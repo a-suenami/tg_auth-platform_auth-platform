@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # ==============================================================================
 # Gemfile
 # ==============================================================================
@@ -5,7 +7,6 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.2.1'
-
 
 # ------------------------------------------------------------------------------
 # Core, DB
@@ -51,25 +52,23 @@ gem 'banken', '~> 1.0.0'
 # Removes invalid UTF8 characters from the URL and other env vars
 gem 'utf8-cleaner', '~> 1.0'
 
-
 # ------------------------------------------------------------------------------
 # Front
 # ------------------------------------------------------------------------------
 # Use slim as template language
 gem 'slim-rails', '~> 3.6.1'
 # JSON API serializer
-gem 'jsonapi-serializer', git: 'https://github.com/twogate/fast_jsonapi', ref: '62c1cc8'
 gem 'jb', '~> 0.8.0'
+gem 'jsonapi-serializer', git: 'https://github.com/twogate/fast_jsonapi', ref: '62c1cc8'
 # Pagination
-gem 'pagy', '~> 6.0.1'
 gem 'api-pagination', '~> 5.0.0'
+gem 'pagy', '~> 6.0.1'
 # link_to helper
 gem 'active_link_to', '~> 1.0.0'
 # Nested form helper
 gem 'cocoon', '~> 1.2', '>= 1.2.15'
 # User Vite as frontend tool
 gem 'vite_rails', '~> 3.0.10'
-
 
 # ------------------------------------------------------------------------------
 # Utilities
@@ -80,8 +79,8 @@ gem 'pry-rails', '~> 0.3.0'
 # Manage multi-environment settings
 gem 'config', '~> 4.1.0'
 # Provides a client interface for the Sentry error logger
-gem 'sentry-ruby', '~> 5.8.0'
 gem 'sentry-rails', '~> 5.8.0'
+gem 'sentry-ruby', '~> 5.8.0'
 gem 'sentry-sidekiq', '~> 5.8.0'
 # Make managing seeds better
 gem 'seed-fu', '~> 2.3.0'
@@ -96,11 +95,11 @@ gem 'factory_bot_rails', '~> 6.2.0'
 # Enumerated attributes with I18n
 gem 'enumerize', '~> 2.5.0'
 # AWS client gems
+gem 'aws-record', '~> 2.10.1'
+gem 'aws-sdk-dynamodb', '~> 1.81.0'
 gem 'aws-sdk-rails', '~> 3.7.1'
 gem 'aws-sdk-s3', '~> 1.119.1'
 gem 'aws-sdk-sqs', '~> 1.53.0'
-gem 'aws-sdk-dynamodb', '~> 1.81.0'
-gem 'aws-record', '~> 2.10.1'
 # Encrypt yaml
 gem 'yaml_vault', '~> 1.3.0'
 # Make command line utilities
@@ -135,7 +134,6 @@ gem 'retryable', '~> 3.0.5'
 # As Firebase Authentication SDK
 gem 'google-apis-identitytoolkit_v3', '~> 0.13.0'
 
-
 # ------------------------------------------------------------------------------
 # Development and Test Only
 # ------------------------------------------------------------------------------
@@ -160,8 +158,8 @@ group :development, :test do
   # RSpect matchers
   gem 'rspec-json_expectations', '~> 2.2.0'
   # Run RSpec parallel
-  gem 'parallel_tests', '~> 4.2.0'
   gem 'parallel_split_test', '~> 0.10.0'
+  gem 'parallel_tests', '~> 4.2.0'
   # Strategies for cleaning databases
   gem 'database_cleaner', '~> 2.0.0'
   # Code coverage
@@ -181,7 +179,6 @@ group :development, :test do
   # Optimization of test case partitioning
   gem 'knapsack_pro', '~> 3.7.0'
 end
-
 
 # ------------------------------------------------------------------------------
 # Development Only

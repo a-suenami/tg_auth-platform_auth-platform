@@ -1,0 +1,375 @@
+# ==============================================================================
+# .rubocop
+# ==============================================================================
+require:
+  - rubocop-rails
+  - rubocop-rspec
+
+# ------------------------------------------------------------------------------
+# AllCops
+# ------------------------------------------------------------------------------
+AllCops:
+  TargetRubyVersion: 3.2
+  TargetRailsVersion: 7.0
+  Exclude:
+    - db/schema.rb
+    - db/fixtures/**/*
+    - vendor/**/*
+    - public/**/*
+    - tmp/**/*
+    - log/**/*
+    - .git/**/*
+    - spec/definitions/**/*
+    - spec/parameters/**/*
+    - test/**/*
+    - config/locales/**/*
+    - scripts/**/*
+    - node_modules/**/*
+
+
+# ------------------------------------------------------------------------------
+# Rails
+# ------------------------------------------------------------------------------
+Rails:
+  Enabled: true
+Rails/Output:
+  Exclude:
+    - db/seeds.rb
+Rails/FilePath:
+  Enabled: false
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+Rails/OutputSafety:
+  Enabled: false
+Rails/SkipsModelValidations:
+  Enabled: false
+Rails/HttpPositionalArguments:
+  Enabled: false
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - test
+    - staging
+    - heroku
+Rails/UniqBeforePluck:
+  Exclude:
+    - 'spec/**/*'
+Rails/ActiveRecordCallbacksOrder:
+  Enabled: true
+Rails/AfterCommitOverride:
+  Enabled: true
+Rails/FindById:
+  Enabled: true
+Rails/Inquiry:
+  Enabled: true
+Rails/MailerName:
+  Enabled: true
+Rails/MatchRoute:
+  Enabled: true
+Rails/NegateInclude:
+  Enabled: true
+Rails/Pluck:
+  Enabled: true
+Rails/PluckInWhere:
+  Enabled: true
+Rails/RenderInline:
+  Enabled: true
+Rails/RenderPlainText:
+  Enabled: true
+Rails/ShortI18n:
+  Enabled: true
+Rails/SquishedSQLHeredocs:
+  Enabled: true
+Rails/WhereExists:
+  Enabled: true
+Rails/WhereNot:
+  Enabled: true
+
+
+# ------------------------------------------------------------------------------
+# RSpec
+# ------------------------------------------------------------------------------
+RSpec/ImplicitSubject:
+  Exclude:
+    - 'spec/requests/**/*'
+RSpec/ExampleWording:
+  Enabled: false
+RSpec/ContextWording:
+  Enabled: false
+RSpec/ExampleLength:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+RSpec/AnyInstance:
+  Enabled: false
+RSpec/NestedGroups:
+  Exclude:
+    - 'spec/requests/**/*'
+
+
+# ------------------------------------------------------------------------------
+# Style
+# ------------------------------------------------------------------------------
+Style/Documentation:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/BlockDelimiters:
+  Enabled: false
+Style/BlockComments:
+  Enabled: false
+Style/AsciiComments:
+  Enabled: false
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: consistent_comma
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+Style/SignalException:
+  Enabled: false
+Style/RedundantSelf:
+  Enabled: false
+Style/NonNilCheck:
+  Enabled: false
+Style/IfInsideElse:
+  Enabled: false
+Style/MultilineBlockChain:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/GuardClause:
+  Enabled: false
+Style/WordArray:
+  Enabled: false
+Style/SymbolArray:
+  Enabled: false
+Style/IfUnlessModifier:
+  Enabled: false
+Style/RescueStandardError:
+  Enabled: false
+Style/RedundantBegin:
+  Exclude:
+    - bin/yarn
+Style/RedundantReturn:
+  AllowMultipleReturnValues: true
+Style/MixinUsage:
+  Exclude:
+    - bin/update
+    - bin/setup
+Style/RescueModifier:
+  Exclude:
+    - 'spec/**/*'
+Style/EmptyMethod:
+  Enabled: false
+Style/CommentAnnotation:
+  Enabled: false
+Style/ConditionalAssignment:
+  Enabled: true
+Style/HashEachMethods:
+  Enabled: true
+Style/HashTransformKeys:
+  Enabled: true
+Style/HashTransformValues:
+  Enabled: true
+Style/ExponentialNotation:
+  Enabled: true
+Style/SlicingWithRange:
+  Enabled: true
+Style/AccessorGrouping:
+  Enabled: true
+Style/ArrayCoercion:
+  Enabled: true
+Style/BisectedAttrAccessor:
+  Enabled: true
+Style/CaseLikeIf:
+  Enabled: true
+Style/CombinableLoops:
+  Enabled: true
+Style/ExplicitBlockArgument:
+  Enabled: true
+Style/GlobalStdStream:
+  Enabled: true
+Style/HashAsLastArrayItem:
+  Enabled: false
+Style/HashLikeCase:
+  Enabled: true
+Style/KeywordParametersOrder:
+  Enabled: true
+Style/OptionalBooleanParameter:
+  Enabled: true
+Style/RedundantAssignment:
+  Enabled: false
+Style/RedundantFetchBlock:
+  Enabled: true
+Style/RedundantFileExtensionInRequire:
+  Enabled: true
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+Style/RedundantRegexpEscape:
+  Enabled: true
+Style/RedundantSelfAssignment:
+  Enabled: true
+Style/SingleArgumentDig:
+  Enabled: true
+Style/SoleNestedConditional:
+  Enabled: true
+Style/StringConcatenation:
+  Enabled: true
+
+
+# ------------------------------------------------------------------------------
+# Layout
+# ------------------------------------------------------------------------------
+Layout/EmptyLines:
+  Enabled: false
+Layout/ParameterAlignment:
+  Enabled: false
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+Layout/FirstArrayElementLineBreak:
+  Enabled: true
+Layout/FirstHashElementLineBreak:
+  Enabled: true
+Layout/ArrayAlignment:
+  EnforcedStyle: with_fixed_indentation
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+Layout/ExtraSpacing:
+  Enabled: false
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+Layout/CaseIndentation:
+  Enabled: false
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+Layout/RescueEnsureAlignment:
+  Enabled: false
+Layout/EmptyLineBetweenDefs:
+  NumberOfEmptyLines: [1, 2]
+Layout/ArgumentAlignment:
+  Enabled: false
+Layout/HashAlignment:
+  EnforcedLastArgumentHashStyle: ignore_implicit
+Layout/LineLength:
+  Max: 200
+  Exclude:
+    - db/seeds.rb
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+Layout/BeginEndAlignment:
+  Enabled: true
+
+
+# ------------------------------------------------------------------------------
+# Metrics
+# ------------------------------------------------------------------------------
+Metrics/MethodLength:
+  Max: 100
+Metrics/BlockLength:
+  Max: 50
+  Exclude:
+    - spec/**/*.rb
+    - config/environments/*.rb
+    - config/routes/**/*.rb
+Metrics/AbcSize:
+  Max: 100
+Metrics/CyclomaticComplexity:
+  Max: 15
+Metrics/PerceivedComplexity:
+  Enabled: false
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+Metrics/ModuleLength:
+  Max: 200
+Metrics/ClassLength:
+  Max: 200
+
+
+# ------------------------------------------------------------------------------
+# Lint
+# ------------------------------------------------------------------------------
+Lint/ShadowedArgument:
+  IgnoreImplicitReferences: true
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - 'spec/**/*'
+Lint/Void:
+  Exclude:
+    - 'spec/**/*'
+Lint/RaiseException:
+  Enabled: true
+Lint/StructNewOverride:
+  Enabled: true
+Lint/UnderscorePrefixedVariableName:
+  Enabled: false
+Lint/BinaryOperatorWithIdenticalOperands:
+  Enabled: true
+Lint/ConstantDefinitionInBlock:
+  Enabled: true
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+Lint/DuplicateElsifCondition:
+  Enabled: true
+Lint/DuplicateRequire:
+  Enabled: true
+Lint/DuplicateRescueException:
+  Enabled: true
+Lint/EmptyConditionalBody:
+  Enabled: true
+Lint/EmptyFile:
+  Enabled: true
+Lint/FloatComparison:
+  Enabled: true
+Lint/IdentityComparison:
+  Enabled: true
+Lint/MissingSuper:
+  Enabled: false
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+Lint/OutOfRangeRegexpRef:
+  Enabled: true
+Lint/SelfAssignment:
+  Enabled: true
+Lint/TopLevelReturnWithArgument:
+  Enabled: true
+Lint/TrailingCommaInAttributeDeclaration:
+  Enabled: true
+Lint/UnreachableLoop:
+  Enabled: true
+Lint/UselessMethodDefinition:
+  Enabled: false
+Lint/UselessTimes:
+  Enabled: true
+
+
+# ------------------------------------------------------------------------------
+# Bundler
+# ------------------------------------------------------------------------------
+Bundler/OrderedGems:
+  Enabled: false
+
+
+# ------------------------------------------------------------------------------
+# Naming
+# ------------------------------------------------------------------------------
+Naming/MethodParameterName:
+  AllowedNames:
+    - of
+    - id
+Naming/VariableNumber:
+  EnforcedStyle: snake_case
+  AllowedIdentifiers: [v1, last4, iso8601]
+Naming/AccessorMethodName:
+  Enabled: false
+Naming/FileName:
+  Enabled: false
