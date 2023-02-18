@@ -1,0 +1,8 @@
+# ==============================================================================
+# db - schemas - tenants
+# ==============================================================================
+create_table :tenants, force: :cascade, id: :string do |t|
+  t.string  :name
+
+  t.timestamps null: false
+end
