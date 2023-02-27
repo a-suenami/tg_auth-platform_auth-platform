@@ -1,0 +1,4 @@
+ActiveRecord::Schema.enable_extension(:pgcrypto)
+ActiveRecord::Schema.enable_extension(:citext)
+
+require 'schemas/tenants.schema'

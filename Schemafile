@@ -1,7 +1,0 @@
-# ==============================================================================
-# Schemafile
-# ==============================================================================
-ActiveRecord::Schema.enable_extension(:pgcrypto)
-ActiveRecord::Schema.enable_extension(:citext)
-
-require 'db/schemas/tenants.schema'

@@ -42,7 +42,7 @@ namespace :ridgepole do # rubocop:disable Metrics/BlockLength
   private
 
   def schema_file
-    Rails.root.join('Schemafile')
+    Rails.root.join('db/Schemafile')
   end
 
   def config_file
