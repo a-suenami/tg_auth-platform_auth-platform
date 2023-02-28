@@ -82,7 +82,8 @@ rspec:
     # - bundle exec thor dynamodb:migrate
   after_script:
     - cat log/bullet.log
-  # script:
+  script:
+    - bundle exec rspec
     # - export KNAPSACK_PRO_CI_NODE_TOTAL=$CI_NODE_TOTAL
     # - export KNAPSACK_PRO_CI_NODE_INDEX=$(expr $CI_NODE_INDEX - 1)
     # - bundle exec parallel_rspec -n $PARALLEL_TESTS_CONCURRENCY -e './bin/parallel_tests'
