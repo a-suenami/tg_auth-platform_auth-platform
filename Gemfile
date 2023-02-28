@@ -68,7 +68,7 @@ gem 'active_link_to', '~> 1.0.0'
 # Nested form helper
 gem 'cocoon', '~> 1.2', '>= 1.2.15'
 # User Vite as frontend tool
-gem 'vite_rails', '~> 3.0.10'
+# gem 'vite_rails', '~> 3.0.10'
 
 # ------------------------------------------------------------------------------
 # Utilities
