@@ -1,0 +1,91 @@
+variables:
+  RUBY_VERSION: 'ruby-3.2.1-slim'
+  RUBY_IMAGE: containers.l.twogate.net/docker/ruby-slim-for-rails:ruby3.2.1
+
+cache: &cache
+  paths:
+    - vendor/bundle
+    #- public/vite
+    #- tmp/cache/vite
+
+stages:
+  - prepare
+  - test
+
+bundle-package:
+  image: ${RUBY_IMAGE}
+  stage: prepare
+  cache:
+    <<: *cache
+    key: ${RUBY_VERSION}
+  script:
+    - bundle install --jobs=`nproc` --deployment
+    - bundle clean
+  except:
+    - /^deploy-.*$/
+    - schedules
+
+sast:
+  stage: test
+include:
+  - template: Security/SAST.gitlab-ci.yml
+
+rubocop:
+  image: ${RUBY_IMAGE}
+  stage: test
+  cache:
+    <<: *cache
+    key: ${RUBY_VERSION}
+    policy: pull
+  variables:
+    RAILS_ENV: test
+    ALLOW_ORIGINS: '[]'
+  before_script:
+    - /bin/sh docker/scripts/bundle_install.sh
+  script:
+    - bundle exec rubocop -DESP
+  except:
+    - /^deploy-.*$/
+    - schedules
+
+rspec:
+  # parallel: 5
+  image: ${RUBY_IMAGE}
+  stage: test
+  cache:
+    <<: *cache
+    key: ${RUBY_VERSION}
+    policy: pull
+  variables:
+    RAILS_ENV: test
+    POSTGRES_TEST_HOST: postgres
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    REDIS_URL: redis://redis:6379/0
+    ALLOW_ORIGINS: '[]'
+    # PARALLEL_SPLIT_TEST: 'true'
+    # PARALLEL_TESTS_CONCURRENCY: 4
+    # KNAPSACK_PRO_TEST_SUITE_TOKEN_RSPEC: $KNAPSACK_PRO_TEST_SUITE_TOKEN_RSPEC
+    # KNAPSACK_PRO_FIXED_QUEUE_SPLIT: 'true'
+    # KNAPSACK_PRO_RSPEC_SPLIT_BY_TEST_EXAMPLES: 'true'
+  services:
+    - postgres:15-alpine
+    - redis:7.0-alpine
+    # - name: containers.l.twogate.net/docker/cassandra:3.11
+    #   alias: cassandra
+    # - name: amazon/dynamodb-local
+    #   alias: dynamodb
+  before_script:
+    - touch log/bullet.log
+    - /bin/sh docker/scripts/bundle_install.sh
+    # - bundle exec rake parallel:setup
+    # - bundle exec thor dynamodb:migrate
+  after_script:
+    - cat log/bullet.log
+  # script:
+    # - export KNAPSACK_PRO_CI_NODE_TOTAL=$CI_NODE_TOTAL
+    # - export KNAPSACK_PRO_CI_NODE_INDEX=$(expr $CI_NODE_INDEX - 1)
+    # - bundle exec parallel_rspec -n $PARALLEL_TESTS_CONCURRENCY -e './bin/parallel_tests'
+  except:
+    - /^deploy-.*$/
+    - schedules
