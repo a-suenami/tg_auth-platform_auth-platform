@@ -56,13 +56,13 @@ namespace :ridgepole do # rubocop:disable Metrics/BlockLength
       # for fuckin' heroku uri scheme
       uri.scheme = 'postgresql' if uri.scheme == 'postgres'
 
-      "\'{
+      "'{
         adapter:  #{uri.scheme},
         username: #{uri.user},
         password: #{uri.password},
         host:     #{uri.host},
         database: #{uri.path.sub(%r{\A/}, '')},
-      }\'"
+      }'"
 
     else
       Rails.root.join('config/database.yml')
@@ -72,7 +72,7 @@ namespace :ridgepole do # rubocop:disable Metrics/BlockLength
   def check_non_required_schemas
     schema_file_content = File.read(schema_file)
     requirements = schema_file_content.scan(%r{require 'schemas/.*$}).map { _1.match(/(schemas.*)'/)[1] }
-    schema_files = Dir.glob(Rails.root.join('db/schemas/**/*.schema')).map { _1.match(/(schemas.*)/)[1] }
+    schema_files = Rails.root.glob('db/schemas/**/*.schema').map { _1.match(/(schemas.*)/)[1] }
 
     diff = schema_files - requirements
 
