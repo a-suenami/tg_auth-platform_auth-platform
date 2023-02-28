@@ -78,6 +78,7 @@ rspec:
   before_script:
     - touch log/bullet.log
     - /bin/sh docker/scripts/bundle_install.sh
+    - bundle exec rake db:setup
     # - bundle exec rake parallel:setup
     # - bundle exec thor dynamodb:migrate
   after_script:
