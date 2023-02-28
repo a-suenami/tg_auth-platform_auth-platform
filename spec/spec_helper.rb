@@ -6,7 +6,7 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 require 'rspec/rails'
 # require 'knapsack_pro'
 
-Dir[Rails.root.join('spec', 'helpers', '**', '*.rb')].sort.each { |f| require f }
+Dir[Rails.root.join('spec', 'helpers', '**', '*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
   config.example_status_persistence_file_path = 'spec/examples.txt'
@@ -25,7 +25,7 @@ RSpec.configure do |config|
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
   config.profile_examples = 10
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_path = "#{Rails.root}/spec/fixtures"
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
 
@@ -96,12 +96,9 @@ RSpec.configure do |config|
   # locale を option で切り替える
   config.around do |example|
     if example.metadata[:locale]
-      current_local = I18n.locale
-      I18n.locale = example.metadata[:locale]
-
-      example.run
-
-      I18n.locale = current_local
+      I18n.with_locale(example.metadata[:locale]) do
+        example.run
+      end
     else
       example.run
     end
