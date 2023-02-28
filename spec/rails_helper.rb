@@ -62,13 +62,13 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.around(:each) do |example|
+  config.around do |example|
     DatabaseCleaner.cleaning do
       example.run
     end
   end
 
-  config.before(:each) do
+  config.before do
     Redis.current.flushdb
     FFaker::Lorem.unique.clear
     SeedFu.quiet = true
@@ -76,11 +76,11 @@ RSpec.configure do |config|
   end
 
   if Bullet.enable?
-    config.before(:each) do
+    config.before do
       Bullet.start_request
     end
 
-    config.after(:each) do
+    config.after do
       Bullet.perform_out_of_channel_notifications if Bullet.notification?
       Bullet.end_request
     end

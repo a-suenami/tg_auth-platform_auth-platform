@@ -1,4 +1,4 @@
-#require 'rails_helper'
+# require 'rails_helper'
 
 describe Multitenancy do
   not_multitenant_models = [Tenant].freeze
@@ -9,7 +9,7 @@ describe Multitenancy do
 
     describe model.to_s do
       it 'should include Multitenancy' do
-        expect(model.included_modules.include?(Multitenancy)).to be should_multitenant_model
+        expect(model.included_modules.include?(described_class)).to be should_multitenant_model
       end
     end
   end
