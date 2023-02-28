@@ -1,4 +1,4 @@
-# require 'rails_helper'
+require 'spec_helper'
 
 describe Multitenancy do
   not_multitenant_models = [Tenant].freeze

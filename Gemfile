@@ -18,8 +18,8 @@ gem 'puma', '~> 6.1.0'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.4.0'
 # # Use Redis for in-memory database
-# gem 'redis', '~> 4.8.1'
-# gem 'redis-namespace', '~> 1.10.0'
+gem 'redis', '~> 5.0', '>= 5.0.6'
+gem 'redis-namespace', '~> 1.10.0'
 # # Mutex by Redis
 # gem 'redlock', '~> 2.0.1'
 # # Support for Cross-Origin Resource Sharing (CORS) for Rack compatible web applications
@@ -36,9 +36,9 @@ gem 'ridgepole', '~> 1.2.0'
 # gem 'sidekiq-status', '~> 2.1.0'
 # # Ensure uniqueness of your Sidekiq jobs
 # gem 'sidekiq-unique-jobs', '~> 7.1.0'
-# # Enable per-request global storage
-# gem 'request_store', '~> 1.5.0'
-# gem 'request_store-sidekiq', '~> 0.1.0'
+# Enable per-request global storage
+gem 'request_store', '~> 1.5.1'
+gem 'request_store-sidekiq', '~> 0.1.0'
 # # AuthorizationP
 # gem 'pundit', '~> 2.3.0'
 # # Secure hash algorithm
@@ -159,7 +159,7 @@ group :development, :test do
   # gem 'parallel_split_test', '~> 0.10.0'
   # gem 'parallel_tests', '~> 4.2.0'
   # # Strategies for cleaning databases
-  # gem 'database_cleaner', '~> 2.0.0'
+  gem 'database_cleaner', '~> 2.0.1'
   # Code coverage
   gem 'simplecov', '~> 0.22.0', require: false
   # Detect N + 1 queries
