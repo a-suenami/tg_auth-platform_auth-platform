@@ -132,6 +132,9 @@ gem 'yaml_vault', '~> 1.3.2'
 # # As Firebase Authentication SDK
 # gem 'google-apis-identitytoolkit_v3', '~> 0.13.0'
 
+# typing
+gem 'sorbet-runtime'
+
 # ------------------------------------------------------------------------------
 # Development and Test Only
 # ------------------------------------------------------------------------------
@@ -195,4 +198,7 @@ group :development do
   gem 'rails-erd', '~> 1.7.2'
   # Ruby Language Server by Shopify
   gem 'ruby-lsp', '~> 0.4.1'
+
+  gem 'sorbet'
+  gem 'tapioca', require: false
 end
