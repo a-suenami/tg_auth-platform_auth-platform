@@ -4,15 +4,19 @@
 
 # typed: false
 
-module ::AbstractController::Base; end
-module ::AbstractController::Caching::ConfigMethods; end
-module ::AbstractController::Helpers; end
-module ::AbstractController::Helpers::ClassMethods; end
-module ::Settings; end
+module AbstractController::Base; end
+module AbstractController::Caching::ConfigMethods; end
+module AbstractController::Caching::Fragments::ClassMethods; end
+module AbstractController::Callbacks::ClassMethods; end
+module AbstractController::Helpers::ClassMethods; end
+module AbstractController::UrlFor::ClassMethods; end
 module ActionController::Base::HelperMethods; end
 module ActionController::BasicImplicitRender; end
+module ActionController::ConditionalGet::ClassMethods; end
 module ActionController::Head; end
 module ActionController::MimeResponds::Collector; end
+module ActionController::Renderers::ClassMethods; end
+module ActionController::Rendering::ClassMethods; end
 module ActionController::TemplateAssertions; end
 module ActionDispatch::Assertions; end
 module ActionDispatch::Assertions::ResponseAssertions; end
@@ -24,13 +28,11 @@ module ActionDispatch::Request::Session; end
 module ActionDispatch::Response; end
 module ActionDispatch::Response::Header; end
 module ActionDispatch::Routing::PolymorphicRoutes; end
-module ActionDispatch::Routing::UrlFor; end
 module ActionDispatch::TestProcess; end
 module ActionDispatch::TestProcess::FixtureFile; end
 module ActionDispatch::TestRequest; end
 module ActionDispatch::TestResponse; end
 module ActionMailer::Base::Mail::Message; end
 module RSpec::Matchers; end
-module Redis::Settings; end
 module Sidekiq::Process; end
 module Sidekiq::SortedEntry; end
