@@ -201,4 +201,5 @@ group :development do
 
   gem 'sorbet'
   gem 'tapioca', require: false
+  gem "spoom", require: false
 end

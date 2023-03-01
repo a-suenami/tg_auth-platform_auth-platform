@@ -407,6 +407,7 @@ DEPENDENCIES
   solargraph (~> 0.48.0)
   sorbet
   sorbet-runtime
+  spoom
   spring (~> 4.1.1)
   spring-commands-rspec (~> 1.0.4)
   spring-watcher-listen (~> 2.1.0)
