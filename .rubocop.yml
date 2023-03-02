@@ -12,6 +12,8 @@ AllCops:
   TargetRubyVersion: 3.2
   TargetRailsVersion: 7.0
   Exclude:
+    - bin/**/*
+    - sorbet/**/*
     - db/schema.rb
     - db/fixtures/**/*
     - vendor/**/*

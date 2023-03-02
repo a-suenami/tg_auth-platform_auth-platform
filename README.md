@@ -34,6 +34,18 @@ https://marketplace.visualstudio.com/items?itemName=Shopify.ruby-extensions-pack
 
 And disable any other Ruby VSCode extensions, Solargraph, etc.
 
+To perform a type check, execute one of the following commands:
+
+```
+bundle exec srb tc
+
+# you can use auto-correct
+bundle exec srb tc -a
+
+# simpler output
+bundle exec spoom tc
+```
+
 # Running rails
 Load the environment variables into your current shell.
 
@@ -86,6 +98,15 @@ After running **database migrations**
 - `tapioca dsl`
 After updating the **routes file**
 - `tapioca dsl`
+
+To ensure all RBI files for DSLs are up-to-date with the latest changes in your application or database, run these commands before commit.
+
+```
+bundle exec tapioca gems --verify
+bundle exec tapioca dsl --verify
+```
+
+These commands checks that RBIs are kept updated or not, and if not, the command shows you to how to update.
 
 # Rules
 Basically, follow the rules of rubocop. You should follow the rules below also which cannot be restricted by rubocop.

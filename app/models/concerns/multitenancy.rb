@@ -1,3 +1,5 @@
+# typed: false
+
 module Multitenancy
   extend ActiveSupport::Concern
 
