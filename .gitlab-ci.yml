@@ -49,7 +49,7 @@ rubocop:
     - /^deploy-.*$/
     - schedules
 
-rspec: &rspec
+rspec:
   # parallel: 5
   image: ${RUBY_IMAGE}
   stage: test
@@ -85,9 +85,6 @@ rspec: &rspec
   after_script:
     - cat log/bullet.log
   script:
-    - bundle exec tapioca gems --verify
-    - bundle exec tapioca dsl --verify
-    - bundle exec srb tc
     - bundle exec rspec
     # - export KNAPSACK_PRO_CI_NODE_TOTAL=$CI_NODE_TOTAL
     # - export KNAPSACK_PRO_CI_NODE_INDEX=$(expr $CI_NODE_INDEX - 1)
@@ -97,33 +94,27 @@ rspec: &rspec
     - schedules
 
 sorbet:
-  <<: *rspec
+  image: ${RUBY_IMAGE}
+  stage: test
+  cache:
+    <<: *cache
+    key: ${RUBY_VERSION}
+    policy: pull
+  services:
+    - ${POSTGRES_VERSION}
+  variables:
+    POSTGRES_HOST: postgres
+    POSTGRES_TEST_HOST: postgres
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    RAILS_ENV: development
+  before_script:
+    - /bin/sh docker/scripts/bundle_install.sh
+    - bundle exec rake db:create db:schema:load
   script:
     - bundle exec tapioca gems --verify
     - bundle exec tapioca dsl --verify
     - bundle exec srb tc
-
-#   image: ${RUBY_IMAGE}
-#   stage: test
-#   cache:
-#     <<: *cache
-#     key: ${RUBY_VERSION}
-#     policy: pull
-#   variables:
-#     #SRB_SKIP_GEM_RBIS: 'true'
-#     RAILS_ENV: test
-#     POSTGRES_TEST_HOST: postgres
-#     POSTGRES_USER: postgres
-#     POSTGRES_PASSWORD: postgres
-#   services:
-#     - ${POSTGRES_VERSION}
-#   before_script:
-#     - /bin/sh docker/scripts/bundle_install.sh
-#     - bundle exec rake db:setup
-#   script:
-#     - bundle exec tapioca gems --verify -e test
-#     - bundle exec tapioca dsl --verify -e test
-#     - bundle exec srb tc
-#   except:
-#     - /^deploy-.*$/
-#     - schedules
+  except:
+    - /^deploy-.*$/
+    - schedules
