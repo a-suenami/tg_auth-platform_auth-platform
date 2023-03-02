@@ -72,7 +72,7 @@ namespace :ridgepole do # rubocop:disable Metrics/BlockLength
   def check_non_required_schemas
     schema_file_content = File.read(schema_file)
     requirements = schema_file_content.scan(%r{require 'schemas/.*$}).map { _1.match(/(schemas.*)'/)[1] }
-    schema_files = Rails.root.glob('db/schemas/**/*.schema').map { _1.match(/(schemas.*)/)[1] }
+    schema_files = Dir.glob(Rails.root.join('db/schemas/**/*.schema')).map { _1.match(/(schemas.*)/)[1] } # rubocop:disable Rails/RootPathnameMethods
 
     diff = schema_files - requirements
 
