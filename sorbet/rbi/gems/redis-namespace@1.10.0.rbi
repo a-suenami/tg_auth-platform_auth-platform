@@ -23,49 +23,21 @@ class Redis
   include ::Redis::Commands::Strings
   include ::Redis::Commands::Transactions
 
-  # Create a new client instance
-  #
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @param options [Hash]
-  # @return [Redis] a new client instance
-  #
   # source://redis/5.0.6/lib/redis.rb#63
   def initialize(options = T.unsafe(nil)); end
 
   # source://redis/5.0.6/lib/redis.rb#98
   def _client; end
 
-  # Disconnect the client as quickly and silently as possible.
-  #
   # source://redis/5.0.6/lib/redis.rb#88
   def close; end
 
-  # Test whether or not the client is connected
-  #
-  # @return [Boolean]
-  #
   # source://redis/5.0.6/lib/redis.rb#83
   def connected?; end
 
   # source://redis/5.0.6/lib/redis.rb#122
   def connection; end
 
-  # Disconnect the client as quickly and silently as possible.
-  #
   # source://redis/5.0.6/lib/redis.rb#88
   def disconnect!; end
 
@@ -81,14 +53,9 @@ class Redis
   # source://redis/5.0.6/lib/redis.rb#102
   def pipelined; end
 
-  # @yield [_self]
-  # @yieldparam _self [Redis] the object that the method was called on
-  #
   # source://redis/5.0.6/lib/redis.rb#94
   def with; end
 
-  # Run code without the client reconnecting
-  #
   # source://redis/5.0.6/lib/redis.rb#78
   def without_reconnect(&block); end
 
@@ -113,27 +80,15 @@ class Redis
     # source://redis/5.0.6/lib/redis.rb#14
     def deprecate!(message); end
 
-    # Returns the value of attribute raise_deprecations.
-    #
     # source://redis/5.0.6/lib/redis.rb#12
     def raise_deprecations; end
 
-    # Sets the attribute raise_deprecations
-    #
-    # @param value the value to set the attribute raise_deprecations to.
-    #
     # source://redis/5.0.6/lib/redis.rb#12
     def raise_deprecations=(_arg0); end
 
-    # Returns the value of attribute silence_deprecations.
-    #
     # source://redis/5.0.6/lib/redis.rb#12
     def silence_deprecations; end
 
-    # Sets the attribute silence_deprecations
-    #
-    # @param value the value to set the attribute silence_deprecations to.
-    #
     # source://redis/5.0.6/lib/redis.rb#12
     def silence_deprecations=(_arg0); end
   end

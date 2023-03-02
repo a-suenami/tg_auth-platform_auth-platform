@@ -10826,7 +10826,7 @@ end
 # source://activesupport//lib/active_support/test_case.rb#20
 ActiveSupport::TestCase::Assertion = Minitest::Assertion
 
-# source://activesupport//lib/active_support/testing/tagged_logging.rb#4
+# source://activesupport//lib/active_support/testing/file_fixtures.rb#6
 module ActiveSupport::Testing; end
 
 # source://activesupport//lib/active_support/testing/assertions.rb#7

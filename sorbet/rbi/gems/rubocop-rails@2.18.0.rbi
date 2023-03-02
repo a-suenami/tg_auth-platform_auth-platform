@@ -104,13 +104,9 @@ end
 #
 # source://rubocop-rails//lib/rubocop/cop/mixin/enforce_superclass.rb#6
 module RuboCop::Cop::EnforceSuperclass
-  # @api private
-  #
   # source://rubocop-rails//lib/rubocop/cop/mixin/enforce_superclass.rb#19
   def on_class(node); end
 
-  # @api private
-  #
   # source://rubocop-rails//lib/rubocop/cop/mixin/enforce_superclass.rb#25
   def on_send(node); end
 
@@ -120,8 +116,6 @@ module RuboCop::Cop::EnforceSuperclass
   def register_offense(offense_node); end
 
   class << self
-    # @api private
-    # @private
     # @private
     #
     # source://rubocop-rails//lib/rubocop/cop/mixin/enforce_superclass.rb#7
@@ -8163,184 +8157,6 @@ RuboCop::Cop::Rails::WhereNotWithMultipleConditions::RESTRICT_ON_SEND = T.let(T.
 
 module RuboCop::Cop::Style; end
 
-# Enforces the presence (default) or absence of parentheses in
-# method calls containing parameters.
-#
-# In the default style (require_parentheses), macro methods are allowed.
-# Additional methods can be added to the `AllowedMethods`
-# or `AllowedPatterns` list. These options are
-# valid only in the default style. Macros can be included by
-# either setting `IgnoreMacros` to false or adding specific macros to
-# the `IncludedMacros` list.
-#
-# Precedence of options is all follows:
-#
-# 1. `AllowedMethods`
-# 2. `AllowedPatterns`
-# 3. `IncludedMacros`
-#
-# eg. If a method is listed in both
-# `IncludedMacros` and `AllowedMethods`, then the latter takes
-# precedence (that is, the method is allowed).
-#
-# In the alternative style (omit_parentheses), there are three additional
-# options.
-#
-# 1. `AllowParenthesesInChaining` is `false` by default. Setting it to
-#    `true` allows the presence of parentheses in the last call during
-#    method chaining.
-#
-# 2. `AllowParenthesesInMultilineCall` is `false` by default. Setting it
-#     to `true` allows the presence of parentheses in multi-line method
-#     calls.
-#
-# 3. `AllowParenthesesInCamelCaseMethod` is `false` by default. This
-#     allows the presence of parentheses when calling a method whose name
-#     begins with a capital letter and which has no arguments. Setting it
-#     to `true` allows the presence of parentheses in such a method call
-#     even with arguments.
-#
-# NOTE: Parentheses are still allowed in cases where omitting them
-# results in ambiguous or syntactically incorrect code. For example,
-# parentheses are required around a method with arguments when inside an
-# endless method definition introduced in Ruby 3.0. Parentheses are also
-# allowed when forwarding arguments with the triple-dot syntax introduced
-# in Ruby 2.7 as omitting them starts an endless range.
-# And Ruby 3.1's hash omission syntax has a case that requires parentheses
-# because of the following issue: https://bugs.ruby-lang.org/issues/18396.
-#
-# @example EnforcedStyle: require_parentheses (default)
-#
-#   # bad
-#   array.delete e
-#
-#   # good
-#   array.delete(e)
-#
-#   # good
-#   # Operators don't need parens
-#   foo == bar
-#
-#   # good
-#   # Setter methods don't need parens
-#   foo.bar = baz
-#
-#   # okay with `puts` listed in `AllowedMethods`
-#   puts 'test'
-#
-#   # okay with `^assert` listed in `AllowedPatterns`
-#   assert_equal 'test', x
-# @example EnforcedStyle: omit_parentheses
-#
-#   # bad
-#   array.delete(e)
-#
-#   # good
-#   array.delete e
-#
-#   # bad
-#   foo.enforce(strict: true)
-#
-#   # good
-#   foo.enforce strict: true
-#
-#   # good
-#   # Allows parens for calls that won't produce valid Ruby or be ambiguous.
-#   model.validate strict(true)
-#
-#   # good
-#   # Allows parens for calls that won't produce valid Ruby or be ambiguous.
-#   yield path, File.basename(path)
-#
-#   # good
-#   # Operators methods calls with parens
-#   array&.[](index)
-#
-#   # good
-#   # Operators methods without parens, if you prefer
-#   array.[] index
-#
-#   # good
-#   # Operators methods calls with parens
-#   array&.[](index)
-#
-#   # good
-#   # Operators methods without parens, if you prefer
-#   array.[] index
-# @example IgnoreMacros: true (default)
-#
-#   # good
-#   class Foo
-#   bar :baz
-#   end
-# @example IgnoreMacros: false
-#
-#   # bad
-#   class Foo
-#   bar :baz
-#   end
-# @example AllowParenthesesInMultilineCall: false (default)
-#
-#   # bad
-#   foo.enforce(
-#   strict: true
-#   )
-#
-#   # good
-#   foo.enforce \
-#   strict: true
-# @example AllowParenthesesInMultilineCall: true
-#
-#   # good
-#   foo.enforce(
-#   strict: true
-#   )
-#
-#   # good
-#   foo.enforce \
-#   strict: true
-# @example AllowParenthesesInChaining: false (default)
-#
-#   # bad
-#   foo().bar(1)
-#
-#   # good
-#   foo().bar 1
-# @example AllowParenthesesInChaining: true
-#
-#   # good
-#   foo().bar(1)
-#
-#   # good
-#   foo().bar 1
-# @example AllowParenthesesInCamelCaseMethod: false (default)
-#
-#   # bad
-#   Array(1)
-#
-#   # good
-#   Array 1
-# @example AllowParenthesesInCamelCaseMethod: true
-#
-#   # good
-#   Array(1)
-#
-#   # good
-#   Array 1
-# @example AllowParenthesesInStringInterpolation: false (default)
-#
-#   # bad
-#   "#{t('this.is.bad')}"
-#
-#   # good
-#   "#{t 'this.is.better'}"
-# @example AllowParenthesesInStringInterpolation: true
-#
-#   # good
-#   "#{t('this.is.good')}"
-#
-#   # good
-#   "#{t 'this.is.also.good'}"
 class RuboCop::Cop::Style::MethodCallWithArgsParentheses < ::RuboCop::Cop::Base
   # source://rubocop/1.46.0/lib/rubocop/cop/style/method_call_with_args_parentheses.rb#210
   def on_csend(node); end
@@ -8362,8 +8178,6 @@ class RuboCop::Cop::Style::MethodCallWithArgsParentheses < ::RuboCop::Cop::Base
   # source://rubocop/1.46.0/lib/rubocop/cop/style/method_call_with_args_parentheses.rb#228
   def args_end(node); end
 
-  # @return [Boolean]
-  #
   # source://rubocop/1.46.0/lib/rubocop/cop/style/method_call_with_args_parentheses.rb#232
   def args_parenthesized?(node); end
 
@@ -8373,52 +8187,10 @@ class RuboCop::Cop::Style::MethodCallWithArgsParentheses < ::RuboCop::Cop::Base
   end
 end
 
-# Checks for redundant uses of `self`.
-#
-# The usage of `self` is only needed when:
-#
-# * Sending a message to same object with zero arguments in
-#   presence of a method name clash with an argument or a local
-#   variable.
-#
-# * Calling an attribute writer to prevent a local variable assignment.
-#
-# Note, with using explicit self you can only send messages with public or
-# protected scope, you cannot send private messages this way.
-#
-# Note we allow uses of `self` with operators because it would be awkward
-# otherwise.
-#
-# @example
-#
-#   # bad
-#   def foo(bar)
-#   self.baz
-#   end
-#
-#   # good
-#   def foo(bar)
-#   self.bar  # Resolves name clash with the argument.
-#   end
-#
-#   def foo
-#   bar = 1
-#   self.bar  # Resolves name clash with the local variable.
-#   end
-#
-#   def foo
-#   %w[x y z].select do |bar|
-#   self.bar == bar  # Resolves name clash with argument of the block.
-#   end
-#   end
 class RuboCop::Cop::Style::RedundantSelf < ::RuboCop::Cop::Base
-  # @return [RedundantSelf] a new instance of RedundantSelf
-  #
   # source://rubocop/1.46.0/lib/rubocop/cop/style/redundant_self.rb#59
   def initialize(config = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # Assignment of self.x
-  #
   # source://rubocop/1.46.0/lib/rubocop/cop/style/redundant_self.rb#67
   def on_and_asgn(node); end
 
@@ -8431,13 +8203,9 @@ class RuboCop::Cop::Style::RedundantSelf < ::RuboCop::Cop::Base
   # source://rubocop/1.46.0/lib/rubocop/cop/style/redundant_self.rb#89
   def on_blockarg(node); end
 
-  # Using self.x to distinguish from local variable x
-  #
   # source://rubocop/1.46.0/lib/rubocop/cop/style/redundant_self.rb#80
   def on_def(node); end
 
-  # Using self.x to distinguish from local variable x
-  #
   # source://rubocop/1.46.0/lib/rubocop/cop/style/redundant_self.rb#80
   def on_defs(node); end
 
@@ -8459,8 +8227,6 @@ class RuboCop::Cop::Style::RedundantSelf < ::RuboCop::Cop::Base
   # source://rubocop/1.46.0/lib/rubocop/cop/style/redundant_self.rb#73
   def on_op_asgn(node); end
 
-  # Assignment of self.x
-  #
   # source://rubocop/1.46.0/lib/rubocop/cop/style/redundant_self.rb#67
   def on_or_asgn(node); end
 
@@ -8490,16 +8256,12 @@ class RuboCop::Cop::Style::RedundantSelf < ::RuboCop::Cop::Base
   # source://rubocop/1.46.0/lib/rubocop/cop/style/redundant_self.rb#175
   def allow_self(node); end
 
-  # @return [Boolean]
-  #
   # source://rubocop/1.46.0/lib/rubocop/cop/style/redundant_self.rb#149
   def allowed_send_node?(node); end
 
   # source://rubocop/1.46.0/lib/rubocop/cop/style/redundant_self.rb#166
   def on_argument(node); end
 
-  # @return [Boolean]
-  #
   # source://rubocop/1.46.0/lib/rubocop/cop/style/redundant_self.rb#158
   def regular_method_call?(node); end
 

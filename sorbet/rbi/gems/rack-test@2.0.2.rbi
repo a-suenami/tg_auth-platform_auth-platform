@@ -9,13 +9,9 @@
 # source://rack-test//lib/rack/test/cookie_jar.rb#6
 module Rack
   class << self
-    # Return the Rack release as a dotted string.
-    #
     # source://rack/2.2.6.2/lib/rack/version.rb#26
     def release; end
 
-    # Return the Rack protocol version as a dotted string.
-    #
     # source://rack/2.2.6.2/lib/rack/version.rb#19
     def version; end
   end
