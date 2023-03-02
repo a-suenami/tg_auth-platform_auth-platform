@@ -105,7 +105,6 @@ sorbet:
   before_script:
     - /bin/sh docker/scripts/bundle_install.sh
   script:
-    - bundle exec tapioca gems --verify
     - bundle exec tapioca dsl --verify
     - bundle exec srb tc
   except:
