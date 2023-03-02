@@ -12,6 +12,7 @@ apt-get update -qq && \
     curl \
     gnupg2 \
     lsb-release \
+    unzip \
 
 # pg_dump for pg15 のインストール
 curl -sS https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
@@ -30,3 +31,13 @@ apt-get update -qq && \
   apt-get install -y \
     nodejs \
     yarn \
+
+cd $(mktemp -d) && \
+curl -sSL -o dl-watchman.zip https://github.com/facebook/watchman/releases/download/v2023.02.27.00/watchman-v2023.02.27.00-linux.zip && \
+unzip dl-watchman.zip && \
+cd watchman* && \
+mkdir -p /usr/local/{bin,lib} /usr/local/var/run/watchman && \
+cp bin/* /usr/local/bin && \
+cp lib/* /usr/local/lib && \
+chmod 755 /usr/local/bin/watchman && \
+chmod 2777 /usr/local/var/run/watchman

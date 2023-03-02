@@ -1,114 +1,109 @@
-# 開発環境動かすまで
+# Getting Started
 
-Docker および Docker Compose V2 が必要
+Install Docker & Docker Compose V2
 
 - https://docs.docker.com/engine/
 - https://docs.docker.com/compose/install/
+
+Build the containers & Install libraries
 
 ```sh
 source env.sh
 build
 bundle install
 yarn install
-bundle exec thor credentials:decrypt # パスワードを聞かれるので入力する。パスワードについては PM に確認
+```
+
+`bundle install` and `yarn install` should also be ran when updating Gem or Node packages.
+
+API tokens and passwords are encrypted before git commit and should be decrypted during development. Decrypted files should not be committed.
+
+```
+bundle exec thor credentials:decrypt
+```
+
+Then you can prepare a database.
+```
 rake db:create ridgepole:apply db:seed db:seed_fu
 ```
 
+## Development environment
+Since this project is typed by Sorbet, you will be able to develop comfortably with Ruby-LSP installed. So, we recommend installing the Ruby extension pack from Shopify.
 
-# 起動
-以下はシェルを起動したら初めに
+https://marketplace.visualstudio.com/items?itemName=Shopify.ruby-extensions-pack
+
+And disable any other Ruby VSCode extensions, Solargraph, etc.
+
+# Running rails
+Load the environment variables into your current shell.
 
 ```sh
 source env.sh
 ```
 
-をしてから行うこと。
-
-
-## Spring server
-
-シェルを1つ用意して
+Then `up` will start all containers.
 
 ```sh
-spring
+up
 ```
 
-と打ち込んで放置する。これで spring server が立ち上がり続ける。
-基本的に spring server は常に起動しておく。
-そうでないと rails console などが使えなくなる。
-
-
-## Rails
-
-別のシェルを用意して
-
-```sh
-app
-```
-
-とする。再起動する場合は `ctrl+c` で停止できる。うまく停止できなかったときは
-
-```sh
-stop app
-app
-```
-
-で再起動する。
-
-
-## Webpacker
-
-以下のコマンドで webpack の dev server が立ち上がり、Hot Module Replacement が利用できる。
-
-```sh
-up webpack-dev-server
-```
-
+Don't mix another project's environment.
 
 ## Rails console
-
-こちらも別のシェルを用意して
-
 ```sh
 rails c
 ```
 
-でOK。
-
-
-## Worker (Sidekiq)
-
-こちらも別のシェルを用意して
+# Testing & Linting
+Since the test database will run on tmpfs for performance reason, the database must be prepared for each startup before running rspec.
 
 ```sh
-up worker
-```
-
-でOK。
-
-
-# Seed
-
-```sh
-# 基本
-rake db:seed_fu
-```
-
-
-# テスト / Rubocop
-
-```sh
-# テスト環境の DB 更新（初回とその後必要に応じて）
+# Update DB of test environment (first time and when needed)
 rake db:create db:structure:load RAILS_ENV=test
-# DBを再更新する場合、その前にテスト環境DBをdropする必要がある（structure.sqlにはforce optionがないため）
+# If DB is to be updated again, the test environment DB must be dropped before doing so (since structure.sql does not have a force option).
 rake db:drop RAILS_ENV=test
-# テスト実行
+# run test
 rspec
-# 特定のテストだけを実行する場合
+# Example of running only specific tests
 rspec spec/path/to/sepc.rb
-# 行を指定することもできる
+# Can be executed by specifying a line number
 rspec spec/path/to/sepc.rb:33
 
-# Rubocop
+# Lint
 rubocop
+# Auto-correcting
+rubocop -A
 ```
+
+Run rubocop and rspec before committing.
+
+# Typing with sorbet
+## Generating RBIs
+After **installing or updating gems**, you need to run this:
+- `tapioca gem`
+- `tapioca dsl` (You probably only need to run this if you’ve updated Tapioca)
+After running **database migrations**
+- `tapioca dsl`
+After updating the **routes file**
+- `tapioca dsl`
+
+# Rules
+Basically, follow the rules of rubocop. You should follow the rules below also which cannot be restricted by rubocop.
+
+## Naming Convention
+https://twogate.notion.site/9b6a922dc60f41819bf845e9dcf2493b
+
+## Ordering model associations
+Associations order should be:
+
+- `belongs_to`
+- `has_one` / `has_many`
+- `has_one through` / `has_many through`
+
+Arrange by column name in alphabetical order. (However, columns with strong relationships may be ignored in exceptional cases.)
+
+## Ordering table schema
+To create a table for the scope of a tenant, the first column should be `tenant_id`. The last column should be timestamps.
+
+## Do/Don'ts
+- Don't install unnecessary Gems.

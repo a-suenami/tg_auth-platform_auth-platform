@@ -1,8 +1,8 @@
 # ==============================================================================
 # env
 # ==============================================================================
+# Usage: `source env.sh`
 project_name='triple'
-alias docker compose="docker compose -p $project_name"
 alias docker-compose="docker compose -p $project_name"
 alias build="docker-compose build"
 alias up="docker-compose up"
@@ -42,3 +42,9 @@ fi
 
 export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
+
+# if executed directly, the command is executed according to its arguments.
+# Usage: `bash env.sh bundle install`
+case "$1" in
+  "bundle" ) docker compose -p $project_name run -e RAILS_ENV=development --rm app bundle ${@:2} ;;
+esac
