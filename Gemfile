@@ -181,6 +181,7 @@ group :development, :test do
   # gem 'knapsack_pro', '~> 3.7.0'
 
   gem 'sorbet'
+  gem 'rubocop-sorbet', require: false
   gem 'tapioca', require: false
   gem 'spoom', require: false
 end

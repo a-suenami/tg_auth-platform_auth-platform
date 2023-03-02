@@ -287,6 +287,8 @@ GEM
     rubocop-rspec (2.18.1)
       rubocop (~> 1.33)
       rubocop-capybara (~> 2.17)
+    rubocop-sorbet (0.7.0)
+      rubocop (>= 0.90.0)
     ruby-graphviz (1.2.5)
       rexml
     ruby-lsp (0.4.1)
@@ -402,6 +404,7 @@ DEPENDENCIES
   rubocop (~> 1.46.0)
   rubocop-rails (~> 2.18)
   rubocop-rspec (~> 2.18.1)
+  rubocop-sorbet
   ruby-lsp (~> 0.4.1)
   simplecov (~> 0.22.0)
   solargraph (~> 0.48.0)

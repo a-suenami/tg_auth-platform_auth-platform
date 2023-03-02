@@ -1,3 +1,5 @@
+# typed: true
+
 Redis.new(url: Settings.redis.url, db: 0).ping if defined? Rails::Server
 
 class Redis

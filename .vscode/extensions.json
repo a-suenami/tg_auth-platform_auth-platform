@@ -1,3 +1,7 @@
 {
-  "recommendations": ["shopify.ruby-extensions-pack", "sianglim.slim", "EditorConfig.EditorConfig"]
+  "recommendations": [
+    "shopify.ruby-extensions-pack",
+    "sianglim.slim",
+    "EditorConfig.EditorConfig"
+  ]
 }

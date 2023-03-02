@@ -1,3 +1,5 @@
+# typed: false
+
 require 'spec_helper'
 
 describe Multitenancy do

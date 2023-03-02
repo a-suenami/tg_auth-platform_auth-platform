@@ -4,6 +4,7 @@
 require:
   - rubocop-rails
   - rubocop-rspec
+  - rubocop-sorbet
 
 # ------------------------------------------------------------------------------
 # AllCops
