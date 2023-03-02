@@ -179,6 +179,10 @@ group :development, :test do
   # gem 'amazing_print', '~> 1.4.0'
   # # Optimization of test case partitioning
   # gem 'knapsack_pro', '~> 3.7.0'
+
+  gem 'sorbet'
+  gem 'tapioca', require: false
+  gem "spoom", require: false
 end
 
 # ------------------------------------------------------------------------------
@@ -198,8 +202,4 @@ group :development do
   gem 'rails-erd', '~> 1.7.2'
   # Ruby Language Server by Shopify
   gem 'ruby-lsp', '~> 0.4.1'
-
-  gem 'sorbet'
-  gem 'tapioca', require: false
-  gem "spoom", require: false
 end
