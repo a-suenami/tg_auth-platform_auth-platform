@@ -91,3 +91,21 @@ rspec:
   except:
     - /^deploy-.*$/
     - schedules
+
+sorbet:
+  image: ${RUBY_IMAGE}
+  stage: test
+  cache:
+    <<: *cache
+    key: ${RUBY_VERSION}
+    policy: pull
+  variables:
+    RAILS_ENV: test
+    ALLOW_ORIGINS: '[]'
+  before_script:
+    - /bin/sh docker/scripts/bundle_install.sh
+  script:
+    - bundle exec srb tc
+  except:
+    - /^deploy-.*$/
+    - schedules
