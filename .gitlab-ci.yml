@@ -1,6 +1,7 @@
 variables:
   RUBY_VERSION: 'ruby-3.2.1-slim'
   RUBY_IMAGE: containers.l.twogate.net/docker/ruby-slim-for-rails:ruby3.2.1
+  POSTGRES_VERSION: 'postgres:15-alpine'
 
 cache: &cache
   paths:
@@ -69,7 +70,7 @@ rspec:
     # KNAPSACK_PRO_FIXED_QUEUE_SPLIT: 'true'
     # KNAPSACK_PRO_RSPEC_SPLIT_BY_TEST_EXAMPLES: 'true'
   services:
-    - postgres:15-alpine
+    - ${POSTGRES_VERSION}
     - redis:7.0-alpine
     # - name: containers.l.twogate.net/docker/cassandra:3.11
     #   alias: cassandra
@@ -84,6 +85,11 @@ rspec:
   after_script:
     - cat log/bullet.log
   script:
+    # ==== type checking (wrote at rspec section because srb wants database connection) ====
+    - bundle exec tapioca gems --verify
+    - bundle exec tapioca dsl --verify
+    - bundle exec srb tc
+    # ==== rspec ====
     - bundle exec rspec
     # - export KNAPSACK_PRO_CI_NODE_TOTAL=$CI_NODE_TOTAL
     # - export KNAPSACK_PRO_CI_NODE_INDEX=$(expr $CI_NODE_INDEX - 1)
@@ -92,21 +98,28 @@ rspec:
     - /^deploy-.*$/
     - schedules
 
-sorbet:
-  image: ${RUBY_IMAGE}
-  stage: test
-  cache:
-    <<: *cache
-    key: ${RUBY_VERSION}
-    policy: pull
-  variables:
-    RAILS_ENV: test
-    ALLOW_ORIGINS: '[]'
-  before_script:
-    - /bin/sh docker/scripts/bundle_install.sh
-  script:
-    - bundle exec tapioca dsl --verify
-    - bundle exec srb tc
-  except:
-    - /^deploy-.*$/
-    - schedules
+# sorbet:
+#   image: ${RUBY_IMAGE}
+#   stage: test
+#   cache:
+#     <<: *cache
+#     key: ${RUBY_VERSION}
+#     policy: pull
+#   variables:
+#     #SRB_SKIP_GEM_RBIS: 'true'
+#     RAILS_ENV: test
+#     POSTGRES_TEST_HOST: postgres
+#     POSTGRES_USER: postgres
+#     POSTGRES_PASSWORD: postgres
+#   services:
+#     - ${POSTGRES_VERSION}
+#   before_script:
+#     - /bin/sh docker/scripts/bundle_install.sh
+#     - bundle exec rake db:setup
+#   script:
+#     - bundle exec tapioca gems --verify -e test
+#     - bundle exec tapioca dsl --verify -e test
+#     - bundle exec srb tc
+#   except:
+#     - /^deploy-.*$/
+#     - schedules
