@@ -30,7 +30,7 @@ services:
       SPRING_SOCKET: 'tmp/pids/spring.sock'
       SPRING_SERVER_COMMAND: 'docker-compose up spring'
       RUBYOPT: '-W:no-deprecated -W:no-experimental'
-      # VITE_RUBY_HOST: vite-dev-server
+      VITE_RUBY_HOST: vite-dev-server
     volumes:
       - .:/rails_app
       - bundle-data:/usr/local/bundle
@@ -60,17 +60,17 @@ services:
     pid: host
 
 
-  # # ----------------------------------------------------------------------------
-  # vite-dev-server:
-  # # ----------------------------------------------------------------------------
-  #   <<: *triple-app-base
-  #   command: ./bin/vite dev
-  #   environment:
-  #     VITE_RUBY_HOST: '0.0.0.0'
-  #     VITE_SERVER_HMR_HOST:
-  #     VITE_SERVER_HMR_PORT:
-  #   ports:
-  #     - '3036:3036'
+  # ----------------------------------------------------------------------------
+  vite-dev-server:
+  # ----------------------------------------------------------------------------
+    <<: *triple-app-base
+    command: ./bin/vite dev
+    environment:
+      VITE_RUBY_HOST: '0.0.0.0'
+      VITE_SERVER_HMR_HOST:
+      VITE_SERVER_HMR_PORT:
+    ports:
+      - '3036:3036'
 
 
   # ----------------------------------------------------------------------------

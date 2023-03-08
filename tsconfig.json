@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@app/*": ["app/frontend/*"]
+    },
+    "lib": ["es2018", "dom", "dom.iterable"],
+    "strict": true
+  },
+}

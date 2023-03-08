@@ -29,6 +29,14 @@ AllCops:
     - scripts/**/*
     - node_modules/**/*
 
+# Sorbet
+# it's too hard to write type annotation for helpers/controllers
+Sorbet/FalseSigil:
+  Exclude:
+    - 'app/controllers/**/*'
+    - 'app/helpers/**/*'
+    - 'config/**/*'
+    - 'db/**/*'
 
 # ------------------------------------------------------------------------------
 # Rails

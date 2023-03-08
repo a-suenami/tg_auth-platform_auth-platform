@@ -55,20 +55,24 @@ gem 'request_store-sidekiq', '~> 0.1.0'
 # ------------------------------------------------------------------------------
 # Front
 # ------------------------------------------------------------------------------
-# # Use slim as template language
-# gem 'slim-rails', '~> 3.6.1'
+# Use slim as template language
+gem 'slim-rails', '~> 3.6.1'
 # # JSON API serializer
 # gem 'jb', '~> 0.8.0'
 # gem 'jsonapi-serializer', git: 'https://github.com/twogate/fast_jsonapi', ref: '62c1cc8'
-# # Pagination
-# gem 'api-pagination', '~> 5.0.0'
-# gem 'pagy', '~> 6.0.1'
+# Pagination
+gem 'api-pagination', '~> 5.0.0'
+gem 'pagy', '~> 6.0.1'
 # # link_to helper
 # gem 'active_link_to', '~> 1.0.0'
 # # Nested form helper
 # gem 'cocoon', '~> 1.2', '>= 1.2.15'
-# # User Vite as frontend tool
-# # gem 'vite_rails', '~> 3.0.10'
+# Use Vite as frontend tool
+gem 'vite_rails', '~> 4.0.0.alpha1'
+# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem 'turbo-rails', '~> 1.1.0'
+# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem 'stimulus-rails', '~> 1.0.0'
 
 # ------------------------------------------------------------------------------
 # Utilities
@@ -180,6 +184,7 @@ group :development, :test do
   # # Optimization of test case partitioning
   # gem 'knapsack_pro', '~> 3.7.0'
 
+  # typing
   gem 'sorbet'
   gem 'rubocop-sorbet', require: false
   gem 'tapioca', require: false

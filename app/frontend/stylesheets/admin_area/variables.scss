@@ -1,0 +1,8 @@
+@function font-color($key) {
+  @return map-get($font-colors, $key);
+}
+
+$font-colors: (
+  black: #333,
+);
+

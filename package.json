@@ -1,0 +1,15 @@
+{
+  "devDependencies": {
+    "sass": "^1.58.3",
+    "typescript": "^5.0.1-rc",
+    "vite": "^2.7.7",
+    "vite-plugin-ruby": "^3.0.5"
+  },
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.1",
+    "@hotwired/turbo": "^7.3.0",
+    "pug": "^3.0.2",
+    "pug-plain-loader": "^1.1.0",
+    "uikit": "^3.16.3"
+  }
+}

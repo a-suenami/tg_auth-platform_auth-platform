@@ -36,5 +36,26 @@ module RailsApp
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # --------------------------------------------------------------------------
+    # Timezone
+    # --------------------------------------------------------------------------
+    config.time_zone = 'Asia/Tokyo'
+    config.active_record.time_zone_aware_types = %i[datetime time]
+
+    # --------------------------------------------------------------------------
+    # Routing
+    # --------------------------------------------------------------------------
+    config.paths['config/routes.rb'].concat Dir[Rails.root.join('config/routes/**/*.rb')]
+
+    # --------------------------------------------------------------------------
+    # Loading files
+    # --------------------------------------------------------------------------
+    config.paths.add 'lib', eager_load: true
+
+    # --------------------------------------------------------------------------
+    # ActionController
+    # --------------------------------------------------------------------------
+    config.action_controller.include_all_helpers = false
   end
 end

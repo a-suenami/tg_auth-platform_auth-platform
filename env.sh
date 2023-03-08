@@ -26,6 +26,10 @@ bundle() {
   docker-compose run -e RAILS_ENV=${RAILS_ENV:=development} --rm app bundle $*
 }
 
+npm() {
+  echo "Don't use npm for this project. Use yarn instead."
+}
+
 # json formatting and copy
 function jpy {
   echo $1 | jq | pbcopy

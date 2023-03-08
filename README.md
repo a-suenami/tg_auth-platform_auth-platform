@@ -92,13 +92,15 @@ Run rubocop and rspec before committing.
 # Typing with sorbet
 ## Generating RBIs
 After **installing or updating gems**, you need to run this:
-- `tapioca gem`
-- `tapioca dsl` (You probably only need to run this if you’ve updated Tapioca)
+- `bundle exec tapioca gem`
+- `bundle exec tapioca dsl` (You probably only need to run this if you’ve updated Tapioca)
 After running **database migrations**
-- `tapioca dsl`
+- `bundle exec tapioca dsl`
 After updating the **routes file**
-- `tapioca dsl`
+- `bundle exec tapioca dsl`
 
+
+## Check Gems & DSLs are typed
 To ensure all RBI files for DSLs are up-to-date with the latest changes in your application or database, run these commands before commit.
 
 ```
@@ -107,6 +109,9 @@ bundle exec tapioca dsl --verify
 ```
 
 These commands checks that RBIs are kept updated or not, and if not, the command shows you to how to update.
+
+## How to type
+- https://sorbet.org/docs/sigs
 
 # Rules
 Basically, follow the rules of rubocop. You should follow the rules below also which cannot be restricted by rubocop.

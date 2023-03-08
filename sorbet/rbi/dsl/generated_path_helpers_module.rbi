@@ -9,6 +9,12 @@ module GeneratedPathHelpersModule
   include ::ActionDispatch::Routing::PolymorphicRoutes
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_root_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def health_check_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def rails_info_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -16,4 +22,13 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def rails_info_routes_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def turbo_recede_historical_location_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def turbo_refresh_historical_location_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def turbo_resume_historical_location_path(*args); end
 end

@@ -12,6 +12,12 @@ class ApplicationController
   def helpers; end
 
   module HelperMethods
+    include ::Turbo::DriveHelper
+    include ::Turbo::FramesHelper
+    include ::Turbo::IncludesHelper
+    include ::Turbo::StreamsHelper
+    include ::Turbo::Streams::ActionHelper
+    include ::ViteRails::TagHelpers
     include ::ActionController::Base::HelperMethods
     include ::ApplicationHelper
   end
