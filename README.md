@@ -90,6 +90,17 @@ rubocop -A
 Run rubocop and rspec before committing.
 
 # Typing with sorbet
+Ruby files should be type-annotated. But you don't need annotate under these directories:
+
+- 'app/controllers'
+- 'app/helpers'
+- 'config'
+- 'db'
+
+You should always type model scripts, service scripts and scripts under lib directory.
+
+Typing of concern/helper scripts (which are included from another script) may be little bit hard, so you can `typed: false` for these scripts.
+
 ## Generating RBIs
 After **installing or updating gems**, you need to run this:
 - `bundle exec tapioca gem`
@@ -98,7 +109,6 @@ After running **database migrations**
 - `bundle exec tapioca dsl`
 After updating the **routes file**
 - `bundle exec tapioca dsl`
-
 
 ## Check Gems & DSLs are typed
 To ensure all RBI files for DSLs are up-to-date with the latest changes in your application or database, run these commands before commit.
