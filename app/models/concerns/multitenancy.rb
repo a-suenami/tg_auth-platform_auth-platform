@@ -5,6 +5,7 @@ module Multitenancy
 
   module ClassMethods
     extend T::Sig
+
     sig { returns(T.nilable(ActiveRecord::Relation)) }
     def default_scope
       T.bind(self, ActiveRecord::Querying)

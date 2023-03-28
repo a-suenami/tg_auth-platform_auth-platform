@@ -86,8 +86,8 @@ gem 'config', '~> 4.1.0'
 # gem 'sentry-rails', '~> 5.8.0'
 # gem 'sentry-ruby', '~> 5.8.0'
 # gem 'sentry-sidekiq', '~> 5.8.0'
-# # Make managing seeds better
-# gem 'seed-fu', '~> 2.3.0'
+# Make managing seeds better
+gem 'seed-fu', '~> 2.3.0'
 # # Easily generater of fake data
 # gem 'ffaker', '~> 2.21.0'
 # # Json Web Token

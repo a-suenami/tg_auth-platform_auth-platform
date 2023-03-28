@@ -301,6 +301,9 @@ GEM
       sorbet-runtime
       syntax_tree (>= 6, < 7)
     ruby-progressbar (1.11.0)
+    seed-fu (2.3.9)
+      activerecord (>= 3.1)
+      activesupport (>= 3.1)
     sidekiq (7.0.6)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
@@ -434,6 +437,7 @@ DEPENDENCIES
   rubocop-rspec (~> 2.18.1)
   rubocop-sorbet
   ruby-lsp (~> 0.4.1)
+  seed-fu (~> 2.3.0)
   simplecov (~> 0.22.0)
   slim-rails (~> 3.6.1)
   solargraph (~> 0.48.0)

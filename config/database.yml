@@ -13,15 +13,15 @@ default: &default
 development:
   <<: *default
   host: <%= ENV['POSTGRES_HOST'] %>
-  database: triple_development
+  database: auth-platform_development
 
 test:
   <<: *default
   host: <%= ENV['POSTGRES_TEST_HOST'] %>
-  database: triple_test<%= ENV['TEST_ENV_NUMBER'] %>
+  database: auth-platform_test<%= ENV['TEST_ENV_NUMBER'] %>
   pool: 50
 
 production:
   <<: *default
   host: <%= ENV['POSTGRES_HOST'] %>
-  database: triple_production
+  database: auth-platform_production

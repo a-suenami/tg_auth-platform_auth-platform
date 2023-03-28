@@ -4,7 +4,7 @@
 version: '3.9'
 services:
   # ----------------------------------------------------------------------------
-  app: &triple-app-base
+  app: &auth-platform-app-base
   # ----------------------------------------------------------------------------
     build:
       context: .
@@ -41,7 +41,7 @@ services:
   # # ----------------------------------------------------------------------------
   # worker:
   # # ----------------------------------------------------------------------------
-  #   <<: *triple-app-base
+  #   <<: *auth-platform-app-base
   #   build:
   #     context: .
   #     dockerfile: docker/local.Dockerfile
@@ -54,7 +54,7 @@ services:
   # ----------------------------------------------------------------------------
   spring:
   # ----------------------------------------------------------------------------
-    <<: *triple-app-base
+    <<: *auth-platform-app-base
     ports: []
     command: bundle exec bin/spring server
     pid: host
@@ -63,7 +63,7 @@ services:
   # ----------------------------------------------------------------------------
   vite-dev-server:
   # ----------------------------------------------------------------------------
-    <<: *triple-app-base
+    <<: *auth-platform-app-base
     command: ./bin/vite dev
     environment:
       VITE_RUBY_HOST: '0.0.0.0'

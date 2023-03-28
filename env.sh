@@ -2,7 +2,7 @@
 # env
 # ==============================================================================
 # Usage: `source env.sh`
-project_name='triple'
+project_name='auth-platform'
 alias docker-compose="docker compose -p $project_name"
 alias build="docker-compose build"
 alias up="docker-compose up"

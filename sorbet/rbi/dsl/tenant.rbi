@@ -5,7 +5,6 @@
 # Please instead update this file by running `bin/tapioca dsl Tenant`.
 
 class Tenant
-  include GeneratedAssociationMethods
   include GeneratedAttributeMethods
   extend CommonRelationMethods
   extend GeneratedRelationMethods
@@ -216,22 +215,6 @@ class Tenant
 
     sig { returns(::Tenant) }
     def third_to_last!; end
-  end
-
-  module GeneratedAssociationMethods
-    sig { returns(T::Array[T.untyped]) }
-    def booth_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def booth_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `Tenant` class because it declared `has_many :booths`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Booth::PrivateCollectionProxy) }
-    def booths; end
-
-    sig { params(value: T::Enumerable[::Booth]).void }
-    def booths=(value); end
   end
 
   module GeneratedAssociationRelationMethods

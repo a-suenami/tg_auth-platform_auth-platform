@@ -18,12 +18,16 @@ yarn install
 
 API tokens and passwords are encrypted before git commit and should be decrypted during development. Decrypted files should not be committed.
 
+To decrypt these secrets:
+
 ```
 bundle exec thor credentials:decrypt
 ```
 
+(Decrypted files are gitignored)
+
 Then you can prepare a database.
-```
+```sh
 rake db:create ridgepole:apply db:seed db:seed_fu
 ```
 
@@ -36,7 +40,7 @@ And disable any other Ruby VSCode extensions, Solargraph, etc.
 
 To perform a type check, execute one of the following commands:
 
-```
+```sh
 bundle exec srb tc
 
 # you can use auto-correct
@@ -77,9 +81,9 @@ rake db:drop RAILS_ENV=test
 # run test
 rspec
 # Example of running only specific tests
-rspec spec/path/to/sepc.rb
+rspec spec/path/to/spec.rb
 # Can be executed by specifying a line number
-rspec spec/path/to/sepc.rb:33
+rspec spec/path/to/spec.rb:33
 
 # Lint
 rubocop
