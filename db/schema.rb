@@ -49,7 +49,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   end
 
   create_table "oauth_access_grants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.citext "tenant_id", null: false
     t.uuid "resource_owner_id", null: false
     t.uuid "application_id", null: false
     t.string "token", null: false
@@ -62,12 +61,10 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "code_challenge_method"
     t.index ["application_id"], name: "index_oauth_access_grants_on_application_id"
     t.index ["resource_owner_id"], name: "index_oauth_access_grants_on_resource_owner_id"
-    t.index ["tenant_id"], name: "index_oauth_access_grants_on_tenant_id"
     t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
   end
 
   create_table "oauth_access_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.citext "tenant_id", null: false
     t.uuid "resource_owner_id", null: false
     t.uuid "application_id", null: false
     t.string "token", null: false
@@ -80,7 +77,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
     t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
     t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
-    t.index ["tenant_id"], name: "index_oauth_access_tokens_on_tenant_id"
     t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
   end
 
@@ -132,7 +128,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.citext "tenant_id", null: false
     t.string "uid", null: false
     t.string "email"
-    t.string "encrypted_password"
+    t.string "password_digest"
     t.string "tel"
     t.boolean "tel_verified", default: false
     t.string "email_confirm_code"

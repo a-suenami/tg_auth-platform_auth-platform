@@ -42,7 +42,7 @@ gem 'request_store-sidekiq', '~> 0.1.0'
 # # AuthorizationP
 # gem 'pundit', '~> 2.3.0'
 # # Secure hash algorithm
-# gem 'bcrypt', '~> 3.1.0'
+gem 'bcrypt', '~> 3.1.0'
 # # Preload using if condition
 # gem 'activerecord-belongs_to_if', '~> 0.1.0'
 # # A rich library for bulk inserting data using ActiveRecord

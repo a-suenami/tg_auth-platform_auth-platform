@@ -7,7 +7,15 @@ Doorkeeper.configure do
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
-    raise "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
+    resource_owner = User.find_by(id: session[:current_user_id])
+
+    if resource_owner.nil?
+      redirect_to(new_user_area_session_path)
+    else
+      resource_owner
+    end
+
+    # raise "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
     # Put your resource owner authentication logic here.
     # Example implementation:
     #   User.find_by(id: session[:user_id]) || redirect_to(new_user_session_url)
@@ -18,16 +26,19 @@ Doorkeeper.configure do
   # adding oauth authorized applications. In other case it will return 403 Forbidden response
   # every time somebody will try to access the admin web interface.
   #
-  # admin_authenticator do
-  #   # Put your admin authentication logic here.
-  #   # Example implementation:
-  #
-  #   if current_user
-  #     head :forbidden unless current_user.admin?
-  #   else
-  #     redirect_to sign_in_url
-  #   end
-  # end
+  admin_authenticator do
+    # Put your admin authentication logic here.
+    # Example implementation:
+
+    # disable only for development
+    unless Rails.env.development?
+      if current_user
+        head :forbidden unless current_user.admin?
+      else
+        redirect_to sign_in_url
+      end
+    end
+  end
 
   # You can use your own model classes if you need to extend (or even override) default
   # Doorkeeper models such as `Application`, `AccessToken` and `AccessGrant.
@@ -230,8 +241,8 @@ Doorkeeper.configure do
   # For more information go to
   # https://doorkeeper.gitbook.io/guides/ruby-on-rails/scopes
   #
-  # default_scopes  :public
-  # optional_scopes :write, :update
+  default_scopes  :public
+  optional_scopes :uid, :email
 
   # Allows to restrict only certain scopes for grant_type.
   # By default, all the scopes will be available for all the grant types.

@@ -87,7 +87,6 @@ CREATE TABLE public.delivary_address (
 
 CREATE TABLE public.oauth_access_grants (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
     resource_owner_id uuid NOT NULL,
     application_id uuid NOT NULL,
     token character varying NOT NULL,
@@ -107,7 +106,6 @@ CREATE TABLE public.oauth_access_grants (
 
 CREATE TABLE public.oauth_access_tokens (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
     resource_owner_id uuid NOT NULL,
     application_id uuid NOT NULL,
     token character varying NOT NULL,
@@ -191,7 +189,7 @@ CREATE TABLE public.users (
     tenant_id public.citext NOT NULL,
     uid character varying NOT NULL,
     email character varying,
-    encrypted_password character varying,
+    password_digest character varying,
     tel character varying,
     tel_verified boolean DEFAULT false,
     email_confirm_code character varying,
@@ -317,13 +315,6 @@ CREATE INDEX index_oauth_access_grants_on_resource_owner_id ON public.oauth_acce
 
 
 --
--- Name: index_oauth_access_grants_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_oauth_access_grants_on_tenant_id ON public.oauth_access_grants USING btree (tenant_id);
-
-
---
 -- Name: index_oauth_access_grants_on_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -349,13 +340,6 @@ CREATE UNIQUE INDEX index_oauth_access_tokens_on_refresh_token ON public.oauth_a
 --
 
 CREATE INDEX index_oauth_access_tokens_on_resource_owner_id ON public.oauth_access_tokens USING btree (resource_owner_id);
-
-
---
--- Name: index_oauth_access_tokens_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_oauth_access_tokens_on_tenant_id ON public.oauth_access_tokens USING btree (tenant_id);
 
 
 --
