@@ -12,7 +12,58 @@ module GeneratedUrlHelpersModule
   def admin_area_root_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_oauth_application_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def health_check_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def native_oauth_authorization_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_oauth_application_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_user_area_session_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_application_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_applications_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_authorization_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_authorized_application_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_authorized_applications_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_discovery_keys_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_discovery_provider_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_discovery_webfinger_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_introspect_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_revoke_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_token_info_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_token_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_userinfo_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def rails_info_properties_url(*args); end
@@ -31,4 +82,10 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def turbo_resume_historical_location_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def user_area_session_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def user_area_sessions_url(*args); end
 end

@@ -12,8 +12,10 @@ module UserArea
         session[:current_user_id] = user.id
         redirect_to oauth_authorization_path
       else
+        # rubocop:disable Rails/I18nLocaleTexts
         flash[:error] = 'Invalid email or password'
         render 'user_area/sample/sessions/new'
+        # rubocop:enable Rails/I18nLocaleTexts
       end
     end
   end

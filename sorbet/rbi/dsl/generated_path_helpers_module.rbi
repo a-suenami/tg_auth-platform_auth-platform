@@ -12,7 +12,58 @@ module GeneratedPathHelpersModule
   def admin_area_root_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_oauth_application_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def health_check_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def native_oauth_authorization_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_oauth_application_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_user_area_session_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_application_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_applications_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_authorization_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_authorized_application_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_authorized_applications_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_discovery_keys_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_discovery_provider_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_discovery_webfinger_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_introspect_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_revoke_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_token_info_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_token_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_userinfo_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def rails_info_path(*args); end
@@ -31,4 +82,10 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def turbo_resume_historical_location_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def user_area_session_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def user_area_sessions_path(*args); end
 end

@@ -2,7 +2,7 @@
 
 module UserArea
   class ApplicationController < ActionController::Base
-    include Pagy::Backen
+    include Pagy::Backend
 
     before_action :set_tenant
 

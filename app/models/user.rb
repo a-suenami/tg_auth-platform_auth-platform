@@ -2,17 +2,21 @@
 
 class User < ApplicationRecord
   extend T::Sig
+  include Multitenancy
   has_secure_password
 
   has_many :access_grants,
     class_name: 'Doorkeeper::AccessGrant',
     foreign_key: :resource_owner_id,
-    dependent: :delete_all # or :destroy if you need callbacks
+    dependent: :delete_all, # or :destroy if you need callbacks
+    inverse_of: :resource_owner
+
 
   has_many :access_tokens,
     class_name: 'Doorkeeper::AccessToken',
     foreign_key: :resource_owner_id,
-    dependent: :delete_all # or :destroy if you need callbacks
+    dependent: :delete_all, # or :destroy if you need callbacks
+    inverse_of: :resource_owner
 
   sig { params(password: String).returns(T::Boolean) }
   def authenticate!(password)
