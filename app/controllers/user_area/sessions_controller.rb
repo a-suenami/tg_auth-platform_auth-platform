@@ -1,8 +1,7 @@
-
 module UserArea
   class SessionsController < ApplicationController
     def new
-      render "user_area/sample/sessions/new"
+      render 'user_area/sample/sessions/new'
     end
 
     def create
@@ -13,8 +12,8 @@ module UserArea
         session[:current_user_id] = user.id
         redirect_to oauth_authorization_path
       else
-        flash[:error] = "Invalid email or password"
-        render "user_area/sample/sessions/new"
+        flash[:error] = 'Invalid email or password'
+        render 'user_area/sample/sessions/new'
       end
     end
   end

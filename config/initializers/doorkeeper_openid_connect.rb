@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Doorkeeper::OpenidConnect.configure do
-  issuer do |resource_owner, application|
+  issuer do |_resource_owner, _application|
     'issuer string'
   end
 
