@@ -1,5 +1,7 @@
-create_table :tenants, force: :cascade, id: :string do |t|
+create_table :tenants, force: :cascade, id: :citext do |t|
   t.string :name
+
+  t.string :domain
 
   t.timestamps null: false
 end
