@@ -1,0 +1,8 @@
+create_table :oauth_openid_requests, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :access_grant, type: :uuid, null: false, index: true
+
+  t.string :nonce, null: false
+end
+
+add_foreign_key :oauth_openid_requests, :oauth_access_grants, name: :fk_oauth_openid_requests_oauth_access_grants, column: "access_grant_id"

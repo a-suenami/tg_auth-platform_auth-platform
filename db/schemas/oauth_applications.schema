@@ -1,0 +1,12 @@
+create_table "oauth_applications", force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false
+  t.string :name, null: false
+  t.string :uid, null: false
+  t.string :secret, null: false
+  t.text :redirect_uri, null: false
+  t.string :scopes, default: "", null: false
+  t.boolean :confidential, default: true, null: false
+  t.datetime :created_at, null: false
+  t.datetime :updated_at, null: false
+  t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
+end

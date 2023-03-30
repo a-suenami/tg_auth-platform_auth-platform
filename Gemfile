@@ -51,6 +51,9 @@ gem 'request_store-sidekiq', '~> 0.1.0'
 # gem 'banken', '~> 1.0.0'
 # # Removes invalid UTF8 characters from the URL and other env vars
 # gem 'utf8-cleaner', '~> 1.0'
+# OAuth 2 provider
+gem 'doorkeeper', '~> 5.6.6'
+gem 'doorkeeper-openid_connect', '~> 1.8.4'
 
 # ------------------------------------------------------------------------------
 # Front

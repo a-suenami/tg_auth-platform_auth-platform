@@ -1,0 +1,17 @@
+create_table "oauth_access_grants", force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :resource_owner, type: :uuid, null: false
+  t.references :application, type: :uuid, null: false
+  t.string :token, null: false
+  t.integer :expires_in, null: false
+  t.text :redirect_uri, null: false
+  t.datetime :created_at, null: false
+  t.datetime :revoked_at
+  t.string :scopes
+  t.string :code_challenge
+  t.string :code_challenge_method
+  t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
+end
+
+add_foreign_key :oauth_access_grants, :oauth_applications, name: :fk_oauth_access_grants_oauth_applications, column: "application_id"
+add_foreign_key :oauth_access_grants, :users, column: :resource_owner_id
