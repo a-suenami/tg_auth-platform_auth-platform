@@ -10,7 +10,8 @@ module UserArea
       if user&.authenticate(params[:password])
         # create session
         session[:current_user_id] = user.id
-        redirect_to oauth_authorization_path
+        # TODO: session[:auth_url]がない場合、oauth_applicationsからredirect_uriにリダイレクトする
+        redirect_to session[:auth_url]
       else
         # rubocop:disable Rails/I18nLocaleTexts
         flash[:error] = 'Invalid email or password'

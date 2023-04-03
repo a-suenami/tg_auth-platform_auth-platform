@@ -7,6 +7,8 @@ Doorkeeper.configure do
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
+    session[:auth_url] = request.fullpath
+
     resource_owner = User.find_by(id: session[:current_user_id])
 
     if resource_owner.nil?
