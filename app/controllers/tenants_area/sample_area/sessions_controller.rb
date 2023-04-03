@@ -1,7 +1,7 @@
-module UserArea
+module TenantsArea::SampleArea
   class SessionsController < ApplicationController
     def new
-      render 'user_area/sample/sessions/new'
+      render :new
     end
 
     def create
@@ -15,7 +15,7 @@ module UserArea
       else
         # rubocop:disable Rails/I18nLocaleTexts
         flash[:error] = 'Invalid email or password'
-        render 'user_area/sample/sessions/new'
+        render :new
         # rubocop:enable Rails/I18nLocaleTexts
       end
     end

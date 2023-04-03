@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module UserArea
+module TenantsArea
   class ApplicationController < ActionController::Base
     include Pagy::Backend
 
