@@ -15,26 +15,33 @@ class Tenant < ApplicationRecord
       RequestStore.store[:current_tenant]&.to_s
     end
 
+    sig { returns(T.nilable(String)) }
+    def current_domain
+      RequestStore.store[:current_tenant_domain]&.to_s
+    end
+
     sig { returns(T.nilable(Tenant)) }
     def current
-      return if self.current_id.blank?
+      return if self.current_domain.blank?
 
       # cache がない場合
       if RequestStore.store[:current_tenant_object].blank?
-        RequestStore.store[:current_tenant_object] = self.find(self.current_id)
+        RequestStore.store[:current_tenant_object] = self.find_by!(domain: self.current_domain)
+        RequestStore.store[:current_tenant] = RequestStore.store[:current_tenant_object].id
       end
 
-      # cache と current_id が違う場合は取得し直す
-      if RequestStore.store[:current_tenant_object].id != self.current_id
-        RequestStore.store[:current_tenant_object] = self.find(self.current_id)
+      # cache と current_domain が違う場合は取得し直す
+      if RequestStore.store[:current_tenant_object].domain != self.current_domain
+        RequestStore.store[:current_tenant_object] = self.find_by!(domain: self.current_domain)
+        RequestStore.store[:current_tenant] = RequestStore.store[:current_tenant_object].id
       end
 
       RequestStore.store[:current_tenant_object]
     end
 
     sig { params(id: String).returns(String) }
-    def current_id=(id)
-      RequestStore.store[:current_tenant] = id
+    def current_domain=(id)
+      RequestStore.store[:current_tenant_domain] = id
     end
   end
 end

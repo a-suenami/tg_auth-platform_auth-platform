@@ -18,7 +18,13 @@ module GeneratedPathHelpersModule
   def native_sample_area_oauth_authorization_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def native_twogate_area_oauth_authorization_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def new_sample_area_session_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_twogate_area_session_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def rails_info_path(*args); end
@@ -76,4 +82,43 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def turbo_resume_historical_location_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_authorization_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_authorized_application_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_authorized_applications_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_discovery_keys_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_discovery_provider_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_discovery_webfinger_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_introspect_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_revoke_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_token_info_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_token_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_userinfo_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_session_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_sessions_path(*args); end
 end

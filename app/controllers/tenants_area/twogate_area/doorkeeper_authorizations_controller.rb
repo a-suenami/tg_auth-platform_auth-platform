@@ -1,4 +1,4 @@
-module TenantsArea::SampleArea
+module TenantsArea::TwogateArea
   class DoorkeeperAuthorizationsController < Doorkeeper::AuthorizationsController
     include MultitenantEnable
   end

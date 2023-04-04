@@ -7,15 +7,15 @@ Doorkeeper.configure do
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
-    # TODO: テナントの特定
+    RequestStore.store[:current_tenant_domain] = request.host || '-'
+    Tenant.current
 
     session[:auth_url] = request.fullpath
 
     resource_owner = User.find_by(id: session[:current_user_id])
 
     if resource_owner.nil?
-      # TODO: テナントごとリダイレクト先を変える
-      redirect_to(new_sample_area_session_path)
+      redirect_to view_context.send("new_#{Tenant.current.id}_area_session_path")
     else
       resource_owner
     end

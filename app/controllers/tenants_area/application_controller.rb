@@ -9,7 +9,7 @@ module TenantsArea
     private
 
     def set_tenant
-      RequestStore.store[:current_tenant] = request.subdomain.split('.').first&.to_sym || '-'
+      RequestStore.store[:current_tenant_domain] = request.host || '-'
       Tenant.current
     end
   end

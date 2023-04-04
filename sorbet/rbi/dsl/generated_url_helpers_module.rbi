@@ -18,7 +18,13 @@ module GeneratedUrlHelpersModule
   def native_sample_area_oauth_authorization_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def native_twogate_area_oauth_authorization_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def new_sample_area_session_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_twogate_area_session_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def rails_info_properties_url(*args); end
@@ -76,4 +82,43 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def turbo_resume_historical_location_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_authorization_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_authorized_application_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_authorized_applications_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_discovery_keys_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_discovery_provider_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_discovery_webfinger_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_introspect_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_revoke_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_token_info_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_token_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_oauth_userinfo_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_session_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def twogate_area_sessions_url(*args); end
 end
