@@ -45,9 +45,9 @@ Doorkeeper.configure do
   #
   # Be default Doorkeeper ActiveRecord ORM uses it's own classes:
   #
-  # access_token_class "Doorkeeper::AccessToken"
-  # access_grant_class "Doorkeeper::AccessGrant"
-  # application_class "Doorkeeper::Application"
+  access_token_class "OauthAccessToken"
+  access_grant_class "OauthAccessGrant"
+  application_class "OauthApplication"
   #
   # Don't forget to include Doorkeeper ORM mixins into your custom models:
   #
@@ -134,6 +134,8 @@ Doorkeeper.configure do
   # See https://doorkeeper.gitbook.io/guides/configuration/other-configurations#custom-controllers
   #
   base_controller 'TenantsArea::ApplicationController'
+  base_metal_controller 'TenantsArea::ApplicationMetalController'
+
 
   # Reuse access token for the same resource owner within an application (disabled by default).
   #

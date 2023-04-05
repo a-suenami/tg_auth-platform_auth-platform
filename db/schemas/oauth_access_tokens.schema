@@ -1,4 +1,5 @@
 create_table "oauth_access_tokens", force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false
   t.references :resource_owner, type: :uuid, null: false
   t.references :application, type: :uuid, null: false
   t.string :token, null: false
@@ -12,5 +13,6 @@ create_table "oauth_access_tokens", force: :cascade, id: :uuid, default: -> { 'g
   t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
 end
 
+add_foreign_key :oauth_access_tokens, :tenants, name: :fk_oauth_access_tokens_tenants
 add_foreign_key :oauth_access_tokens, :oauth_applications, name: :fk_oauth_access_tokens_oauth_applications, column: "application_id"
 add_foreign_key :oauth_access_tokens, :users, column: :resource_owner_id
