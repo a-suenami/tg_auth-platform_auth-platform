@@ -1,4 +1,4 @@
-module TenantsArea::TwogateArea
+module TenantsArea
   class SessionsController < ApplicationController
     def new
       render :new

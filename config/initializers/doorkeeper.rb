@@ -7,23 +7,18 @@ Doorkeeper.configure do
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
+    # 一応テナントを設定処理
     RequestStore.store[:current_tenant_domain] = request.host || '-'
-    Tenant.current
 
     session[:auth_url] = request.fullpath
 
     resource_owner = User.find_by(id: session[:current_user_id])
 
     if resource_owner.nil?
-      redirect_to view_context.send("new_#{Tenant.current.id}_area_session_path")
+      redirect_to new_session_path
     else
       resource_owner
     end
-
-    # raise "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
-    # Put your resource owner authentication logic here.
-    # Example implementation:
-    #   User.find_by(id: session[:user_id]) || redirect_to(new_user_session_url)
   end
 
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb
@@ -138,7 +133,7 @@ Doorkeeper.configure do
   # +ActionController::API+. The return value of this option must be a stringified class name.
   # See https://doorkeeper.gitbook.io/guides/configuration/other-configurations#custom-controllers
   #
-  # base_controller 'ApplicationController'
+  base_controller 'TenantsArea::ApplicationController'
 
   # Reuse access token for the same resource owner within an application (disabled by default).
   #
@@ -461,9 +456,9 @@ Doorkeeper.configure do
   # so that the user skips the authorization step.
   # For example if dealing with a trusted application.
   #
-  # skip_authorization do |resource_owner, client|
-  #   client.superapp? or resource_owner.admin?
-  # end
+  skip_authorization do
+    true
+  end
 
   # Configure custom constraints for the Token Introspection request.
   # By default this configuration option allows to introspect a token by another
