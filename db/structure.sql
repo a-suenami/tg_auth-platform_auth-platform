@@ -144,7 +144,6 @@ CREATE TABLE public.oauth_applications (
 
 CREATE TABLE public.oauth_openid_requests (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
     access_grant_id uuid NOT NULL,
     nonce character varying NOT NULL
 );
@@ -384,13 +383,6 @@ CREATE UNIQUE INDEX index_oauth_applications_on_uid ON public.oauth_applications
 --
 
 CREATE INDEX index_oauth_openid_requests_on_access_grant_id ON public.oauth_openid_requests USING btree (access_grant_id);
-
-
---
--- Name: index_oauth_openid_requests_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_oauth_openid_requests_on_tenant_id ON public.oauth_openid_requests USING btree (tenant_id);
 
 
 --

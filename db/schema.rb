@@ -99,11 +99,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   end
 
   create_table "oauth_openid_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.citext "tenant_id", null: false
     t.uuid "access_grant_id", null: false
     t.string "nonce", null: false
     t.index ["access_grant_id"], name: "index_oauth_openid_requests_on_access_grant_id"
-    t.index ["tenant_id"], name: "index_oauth_openid_requests_on_tenant_id"
   end
 
   create_table "tenants", id: :citext, force: :cascade do |t|
