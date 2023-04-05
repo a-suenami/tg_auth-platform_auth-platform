@@ -1,7 +1,8 @@
 module TenantsArea
   class SessionsController < ApplicationController
     def new
-      render :new
+      # render by tenant
+      render "tenants_area/#{Tenant.current.id}_area/sessions/new"
     end
 
     def create
@@ -10,12 +11,17 @@ module TenantsArea
       if user&.authenticate(params[:password])
         # create session
         session[:current_user_id] = user.id
-        # TODO: session[:auth_url]がない場合、oauth_applicationsからredirect_uriにリダイレクトする
-        redirect_to session[:auth_url]
+
+        if session[:auth_url].present?
+          redirect_to session[:auth_url]
+        else
+          # session[:auth_url]がない場合は認証フローエラーとして処理する
+          render "tenants_area/#{Tenant.current.id}_area/sessions/error"
+        end
       else
         # rubocop:disable Rails/I18nLocaleTexts
         flash[:error] = 'Invalid email or password'
-        render :new
+        render "tenants_area/#{Tenant.current.id}_area/sessions/new"
         # rubocop:enable Rails/I18nLocaleTexts
       end
     end
