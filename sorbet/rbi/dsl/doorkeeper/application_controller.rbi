@@ -5,9 +5,6 @@
 # Please instead update this file by running `bin/tapioca dsl Doorkeeper::ApplicationController`.
 
 class Doorkeeper::ApplicationController
-  include GeneratedUrlHelpersModule
-  include GeneratedPathHelpersModule
-
   sig { returns(HelperProxy) }
   def helpers; end
 

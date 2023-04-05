@@ -15,16 +15,43 @@ module GeneratedPathHelpersModule
   def health_check_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def native_sample_area_oauth_authorization_path(*args); end
+  def native_oauth_authorization_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def native_twogate_area_oauth_authorization_path(*args); end
+  def new_session_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def new_sample_area_session_path(*args); end
+  def oauth_authorization_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def new_twogate_area_session_path(*args); end
+  def oauth_authorized_application_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_authorized_applications_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_discovery_keys_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_discovery_provider_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_discovery_webfinger_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_introspect_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_revoke_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_token_info_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_token_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_userinfo_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def rails_info_path(*args); end
@@ -36,43 +63,10 @@ module GeneratedPathHelpersModule
   def rails_info_routes_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def sample_area_oauth_authorization_path(*args); end
+  def session_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def sample_area_oauth_authorized_application_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def sample_area_oauth_authorized_applications_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def sample_area_oauth_discovery_keys_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def sample_area_oauth_discovery_provider_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def sample_area_oauth_discovery_webfinger_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def sample_area_oauth_introspect_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def sample_area_oauth_revoke_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def sample_area_oauth_token_info_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def sample_area_oauth_token_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def sample_area_oauth_userinfo_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def sample_area_session_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def sample_area_sessions_path(*args); end
+  def sessions_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def turbo_recede_historical_location_path(*args); end
@@ -82,43 +76,4 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def turbo_resume_historical_location_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def twogate_area_oauth_authorization_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def twogate_area_oauth_authorized_application_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def twogate_area_oauth_authorized_applications_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def twogate_area_oauth_discovery_keys_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def twogate_area_oauth_discovery_provider_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def twogate_area_oauth_discovery_webfinger_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def twogate_area_oauth_introspect_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def twogate_area_oauth_revoke_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def twogate_area_oauth_token_info_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def twogate_area_oauth_token_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def twogate_area_oauth_userinfo_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def twogate_area_session_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def twogate_area_sessions_path(*args); end
 end
