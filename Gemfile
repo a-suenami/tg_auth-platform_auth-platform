@@ -61,7 +61,7 @@ gem 'doorkeeper-openid_connect', '~> 1.8.4'
 # Use slim as template language
 gem 'slim-rails', '~> 3.6.1'
 # # JSON API serializer
-# gem 'jb', '~> 0.8.0'
+gem 'jb', '~> 0.8.0'
 # gem 'jsonapi-serializer', git: 'https://github.com/twogate/fast_jsonapi', ref: '62c1cc8'
 # Pagination
 gem 'api-pagination', '~> 5.0.0'
