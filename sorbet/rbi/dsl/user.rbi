@@ -242,10 +242,10 @@ class User
 
     # This method is created by ActiveRecord on the `User` class because it declared `has_many :access_grants`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(ContactAddress::PrivateCollectionProxy) }
+    sig { returns(::OauthAccessGrant::PrivateCollectionProxy) }
     def access_grants; end
 
-    sig { params(value: T::Enumerable[::Doorkeeper::AccessGrant]).void }
+    sig { params(value: T::Enumerable[::OauthAccessGrant]).void }
     def access_grants=(value); end
 
     sig { returns(T::Array[T.untyped]) }
@@ -256,10 +256,10 @@ class User
 
     # This method is created by ActiveRecord on the `User` class because it declared `has_many :access_tokens`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(ContactAddress::PrivateCollectionProxy) }
+    sig { returns(::OauthAccessToken::PrivateCollectionProxy) }
     def access_tokens; end
 
-    sig { params(value: T::Enumerable[::Doorkeeper::AccessToken]).void }
+    sig { params(value: T::Enumerable[::OauthAccessToken]).void }
     def access_tokens=(value); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::ContactAddress) }

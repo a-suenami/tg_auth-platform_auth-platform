@@ -6,14 +6,13 @@ class User < ApplicationRecord
   has_secure_password
 
   has_many :access_grants,
-    class_name: 'Doorkeeper::AccessGrant',
+    class_name: 'OauthAccessGrant',
     foreign_key: :resource_owner_id,
     dependent: :delete_all, # or :destroy if you need callbacks
     inverse_of: :resource_owner
 
-
   has_many :access_tokens,
-    class_name: 'Doorkeeper::AccessToken',
+    class_name: 'OauthAccessToken',
     foreign_key: :resource_owner_id,
     dependent: :delete_all, # or :destroy if you need callbacks
     inverse_of: :resource_owner
