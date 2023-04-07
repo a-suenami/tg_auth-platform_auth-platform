@@ -49,23 +49,21 @@ CREATE TABLE public.contact_addresses (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
-    is_default boolean,
     zip_code character varying,
     prefecture_code integer,
     city character varying,
-    address1 character varying,
-    address2 character varying,
-    contact_tel character varying,
+    address_1 character varying,
+    address_2 character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
 
 
 --
--- Name: delivary_address; Type: TABLE; Schema: public; Owner: -
+-- Name: delivary_addresses; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.delivary_address (
+CREATE TABLE public.delivary_addresses (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
@@ -73,8 +71,8 @@ CREATE TABLE public.delivary_address (
     zip_code character varying,
     prefecture_code integer,
     city character varying,
-    address1 character varying,
-    address2 character varying,
+    address_1 character varying,
+    address_2 character varying,
     contact_tel character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -173,7 +171,7 @@ CREATE TABLE public.user_profiles (
     first_name character varying,
     last_name character varying,
     first_name_kana character varying,
-    last_name_kane character varying,
+    last_name_kana character varying,
     birth_date date,
     gender character varying,
     created_at timestamp(6) without time zone NOT NULL,
@@ -210,11 +208,11 @@ ALTER TABLE ONLY public.contact_addresses
 
 
 --
--- Name: delivary_address delivary_address_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: delivary_addresses delivary_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.delivary_address
-    ADD CONSTRAINT delivary_address_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.delivary_addresses
+    ADD CONSTRAINT delivary_addresses_pkey PRIMARY KEY (id);
 
 
 --
@@ -288,17 +286,17 @@ CREATE INDEX index_contact_addresses_on_user_id ON public.contact_addresses USIN
 
 
 --
--- Name: index_delivary_address_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_delivary_addresses_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_delivary_address_on_tenant_id ON public.delivary_address USING btree (tenant_id);
+CREATE INDEX index_delivary_addresses_on_tenant_id ON public.delivary_addresses USING btree (tenant_id);
 
 
 --
--- Name: index_delivary_address_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_delivary_addresses_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_delivary_address_on_user_id ON public.delivary_address USING btree (user_id);
+CREATE INDEX index_delivary_addresses_on_user_id ON public.delivary_addresses USING btree (user_id);
 
 
 --
@@ -423,19 +421,19 @@ ALTER TABLE ONLY public.contact_addresses
 
 
 --
--- Name: delivary_address fk_delivary_address_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: delivary_addresses fk_delivary_addresses_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.delivary_address
-    ADD CONSTRAINT fk_delivary_address_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+ALTER TABLE ONLY public.delivary_addresses
+    ADD CONSTRAINT fk_delivary_addresses_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
--- Name: delivary_address fk_delivary_address_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: delivary_addresses fk_delivary_addresses_users; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.delivary_address
-    ADD CONSTRAINT fk_delivary_address_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.delivary_addresses
+    ADD CONSTRAINT fk_delivary_addresses_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --

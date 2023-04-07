@@ -4,7 +4,7 @@ create_table :user_profiles, force: :cascade, id: :uuid, default: -> { 'gen_rand
   t.string  :first_name
   t.string  :last_name
   t.string  :first_name_kana
-  t.string :last_name_kane
+  t.string :last_name_kana
   t.date  :birth_date
   t.string :gender
 

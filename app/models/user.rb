@@ -18,6 +18,10 @@ class User < ApplicationRecord
     dependent: :delete_all, # or :destroy if you need callbacks
     inverse_of: :resource_owner
 
+  has_one :user_profile, dependent: :delete
+  has_one :contact_address, dependent: :delete
+  has_many :delivary_addresses, dependent: :delete_all
+
   sig { params(password: String).returns(T::Boolean) }
   def authenticate!(password)
     # authenticate password

@@ -125,7 +125,7 @@ gem 'yaml_vault', '~> 1.3.2'
 # # User-Agent parser
 # gem 'rack-user_agent', '~> 0.5.0'
 # # japanese prefecture
-# gem 'jp_prefecture', '~> 1.1.0'
+gem 'jp_prefecture', '~> 1.1.0'
 # # SendGrid client
 # gem 'sendgrid-ruby', '~> 6.6.0'
 # # check reserved subdomain
