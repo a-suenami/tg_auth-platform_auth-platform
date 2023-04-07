@@ -12,6 +12,9 @@ module GeneratedPathHelpersModule
   def admin_area_root_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def api_private_userinfo_index_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def health_check_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }

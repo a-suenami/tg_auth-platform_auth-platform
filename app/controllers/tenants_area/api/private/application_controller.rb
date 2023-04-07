@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module TenantsArea::API::Private
-  class ApplicationController < ApplicationController
+  class ApplicationController < TenantsArea::API::ApplicationController
     include DoorkeeperAuthable
   end
 end
