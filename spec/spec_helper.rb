@@ -107,9 +107,10 @@ RSpec.configure do |config|
   end
 
 
-  # config.include RSpec::RequestDescriber, type: :request
-  # config.include RequestHelpers, type: :request
-  # config.include FactoryBot::Syntax::Methods
+  config.include RSpec::RequestDescriber, type: :request
+  config.include RequestHelpers, type: :request
+  config.include FactoryBot::Syntax::Methods
+  config.include T::Private::Methods
   # config.include ActiveSupport::Testing::TimeHelpers
   # config.include DynamoDBHelpers
 end

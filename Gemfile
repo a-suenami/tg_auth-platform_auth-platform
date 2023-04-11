@@ -98,7 +98,7 @@ gem 'seed-fu', '~> 2.3.0'
 # # Use rails-i18n as a set of common locale data
 # gem 'rails-i18n', '~> 7.0.0'
 # # Framework for factories
-# gem 'factory_bot_rails', '~> 6.2.0'
+gem 'factory_bot_rails', '~> 6.2.0'
 # # Enumerated attributes with I18n
 # gem 'enumerize', '~> 2.5.0'
 # # AWS client gems
@@ -162,7 +162,7 @@ group :development, :test do
   # # Simplify test code
   # gem 'shoulda-matchers', '~> 5.3.0'
   # # Simplify request test code
-  # gem 'rspec-request_describer', '~> 0.3.0'
+  gem 'rspec-request_describer', '~> 0.3.0'
   # # RSpect matchers
   # gem 'rspec-json_expectations', '~> 2.2.0'
   # # Run RSpec parallel

@@ -6,7 +6,6 @@ module TenantsArea::API::Private
 
     def index
       @doorkeeper_token = doorkeeper_token
-
       render :index
     end
   end
