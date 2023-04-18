@@ -42,6 +42,21 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: admins; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.admins (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    name character varying,
+    email character varying,
+    password_digest character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: contact_addresses; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -200,6 +215,14 @@ CREATE TABLE public.users (
 
 
 --
+-- Name: admins admins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admins
+    ADD CONSTRAINT admins_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: contact_addresses contact_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -269,6 +292,13 @@ ALTER TABLE ONLY public.user_profiles
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_admins_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_admins_on_tenant_id ON public.admins USING btree (tenant_id);
 
 
 --
@@ -402,6 +432,14 @@ CREATE INDEX index_user_profiles_on_user_id ON public.user_profiles USING btree 
 --
 
 CREATE INDEX index_users_on_tenant_id ON public.users USING btree (tenant_id);
+
+
+--
+-- Name: admins fk_admins_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admins
+    ADD CONSTRAINT fk_admins_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --

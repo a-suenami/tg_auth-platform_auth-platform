@@ -1,6 +1,7 @@
 ActiveRecord::Schema.enable_extension(:pgcrypto)
 ActiveRecord::Schema.enable_extension(:citext)
 
+require 'schemas/admins.schema'
 require 'schemas/contact_address.schema'
 require 'schemas/delivary_address.schema'
 require 'schemas/oauth_access_grants.schema'

@@ -16,6 +16,16 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
+  create_table "admins", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "name"
+    t.string "email"
+    t.string "password_digest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_admins_on_tenant_id"
+  end
+
   create_table "contact_addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
@@ -139,6 +149,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
   end
 
+  add_foreign_key "admins", "tenants", name: "fk_admins_tenants"
   add_foreign_key "contact_addresses", "tenants", name: "fk_contact_addresses_tenants"
   add_foreign_key "contact_addresses", "users", name: "fk_contact_addresses_users"
   add_foreign_key "delivary_addresses", "tenants", name: "fk_delivary_addresses_tenants"

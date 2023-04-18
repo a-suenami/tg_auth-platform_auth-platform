@@ -12,17 +12,27 @@ html lang='ja'
     = csrf_meta_tags
   body
     = render 'layouts/admin_area/flash'
-    div.uk-navbar-container.rl-navbar-container uk-sticky=''
+    nav.uk-navbar-container#main-navbar
       .uk-container.uk-container-expand
-        nav.uk-navbar
-          .uk-navbar-left
+        div.tg-application-header uk-navbar="mode: click"
+          / div.uk-navbar-left.tg-application-navbar(class="uk-visible@s")
+            / = link_to admin_area_root_path, class: 'uk-navbar-item uk-logo'
+              / = vite_image_tag 'images/admin_area/triple-logo.svg', width: '120px'
+
+          div.uk-navbar-left.tg-application-navbar.content-navbar(class="uk-visible@s")
+            ul.uk-navbar-nav.uk-hidden-small
+              = render 'layouts/admin_area/nav-content'
+
+          div.uk-navbar-right.tg-application-navbar.management-navbar
             ul.uk-navbar-nav
-              a.uk-navbar-item.uk-logo
-                / = Tenant.current.name
-                = "Tenant.current.name"
-          .uk-navbar-right
-            ul.uk-navbar-nav class='uk-visible@m'
-            a.uk-navbar-toggle.uk-icon.uk-navbar-toggle-icon aria-expanded='false' class='uk-hidden@m' href='#offcanvas' uk-navbar-toggle-icon='' uk-toggle='target: #offcanvas-sidebar'
+              li
+                a href="#" アカウント
+                div.uk-navbar-dropdown
+                  ul.uk-nav.uk-navbar-dropdown-nav
+                    li
+                      = link_to 'ログアウト', admin_area_logout_path
+
+
     .uk-container.uk-container-expand
       = yield
 

@@ -1,0 +1,40 @@
+/ = form_tag admin_area_users_path, method: :get do
+/   = text_field_tag :search, params[:search]
+/   = submit_tag "Search"
+
+- if @users.empty?
+  p.uk-text-lead
+    | No users found
+- else
+  table.uk-table.uk-table-striped
+    tr
+      th
+        | 会員番号
+      th
+        | メールアドレス
+      th
+        | 氏名
+      th
+        | 性別
+      th
+        | 年代
+      th
+        | 都道府県
+      th
+        | 操作
+    - @users.each do |user|
+      tr
+        td
+          = user.uid
+        td
+          = user.email
+        td
+          = user.user_profile.name
+        td
+          = user.user_profile.gender
+        td
+          = user.user_profile.age_range
+        th
+          = user.contact_address&.prefecture&.name
+        th
+          = link_to "詳細", admin_area_user_path(user), class: "uk-button uk-button-primary"

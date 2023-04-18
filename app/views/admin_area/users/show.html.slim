@@ -1,0 +1,33 @@
+/ show user profile
+
+table.uk-table
+  tr
+    th
+      | 会員番号
+    td
+      = @user.uid
+  tr
+    th
+      | メールアドレス
+    td
+      = @user.email
+  tr
+    th
+      | 氏名
+    td
+      = @user.user_profile.name
+  tr
+    th
+      | 性別
+    td
+      = @user.user_profile.gender
+  tr
+    th
+      | 年代
+    td
+      = @user.user_profile.age_range
+  tr
+    th
+      | 都道府県
+    td
+      = @user.contact_address&.prefecture&.name
