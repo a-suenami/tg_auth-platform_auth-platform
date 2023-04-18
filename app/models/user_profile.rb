@@ -16,8 +16,8 @@ class UserProfile < ApplicationRecord
   def age_range
     return 0 if birth_date.nil?
 
-    age = Date.today.year - birth_date.year
-    age -= 1 if Date.today < birth_date + age.years
+    age = Time.zone.today.year - T.must(birth_date).year
+    age -= 1 if Time.zone.today < T.must(birth_date) + age.years
     age
   end
 end
