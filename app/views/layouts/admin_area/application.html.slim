@@ -10,32 +10,25 @@ html lang='ja'
     = vite_client_tag
     = vite_typescript_tag 'entrypoints/admin_area/application'
     = csrf_meta_tags
-  body
-    = render 'layouts/admin_area/flash'
-    nav.uk-navbar-container#main-navbar
-      .uk-container.uk-container-expand
-        div.tg-application-header uk-navbar="mode: click"
-          / div.uk-navbar-left.tg-application-navbar(class="uk-visible@s")
-            / = link_to admin_area_root_path, class: 'uk-navbar-item uk-logo'
-              / = vite_image_tag 'images/admin_area/triple-logo.svg', width: '120px'
-
-          div.uk-navbar-left.tg-application-navbar.content-navbar(class="uk-visible@s")
-            ul.uk-navbar-nav.uk-hidden-small
-              = render 'layouts/admin_area/nav-content'
-
-          div.uk-navbar-right.tg-application-navbar.management-navbar
-            ul.uk-navbar-nav
-              li
-                a href="#" アカウント
-                div.uk-navbar-dropdown
-                  ul.uk-nav.uk-navbar-dropdown-nav
+  body.l-page
+    .l-page-sidebar
+        .uk-width-medium.uk-height-1-1.uk-section-secondary
+          .uk-container.uk-height-1-1
+            h3.uk-padding.uk-padding-remove-horizontal
+              = Tenant.current.name
+            .tg-sidebar-section
+              ul.uk-nav.uk-nav-default
+                ul.uk-parent
+                  a 会員ID管理
+                  ul.uk-nav-sub
                     li
-                      = link_to 'ログアウト', admin_area_logout_path
+                      a 会員ID一覧
+            .tg-sidebar-section.bottom
+              ul.uk-nav.uk-nav-default
+                li アカウント
+                li = @current_admin&.email
+                li = link_to 'ログアウト', admin_area_logout_path
 
-
-    .uk-container.uk-container-expand
+    .l-page-contents
+      = render 'layouts/admin_area/flash'
       = yield
-
-    #offcanvas-sidebar uk-offcanvas=""
-      .uk-offcanvas-bar
-        button.uk-offcanvas-close type='button' uk-close=''

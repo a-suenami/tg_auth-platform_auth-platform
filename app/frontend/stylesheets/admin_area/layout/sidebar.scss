@@ -1,0 +1,9 @@
+.tg-sidebar-section {
+  & + .tg-sidebar-section {
+    margin-top: 24px;
+  }
+  &:not(.bottom) + .bottom {
+    margin-top: auto;
+    padding-top: 24px;
+  }
+}
