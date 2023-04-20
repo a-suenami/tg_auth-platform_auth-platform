@@ -2,7 +2,7 @@ create_table :admins, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid
   t.references :tenant, type: :citext, null: false
   t.string :name
   t.string  :email
-  t.string  :password_digest
+  t.string  :uid
 
   t.timestamps null: false
 end

@@ -54,7 +54,9 @@ gem 'bcrypt', '~> 3.1.0'
 # OAuth 2 provider
 gem 'doorkeeper', '~> 5.6.6'
 gem 'doorkeeper-openid_connect', '~> 1.8.4'
-
+gem 'omniauth-auth0', '~> 3.0'
+gem 'omniauth-rails_csrf_protection', '~> 1.0'
+gem 'auth0', '~> 5.12'
 # ------------------------------------------------------------------------------
 # Front
 # ------------------------------------------------------------------------------

@@ -50,7 +50,7 @@ CREATE TABLE public.admins (
     tenant_id public.citext NOT NULL,
     name character varying,
     email character varying,
-    password_digest character varying,
+    uid character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );

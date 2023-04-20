@@ -3,5 +3,5 @@ Admin.seed do |s|
   s.name = 'Tenant Admin'
   s.tenant_id = 'sample'
   s.email = 'test-admin@example.com'
-  s.password = 'password'
+  s.uid = 'auth0|6440c74cdacb437dc2139682'
 end

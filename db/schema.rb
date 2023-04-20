@@ -20,7 +20,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.citext "tenant_id", null: false
     t.string "name"
     t.string "email"
-    t.string "password_digest"
+    t.string "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id"], name: "index_admins_on_tenant_id"
