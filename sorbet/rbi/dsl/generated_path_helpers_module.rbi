@@ -9,7 +9,28 @@ module GeneratedPathHelpersModule
   include ::ActionDispatch::Routing::PolymorphicRoutes
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_auth_auth0_callback_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_auth_failure_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_auth_logout_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_login_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_logout_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_root_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_users_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def api_private_userinfo_index_path(*args); end

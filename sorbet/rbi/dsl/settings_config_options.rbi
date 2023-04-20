@@ -12,6 +12,12 @@ class SettingsConfigOptions < ::Config::Options
   Elem = type_member { { fixed: T.untyped } }
 
   sig { returns(T.untyped) }
+  def admin; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def admin=(value); end
+
+  sig { returns(T.untyped) }
   def redis; end
 
   sig { params(value: T.untyped).returns(T.untyped) }

@@ -9,7 +9,28 @@ module GeneratedUrlHelpersModule
   include ::ActionDispatch::Routing::PolymorphicRoutes
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_auth_auth0_callback_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_auth_failure_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_auth_logout_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_login_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_logout_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_root_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_users_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def api_private_userinfo_index_url(*args); end

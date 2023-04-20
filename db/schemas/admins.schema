@@ -1,0 +1,10 @@
+create_table :admins, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false
+  t.string :name
+  t.string  :email
+  t.string  :uid
+
+  t.timestamps null: false
+end
+
+add_foreign_key :admins, :tenants, name: :fk_admins_tenants

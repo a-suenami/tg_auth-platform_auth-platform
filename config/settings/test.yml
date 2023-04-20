@@ -1,0 +1,5 @@
+admin:
+  auth0:
+    auth0_domain:
+    auth0_client_id:
+    auth0_client_secret:

@@ -10,22 +10,25 @@ html lang='ja'
     = vite_client_tag
     = vite_typescript_tag 'entrypoints/admin_area/application'
     = csrf_meta_tags
-  body
-    = render 'layouts/admin_area/flash'
-    div.uk-navbar-container.rl-navbar-container uk-sticky=''
-      .uk-container.uk-container-expand
-        nav.uk-navbar
-          .uk-navbar-left
-            ul.uk-navbar-nav
-              a.uk-navbar-item.uk-logo
-                / = Tenant.current.name
-                = "Tenant.current.name"
-          .uk-navbar-right
-            ul.uk-navbar-nav class='uk-visible@m'
-            a.uk-navbar-toggle.uk-icon.uk-navbar-toggle-icon aria-expanded='false' class='uk-hidden@m' href='#offcanvas' uk-navbar-toggle-icon='' uk-toggle='target: #offcanvas-sidebar'
-    .uk-container.uk-container-expand
-      = yield
+  body.l-page
+    .l-page-sidebar
+        .uk-width-medium.uk-height-1-1.uk-section-secondary
+          .uk-container.uk-height-1-1
+            h3.uk-padding.uk-padding-remove-horizontal
+              = Tenant.current.name
+            .tg-sidebar-section
+              ul.uk-nav.uk-nav-default
+                ul.uk-parent
+                  = link_to '会員ID管理', admin_area_users_path
+                  ul.uk-nav-sub
+                    li
+                      = link_to '会員ID一覧', admin_area_users_path
+            .tg-sidebar-section.bottom
+              ul.uk-nav.uk-nav-default
+                li アカウント
+                li = @current_admin&.email
+                li = link_to 'ログアウト', admin_area_logout_path
 
-    #offcanvas-sidebar uk-offcanvas=""
-      .uk-offcanvas-bar
-        button.uk-offcanvas-close type='button' uk-close=''
+    .l-page-contents
+      = render 'layouts/admin_area/flash'
+      = yield

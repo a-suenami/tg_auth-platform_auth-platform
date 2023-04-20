@@ -630,7 +630,7 @@ Naming/MethodParameterName:
     - id
 Naming/VariableNumber:
   EnforcedStyle: snake_case
-  AllowedIdentifiers: [v1, last4, iso8601]
+  AllowedIdentifiers: [v1, last4, iso8601, auth0]
 Naming/AccessorMethodName:
   Enabled: false
 Naming/FileName:
