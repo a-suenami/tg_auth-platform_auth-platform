@@ -4,7 +4,8 @@ module TenantsArea::API
   class OauthController < ActionController::API
 
     def login
-      client = OauthFirstPartyApplication.find_by!(uid: params[:client_id])
+      # clientが存在するかチェック
+      OauthFirstPartyApplication.find_by!(uid: params[:client_id])
 
       user = User.find_by(email: params[:email])
       if user&.authenticate(params[:password])
