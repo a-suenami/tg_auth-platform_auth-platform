@@ -1,0 +1,7 @@
+OauthFirstPartyApplication.seed do |s|
+  s.id = 'bb1839be-3a5b-4411-a947-eebae7f78d63'
+  s.name = 'First Party Application 1'
+  s.tenant_id = 'sample'
+  s.uid = 'oauth|sample|1234567'
+  s.allowed_logout_urls = 'http://localhost:3000/'
+end

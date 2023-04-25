@@ -8,8 +8,6 @@ Rails.application.routes.draw do
         post :login
         get :logout
       end
-      resource :oauth do
-      end
       namespace :private do
         resources :userinfo, only: [:index]
       end

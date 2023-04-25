@@ -4,7 +4,7 @@ module TenantsArea::API
   class OauthController < ActionController::API
 
     def login
-      # TODO: check client id
+      client = OauthFirstPartyApplication.find_by!(uid: params[:client_id])
 
       user = User.find_by(email: params[:email])
       if user&.authenticate(params[:password])
@@ -18,9 +18,14 @@ module TenantsArea::API
     end
 
     def logout
-      session[:current_user_id] = nil
-      # TODO: validate returnTo. check whitelist
-      redirect_to params[:returnTo]
+      client = OauthFirstPartyApplication.find_by(uid: params[:client_id])
+
+      if client.present? && client.vaild_return_to?(params[:returnTo])
+        session[:current_user_id] = nil
+        redirect_to params[:returnTo], allow_other_host: true
+      else
+        render :error, formats: :html
+      end
     end
 
     def signup

@@ -106,6 +106,19 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
+  create_table "oauth_first_party_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "name", null: false
+    t.string "uid", null: false
+    t.text "allowed_logout_urls", null: false
+    t.string "scopes", default: "", null: false
+    t.boolean "confidential", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_oauth_first_party_applications_on_tenant_id"
+    t.index ["uid"], name: "index_oauth_first_party_applications_on_uid", unique: true
+  end
+
   create_table "oauth_openid_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "access_grant_id", null: false
     t.string "nonce", null: false
@@ -161,6 +174,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "oauth_access_tokens", "tenants", name: "fk_oauth_access_tokens_tenants"
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
   add_foreign_key "oauth_applications", "tenants", name: "fk_oauth_applications_tenants"
+  add_foreign_key "oauth_first_party_applications", "tenants", name: "fk_oauth_first_party_applications_tenants"
   add_foreign_key "oauth_openid_requests", "oauth_access_grants", column: "access_grant_id", name: "fk_oauth_openid_requests_oauth_access_grants"
   add_foreign_key "user_profiles", "tenants", name: "fk_user_profiles_tenants"
   add_foreign_key "user_profiles", "users", name: "fk_user_profiles_users"
