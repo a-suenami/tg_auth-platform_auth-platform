@@ -2,6 +2,7 @@
 
 module TenantsArea::API
   class ApplicationController < ActionController::API
+    include ExceptionRescuable
     before_action :set_tenant
 
     private
