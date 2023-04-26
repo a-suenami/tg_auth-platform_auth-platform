@@ -1,3 +1,5 @@
+# typed: false
+
 class BaseService
   attr_accessor :params
 

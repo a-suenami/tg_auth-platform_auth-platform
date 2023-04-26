@@ -37,7 +37,7 @@ module TenantsArea::API
       else
         render json: { status: 'error' }
       end
-    rescue ActiveRecord::RecordNotUnique => e
+    rescue ActiveRecord::RecordNotUnique
       handle_400(error_details: ['すでに登録されているメールアドレスです。'])
     end
 
@@ -45,6 +45,7 @@ module TenantsArea::API
     end
 
     private
+
     def singup_params
       params.require(:user).permit(:email, :password, :password_confirmation)
     end

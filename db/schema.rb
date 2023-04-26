@@ -56,6 +56,17 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["user_id"], name: "index_delivary_addresses_on_user_id"
   end
 
+  create_table "email_templates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "name", null: false
+    t.string "template_type", null: false
+    t.string "subject", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_email_templates_on_tenant_id"
+  end
+
   create_table "oauth_access_grants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "resource_owner_id", null: false
@@ -168,6 +179,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "contact_addresses", "users", name: "fk_contact_addresses_users"
   add_foreign_key "delivary_addresses", "tenants", name: "fk_delivary_addresses_tenants"
   add_foreign_key "delivary_addresses", "users", name: "fk_delivary_addresses_users"
+  add_foreign_key "email_templates", "tenants", name: "fk_email_templates_tenants"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id", name: "fk_oauth_access_grants_oauth_applications"
   add_foreign_key "oauth_access_grants", "tenants", name: "fk_oauth_access_grants_tenants"
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id"

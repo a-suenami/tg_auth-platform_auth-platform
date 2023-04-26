@@ -95,6 +95,22 @@ CREATE TABLE public.delivary_addresses (
 
 
 --
+-- Name: email_templates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_templates (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    name character varying NOT NULL,
+    template_type character varying NOT NULL,
+    subject character varying NOT NULL,
+    body text NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: oauth_access_grants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -256,6 +272,14 @@ ALTER TABLE ONLY public.delivary_addresses
 
 
 --
+-- Name: email_templates email_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_templates
+    ADD CONSTRAINT email_templates_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: oauth_access_grants oauth_access_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -352,6 +376,13 @@ CREATE INDEX index_delivary_addresses_on_tenant_id ON public.delivary_addresses 
 --
 
 CREATE INDEX index_delivary_addresses_on_user_id ON public.delivary_addresses USING btree (user_id);
+
+
+--
+-- Name: index_email_templates_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_email_templates_on_tenant_id ON public.email_templates USING btree (tenant_id);
 
 
 --
@@ -518,6 +549,14 @@ ALTER TABLE ONLY public.delivary_addresses
 
 ALTER TABLE ONLY public.delivary_addresses
     ADD CONSTRAINT fk_delivary_addresses_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: email_templates fk_email_templates_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_templates
+    ADD CONSTRAINT fk_email_templates_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --

@@ -78,6 +78,8 @@ gem 'vite_rails', '~> 4.0.0.alpha1'
 gem 'turbo-rails', '~> 1.1.0'
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem 'stimulus-rails', '~> 1.0.0'
+# Template Engine
+gem 'liquid', '~> 5.4.0'
 
 # ------------------------------------------------------------------------------
 # Utilities
@@ -116,7 +118,7 @@ gem 'yaml_vault', '~> 1.3.2'
 # # FCM push notification utility
 # gem 'fcmpush', '~> 1.4.0'
 # # HTTP client
-# gem 'faraday', '~> 2.7.4'
+gem 'faraday', '~> 2.7.4'
 # gem 'faraday-http-cache', '~> 2.4.0'
 # # Convert bytesize to human readable string
 # gem 'bytesize', '~> 0.1.0'
