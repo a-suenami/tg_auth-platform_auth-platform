@@ -159,6 +159,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "password_reset_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
   end
 

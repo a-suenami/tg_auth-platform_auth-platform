@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       namespace :oauth do
         post :login
         get :logout
+        post :signup
       end
       namespace :private do
         resources :userinfo, only: [:index]

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module TenantsArea::API
-  class OauthController < ActionController::API
+  class OauthController < ApplicationController
 
     def login
       # clientが存在するかチェック
@@ -30,9 +30,23 @@ module TenantsArea::API
     end
 
     def signup
+      user = Users::CreateService.new(singup_params).execute
+      if user.persisted?
+        # TODO: send email
+        render json: { status: 'ok' }
+      else
+        render json: { status: 'error' }
+      end
+    rescue ActiveRecord::RecordNotUnique => e
+      handle_400(error_details: ['すでに登録されているメールアドレスです。'])
     end
 
     def password_change
+    end
+
+    private
+    def singup_params
+      params.require(:user).permit(:email, :password, :password_confirmation)
     end
   end
 end
