@@ -39,22 +39,16 @@ module GeneratedUrlHelpersModule
   def api_oauth_logout_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_oauth_url(*args); end
+  def api_oauth_signup_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def api_private_userinfo_index_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def edit_api_oauth_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def health_check_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def new_api_oauth_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_session_url(*args); end

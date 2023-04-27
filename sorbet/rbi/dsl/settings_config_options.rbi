@@ -18,6 +18,12 @@ class SettingsConfigOptions < ::Config::Options
   def admin=(value); end
 
   sig { returns(T.untyped) }
+  def blastengine; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def blastengine=(value); end
+
+  sig { returns(T.untyped) }
   def redis; end
 
   sig { params(value: T.untyped).returns(T.untyped) }
