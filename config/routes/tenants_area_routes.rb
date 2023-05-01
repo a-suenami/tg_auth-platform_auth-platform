@@ -4,6 +4,11 @@ Rails.application.routes.draw do
 
     # format :html になるのを避けるため設定
     namespace :api, format: 'json' do
+      namespace :oauth do
+        post :login
+        get :logout
+        post :signup
+      end
       namespace :private do
         resources :userinfo, only: [:index]
       end

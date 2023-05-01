@@ -56,6 +56,17 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["user_id"], name: "index_delivary_addresses_on_user_id"
   end
 
+  create_table "email_templates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "name", null: false
+    t.string "template_type", null: false
+    t.string "subject", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_email_templates_on_tenant_id"
+  end
+
   create_table "oauth_access_grants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "resource_owner_id", null: false
@@ -106,6 +117,19 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
+  create_table "oauth_first_party_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "name", null: false
+    t.string "uid", null: false
+    t.text "allowed_logout_urls", null: false
+    t.string "scopes", default: "", null: false
+    t.boolean "confidential", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_oauth_first_party_applications_on_tenant_id"
+    t.index ["uid"], name: "index_oauth_first_party_applications_on_uid", unique: true
+  end
+
   create_table "oauth_openid_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "access_grant_id", null: false
     t.string "nonce", null: false
@@ -146,6 +170,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "password_reset_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
   end
 
@@ -154,6 +179,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "contact_addresses", "users", name: "fk_contact_addresses_users"
   add_foreign_key "delivary_addresses", "tenants", name: "fk_delivary_addresses_tenants"
   add_foreign_key "delivary_addresses", "users", name: "fk_delivary_addresses_users"
+  add_foreign_key "email_templates", "tenants", name: "fk_email_templates_tenants"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id", name: "fk_oauth_access_grants_oauth_applications"
   add_foreign_key "oauth_access_grants", "tenants", name: "fk_oauth_access_grants_tenants"
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id"
@@ -161,6 +187,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "oauth_access_tokens", "tenants", name: "fk_oauth_access_tokens_tenants"
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
   add_foreign_key "oauth_applications", "tenants", name: "fk_oauth_applications_tenants"
+  add_foreign_key "oauth_first_party_applications", "tenants", name: "fk_oauth_first_party_applications_tenants"
   add_foreign_key "oauth_openid_requests", "oauth_access_grants", column: "access_grant_id", name: "fk_oauth_openid_requests_oauth_access_grants"
   add_foreign_key "user_profiles", "tenants", name: "fk_user_profiles_tenants"
   add_foreign_key "user_profiles", "users", name: "fk_user_profiles_users"

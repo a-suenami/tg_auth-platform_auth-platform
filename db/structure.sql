@@ -95,6 +95,22 @@ CREATE TABLE public.delivary_addresses (
 
 
 --
+-- Name: email_templates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_templates (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    name character varying NOT NULL,
+    template_type character varying NOT NULL,
+    subject character varying NOT NULL,
+    body text NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: oauth_access_grants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -144,6 +160,23 @@ CREATE TABLE public.oauth_applications (
     uid character varying NOT NULL,
     secret character varying NOT NULL,
     redirect_uri text NOT NULL,
+    scopes character varying DEFAULT ''::character varying NOT NULL,
+    confidential boolean DEFAULT true NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: oauth_first_party_applications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.oauth_first_party_applications (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    name character varying NOT NULL,
+    uid character varying NOT NULL,
+    allowed_logout_urls text NOT NULL,
     scopes character varying DEFAULT ''::character varying NOT NULL,
     confidential boolean DEFAULT true NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
@@ -239,6 +272,14 @@ ALTER TABLE ONLY public.delivary_addresses
 
 
 --
+-- Name: email_templates email_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_templates
+    ADD CONSTRAINT email_templates_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: oauth_access_grants oauth_access_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -260,6 +301,14 @@ ALTER TABLE ONLY public.oauth_access_tokens
 
 ALTER TABLE ONLY public.oauth_applications
     ADD CONSTRAINT oauth_applications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: oauth_first_party_applications oauth_first_party_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.oauth_first_party_applications
+    ADD CONSTRAINT oauth_first_party_applications_pkey PRIMARY KEY (id);
 
 
 --
@@ -327,6 +376,13 @@ CREATE INDEX index_delivary_addresses_on_tenant_id ON public.delivary_addresses 
 --
 
 CREATE INDEX index_delivary_addresses_on_user_id ON public.delivary_addresses USING btree (user_id);
+
+
+--
+-- Name: index_email_templates_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_email_templates_on_tenant_id ON public.email_templates USING btree (tenant_id);
 
 
 --
@@ -407,6 +463,20 @@ CREATE UNIQUE INDEX index_oauth_applications_on_uid ON public.oauth_applications
 
 
 --
+-- Name: index_oauth_first_party_applications_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_oauth_first_party_applications_on_tenant_id ON public.oauth_first_party_applications USING btree (tenant_id);
+
+
+--
+-- Name: index_oauth_first_party_applications_on_uid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_oauth_first_party_applications_on_uid ON public.oauth_first_party_applications USING btree (uid);
+
+
+--
 -- Name: index_oauth_openid_requests_on_access_grant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -425,6 +495,13 @@ CREATE INDEX index_user_profiles_on_tenant_id ON public.user_profiles USING btre
 --
 
 CREATE INDEX index_user_profiles_on_user_id ON public.user_profiles USING btree (user_id);
+
+
+--
+-- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
 
 
 --
@@ -475,6 +552,14 @@ ALTER TABLE ONLY public.delivary_addresses
 
 
 --
+-- Name: email_templates fk_email_templates_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_templates
+    ADD CONSTRAINT fk_email_templates_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: oauth_access_grants fk_oauth_access_grants_oauth_applications; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -512,6 +597,14 @@ ALTER TABLE ONLY public.oauth_access_tokens
 
 ALTER TABLE ONLY public.oauth_applications
     ADD CONSTRAINT fk_oauth_applications_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: oauth_first_party_applications fk_oauth_first_party_applications_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.oauth_first_party_applications
+    ADD CONSTRAINT fk_oauth_first_party_applications_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --

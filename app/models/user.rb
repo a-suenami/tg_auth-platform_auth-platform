@@ -26,4 +26,10 @@ class User < ApplicationRecord
     # authenticate password
     BCrypt::Password.new(self.password_digest) == password
   end
+
+  sig { returns(T::Boolean) }
+  def set_email_confirm_code
+    self.email_confirm_code = SecureRandom.hex(32)
+    true
+  end
 end
