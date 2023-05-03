@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module TenantsArea::API
-  class OauthController < ApplicationController
+module API::V1
+  class OauthController < API::ApplicationController
 
     def login
       # clientが存在するかチェック

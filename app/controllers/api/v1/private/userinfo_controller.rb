@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module TenantsArea::API::Private
+module API::V1::Private
   class UserinfoController < ApplicationController
     before_action -> { doorkeeper_authorize! :uid, :email, :name, :profile, :contact, :delivary_address }, only: :index
 
