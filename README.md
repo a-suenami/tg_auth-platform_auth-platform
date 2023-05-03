@@ -28,7 +28,8 @@ bundle exec thor credentials:decrypt
 
 Then you can prepare a database.
 ```sh
-rake db:create ridgepole:apply db:seed db:seed_fu
+rake db:create
+rake ridgepole:apply db:seed db:seed_fu
 ```
 
 ## Development environment
