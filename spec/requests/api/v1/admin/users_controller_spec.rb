@@ -8,14 +8,14 @@ RSpec.describe '[ Admin Users API ]' do
         name: 'Sample',
         redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
         scopes: 'admin_users uid email name profile contact delivary_address openid',
-        enable_client_credential_flow: true
+        enable_client_credential_flow: true,
       )
     }
     let(:token_expires_in) { 2.hours }
     let(:user) { create(:user, tenant_id: current_tenant.id) }
-    let(:user_profile) { create(:user_profile, tenant_id: current_tenant.id, user: user) }
-    let(:contact_address) { create(:contact_address, tenant_id: current_tenant.id, user: user) }
-    let(:delivary_address) { create(:delivary_address, tenant_id: current_tenant.id, user: user) }
+    let(:user_profile) { create(:user_profile, tenant_id: current_tenant.id, user:) }
+    let(:contact_address) { create(:contact_address, tenant_id: current_tenant.id, user:) }
+    let(:delivary_address) { create(:delivary_address, tenant_id: current_tenant.id, user:) }
     let(:user_id) { user.id }
 
     context 'when present vaild access token' do
