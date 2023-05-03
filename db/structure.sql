@@ -137,7 +137,7 @@ CREATE TABLE public.oauth_access_grants (
 CREATE TABLE public.oauth_access_tokens (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
-    resource_owner_id uuid NOT NULL,
+    resource_owner_id uuid,
     application_id uuid NOT NULL,
     token character varying NOT NULL,
     refresh_token character varying,
@@ -163,7 +163,8 @@ CREATE TABLE public.oauth_applications (
     scopes character varying DEFAULT ''::character varying NOT NULL,
     confidential boolean DEFAULT true NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    enable_client_credential_flow boolean DEFAULT false
 );
 
 

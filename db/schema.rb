@@ -87,7 +87,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
 
   create_table "oauth_access_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
-    t.uuid "resource_owner_id", null: false
+    t.uuid "resource_owner_id"
     t.uuid "application_id", null: false
     t.string "token", null: false
     t.string "refresh_token"
@@ -113,6 +113,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "confidential", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "enable_client_credential_flow", default: false
     t.index ["tenant_id"], name: "index_oauth_applications_on_tenant_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end

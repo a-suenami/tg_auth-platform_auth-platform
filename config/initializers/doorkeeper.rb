@@ -244,7 +244,7 @@ Doorkeeper.configure do
   # https://doorkeeper.gitbook.io/guides/ruby-on-rails/scopes
   #
   default_scopes  :public
-  optional_scopes :uid, :email, :name, :profile, :contact, :delivary_address, :openid
+  optional_scopes :uid, :email, :name, :profile, :contact, :delivary_address, :openid, :admin_users
 
   # Allows to restrict only certain scopes for grant_type.
   # By default, all the scopes will be available for all the grant types.
@@ -305,7 +305,7 @@ Doorkeeper.configure do
   #
   # You can completely disable this feature with:
   #
-  # allow_blank_redirect_uri false
+  # allow_blank_redirect_uri true
   #
   # Or you can define your custom check:
   #
@@ -360,7 +360,7 @@ Doorkeeper.configure do
   #   https://datatracker.ietf.org/doc/html/rfc6819#section-4.4.2
   #   https://datatracker.ietf.org/doc/html/rfc6819#section-4.4.3
   #
-  grant_flows %w[authorization_code implicit_oidc]
+  grant_flows %w[authorization_code implicit_oidc client_credentials]
 
   # Allows to customize OAuth grant flows that +each+ application support.
   # You can configure a custom block (or use a class respond to `#call`) that must
@@ -386,12 +386,13 @@ Doorkeeper.configure do
   # @param allow_grant_flow_for_client [Proc] Block or any object respond to #call
   # @return [Boolean] `true` if allow or `false` if forbid the request
   #
-  # allow_grant_flow_for_client do |grant_flow, client|
-  #   # `grant_flows` is an Array column with grant
-  #   # flows that application supports
-  #
-  #   client.grant_flows.include?(grant_flow)
-  # end
+  allow_grant_flow_for_client do |grant_flow, client|
+    if grant_flow == 'client_credentials'
+      client.enable_client_credential_flow
+    else
+      true
+    end
+  end
 
   # If you need arbitrary Resource Owner-Client authorization you can enable this option
   # and implement the check your need. Config option must respond to #call and return

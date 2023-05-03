@@ -1,6 +1,6 @@
 create_table "oauth_access_tokens", force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant, type: :citext, null: false
-  t.references :resource_owner, type: :uuid, null: false
+  t.references :resource_owner, type: :uuid
   t.references :application, type: :uuid, null: false
   t.string :token, null: false
   t.string :refresh_token
