@@ -592,6 +592,51 @@ class OauthApplication
     sig { void }
     def created_at_will_change!; end
 
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_client_credential_flow; end
+
+    sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+    def enable_client_credential_flow=(value); end
+
+    sig { returns(T::Boolean) }
+    def enable_client_credential_flow?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_client_credential_flow_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def enable_client_credential_flow_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def enable_client_credential_flow_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def enable_client_credential_flow_change; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def enable_client_credential_flow_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def enable_client_credential_flow_changed?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_client_credential_flow_in_database; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def enable_client_credential_flow_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def enable_client_credential_flow_previously_changed?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_client_credential_flow_previously_was; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_client_credential_flow_was; end
+
+    sig { void }
+    def enable_client_credential_flow_will_change!; end
+
     sig { returns(T.untyped) }
     def id; end
 
@@ -734,6 +779,9 @@ class OauthApplication
     def restore_created_at!; end
 
     sig { void }
+    def restore_enable_client_credential_flow!; end
+
+    sig { void }
     def restore_id!; end
 
     sig { void }
@@ -768,6 +816,12 @@ class OauthApplication
 
     sig { returns(T::Boolean) }
     def saved_change_to_created_at?; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def saved_change_to_enable_client_credential_flow; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_enable_client_credential_flow?; end
 
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_id; end
@@ -1047,6 +1101,9 @@ class OauthApplication
 
     sig { returns(T::Boolean) }
     def will_save_change_to_created_at?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_enable_client_credential_flow?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_id?; end
