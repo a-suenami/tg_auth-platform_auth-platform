@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module TenantsArea::API
+module API
   class ApplicationController < ActionController::API
     include ExceptionRescuable
     before_action :set_tenant

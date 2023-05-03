@@ -33,16 +33,19 @@ module GeneratedPathHelpersModule
   def admin_area_users_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_oauth_login_path(*args); end
+  def api_v1_admin_user_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_oauth_logout_path(*args); end
+  def api_v1_oauth_login_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_oauth_signup_path(*args); end
+  def api_v1_oauth_logout_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_private_userinfo_index_path(*args); end
+  def api_v1_oauth_signup_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_private_userinfo_index_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def health_check_path(*args); end

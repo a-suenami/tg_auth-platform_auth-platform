@@ -3,7 +3,7 @@ json = {}
 profile_json = {}
 contact_address_json = {}
 
-json[:uid] = current_user.uid if @doorkeeper_token.acceptable?(:uid)
+json[:uid] = current_user.id if @doorkeeper_token.acceptable?(:uid)
 json[:email] = current_user.email if @doorkeeper_token.acceptable?(:email)
 if @doorkeeper_token.acceptable?(:name)
   profile_json[:first_name] = current_user.user_profile&.first_name

@@ -1,4 +1,5 @@
 DelivaryAddress.seed do |s|
+  s.id = 'b2f19aed-da23-44c7-b93a-b71c9f76cdb8'
   s.tenant_id = 'sample'
   s.user_id = 'a07348fe-26b8-417b-ae18-aaf6851f7651'
   s.is_default = true
@@ -10,6 +11,7 @@ DelivaryAddress.seed do |s|
 end
 
 DelivaryAddress.seed do |s|
+  s.id = '12eca170-a90d-4f5e-9f67-ebe189900773'
   s.tenant_id = 'sample'
   s.user_id = 'a07348fe-26b8-417b-ae18-aaf6851f7651'
   s.is_default = false

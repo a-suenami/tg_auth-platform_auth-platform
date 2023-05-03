@@ -7,8 +7,6 @@ module Users
       ActiveRecord::Base.transaction do
         user = User.new(params)
         user.set_email_confirm_code
-        # TODO: uidの生成方法を検討する
-        user.uid = SecureRandom.uuid
 
         user.save
 

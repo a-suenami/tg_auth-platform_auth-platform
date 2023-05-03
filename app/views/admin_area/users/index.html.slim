@@ -17,7 +17,7 @@
       table.uk-table.uk-table-divider
         tr
           th
-            | 会員番号
+            | ID
           th
             | メールアドレス
           th
@@ -33,7 +33,7 @@
         - @users.each do |user|
           tr
             td
-              = user.uid
+              = user.id
             td
               = user.email
             td

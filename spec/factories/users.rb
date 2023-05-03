@@ -6,6 +6,5 @@ FactoryBot.define do
     password_confirmation { 'password' }
     tenant_id { create(:tenant).id }
     sequence(:email) { |n| "test#{n}@example.com" }
-    uid { SecureRandom.uuid }
   end
 end

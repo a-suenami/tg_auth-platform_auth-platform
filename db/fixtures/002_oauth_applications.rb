@@ -16,3 +16,14 @@ Doorkeeper::Application.seed do |s|
   s.name = 'Twogate Application'
   s.redirect_uri = 'http://localhost:3000/twogate/oauth/callback'
 end
+
+Doorkeeper::Application.seed do |s|
+  s.id = '48213048-1839-4429-b9c5-4c801b767321'
+  s.uid = 'gd1dy__aQqiaA3izY26nkdU68eHDBNxMyxTQwJAzM2M'
+  s.secret = 'k4k3VLIBX9ahRXBUW61uO8-tEsR1cLDzQvTrSPKUz6Q'
+  s.tenant_id = 'sample'
+  s.name = 'Admin Application'
+  s.redirect_uri = 'http://localhost:3000/sample/oauth/callback2'
+  s.scopes = 'public admin_users uid email name profile contact delivary_address openid'
+  s.enable_client_credential_flow = true
+end

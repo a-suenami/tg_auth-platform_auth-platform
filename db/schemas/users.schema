@@ -1,6 +1,5 @@
 create_table :users, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant, type: :citext, null: false
-  t.string  :uid, null: false
   t.string  :email
   t.string  :password_digest
   t.string  :tel
