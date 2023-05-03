@@ -160,7 +160,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
-    t.string "uid", null: false
     t.string "email"
     t.string "password_digest"
     t.string "tel"

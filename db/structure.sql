@@ -234,7 +234,6 @@ CREATE TABLE public.user_profiles (
 CREATE TABLE public.users (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
-    uid character varying NOT NULL,
     email character varying,
     password_digest character varying,
     tel character varying,
