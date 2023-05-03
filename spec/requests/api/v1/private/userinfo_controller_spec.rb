@@ -1,7 +1,7 @@
 # typed: false
 
 RSpec.describe '[ Userinfo API ]' do
-  describe 'GET /api/private/userinfo' do
+  describe 'GET /api/v1/private/userinfo' do
     let(:oauth_application) {
       OauthApplication.create!(
         tenant_id: current_tenant.id,
@@ -47,7 +47,7 @@ RSpec.describe '[ Userinfo API ]' do
         it 'returns user info' do
           is_expected.to eq 200
           expect(body_hash).to eq({
-            'uid' => current_user.uid,
+            'uid' => current_user.id,
             'email' => current_user.email,
             'delivary_addresses' => [
               {
@@ -87,7 +87,7 @@ RSpec.describe '[ Userinfo API ]' do
         it 'returns user info' do
           is_expected.to eq 200
           expect(body_hash).to eq({
-            'uid' => current_user.uid,
+            'uid' => current_user.id,
           })
         end
       end
