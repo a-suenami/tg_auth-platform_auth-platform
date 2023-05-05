@@ -18,7 +18,7 @@ COPY Gemfile Gemfile
 COPY Gemfile.lock Gemfile.lock
 COPY docker/scripts/bundle_install.sh scripts/bundle_install.sh
 COPY docker/scripts/apt_install.sh scripts/apt_install.sh
-COPY vendor/bundle vendor/bundle
+#COPY vendor/bundle vendor/bundle
 RUN /bin/sh scripts/apt_install.sh && \
   /bin/sh scripts/bundle_install.sh && \
   rm -rf /usr/local/bundle/cache && \
