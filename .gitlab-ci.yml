@@ -12,6 +12,7 @@ cache: &cache
 stages:
   - prepare
   - test
+  - deploy
 
 bundle-package:
   image: ${RUBY_IMAGE}
@@ -117,4 +118,19 @@ sorbet:
     - bundle exec srb tc
   except:
     - /^deploy-.*$/
+    - schedules
+
+deploy-dev:
+  stage: deploy
+  image: ${RUBY_IMAGE}
+  cache: {}
+  variables:
+    RAILS_ENV: production
+    FLY_ACCESS_TOKEN: $FLY_ACCESS_TOKEN
+  script:
+    - curl -L https://fly.io/install.sh | sh
+    - ~/.fly/bin/flyctl deploy -c fly.toml
+  only:
+    - master
+  except:
     - schedules
