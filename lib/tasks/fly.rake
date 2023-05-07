@@ -1,3 +1,5 @@
+# typed: false
+
 # commands used to deploy a Rails application
 namespace :fly do
     # BUILD step:
