@@ -1,0 +1,7 @@
+/ email form
+= form_for(@user, url: send_verification_email_registrations_path) do |f|
+  .form-group
+    = f.label :email
+    = f.email_field :email, autofocus: true, class: 'form-control'
+  .form-group
+    = f.submit '送信', class: 'btn btn-primary'

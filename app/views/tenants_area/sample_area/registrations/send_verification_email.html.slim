@@ -1,0 +1,9 @@
+p メールを確認してください
+
+p 再送信はこちら
+= form_for(@user, url: send_verification_email_registrations_path, method: :post) do |f|
+  .form-group
+    = f.label :email
+    = f.email_field :email, autofocus: true, class: 'form-control', value: @user.email
+  .form-group
+    = f.submit '送信', class: 'btn btn-primary'

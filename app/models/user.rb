@@ -3,7 +3,7 @@
 class User < ApplicationRecord
   extend T::Sig
   include Multitenancy
-  has_secure_password
+  has_secure_password validations: false
 
   has_many :access_grants,
     class_name: 'OauthAccessGrant',

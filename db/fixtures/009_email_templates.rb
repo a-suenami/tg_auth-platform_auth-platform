@@ -10,3 +10,15 @@ EmailTemplate.seed do |s|
     {{ email }}
   TEXT
 end
+
+EmailTemplate.seed do |s|
+  s.id = '45df5301-4f0e-4151-9c31-ce92c88cdec7'
+  s.tenant_id = 'sample'
+  s.name = 'emailVerificationメールテンプレート'
+  s.template_type = 'email_address_verification'
+  s.subject = 'emailVerificationメール！'
+  s.body = <<~TEXT
+    <p>以下のリンクをクリックしてメールアドレスを確認してください</p>
+    <a href="{{ email_verification_url }}">ここをクリックしてください</a>
+  TEXT
+end
