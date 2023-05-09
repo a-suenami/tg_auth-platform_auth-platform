@@ -8,5 +8,6 @@ Rails.application.routes.draw do
       end
     end
     resources :passwords, only: [:new, :create]
+    resources :profiles, only: [:new, :create]
   end
 end

@@ -104,7 +104,7 @@ gem 'seed-fu', '~> 2.3.0'
 # # Framework for factories
 gem 'factory_bot_rails', '~> 6.2.0'
 # # Enumerated attributes with I18n
-# gem 'enumerize', '~> 2.5.0'
+gem 'enumerize', '~> 2.5.0'
 # # AWS client gems
 # gem 'aws-record', '~> 2.10.1'
 # gem 'aws-sdk-dynamodb', '~> 1.81.0'

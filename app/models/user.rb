@@ -20,6 +20,7 @@ class User < ApplicationRecord
   has_one :user_profile, dependent: :delete
   has_one :contact_address, dependent: :delete
   has_many :delivary_addresses, dependent: :delete_all
+  accepts_nested_attributes_for :contact_address, :user_profile
 
   sig { params(password: String).returns(T::Boolean) }
   def authenticate!(password)

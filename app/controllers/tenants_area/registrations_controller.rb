@@ -21,7 +21,7 @@ module TenantsArea
     def email_verification
       @user = Users::EmailVerificationService.new.execute(email_confirm_code: params[:email_confirm_code], user_id: params[:user_id])
       if @user.present?
-        render "tenants_area/#{Tenant.current.id}_area/passwords/new"
+        redirect_to '/passwords/new'
         session[:registering_user_id] = @user.id
       else
         render "tenants_area/#{Tenant.current.id}_area/registrations/new"
@@ -29,6 +29,7 @@ module TenantsArea
     end
 
     private
+
     def send_verification_email_params
       params.require(:user).permit(:email)
     end

@@ -1,0 +1,40 @@
+/ プロファイルフォーム
+= form_for @user, url: profiles_path, method: :post do |f|
+  = f.fields_for :user_profile, @user.build_user_profile do |profile_form|
+    .form-item
+      = profile_form.label :first_name
+      = profile_form.text_field :first_name
+    .form-item
+      = profile_form.label :last_name
+      = profile_form.text_field :last_name
+    .form-item
+      = profile_form.label :first_name_kana
+      = profile_form.text_field :first_name_kana
+    .form-item
+      = profile_form.label :last_name_kana
+      = profile_form.text_field :last_name_kana
+    .form-item
+      = profile_form.label :birth_date
+      = profile_form.date_field :birth_date
+    .form-item
+      = profile_form.label :gender
+      = profile_form.select :gender, options_for_select(UserProfile.gender.options)
+
+  = f.fields_for :contact_address, @user.build_contact_address do |address_form|
+    .form-item
+      = address_form.label :zip_code
+      = address_form.text_field :zip_code
+    .form-item
+      = address_form.label :prefecture_code
+      = address_form.collection_select :prefecture_code, JpPrefecture::Prefecture.all, :code, :name
+    .form-item
+      = address_form.label :city
+      = address_form.text_field :city
+    .form-item
+      = address_form.label :address_1
+      = address_form.text_field :address_1
+    .form-item
+      = address_form.label :address_2
+      = address_form.text_field :address_2
+
+  = f.submit '登録'
