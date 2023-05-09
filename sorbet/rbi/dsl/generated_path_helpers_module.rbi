@@ -48,10 +48,22 @@ module GeneratedPathHelpersModule
   def api_v1_private_userinfo_index_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def email_verification_registrations_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def health_check_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_password_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_profile_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_registration_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_session_path(*args); end
@@ -90,6 +102,12 @@ module GeneratedPathHelpersModule
   def oauth_userinfo_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def passwords_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def profiles_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def rails_info_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -97,6 +115,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def rails_info_routes_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def send_verification_email_registrations_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def session_path(*args); end

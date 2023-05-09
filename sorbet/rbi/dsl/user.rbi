@@ -274,6 +274,9 @@ class User
     sig { params(value: T.nilable(::ContactAddress)).void }
     def contact_address=(value); end
 
+    sig { params(attributes: T.untyped).returns(T.untyped) }
+    def contact_address_attributes=(attributes); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::ContactAddress) }
     def create_contact_address(*args, &blk); end
 
@@ -311,6 +314,9 @@ class User
 
     sig { params(value: T.nilable(::UserProfile)).void }
     def user_profile=(value); end
+
+    sig { params(attributes: T.untyped).returns(T.untyped) }
+    def user_profile_attributes=(attributes); end
   end
 
   module GeneratedAssociationRelationMethods

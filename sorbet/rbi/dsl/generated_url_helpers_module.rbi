@@ -48,10 +48,22 @@ module GeneratedUrlHelpersModule
   def api_v1_private_userinfo_index_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def email_verification_registrations_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def health_check_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_password_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_profile_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_registration_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_session_url(*args); end
@@ -90,6 +102,12 @@ module GeneratedUrlHelpersModule
   def oauth_userinfo_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def passwords_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def profiles_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def rails_info_properties_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -97,6 +115,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def rails_info_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def send_verification_email_registrations_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def session_url(*args); end
