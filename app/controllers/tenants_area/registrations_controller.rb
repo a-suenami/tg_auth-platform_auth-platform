@@ -3,7 +3,7 @@ module TenantsArea
     # email form
     def new
       @user = User.new
-      render "tenants_area/#{Tenant.current.id}_area/registrations/new"
+      render registrations_new_path
     end
 
     # send email address verification email
@@ -13,8 +13,13 @@ module TenantsArea
       if @user.present?
         render "tenants_area/#{Tenant.current.id}_area/registrations/send_verification_email"
       else
-        render "tenants_area/#{Tenant.current.id}_area/registrations/new"
+        @user = User.new
+        render registrations_new_path
       end
+    rescue Exceptions::Auth::InvalidEmail
+      flash[:alert] = 'Invalid email'
+      @user = User.new
+      render registrations_new_path
     end
 
     # email verification endpoint
@@ -24,7 +29,8 @@ module TenantsArea
         redirect_to '/passwords/new'
         session[:registering_user_id] = @user.id
       else
-        render "tenants_area/#{Tenant.current.id}_area/registrations/new"
+        @user = User.new
+        render registrations_new_path
       end
     end
 
@@ -32,6 +38,10 @@ module TenantsArea
 
     def send_verification_email_params
       params.require(:user).permit(:email)
+    end
+
+    def registrations_new_path
+      "tenants_area/#{Tenant.current.id}_area/registrations/new"
     end
   end
 end

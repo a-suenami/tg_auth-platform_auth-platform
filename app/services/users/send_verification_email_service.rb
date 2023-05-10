@@ -6,13 +6,14 @@ module Users
     def execute(email:, base_url:)
       # email validate
       unless email =~ URI::MailTo::EMAIL_REGEXP
-        raise Exceptions::API::ServerError.new(status: '400', body: 'invalid email')
+        raise Exceptions::Auth::InvalidEmail
       end
 
       ActiveRecord::Base.transaction do
         user = User.find_by(email:, email_verified: true)
         if user.present?
-          raise Exceptions::API::ServerError.new(status: '400', body: 'already registered')
+          # アカウントの存在を隠すため、エラーせずそのまま返す
+          return user
         end
 
         user = User.find_or_initialize_by(email:)
@@ -29,6 +30,7 @@ module Users
       liquid_template = Liquid::Template.parse(email_template.body)
 
       email_verification_url = "#{base_url}?email_confirm_code=#{user.email_confirm_code}&user_id=#{user.id}"
+
       Blastengine::API.new.send_email(
         send_to: user.email,
         subject: email_template.subject,
