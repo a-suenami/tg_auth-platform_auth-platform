@@ -8,30 +8,32 @@ module TenantsArea
 
     # send email address verification email
     def send_verification_email
-      base_url = "https://#{Tenant.current.domain}/registrations/email_verification"
-      @user = Users::SendVerificationEmailService.new.execute(email: send_verification_email_params[:email], base_url:)
-      if @user.present?
+      @user = Users::SendVerificationEmailService.new.execute(email: send_verification_email_params[:email])
+      if @user.persisted?
+        session[:registering_user_id] = @user.id
         render "tenants_area/#{Tenant.current.id}_area/registrations/send_verification_email"
       else
         @user = User.new
         render registrations_new_path
       end
-    rescue Exceptions::Auth::InvalidEmail
-      flash[:alert] = 'Invalid email'
+    rescue Exceptions::Auth::InvalidEmail => e
+      flash[:alert] = e.message
       @user = User.new
       render registrations_new_path
     end
 
-    # email verification endpoint
-    def email_verification
-      @user = Users::EmailVerificationService.new.execute(email_confirm_code: params[:email_confirm_code], user_id: params[:user_id])
-      if @user.present?
-        redirect_to '/passwords/new'
-        session[:registering_user_id] = @user.id
-      else
-        @user = User.new
-        render registrations_new_path
-      end
+    # verify email endpoint
+    def verify_email
+      @user = Users::VerifyEmailService.new.execute(email_verification_code: params[:email_verification_code], user_id: session[:registering_user_id])
+      redirect_to '/passwords/new'
+    rescue Exceptions::Auth::InvalidCode => e
+      flash[:alert] = e.message
+      @user = User.find session[:registering_user_id]
+      render "tenants_area/#{Tenant.current.id}_area/registrations/send_verification_email"
+    rescue Exceptions::Auth::BaseError => e
+      flash[:alert] = e.message
+      @user = User.new
+      render registrations_new_path
     end
 
     private

@@ -12,7 +12,7 @@ module TenantsArea
       @user = User.find session[:registering_user_id]
       return redirect_to '/passwords/new' if @user.password_digest.blank?
 
-      if @user.update(user_params)
+      if Users::UpdateService.new(user_params).execute(user: @user) && @user.set_enabled
         session[:registering_user_id] = nil
         session[:current_user_id] = @user.id
 

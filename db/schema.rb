@@ -163,9 +163,12 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.citext "tenant_id", null: false
     t.string "email"
     t.string "password_digest"
+    t.boolean "enabled", default: false
     t.string "tel"
     t.boolean "tel_verified", default: false
-    t.string "email_confirm_code"
+    t.string "email_verification_code"
+    t.datetime "email_verification_code_expired_at"
+    t.integer "email_verification_code_remaining_attempts", default: 0
     t.boolean "email_verified", default: false
     t.string "password_reset_code"
     t.datetime "created_at", null: false

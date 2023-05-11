@@ -29,8 +29,19 @@ class User < ApplicationRecord
   end
 
   sig { returns(T::Boolean) }
-  def set_email_confirm_code
-    self.email_confirm_code = SecureRandom.hex(32)
+  def set_email_verification_code
+    self.email_verification_code = format('%06d', SecureRandom.random_number(10**6))
+    self.email_verification_code_expired_at = 1.hour.from_now
+    self.email_verification_code_remaining_attempts = 5
     true
+  end
+
+  sig { returns(T::Boolean) }
+  def set_enabled
+    # 同じemailで他に有効なユーザーがいる場合は、有効にしない
+    return false if User.find_by(email: self.email, enabled: true).present?
+
+    self.enabled = true
+    self.save
   end
 end

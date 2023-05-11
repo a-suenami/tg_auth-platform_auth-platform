@@ -18,7 +18,7 @@ EmailTemplate.seed do |s|
   s.template_type = 'email_address_verification'
   s.subject = 'emailVerificationメール！'
   s.body = <<~TEXT
-    <p>以下のリンクをクリックしてメールアドレスを確認してください</p>
-    <a href="{{ email_verification_url }}">ここをクリックしてください</a>
+    <p>認証コードは以下です</p>
+    <p>{{ email_verification_code }}</p>
   TEXT
 end
