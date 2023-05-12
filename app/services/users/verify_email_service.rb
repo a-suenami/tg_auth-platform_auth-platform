@@ -12,6 +12,8 @@ module Users
 
         if user.email_verification_code == email_verification_code
           if Time.zone.now < user.email_verification_code_expired_at
+            user.email_verification_code = nil
+            user.email_verification_code_expired_at = nil
             user.email_verified = true
             user.save!
           else

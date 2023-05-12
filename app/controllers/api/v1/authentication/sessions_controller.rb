@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module API::V1
-  class OauthController < API::ApplicationController
+module API::V1::Authentication
+  class SessionsController < ApplicationController
 
-    def login
+    def create
       # clientが存在するかチェック
       OauthFirstPartyApplication.find_by!(uid: params[:client_id])
 
@@ -27,27 +27,6 @@ module API::V1
       else
         render :error, formats: :html
       end
-    end
-
-    def signup
-      user = Users::CreateService.new(singup_params).execute
-      if user.persisted?
-        # TODO: send email
-        render json: { status: 'ok' }
-      else
-        render json: { status: 'error' }
-      end
-    rescue ActiveRecord::RecordNotUnique
-      handle_400(error_details: ['すでに登録されているメールアドレスです。'])
-    end
-
-    def password_change
-    end
-
-    private
-
-    def singup_params
-      params.require(:user).permit(:email, :password, :password_confirmation)
     end
   end
 end
