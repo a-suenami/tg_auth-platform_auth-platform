@@ -3,10 +3,10 @@
 module Users
   class SendVerificationEmailService < BaseService
 
-    def execute(email:)
+    def execute!(email:)
       # email validate
       unless email =~ URI::MailTo::EMAIL_REGEXP
-        raise Exceptions::Auth::InvalidEmail
+        raise Exceptions::Services::Users::InvalidEmail
       end
 
       ActiveRecord::Base.transaction do

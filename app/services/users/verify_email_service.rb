@@ -3,7 +3,7 @@
 module Users
   class VerifyEmailService < BaseService
 
-    def execute(email_verification_code:, user_id:)
+    def execute!(email_verification_code:, user_id:)
       user = User.find user_id
 
       if user.email_verification_code_remaining_attempts.positive?
@@ -15,13 +15,13 @@ module Users
             user.email_verified = true
             user.save!
           else
-            raise Exceptions::Auth::ExpiredEmailVerificationCode
+            raise Exceptions::Services::Users::ExpiredEmailVerificationCode
           end
         else
-          raise Exceptions::Auth::InvalidCode
+          raise Exceptions::Services::Users::InvalidCode
         end
       else
-        raise Exceptions::Auth::EmailVerificationCodeAttemptsIsOver
+        raise Exceptions::Services::Users::EmailVerificationCodeAttemptsIsOver
       end
 
       user
