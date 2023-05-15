@@ -1,22 +1,25 @@
 module API::V1::Authentication
   class ProfilesController < ApplicationController
+    include SessionKeyUseable
+    before_action :session_key_authenticate
+
     def create
-      # @user = User.find session[:registering_user_id]
-      # return redirect_to '/passwords/new' if @user.password_digest.blank?
+      @user = User.find params[:user_id]
+      return handle_400 error_details: ['already created passowrd']  if @user.password_digest.blank?
 
-      # if Users::UpdateService.new(user_params).execute(user: @user) && @user.set_enabled
-      #   session[:registering_user_id] = nil
-      #   session[:current_user_id] = @user.id
+      if Users::UpdateService.new(user_params).execute(user: @user) && @user.set_enabled
+        delete_session_key(@user.id)
+        session[:current_user_id] = @user.id
 
-      #   if session[:auth_url].present?
-      #     redirect_to session[:auth_url]
-      #   else
-      #     # TODO: redirect maypage
-      #     render "tenants_area/#{Tenant.current.id}_area/sessions/error"
-      #   end
-      # else
-      #   render "tenants_area/#{Tenant.current.id}_area/profiles/new"
-      # end
+        if session[:auth_url].present?
+          # TODO: レスポンスをしっかり定義する
+          render json: { status: 'ok', redirect_url: session[:auth_url] }
+        else
+          handle_400 error_details: ['failed load auth url']
+        end
+      else
+        handle_400 error_details: ['failed to create profiles']
+      end
     end
 
     private

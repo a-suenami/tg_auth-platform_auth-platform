@@ -38,6 +38,7 @@ class User < ApplicationRecord
 
   sig { returns(T::Boolean) }
   def set_enabled
+    return true if self.enabled
     # 同じemailで他に有効なユーザーがいる場合は、有効にしない
     return false if User.find_by(email: self.email, enabled: true).present?
 
