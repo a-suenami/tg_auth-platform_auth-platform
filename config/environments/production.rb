@@ -81,4 +81,55 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Settings for lograge
+  config.lograge.enabled = true
+  config.lograge.base_controller_class = ['ActionController::API', 'ActionController::Base']
+  config.lograge.formatter = Lograge::Formatters::Json.new
+  config.lograge.custom_payload do |controller|
+    payload = {
+      host: controller.request.host,
+      remote_ip: controller.request.remote_ip,
+      x_forwarded_for: controller.request.headers[:HTTP_X_FORWARDED_FOR],
+      current_tenant: RequestStore.store[:current_tenant],
+    }
+
+    begin
+      case controller.controller_path
+      when /\Aadmins/
+        payload[:_cookie_session] = controller.send(:_cookie_session)
+      when %r{\Aapi/v1/private}
+        payload[:user_id] = controller.send(:_current_user)&.id
+        payload[:_decoded_token] = controller.send(:_decoded_token)&.first
+      end
+    rescue
+      nil
+    end
+
+    begin
+      if controller.response.status >= 400 && controller.response.media_type == 'application/json'
+        payload.merge!(
+          response: {
+            status: controller.response.status,
+            body: JSON.parse(controller.response.body),
+          },
+        )
+      end
+    rescue => e
+      Sentry.capture_exception(e)
+    end
+
+    payload
+  end
+  config.lograge.custom_options = lambda { |event|
+    exceptions = %w[controller action format id]
+    {
+      time: event.time,
+      params: event.payload[:params].except(*exceptions),
+      exception_object: event.payload[:exception_object],
+      exception: event.payload[:exception],
+      backtrace: event.payload[:exception_object].try(:backtrace),
+    }
+  }
+  config.lograge.ignore_actions = ['ApplicationController#health_check']
 end
