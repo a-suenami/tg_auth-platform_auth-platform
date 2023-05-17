@@ -1,0 +1,39 @@
+{
+  "deploymentConfiguration": {
+    "deploymentCircuitBreaker": {
+      "enable": false,
+      "rollback": false
+    },
+    "maximumPercent": 200,
+    "minimumHealthyPercent": 0
+  },
+  "deploymentController": {
+    "type": "ECS"
+  },
+  "desiredCount": 1,
+  "enableECSManagedTags": false,
+  "enableExecuteCommand": false,
+  "healthCheckGracePeriodSeconds": 0,
+  "launchType": "EC2",
+  "loadBalancers": [
+    {
+      "containerName": "nginx",
+      "containerPort": 80,
+      "targetGroupArn": "arn:aws:elasticloadbalancing:ap-northeast-1:287511440462:targetgroup/id-platform-ecs-default-stg/8c2fe563353ec5c5"
+    }
+  ],
+  "placementConstraints": [],
+  "placementStrategy": [
+    {
+      "field": "attribute:ecs.availability-zone",
+      "type": "spread"
+    },
+    {
+      "field": "instanceId",
+      "type": "spread"
+    }
+  ],
+  "schedulingStrategy": "REPLICA",
+  "serviceRegistries": [],
+  "tags": []
+}
