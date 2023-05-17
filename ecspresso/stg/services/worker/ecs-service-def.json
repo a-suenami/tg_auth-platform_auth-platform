@@ -1,0 +1,32 @@
+{
+  "deploymentConfiguration": {
+    "deploymentCircuitBreaker": {
+      "enable": false,
+      "rollback": false
+    },
+    "maximumPercent": 200,
+    "minimumHealthyPercent": 0
+  },
+  "deploymentController": {
+    "type": "ECS"
+  },
+  "desiredCount": 0,
+  "enableECSManagedTags": false,
+  "enableExecuteCommand": false,
+  "launchType": "EC2",
+  "loadBalancers": [],
+  "placementConstraints": [],
+  "placementStrategy": [
+    {
+      "field": "attribute:ecs.availability-zone",
+      "type": "spread"
+    },
+    {
+      "field": "instanceId",
+      "type": "spread"
+    }
+  ],
+  "schedulingStrategy": "REPLICA",
+  "serviceRegistries": [],
+  "tags": []
+}

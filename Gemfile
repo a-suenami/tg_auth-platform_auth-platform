@@ -90,9 +90,9 @@ gem 'pry-rails', '~> 0.3.9'
 # Manage multi-environment settings
 gem 'config', '~> 4.1.0'
 # # Provides a client interface for the Sentry error logger
-# gem 'sentry-rails', '~> 5.8.0'
-# gem 'sentry-ruby', '~> 5.8.0'
-# gem 'sentry-sidekiq', '~> 5.8.0'
+gem 'sentry-rails', '~> 5.8.0'
+gem 'sentry-ruby', '~> 5.8.0'
+gem 'sentry-sidekiq', '~> 5.8.0'
 # Make managing seeds better
 gem 'seed-fu', '~> 2.3.0'
 # # Easily generater of fake data
@@ -125,7 +125,7 @@ gem 'faraday', '~> 2.7.4'
 # # SameSite option
 # gem 'rails_same_site_cookie', git: 'https://github.com/twogate/rails_same_site_cookie.git', ref: '5a31856'
 # # Logger extension
-# gem 'lograge', '~> 0.12.0'
+gem 'lograge', '~> 0.12.0'
 # # User-Agent parser
 # gem 'rack-user_agent', '~> 0.5.0'
 # # japanese prefecture
