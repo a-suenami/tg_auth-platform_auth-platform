@@ -9,5 +9,11 @@ Rails.application.routes.draw do
     end
     resources :passwords, only: [:new, :create]
     resources :profiles, only: [:new, :create]
+    resources :password_resets, only: [:new, :create] do
+      collection do
+        get :edit
+        put :update
+      end
+    end
   end
 end

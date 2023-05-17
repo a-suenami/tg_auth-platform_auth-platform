@@ -177,6 +177,18 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
   end
 
+  create_table "users__password_resets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.string "code", null: false
+    t.datetime "expired_at", null: false
+    t.datetime "used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_users__password_resets_on_tenant_id"
+    t.index ["user_id"], name: "index_users__password_resets_on_user_id"
+  end
+
   add_foreign_key "admins", "tenants", name: "fk_admins_tenants"
   add_foreign_key "contact_addresses", "tenants", name: "fk_contact_addresses_tenants"
   add_foreign_key "contact_addresses", "users", name: "fk_contact_addresses_users"
@@ -195,4 +207,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "user_profiles", "tenants", name: "fk_user_profiles_tenants"
   add_foreign_key "user_profiles", "users", name: "fk_user_profiles_users"
   add_foreign_key "users", "tenants", name: "fk_users_tenants"
+  add_foreign_key "users__password_resets", "tenants", name: "fk_users__password_resets_tenants"
+  add_foreign_key "users__password_resets", "users", name: "fk_users__password_resets_users"
 end

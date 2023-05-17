@@ -251,6 +251,22 @@ CREATE TABLE public.users (
 
 
 --
+-- Name: users__password_resets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users__password_resets (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    code character varying NOT NULL,
+    expired_at timestamp(6) without time zone NOT NULL,
+    used_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: admins admins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -336,6 +352,14 @@ ALTER TABLE ONLY public.tenants
 
 ALTER TABLE ONLY public.user_profiles
     ADD CONSTRAINT user_profiles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users__password_resets users__password_resets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__password_resets
+    ADD CONSTRAINT users__password_resets_pkey PRIMARY KEY (id);
 
 
 --
@@ -501,6 +525,20 @@ CREATE INDEX index_user_profiles_on_user_id ON public.user_profiles USING btree 
 
 
 --
+-- Name: index_users__password_resets_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__password_resets_on_tenant_id ON public.users__password_resets USING btree (tenant_id);
+
+
+--
+-- Name: index_users__password_resets_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__password_resets_on_user_id ON public.users__password_resets USING btree (user_id);
+
+
+--
 -- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -648,6 +686,22 @@ ALTER TABLE ONLY public.user_profiles
 
 ALTER TABLE ONLY public.user_profiles
     ADD CONSTRAINT fk_user_profiles_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: users__password_resets fk_users__password_resets_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__password_resets
+    ADD CONSTRAINT fk_users__password_resets_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: users__password_resets fk_users__password_resets_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__password_resets
+    ADD CONSTRAINT fk_users__password_resets_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
