@@ -67,6 +67,20 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["tenant_id"], name: "index_email_templates_on_tenant_id"
   end
 
+  create_table "login_spa_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "name", null: false
+    t.string "uid", null: false
+    t.text "allowed_logout_urls", null: false
+    t.string "scopes", default: "", null: false
+    t.boolean "confidential", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "redirect_url_on_password_reset"
+    t.index ["tenant_id"], name: "index_login_spa_applications_on_tenant_id"
+    t.index ["uid"], name: "index_login_spa_applications_on_uid", unique: true
+  end
+
   create_table "oauth_access_grants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "resource_owner_id", null: false
@@ -116,19 +130,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "enable_client_credential_flow", default: false
     t.index ["tenant_id"], name: "index_oauth_applications_on_tenant_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
-  end
-
-  create_table "oauth_first_party_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.citext "tenant_id", null: false
-    t.string "name", null: false
-    t.string "uid", null: false
-    t.text "allowed_logout_urls", null: false
-    t.string "scopes", default: "", null: false
-    t.boolean "confidential", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["tenant_id"], name: "index_oauth_first_party_applications_on_tenant_id"
-    t.index ["uid"], name: "index_oauth_first_party_applications_on_uid", unique: true
   end
 
   create_table "oauth_openid_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -195,6 +196,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "delivary_addresses", "tenants", name: "fk_delivary_addresses_tenants"
   add_foreign_key "delivary_addresses", "users", name: "fk_delivary_addresses_users"
   add_foreign_key "email_templates", "tenants", name: "fk_email_templates_tenants"
+  add_foreign_key "login_spa_applications", "tenants", name: "fk_login_spa_applications_tenants"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id", name: "fk_oauth_access_grants_oauth_applications"
   add_foreign_key "oauth_access_grants", "tenants", name: "fk_oauth_access_grants_tenants"
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id"
@@ -202,7 +204,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "oauth_access_tokens", "tenants", name: "fk_oauth_access_tokens_tenants"
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
   add_foreign_key "oauth_applications", "tenants", name: "fk_oauth_applications_tenants"
-  add_foreign_key "oauth_first_party_applications", "tenants", name: "fk_oauth_first_party_applications_tenants"
   add_foreign_key "oauth_openid_requests", "oauth_access_grants", column: "access_grant_id", name: "fk_oauth_openid_requests_oauth_access_grants"
   add_foreign_key "user_profiles", "tenants", name: "fk_user_profiles_tenants"
   add_foreign_key "user_profiles", "users", name: "fk_user_profiles_users"

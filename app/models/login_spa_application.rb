@@ -1,6 +1,6 @@
 # typed: strict
 
-class OauthFirstPartyApplication < ApplicationRecord
+class LoginSpaApplication < ApplicationRecord
   extend T::Sig
   include Multitenancy
 

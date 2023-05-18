@@ -1,4 +1,4 @@
-create_table "oauth_first_party_applications", force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+create_table "login_spa_applications", force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant, type: :citext, null: false
   t.string :name, null: false
   t.string :uid, null: false
@@ -7,7 +7,8 @@ create_table "oauth_first_party_applications", force: :cascade, id: :uuid, defau
   t.boolean :confidential, default: true, null: false
   t.datetime :created_at, null: false
   t.datetime :updated_at, null: false
-  t.index ["uid"], name: "index_oauth_first_party_applications_on_uid", unique: true
+  t.string :redirect_url_on_password_reset
+  t.index ["uid"], name: "index_login_spa_applications_on_uid", unique: true
 end
 
-add_foreign_key :oauth_first_party_applications, :tenants, name: :fk_oauth_first_party_applications_tenants
+add_foreign_key :login_spa_applications, :tenants, name: :fk_login_spa_applications_tenants

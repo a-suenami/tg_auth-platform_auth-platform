@@ -4,9 +4,6 @@ module API::V1::Authentication
   class SessionsController < ApplicationController
 
     def create
-      # clientが存在するかチェック
-      OauthFirstPartyApplication.find_by!(uid: params[:client_id])
-
       user = User.find_by(email: params[:email])
       if user&.authenticate(params[:password])
         # create session
@@ -19,7 +16,7 @@ module API::V1::Authentication
     end
 
     def logout
-      client = OauthFirstPartyApplication.find_by(uid: params[:client_id])
+      client = Tenant.current.login_spa_application
 
       if client.present? && client.vaild_return_to?(params[:returnTo])
         session[:current_user_id] = nil
