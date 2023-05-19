@@ -5,7 +5,8 @@ Doorkeeper::Application.seed do |s|
   s.secret = 'leV04prfWVBOgfmALi2wtls8ACecpw09TUGXyrAAEIs'
   s.tenant_id = 'sample'
   s.name = 'Sample Application'
-  s.redirect_uri = 'http://localhost:3000/oauth/callback'
+  s.redirect_uri = 'https://localhost:4200/oauth/callback'
+  s.confidential = false
 end
 
 Doorkeeper::Application.seed do |s|
@@ -14,7 +15,8 @@ Doorkeeper::Application.seed do |s|
   s.secret = 'zH1TtAnSBB3y0OQcWOQIJyw4OyXKT34FkvPM9qebt0M'
   s.tenant_id = 'twogate'
   s.name = 'Twogate Application'
-  s.redirect_uri = 'http://localhost:3000/twogate/oauth/callback'
+  s.redirect_uri = 'https://localhost:4200/oauth/callback'
+  s.confidential = false
 end
 
 Doorkeeper::Application.seed do |s|
