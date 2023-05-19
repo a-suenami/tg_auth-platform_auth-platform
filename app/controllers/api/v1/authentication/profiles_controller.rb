@@ -5,9 +5,12 @@ module API::V1::Authentication
 
     def create
       @user = User.find params[:user_id]
-      return handle_400 error_details: ['already created passowrd']  if @user.password_digest.blank?
 
-      if Users::UpdateService.new(user_params).execute(user: @user) && @user.set_enabled
+      if Users::UpdateService.new(user_params).execute(user: @user)
+        if @user.password_digest.present?
+          @user.set_enabled
+        end
+
         delete_session_key(@user.id)
         session[:current_user_id] = @user.id
 

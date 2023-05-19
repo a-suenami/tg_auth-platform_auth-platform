@@ -10,18 +10,13 @@ module Users
       end
 
       ActiveRecord::Base.transaction do
-        user = User.find_by(email:, enabled: true)
-        if user.blank?
-          # TODO: error message
-          raise Exceptions::Services::Users::BaseError
-        end
+        user = User.find_by!(email:, enabled: true)
 
         password_reset = Users::PasswordReset.find_by!(user:, code: password_reset_code, expired_at: Time.zone.now..)
         if password_reset.used_at.blank?
           user.update!(params)
         else
-          # TODO: error message
-          raise Exceptions::Services::Users::BaseError
+          raise Exceptions::Services::Users::PasswordResetCodeExpired
         end
       end
     end

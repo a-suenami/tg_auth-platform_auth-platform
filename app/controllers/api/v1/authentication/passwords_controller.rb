@@ -8,8 +8,7 @@ module API::V1::Authentication
       return handle_400 error_details: ['already created passowrd'] if @user.password_digest.present?
 
       if @user.update(password_params)
-        # TODO: レスポンスをしっかり定義する
-        render json: { status: 'ok' }
+        head :no_content
       else
         handle_400 error_details: ['failed to create password']
       end

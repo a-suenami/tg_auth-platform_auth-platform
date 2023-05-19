@@ -52,6 +52,18 @@ module Exceptions
           'codeの試行回数が上限に達しました'
         end
       end
+
+      class PasswordResetCodeExpired < BaseError
+        sig { returns(Symbol) }
+        def code
+          :password_reset_code_expired
+        end
+
+        sig { returns(String) }
+        def message
+          'codeの有効期限が切れています'
+        end
+      end
     end
   end
 end
