@@ -36,28 +36,37 @@ module GeneratedPathHelpersModule
   def api_v1_admin_user_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_v1_oauth_login_path(*args); end
+  def api_v1_authentication_password_resets_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_v1_oauth_logout_path(*args); end
+  def api_v1_authentication_passwords_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_v1_oauth_signup_path(*args); end
+  def api_v1_authentication_profiles_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_authentication_sessions_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def api_v1_private_userinfo_index_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def email_verification_registrations_path(*args); end
+  def edit_password_resets_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def health_check_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def logout_api_v1_authentication_sessions_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_password_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_password_reset_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_profile_path(*args); end
@@ -102,6 +111,9 @@ module GeneratedPathHelpersModule
   def oauth_userinfo_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def password_resets_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def passwords_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -115,6 +127,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def rails_info_routes_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def send_verification_email_api_v1_authentication_registrations_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def send_verification_email_registrations_path(*args); end
@@ -133,4 +148,10 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def turbo_resume_historical_location_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def verify_email_api_v1_authentication_registrations_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def verify_email_registrations_path(*args); end
 end
