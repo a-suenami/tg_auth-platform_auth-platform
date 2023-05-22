@@ -14,7 +14,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     origins allow_origins + eval(ENV['ALLOW_ORIGINS'] || '[]')
     # rubocop:enable Security/Eval
 
-    resource '/api/*',
+    resource '/*',
       headers: :any,
       expose: ['Total', 'Per-Page'],
       credentials: true,
