@@ -23,7 +23,7 @@ gem 'redis-namespace', '~> 1.10.0'
 # # Mutex by Redis
 # gem 'redlock', '~> 2.0.1'
 # # Support for Cross-Origin Resource Sharing (CORS) for Rack compatible web applications
-# gem 'rack-cors', '~> 2.0.0'
+gem 'rack-cors', '~> 2.0.0'
 # # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '~> 1.16.0', require: false
 # Use ridgepole for schema management
