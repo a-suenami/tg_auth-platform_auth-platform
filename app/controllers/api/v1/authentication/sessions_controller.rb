@@ -11,7 +11,7 @@ module API::V1::Authentication
 
         render json: { status: 'ok' }
       else
-        render json: { status: 'error' }
+        raise Exceptions::Auth::AuthError
       end
     end
 

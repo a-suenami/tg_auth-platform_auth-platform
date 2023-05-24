@@ -53,15 +53,15 @@ module Exceptions
         end
       end
 
-      class PasswordResetCodeExpired < BaseError
+      class PasswordResetCodeInvalid < BaseError
         sig { returns(Symbol) }
         def code
-          :password_reset_code_expired
+          :password_reset_code_invalid
         end
 
         sig { returns(String) }
         def message
-          'codeの有効期限が切れています'
+          'password reset codeが不正です'
         end
       end
     end

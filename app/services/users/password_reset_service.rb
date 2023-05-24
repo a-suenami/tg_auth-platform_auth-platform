@@ -10,13 +10,15 @@ module Users
       end
 
       ActiveRecord::Base.transaction do
-        user = User.find_by!(email:, enabled: true)
-
-        password_reset = Users::PasswordReset.find_by!(user:, code: password_reset_code, expired_at: Time.zone.now..)
-        if password_reset.used_at.blank?
-          user.update!(params)
-        else
+        user = User.find_by(email:, enabled: true)
+        password_reset = Users::PasswordReset.find_by(user:, code: password_reset_code, expired_at: Time.zone.now..)
+        if user.blank? || password_reset.blank?
+          # アカウントの存在を隠すため、ユーザが存在しない場合もPasswordResetCodeInvalidエラー
+          raise Exceptions::Services::Users::PasswordResetCodeInvalid
+        elsif password_reset.used_at.present?
           raise Exceptions::Services::Users::PasswordResetCodeExpired
+        else
+          user.update!(params)
         end
       end
     end
