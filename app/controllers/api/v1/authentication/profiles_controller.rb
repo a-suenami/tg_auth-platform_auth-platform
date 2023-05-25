@@ -1,6 +1,6 @@
 module API::V1::Authentication
   class ProfilesController < ApplicationController
-    before_action :registrations_session_authenticate
+    before_action :session_authenticate
 
     def create
       if Users::UpdateService.new(user_params).execute(user: @user)
@@ -21,10 +21,10 @@ module API::V1::Authentication
 
     private
 
-    def registrations_session_authenticate
-      raise handle_401 error_details: ['session not set'] if session[:registering_user_id].blank?
+    def session_authenticate
+      return handle_401 error_details: ['session not set'] if session[:current_user_id].blank?
 
-      @user = User.find session[:registering_user_id]
+      @user = User.find session[:current_user_id]
     end
 
     def user_params

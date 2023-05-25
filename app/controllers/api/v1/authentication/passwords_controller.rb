@@ -16,7 +16,7 @@ module API::V1::Authentication
     private
 
     def registrations_session_authenticate
-      raise handle_401 error_details: ['session not set'] if session[:registering_user_id].blank?
+      return handle_401 error_details: ['session not set'] if session[:registering_user_id].blank?
 
       @user = User.find session[:registering_user_id]
     end
