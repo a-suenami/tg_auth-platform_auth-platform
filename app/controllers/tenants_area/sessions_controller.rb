@@ -25,5 +25,16 @@ module TenantsArea
         # rubocop:enable Rails/I18nLocaleTexts
       end
     end
+
+    def logout
+      client = Tenant.current.login_spa_application
+
+      if client.present? && client.vaild_return_to?(params[:returnTo])
+        session[:current_user_id] = nil
+        redirect_to params[:returnTo], allow_other_host: true
+      else
+        render "tenants_area/#{Tenant.current.id}_area/sessions/error"
+      end
+    end
   end
 end

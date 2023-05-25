@@ -1,13 +1,12 @@
 module API::V1::Authentication
   class PasswordsController < ApplicationController
-    include SessionKeyUseable
-    before_action :session_key_authenticate
+    before_action :registrations_session_authenticate
 
     def create
-      @user = User.find params[:user_id]
       return handle_400 error_details: ['already created passowrd'] if @user.password_digest.present?
 
       if @user.update(password_params)
+        session[:current_user_id] = @user.id
         head :no_content
       else
         handle_400 error_details: ['failed to create password']
@@ -16,8 +15,14 @@ module API::V1::Authentication
 
     private
 
+    def registrations_session_authenticate
+      raise handle_401 error_details: ['session not set'] if session[:registering_user_id].blank?
+
+      @user = User.find session[:registering_user_id]
+    end
+
     def password_params
-      params.require(:user).permit(:password, :password_confirmation)
+      params.require(:user).permit(:password)
     end
   end
 end
