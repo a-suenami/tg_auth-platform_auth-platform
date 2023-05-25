@@ -5,6 +5,7 @@ class UserProfile < ApplicationRecord
   include Multitenancy
 
   belongs_to :user, inverse_of: :user_profile
+  enumerize :gender, in: [:male, :female, :other]
 
   sig { returns(String) }
   def name

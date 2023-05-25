@@ -12,6 +12,7 @@ module ExceptionRescuable
     rescue_from ActionView::MissingTemplate, with: :handle_missing_template
     rescue_from ActionController::ParameterMissing, with: :handle_parameter_missing
     rescue_from Pagy::OverflowError, with: :pagy_overflow
+    rescue_from Exceptions::BaseError, with: :handle_bad_request_exception
   end
 
   def handle_record_not_found

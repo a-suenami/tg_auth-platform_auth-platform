@@ -3,7 +3,7 @@
 
 class ApplicationRecord < ActiveRecord::Base
   extend T::Helpers
-  # extend Enumerize
+  extend Enumerize
   abstract!
 
   primary_abstract_class

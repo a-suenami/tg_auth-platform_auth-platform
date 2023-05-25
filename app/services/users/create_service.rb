@@ -6,7 +6,7 @@ module Users
     def execute
       ActiveRecord::Base.transaction do
         user = User.new(params)
-        user.set_email_confirm_code
+        user.set_email_verification_code
 
         user.save
 

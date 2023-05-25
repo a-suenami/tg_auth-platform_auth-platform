@@ -5,6 +5,7 @@
 # Please instead update this file by running `bin/tapioca dsl Tenant`.
 
 class Tenant
+  include GeneratedAssociationMethods
   include GeneratedAttributeMethods
   extend CommonRelationMethods
   extend GeneratedRelationMethods
@@ -215,6 +216,26 @@ class Tenant
 
     sig { returns(::Tenant) }
     def third_to_last!; end
+  end
+
+  module GeneratedAssociationMethods
+    sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
+    def build_login_spa_application(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
+    def create_login_spa_application(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
+    def create_login_spa_application!(*args, &blk); end
+
+    sig { returns(T.nilable(::LoginSpaApplication)) }
+    def login_spa_application; end
+
+    sig { params(value: T.nilable(::LoginSpaApplication)).void }
+    def login_spa_application=(value); end
+
+    sig { returns(T.nilable(::LoginSpaApplication)) }
+    def reload_login_spa_application; end
   end
 
   module GeneratedAssociationRelationMethods

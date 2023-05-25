@@ -111,6 +111,24 @@ CREATE TABLE public.email_templates (
 
 
 --
+-- Name: login_spa_applications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.login_spa_applications (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    name character varying NOT NULL,
+    uid character varying NOT NULL,
+    allowed_logout_urls text NOT NULL,
+    scopes character varying DEFAULT ''::character varying NOT NULL,
+    confidential boolean DEFAULT true NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    redirect_url_on_password_reset character varying
+);
+
+
+--
 -- Name: oauth_access_grants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -169,23 +187,6 @@ CREATE TABLE public.oauth_applications (
 
 
 --
--- Name: oauth_first_party_applications; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.oauth_first_party_applications (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    name character varying NOT NULL,
-    uid character varying NOT NULL,
-    allowed_logout_urls text NOT NULL,
-    scopes character varying DEFAULT ''::character varying NOT NULL,
-    confidential boolean DEFAULT true NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
 -- Name: oauth_openid_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -237,11 +238,30 @@ CREATE TABLE public.users (
     tenant_id public.citext NOT NULL,
     email character varying,
     password_digest character varying,
+    enabled boolean DEFAULT false,
     tel character varying,
     tel_verified boolean DEFAULT false,
-    email_confirm_code character varying,
+    email_verification_code character varying,
+    email_verification_code_expired_at timestamp(6) without time zone,
+    email_verification_code_remaining_attempts integer DEFAULT 0,
     email_verified boolean DEFAULT false,
     password_reset_code character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: users__password_resets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users__password_resets (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    code character varying NOT NULL,
+    expired_at timestamp(6) without time zone NOT NULL,
+    used_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -280,6 +300,14 @@ ALTER TABLE ONLY public.email_templates
 
 
 --
+-- Name: login_spa_applications login_spa_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.login_spa_applications
+    ADD CONSTRAINT login_spa_applications_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: oauth_access_grants oauth_access_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -304,14 +332,6 @@ ALTER TABLE ONLY public.oauth_applications
 
 
 --
--- Name: oauth_first_party_applications oauth_first_party_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.oauth_first_party_applications
-    ADD CONSTRAINT oauth_first_party_applications_pkey PRIMARY KEY (id);
-
-
---
 -- Name: oauth_openid_requests oauth_openid_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -333,6 +353,14 @@ ALTER TABLE ONLY public.tenants
 
 ALTER TABLE ONLY public.user_profiles
     ADD CONSTRAINT user_profiles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users__password_resets users__password_resets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__password_resets
+    ADD CONSTRAINT users__password_resets_pkey PRIMARY KEY (id);
 
 
 --
@@ -383,6 +411,20 @@ CREATE INDEX index_delivary_addresses_on_user_id ON public.delivary_addresses US
 --
 
 CREATE INDEX index_email_templates_on_tenant_id ON public.email_templates USING btree (tenant_id);
+
+
+--
+-- Name: index_login_spa_applications_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_login_spa_applications_on_tenant_id ON public.login_spa_applications USING btree (tenant_id);
+
+
+--
+-- Name: index_login_spa_applications_on_uid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_login_spa_applications_on_uid ON public.login_spa_applications USING btree (uid);
 
 
 --
@@ -463,20 +505,6 @@ CREATE UNIQUE INDEX index_oauth_applications_on_uid ON public.oauth_applications
 
 
 --
--- Name: index_oauth_first_party_applications_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_oauth_first_party_applications_on_tenant_id ON public.oauth_first_party_applications USING btree (tenant_id);
-
-
---
--- Name: index_oauth_first_party_applications_on_uid; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_oauth_first_party_applications_on_uid ON public.oauth_first_party_applications USING btree (uid);
-
-
---
 -- Name: index_oauth_openid_requests_on_access_grant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -495,6 +523,20 @@ CREATE INDEX index_user_profiles_on_tenant_id ON public.user_profiles USING btre
 --
 
 CREATE INDEX index_user_profiles_on_user_id ON public.user_profiles USING btree (user_id);
+
+
+--
+-- Name: index_users__password_resets_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__password_resets_on_tenant_id ON public.users__password_resets USING btree (tenant_id);
+
+
+--
+-- Name: index_users__password_resets_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__password_resets_on_user_id ON public.users__password_resets USING btree (user_id);
 
 
 --
@@ -560,6 +602,14 @@ ALTER TABLE ONLY public.email_templates
 
 
 --
+-- Name: login_spa_applications fk_login_spa_applications_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.login_spa_applications
+    ADD CONSTRAINT fk_login_spa_applications_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: oauth_access_grants fk_oauth_access_grants_oauth_applications; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -600,14 +650,6 @@ ALTER TABLE ONLY public.oauth_applications
 
 
 --
--- Name: oauth_first_party_applications fk_oauth_first_party_applications_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.oauth_first_party_applications
-    ADD CONSTRAINT fk_oauth_first_party_applications_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
 -- Name: oauth_openid_requests fk_oauth_openid_requests_oauth_access_grants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -645,6 +687,22 @@ ALTER TABLE ONLY public.user_profiles
 
 ALTER TABLE ONLY public.user_profiles
     ADD CONSTRAINT fk_user_profiles_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: users__password_resets fk_users__password_resets_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__password_resets
+    ADD CONSTRAINT fk_users__password_resets_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: users__password_resets fk_users__password_resets_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__password_resets
+    ADD CONSTRAINT fk_users__password_resets_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --

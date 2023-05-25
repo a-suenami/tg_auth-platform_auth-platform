@@ -274,6 +274,9 @@ class User
     sig { params(value: T.nilable(::ContactAddress)).void }
     def contact_address=(value); end
 
+    sig { params(attributes: T.untyped).returns(T.untyped) }
+    def contact_address_attributes=(attributes); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::ContactAddress) }
     def create_contact_address(*args, &blk); end
 
@@ -311,6 +314,9 @@ class User
 
     sig { params(value: T.nilable(::UserProfile)).void }
     def user_profile=(value); end
+
+    sig { params(attributes: T.untyped).returns(T.untyped) }
+    def user_profile_attributes=(attributes); end
   end
 
   module GeneratedAssociationRelationMethods
@@ -567,51 +573,6 @@ class User
     def email_changed?; end
 
     sig { returns(T.nilable(::String)) }
-    def email_confirm_code; end
-
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def email_confirm_code=(value); end
-
-    sig { returns(T::Boolean) }
-    def email_confirm_code?; end
-
-    sig { returns(T.nilable(::String)) }
-    def email_confirm_code_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def email_confirm_code_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def email_confirm_code_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def email_confirm_code_change; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def email_confirm_code_change_to_be_saved; end
-
-    sig { returns(T::Boolean) }
-    def email_confirm_code_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def email_confirm_code_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def email_confirm_code_previous_change; end
-
-    sig { returns(T::Boolean) }
-    def email_confirm_code_previously_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def email_confirm_code_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def email_confirm_code_was; end
-
-    sig { void }
-    def email_confirm_code_will_change!; end
-
-    sig { returns(T.nilable(::String)) }
     def email_in_database; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
@@ -622,6 +583,141 @@ class User
 
     sig { returns(T.nilable(::String)) }
     def email_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def email_verification_code; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def email_verification_code=(value); end
+
+    sig { returns(T::Boolean) }
+    def email_verification_code?; end
+
+    sig { returns(T.nilable(::String)) }
+    def email_verification_code_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def email_verification_code_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def email_verification_code_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def email_verification_code_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def email_verification_code_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def email_verification_code_changed?; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def email_verification_code_expired_at; end
+
+    sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def email_verification_code_expired_at=(value); end
+
+    sig { returns(T::Boolean) }
+    def email_verification_code_expired_at?; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def email_verification_code_expired_at_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def email_verification_code_expired_at_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def email_verification_code_expired_at_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def email_verification_code_expired_at_change; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def email_verification_code_expired_at_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def email_verification_code_expired_at_changed?; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def email_verification_code_expired_at_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def email_verification_code_expired_at_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def email_verification_code_expired_at_previously_changed?; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def email_verification_code_expired_at_previously_was; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def email_verification_code_expired_at_was; end
+
+    sig { void }
+    def email_verification_code_expired_at_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def email_verification_code_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def email_verification_code_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def email_verification_code_previously_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def email_verification_code_previously_was; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def email_verification_code_remaining_attempts; end
+
+    sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+    def email_verification_code_remaining_attempts=(value); end
+
+    sig { returns(T::Boolean) }
+    def email_verification_code_remaining_attempts?; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def email_verification_code_remaining_attempts_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def email_verification_code_remaining_attempts_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def email_verification_code_remaining_attempts_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def email_verification_code_remaining_attempts_change; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def email_verification_code_remaining_attempts_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def email_verification_code_remaining_attempts_changed?; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def email_verification_code_remaining_attempts_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def email_verification_code_remaining_attempts_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def email_verification_code_remaining_attempts_previously_changed?; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def email_verification_code_remaining_attempts_previously_was; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def email_verification_code_remaining_attempts_was; end
+
+    sig { void }
+    def email_verification_code_remaining_attempts_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def email_verification_code_was; end
+
+    sig { void }
+    def email_verification_code_will_change!; end
 
     sig { returns(T.nilable(T::Boolean)) }
     def email_verified; end
@@ -673,6 +769,51 @@ class User
 
     sig { void }
     def email_will_change!; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enabled; end
+
+    sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+    def enabled=(value); end
+
+    sig { returns(T::Boolean) }
+    def enabled?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enabled_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def enabled_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def enabled_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def enabled_change; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def enabled_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def enabled_changed?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enabled_in_database; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def enabled_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def enabled_previously_changed?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enabled_previously_was; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enabled_was; end
+
+    sig { void }
+    def enabled_will_change!; end
 
     sig { returns(T.untyped) }
     def id; end
@@ -816,10 +957,19 @@ class User
     def restore_email!; end
 
     sig { void }
-    def restore_email_confirm_code!; end
+    def restore_email_verification_code!; end
+
+    sig { void }
+    def restore_email_verification_code_expired_at!; end
+
+    sig { void }
+    def restore_email_verification_code_remaining_attempts!; end
 
     sig { void }
     def restore_email_verified!; end
+
+    sig { void }
+    def restore_enabled!; end
 
     sig { void }
     def restore_id!; end
@@ -855,16 +1005,34 @@ class User
     def saved_change_to_email?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_email_confirm_code; end
+    def saved_change_to_email_verification_code; end
 
     sig { returns(T::Boolean) }
-    def saved_change_to_email_confirm_code?; end
+    def saved_change_to_email_verification_code?; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def saved_change_to_email_verification_code_expired_at; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_email_verification_code_expired_at?; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def saved_change_to_email_verification_code_remaining_attempts; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_email_verification_code_remaining_attempts?; end
 
     sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
     def saved_change_to_email_verified; end
 
     sig { returns(T::Boolean) }
     def saved_change_to_email_verified?; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def saved_change_to_enabled; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_enabled?; end
 
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_id; end
@@ -1095,10 +1263,19 @@ class User
     def will_save_change_to_email?; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_email_confirm_code?; end
+    def will_save_change_to_email_verification_code?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_email_verification_code_expired_at?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_email_verification_code_remaining_attempts?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_email_verified?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_enabled?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_id?; end
