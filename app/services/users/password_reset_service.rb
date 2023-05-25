@@ -15,8 +15,10 @@ module Users
         if user.blank? || password_reset.blank?
           # アカウントの存在を隠すため、ユーザが存在しない場合もPasswordResetCodeInvalidエラー
           raise Exceptions::Services::Users::PasswordResetCodeInvalid
-        elsif password_reset.used_at.present?
+        elsif password_reset.expired_at < Time.zone.now
           raise Exceptions::Services::Users::PasswordResetCodeExpired
+        elsif password_reset.used_at.present?
+          raise Exceptions::Services::Users::PasswordResetCodeUsed
         else
           user.update!(params)
         end

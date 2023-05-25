@@ -2,30 +2,32 @@
 
 RSpec.describe '[ Registrations API ]' do
   describe 'POST /api/v1/authentication/registrations/send_verification_email' do
-    let!(:user1) {
-      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: "test-user1password")
+    let(:user_1) {
+      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password')
     }
 
-    let!(:email_template) {
+    let(:email_template) {
       create(:email_template,
         tenant_id: current_tenant.id,
         name: 'メールテンプレート名',
-        template_type: "email_address_verification",
+        template_type: 'email_address_verification',
         subject: 'email確認のお願い',
-        body: <<~TEXT
+        body: <<~TEXT,
           <p>認証コードは以下です</p>
           <p>{{ email_verification_code }}</p>
         TEXT
       )
     }
     let(:blastengine_mock) {
-      instance_double('Blastengine::API')
+      instance_double(Blastengine::API)
     }
 
     before do
+      user_1
+      email_template
       allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
       allow(blastengine_mock).to receive(:send_email).and_return({
-        "delivery_id": 1
+        delivery_id: 1,
       })
     end
 

@@ -2,30 +2,32 @@
 
 RSpec.describe '[ Password Resets API ]' do
   describe 'POST /api/v1/authentication/password_resets' do
-    let!(:user1) {
-      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: "test-user1password")
+    let(:user_1) {
+      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password')
     }
 
-    let!(:email_template) {
+    let(:email_template) {
       create(:email_template,
         tenant_id: current_tenant.id,
         name: 'メールテンプレート名',
-        template_type: "password_reset",
+        template_type: 'password_reset',
         subject: 'password reset メール',
-        body: <<~TEXT
+        body: <<~TEXT,
           <p>以下のURLを開いてパスワードを設定してください</p>
           <p>{{ password_reset_url }}</p>
         TEXT
       )
     }
     let(:blastengine_mock) {
-      instance_double('Blastengine::API')
+      instance_double(Blastengine::API)
     }
 
     before do
+      user_1
+      email_template
       allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
       allow(blastengine_mock).to receive(:send_email).and_return({
-        "delivery_id": 1
+        delivery_id: 1,
       })
     end
 
@@ -68,12 +70,17 @@ RSpec.describe '[ Password Resets API ]' do
   end
 
   describe 'PUT /api/v1/authentication/password_resets' do
-    let!(:user1) {
-      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: "test-user1password")
+    let(:user_1) {
+      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password')
     }
-    let!(:users_password_resets) {
-      create(:users__password_resets, tenant_id: current_tenant.id, user_id: user1.id, code: 'this_is_code', expired_at: Time.now + 1.hour)
+    let(:users_password_resets) {
+      create(:users__password_resets, tenant_id: current_tenant.id, user_id: user_1.id, code: 'this_is_code', expired_at: 1.hour.from_now)
     }
+
+    before do
+      user_1
+      users_password_resets
+    end
 
     context 'when email invaild' do
       let(:params) {

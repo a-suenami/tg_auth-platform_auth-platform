@@ -64,6 +64,30 @@ module Exceptions
           'password reset codeが不正です'
         end
       end
+
+      class PasswordResetCodeUsed < BaseError
+        sig { returns(Symbol) }
+        def code
+          :password_reset_code_used
+        end
+
+        sig { returns(String) }
+        def message
+          'codeはすでに使用されています'
+        end
+      end
+
+      class PasswordResetCodeExpired < BaseError
+        sig { returns(Symbol) }
+        def code
+          :password_reset_code_expired
+        end
+
+        sig { returns(String) }
+        def message
+          'codeの有効期限が切れています'
+        end
+      end
     end
   end
 end
