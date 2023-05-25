@@ -22,6 +22,8 @@ module Users
         else
           user.update!(params)
         end
+
+        user
       end
     end
   end
