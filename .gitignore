@@ -43,3 +43,5 @@ spec/examples.txt
 public/rspec.html
 
 cspell.yml
+
+env.fly
