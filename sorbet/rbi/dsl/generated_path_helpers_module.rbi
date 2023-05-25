@@ -60,6 +60,9 @@ module GeneratedPathHelpersModule
   def logout_api_v1_authentication_sessions_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def logout_sessions_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -129,13 +132,13 @@ module GeneratedPathHelpersModule
   def rails_info_routes_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def relaunch_authorizations_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def send_verification_email_api_v1_authentication_registrations_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def send_verification_email_registrations_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def session_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def sessions_path(*args); end

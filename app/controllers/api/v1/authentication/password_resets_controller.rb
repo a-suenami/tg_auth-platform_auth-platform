@@ -11,14 +11,15 @@ module API::V1::Authentication
     end
 
     def update
-      Users::PasswordResetService.new(update_password_params).execute!(password_reset_code: params[:password_reset_code], email: params[:email])
+      user = Users::PasswordResetService.new(update_password_params).execute!(password_reset_code: params[:password_reset_code], email: params[:email])
+      session[:current_user_id] = user.id
       render json: { status: 'ok' }
     end
 
     private
 
     def update_password_params
-      params.permit(:password, :password_confirmation)
+      params.permit(:password)
     end
   end
 end

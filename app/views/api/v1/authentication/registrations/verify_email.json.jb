@@ -1,5 +1,4 @@
 {
   user_id: @user.id,
   email_verified: @user.email_verified,
-  session_key: @session_key,
 }

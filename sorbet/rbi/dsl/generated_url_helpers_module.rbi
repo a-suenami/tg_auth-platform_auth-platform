@@ -60,6 +60,9 @@ module GeneratedUrlHelpersModule
   def logout_api_v1_authentication_sessions_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def logout_sessions_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -129,13 +132,13 @@ module GeneratedUrlHelpersModule
   def rails_info_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def relaunch_authorizations_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def send_verification_email_api_v1_authentication_registrations_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def send_verification_email_registrations_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def session_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def sessions_url(*args); end

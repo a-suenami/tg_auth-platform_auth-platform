@@ -1,18 +1,12 @@
 module API::V1::Authentication
   class ProfilesController < ApplicationController
-    include SessionKeyUseable
-    before_action :session_key_authenticate
+    before_action :session_authenticate
 
     def create
-      @user = User.find params[:user_id]
-
       if Users::UpdateService.new(user_params).execute(user: @user)
         if @user.password_digest.present?
           @user.set_enabled
         end
-
-        delete_session_key(@user.id)
-        session[:current_user_id] = @user.id
 
         if session[:auth_url].present?
           # TODO: レスポンスをしっかり定義する
@@ -26,6 +20,12 @@ module API::V1::Authentication
     end
 
     private
+
+    def session_authenticate
+      return handle_401 error_details: ['session not set'] if session[:current_user_id].blank?
+
+      @user = User.find session[:current_user_id]
+    end
 
     def user_params
       params.require(:user).permit(
