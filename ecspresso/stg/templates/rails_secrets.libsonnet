@@ -18,5 +18,13 @@
   {
     "valueFrom": "/id-platform/stg/ecs/main/sentry_dsn",
     "name": "SENTRY_DSN"
+  },
+  {
+    "valueFrom": "/id-platform/stg/ecs/main/blastengine_user_id",
+    "name": "BLASTENGINE_USER_ID"
+  },
+  {
+    "valueFrom": "/id-platform/stg/ecs/main/blastengine_api_key",
+    "name": "BLASTENGINE_API_KEY"
   }
 ]
