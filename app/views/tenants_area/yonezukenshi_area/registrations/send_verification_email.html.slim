@@ -1,0 +1,18 @@
+p メールを確認してください
+
+p メールに記載されている認証コードを入力してください
+= form_with(url: verify_email_registrations_path, method: :post) do |f|
+  .form-group
+    = f.label :email_verification_code
+    = f.text_field :email_verification_code, autofocus: true, class: 'form-control'
+  .form-group
+    = f.submit '認証', class: 'btn btn-primary'
+
+
+p 再送信はこちら
+= form_for(@user, url: send_verification_email_registrations_path, method: :post) do |f|
+  .form-group
+    = f.label :email
+    = f.email_field :email, class: 'form-control', value: @user.email
+  .form-group
+    = f.submit '送信', class: 'btn btn-primary'

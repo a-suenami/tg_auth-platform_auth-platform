@@ -1,0 +1,12 @@
+/ password form
+= form_with url: password_resets_path, method: :put do |f|
+  .field
+    = f.label :password
+    = f.password_field :password, autofocus: true
+  .field
+    = f.label :password_confirmation
+    = f.password_field :password_confirmation
+  = f.hidden_field :password_reset_code, value: @password_reset_code
+  = f.hidden_field :email, value: @email
+  .actions
+    = f.submit "Update password", class: "btn btn-primary"
