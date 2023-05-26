@@ -10,3 +10,28 @@ EmailTemplate.seed do |s|
     {{ email }}
   TEXT
 end
+
+EmailTemplate.seed do |s|
+  s.id = '45df5301-4f0e-4151-9c31-ce92c88cdec7'
+  s.tenant_id = 'sample'
+  s.name = 'emailVerificationメールテンプレート'
+  s.template_type = 'email_address_verification'
+  s.subject = 'emailVerificationメール！'
+  s.body = <<~TEXT
+    <p>認証コードは以下です</p>
+    <p>{{ email_verification_code }}</p>
+  TEXT
+end
+
+
+EmailTemplate.seed do |s|
+  s.id = '55df5301-4f0e-4151-9c31-ce92c88cdec7'
+  s.tenant_id = 'sample'
+  s.name = 'password reset メールテンプレート'
+  s.template_type = 'password_reset'
+  s.subject = 'password reset メール！'
+  s.body = <<~TEXT
+    <p>以下のURLを開いてパスワードを設定してください</p>
+    <p>{{ password_reset_url }}</p>
+  TEXT
+end

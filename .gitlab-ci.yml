@@ -186,7 +186,7 @@ deploy-dev:
     - curl -L https://fly.io/install.sh | sh
     - ~/.fly/bin/flyctl deploy -c fly.toml
   only:
-    - master
+    - deploy-flyio
   except:
     - schedules
 

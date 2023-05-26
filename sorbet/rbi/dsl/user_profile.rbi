@@ -644,16 +644,16 @@ class UserProfile
     sig { void }
     def first_name_will_change!; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def gender; end
 
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    sig { params(value: T.untyped).returns(T.untyped) }
     def gender=(value); end
 
     sig { returns(T::Boolean) }
     def gender?; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def gender_before_last_save; end
 
     sig { returns(T.untyped) }
@@ -662,28 +662,28 @@ class UserProfile
     sig { returns(T::Boolean) }
     def gender_came_from_user?; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def gender_change; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def gender_change_to_be_saved; end
 
     sig { returns(T::Boolean) }
     def gender_changed?; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def gender_in_database; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def gender_previous_change; end
 
     sig { returns(T::Boolean) }
     def gender_previously_changed?; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def gender_previously_was; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def gender_was; end
 
     sig { void }
@@ -881,7 +881,7 @@ class UserProfile
     sig { returns(T::Boolean) }
     def saved_change_to_first_name_kana?; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_gender; end
 
     sig { returns(T::Boolean) }

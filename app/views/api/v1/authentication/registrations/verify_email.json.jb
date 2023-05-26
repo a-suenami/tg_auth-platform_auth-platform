@@ -1,0 +1,4 @@
+{
+  user_id: @user.id,
+  email_verified: @user.email_verified,
+}

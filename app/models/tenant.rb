@@ -7,6 +7,8 @@ class Tenant < ApplicationRecord
   validates :id, uniqueness: { case_sensitive: false }
   validates :id, format: { with: /\A[a-z0-9][a-z0-9-]+[a-z0-9]\z/ }
 
+  has_one :login_spa_application, dependent: :destroy
+
   class << self
     extend T::Sig
 

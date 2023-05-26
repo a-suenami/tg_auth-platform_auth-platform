@@ -36,22 +36,46 @@ module GeneratedUrlHelpersModule
   def api_v1_admin_user_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_v1_oauth_login_url(*args); end
+  def api_v1_authentication_password_resets_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_v1_oauth_logout_url(*args); end
+  def api_v1_authentication_passwords_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_v1_oauth_signup_url(*args); end
+  def api_v1_authentication_profiles_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_authentication_sessions_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def api_v1_private_userinfo_index_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_password_resets_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def health_check_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def logout_api_v1_authentication_sessions_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def logout_sessions_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_password_reset_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_password_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_profile_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_registration_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_session_url(*args); end
@@ -90,6 +114,15 @@ module GeneratedUrlHelpersModule
   def oauth_userinfo_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def password_resets_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def passwords_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def profiles_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def rails_info_properties_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -99,7 +132,13 @@ module GeneratedUrlHelpersModule
   def rails_info_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def session_url(*args); end
+  def relaunch_authorizations_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def send_verification_email_api_v1_authentication_registrations_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def send_verification_email_registrations_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def sessions_url(*args); end
@@ -112,4 +151,10 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def turbo_resume_historical_location_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def verify_email_api_v1_authentication_registrations_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def verify_email_registrations_url(*args); end
 end

@@ -21,6 +21,7 @@
 
 /public/assets
 
+
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
@@ -32,8 +33,15 @@ node_modules
 # Vite uses dotenv and suggests to ignore local-only env files. See
 # https://vitejs.dev/guide/env-and-mode.html#env-files
 *.local
+*.local.yml
 
 secrets.env
 /config/settings/development.secrets.yml
 /config/settings/test.secrets.yml
 /config/settings/production.secrets.yml
+spec/examples.txt
+public/rspec.html
+
+cspell.yml
+
+env.fly
