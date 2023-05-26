@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 module Users
   class SendPasswordResetEmailService < BaseService
@@ -40,6 +40,7 @@ module Users
         send_to: user.email,
         subject: email_template.subject,
         body: liquid_template.render('password_reset_url' => password_reset_url),
+        name: Tenant.current&.name,
       )
     end
   end
