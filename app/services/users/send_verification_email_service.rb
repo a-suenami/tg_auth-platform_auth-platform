@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 module Users
   class SendVerificationEmailService < BaseService
@@ -33,6 +33,7 @@ module Users
         send_to: user.email,
         subject: email_template.subject,
         body: liquid_template.render('email_verification_code' => user.email_verification_code),
+        name: Tenant.current&.name,
       )
     end
   end

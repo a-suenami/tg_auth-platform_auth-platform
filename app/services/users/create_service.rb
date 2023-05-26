@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 module Users
   class CreateService < BaseService
@@ -23,6 +23,7 @@ module Users
         send_to: user.email,
         subject: email_template.subject,
         body: liquid_template.render('email' => user.email),
+        name: Tenant.current&.name,
       )
     end
   end
