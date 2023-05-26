@@ -1,0 +1,7 @@
+/ forget password form
+= form_with url: password_resets_path, method: :post do |f|
+  .field
+    = f.label :email
+    = f.email_field :email, autofocus: true
+  .actions
+    = f.submit "Send me reset password instructions", class: "btn btn-primary"
