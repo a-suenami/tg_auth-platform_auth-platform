@@ -42,7 +42,7 @@ module Blastengine
       Base64.encode64(hashed_token.downcase).gsub("\n", '')
     end
 
-    sig { params(http_method: Symbol, path: String, params: T.untyped, headers: T.untyped).returns(String) }
+    sig { params(http_method: Symbol, path: String, params: T.untyped, headers: T.untyped).returns(T.untyped) }
     def request(http_method, path, params = nil, headers = {})
       raise unless http_method.to_sym.in? [:get, :post, :put, :delete]
 
