@@ -1,0 +1,15 @@
+json = {}
+profile_json = {}
+
+json[:id] = current_user.id
+json[:email] = current_user.email
+profile_json[:first_name] = current_user.user_profile&.first_name
+profile_json[:last_name] = current_user.user_profile&.last_name
+profile_json[:first_name_kana] = current_user.user_profile&.first_name_kana
+profile_json[:last_name_kana] = current_user.user_profile&.last_name_kana
+profile_json[:birth_date] = current_user.user_profile&.birth_date
+profile_json[:gender] = current_user.user_profile&.gender
+profile_json[:birth_date]
+json[:profile] = profile_json
+
+json

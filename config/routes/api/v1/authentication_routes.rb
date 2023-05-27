@@ -16,10 +16,9 @@ Rails.application.routes.draw do
           end
         end
         resources :passwords, only: [:create]
-        resources :profiles, only: [:create]
         resources :password_resets, only: [:create] do
           collection do
-            put :update
+            post :request
           end
         end
       end
