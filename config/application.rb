@@ -57,5 +57,7 @@ module RailsApp
     # ActionController
     # --------------------------------------------------------------------------
     config.action_controller.include_all_helpers = false
+
+    config.session_config = { domain: :all, tld_length: 4 } # workaround
   end
 end
