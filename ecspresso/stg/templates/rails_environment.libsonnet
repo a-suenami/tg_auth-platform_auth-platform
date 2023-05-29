@@ -1,5 +1,9 @@
 [
   {
+    "name": "ALLOW_ORIGINS",
+    "value": "['http://web.yonezukenshi.auth.app-staging.id-platform.net']"
+  },
+  {
     "name": "ADMIN_AUTH0_CLIENT_ID",
     "value": "gLCWZeA7708FY1adx4SKP3MaxvYmgvW6"
   },
