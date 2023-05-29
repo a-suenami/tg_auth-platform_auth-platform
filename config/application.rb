@@ -58,6 +58,6 @@ module RailsApp
     # --------------------------------------------------------------------------
     config.action_controller.include_all_helpers = false
 
-    config.session_config = { domain: :all, tld_length: 4 } # workaround
+    config.session_store :cookie_store, key: '_rails_app_session', domain: :all, tld_length: 4 # workaround
   end
 end
