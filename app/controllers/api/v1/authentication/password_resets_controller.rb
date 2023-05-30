@@ -1,6 +1,7 @@
 module API::V1::Authentication
   class PasswordResetsController < ApplicationController
-    def create
+    # Httpリクエストのrequestと名前被り回避のため、冗長な名前に
+    def reset_requests
       client = Tenant.current.login_spa_application
       if client.present?
         Users::SendPasswordResetEmailService.new.execute!(email: params[:email], base_url: client.redirect_url_on_password_reset)
@@ -10,15 +11,15 @@ module API::V1::Authentication
       render json: { status: 'ok' }
     end
 
-    def update
-      user = Users::PasswordResetService.new(update_password_params).execute!(password_reset_code: params[:password_reset_code], email: params[:email])
+    def create
+      user = Users::PasswordResetService.new(password_params).execute!(password_reset_code: params[:password_reset_code], email: params[:email])
       session[:current_user_id] = user.id
       render json: { status: 'ok' }
     end
 
     private
 
-    def update_password_params
+    def password_params
       params.permit(:password)
     end
   end
