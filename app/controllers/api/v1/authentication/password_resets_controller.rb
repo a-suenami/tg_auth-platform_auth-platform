@@ -1,6 +1,7 @@
 module API::V1::Authentication
   class PasswordResetsController < ApplicationController
-    def request
+    # Httpリクエストのrequestと名前被り回避のため、冗長な名前に
+    def reset_requests
       client = Tenant.current.login_spa_application
       if client.present?
         Users::SendPasswordResetEmailService.new.execute!(email: params[:email], base_url: client.redirect_url_on_password_reset)

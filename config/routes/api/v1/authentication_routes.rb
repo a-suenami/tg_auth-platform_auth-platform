@@ -18,7 +18,7 @@ Rails.application.routes.draw do
         resources :passwords, only: [:create]
         resources :password_resets, only: [:create] do
           collection do
-            post :request
+            post :request, to: 'password_resets#reset_requests'
           end
         end
       end
