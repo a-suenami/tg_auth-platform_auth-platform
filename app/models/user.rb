@@ -29,14 +29,6 @@ class User < ApplicationRecord
   end
 
   sig { returns(T::Boolean) }
-  def set_email_verification_code
-    self.email_verification_code = format('%06d', SecureRandom.random_number(10**6))
-    self.email_verification_code_expired_at = 1.hour.from_now
-    self.email_verification_code_remaining_attempts = 5
-    true
-  end
-
-  sig { returns(T::Boolean) }
   def set_enabled
     return true if self.enabled
     # 同じemailで他に有効なユーザーがいる場合は、有効にしない

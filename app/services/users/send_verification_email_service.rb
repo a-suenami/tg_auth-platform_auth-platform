@@ -17,22 +17,24 @@ module Users
         end
 
         user = User.find_or_initialize_by(email:)
-        user.set_email_verification_code
+        email_verifier = Users::EmailVerifier.find_or_initialize_by(user:)
+        email_verifier.set_code
+        email_verifier.save!
         user.save!
 
-        send_verification_email(user)
+        send_verification_email(user, email_verifier)
         user
       end
     end
 
-    def send_verification_email(user)
+    def send_verification_email(user, email_verifier)
       email_template = EmailTemplate.find_by!(template_type: 'email_address_verification')
       liquid_template = Liquid::Template.parse(email_template.body)
 
       Blastengine::API.new.send_email(
         send_to: user.email,
         subject: email_template.subject,
-        body: liquid_template.render('email_verification_code' => user.email_verification_code),
+        body: liquid_template.render('email_verification_code' => email_verifier.code),
         name: Tenant.current&.name,
       )
     end
