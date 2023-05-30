@@ -1,7 +1,7 @@
 # typed: false
 
 RSpec.describe '[ Password Resets API ]' do
-  describe 'POST /api/v1/authentication/password_resets' do
+  describe 'POST /api/v1/authentication/password_resets/request' do
     let(:user_1) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password')
     }
@@ -69,7 +69,7 @@ RSpec.describe '[ Password Resets API ]' do
     end
   end
 
-  describe 'PUT /api/v1/authentication/password_resets' do
+  describe 'POST /api/v1/authentication/password_resets' do
     let(:user_1) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password')
     }
