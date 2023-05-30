@@ -6,15 +6,11 @@ module API::V1::Internal
     def create
       if Users::UpdateService.new(user_params).execute(user: @current_user)
         if @current_user.password_digest.present?
+          # TODO: 必須項目が設定されてるか確認する
           @current_user.set_enabled
         end
 
-        if session[:auth_url].present?
-          # TODO: レスポンスをしっかり定義する
-          render json: { status: 'ok' }
-        else
-          handle_400 error_details: ['failed load auth url']
-        end
+        render :show
       else
         handle_400 error_details: ['failed to create profiles']
       end
@@ -24,15 +20,11 @@ module API::V1::Internal
     def update
       if Users::UpdateService.new(user_params).execute(user: @current_user)
         if @current_user.password_digest.present?
+          # TODO: 必須項目が設定されてるか確認する
           @current_user.set_enabled
         end
 
-        if session[:auth_url].present?
-          # TODO: レスポンスをしっかり定義する
-          render json: { status: 'ok' }
-        else
-          handle_400 error_details: ['failed load auth url']
-        end
+        render :show
       else
         handle_400 error_details: ['failed to create profiles']
       end

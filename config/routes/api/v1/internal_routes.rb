@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   namespace :api, format: 'json' do
     namespace :v1 do
       namespace :internal do
-        resource :me, only: [:show]
+        get :me, to: 'me#show'
         namespace :me do
           resource :profile, only: [:show, :create, :update]
         end
