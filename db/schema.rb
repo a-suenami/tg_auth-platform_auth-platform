@@ -76,6 +76,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "confidential", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "login_url"
     t.string "redirect_url_on_password_reset"
     t.index ["tenant_id"], name: "index_login_spa_applications_on_tenant_id"
     t.index ["uid"], name: "index_login_spa_applications_on_uid", unique: true

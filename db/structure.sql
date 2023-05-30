@@ -124,6 +124,7 @@ CREATE TABLE public.login_spa_applications (
     confidential boolean DEFAULT true NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    login_url character varying,
     redirect_url_on_password_reset character varying
 );
 
