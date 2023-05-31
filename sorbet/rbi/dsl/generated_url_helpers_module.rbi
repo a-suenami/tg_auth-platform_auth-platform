@@ -63,9 +63,6 @@ module GeneratedUrlHelpersModule
   def logout_api_v1_authentication_sessions_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def logout_sessions_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
