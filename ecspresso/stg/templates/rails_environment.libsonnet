@@ -1,7 +1,7 @@
 [
   {
     "name": "ALLOW_ORIGINS",
-    "value": "['https://web.yonezukenshi.auth.app-staging.id-platform.net']"
+    "value": "['https://web.yonezukenshi.auth.app-staging.id-platform.net', 'https://dev.yonezukenshi.auth.app-staging.id-platform.net']"
   },
   {
     "name": "ADMIN_AUTH0_CLIENT_ID",
