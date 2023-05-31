@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :authentication do
         resources :sessions, only: [:create] do
-          get :logout, on: :collection
+          post :logout, on: :collection
         end
         resources :registrations, only: [] do
           collection do

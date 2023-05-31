@@ -1,10 +1,6 @@
 Rails.application.routes.draw do
   scope module: :tenants_area do
-    resources :sessions, only: [:new, :create] do
-      collection do
-        get :logout
-      end
-    end
+    resources :sessions, only: [:new, :create]
     resources :authorizations, only: [] do
       collection do
         get :relaunch

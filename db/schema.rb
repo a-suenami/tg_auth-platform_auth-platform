@@ -71,7 +71,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.citext "tenant_id", null: false
     t.string "name", null: false
     t.string "uid", null: false
-    t.text "allowed_logout_urls", null: false
     t.string "scopes", default: "", null: false
     t.boolean "confidential", default: true, null: false
     t.datetime "created_at", null: false
