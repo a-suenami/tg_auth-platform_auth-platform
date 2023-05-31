@@ -119,7 +119,6 @@ CREATE TABLE public.login_spa_applications (
     tenant_id public.citext NOT NULL,
     name character varying NOT NULL,
     uid character varying NOT NULL,
-    allowed_logout_urls text NOT NULL,
     scopes character varying DEFAULT ''::character varying NOT NULL,
     confidential boolean DEFAULT true NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,

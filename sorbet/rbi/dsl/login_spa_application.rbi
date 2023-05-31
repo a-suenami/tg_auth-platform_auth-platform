@@ -459,51 +459,6 @@ class LoginSpaApplication
   end
 
   module GeneratedAttributeMethods
-    sig { returns(::String) }
-    def allowed_logout_urls; end
-
-    sig { params(value: ::String).returns(::String) }
-    def allowed_logout_urls=(value); end
-
-    sig { returns(T::Boolean) }
-    def allowed_logout_urls?; end
-
-    sig { returns(T.nilable(::String)) }
-    def allowed_logout_urls_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def allowed_logout_urls_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def allowed_logout_urls_came_from_user?; end
-
-    sig { returns(T.nilable([::String, ::String])) }
-    def allowed_logout_urls_change; end
-
-    sig { returns(T.nilable([::String, ::String])) }
-    def allowed_logout_urls_change_to_be_saved; end
-
-    sig { returns(T::Boolean) }
-    def allowed_logout_urls_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def allowed_logout_urls_in_database; end
-
-    sig { returns(T.nilable([::String, ::String])) }
-    def allowed_logout_urls_previous_change; end
-
-    sig { returns(T::Boolean) }
-    def allowed_logout_urls_previously_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def allowed_logout_urls_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def allowed_logout_urls_was; end
-
-    sig { void }
-    def allowed_logout_urls_will_change!; end
-
     sig { returns(T::Boolean) }
     def confidential; end
 
@@ -775,9 +730,6 @@ class LoginSpaApplication
     def redirect_url_on_password_reset_will_change!; end
 
     sig { void }
-    def restore_allowed_logout_urls!; end
-
-    sig { void }
     def restore_confidential!; end
 
     sig { void }
@@ -806,12 +758,6 @@ class LoginSpaApplication
 
     sig { void }
     def restore_updated_at!; end
-
-    sig { returns(T.nilable([::String, ::String])) }
-    def saved_change_to_allowed_logout_urls; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_allowed_logout_urls?; end
 
     sig { returns(T.nilable([T::Boolean, T::Boolean])) }
     def saved_change_to_confidential; end
@@ -1052,9 +998,6 @@ class LoginSpaApplication
 
     sig { void }
     def updated_at_will_change!; end
-
-    sig { returns(T::Boolean) }
-    def will_save_change_to_allowed_logout_urls?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_confidential?; end
