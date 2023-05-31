@@ -6,9 +6,8 @@ Rails.application.routes.draw do
   namespace :api, format: 'json' do
     namespace :v1 do
       namespace :authentication do
-        resources :sessions, only: [:create] do
-          post :logout, on: :collection
-        end
+        resources :sessions, only: [:create]
+        post :logout, to: 'logout#create'
         resources :registrations, only: [] do
           collection do
             post :send_verification_email
