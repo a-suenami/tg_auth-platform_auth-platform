@@ -9,6 +9,7 @@ Rails.application.routes.draw do
         get :me, to: 'me#show'
         namespace :me do
           resource :profile, only: [:show, :create, :update]
+          resources :delivery_addresses, only: [:show, :index, :create, :update, :destroy]
         end
       end
     end

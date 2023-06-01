@@ -1,0 +1,11 @@
+{
+  id: @delivery_address.id,
+  is_default: @delivery_address.is_default,
+  zip_code: @delivery_address.zip_code,
+  prefecture_code: @delivery_address.prefecture_code,
+  prefecture: @delivery_address&.prefecture&.name,
+  city: @delivery_address.city,
+  address_1: @delivery_address.address_1,
+  address_2: @delivery_address.address_2,
+  contact_tel: @delivery_address.contact_tel,
+}

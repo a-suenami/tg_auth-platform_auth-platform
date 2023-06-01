@@ -1,6 +1,6 @@
 # typed: false
 
-RSpec.describe '[ Password API ]' do
+RSpec.describe '[ Profiles API ]' do
   describe 'GET /api/v1/internal/me/profile' do
     let(:user_1) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password_digest: nil)
