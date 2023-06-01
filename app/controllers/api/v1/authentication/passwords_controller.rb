@@ -22,6 +22,7 @@ module API::V1::Authentication
         handle_400 error_details: ['failed to create password']
       end
     end
+
     private
 
     def registrations_session_authenticate

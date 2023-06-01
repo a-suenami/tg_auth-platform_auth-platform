@@ -48,6 +48,12 @@ module GeneratedPathHelpersModule
   def api_v1_authentication_sessions_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def api_v1_internal_me_delivery_address_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_internal_me_delivery_addresses_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def api_v1_internal_me_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }

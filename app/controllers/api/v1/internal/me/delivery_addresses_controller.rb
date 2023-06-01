@@ -2,11 +2,11 @@ module API::V1::Internal
   class Me::DeliveryAddressesController < ApplicationController
     before_action :set_delivery_address, only: [:show, :update, :destroy]
 
-    def show; end
-
     def index
       @delivery_addresses = @current_user.delivery_addresses
     end
+
+    def show; end
 
 
     def create
@@ -15,16 +15,6 @@ module API::V1::Internal
         render :show
       else
         handle_400 error_details: ['failed to create delivery_address']
-      end
-    end
-
-    def update
-      @delivery_address = DeliveryAddress.find(params[:id])
-      @delivery_address = DeliveryAddresses::UpdateService.new(delivery_addresses_params).execute(delivery_address: @delivery_address)
-      if @delivery_address.persisted?
-        render :show
-      else
-        handle_400 error_details: ['failed to update delivery_address']
       end
     end
 
@@ -58,7 +48,7 @@ module API::V1::Internal
         :city,
         :address_1,
         :address_2,
-        :contact_tel
+        :contact_tel,
       )
     end
   end

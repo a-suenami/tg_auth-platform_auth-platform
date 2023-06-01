@@ -66,8 +66,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         city: '世田谷区北沢',
         address_1: '1-1-2',
         address_2: '北沢アモーレ 101号室',
-        contact_tel: '080-1234-5678'
-        )
+        contact_tel: '080-1234-5678',)
     }
     let(:user_1_delivery_addresses) {
       create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: user_1.id)
@@ -146,10 +145,11 @@ RSpec.describe '[ DeliveryAddresses API ]' do
             city: '世田谷区北沢',
             address_1: '1-1-2',
             address_2: '北沢アモーレ 101号室',
-            contact_tel: '080-1234-5678'
-          }
+            contact_tel: '080-1234-5678',
+          },
         }
       }
+
       it 'returns 200' do
         is_expected.to eq 200
         expect(body_hash['zip_code']).to eq('155-0031')
@@ -184,8 +184,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         city: '世田谷区北沢',
         address_1: '1-1-2',
         address_2: '北沢アモーレ 101号室',
-        contact_tel: '080-1234-5678'
-        )
+        contact_tel: '080-1234-5678',)
     }
     let(:user_1_delivery_addresses) {
       create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: user_1.id)
@@ -218,10 +217,11 @@ RSpec.describe '[ DeliveryAddresses API ]' do
             city: '東京都港区芝公園',
             address_1: '４丁目２−８',
             address_2: '東京タワー 2F',
-            contact_tel: '080-1234-1234'
-          }
+            contact_tel: '080-1234-1234',
+          },
         }
       }
+
       it 'returns 200' do
         is_expected.to eq 200
         expect(body_hash['zip_code']).to eq('105-0011')
@@ -257,8 +257,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         city: '世田谷区北沢',
         address_1: '1-1-2',
         address_2: '北沢アモーレ 101号室',
-        contact_tel: '080-1234-5678'
-        )
+        contact_tel: '080-1234-5678',)
     }
     let(:user_1_delivery_addresses) {
       create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: user_1.id)
@@ -284,9 +283,9 @@ RSpec.describe '[ DeliveryAddresses API ]' do
 
     context 'when params vaild' do
       it 'returns 204' do
-        expect(DeliveryAddress.find_by(id: user_1_delivery_address_1.id)).not_to eq(nil)
+        expect(DeliveryAddress.find_by(id: user_1_delivery_address_1.id)).not_to be_nil
         is_expected.to eq 204
-        expect(DeliveryAddress.find_by(id: user_1_delivery_address_1.id)).to eq(nil)
+        expect(DeliveryAddress.find_by(id: user_1_delivery_address_1.id)).to be_nil
       end
     end
   end

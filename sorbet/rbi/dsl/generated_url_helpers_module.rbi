@@ -48,6 +48,12 @@ module GeneratedUrlHelpersModule
   def api_v1_authentication_sessions_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def api_v1_internal_me_delivery_address_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_internal_me_delivery_addresses_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def api_v1_internal_me_profile_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
