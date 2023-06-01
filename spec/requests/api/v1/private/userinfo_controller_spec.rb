@@ -12,7 +12,7 @@ RSpec.describe '[ Userinfo API ]' do
     let(:token_expires_in) { 2.hours }
     let(:user_profile) { create(:user_profile, tenant_id: current_tenant.id, user: current_user) }
     let(:contact_address) { create(:contact_address, tenant_id: current_tenant.id, user: current_user) }
-    let(:delivary_address) { create(:delivary_address, tenant_id: current_tenant.id, user: current_user) }
+    let(:delivery_address) { create(:delivery_address, tenant_id: current_tenant.id, user: current_user) }
 
     context 'when present vaild access token' do
       let(:scopes) { '' }
@@ -38,27 +38,27 @@ RSpec.describe '[ Userinfo API ]' do
         oauth_token
         user_profile
         contact_address
-        delivary_address
+        delivery_address
       end
 
       context 'when current user has all scopes' do
-        let(:scopes) { 'uid email name profile contact delivary_address' }
+        let(:scopes) { 'uid email name profile contact delivery_address' }
 
         it 'returns user info' do
           is_expected.to eq 200
           expect(body_hash).to eq({
             'uid' => current_user.id,
             'email' => current_user.email,
-            'delivary_addresses' => [
+            'delivery_addresses' => [
               {
-                'is_default' => delivary_address.is_default,
-                'prefecture_code' => delivary_address.prefecture_code,
-                'prefecture' => delivary_address.prefecture.name,
-                'zip_code' => delivary_address.zip_code,
-                'city' => delivary_address.city,
-                'address_1' => delivary_address.address_1,
-                'address_2' => delivary_address.address_2,
-                'contact_tel' => delivary_address.contact_tel,
+                'is_default' => delivery_address.is_default,
+                'prefecture_code' => delivery_address.prefecture_code,
+                'prefecture' => delivery_address.prefecture.name,
+                'zip_code' => delivery_address.zip_code,
+                'city' => delivery_address.city,
+                'address_1' => delivery_address.address_1,
+                'address_2' => delivery_address.address_2,
+                'contact_tel' => delivery_address.contact_tel,
               },
             ],
             'profile' => {
@@ -155,22 +155,22 @@ RSpec.describe '[ Userinfo API ]' do
         end
       end
 
-      context 'when current user has delivary_address scopes' do
-        let(:scopes) { 'delivary_address' }
+      context 'when current user has delivery_address scopes' do
+        let(:scopes) { 'delivery_address' }
 
         it 'returns user info' do
           is_expected.to eq 200
           expect(body_hash).to eq({
-            'delivary_addresses' => [
+            'delivery_addresses' => [
               {
-                'is_default' => delivary_address.is_default,
-                'prefecture_code' => delivary_address.prefecture_code,
-                'prefecture' => delivary_address.prefecture.name,
-                'zip_code' => delivary_address.zip_code,
-                'city' => delivary_address.city,
-                'address_1' => delivary_address.address_1,
-                'address_2' => delivary_address.address_2,
-                'contact_tel' => delivary_address.contact_tel,
+                'is_default' => delivery_address.is_default,
+                'prefecture_code' => delivery_address.prefecture_code,
+                'prefecture' => delivery_address.prefecture.name,
+                'zip_code' => delivery_address.zip_code,
+                'city' => delivery_address.city,
+                'address_1' => delivery_address.address_1,
+                'address_2' => delivery_address.address_2,
+                'contact_tel' => delivery_address.contact_tel,
               },
             ],
           })

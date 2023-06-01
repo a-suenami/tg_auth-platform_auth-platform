@@ -1,7 +1,7 @@
 # typed: false
 
 FactoryBot.define do
-  factory :delivary_address do
+  factory :delivery_address do
     tenant_id { create(:tenant).id }
     user { create(:user) }
     is_default { false }

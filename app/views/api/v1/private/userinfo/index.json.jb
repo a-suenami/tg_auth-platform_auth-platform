@@ -25,8 +25,8 @@ if @doorkeeper_token.acceptable?(:contact)
   contact_address_json[:address_1] = current_user.contact_address&.address_1
   contact_address_json[:address_2] = current_user.contact_address&.address_2
 end
-if @doorkeeper_token.acceptable?(:delivary_address)
-  json[:delivary_addresses] = current_user.delivary_addresses.map do |address|
+if @doorkeeper_token.acceptable?(:delivery_address)
+  json[:delivery_addresses] = current_user.delivery_addresses.map do |address|
     address_json = {}
     address_json[:is_default] = address&.is_default
     address_json[:prefecture_code] = address&.prefecture_code
