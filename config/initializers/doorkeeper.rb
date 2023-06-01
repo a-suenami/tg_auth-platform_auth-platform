@@ -18,7 +18,7 @@ Doorkeeper.configure do
       client = Tenant.current.login_spa_application
 
       if client.present? && client.login_url.present?
-        redirect_to client.login_url, allow_other_host: true
+        redirect_to client.login_url_with_flag, allow_other_host: true
       else
         redirect_to new_session_path
       end
@@ -250,7 +250,7 @@ Doorkeeper.configure do
   # https://doorkeeper.gitbook.io/guides/ruby-on-rails/scopes
   #
   default_scopes  :public
-  optional_scopes :uid, :email, :name, :profile, :contact, :delivary_address, :openid, :admin_users
+  optional_scopes :uid, :email, :name, :profile, :contact, :delivery_address, :openid, :admin_users
 
   # Allows to restrict only certain scopes for grant_type.
   # By default, all the scopes will be available for all the grant types.

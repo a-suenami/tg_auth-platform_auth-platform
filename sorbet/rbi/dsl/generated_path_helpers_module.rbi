@@ -36,6 +36,9 @@ module GeneratedPathHelpersModule
   def api_v1_admin_user_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def api_v1_authentication_logout_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def api_v1_authentication_password_resets_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -43,6 +46,12 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def api_v1_authentication_sessions_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_internal_me_delivery_address_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_internal_me_delivery_addresses_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def api_v1_internal_me_path(*args); end
@@ -58,12 +67,6 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def health_check_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def logout_api_v1_authentication_sessions_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def logout_sessions_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_path(*args); end

@@ -75,10 +75,10 @@ CREATE TABLE public.contact_addresses (
 
 
 --
--- Name: delivary_addresses; Type: TABLE; Schema: public; Owner: -
+-- Name: delivery_addresses; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.delivary_addresses (
+CREATE TABLE public.delivery_addresses (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
@@ -119,7 +119,6 @@ CREATE TABLE public.login_spa_applications (
     tenant_id public.citext NOT NULL,
     name character varying NOT NULL,
     uid character varying NOT NULL,
-    allowed_logout_urls text NOT NULL,
     scopes character varying DEFAULT ''::character varying NOT NULL,
     confidential boolean DEFAULT true NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
@@ -285,11 +284,11 @@ ALTER TABLE ONLY public.contact_addresses
 
 
 --
--- Name: delivary_addresses delivary_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: delivery_addresses delivery_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.delivary_addresses
-    ADD CONSTRAINT delivary_addresses_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.delivery_addresses
+    ADD CONSTRAINT delivery_addresses_pkey PRIMARY KEY (id);
 
 
 --
@@ -394,17 +393,17 @@ CREATE INDEX index_contact_addresses_on_user_id ON public.contact_addresses USIN
 
 
 --
--- Name: index_delivary_addresses_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_delivery_addresses_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_delivary_addresses_on_tenant_id ON public.delivary_addresses USING btree (tenant_id);
+CREATE INDEX index_delivery_addresses_on_tenant_id ON public.delivery_addresses USING btree (tenant_id);
 
 
 --
--- Name: index_delivary_addresses_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_delivery_addresses_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_delivary_addresses_on_user_id ON public.delivary_addresses USING btree (user_id);
+CREATE INDEX index_delivery_addresses_on_user_id ON public.delivery_addresses USING btree (user_id);
 
 
 --
@@ -579,19 +578,19 @@ ALTER TABLE ONLY public.contact_addresses
 
 
 --
--- Name: delivary_addresses fk_delivary_addresses_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: delivery_addresses fk_delivery_addresses_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.delivary_addresses
-    ADD CONSTRAINT fk_delivary_addresses_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+ALTER TABLE ONLY public.delivery_addresses
+    ADD CONSTRAINT fk_delivery_addresses_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
--- Name: delivary_addresses fk_delivary_addresses_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: delivery_addresses fk_delivery_addresses_users; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.delivary_addresses
-    ADD CONSTRAINT fk_delivary_addresses_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.delivery_addresses
+    ADD CONSTRAINT fk_delivery_addresses_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --

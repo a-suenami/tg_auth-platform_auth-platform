@@ -6,16 +6,15 @@ Rails.application.routes.draw do
   namespace :api, format: 'json' do
     namespace :v1 do
       namespace :authentication do
-        resources :sessions, only: [:create] do
-          get :logout, on: :collection
-        end
+        resources :sessions, only: [:create]
+        post :logout, to: 'logout#create'
         resources :registrations, only: [] do
           collection do
             post :send_verification_email
             post :verify_email
           end
         end
-        resources :passwords, only: [:create]
+        resource :passwords, only: [:create, :update]
         resources :password_resets, only: [:create] do
           collection do
             post :request, to: 'password_resets#reset_requests'

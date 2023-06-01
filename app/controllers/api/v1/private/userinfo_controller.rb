@@ -2,7 +2,7 @@
 
 module API::V1::Private
   class UserinfoController < ApplicationController
-    before_action -> { doorkeeper_authorize! :uid, :email, :name, :profile, :contact, :delivary_address }, only: :index
+    before_action -> { doorkeeper_authorize! :uid, :email, :name, :profile, :contact, :delivery_address }, only: :index
 
     def index
       @doorkeeper_token = doorkeeper_token

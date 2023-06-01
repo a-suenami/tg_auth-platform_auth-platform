@@ -40,7 +40,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["user_id"], name: "index_contact_addresses_on_user_id"
   end
 
-  create_table "delivary_addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "delivery_addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.boolean "is_default"
@@ -52,8 +52,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "contact_tel"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tenant_id"], name: "index_delivary_addresses_on_tenant_id"
-    t.index ["user_id"], name: "index_delivary_addresses_on_user_id"
+    t.index ["tenant_id"], name: "index_delivery_addresses_on_tenant_id"
+    t.index ["user_id"], name: "index_delivery_addresses_on_user_id"
   end
 
   create_table "email_templates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -71,7 +71,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.citext "tenant_id", null: false
     t.string "name", null: false
     t.string "uid", null: false
-    t.text "allowed_logout_urls", null: false
     t.string "scopes", default: "", null: false
     t.boolean "confidential", default: true, null: false
     t.datetime "created_at", null: false
@@ -194,8 +193,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "admins", "tenants", name: "fk_admins_tenants"
   add_foreign_key "contact_addresses", "tenants", name: "fk_contact_addresses_tenants"
   add_foreign_key "contact_addresses", "users", name: "fk_contact_addresses_users"
-  add_foreign_key "delivary_addresses", "tenants", name: "fk_delivary_addresses_tenants"
-  add_foreign_key "delivary_addresses", "users", name: "fk_delivary_addresses_users"
+  add_foreign_key "delivery_addresses", "tenants", name: "fk_delivery_addresses_tenants"
+  add_foreign_key "delivery_addresses", "users", name: "fk_delivery_addresses_users"
   add_foreign_key "email_templates", "tenants", name: "fk_email_templates_tenants"
   add_foreign_key "login_spa_applications", "tenants", name: "fk_login_spa_applications_tenants"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id", name: "fk_oauth_access_grants_oauth_applications"
