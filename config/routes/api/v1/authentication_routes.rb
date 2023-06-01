@@ -14,7 +14,7 @@ Rails.application.routes.draw do
             post :verify_email
           end
         end
-        resources :passwords, only: [:create]
+        resource :passwords, only: [:create, :update]
         resources :password_resets, only: [:create] do
           collection do
             post :request, to: 'password_resets#reset_requests'

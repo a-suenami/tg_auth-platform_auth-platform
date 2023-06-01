@@ -290,18 +290,18 @@ class User
     def create_user_profile!(*args, &blk); end
 
     sig { returns(T::Array[T.untyped]) }
-    def delivary_address_ids; end
+    def delivery_address_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def delivary_address_ids=(ids); end
+    def delivery_address_ids=(ids); end
 
-    # This method is created by ActiveRecord on the `User` class because it declared `has_many :delivary_addresses`.
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :delivery_addresses`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::DelivaryAddress::PrivateCollectionProxy) }
-    def delivary_addresses; end
+    sig { returns(::DeliveryAddress::PrivateCollectionProxy) }
+    def delivery_addresses; end
 
-    sig { params(value: T::Enumerable[::DelivaryAddress]).void }
-    def delivary_addresses=(value); end
+    sig { params(value: T::Enumerable[::DeliveryAddress]).void }
+    def delivery_addresses=(value); end
 
     sig { returns(T.nilable(::ContactAddress)) }
     def reload_contact_address; end

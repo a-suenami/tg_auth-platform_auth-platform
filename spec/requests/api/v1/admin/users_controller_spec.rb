@@ -7,7 +7,7 @@ RSpec.describe '[ Admin Users API ]' do
         tenant_id: current_tenant.id,
         name: 'Sample',
         redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
-        scopes: 'admin_users uid email name profile contact delivary_address openid',
+        scopes: 'admin_users uid email name profile contact delivery_address openid',
         enable_client_credential_flow: true,
       )
     }
@@ -15,11 +15,11 @@ RSpec.describe '[ Admin Users API ]' do
     let(:user) { create(:user, tenant_id: current_tenant.id) }
     let(:user_profile) { create(:user_profile, tenant_id: current_tenant.id, user:) }
     let(:contact_address) { create(:contact_address, tenant_id: current_tenant.id, user:) }
-    let(:delivary_address) { create(:delivary_address, tenant_id: current_tenant.id, user:) }
+    let(:delivery_address) { create(:delivery_address, tenant_id: current_tenant.id, user:) }
     let(:user_id) { user.id }
 
     context 'when present vaild access token' do
-      let(:scopes) { 'admin_users uid email name profile contact delivary_address' }
+      let(:scopes) { 'admin_users uid email name profile contact delivery_address' }
       let(:oauth_token) {
         OauthAccessToken.create!(
           tenant_id: current_tenant.id,
@@ -42,7 +42,7 @@ RSpec.describe '[ Admin Users API ]' do
         oauth_token
         user_profile
         contact_address
-        delivary_address
+        delivery_address
       end
 
       context 'when has all scopes' do
@@ -51,16 +51,16 @@ RSpec.describe '[ Admin Users API ]' do
           expect(body_hash).to eq({
             'uid' => user.id,
             'email' => user.email,
-            'delivary_addresses' => [
+            'delivery_addresses' => [
               {
-                'is_default' => delivary_address.is_default,
-                'prefecture_code' => delivary_address.prefecture_code,
-                'prefecture' => delivary_address.prefecture.name,
-                'zip_code' => delivary_address.zip_code,
-                'city' => delivary_address.city,
-                'address_1' => delivary_address.address_1,
-                'address_2' => delivary_address.address_2,
-                'contact_tel' => delivary_address.contact_tel,
+                'is_default' => delivery_address.is_default,
+                'prefecture_code' => delivery_address.prefecture_code,
+                'prefecture' => delivery_address.prefecture.name,
+                'zip_code' => delivery_address.zip_code,
+                'city' => delivery_address.city,
+                'address_1' => delivery_address.address_1,
+                'address_2' => delivery_address.address_2,
+                'contact_tel' => delivery_address.contact_tel,
               },
             ],
             'profile' => {
