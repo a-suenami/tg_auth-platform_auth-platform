@@ -57,6 +57,45 @@ RSpec.describe '[ Registrations API ]' do
     end
   end
 
-  # describe 'POST /api/v1/authentication/registrations/verify_email' do
-  # end
+  describe 'POST /api/v1/authentication/registrations/verify_email' do
+    let(:user_1) {
+      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', email_verified: false)
+    }
+
+    let(:users__email_verifier) {
+      create(:users__email_verifier, tenant_id: current_tenant.id, user: user_1, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 5)
+    }
+
+    before do
+      user_1
+      users__email_verifier
+    end
+
+    context 'when code invaild' do
+      let(:params) {
+        {
+          email_verification_code: '111111',
+          user_id: user_1.id,
+        }
+      }
+
+      it 'returns 400' do
+        is_expected.to eq 400
+      end
+    end
+
+    context 'when code vaild' do
+      let(:params) {
+        {
+          email_verification_code: '123456',
+          user_id: user_1.id,
+        }
+      }
+
+      it 'returns 200' do
+        is_expected.to eq 200
+        expect(User.find(user_1.id).email_verified).to be true
+      end
+    end
+  end
 end

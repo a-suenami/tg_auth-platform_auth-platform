@@ -5,11 +5,11 @@ module Users
 
     def execute!(email_verification_code:, user_id:)
       user = User.find user_id
-      email_verifier = Users::EmailVerifier.find_by(user: user, code: email_verification_code)
+      email_verifier = Users::EmailVerifier.find_by(user:, code: email_verification_code)
 
       return raise Exceptions::Services::Users::InvalidCode if email_verifier.blank?
 
-      return raise Exceptions::Services::Users::EmailVerificationCodeAttemptsIsOver if email_verifier.remaining_attempts.positive?
+      return raise Exceptions::Services::Users::EmailVerificationCodeAttemptsIsOver if email_verifier.remaining_attempts.negative?
 
       if email_verifier.code == email_verification_code
         if Time.zone.now < email_verifier.expired_at

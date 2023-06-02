@@ -4,7 +4,7 @@ module Users
   class EmailVerifier < ApplicationRecord
     extend T::Sig
     include Multitenancy
-    CODE_ATTEMPTS_LIMIT = T.let(5.freeze, Integer)
+    CODE_ATTEMPTS_LIMIT = T.let(5, Integer)
 
     belongs_to :user
 
