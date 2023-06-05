@@ -22,6 +22,11 @@ class User < ApplicationRecord
   has_many :delivery_addresses, dependent: :delete_all
   accepts_nested_attributes_for :contact_address, :user_profile
 
+  has_many :email_verifiers,
+    class_name: 'Users::EmailVerifier',
+    dependent: :delete_all,
+    inverse_of: :user
+
   sig { params(password: String).returns(T::Boolean) }
   def authenticate!(password)
     # authenticate password

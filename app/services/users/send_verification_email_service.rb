@@ -17,7 +17,7 @@ module Users
         end
 
         user = User.find_or_initialize_by(email:)
-        email_verifier = Users::EmailVerifier.find_or_initialize_by(user:)
+        email_verifier = Users::EmailVerifier.new(user:, email:, email_verifier_type: :registration)
         email_verifier.set_code
         email_verifier.save!
         user.save!

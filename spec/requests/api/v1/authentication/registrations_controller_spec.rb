@@ -81,6 +81,23 @@ RSpec.describe '[ Registrations API ]' do
 
       it 'returns 400' do
         is_expected.to eq 400
+        expect(Users::EmailVerifier.find(users__email_verifier.id).remaining_attempts).to be 4
+      end
+    end
+
+    context 'when remaining_attempts is 0' do
+      let(:users__email_verifier) {
+        create(:users__email_verifier, tenant_id: current_tenant.id, user: user_1, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 0)
+      }
+      let(:params) {
+        {
+          email_verification_code: '123456',
+          user_id: user_1.id,
+        }
+      }
+
+      it 'returns 400' do
+        is_expected.to eq 400
       end
     end
 

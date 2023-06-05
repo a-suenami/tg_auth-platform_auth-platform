@@ -4,6 +4,9 @@ create_table :users__email_verifiers, force: :cascade, id: :uuid, default: -> { 
   t.string  :code, null: false
   t.datetime  :expired_at, null: false
   t.integer  :remaining_attempts, default: 0
+  t.string :email_verifier_type, null: false
+  t.string :email
+  t.datetime  :used_at
 
   t.timestamps null: false
 end
