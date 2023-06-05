@@ -71,7 +71,7 @@ RSpec.describe '[ Password Resets API ]' do
 
   describe 'POST /api/v1/authentication/password_resets' do
     let(:user_1) {
-      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password')
+      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password', email_verified: true)
     }
     let(:users_password_resets) {
       create(:users__password_resets, tenant_id: current_tenant.id, user_id: user_1.id, code: 'this_is_code', expired_at: 1.hour.from_now)
