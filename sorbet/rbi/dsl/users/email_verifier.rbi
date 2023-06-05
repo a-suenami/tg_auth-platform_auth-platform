@@ -319,6 +319,9 @@ class Users::EmailVerifier
     def eager_load(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+    def enabled(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def except(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
@@ -570,6 +573,96 @@ class Users::EmailVerifier
     sig { void }
     def created_at_will_change!; end
 
+    sig { returns(T.nilable(::String)) }
+    def email; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def email=(value); end
+
+    sig { returns(T::Boolean) }
+    def email?; end
+
+    sig { returns(T.nilable(::String)) }
+    def email_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def email_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def email_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def email_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def email_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def email_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def email_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def email_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def email_previously_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def email_previously_was; end
+
+    sig { returns(T.untyped) }
+    def email_verifier_type; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def email_verifier_type=(value); end
+
+    sig { returns(T::Boolean) }
+    def email_verifier_type?; end
+
+    sig { returns(T.untyped) }
+    def email_verifier_type_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def email_verifier_type_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def email_verifier_type_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def email_verifier_type_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def email_verifier_type_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def email_verifier_type_changed?; end
+
+    sig { returns(T.untyped) }
+    def email_verifier_type_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def email_verifier_type_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def email_verifier_type_previously_changed?; end
+
+    sig { returns(T.untyped) }
+    def email_verifier_type_previously_was; end
+
+    sig { returns(T.untyped) }
+    def email_verifier_type_was; end
+
+    sig { void }
+    def email_verifier_type_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def email_was; end
+
+    sig { void }
+    def email_will_change!; end
+
     sig { returns(::ActiveSupport::TimeWithZone) }
     def expired_at; end
 
@@ -712,6 +805,12 @@ class Users::EmailVerifier
     def restore_created_at!; end
 
     sig { void }
+    def restore_email!; end
+
+    sig { void }
+    def restore_email_verifier_type!; end
+
+    sig { void }
     def restore_expired_at!; end
 
     sig { void }
@@ -727,6 +826,9 @@ class Users::EmailVerifier
     def restore_updated_at!; end
 
     sig { void }
+    def restore_used_at!; end
+
+    sig { void }
     def restore_user_id!; end
 
     sig { returns(T.nilable([::String, ::String])) }
@@ -740,6 +842,18 @@ class Users::EmailVerifier
 
     sig { returns(T::Boolean) }
     def saved_change_to_created_at?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_email; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_email?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_email_verifier_type; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_email_verifier_type?; end
 
     sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
     def saved_change_to_expired_at; end
@@ -770,6 +884,12 @@ class Users::EmailVerifier
 
     sig { returns(T::Boolean) }
     def saved_change_to_updated_at?; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def saved_change_to_used_at; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_used_at?; end
 
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_user_id; end
@@ -867,6 +987,51 @@ class Users::EmailVerifier
     sig { void }
     def updated_at_will_change!; end
 
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def used_at; end
+
+    sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def used_at=(value); end
+
+    sig { returns(T::Boolean) }
+    def used_at?; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def used_at_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def used_at_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def used_at_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def used_at_change; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def used_at_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def used_at_changed?; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def used_at_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def used_at_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def used_at_previously_changed?; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def used_at_previously_was; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def used_at_was; end
+
+    sig { void }
+    def used_at_will_change!; end
+
     sig { returns(T.untyped) }
     def user_id; end
 
@@ -919,6 +1084,12 @@ class Users::EmailVerifier
     def will_save_change_to_created_at?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_email?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_email_verifier_type?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_expired_at?; end
 
     sig { returns(T::Boolean) }
@@ -932,6 +1103,9 @@ class Users::EmailVerifier
 
     sig { returns(T::Boolean) }
     def will_save_change_to_updated_at?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_used_at?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_user_id?; end
@@ -955,6 +1129,9 @@ class Users::EmailVerifier
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def eager_load(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+    def enabled(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def except(*args, &blk); end

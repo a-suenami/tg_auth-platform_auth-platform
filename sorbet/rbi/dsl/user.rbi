@@ -303,6 +303,20 @@ class User
     sig { params(value: T::Enumerable[::DeliveryAddress]).void }
     def delivery_addresses=(value); end
 
+    sig { returns(T::Array[T.untyped]) }
+    def email_verifier_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def email_verifier_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :email_verifiers`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Users::EmailVerifier::PrivateCollectionProxy) }
+    def email_verifiers; end
+
+    sig { params(value: T::Enumerable[::Users::EmailVerifier]).void }
+    def email_verifiers=(value); end
+
     sig { returns(T.nilable(::ContactAddress)) }
     def reload_contact_address; end
 

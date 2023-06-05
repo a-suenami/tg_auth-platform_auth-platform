@@ -48,6 +48,9 @@ module GeneratedPathHelpersModule
   def api_v1_authentication_sessions_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def api_v1_internal_email_change_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def api_v1_internal_me_delivery_address_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -142,6 +145,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def request_api_v1_authentication_password_resets_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def request_api_v1_internal_email_change_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def send_verification_email_api_v1_authentication_registrations_path(*args); end
