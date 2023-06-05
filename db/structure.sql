@@ -259,7 +259,7 @@ CREATE TABLE public.users__email_verifiers (
     code character varying NOT NULL,
     expired_at timestamp(6) without time zone NOT NULL,
     remaining_attempts integer DEFAULT 0,
-    email_verifier_type character varying,
+    email_verifier_type character varying NOT NULL,
     email character varying,
     used_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,

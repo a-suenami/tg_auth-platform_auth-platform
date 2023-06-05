@@ -181,7 +181,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "code", null: false
     t.datetime "expired_at", null: false
     t.integer "remaining_attempts", default: 0
-    t.string "email_verifier_type"
+    t.string "email_verifier_type", null: false
     t.string "email"
     t.datetime "used_at"
     t.datetime "created_at", null: false
