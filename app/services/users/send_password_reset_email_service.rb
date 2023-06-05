@@ -10,7 +10,7 @@ module Users
       end
 
       ActiveRecord::Base.transaction do
-        user = User.find_by(email:, enabled: true)
+        user = User.find_by(email:, email_verified: true)
         if user.blank?
           # アカウントの存在を隠すため、エラーせずそのまま返す
           next true
