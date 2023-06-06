@@ -14,9 +14,9 @@ module Users
         return raise Exceptions::Services::Users::InvalidCode
       end
 
-      return raise Exceptions::Services::Users::EmailVerificationCodeAttemptsIsOver if email_verifier.remaining_attempts <= 0
-
-      if Time.zone.now < email_verifier.expired_at
+      if email_verifier.remaining_attempts <= 0
+        raise Exceptions::Services::Users::EmailVerificationCodeAttemptsIsOver
+      elsif Time.zone.now < email_verifier.expired_at
         user.email_verified = true
         user.save!
         email_verifier.used_at = Time.zone.now

@@ -48,7 +48,7 @@ module ExceptionRescuable
   end
 
   def handle_bad_request_exception(exception = nil)
-    handle_400(error_details: [exception.message])
+    handle_400(code: exception&.code, error_details: [exception&.message])
   end
 
   def handle_access_denied
