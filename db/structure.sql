@@ -540,17 +540,17 @@ CREATE INDEX index_users__password_resets_on_user_id ON public.users__password_r
 
 
 --
--- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
-
-
---
 -- Name: index_users_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_users_on_tenant_id ON public.users USING btree (tenant_id);
+
+
+--
+-- Name: index_users_on_tenant_id_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_tenant_id_email ON public.users USING btree (tenant_id, email);
 
 
 --
