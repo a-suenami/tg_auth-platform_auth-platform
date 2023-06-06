@@ -8,6 +8,7 @@ module ExceptionRescuable
 
     rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
     rescue_from ActiveRecord::RecordInvalid, with: :handle_record_invalid
+    rescue_from ActiveRecord::RecordNotUnique, with: :handle_record_not_unique
     rescue_from AbstractController::ActionNotFound, with: :handle_action_not_found
     rescue_from ActionView::MissingTemplate, with: :handle_missing_template
     rescue_from ActionController::ParameterMissing, with: :handle_parameter_missing
@@ -33,6 +34,10 @@ module ExceptionRescuable
     end
 
     render json: { errors: serialized_errors.flatten }, status: :bad_request
+  end
+
+  def handle_record_not_unique
+    handle_400(code: :record_not_unique, error_details: ['重複により保存が失敗しました。'])
   end
 
   def handle_action_not_found
