@@ -115,6 +115,13 @@ After running **database migrations**
 After updating the **routes file**
 - `bundle exec tapioca dsl`
 
+## Fixing broken gem types
+Sometimes typings of gems will break. To fix that, redo tapioca gem for all. It takes a very very long time. (~30min)
+
+```
+bundle exec tapioca gems --all
+```
+
 ## Check Gems & DSLs are typed
 To ensure all RBI files for DSLs are up-to-date with the latest changes in your application or database, run these commands before commit.
 
