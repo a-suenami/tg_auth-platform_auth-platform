@@ -11,7 +11,7 @@ class UserProfile < ApplicationRecord
   validates :first_name_kana, presence: true
   validates :last_name_kana, presence: true
   validates :birth_date, presence: true
-  validates :birth_date, comparison: { less_than: Date.today }
+  validates :birth_date, comparison: { less_than: Time.zone.today }
   validates :gender, presence: true
   enumerize :gender, in: [:male, :female, :other]
 
