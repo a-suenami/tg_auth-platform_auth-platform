@@ -27,6 +27,8 @@ class User < ApplicationRecord
     dependent: :delete_all,
     inverse_of: :user
 
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
+
   sig { params(password: String).returns(T::Boolean) }
   def authenticate!(password)
     # authenticate password
