@@ -11,6 +11,10 @@ Rails.application.routes.draw do
           resource :profile, only: [:show, :create, :update]
           resources :delivery_addresses, only: [:show, :index, :create, :update, :destroy]
         end
+
+        resource :email_change, only: [:create] do
+          post :request, to: 'email_changes#email_change_request'
+        end
       end
     end
   end

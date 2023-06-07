@@ -241,11 +241,27 @@ CREATE TABLE public.users (
     enabled boolean DEFAULT false,
     tel character varying,
     tel_verified boolean DEFAULT false,
-    email_verification_code character varying,
-    email_verification_code_expired_at timestamp(6) without time zone,
-    email_verification_code_remaining_attempts integer DEFAULT 0,
     email_verified boolean DEFAULT false,
     password_reset_code character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: users__email_verifiers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users__email_verifiers (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    code character varying NOT NULL,
+    expired_at timestamp(6) without time zone NOT NULL,
+    remaining_attempts integer DEFAULT 0,
+    email_verifier_type character varying NOT NULL,
+    email character varying,
+    used_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -353,6 +369,14 @@ ALTER TABLE ONLY public.tenants
 
 ALTER TABLE ONLY public.user_profiles
     ADD CONSTRAINT user_profiles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users__email_verifiers users__email_verifiers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__email_verifiers
+    ADD CONSTRAINT users__email_verifiers_pkey PRIMARY KEY (id);
 
 
 --
@@ -526,6 +550,20 @@ CREATE INDEX index_user_profiles_on_user_id ON public.user_profiles USING btree 
 
 
 --
+-- Name: index_users__email_verifiers_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__email_verifiers_on_tenant_id ON public.users__email_verifiers USING btree (tenant_id);
+
+
+--
+-- Name: index_users__email_verifiers_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__email_verifiers_on_user_id ON public.users__email_verifiers USING btree (user_id);
+
+
+--
 -- Name: index_users__password_resets_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -540,17 +578,17 @@ CREATE INDEX index_users__password_resets_on_user_id ON public.users__password_r
 
 
 --
--- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
-
-
---
 -- Name: index_users_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_users_on_tenant_id ON public.users USING btree (tenant_id);
+
+
+--
+-- Name: index_users_on_tenant_id_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_tenant_id_email ON public.users USING btree (tenant_id, email);
 
 
 --
@@ -687,6 +725,22 @@ ALTER TABLE ONLY public.user_profiles
 
 ALTER TABLE ONLY public.user_profiles
     ADD CONSTRAINT fk_user_profiles_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: users__email_verifiers fk_users__email_verifiers_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__email_verifiers
+    ADD CONSTRAINT fk_users__email_verifiers_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: users__email_verifiers fk_users__email_verifiers_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__email_verifiers
+    ADD CONSTRAINT fk_users__email_verifiers_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --

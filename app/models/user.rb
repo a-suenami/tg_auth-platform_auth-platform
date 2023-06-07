@@ -22,18 +22,15 @@ class User < ApplicationRecord
   has_many :delivery_addresses, dependent: :delete_all
   accepts_nested_attributes_for :contact_address, :user_profile
 
+  has_many :email_verifiers,
+    class_name: 'Users::EmailVerifier',
+    dependent: :delete_all,
+    inverse_of: :user
+
   sig { params(password: String).returns(T::Boolean) }
   def authenticate!(password)
     # authenticate password
     BCrypt::Password.new(self.password_digest) == password
-  end
-
-  sig { returns(T::Boolean) }
-  def set_email_verification_code
-    self.email_verification_code = format('%06d', SecureRandom.random_number(10**6))
-    self.email_verification_code_expired_at = 1.hour.from_now
-    self.email_verification_code_remaining_attempts = 5
-    true
   end
 
   sig { returns(T::Boolean) }
