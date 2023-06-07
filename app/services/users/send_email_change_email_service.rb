@@ -1,23 +1,16 @@
 # typed: true
 
 module Users
-  class SendVerificationEmailService < BaseService
+  class SendEmailChangeEmailService < BaseService
 
-    def execute!(email:)
+    def execute!(user:, email:)
       # email validate
       unless email =~ URI::MailTo::EMAIL_REGEXP
         raise Exceptions::Services::Users::InvalidEmail
       end
 
       ActiveRecord::Base.transaction do
-        user = User.find_by(email:, email_verified: true, enabled: true)
-        if user.present?
-          # アカウントの存在を隠すため、エラーせずそのまま返す
-          next user
-        end
-
-        user = User.find_or_initialize_by(email:)
-        email_verifier = Users::EmailVerifier.new(user:, email:, email_verifier_type: :registration)
+        email_verifier = Users::EmailVerifier.new(user:, email:, email_verifier_type: :email_change)
         email_verifier.set_code
         email_verifier.save!
         user.save!
@@ -28,7 +21,7 @@ module Users
     end
 
     def send_verification_email(user, email_verifier)
-      email_template = EmailTemplate.find_by!(template_type: 'email_address_verification')
+      email_template = EmailTemplate.find_by!(template_type: 'email_address_change')
       liquid_template = Liquid::Template.parse(email_template.body)
 
       Blastengine::API.new.send_email(

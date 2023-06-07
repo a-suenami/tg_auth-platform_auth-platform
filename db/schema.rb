@@ -167,15 +167,27 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "enabled", default: false
     t.string "tel"
     t.boolean "tel_verified", default: false
-    t.string "email_verification_code"
-    t.datetime "email_verification_code_expired_at"
-    t.integer "email_verification_code_remaining_attempts", default: 0
     t.boolean "email_verified", default: false
     t.string "password_reset_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id", "email"], name: "index_users_on_tenant_id_email", unique: true
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
+  end
+
+  create_table "users__email_verifiers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.string "code", null: false
+    t.datetime "expired_at", null: false
+    t.integer "remaining_attempts", default: 0
+    t.string "email_verifier_type", null: false
+    t.string "email"
+    t.datetime "used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_users__email_verifiers_on_tenant_id"
+    t.index ["user_id"], name: "index_users__email_verifiers_on_user_id"
   end
 
   create_table "users__password_resets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -208,6 +220,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "user_profiles", "tenants", name: "fk_user_profiles_tenants"
   add_foreign_key "user_profiles", "users", name: "fk_user_profiles_users"
   add_foreign_key "users", "tenants", name: "fk_users_tenants"
+  add_foreign_key "users__email_verifiers", "tenants", name: "fk_users__email_verifiers_tenants"
+  add_foreign_key "users__email_verifiers", "users", name: "fk_users__email_verifiers_users"
   add_foreign_key "users__password_resets", "tenants", name: "fk_users__password_resets_tenants"
   add_foreign_key "users__password_resets", "users", name: "fk_users__password_resets_users"
 end

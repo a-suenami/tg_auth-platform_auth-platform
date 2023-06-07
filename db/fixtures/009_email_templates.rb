@@ -35,3 +35,16 @@ EmailTemplate.seed do |s|
     <p>{{ password_reset_url }}</p>
   TEXT
 end
+
+EmailTemplate.seed do |s|
+  s.id = 'e3103a60-be8c-407a-a0c4-85b958467981'
+  s.tenant_id = 'sample'
+  s.name = 'email変更 code メールテンプレート'
+  s.template_type = 'email_address_change'
+  s.subject = 'email変更 code メール'
+  s.body = <<~TEXT
+    <p>email変更を完了するため、以下のコードを入力してください</p>
+    <p>{{ email_verification_code }}</p>
+  TEXT
+end
+

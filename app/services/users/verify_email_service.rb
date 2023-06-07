@@ -2,28 +2,27 @@
 
 module Users
   class VerifyEmailService < BaseService
-
     def execute!(email_verification_code:, user_id:)
       user = User.find user_id
+      email_verifier = Users::EmailVerifier.find_by(user:, code: email_verification_code, email_verifier_type: :registration, used_at: nil)
 
-      if user.email_verification_code_remaining_attempts.positive?
-        user.email_verification_code_remaining_attempts -= 1
-        user.save
-
-        if user.email_verification_code == email_verification_code
-          if Time.zone.now < user.email_verification_code_expired_at
-            user.email_verification_code = nil
-            user.email_verification_code_expired_at = nil
-            user.email_verified = true
-            user.save!
-          else
-            raise Exceptions::Services::Users::ExpiredEmailVerificationCode
-          end
-        else
-          raise Exceptions::Services::Users::InvalidCode
+      if email_verifier.blank?
+        user.email_verifiers.enabled.where(email_verifier_type: :registration).each do |ev|
+          ev.remaining_attempts -= 1
+          ev.save!
         end
-      else
+        return raise Exceptions::Services::Users::InvalidCode
+      end
+
+      if email_verifier.remaining_attempts <= 0
         raise Exceptions::Services::Users::EmailVerificationCodeAttemptsIsOver
+      elsif Time.zone.now < email_verifier.expired_at
+        user.email_verified = true
+        user.save!
+        email_verifier.used_at = Time.zone.now
+        email_verifier.save!
+      else
+        raise Exceptions::Services::Users::ExpiredEmailVerificationCode
       end
 
       user
