@@ -19,13 +19,12 @@ module API::V1::Authentication
     end
 
     def update
-      begin @current_user.update!(password_params)
-        head :no_content
-      rescue ActiveRecord::RecordInvalid
-        handle_400 error_details: ['validation error']
-      rescue
-        handle_400 error_details: ['failed to create password']
-      end
+      @current_user.update!(password_params)
+      head :no_content
+    rescue ActiveRecord::RecordInvalid
+      handle_400 error_details: ['validation error']
+    rescue
+      handle_400 error_details: ['failed to create password']
     end
 
     private
