@@ -86,9 +86,8 @@ RSpec.describe '[ Password Resets API ]' do
       let(:params) {
         {
           email: 'hogehoge',
-          password_reset_code: 'hogehoge',
+          password_reset_code: 'this_is_code',
           password: 'Abc123456$%',
-          password_confirmation: 'Abc123456$%',
         }
       }
 
@@ -101,9 +100,8 @@ RSpec.describe '[ Password Resets API ]' do
       let(:params) {
         {
           email: 'test-email@example.com',
-          password_reset_code: 'hogehoge',
+          password_reset_code: 'this_is_code',
           password: 'Abc123456$%',
-          password_confirmation: 'Abc123456$%',
         }
       }
 
@@ -118,7 +116,6 @@ RSpec.describe '[ Password Resets API ]' do
           email: 'test-user1@example.com',
           password_reset_code: 'hogehoge',
           password: 'Abc123456$%',
-          password_confirmation: 'Abc123456$%',
         }
       }
 
@@ -133,12 +130,25 @@ RSpec.describe '[ Password Resets API ]' do
           email: 'test-user1@example.com',
           password_reset_code: 'this_is_code',
           password: 'Abc123456$%',
-          password_confirmation: 'Abc123456$%',
         }
       }
 
       it 'returns 200' do
         is_expected.to eq 200
+      end
+    end
+
+    context 'when params invaild' do
+      let(:params) {
+        {
+          email: 'test-user1@example.com',
+          password_reset_code: 'this_is_code',
+          password: 'Abc123456',
+        }
+      }
+
+      it 'returns 400' do
+        is_expected.to eq 400
       end
     end
   end
