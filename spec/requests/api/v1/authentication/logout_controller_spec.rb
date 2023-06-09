@@ -3,7 +3,7 @@
 RSpec.describe '[ Logout API ]' do
   describe 'POST /api/v1/authentication/logout' do
     let(:user_1) {
-      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password')
+      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
     }
 
     before do

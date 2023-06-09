@@ -7,18 +7,23 @@ module API::V1::Authentication
     def create
       return handle_400 error_details: ['already created passowrd'] if @current_user.password_digest.present?
 
-      if @current_user.update(password_params)
+      begin
+        @current_user.update!(password_params)
         session[:current_user_id] = @current_user.id
         head :no_content
-      else
+      rescue ActiveRecord::RecordInvalid
+        handle_400 error_details: ['validation error']
+      rescue
         handle_400 error_details: ['failed to create password']
       end
     end
 
     def update
-      if @current_user.update(password_params)
+      begin @current_user.update!(password_params)
         head :no_content
-      else
+      rescue ActiveRecord::RecordInvalid
+        handle_400 error_details: ['validation error']
+      rescue
         handle_400 error_details: ['failed to create password']
       end
     end
