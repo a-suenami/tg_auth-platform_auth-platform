@@ -3,7 +3,7 @@
 RSpec.describe '[ email change API ]' do
   describe 'POST /api/v1/internal/email_change/request' do
     let(:current_user) {
-      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password')
+      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
     }
 
     let(:email_template) {
@@ -57,7 +57,7 @@ RSpec.describe '[ email change API ]' do
 
     context 'when duplicate email with other user' do
       let(:other_user) {
-        create(:user, tenant_id: current_tenant.id, email: 'change-email@example.com', password: 'test-user1password')
+        create(:user, tenant_id: current_tenant.id, email: 'change-email@example.com', password: 'Password1234!')
       }
       let(:params) {
         {
@@ -155,7 +155,7 @@ email: 'change-email@example.com',)
         }
       }
       let(:other_user) {
-        create(:user, tenant_id: current_tenant.id, email: 'change-email@example.com', password: 'test-user1password')
+        create(:user, tenant_id: current_tenant.id, email: 'change-email@example.com', password: 'Password1234!')
       }
 
       before do

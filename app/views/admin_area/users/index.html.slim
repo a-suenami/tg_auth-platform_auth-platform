@@ -7,6 +7,14 @@
 
   .uk-card.uk-card-default.uk-card-body
     p 検索条件
+    = form_with url: admin_area_users_path, method: :get do |f|
+      .uk-margin
+        = f.label :id, "ID"
+        = f.text_field :id, value: @id, class: "uk-input"
+      .uk-margin
+        = f.label :email, "メールアドレス"
+        = f.text_field :email, value: @email, class: "uk-input"
+      = submit_tag "Search", class: "uk-button uk-button-default"
     br
 
   .uk-margin-top.uk-card.uk-card-default.uk-card-body
@@ -37,12 +45,14 @@
             td
               = user.email
             td
-              = user.user_profile.name
+              = user&.user_profile&.name
             td
-              = user.user_profile.gender
+              = user&.user_profile&.gender
             td
-              = user.user_profile.age_range
+              = user&.user_profile&.age_range
             td
-              = user.contact_address&.prefecture&.name
+              = user&.contact_address&.prefecture&.name
             td
               = link_to "詳細", admin_area_user_path(user), class: "uk-button uk-button-secondary"
+
+    == pagy_nav(@pagy)

@@ -3,7 +3,7 @@
 RSpec.describe '[ Password Resets API ]' do
   describe 'POST /api/v1/authentication/password_resets/request' do
     let(:user_1) {
-      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password')
+      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
     }
 
     let(:email_template) {
@@ -71,7 +71,7 @@ RSpec.describe '[ Password Resets API ]' do
 
   describe 'POST /api/v1/authentication/password_resets' do
     let(:user_1) {
-      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password', email_verified: true)
+      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true)
     }
     let(:users_password_resets) {
       create(:users__password_resets, tenant_id: current_tenant.id, user_id: user_1.id, code: 'this_is_code', expired_at: 1.hour.from_now)
@@ -86,9 +86,8 @@ RSpec.describe '[ Password Resets API ]' do
       let(:params) {
         {
           email: 'hogehoge',
-          password_reset_code: 'hogehoge',
+          password_reset_code: 'this_is_code',
           password: 'Abc123456$%',
-          password_confirmation: 'Abc123456$%',
         }
       }
 
@@ -101,9 +100,8 @@ RSpec.describe '[ Password Resets API ]' do
       let(:params) {
         {
           email: 'test-email@example.com',
-          password_reset_code: 'hogehoge',
+          password_reset_code: 'this_is_code',
           password: 'Abc123456$%',
-          password_confirmation: 'Abc123456$%',
         }
       }
 
@@ -118,7 +116,6 @@ RSpec.describe '[ Password Resets API ]' do
           email: 'test-user1@example.com',
           password_reset_code: 'hogehoge',
           password: 'Abc123456$%',
-          password_confirmation: 'Abc123456$%',
         }
       }
 
@@ -133,12 +130,25 @@ RSpec.describe '[ Password Resets API ]' do
           email: 'test-user1@example.com',
           password_reset_code: 'this_is_code',
           password: 'Abc123456$%',
-          password_confirmation: 'Abc123456$%',
         }
       }
 
       it 'returns 200' do
         is_expected.to eq 200
+      end
+    end
+
+    context 'when params invaild' do
+      let(:params) {
+        {
+          email: 'test-user1@example.com',
+          password_reset_code: 'this_is_code',
+          password: 'Abc123456',
+        }
+      }
+
+      it 'returns 400' do
+        is_expected.to eq 400
       end
     end
   end

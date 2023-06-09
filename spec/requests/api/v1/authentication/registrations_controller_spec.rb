@@ -43,7 +43,7 @@ RSpec.describe '[ Registrations API ]' do
 
       context 'when user already exists and email_verified is false' do
         let(:current_user) {
-          create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password', email_verified: false)
+          create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: false)
         }
 
         before do
@@ -58,7 +58,7 @@ RSpec.describe '[ Registrations API ]' do
 
       context 'when user already exists and enabled is false' do
         let(:current_user) {
-          create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password', email_verified: true, enabled: false)
+          create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: false)
         }
 
         before do
@@ -74,7 +74,7 @@ RSpec.describe '[ Registrations API ]' do
 
       context 'when user already exists and enabled is true' do
         let(:current_user) {
-          create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'test-user1password', email_verified: true, enabled: true)
+          create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true)
         }
 
         before do
