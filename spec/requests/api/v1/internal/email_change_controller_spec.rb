@@ -137,7 +137,6 @@ email: 'change-email@example.com',)
       let(:params) {
         {
           email_verification_code: '123456',
-          user_id: current_user.id,
         }
       }
 
@@ -151,7 +150,6 @@ email: 'change-email@example.com',)
       let(:params) {
         {
           email_verification_code: '123456',
-          user_id: current_user.id,
         }
       }
       let(:other_user) {
@@ -173,7 +171,6 @@ email: 'change-email@example.com',)
       let(:params) {
         {
           email_verification_code: '111111',
-          user_id: current_user.id,
         }
       }
 
@@ -194,7 +191,6 @@ email: 'change-email@example.com',)
       let(:params) {
         {
           email_verification_code: '123456',
-          user_id: current_user.id,
         }
       }
 
@@ -211,7 +207,6 @@ email: 'change-email@example.com',)
       let(:params) {
         {
           email_verification_code: '123456',
-          user_id: current_user.id,
         }
       }
 
@@ -228,7 +223,6 @@ email_verifier_type: :email_change, email: 'change-email@example.com',)
       let(:params) {
         {
           email_verification_code: '123456',
-          user_id: current_user.id,
         }
       }
 
