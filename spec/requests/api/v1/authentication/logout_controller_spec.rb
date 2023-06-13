@@ -30,8 +30,8 @@ RSpec.describe '[ Logout API ]' do
         allow(session_mock).to receive(:[]=).and_return(nil)
       end
 
-      it 'returns 200' do
-        is_expected.to eq 200
+      it 'returns 204' do
+        is_expected.to eq 204
         expect(session_mock).to have_received(:[]=)
       end
     end

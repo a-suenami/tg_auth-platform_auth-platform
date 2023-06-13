@@ -88,6 +88,18 @@ module Exceptions
           'codeの有効期限が切れています'
         end
       end
+
+      class PasswordAlreadySet < BaseError
+        sig { returns(Symbol) }
+        def code
+          :password_already_set
+        end
+
+        sig { returns(String) }
+        def message
+          'パスワードはすでに設定済みです'
+        end
+      end
     end
   end
 end

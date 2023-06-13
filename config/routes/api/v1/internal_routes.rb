@@ -8,7 +8,7 @@ Rails.application.routes.draw do
       namespace :internal do
         get :me, to: 'me#show'
         namespace :me do
-          resource :profile, only: [:show, :create, :update]
+          resource :profile, only: [:show, :update]
           resources :delivery_addresses, only: [:show, :index, :create, :update, :destroy]
         end
 

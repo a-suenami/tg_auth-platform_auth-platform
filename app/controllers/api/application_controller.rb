@@ -2,7 +2,7 @@
 
 module API
   class ApplicationController < ActionController::API
-    include ExceptionRescuable
+    include API::ExceptionRescuable
     before_action :set_tenant
 
     private

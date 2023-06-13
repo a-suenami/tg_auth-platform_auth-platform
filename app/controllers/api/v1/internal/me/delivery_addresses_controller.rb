@@ -11,21 +11,13 @@ module API::V1::Internal
 
     def create
       @delivery_address = DeliveryAddresses::CreateService.new(delivery_addresses_params).execute(user: @current_user)
-      if @delivery_address.persisted?
-        render :show
-      else
-        handle_400 error_details: ['failed to create delivery_address']
-      end
+      render :show
     end
 
     def update
       @delivery_address = DeliveryAddress.find(params[:id])
       @delivery_address = DeliveryAddresses::UpdateService.new(delivery_addresses_params).execute(delivery_address: @delivery_address)
-      if @delivery_address.persisted?
-        render :show
-      else
-        handle_400 error_details: ['failed to update delivery_address']
-      end
+      render :show
     end
 
     def destroy
