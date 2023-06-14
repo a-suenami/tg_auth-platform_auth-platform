@@ -1,33 +1,54 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   "true": "foo"
-#
-# To learn more, please read the Rails Internationalization guide
-# available at https://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  errors:
+    messages:
+      format: '%{attribute}%{message}'
+      something_went_wrong: Something went wrong
+      not_found: Not found
+      error_occurred: Error occurred
+      parameter_missing: Parameter missing
+      try_agin_in_a_while: Something went wrong. Please try again in a while
+      invalid_auth_token: Invalid token
+      auth_token_expired: Token expired
+      cannot_destroy: Cannot destroy
+      invalid_url: is invalid format
+      uniqueness: " is registered."
+      is_destroyed: It was deleted
+      blank: is blanked.
+  helpers:
+    select:
+      prompt: Please choose.
+    action:
+      edit: Edit
+      back: Back
+      new: New
+      view: View
+      search: Search
+      delete: Delete
+      add: Add
+      save: Save
+      cancel: Cancel
+      sync: Sync
+    submit: # For form submit
+      create: Create
+      update: Update
+    messages:
+      created: Created Success!
+      updated: Updated Success!
+      synced: Synced Success!
+      destroyed: Deleted Success!
+      update_confirm: Do you want to update it?
+      save_confirm: Do you want to save it?
+      create_confirm: Do you want to create it?
+      destroy_confirm: Do you want to delete it?
+      login_successful: Login successfully!
+    note:
+      image_size: Please choose the image below 5MB.
+  time:
+    formats:
+      ymd: "%Y/%m/%d"
+      ymdhm: "%Y/%m/%d %H:%M"
+      ymdhms: "%Y/%m/%d %H:%M:%S"
+      hm: "%H:%M"
+  date:
+    formats:
+      ymd: "%Y/%m/%d"
