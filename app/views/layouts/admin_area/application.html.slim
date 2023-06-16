@@ -30,6 +30,13 @@ html lang='ja'
                   ul.uk-nav-sub
                     li
                       = link_to 'メールテンプレート一覧', admin_area_email_templates_path
+            .tg-sidebar-section
+              ul.uk-nav.uk-nav-default
+                ul.uk-parent
+                  = link_to 'OAuth設定', admin_area_oauth_applications_path
+                  ul.uk-nav-sub
+                    li
+                      = link_to 'OAuth Application', admin_area_oauth_applications_path
             .tg-sidebar-section.bottom
               ul.uk-nav.uk-nav-default
                 li アカウント
