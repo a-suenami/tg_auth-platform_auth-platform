@@ -438,6 +438,13 @@ CREATE INDEX index_email_templates_on_tenant_id ON public.email_templates USING 
 
 
 --
+-- Name: index_email_templates_on_tenant_id_template_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_email_templates_on_tenant_id_template_type ON public.email_templates USING btree (tenant_id, template_type);
+
+
+--
 -- Name: index_login_spa_applications_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 

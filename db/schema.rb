@@ -64,6 +64,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "body", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["tenant_id", "template_type"], name: "index_email_templates_on_tenant_id_template_type", unique: true
     t.index ["tenant_id"], name: "index_email_templates_on_tenant_id"
   end
 
