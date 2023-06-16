@@ -1,0 +1,19 @@
+ja:
+  activerecord:
+    models:
+      email_template: Email Template
+    attributes:
+      email_template:
+        id: ID
+        tenant_id: テナント
+        name: テンプレート名
+        template_type: テンプレートタイプ
+        subject: 件名
+        body: 本文
+  enumerize:
+    email_template:
+      template_type:
+        registration: 新規登録メール
+        email_address_verification: メールアドレス確認メール
+        password_reset: パスワードリセットメール
+        email_address_change: メールアドレス変更確認メール

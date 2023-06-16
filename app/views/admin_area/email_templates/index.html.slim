@@ -11,14 +11,10 @@
 
       table.uk-table.uk-table-divider
         tr
-          th
-            | ID
-          th
-            | template_type
-          th
-            | テンプレート名
-          th
-            | タイトル
+          th = EmailTemplate.human_attribute_name(:id)
+          th = EmailTemplate.human_attribute_name(:template_type)
+          th = EmailTemplate.human_attribute_name(:name)
+          th = EmailTemplate.human_attribute_name(:subject)
         - @email_templates.each do |email_template|
           tr
             td
@@ -28,7 +24,7 @@
             td
               = email_template.name
             td
-              = email_template&.subject
+              = email_template.subject
             td
               = link_to "詳細", admin_area_email_template_path(email_template), class: "uk-button uk-button-secondary"
 

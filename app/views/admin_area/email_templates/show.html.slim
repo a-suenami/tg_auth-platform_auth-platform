@@ -8,27 +8,22 @@
 
   table.uk-table
     tr
-      th
-        | ID
+      th = EmailTemplate.human_attribute_name(:id)
       td
         = @email_template.id
     tr
-      th
-        | template_type
+      th = EmailTemplate.human_attribute_name(:template_type)
       td
         = @email_template.template_type
     tr
-      th
-        | name
+      th = EmailTemplate.human_attribute_name(:name)
       td
         = @email_template.name
     tr
-      th
-        | subject
+      th = EmailTemplate.human_attribute_name(:subject)
       td
         = @email_template.subject
     tr
-      th
-        | body
+      th = EmailTemplate.human_attribute_name(:body)
       td
         = @email_template.body
