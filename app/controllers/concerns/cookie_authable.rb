@@ -9,7 +9,7 @@ module CookieAuthable
   end
 
   def session_authenticate
-    return handle_401 error_details: ['session not set'] if session[:current_user_id].blank?
+    raise Exceptions::Auth::AuthError if session[:current_user_id].blank?
 
     @current_user = User.find session[:current_user_id]
   end

@@ -7,7 +7,7 @@ module API::V1::Authentication
     def create
       session[:current_user_id] = nil
 
-      render json: { status: 'ok' }
+      head :no_content
     end
   end
 end

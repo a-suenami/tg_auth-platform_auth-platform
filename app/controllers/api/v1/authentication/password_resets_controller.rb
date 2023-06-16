@@ -8,13 +8,13 @@ module API::V1::Authentication
       else
         Users::SendPasswordResetEmailService.new.execute!(email: params[:email], base_url: "#{request.protocol}#{request.host_with_port}/password_resets/edit")
       end
-      render json: { status: 'ok' }
+      head :no_content
     end
 
     def create
       user = Users::PasswordResetService.new(password_params).execute!(password_reset_code: params[:password_reset_code], email: params[:email])
       session[:current_user_id] = user.id
-      render json: { status: 'ok' }
+      head :no_content
     rescue ActiveRecord::RecordInvalid
       handle_400 error_details: ['validation error']
     end

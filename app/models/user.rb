@@ -31,6 +31,7 @@ class User < ApplicationRecord
     inverse_of: :user
 
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :email, uniqueness: { scope: :tenant_id }
 
   sig { params(password: String).returns(T::Boolean) }
   def authenticate!(password)
@@ -45,6 +46,6 @@ class User < ApplicationRecord
     return false if User.find_by(email: self.email, enabled: true).present?
 
     self.enabled = true
-    self.save
+    self.save!
   end
 end

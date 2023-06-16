@@ -9,16 +9,10 @@ module API::V1::Authentication
         # create session
         session[:current_user_id] = user.id
 
-        render json: { status: 'ok' }
+        head :no_content
       else
         raise Exceptions::Auth::AuthError
       end
-    end
-
-    def logout
-      session[:current_user_id] = nil
-
-      render json: { status: 'ok' }
     end
   end
 end

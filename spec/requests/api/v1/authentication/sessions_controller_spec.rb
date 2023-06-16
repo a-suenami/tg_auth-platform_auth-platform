@@ -18,8 +18,8 @@ RSpec.describe '[ Sessions API ]' do
         }
       }
 
-      it 'returns 400' do
-        is_expected.to eq 400
+      it 'returns 401' do
+        is_expected.to eq 401
       end
     end
 
@@ -31,8 +31,8 @@ RSpec.describe '[ Sessions API ]' do
         }
       }
 
-      it 'returns 400' do
-        is_expected.to eq 400
+      it 'returns 401' do
+        is_expected.to eq 401
       end
     end
 
@@ -44,8 +44,8 @@ RSpec.describe '[ Sessions API ]' do
         }
       }
 
-      it 'returns 200' do
-        is_expected.to eq 200
+      it 'returns 204' do
+        is_expected.to eq 204
       end
     end
   end
