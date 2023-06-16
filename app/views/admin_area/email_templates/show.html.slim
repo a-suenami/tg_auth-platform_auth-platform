@@ -1,0 +1,34 @@
+.uk-margin-top.uk-container
+  h2 メールテンプレート詳細
+
+  .uk-flex.uk-flex-right
+    = link_to "編集", edit_admin_area_email_template_path(@email_template), class: "uk-button uk-button-primary"
+    .uk-margin-left
+    = link_to "削除", admin_area_email_template_path(@email_template), data: { turbo_method: :delete, turbo_confirm: "一度削除したデータを戻せません。本当に削除しますか？" }, class: 'uk-button uk-button-danger'
+
+  table.uk-table
+    tr
+      th
+        | ID
+      td
+        = @email_template.id
+    tr
+      th
+        | template_type
+      td
+        = @email_template.template_type
+    tr
+      th
+        | name
+      td
+        = @email_template.name
+    tr
+      th
+        | subject
+      td
+        = @email_template.subject
+    tr
+      th
+        | body
+      td
+        = @email_template.body
