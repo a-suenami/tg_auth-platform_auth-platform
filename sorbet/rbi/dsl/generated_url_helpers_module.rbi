@@ -30,6 +30,12 @@ module GeneratedUrlHelpersModule
   def admin_area_logout_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_oauth_application_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_oauth_applications_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_root_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -75,6 +81,9 @@ module GeneratedUrlHelpersModule
   def edit_admin_area_email_template_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_oauth_application_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_password_resets_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -85,6 +94,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_admin_area_email_template_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_oauth_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_password_reset_url(*args); end

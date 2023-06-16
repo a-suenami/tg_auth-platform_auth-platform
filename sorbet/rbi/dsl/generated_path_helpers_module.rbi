@@ -30,6 +30,12 @@ module GeneratedPathHelpersModule
   def admin_area_logout_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_oauth_application_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_oauth_applications_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_root_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -75,6 +81,9 @@ module GeneratedPathHelpersModule
   def edit_admin_area_email_template_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_oauth_application_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_password_resets_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -85,6 +94,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_admin_area_email_template_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_oauth_application_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_password_path(*args); end
