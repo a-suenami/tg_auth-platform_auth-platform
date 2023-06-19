@@ -2,7 +2,7 @@
 # docker - Dockerfile
 # ==============================================================================
 # ruby:3.2.2-slim
-FROM ruby@sha256:f96c440a4790350fd0b516d153d22e7492d1dea1c3469a4ccb08ac245ee40c91
+FROM ruby@sha256:a55e693b65a58bf6ff457a0e3881637605509287291abacca25d44c8d9a75a4b
 ENV LANG C.UTF-8
 
 ARG BUNDLE_GIT__L__TWOGATE__NET
