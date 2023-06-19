@@ -1,0 +1,59 @@
+ja:
+  errors:
+    messages:
+      format: '%{attribute}%{message}'
+      something_went_wrong: 意図しないエラーが発生しました
+      not_found: 見つかりませんでした
+      error_occurred: エラーが発生しました
+      parameter_missing: パラメーターが不足しています
+      try_agin_in_a_while: 意図しないエラーが発生しました。しばらくしてからもう一度お試しください
+      invalid_auth_token: トークンが不正です
+      auth_token_expired: トークンの有効期限が切れています
+      cannot_destroy: 削除できませんでした
+      invalid_url: の形式が不正です
+      uniqueness: は登録済みです
+      is_destroyed: 削除されました
+      blank: を選択してください
+  activerecord:
+    errors:
+      messages:
+        restrict_dependent_destroy:
+          has_one: "%{record}が存在しているため削除できません"
+          has_many: "%{record}が存在しているため削除できません"
+  helpers:
+    select:
+      prompt: 選択してください
+    action:
+      edit: 編集
+      back: 戻る
+      new: 作成
+      view: 詳細
+      search: 検索
+      delete: 削除
+      add: 追加
+      save: 保存
+      cancel: キャンセル
+      sync: 同期
+    submit: # For form submit
+      create: 登録
+      update: 更新
+    messages:
+      created: 作成しました。
+      updated: 更新しました。
+      synced: 同期しました。
+      destroyed: 削除しました。
+      update_confirm: 更新してもよろしいですか?
+      save_confirm: 保存してよろしいですか？
+      create_confirm: 登録してよろしいですか？
+      destroy_confirm: 削除してよろしいですか？
+      login_successful: ログインできました
+    note:
+      image_size: 5MB以内の画像をアップしてください
+  time:
+    formats:
+      default: '%Y/%m/%d %H:%M'
+      long: '%Y/%m/%d %H:%M'
+      short: '%m/%d %H:%M'
+  date:
+    formats:
+      default: "%Y/%m/%d"

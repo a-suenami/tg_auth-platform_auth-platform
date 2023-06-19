@@ -161,6 +161,25 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         expect(body_hash['contact_tel']).to eq('080-1234-5678')
       end
     end
+
+    context 'when params invaild' do
+      let(:params) {
+        {
+          delivery_addresses: {
+            zip_code: nil,
+            prefecture_code: nil,
+            city: nil,
+            address_1: nil,
+            address_2: nil,
+            contact_tel: nil,
+          },
+        }
+      }
+
+      it 'returns 400' do
+        is_expected.to eq 400
+      end
+    end
   end
 
   describe 'PUT /api/v1/internal/me/delivery_addresses/:id' do
@@ -231,6 +250,25 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         expect(body_hash['address_1']).to eq('４丁目２−８')
         expect(body_hash['address_2']).to eq('東京タワー 2F')
         expect(body_hash['contact_tel']).to eq('080-1234-1234')
+      end
+    end
+
+    context 'when params invaild' do
+      let(:params) {
+        {
+          delivery_addresses: {
+            zip_code: nil,
+            prefecture_code: nil,
+            city: nil,
+            address_1: nil,
+            address_2: nil,
+            contact_tel: nil,
+          },
+        }
+      }
+
+      it 'returns 400' do
+        is_expected.to eq 400
       end
     end
   end

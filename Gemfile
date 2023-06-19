@@ -99,8 +99,8 @@ gem 'seed-fu', '~> 2.3.0'
 # gem 'ffaker', '~> 2.21.0'
 # # Json Web Token
 # gem 'jwt', '~> 2.7.0'
-# # Use rails-i18n as a set of common locale data
-# gem 'rails-i18n', '~> 7.0.0'
+# Use rails-i18n as a set of common locale data
+gem 'rails-i18n', '~> 7.0.0'
 # # Framework for factories
 gem 'factory_bot_rails', '~> 6.2.0'
 # # Enumerated attributes with I18n

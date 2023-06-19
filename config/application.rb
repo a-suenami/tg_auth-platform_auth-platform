@@ -54,6 +54,13 @@ module RailsApp
     config.paths.add 'lib', eager_load: true
 
     # --------------------------------------------------------------------------
+    # i18n
+    # --------------------------------------------------------------------------
+    config.i18n.default_locale = :ja
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
+    config.active_model.i18n_customize_full_message = true
+
+    # --------------------------------------------------------------------------
     # ActionController
     # --------------------------------------------------------------------------
     config.action_controller.include_all_helpers = false

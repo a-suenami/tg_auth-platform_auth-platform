@@ -51,8 +51,8 @@ RSpec.describe '[ Password Resets API ]' do
       }
 
       # ユーザの存在確認をされないために200を返す
-      it 'returns 200' do
-        is_expected.to eq 200
+      it 'returns 204' do
+        is_expected.to eq 204
       end
     end
 
@@ -63,8 +63,8 @@ RSpec.describe '[ Password Resets API ]' do
         }
       }
 
-      it 'returns 200' do
-        is_expected.to eq 200
+      it 'returns 204' do
+        is_expected.to eq 204
       end
     end
   end
@@ -133,8 +133,8 @@ RSpec.describe '[ Password Resets API ]' do
         }
       }
 
-      it 'returns 200' do
-        is_expected.to eq 200
+      it 'returns 204' do
+        is_expected.to eq 204
       end
     end
 

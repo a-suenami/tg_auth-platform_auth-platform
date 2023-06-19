@@ -1,7 +1,7 @@
 [
   {
     "name": "ALLOW_ORIGINS",
-    "value": "['https://web.yonezukenshi.auth.app-staging.id-platform.net', 'https://dev.yonezukenshi.auth.app-staging.id-platform.net', 'https://web-local.triple-dev.auth.app-staging.id-platform.net', 'https://triple-ticket.netlify.app']"
+    "value": "['https://web.yonezukenshi.auth.app-staging.id-platform.net', 'https://dev.yonezukenshi.auth.app-staging.id-platform.net', 'https://web-local.triple-dev.auth.app-staging.id-platform.net', 'https://test.yonezukenshi.auth.app-staging.id-platform.net', 'https://triple-ticket.netlify.app']"
   },
   {
     "name": "ADMIN_AUTH0_CLIENT_ID",

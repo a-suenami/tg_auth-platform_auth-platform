@@ -5,32 +5,22 @@ module API::V1::Authentication
     before_action :registrations_session_authenticate, only: [:create]
 
     def create
-      return handle_400 error_details: ['already created passowrd'] if @current_user.password_digest.present?
+      raise Exceptions::Services::Users::PasswordAlreadySet if @current_user.password_digest.present?
 
-      begin
-        @current_user.update!(password_params)
-        session[:current_user_id] = @current_user.id
-        head :no_content
-      rescue ActiveRecord::RecordInvalid
-        handle_400 error_details: ['validation error']
-      rescue
-        handle_400 error_details: ['failed to create password']
-      end
+      @current_user.update!(password_params)
+      session[:current_user_id] = @current_user.id
+      head :no_content
     end
 
     def update
       @current_user.update!(password_params)
       head :no_content
-    rescue ActiveRecord::RecordInvalid
-      handle_400 error_details: ['validation error']
-    rescue
-      handle_400 error_details: ['failed to create password']
     end
 
     private
 
     def registrations_session_authenticate
-      return handle_401 error_details: ['session not set'] if session[:registering_user_id].blank?
+      raise Exceptions::Auth::AuthError if session[:registering_user_id].blank?
 
       @current_user = User.find session[:registering_user_id]
     end
