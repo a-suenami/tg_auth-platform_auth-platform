@@ -1,5 +1,4 @@
-// @import './ruler_theme.scss';
-// @import './variables.scss';
-
-// style はめんどくさいので参照する
-// @import '../admin_area/admin_theme.scss';
+@import './admin_theme.scss';
+@import './variables.scss';
+@import './layout/page.scss';
+@import './layout/sidebar.scss';

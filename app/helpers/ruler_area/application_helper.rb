@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AdminArea
+module RulerArea
   module ApplicationHelper
     include ::ApplicationHelper
     include Pagy::Frontend
@@ -12,7 +12,7 @@ module AdminArea
     end
 
     def pagy_app_nav(pagy)
-      render partial: 'admin_area/pagy/nav', locals: { pagy: }
+      render partial: 'ruler_area/pagy/nav', locals: { pagy: }
     end
 
     def last_access_page

@@ -198,6 +198,20 @@ CREATE TABLE public.oauth_openid_requests (
 
 
 --
+-- Name: rulers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rulers (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    name character varying,
+    email character varying,
+    uid character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: tenants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -353,6 +367,14 @@ ALTER TABLE ONLY public.oauth_applications
 
 ALTER TABLE ONLY public.oauth_openid_requests
     ADD CONSTRAINT oauth_openid_requests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rulers rulers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rulers
+    ADD CONSTRAINT rulers_pkey PRIMARY KEY (id);
 
 
 --
