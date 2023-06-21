@@ -87,6 +87,9 @@ module GeneratedUrlHelpersModule
   def edit_password_resets_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_login_spa_application_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def health_check_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -109,6 +112,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_registration_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_login_spa_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_session_url(*args); end
@@ -172,6 +178,30 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def request_api_v1_internal_email_change_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_auth_auth0_callback_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_auth_failure_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_auth_logout_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_login_spa_application_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_login_spa_applications_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_login_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_logout_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_root_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def send_verification_email_api_v1_authentication_registrations_url(*args); end
