@@ -1,0 +1,34 @@
+.uk-margin-top.uk-container
+  h2 Login Spa Application 一覧
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    - if @login_spa_applications.empty?
+      p.uk-text-lead
+        | No Login Spa Applications found
+      = link_to "新規登録", new_ruler_area_login_spa_application_path, class: "uk-button uk-button-primary"
+
+    - else
+      table.uk-table.uk-table-divider
+        tr
+          th = LoginSpaApplication.human_attribute_name(:id)
+          th = LoginSpaApplication.human_attribute_name(:name)
+          th = LoginSpaApplication.human_attribute_name(:login_url)
+          th = LoginSpaApplication.human_attribute_name(:redirect_url_on_password_reset)
+          th = "操作"
+
+        - @login_spa_applications.each do |login_spa_application|
+          tr
+            td
+              = login_spa_application.id
+            td
+              = login_spa_application.name
+            td
+              = login_spa_application.login_url
+            td
+              = login_spa_application.redirect_url_on_password_reset
+            td
+              = link_to "詳細", ruler_area_login_spa_application_path(login_spa_application), class: "uk-button uk-button-secondary"
+              .uk-margin
+                = link_to "編集", edit_ruler_area_login_spa_application_path(login_spa_application), class: "uk-button uk-button-primary"
+
+      == pagy_nav(@pagy)

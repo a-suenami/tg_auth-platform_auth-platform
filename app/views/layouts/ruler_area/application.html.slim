@@ -16,13 +16,13 @@ html lang='ja'
           .uk-container.uk-height-1-1
             h3.uk-padding.uk-padding-remove-horizontal
               = Tenant.current.name
-            / .tg-sidebar-section
-            /   ul.uk-nav.uk-nav-default
-            /     ul.uk-parent
-            /       = link_to 'OAuth設定', ruler_area_oauth_applications_path
-            /       ul.uk-nav-sub
-            /         li
-            /           = link_to 'OAuth Application', ruler_area_oauth_applications_path
+            .tg-sidebar-section
+              ul.uk-nav.uk-nav-default
+                ul.uk-parent
+                  = link_to 'LoginSpa設定', ruler_area_login_spa_applications_path
+                  ul.uk-nav-sub
+                    li
+                      = link_to 'Login Spa Applicatoin', ruler_area_login_spa_applications_path
             .tg-sidebar-section.bottom
               ul.uk-nav.uk-nav-default
                 li アカウント

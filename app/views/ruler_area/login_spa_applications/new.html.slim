@@ -1,0 +1,6 @@
+.uk-margin-top.uk-container
+  h2 Login Spa Application 新規作成
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with model: @login_spa_application, url: ruler_area_login_spa_applications_path, method: :post do |f|
+      = render 'form', f: f
