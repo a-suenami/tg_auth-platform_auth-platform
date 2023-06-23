@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe Multitenancy do
-  not_multitenant_models = [Tenant].freeze
+  not_multitenant_models = [Tenant, Ruler].freeze
   Rails.application.eager_load!
 
   ActiveSupport::DescendantsTracker.descendants(ApplicationRecord).each do |model|
