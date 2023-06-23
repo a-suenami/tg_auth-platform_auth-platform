@@ -4,6 +4,10 @@
     "name": "ADMIN_AUTH0_CLIENT_SECRET"
   },
   {
+    "valueFrom": "/id-platform/stg/ecs/main/ruler_auth0_client_secret",
+    "name": "RULER_AUTH0_CLIENT_SECRET"
+  },
+  {
     "valueFrom": "/id-platform/stg/ecs/main/database_url",
     "name": "DATABASE_URL"
   },
