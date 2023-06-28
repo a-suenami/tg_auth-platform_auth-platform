@@ -198,6 +198,20 @@ CREATE TABLE public.oauth_openid_requests (
 
 
 --
+-- Name: rulers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rulers (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    name character varying,
+    email character varying,
+    uid character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: tenants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -356,6 +370,14 @@ ALTER TABLE ONLY public.oauth_openid_requests
 
 
 --
+-- Name: rulers rulers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rulers
+    ADD CONSTRAINT rulers_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: tenants tenants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -435,6 +457,13 @@ CREATE INDEX index_delivery_addresses_on_user_id ON public.delivery_addresses US
 --
 
 CREATE INDEX index_email_templates_on_tenant_id ON public.email_templates USING btree (tenant_id);
+
+
+--
+-- Name: index_email_templates_on_tenant_id_template_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_email_templates_on_tenant_id_template_type ON public.email_templates USING btree (tenant_id, template_type);
 
 
 --

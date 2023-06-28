@@ -64,6 +64,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.text "body", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["tenant_id", "template_type"], name: "index_email_templates_on_tenant_id_template_type", unique: true
     t.index ["tenant_id"], name: "index_email_templates_on_tenant_id"
   end
 
@@ -136,6 +137,14 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.uuid "access_grant_id", null: false
     t.string "nonce", null: false
     t.index ["access_grant_id"], name: "index_oauth_openid_requests_on_access_grant_id"
+  end
+
+  create_table "rulers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.string "uid"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "tenants", id: :citext, force: :cascade do |t|
