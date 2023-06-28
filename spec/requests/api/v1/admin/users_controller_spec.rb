@@ -58,8 +58,8 @@ RSpec.describe '[ Admin Users API ]' do
                 'prefecture' => delivery_address.prefecture.name,
                 'zip_code' => delivery_address.zip_code,
                 'city' => delivery_address.city,
-                'address_1' => delivery_address.address_1,
-                'address_2' => delivery_address.address_2,
+                'street' => delivery_address.street,
+                'building_name' => delivery_address.building_name,
                 'contact_tel' => delivery_address.contact_tel,
               },
             ],
@@ -76,8 +76,8 @@ RSpec.describe '[ Admin Users API ]' do
               'prefecture' => contact_address.prefecture.name,
               'zip_code' => contact_address.zip_code,
               'city' => contact_address.city,
-              'address_1' => contact_address.address_1,
-              'address_2' => contact_address.address_2,
+              'street' => contact_address.street,
+              'building_name' => contact_address.building_name,
             },
           })
         end

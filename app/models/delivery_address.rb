@@ -10,7 +10,7 @@ class DeliveryAddress < ApplicationRecord
   validates :zip_code, presence: true
   validates :prefecture_code, presence: true
   validates :city, presence: true
-  validates :address_1, presence: true
+  validates :street, presence: true
 
   jp_prefecture :prefecture_code
 end
