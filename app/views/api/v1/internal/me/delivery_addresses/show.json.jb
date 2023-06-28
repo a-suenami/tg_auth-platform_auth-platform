@@ -8,4 +8,5 @@
   street: @delivery_address.street,
   building_name: @delivery_address.building_name,
   contact_tel: @delivery_address.contact_tel,
+  country_code: @delivery_address.country_code,
 }

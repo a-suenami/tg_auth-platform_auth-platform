@@ -41,6 +41,7 @@ module API::V1::Internal
         :street,
         :building_name,
         :contact_tel,
+        :country_code,
       )
     end
   end
