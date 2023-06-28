@@ -11,5 +11,6 @@ FactoryBot.define do
     street { '1-1-1' }
     building_name { '代田アモーレ 101号室' }
     contact_tel { '090-1234-5678' }
+    country_code { 'JP' }
   end
 end

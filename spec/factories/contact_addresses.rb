@@ -9,5 +9,6 @@ FactoryBot.define do
     city { '世田谷区代田' }
     street { '1-1-1' }
     building_name { '代田アモーレ 101号室' }
+    country_code { 'JP' }
   end
 end

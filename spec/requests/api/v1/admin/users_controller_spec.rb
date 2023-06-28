@@ -60,6 +60,7 @@ RSpec.describe '[ Admin Users API ]' do
                 'city' => delivery_address.city,
                 'street' => delivery_address.street,
                 'building_name' => delivery_address.building_name,
+                'country_code'=>'JP',
                 'contact_tel' => delivery_address.contact_tel,
               },
             ],
@@ -78,6 +79,7 @@ RSpec.describe '[ Admin Users API ]' do
               'city' => contact_address.city,
               'street' => contact_address.street,
               'building_name' => contact_address.building_name,
+              'country_code'=>'JP',
             },
           })
         end
