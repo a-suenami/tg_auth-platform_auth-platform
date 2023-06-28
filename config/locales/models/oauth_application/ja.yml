@@ -1,0 +1,22 @@
+ja:
+  activerecord:
+    models:
+      oauth_application: OAuth Application
+    attributes:
+      oauth_application:
+        id: ID
+        tenant_id: テナント
+        name: アプリケーション名
+        uid: Client ID
+        secret: Client Key
+        redirect_uri: リダイレクトURL
+        scopes: スコープ
+        confidential: confidential
+        enable_client_credential_flow: Admin APIの利用
+  enumerize:
+    oauth_application:
+      template_type:
+        registration: 新規登録メール
+        email_address_verification: メールアドレス確認メール
+        password_reset: パスワードリセットメール
+        email_address_change: メールアドレス変更確認メール

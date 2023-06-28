@@ -44,6 +44,14 @@
     "value": "1"
   },
   {
+    "name": "RULER_AUTH0_CLIENT_ID",
+    "value": "T0dSCl1BC38VSdiq8UY6KWcDRPxy9Dd8"
+  },
+  {
+    "name": "RULER_AUTH0_DOMAIN",
+    "value": "id-platform-stg.jp.auth0.com"
+  },
+  {
     "name": "S3_BUCKET",
     "value": "id-platform-media-stg"
   },

@@ -677,7 +677,7 @@ class EmailTemplate
     sig { returns(T::Boolean) }
     def saved_change_to_subject?; end
 
-    sig { returns(T.nilable([::String, ::String])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_template_type; end
 
     sig { returns(T::Boolean) }
@@ -740,16 +740,16 @@ class EmailTemplate
     sig { void }
     def subject_will_change!; end
 
-    sig { returns(::String) }
+    sig { returns(T.untyped) }
     def template_type; end
 
-    sig { params(value: ::String).returns(::String) }
+    sig { params(value: T.untyped).returns(T.untyped) }
     def template_type=(value); end
 
     sig { returns(T::Boolean) }
     def template_type?; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def template_type_before_last_save; end
 
     sig { returns(T.untyped) }
@@ -758,28 +758,28 @@ class EmailTemplate
     sig { returns(T::Boolean) }
     def template_type_came_from_user?; end
 
-    sig { returns(T.nilable([::String, ::String])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def template_type_change; end
 
-    sig { returns(T.nilable([::String, ::String])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def template_type_change_to_be_saved; end
 
     sig { returns(T::Boolean) }
     def template_type_changed?; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def template_type_in_database; end
 
-    sig { returns(T.nilable([::String, ::String])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def template_type_previous_change; end
 
     sig { returns(T::Boolean) }
     def template_type_previously_changed?; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def template_type_previously_was; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def template_type_was; end
 
     sig { void }

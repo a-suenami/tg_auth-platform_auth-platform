@@ -1,9 +1,13 @@
-# require 'sidekiq/web'
-# require 'sidekiq-scheduler/web'
-# require 'sidekiq_unique_jobs/web'
-
 Rails.application.routes.draw do
   namespace :ruler_area, path: :ruler do
-    # ...
+    root to: 'application#root', as: :root
+
+    get 'login', to: 'auth0#login'
+    get 'logout', to: 'auth0#logout'
+    get '/auth/auth0/callback' => 'auth0#callback'
+    get '/auth/failure' => 'auth0#failure'
+    get '/auth/logout' => 'auth0#logout'
+
+    resources :login_spa_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
   end
 end

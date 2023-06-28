@@ -9,5 +9,7 @@ Rails.application.routes.draw do
     get '/auth/logout' => 'auth0#logout'
 
     resources :users, only: %i[index show]
+    resources :email_templates, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+    resources :oauth_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
   end
 end

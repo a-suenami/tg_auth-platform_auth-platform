@@ -1,0 +1,19 @@
+= render 'ruler_area/shared/form_error', target: f.object
+.uk-margin
+  = f.label :name
+  = f.text_field :name, class: "uk-input"
+.uk-margin
+  = f.label :login_url
+  = f.text_field :login_url, class: "uk-input"
+.uk-margin
+  = f.label :redirect_url_on_password_reset
+  = f.text_field :redirect_url_on_password_reset, class: "uk-input"
+/ .uk-margin
+/   = f.label :scopes
+/   .uk-article
+/     p.uk-article-meta
+/       | 設定可能なスコープ(public uid email name profile contact delivery_address openid ruler_users)
+/       br
+/       | 複数のScopeを設定する場合は、スペースで区切って入力してください(ex "uid email")
+/   = f.text_field :scopes, class: "uk-input"
+= f.submit class: "uk-button uk-button-default"

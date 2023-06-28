@@ -7,6 +7,7 @@ RSpec.describe '[ Userinfo API ]' do
         tenant_id: current_tenant.id,
         name: 'Sample',
         redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+        scopes: 'admin_users uid email name profile contact delivery_address openid',
       )
     }
     let(:token_expires_in) { 2.hours }
