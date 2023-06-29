@@ -58,7 +58,7 @@ RSpec.describe '[ Userinfo API ]' do
                 'city' => delivery_address.city,
                 'street' => delivery_address.street,
                 'building_name' => delivery_address.building_name,
-                'country_code'=> delivery_address.country_code,
+                'country_code' => delivery_address.country_code,
                 'contact_tel' => delivery_address.contact_tel,
               },
             ],

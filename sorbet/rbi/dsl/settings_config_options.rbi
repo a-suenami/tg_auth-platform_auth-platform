@@ -28,10 +28,4 @@ class SettingsConfigOptions < ::Config::Options
 
   sig { params(value: T.untyped).returns(T.untyped) }
   def redis=(value); end
-
-  sig { returns(T.untyped) }
-  def ruler; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def ruler=(value); end
 end
