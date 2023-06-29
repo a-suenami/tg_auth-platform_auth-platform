@@ -35,8 +35,6 @@ class Float < ::Numeric
   def to_msgpack_with_packer(packer); end
 end
 
-# Really ugly, horrible, extremely fun hack.
-#
 # source://msgpack//lib/msgpack/core_ext.rb#77
 class Hash
   include ::Enumerable
@@ -283,9 +281,6 @@ class NilClass
   def to_msgpack_with_packer(packer); end
 end
 
-# Enhance the String class with a XML escaped character version of
-# to_s.
-#
 # source://msgpack//lib/msgpack/core_ext.rb#57
 class String
   include ::Comparable

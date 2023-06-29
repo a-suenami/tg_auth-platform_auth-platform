@@ -10,8 +10,6 @@ module OmniAuth
     # source://omniauth/2.1.1/lib/omniauth.rb#130
     def config; end
 
-    # @yield [config]
-    #
     # source://omniauth/2.1.1/lib/omniauth.rb#134
     def configure; end
 

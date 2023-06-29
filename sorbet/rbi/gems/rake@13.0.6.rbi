@@ -90,6 +90,12 @@ FileUtils::LN_SUPPORTED = T.let(T.unsafe(nil), Array)
 # source://rake//lib/rake/file_utils.rb#10
 FileUtils::RUBY = T.let(T.unsafe(nil), String)
 
+# Also, modules included into Object need to be scanned and have their
+# instance methods removed from blank slate.  In theory, modules
+# included into Kernel would have to be removed as well, but a
+# "feature" of Ruby prevents late includes into modules from being
+# exposed in the first place.
+#
 # source://rake//lib/rake/ext/core.rb#2
 class Module
   # Check for an existing method in the current class before extending.  If
@@ -235,7 +241,7 @@ class Rake::Application
 
   # Display the error message that caused the exception.
   #
-  # source://rake//lib/rake/application.rb#206
+  # source://sentry-ruby/5.8.0/lib/sentry/rake.rb#10
   def display_error_message(ex); end
 
   # source://rake//lib/rake/application.rb#245
@@ -1563,6 +1569,9 @@ class Rake::FileList
   def to_h(*args, &block); end
 
   # source://rake//lib/rake/file_list.rb#77
+  def to_liquid(*args, &block); end
+
+  # source://rake//lib/rake/file_list.rb#77
   def to_msgpack(*args, &block); end
 
   # Convert a FileList to a string by joining all elements with a space.
@@ -2433,7 +2442,7 @@ class Rake::Task
 
   # Execute the actions associated with this task.
   #
-  # source://rake//lib/rake/task.rb#270
+  # source://sentry-ruby/5.8.0/lib/sentry/rake.rb#23
   def execute(args = T.unsafe(nil)); end
 
   # Full collection of comments. Multiple comments are separated by

@@ -451,13 +451,6 @@ class Insertion
   def insertion(val, rel, recursive = T.unsafe(nil), list = T.unsafe(nil)); end
 end
 
-# We need to do the alias-method-chain dance since Bootsnap does the same,
-# and prepended modules and alias-method-chain don't play well together.
-#
-# So, why does Bootsnap do alias-method-chain and not prepend? Glad you asked!
-# That's because RubyGems does alias-method-chain for Kernel#require and such,
-# so, if Bootsnap were to do prepend, it might end up breaking RubyGems.
-#
 # source://yard//lib/yard/core_ext/module.rb#2
 class Module
   # Returns the class name of a full module namespace path
@@ -497,21 +490,19 @@ RUBY19 = T.let(T.unsafe(nil), TrueClass)
 #
 # source://yard//lib/yard/server/rack_adapter.rb#85
 class Rack::Request
-  # @return [Request] a new instance of Request
-  #
-  # source://rack/2.2.6.2/lib/rack/request.rb#26
+  # source://rack/2.2.6.3/lib/rack/request.rb#26
   def initialize(env); end
 
-  # source://rack/2.2.6.2/lib/rack/request.rb#40
+  # source://rack/2.2.6.3/lib/rack/request.rb#40
   def delete_param(k); end
 
-  # source://rack/2.2.6.2/lib/rack/request.rb#31
+  # source://rack/2.2.6.3/lib/rack/request.rb#31
   def params; end
 
-  # source://rack/2.2.6.2/lib/rack/request.rb#31
+  # source://rack/2.2.6.3/lib/rack/request.rb#31
   def query; end
 
-  # source://rack/2.2.6.2/lib/rack/request.rb#35
+  # source://rack/2.2.6.3/lib/rack/request.rb#35
   def update_param(k, v); end
 
   # Returns the value of attribute version_supplied.
@@ -532,22 +523,14 @@ class Rack::Request
   def xhr?; end
 
   class << self
-    # Returns the value of attribute ip_filter.
-    #
-    # source://rack/2.2.6.2/lib/rack/request.rb#16
+    # source://rack/2.2.6.3/lib/rack/request.rb#16
     def ip_filter; end
 
-    # Sets the attribute ip_filter
-    #
-    # @param value the value to set the attribute ip_filter to.
-    #
-    # source://rack/2.2.6.2/lib/rack/request.rb#16
+    # source://rack/2.2.6.3/lib/rack/request.rb#16
     def ip_filter=(_arg0); end
   end
 end
 
-# Extensions to the core String class
-#
 # source://yard//lib/yard/core_ext/string.rb#2
 class String
   include ::Comparable
