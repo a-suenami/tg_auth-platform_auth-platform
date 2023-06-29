@@ -465,94 +465,49 @@ class DeliveryAddress
 
   module GeneratedAttributeMethods
     sig { returns(T.nilable(::String)) }
-    def address_1; end
+    def building_name; end
 
     sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def address_1=(value); end
+    def building_name=(value); end
 
     sig { returns(T::Boolean) }
-    def address_1?; end
+    def building_name?; end
 
     sig { returns(T.nilable(::String)) }
-    def address_1_before_last_save; end
+    def building_name_before_last_save; end
 
     sig { returns(T.untyped) }
-    def address_1_before_type_cast; end
+    def building_name_before_type_cast; end
 
     sig { returns(T::Boolean) }
-    def address_1_came_from_user?; end
+    def building_name_came_from_user?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def address_1_change; end
+    def building_name_change; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def address_1_change_to_be_saved; end
+    def building_name_change_to_be_saved; end
 
     sig { returns(T::Boolean) }
-    def address_1_changed?; end
+    def building_name_changed?; end
 
     sig { returns(T.nilable(::String)) }
-    def address_1_in_database; end
+    def building_name_in_database; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def address_1_previous_change; end
+    def building_name_previous_change; end
 
     sig { returns(T::Boolean) }
-    def address_1_previously_changed?; end
+    def building_name_previously_changed?; end
 
     sig { returns(T.nilable(::String)) }
-    def address_1_previously_was; end
+    def building_name_previously_was; end
 
     sig { returns(T.nilable(::String)) }
-    def address_1_was; end
+    def building_name_was; end
 
     sig { void }
-    def address_1_will_change!; end
-
-    sig { returns(T.nilable(::String)) }
-    def address_2; end
-
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def address_2=(value); end
-
-    sig { returns(T::Boolean) }
-    def address_2?; end
-
-    sig { returns(T.nilable(::String)) }
-    def address_2_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def address_2_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def address_2_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def address_2_change; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def address_2_change_to_be_saved; end
-
-    sig { returns(T::Boolean) }
-    def address_2_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def address_2_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def address_2_previous_change; end
-
-    sig { returns(T::Boolean) }
-    def address_2_previously_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def address_2_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def address_2_was; end
-
-    sig { void }
-    def address_2_will_change!; end
+    def building_name_will_change!; end
 
     sig { returns(T.nilable(::String)) }
     def city; end
@@ -643,6 +598,51 @@ class DeliveryAddress
 
     sig { void }
     def contact_tel_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def country_code; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def country_code=(value); end
+
+    sig { returns(T::Boolean) }
+    def country_code?; end
+
+    sig { returns(T.nilable(::String)) }
+    def country_code_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def country_code_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def country_code_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def country_code_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def country_code_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def country_code_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def country_code_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def country_code_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def country_code_previously_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def country_code_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def country_code_was; end
+
+    sig { void }
+    def country_code_will_change!; end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def created_at; end
@@ -825,16 +825,16 @@ class DeliveryAddress
     def prefecture_code_will_change!; end
 
     sig { void }
-    def restore_address_1!; end
-
-    sig { void }
-    def restore_address_2!; end
+    def restore_building_name!; end
 
     sig { void }
     def restore_city!; end
 
     sig { void }
     def restore_contact_tel!; end
+
+    sig { void }
+    def restore_country_code!; end
 
     sig { void }
     def restore_created_at!; end
@@ -849,6 +849,9 @@ class DeliveryAddress
     def restore_prefecture_code!; end
 
     sig { void }
+    def restore_street!; end
+
+    sig { void }
     def restore_tenant_id!; end
 
     sig { void }
@@ -861,16 +864,10 @@ class DeliveryAddress
     def restore_zip_code!; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_address_1; end
+    def saved_change_to_building_name; end
 
     sig { returns(T::Boolean) }
-    def saved_change_to_address_1?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_address_2; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_address_2?; end
+    def saved_change_to_building_name?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_city; end
@@ -883,6 +880,12 @@ class DeliveryAddress
 
     sig { returns(T::Boolean) }
     def saved_change_to_contact_tel?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_country_code; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_country_code?; end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_created_at; end
@@ -908,6 +911,12 @@ class DeliveryAddress
     sig { returns(T::Boolean) }
     def saved_change_to_prefecture_code?; end
 
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_street; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_street?; end
+
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
 
@@ -931,6 +940,51 @@ class DeliveryAddress
 
     sig { returns(T::Boolean) }
     def saved_change_to_zip_code?; end
+
+    sig { returns(T.nilable(::String)) }
+    def street; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def street=(value); end
+
+    sig { returns(T::Boolean) }
+    def street?; end
+
+    sig { returns(T.nilable(::String)) }
+    def street_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def street_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def street_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def street_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def street_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def street_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def street_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def street_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def street_previously_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def street_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def street_was; end
+
+    sig { void }
+    def street_will_change!; end
 
     sig { returns(::String) }
     def tenant_id; end
@@ -1068,16 +1122,16 @@ class DeliveryAddress
     def user_id_will_change!; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_address_1?; end
-
-    sig { returns(T::Boolean) }
-    def will_save_change_to_address_2?; end
+    def will_save_change_to_building_name?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_city?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_contact_tel?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_country_code?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_created_at?; end
@@ -1090,6 +1144,9 @@ class DeliveryAddress
 
     sig { returns(T::Boolean) }
     def will_save_change_to_prefecture_code?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_street?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end

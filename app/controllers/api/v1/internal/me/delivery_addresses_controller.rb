@@ -38,9 +38,10 @@ module API::V1::Internal
         :zip_code,
         :prefecture_code,
         :city,
-        :address_1,
-        :address_2,
+        :street,
+        :building_name,
         :contact_tel,
+        :country_code,
       )
     end
   end

@@ -2561,6 +2561,7 @@ end
 
 # source://railties//lib/rails/mailers_controller.rb#0
 module Rails::MailersController::HelperMethods
+  include ::ViteRails::TagHelpers
   include ::ActionController::Base::HelperMethods
 
   # source://railties//lib/rails/mailers_controller.rb#12

@@ -7957,6 +7957,7 @@ RSpec::Matchers::DSL::Macros::RAISE_NOTIFIER = T.let(T.unsafe(nil), Proc)
 class RSpec::Matchers::DSL::Matcher
   include ::RSpec::Matchers::BuiltIn::BaseMatcher::DefaultFailureMessages
   include ::RSpec::Matchers::DSL::DefaultImplementations
+  include ::Enumerize::Integrations::RSpec
   include ::RSpec::Matchers
   include ::RSpec::Matchers::Composable
   extend ::RSpec::Matchers::DSL::Macros

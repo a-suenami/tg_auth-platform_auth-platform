@@ -17,6 +17,7 @@ module API::V1::Internal
 
     def user_params
       params.require(:user).permit(
+        :tel,
         user_profile_attributes: [
           :first_name,
           :last_name,
@@ -29,8 +30,9 @@ module API::V1::Internal
           :zip_code,
           :prefecture_code,
           :city,
-          :address_1,
-          :address_2,
+          :street,
+          :building_name,
+          :country_code,
         ],
       )
     end

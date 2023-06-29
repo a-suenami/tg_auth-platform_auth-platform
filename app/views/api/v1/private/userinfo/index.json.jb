@@ -18,12 +18,14 @@ if @doorkeeper_token.acceptable?(:profile)
   contact_address_json[:prefecture] = current_user.contact_address&.prefecture&.name
 end
 if @doorkeeper_token.acceptable?(:contact)
+  json[:tel] = current_user.tel
   contact_address_json[:prefecture_code] = current_user.contact_address&.prefecture_code
   contact_address_json[:prefecture] = current_user.contact_address&.prefecture&.name
   contact_address_json[:zip_code] = current_user.contact_address&.zip_code
   contact_address_json[:city] = current_user.contact_address&.city
-  contact_address_json[:address_1] = current_user.contact_address&.address_1
-  contact_address_json[:address_2] = current_user.contact_address&.address_2
+  contact_address_json[:street] = current_user.contact_address&.street
+  contact_address_json[:building_name] = current_user.contact_address&.building_name
+  contact_address_json[:country_code] = current_user.contact_address&.country_code
 end
 if @doorkeeper_token.acceptable?(:delivery_address)
   json[:delivery_addresses] = current_user.delivery_addresses.map do |address|
@@ -33,9 +35,10 @@ if @doorkeeper_token.acceptable?(:delivery_address)
     address_json[:prefecture] = address&.prefecture&.name
     address_json[:zip_code] = address&.zip_code
     address_json[:city] = address&.city
-    address_json[:address_1] = address&.address_1
-    address_json[:address_2] = address&.address_2
+    address_json[:street] = address&.street
+    address_json[:building_name] = address&.building_name
     address_json[:contact_tel] = address&.contact_tel
+    address_json[:country_code] = address&.country_code
     address_json
   end
 end

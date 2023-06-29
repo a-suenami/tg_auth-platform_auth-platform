@@ -67,8 +67,9 @@ CREATE TABLE public.contact_addresses (
     zip_code character varying,
     prefecture_code integer,
     city character varying,
-    address_1 character varying,
-    address_2 character varying,
+    street character varying,
+    building_name character varying,
+    country_code character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -86,9 +87,10 @@ CREATE TABLE public.delivery_addresses (
     zip_code character varying,
     prefecture_code integer,
     city character varying,
-    address_1 character varying,
-    address_2 character varying,
+    street character varying,
+    building_name character varying,
     contact_tel character varying,
+    country_code character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
