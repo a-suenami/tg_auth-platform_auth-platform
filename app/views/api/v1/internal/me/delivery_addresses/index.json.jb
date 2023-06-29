@@ -9,5 +9,6 @@
     address_1: delivery_address.address_1,
     address_2: delivery_address.address_2,
     contact_tel: delivery_address.contact_tel,
+    country_code: delivery_address.country_code,
   }
 end

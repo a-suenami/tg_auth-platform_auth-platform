@@ -10640,49 +10640,55 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/callbacks.rb#940
   def _teardown_callbacks; end
 
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#709
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#735
   def assert_no_match(matcher, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#638
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#664
   def assert_not_empty(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#649
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#675
   def assert_not_equal(exp, act, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#661
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#687
   def assert_not_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#673
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#699
   def assert_not_in_epsilon(a, b, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#680
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#706
   def assert_not_includes(collection, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#691
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#717
   def assert_not_instance_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#701
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#727
   def assert_not_kind_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#719
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#745
   def assert_not_nil(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#730
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#780
   def assert_not_operator(o1, op, o2 = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#753
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#803
   def assert_not_predicate(o1, op, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#761
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#811
   def assert_not_respond_to(obj, meth, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#770
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#820
   def assert_not_same(exp, act, msg = T.unsafe(nil)); end
 
   # test/unit backwards compatibility methods
   #
-  # source://minitest/5.17.0/lib/minitest/assertions.rb#396
+  # source://minitest/5.18.0/lib/minitest/assertions.rb#422
   def assert_raise(*exp); end
+
+  # source://turbo-rails/1.1.1/lib/turbo/test_assertions.rb#7
+  def dom_class(*_arg0, **_arg1, &_arg2); end
+
+  # source://turbo-rails/1.1.1/lib/turbo/test_assertions.rb#7
+  def dom_id(*_arg0, **_arg1, &_arg2); end
 
   # source://activesupport//lib/active_support/testing/file_fixtures.rb#20
   def file_fixture_path; end
@@ -10693,7 +10699,7 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/test_case.rb#151
   def inspect; end
 
-  # source://minitest/5.17.0/lib/minitest.rb#304
+  # source://minitest/5.18.0/lib/minitest.rb#304
   def method_name; end
 
   class << self

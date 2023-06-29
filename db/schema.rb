@@ -34,6 +34,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "city"
     t.string "address_1"
     t.string "address_2"
+    t.string "country_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id"], name: "index_contact_addresses_on_tenant_id"
@@ -50,6 +51,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "address_1"
     t.string "address_2"
     t.string "contact_tel"
+    t.string "country_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id"], name: "index_delivery_addresses_on_tenant_id"

@@ -41,6 +41,7 @@ module API::V1::Internal
         :address_1,
         :address_2,
         :contact_tel,
+        :country_code,
       )
     end
   end

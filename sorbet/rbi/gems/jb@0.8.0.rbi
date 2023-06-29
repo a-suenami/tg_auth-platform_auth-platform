@@ -7,9 +7,13 @@
 # source://jb//lib/jb/railtie.rb#18
 module ActionController
   class << self
+    # See <tt>Renderers.add</tt>
+    #
     # source://actionpack/7.0.4.2/lib/action_controller/metal/renderers.rb#7
     def add_renderer(key, &block); end
 
+    # See <tt>Renderers.remove</tt>
+    #
     # source://actionpack/7.0.4.2/lib/action_controller/metal/renderers.rb#12
     def remove_renderer(key); end
   end

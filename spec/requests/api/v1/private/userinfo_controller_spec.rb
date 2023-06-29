@@ -50,6 +50,7 @@ RSpec.describe '[ Userinfo API ]' do
           expect(body_hash).to eq({
             'uid' => current_user.id,
             'email' => current_user.email,
+            'tel' => '09012345678',
             'delivery_addresses' => [
               {
                 'is_default' => delivery_address.is_default,
@@ -59,6 +60,7 @@ RSpec.describe '[ Userinfo API ]' do
                 'city' => delivery_address.city,
                 'address_1' => delivery_address.address_1,
                 'address_2' => delivery_address.address_2,
+                'country_code' => delivery_address.country_code,
                 'contact_tel' => delivery_address.contact_tel,
               },
             ],
@@ -77,6 +79,7 @@ RSpec.describe '[ Userinfo API ]' do
               'city' => contact_address.city,
               'address_1' => contact_address.address_1,
               'address_2' => contact_address.address_2,
+              'country_code' => contact_address.country_code,
             },
           })
         end
@@ -144,6 +147,7 @@ RSpec.describe '[ Userinfo API ]' do
         it 'returns user info' do
           is_expected.to eq 200
           expect(body_hash).to eq({
+            'tel' => '09012345678',
             'contact_address' => {
               'prefecture_code' => contact_address.prefecture_code,
               'prefecture' => contact_address.prefecture.name,
@@ -151,6 +155,7 @@ RSpec.describe '[ Userinfo API ]' do
               'city' => contact_address.city,
               'address_1' => contact_address.address_1,
               'address_2' => contact_address.address_2,
+              'country_code' => contact_address.country_code,
             },
           })
         end
@@ -171,6 +176,7 @@ RSpec.describe '[ Userinfo API ]' do
                 'city' => delivery_address.city,
                 'address_1' => delivery_address.address_1,
                 'address_2' => delivery_address.address_2,
+                'country_code' => delivery_address.country_code,
                 'contact_tel' => delivery_address.contact_tel,
               },
             ],

@@ -11,5 +11,6 @@ FactoryBot.define do
     address_1 { '1-1-1' }
     address_2 { '代田アモーレ 101号室' }
     contact_tel { '090-1234-5678' }
+    country_code { 'JP' }
   end
 end

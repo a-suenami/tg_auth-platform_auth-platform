@@ -28,9 +28,6 @@ module ActiveRecord
     # source://activerecord/7.0.4.2/lib/active_record.rb#183
     def default_timezone; end
 
-    # Determines whether to use Time.utc (using :utc) or Time.local (using :local) when pulling
-    # dates and times from the database. This is set to :utc by default.
-    #
     # source://activerecord/7.0.4.2/lib/active_record.rb#187
     def default_timezone=(default_timezone); end
 
@@ -55,17 +52,12 @@ module ActiveRecord
     # source://activerecord/7.0.4.2/lib/active_record.rb#296
     def error_on_ignored_order=(_arg0); end
 
-    # Returns the currently loaded version of Active Record as a <tt>Gem::Version</tt>.
-    #
     # source://activerecord/7.0.4.2/lib/active_record/gem_version.rb#5
     def gem_version; end
 
     # source://activerecord/7.0.4.2/lib/active_record.rb#236
     def global_executor_concurrency; end
 
-    # Set the +global_executor_concurrency+. This configuration value can only be used
-    # with the global thread pool async query executor.
-    #
     # source://activerecord/7.0.4.2/lib/active_record.rb#228
     def global_executor_concurrency=(global_executor_concurrency); end
 
@@ -162,8 +154,6 @@ module ActiveRecord
     # source://activerecord/7.0.4.2/lib/active_record.rb#337
     def verify_foreign_keys_for_fixtures=(_arg0); end
 
-    # Returns the currently loaded version of Active Record as a <tt>Gem::Version</tt>.
-    #
     # source://activerecord/7.0.4.2/lib/active_record/version.rb#7
     def version; end
 
@@ -192,8 +182,6 @@ module ActiveRecord::Tasks; end
 
 # source://pgreset//lib/pgreset.rb#5
 class ActiveRecord::Tasks::PostgreSQLDatabaseTasks
-  # @return [PostgreSQLDatabaseTasks] a new instance of PostgreSQLDatabaseTasks
-  #
   # source://activerecord/7.0.4.2/lib/active_record/tasks/postgresql_database_tasks.rb#19
   def initialize(db_config); end
 
@@ -229,13 +217,9 @@ class ActiveRecord::Tasks::PostgreSQLDatabaseTasks
 
   private
 
-  # Returns the value of attribute configuration_hash.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/tasks/postgresql_database_tasks.rb#90
   def configuration_hash; end
 
-  # Returns the value of attribute db_config.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/tasks/postgresql_database_tasks.rb#90
   def db_config; end
 
@@ -258,8 +242,6 @@ class ActiveRecord::Tasks::PostgreSQLDatabaseTasks
   def run_cmd_error(cmd, args, action); end
 
   class << self
-    # @return [Boolean]
-    #
     # source://activerecord/7.0.4.2/lib/active_record/tasks/postgresql_database_tasks.rb#15
     def using_database_configurations?; end
   end

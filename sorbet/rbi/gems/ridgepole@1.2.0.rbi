@@ -28,9 +28,6 @@ module ActiveRecord
     # source://activerecord/7.0.4.2/lib/active_record.rb#183
     def default_timezone; end
 
-    # Determines whether to use Time.utc (using :utc) or Time.local (using :local) when pulling
-    # dates and times from the database. This is set to :utc by default.
-    #
     # source://activerecord/7.0.4.2/lib/active_record.rb#187
     def default_timezone=(default_timezone); end
 
@@ -55,17 +52,12 @@ module ActiveRecord
     # source://activerecord/7.0.4.2/lib/active_record.rb#296
     def error_on_ignored_order=(_arg0); end
 
-    # Returns the currently loaded version of Active Record as a <tt>Gem::Version</tt>.
-    #
     # source://activerecord/7.0.4.2/lib/active_record/gem_version.rb#5
     def gem_version; end
 
     # source://activerecord/7.0.4.2/lib/active_record.rb#236
     def global_executor_concurrency; end
 
-    # Set the +global_executor_concurrency+. This configuration value can only be used
-    # with the global thread pool async query executor.
-    #
     # source://activerecord/7.0.4.2/lib/active_record.rb#228
     def global_executor_concurrency=(global_executor_concurrency); end
 
@@ -162,8 +154,6 @@ module ActiveRecord
     # source://activerecord/7.0.4.2/lib/active_record.rb#337
     def verify_foreign_keys_for_fixtures=(_arg0); end
 
-    # Returns the currently loaded version of Active Record as a <tt>Gem::Version</tt>.
-    #
     # source://activerecord/7.0.4.2/lib/active_record/version.rb#7
     def version; end
 
@@ -190,27 +180,11 @@ end
 # source://ridgepole//lib/ridgepole/ext/abstract_adapter/disable_table_options.rb#35
 module ActiveRecord::ConnectionAdapters; end
 
-# Active Record supports multiple database systems. AbstractAdapter and
-# related classes form the abstraction layer which makes this possible.
-# An AbstractAdapter represents a connection to a database, and provides an
-# abstract interface for database-specific functionality such as establishing
-# a connection, escaping values, building the right SQL fragments for +:offset+
-# and +:limit+ options, etc.
-#
-# All the concrete database adapters follow the interface laid down in this class.
-# {ActiveRecord::Base.connection}[rdoc-ref:ConnectionHandling#connection] returns an AbstractAdapter object, which
-# you can use.
-#
-# Most of the methods in the adapter are useful during migrations. Most
-# notably, the instance methods provided by SchemaStatements are very useful.
-#
 # source://ridgepole//lib/ridgepole/ext/abstract_adapter/disable_table_options.rb#36
 class ActiveRecord::ConnectionAdapters::AbstractAdapter
   include ::Ridgepole::SchemaStatementsExt
   include ::ActiveRecord::Migration::JoinTable
 
-  # @return [AbstractAdapter] a new instance of AbstractAdapter
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#82
   def initialize(connection, logger = T.unsafe(nil), config = T.unsafe(nil)); end
 
@@ -232,44 +206,21 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
   def _run_checkout_callbacks(&block); end
 
-  # Checks whether the connection to the database is still active. This includes
-  # checking whether the database is actually capable of responding, i.e. whether
-  # the connection isn't stale.
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#523
   def active?; end
 
-  # Returns the human-readable name of the adapter. Use mixed case - one
-  # can always use downcase if needed.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#292
   def adapter_name; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#478
   def advisory_locks_enabled?; end
 
-  # Override to check all foreign key constraints in a database.
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#514
   def all_foreign_keys_valid?; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#461
   def async_enabled?; end
 
-  # Called by ActiveRecord::InsertAll,
-  # Passed an instance of ActiveRecord::InsertAll::Builder,
-  # This method implements standard bulk inserts for all databases, but
-  # should be overridden by adapters to implement common features with
-  # non-standard syntax like handling duplicates or returning values.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#638
   def build_insert_sql(insert); end
 
@@ -285,13 +236,9 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#653
   def check_version; end
 
-  # Clear any caching the database adapter may be doing.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#574
   def clear_cache!; end
 
-  # Check the connection back in to the connection pool
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#625
   def close; end
 
@@ -301,16 +248,12 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract/query_cache.rb#20
   def create(*_arg0); end
 
-  # This is meant to be implemented by the adapters that support custom enum types
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#475
   def create_enum(*_arg0); end
 
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#649
   def database_version; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#629
   def default_index_type?(index); end
 
@@ -320,89 +263,54 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract/query_cache.rb#20
   def delete(*_arg0); end
 
-  # This is meant to be implemented by the adapters that support extensions
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#467
   def disable_extension(name); end
 
-  # Override to turn off referential integrity while executing <tt>&block</tt>.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#509
   def disable_referential_integrity; end
 
-  # Immediately forget this connection ever existed. Unlike disconnect!,
-  # this will not communicate with the server.
-  #
-  # After calling this method, the behavior of all other methods becomes
-  # undefined. This is called internally just before a forked process gets
-  # rid of a connection that belonged to its parent.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#547
   def discard!; end
 
-  # Disconnects from the database if already connected. Otherwise, this
-  # method does nothing.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#536
   def disconnect!; end
 
-  # This is meant to be implemented by the adapters that support extensions
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#471
   def enable_extension(name); end
 
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract/query_cache.rb#20
   def exec_insert_all(*_arg0); end
 
-  # this method must only be called while holding connection pool's mutex
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#249
   def expire; end
 
-  # A list of extensions, to be filled in by adapters that support them.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#497
   def extensions; end
 
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#664
   def field_ordered_value(column, values); end
 
-  # This is meant to be implemented by the adapters that support advisory
-  # locks
-  #
-  # Return true if we got the lock, otherwise false
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#486
   def get_advisory_lock(lock_id); end
 
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#646
   def get_database_version; end
 
-  # Returns the value of attribute owner.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#42
   def in_use?; end
 
-  # A list of index algorithms, to be filled by adapters that support them.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#502
   def index_algorithms; end
 
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract/query_cache.rb#20
   def insert(*_arg0); end
 
-  # this method must only be called while holding connection pool's mutex
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#208
   def lease; end
 
-  # Returns the value of attribute lock.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#42
   def lock; end
 
-  # Returns the value of attribute logger.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#42
   def logger; end
 
@@ -412,110 +320,48 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#149
   def migrations_paths; end
 
-  # Returns the value of attribute owner.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#42
   def owner; end
 
-  # Returns the value of attribute pool.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#41
   def pool; end
 
-  # Sets the attribute pool
-  #
-  # @param value the value to set the attribute pool to.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#41
   def pool=(_arg0); end
 
-  # Should primary key values be selected from their corresponding
-  # sequence before the insert statement? If true, next_sequence_value
-  # is called before each insert to set the record's primary key.
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#324
   def prefetch_primary_key?(table_name = T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#175
   def prepared_statements; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#175
   def prepared_statements?; end
 
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#180
   def prepared_statements_disabled_cache; end
 
-  # Determines whether writes are currently being prevented.
-  #
-  # Returns true if the connection is a replica.
-  #
-  # If the application is using legacy handling, returns
-  # true if +connection_handler.prevent_writes+ is set.
-  #
-  # If the application is using the new connection handling
-  # will return true based on +current_preventing_writes+.
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#141
   def preventing_writes?; end
 
-  # Provides access to the underlying database driver for this adapter. For
-  # example, this method returns a Mysql2::Client object in case of Mysql2Adapter,
-  # and a PG::Connection object in case of PostgreSQLAdapter.
-  #
-  # This is useful for when you need to call a proprietary method such as
-  # PostgreSQL's lo_* methods.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#596
   def raw_connection; end
 
-  # Disconnects from the database if already connected, and establishes a
-  # new connection with the database. Implementors should call super if they
-  # override the default implementation.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#529
   def reconnect!; end
 
-  # This is meant to be implemented by the adapters that support advisory
-  # locks.
-  #
-  # Return true if we released the lock, otherwise false
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#493
   def release_advisory_lock(lock_id); end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#124
   def replica?; end
 
-  # Returns true if its required to reload the connection between requests for development mode.
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#579
   def requires_reloading?; end
 
-  # Reset the state of this connection, directing the DBMS to clear
-  # transactions and other connection-related server-side state. Usually a
-  # database-dependent operation.
-  #
-  # The default implementation does nothing; the implementation should be
-  # overridden by concrete adapters.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#563
   def reset!; end
 
-  # The role (e.g. +:writing+) for the current connection. In a
-  # non-multi role application, +:writing+ is returned.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#229
   def role; end
 
@@ -534,240 +380,114 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#157
   def schema_migration; end
 
-  # Returns the version identifier of the schema currently available in
-  # the database. This is generally equal to the number of the highest-
-  # numbered migration that has been executed, or 0 if no schema
-  # information is present / the database is empty.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#660
   def schema_version; end
 
-  # Seconds since this connection was returned to the pool
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#278
   def seconds_idle; end
 
-  # The shard (e.g. +:default+) for the current connection. In
-  # a non-sharded application, +:default+ is returned.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#235
   def shard; end
 
-  # this method must only be called while holding connection pool's mutex (and a desire for segfaults)
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#265
   def steal!; end
 
-  # Does this adapter support application-enforced advisory locking?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#317
   def supports_advisory_locks?; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#307
   def supports_bulk_alter?; end
 
-  # Does this adapter support creating check constraints?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#384
   def supports_check_constraints?; end
 
-  # Does this adapter support metadata comments on database objects (tables, columns, indexes)?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#409
   def supports_comments?; end
 
-  # Can comments for tables, columns, and indexes be specified in create/alter table statements?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#414
   def supports_comments_in_create?; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#433
   def supports_common_table_expressions?; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#457
   def supports_concurrent_connections?; end
 
-  # Does this adapter support datetime with precision?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#399
   def supports_datetime_with_precision?; end
 
-  # Does this adapter support DDL rollbacks in transactions? That is, would
-  # CREATE TABLE or ALTER TABLE get rolled back by a transaction?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#303
   def supports_ddl_transactions?; end
 
-  # Does this adapter support creating deferrable constraints?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#379
   def supports_deferrable_constraints?; end
 
-  # Does this adapter support explain?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#348
   def supports_explain?; end
 
-  # Does this adapter support expression indices?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#343
   def supports_expression_index?; end
 
-  # Does this adapter support database extensions?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#358
   def supports_extensions?; end
 
-  # Does this adapter support creating foreign key constraints?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#369
   def supports_foreign_keys?; end
 
-  # Does this adapter support foreign/external tables?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#424
   def supports_foreign_tables?; end
 
-  # Does this adapter support index sort order?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#333
   def supports_index_sort_order?; end
 
-  # Does this adapter support creating indexes in the same statement as
-  # creating the table?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#364
   def supports_indexes_in_create?; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#453
   def supports_insert_conflict_target?; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#445
   def supports_insert_on_duplicate_skip?; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#449
   def supports_insert_on_duplicate_update?; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#441
   def supports_insert_returning?; end
 
-  # Does this adapter support json data type?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#404
   def supports_json?; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#437
   def supports_lazy_transactions?; end
 
-  # Does this adapter support materialized views?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#394
   def supports_materialized_views?; end
 
-  # Does this adapter support optimizer hints?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#429
   def supports_optimizer_hints?; end
 
-  # Does this adapter support partial indices?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#338
   def supports_partial_index?; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#328
   def supports_partitioned_indexes?; end
 
-  # Does this adapter support savepoints?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#312
   def supports_savepoints?; end
 
-  # Does this adapter support setting the isolation level for a transaction?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#353
   def supports_transaction_isolation?; end
 
-  # Does this adapter support creating invalid constraints?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#374
   def supports_validate_constraints?; end
 
-  # Does this adapter support views?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#389
   def supports_views?; end
 
-  # Does this adapter support virtual columns?
-  #
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#419
   def supports_virtual_columns?; end
 
-  # Removes the connection from the pool and disconnect it.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#568
   def throw_away!; end
 
@@ -783,25 +503,15 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract/query_cache.rb#20
   def update(*_arg0); end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#128
   def use_metadata_table?; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#203
   def valid_type?(type); end
 
-  # Checks whether the connection to the database is still active (i.e. not stale).
-  # This is done under the hood by calling #active?. If the connection
-  # is no longer active, then this method will reconnect to the database.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#586
   def verify!; end
 
-  # Returns the value of attribute visitor.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#42
   def visitor; end
 
@@ -813,19 +523,12 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#817
   def arel_visitor; end
 
-  # Builds the result object.
-  #
-  # This is an internal hook to make possible connection adapters to build
-  # custom result objects with connection-specific data.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#828
   def build_result(columns:, rows:, column_types: T.unsafe(nil)); end
 
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#821
   def build_statement_pool; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#619
   def can_perform_case_insensitive_comparison_for?(column); end
 
@@ -853,8 +556,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#741
   def type_map; end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#788
   def without_prepared_statement?(binds); end
 
@@ -883,11 +584,6 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
     # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#68
     def build_read_query_regexp(*parts); end
 
-    # Does the database for this adapter exist?
-    #
-    # @raise [NotImplementedError]
-    # @return [Boolean]
-    #
     # source://activerecord/7.0.4.2/lib/active_record/connection_adapters/abstract_adapter.rb#297
     def database_exists?(config); end
 
@@ -930,341 +626,10 @@ class ActiveRecord::ConnectionAdapters::AbstractAdapter
   end
 end
 
-# = Active Record Migrations
-#
-# Migrations can manage the evolution of a schema used by several physical
-# databases. It's a solution to the common problem of adding a field to make
-# a new feature work in your local database, but being unsure of how to
-# push that change to other developers and to the production server. With
-# migrations, you can describe the transformations in self-contained classes
-# that can be checked into version control systems and executed against
-# another database that might be one, two, or five versions behind.
-#
-# Example of a simple migration:
-#
-#   class AddSsl < ActiveRecord::Migration[7.0]
-#     def up
-#       add_column :accounts, :ssl_enabled, :boolean, default: true
-#     end
-#
-#     def down
-#       remove_column :accounts, :ssl_enabled
-#     end
-#   end
-#
-# This migration will add a boolean flag to the accounts table and remove it
-# if you're backing out of the migration. It shows how all migrations have
-# two methods +up+ and +down+ that describes the transformations
-# required to implement or remove the migration. These methods can consist
-# of both the migration specific methods like +add_column+ and +remove_column+,
-# but may also contain regular Ruby code for generating data needed for the
-# transformations.
-#
-# Example of a more complex migration that also needs to initialize data:
-#
-#   class AddSystemSettings < ActiveRecord::Migration[7.0]
-#     def up
-#       create_table :system_settings do |t|
-#         t.string  :name
-#         t.string  :label
-#         t.text    :value
-#         t.string  :type
-#         t.integer :position
-#       end
-#
-#       SystemSetting.create  name:  'notice',
-#                             label: 'Use notice?',
-#                             value: 1
-#     end
-#
-#     def down
-#       drop_table :system_settings
-#     end
-#   end
-#
-# This migration first adds the +system_settings+ table, then creates the very
-# first row in it using the Active Record model that relies on the table. It
-# also uses the more advanced +create_table+ syntax where you can specify a
-# complete table schema in one block call.
-#
-# == Available transformations
-#
-# === Creation
-#
-# * <tt>create_join_table(table_1, table_2, options)</tt>: Creates a join
-#   table having its name as the lexical order of the first two
-#   arguments. See
-#   ActiveRecord::ConnectionAdapters::SchemaStatements#create_join_table for
-#   details.
-# * <tt>create_table(name, options)</tt>: Creates a table called +name+ and
-#   makes the table object available to a block that can then add columns to it,
-#   following the same format as +add_column+. See example above. The options hash
-#   is for fragments like "DEFAULT CHARSET=UTF-8" that are appended to the create
-#   table definition.
-# * <tt>add_column(table_name, column_name, type, options)</tt>: Adds a new column
-#   to the table called +table_name+
-#   named +column_name+ specified to be one of the following types:
-#   <tt>:string</tt>, <tt>:text</tt>, <tt>:integer</tt>, <tt>:float</tt>,
-#   <tt>:decimal</tt>, <tt>:datetime</tt>, <tt>:timestamp</tt>, <tt>:time</tt>,
-#   <tt>:date</tt>, <tt>:binary</tt>, <tt>:boolean</tt>. A default value can be
-#   specified by passing an +options+ hash like <tt>{ default: 11 }</tt>.
-#   Other options include <tt>:limit</tt> and <tt>:null</tt> (e.g.
-#   <tt>{ limit: 50, null: false }</tt>) -- see
-#   ActiveRecord::ConnectionAdapters::TableDefinition#column for details.
-# * <tt>add_foreign_key(from_table, to_table, options)</tt>: Adds a new
-#   foreign key. +from_table+ is the table with the key column, +to_table+ contains
-#   the referenced primary key.
-# * <tt>add_index(table_name, column_names, options)</tt>: Adds a new index
-#   with the name of the column. Other options include
-#   <tt>:name</tt>, <tt>:unique</tt> (e.g.
-#   <tt>{ name: 'users_name_index', unique: true }</tt>) and <tt>:order</tt>
-#   (e.g. <tt>{ order: { name: :desc } }</tt>).
-# * <tt>add_reference(:table_name, :reference_name)</tt>: Adds a new column
-#   +reference_name_id+ by default an integer. See
-#   ActiveRecord::ConnectionAdapters::SchemaStatements#add_reference for details.
-# * <tt>add_timestamps(table_name, options)</tt>: Adds timestamps (+created_at+
-#   and +updated_at+) columns to +table_name+.
-#
-# === Modification
-#
-# * <tt>change_column(table_name, column_name, type, options)</tt>:  Changes
-#   the column to a different type using the same parameters as add_column.
-# * <tt>change_column_default(table_name, column_name, default_or_changes)</tt>:
-#   Sets a default value for +column_name+ defined by +default_or_changes+ on
-#   +table_name+. Passing a hash containing <tt>:from</tt> and <tt>:to</tt>
-#   as +default_or_changes+ will make this change reversible in the migration.
-# * <tt>change_column_null(table_name, column_name, null, default = nil)</tt>:
-#   Sets or removes a <tt>NOT NULL</tt> constraint on +column_name+. The +null+ flag
-#   indicates whether the value can be +NULL+. See
-#   ActiveRecord::ConnectionAdapters::SchemaStatements#change_column_null for
-#   details.
-# * <tt>change_table(name, options)</tt>: Allows to make column alterations to
-#   the table called +name+. It makes the table object available to a block that
-#   can then add/remove columns, indexes, or foreign keys to it.
-# * <tt>rename_column(table_name, column_name, new_column_name)</tt>: Renames
-#   a column but keeps the type and content.
-# * <tt>rename_index(table_name, old_name, new_name)</tt>: Renames an index.
-# * <tt>rename_table(old_name, new_name)</tt>: Renames the table called +old_name+
-#   to +new_name+.
-#
-# === Deletion
-#
-# * <tt>drop_table(name)</tt>: Drops the table called +name+.
-# * <tt>drop_join_table(table_1, table_2, options)</tt>: Drops the join table
-#   specified by the given arguments.
-# * <tt>remove_column(table_name, column_name, type, options)</tt>: Removes the column
-#   named +column_name+ from the table called +table_name+.
-# * <tt>remove_columns(table_name, *column_names)</tt>: Removes the given
-#   columns from the table definition.
-# * <tt>remove_foreign_key(from_table, to_table = nil, **options)</tt>: Removes the
-#   given foreign key from the table called +table_name+.
-# * <tt>remove_index(table_name, column: column_names)</tt>: Removes the index
-#   specified by +column_names+.
-# * <tt>remove_index(table_name, name: index_name)</tt>: Removes the index
-#   specified by +index_name+.
-# * <tt>remove_reference(table_name, ref_name, options)</tt>: Removes the
-#   reference(s) on +table_name+ specified by +ref_name+.
-# * <tt>remove_timestamps(table_name, options)</tt>: Removes the timestamp
-#   columns (+created_at+ and +updated_at+) from the table definition.
-#
-# == Irreversible transformations
-#
-# Some transformations are destructive in a manner that cannot be reversed.
-# Migrations of that kind should raise an <tt>ActiveRecord::IrreversibleMigration</tt>
-# exception in their +down+ method.
-#
-# == Running migrations from within Rails
-#
-# The Rails package has several tools to help create and apply migrations.
-#
-# To generate a new migration, you can use
-#   bin/rails generate migration MyNewMigration
-#
-# where MyNewMigration is the name of your migration. The generator will
-# create an empty migration file <tt>timestamp_my_new_migration.rb</tt>
-# in the <tt>db/migrate/</tt> directory where <tt>timestamp</tt> is the
-# UTC formatted date and time that the migration was generated.
-#
-# There is a special syntactic shortcut to generate migrations that add fields to a table.
-#
-#   bin/rails generate migration add_fieldname_to_tablename fieldname:string
-#
-# This will generate the file <tt>timestamp_add_fieldname_to_tablename.rb</tt>, which will look like this:
-#   class AddFieldnameToTablename < ActiveRecord::Migration[7.0]
-#     def change
-#       add_column :tablenames, :fieldname, :string
-#     end
-#   end
-#
-# To run migrations against the currently configured database, use
-# <tt>bin/rails db:migrate</tt>. This will update the database by running all of the
-# pending migrations, creating the <tt>schema_migrations</tt> table
-# (see "About the schema_migrations table" section below) if missing. It will also
-# invoke the db:schema:dump command, which will update your db/schema.rb file
-# to match the structure of your database.
-#
-# To roll the database back to a previous migration version, use
-# <tt>bin/rails db:rollback VERSION=X</tt> where <tt>X</tt> is the version to which
-# you wish to downgrade. Alternatively, you can also use the STEP option if you
-# wish to rollback last few migrations. <tt>bin/rails db:rollback STEP=2</tt> will rollback
-# the latest two migrations.
-#
-# If any of the migrations throw an <tt>ActiveRecord::IrreversibleMigration</tt> exception,
-# that step will fail and you'll have some manual work to do.
-#
-# == More examples
-#
-# Not all migrations change the schema. Some just fix the data:
-#
-#   class RemoveEmptyTags < ActiveRecord::Migration[7.0]
-#     def up
-#       Tag.all.each { |tag| tag.destroy if tag.pages.empty? }
-#     end
-#
-#     def down
-#       # not much we can do to restore deleted data
-#       raise ActiveRecord::IrreversibleMigration, "Can't recover the deleted tags"
-#     end
-#   end
-#
-# Others remove columns when they migrate up instead of down:
-#
-#   class RemoveUnnecessaryItemAttributes < ActiveRecord::Migration[7.0]
-#     def up
-#       remove_column :items, :incomplete_items_count
-#       remove_column :items, :completed_items_count
-#     end
-#
-#     def down
-#       add_column :items, :incomplete_items_count
-#       add_column :items, :completed_items_count
-#     end
-#   end
-#
-# And sometimes you need to do something in SQL not abstracted directly by migrations:
-#
-#   class MakeJoinUnique < ActiveRecord::Migration[7.0]
-#     def up
-#       execute "ALTER TABLE `pages_linked_pages` ADD UNIQUE `page_id_linked_page_id` (`page_id`,`linked_page_id`)"
-#     end
-#
-#     def down
-#       execute "ALTER TABLE `pages_linked_pages` DROP INDEX `page_id_linked_page_id`"
-#     end
-#   end
-#
-# == Using a model after changing its table
-#
-# Sometimes you'll want to add a column in a migration and populate it
-# immediately after. In that case, you'll need to make a call to
-# <tt>Base#reset_column_information</tt> in order to ensure that the model has the
-# latest column data from after the new column was added. Example:
-#
-#   class AddPeopleSalary < ActiveRecord::Migration[7.0]
-#     def up
-#       add_column :people, :salary, :integer
-#       Person.reset_column_information
-#       Person.all.each do |p|
-#         p.update_attribute :salary, SalaryCalculator.compute(p)
-#       end
-#     end
-#   end
-#
-# == Controlling verbosity
-#
-# By default, migrations will describe the actions they are taking, writing
-# them to the console as they happen, along with benchmarks describing how
-# long each step took.
-#
-# You can quiet them down by setting ActiveRecord::Migration.verbose = false.
-#
-# You can also insert your own messages and benchmarks by using the +say_with_time+
-# method:
-#
-#   def up
-#     ...
-#     say_with_time "Updating salaries..." do
-#       Person.all.each do |p|
-#         p.update_attribute :salary, SalaryCalculator.compute(p)
-#       end
-#     end
-#     ...
-#   end
-#
-# The phrase "Updating salaries..." would then be printed, along with the
-# benchmark for the block when the block completes.
-#
-# == Timestamped Migrations
-#
-# By default, Rails generates migrations that look like:
-#
-#    20080717013526_your_migration_name.rb
-#
-# The prefix is a generation timestamp (in UTC).
-#
-# If you'd prefer to use numeric prefixes, you can turn timestamped migrations
-# off by setting:
-#
-#    config.active_record.timestamped_migrations = false
-#
-# In application.rb.
-#
-# == Reversible Migrations
-#
-# Reversible migrations are migrations that know how to go +down+ for you.
-# You simply supply the +up+ logic, and the Migration system figures out
-# how to execute the down commands for you.
-#
-# To define a reversible migration, define the +change+ method in your
-# migration like this:
-#
-#   class TenderloveMigration < ActiveRecord::Migration[7.0]
-#     def change
-#       create_table(:horses) do |t|
-#         t.column :content, :text
-#         t.column :remind_at, :datetime
-#       end
-#     end
-#   end
-#
-# This migration will create the horses table for you on the way up, and
-# automatically figure out how to drop the table on the way down.
-#
-# Some commands cannot be reversed. If you care to define how to move up
-# and down in these cases, you should define the +up+ and +down+ methods
-# as before.
-#
-# If a command cannot be reversed, an
-# <tt>ActiveRecord::IrreversibleMigration</tt> exception will be raised when
-# the migration is moving down.
-#
-# For a list of commands that are reversible, please see
-# <tt>ActiveRecord::Migration::CommandRecorder</tt>.
-#
-# == Transactional Migrations
-#
-# If the database adapter supports DDL transactions, all migrations will
-# automatically be wrapped in a transaction. There are queries that you
-# can't execute inside a transaction though, and for these situations
-# you can turn the automatic transactions off.
-#
-#   class ChangeEnum < ActiveRecord::Migration[7.0]
-#     disable_ddl_transaction!
-#
-#     def up
-#       execute "ALTER TYPE model_size ADD VALUE 'new_value'"
-#     end
-#   end
-#
-# Remember that you can still open your own transactions, even if you
-# are in a Migration with <tt>self.disable_ddl_transaction!</tt>.
-#
 # source://ridgepole//lib/ridgepole/migration_ext.rb#66
 class ActiveRecord::Migration
   include ::Ridgepole::MigrationExt
 
-  # @return [Migration] a new instance of Migration
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#684
   def initialize(name = T.unsafe(nil), version = T.unsafe(nil)); end
 
@@ -1295,140 +660,42 @@ class ActiveRecord::Migration
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#918
   def method_missing(method, *arguments, **_arg2, &block); end
 
-  # Execute this migration in the named direction
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#843
   def migrate(direction); end
 
-  # Returns the value of attribute name.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#682
   def name; end
 
-  # Sets the attribute name
-  #
-  # @param value the value to set the attribute name to.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#682
   def name=(_arg0); end
 
-  # Determines the version number of the next migration.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#1003
   def next_migration_number(number); end
 
-  # Finds the correct table name given an Active Record object.
-  # Uses the Active Record object's own table_name, or pre/suffix from the
-  # options passed in.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#994
   def proper_table_name(name, options = T.unsafe(nil)); end
 
-  # Used to specify an operation that can be run in one direction or another.
-  # Call the methods +up+ and +down+ of the yielded object to run a block
-  # only in one given direction.
-  # The whole block will be called in the right order within the migration.
-  #
-  # In the following example, the looping on users will always be done
-  # when the three columns 'first_name', 'last_name' and 'full_name' exist,
-  # even when migrating down:
-  #
-  #    class SplitNameMigration < ActiveRecord::Migration[7.0]
-  #      def change
-  #        add_column :users, :first_name, :string
-  #        add_column :users, :last_name, :string
-  #
-  #        reversible do |dir|
-  #          User.reset_column_information
-  #          User.all.each do |u|
-  #            dir.up   { u.first_name, u.last_name = u.full_name.split(' ') }
-  #            dir.down { u.full_name = "#{u.first_name} #{u.last_name}" }
-  #            u.save
-  #          end
-  #        end
-  #
-  #        revert { add_column :users, :full_name, :string }
-  #      end
-  #    end
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#788
   def reversible; end
 
-  # Reverses the migration commands for the given block and
-  # the given migrations.
-  #
-  # The following migration will remove the table 'horses'
-  # and create the table 'apples' on the way up, and the reverse
-  # on the way down.
-  #
-  #   class FixTLMigration < ActiveRecord::Migration[7.0]
-  #     def change
-  #       revert do
-  #         create_table(:horses) do |t|
-  #           t.text :content
-  #           t.datetime :remind_at
-  #         end
-  #       end
-  #       create_table(:apples) do |t|
-  #         t.string :variety
-  #       end
-  #     end
-  #   end
-  #
-  # Or equivalently, if +TenderloveMigration+ is defined as in the
-  # documentation for Migration:
-  #
-  #   require_relative "20121212123456_tenderlove_migration"
-  #
-  #   class FixupTLMigration < ActiveRecord::Migration[7.0]
-  #     def change
-  #       revert TenderloveMigration
-  #
-  #       create_table(:apples) do |t|
-  #         t.string :variety
-  #       end
-  #     end
-  #   end
-  #
-  # This command can be nested.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#731
   def revert(*migration_classes, &block); end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#748
   def reverting?; end
 
-  # Runs the given migration classes.
-  # Last argument can specify options:
-  #
-  # - +:direction+ - Default is +:up+.
-  # - +:revert+ - Default is +false+.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#816
   def run(*migration_classes); end
 
-  # Takes a message argument and outputs it as is.
-  # A second boolean argument can be passed to specify whether to indent or not.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#891
   def say(message, subitem = T.unsafe(nil)); end
 
-  # Outputs text along with how long it took to run its block.
-  # If the block returns an integer it assumes it is the number of rows affected.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#897
   def say_with_time(message); end
 
-  # Takes a block as an argument and suppresses any output generated by the block.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#907
   def suppress_messages; end
 
-  # Builds a hash for use in ActiveRecord::Migration#proper_table_name using
-  # the Active Record object's table_name prefix and suffix
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#1013
   def table_name_options(config = T.unsafe(nil)); end
 
@@ -1441,21 +708,6 @@ class ActiveRecord::Migration
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#830
   def up; end
 
-  # Used to specify an operation that is only run when migrating up
-  # (for example, populating a new column with its initial values).
-  #
-  # In the following example, the new column +published+ will be given
-  # the value +true+ for all existing records.
-  #
-  #    class AddPublishedToPosts < ActiveRecord::Migration[7.0]
-  #      def change
-  #        add_column :posts, :published, :boolean, default: false
-  #        up_only do
-  #          execute "update posts set published = 'true'"
-  #        end
-  #      end
-  #    end
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#807
   def up_only(&block); end
 
@@ -1465,15 +717,9 @@ class ActiveRecord::Migration
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#681
   def verbose=(val); end
 
-  # Returns the value of attribute version.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#682
   def version; end
 
-  # Sets the attribute version
-  #
-  # @param value the value to set the attribute version to.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/migration.rb#682
   def version=(_arg0); end
 
@@ -1492,10 +738,6 @@ class ActiveRecord::Migration
     # source://activerecord/7.0.4.2/lib/active_record/migration.rb#568
     def [](version); end
 
-    # Raises <tt>ActiveRecord::PendingMigrationError</tt> error if any migrations are pending.
-    #
-    # @raise [ActiveRecord::PendingMigrationError]
-    #
     # source://activerecord/7.0.4.2/lib/active_record/migration.rb#626
     def check_pending!(connection = T.unsafe(nil)); end
 
@@ -1511,11 +753,6 @@ class ActiveRecord::Migration
     # source://activerecord/7.0.4.2/lib/active_record/migration.rb#619
     def disable_ddl_transaction; end
 
-    # Disable the transaction wrapping this migration.
-    # You can still create your own transactions even after calling #disable_ddl_transaction!
-    #
-    # For more details read the {"Transactional Migrations" section above}[rdoc-ref:Migration].
-    #
     # source://activerecord/7.0.4.2/lib/active_record/migration.rb#672
     def disable_ddl_transaction!; end
 
@@ -1563,26 +800,15 @@ class ActiveRecord::Migration
   end
 end
 
-# = Active Record Schema Dumper
-#
-# This class is used to dump the database schema for some connection to some
-# output format (i.e., ActiveRecord::Schema).
-#
 # source://ridgepole//lib/ridgepole/ext/schema_dumper.rb#53
 class ActiveRecord::SchemaDumper
   include ::Ridgepole::Ext::SchemaDumper
   include ::Ridgepole::SchemaDumperExt
   extend ::Ridgepole::Ext::SchemaDumper::ClassMethods
 
-  # @return [SchemaDumper] a new instance of SchemaDumper
-  #
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#59
   def initialize(connection, options = T.unsafe(nil)); end
 
-  # :singleton-method:
-  # Specify a custom regular expression matching check constraints which name
-  # should not be dumped to db/schema.rb.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#30
   def chk_ignore_pattern; end
 
@@ -1592,10 +818,6 @@ class ActiveRecord::SchemaDumper
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#47
   def dump(stream); end
 
-  # :singleton-method:
-  # Specify a custom regular expression matching foreign keys which name
-  # should not be dumped to db/schema.rb.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#24
   def fk_ignore_pattern; end
 
@@ -1605,11 +827,6 @@ class ActiveRecord::SchemaDumper
   # source://ridgepole//lib/ridgepole/ext/schema_dumper.rb#23
   def foreign_keys(table, stream); end
 
-  # :singleton-method:
-  # A list of tables which should not be dumped to the schema.
-  # Acceptable values are strings as well as regexp if ActiveRecord.schema_format == :ruby.
-  # Only strings are accepted if ActiveRecord.schema_format == :sql.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#18
   def ignore_tables; end
 
@@ -1627,8 +844,6 @@ class ActiveRecord::SchemaDumper
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#72
   def define_params; end
 
-  # extensions are only supported by PostgreSQL
-  #
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#99
   def extensions(stream); end
 
@@ -1641,24 +856,18 @@ class ActiveRecord::SchemaDumper
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#282
   def format_options(options); end
 
-  # turns 20170404131909 into "2017_04_04_131909"
-  #
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#66
   def formatted_version; end
 
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#76
   def header(stream); end
 
-  # @return [Boolean]
-  #
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#300
   def ignored?(table_name); end
 
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#211
   def index_parts(index); end
 
-  # Keep it for indexing materialized views
-  #
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#190
   def indexes(table, stream); end
 
@@ -1668,15 +877,9 @@ class ActiveRecord::SchemaDumper
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#294
   def remove_prefix_and_suffix(table); end
 
-  # Returns the value of attribute table_name.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#57
   def table_name; end
 
-  # Sets the attribute table_name
-  #
-  # @param value the value to set the attribute table_name to.
-  #
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#57
   def table_name=(_arg0); end
 
@@ -1686,8 +889,6 @@ class ActiveRecord::SchemaDumper
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#94
   def trailer(stream); end
 
-  # (enum) types are only supported by PostgreSQL
-  #
   # source://activerecord/7.0.4.2/lib/active_record/schema_dumper.rb#103
   def types(stream); end
 

@@ -49,6 +49,7 @@ RSpec.describe '[ Admin Users API ]' do
         it 'returns user info' do
           is_expected.to eq 200
           expect(body_hash).to eq({
+            'tel' => '09012345678',
             'uid' => user.id,
             'email' => user.email,
             'delivery_addresses' => [
@@ -60,6 +61,7 @@ RSpec.describe '[ Admin Users API ]' do
                 'city' => delivery_address.city,
                 'address_1' => delivery_address.address_1,
                 'address_2' => delivery_address.address_2,
+                'country_code' => 'JP',
                 'contact_tel' => delivery_address.contact_tel,
               },
             ],
@@ -78,6 +80,7 @@ RSpec.describe '[ Admin Users API ]' do
               'city' => contact_address.city,
               'address_1' => contact_address.address_1,
               'address_2' => contact_address.address_2,
+              'country_code' => 'JP',
             },
           })
         end

@@ -6635,6 +6635,9 @@ module RSpec::Core::HashImitatable
   def to_hash(*args, &block); end
 
   # source://rspec-core//lib/rspec/core/metadata.rb#367
+  def to_liquid(*args, &block); end
+
+  # source://rspec-core//lib/rspec/core/metadata.rb#367
   def to_msgpack(*args, &block); end
 
   # source://rspec-core//lib/rspec/core/metadata.rb#367

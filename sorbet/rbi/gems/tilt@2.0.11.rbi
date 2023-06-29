@@ -269,6 +269,39 @@ Tilt::KramdownTemplate::DUMB_QUOTES = T.let(T.unsafe(nil), Array)
 # source://tilt//lib/tilt/template.rb#16
 Tilt::LOCK = T.let(T.unsafe(nil), Thread::Mutex)
 
+# Liquid template implementation. See:
+# http://liquidmarkup.org/
+#
+# Liquid is designed to be a *safe* template system and threfore
+# does not provide direct access to execuatable scopes. In order to
+# support a +scope+, the +scope+ must be able to represent itself
+# as a hash by responding to #to_h. If the +scope+ does not respond
+# to #to_h it will be ignored.
+#
+# LiquidTemplate does not support yield blocks.
+#
+# It's suggested that your program require 'liquid' at load
+# time when using this template engine.
+#
+# source://tilt//lib/tilt/liquid.rb#18
+class Tilt::LiquidTemplate < ::Tilt::Template
+  # @return [Boolean]
+  #
+  # source://tilt//lib/tilt/liquid.rb#34
+  def allows_script?; end
+
+  # source://tilt//lib/tilt/liquid.rb#23
+  def evaluate(scope, locals, &block); end
+
+  # source://tilt//lib/tilt/liquid.rb#19
+  def prepare; end
+
+  private
+
+  # source://tilt//lib/tilt/liquid.rb#40
+  def liquid_options; end
+end
+
 # Tilt::Mapping associates file extensions with template implementations.
 #
 #     mapping = Tilt::Mapping.new
