@@ -18,6 +18,7 @@ if @doorkeeper_token.acceptable?(:profile)
   contact_address_json[:prefecture] = current_user.contact_address&.prefecture&.name
 end
 if @doorkeeper_token.acceptable?(:contact)
+  json[:tel] = current_user.tel
   contact_address_json[:prefecture_code] = current_user.contact_address&.prefecture_code
   contact_address_json[:prefecture] = current_user.contact_address&.prefecture&.name
   contact_address_json[:zip_code] = current_user.contact_address&.zip_code

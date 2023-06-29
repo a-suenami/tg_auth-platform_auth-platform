@@ -49,6 +49,7 @@ RSpec.describe '[ Admin Users API ]' do
         it 'returns user info' do
           is_expected.to eq 200
           expect(body_hash).to eq({
+            'tel' => '09012345678',
             'uid' => user.id,
             'email' => user.email,
             'delivery_addresses' => [

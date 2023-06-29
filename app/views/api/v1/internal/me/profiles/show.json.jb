@@ -5,6 +5,7 @@ contact_address_json = {}
 
 json[:id] = current_user.id
 json[:email] = current_user.email
+json[:tel] = current_user.tel
 json[:enabled] = current_user.enabled
 json[:email_verified] = current_user.email_verified
 profile_json[:first_name] = current_user.user_profile&.first_name
