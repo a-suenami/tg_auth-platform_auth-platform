@@ -14,12 +14,12 @@ end
 if @doorkeeper_token.acceptable?(:profile)
   profile_json[:birth_date] = @user.user_profile&.birth_date
   profile_json[:gender] = @user.user_profile&.gender
-  contact_address_json[:prefecture_code] = @user.contact_address&.prefecture_code
+  contact_address_json[:prefecture_code] = @user.contact_address&.prefecture_code_jis
   contact_address_json[:prefecture] = @user.contact_address&.prefecture&.name
 end
 if @doorkeeper_token.acceptable?(:contact)
   json[:tel] = @user.tel
-  contact_address_json[:prefecture_code] = @user.contact_address&.prefecture_code
+  contact_address_json[:prefecture_code] = @user.contact_address&.prefecture_code_jis
   contact_address_json[:prefecture] = @user.contact_address&.prefecture&.name
   contact_address_json[:zip_code] = @user.contact_address&.zip_code
   contact_address_json[:city] = @user.contact_address&.city
@@ -31,7 +31,7 @@ if @doorkeeper_token.acceptable?(:delivery_address)
   json[:delivery_addresses] = @user.delivery_addresses.map do |address|
     address_json = {}
     address_json[:is_default] = address&.is_default
-    address_json[:prefecture_code] = address&.prefecture_code
+    address_json[:prefecture_code] = address&.prefecture_code_jis
     address_json[:prefecture] = address&.prefecture&.name
     address_json[:zip_code] = address&.zip_code
     address_json[:city] = address&.city
