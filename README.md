@@ -71,6 +71,16 @@ Don't mix another project's environment.
 rails c
 ```
 
+# Admin page
+The Admin administration page is located at /admin.
+You must set Allowed Callback URLs and Allowed Logout URLs in the auth0 dashboard.
+You must also create a user in auth0 and set the uid in Admin to the user_id of the account you created.
+
+# Ruler page
+There is a Ruler admin page at /ruler.
+You must set Allowed Callback URLs and Allowed Logout URLs in the auth0 dashboard.
+You also need to create a user in auth0 and set the uid in Ruler to the user_id of the account you created.
+
 # Testing & Linting
 Since the test database will run on tmpfs for performance reason, the database must be prepared for each startup before running rspec.
 
