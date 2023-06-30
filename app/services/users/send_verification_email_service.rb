@@ -10,12 +10,6 @@ module Users
       end
 
       ActiveRecord::Base.transaction do
-        user = User.find_by(email:, email_verified: true, enabled: true)
-        if user.present?
-          # アカウントの存在を隠すため、エラーせずそのまま返す
-          next user
-        end
-
         user = User.find_or_initialize_by(email:)
         email_verifier = Users::EmailVerifier.new(user:, email:, email_verifier_type: :registration)
         email_verifier.set_code

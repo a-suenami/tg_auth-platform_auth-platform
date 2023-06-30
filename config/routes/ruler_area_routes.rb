@@ -8,6 +8,11 @@ Rails.application.routes.draw do
     get '/auth/failure' => 'auth0#failure'
     get '/auth/logout' => 'auth0#logout'
 
-    resources :login_spa_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+    resources :tenants, only: [:index, :new, :create, :edit, :update] do
+      scope module: 'tenants' do
+        get :root, to: 'application#root'
+        resources :login_spa_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+      end
+    end
   end
 end

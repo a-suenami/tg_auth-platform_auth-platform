@@ -83,7 +83,7 @@ RSpec.describe '[ Registrations API ]' do
 
         it 'returns 200' do
           is_expected.to eq 200
-          expect(blastengine_mock).not_to have_received(:send_email)
+          expect(blastengine_mock).to have_received(:send_email)
         end
       end
     end
@@ -103,7 +103,7 @@ RSpec.describe '[ Registrations API ]' do
 
   describe 'POST /api/v1/authentication/registrations/verify_email' do
     let(:current_user) {
-      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', email_verified: false)
+      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', email_verified: false, enabled: false)
     }
     let(:other_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-other-user1@example.com', email_verified: false)
@@ -139,10 +139,30 @@ RSpec.describe '[ Registrations API ]' do
         }
       }
 
-      it 'returns 200' do
-        is_expected.to eq 200
-        expect(User.find(current_user.id).email_verified).to be true
-        expect(Users::EmailVerifier.find(email_verifier.id).used_at).not_to be_nil
+      context 'when unregistered user' do
+        it 'returns 200' do
+          is_expected.to eq 200
+          expect(User.find(current_user.id).email_verified).to be true
+          expect(Users::EmailVerifier.find(email_verifier.id).used_at).not_to be_nil
+          expect(body_hash['user_id']).to eq(current_user.id)
+          expect(body_hash['email_verified']).to be true
+          expect(body_hash['registered']).to be false
+        end
+      end
+
+      context 'when registered user' do
+        let(:current_user) {
+          create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', email_verified: true, enabled: true)
+        }
+
+        it 'returns 200' do
+          is_expected.to eq 200
+          expect(User.find(current_user.id).email_verified).to be true
+          expect(Users::EmailVerifier.find(email_verifier.id).used_at).not_to be_nil
+          expect(body_hash['user_id']).to eq(current_user.id)
+          expect(body_hash['email_verified']).to be true
+          expect(body_hash['registered']).to be true
+        end
       end
     end
 

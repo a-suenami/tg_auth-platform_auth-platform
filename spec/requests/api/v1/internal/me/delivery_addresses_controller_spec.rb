@@ -36,7 +36,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
       it 'returns 200' do
         is_expected.to eq 200
         expect(body_array[0]['zip_code']).to eq('155-0033')
-        expect(body_array[0]['prefecture_code']).to eq(13)
+        expect(body_array[0]['prefecture_code']).to eq('13')
         expect(body_array[0]['prefecture']).to eq('東京都')
         expect(body_array[0]['city']).to eq('世田谷区代田')
         expect(body_array[0]['address_1']).to eq('1-1-1')
@@ -95,7 +95,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
       it 'returns 200' do
         is_expected.to eq 200
         expect(body_hash['zip_code']).to eq('155-0031')
-        expect(body_hash['prefecture_code']).to eq(13)
+        expect(body_hash['prefecture_code']).to eq('13')
         expect(body_hash['prefecture']).to eq('東京都')
         expect(body_hash['city']).to eq('世田谷区北沢')
         expect(body_hash['address_1']).to eq('1-1-2')
@@ -153,7 +153,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
       it 'returns 200' do
         is_expected.to eq 200
         expect(body_hash['zip_code']).to eq('155-0031')
-        expect(body_hash['prefecture_code']).to eq(13)
+        expect(body_hash['prefecture_code']).to eq('13')
         expect(body_hash['prefecture']).to eq('東京都')
         expect(body_hash['city']).to eq('世田谷区北沢')
         expect(body_hash['address_1']).to eq('1-1-2')
@@ -244,7 +244,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
       it 'returns 200' do
         is_expected.to eq 200
         expect(body_hash['zip_code']).to eq('105-0011')
-        expect(body_hash['prefecture_code']).to eq(13)
+        expect(body_hash['prefecture_code']).to eq('13')
         expect(body_hash['prefecture']).to eq('東京都')
         expect(body_hash['city']).to eq('東京都港区芝公園')
         expect(body_hash['address_1']).to eq('４丁目２−８')

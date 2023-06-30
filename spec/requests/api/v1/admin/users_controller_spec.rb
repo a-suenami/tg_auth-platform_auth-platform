@@ -55,7 +55,7 @@ RSpec.describe '[ Admin Users API ]' do
             'delivery_addresses' => [
               {
                 'is_default' => delivery_address.is_default,
-                'prefecture_code' => delivery_address.prefecture_code,
+                'prefecture_code' => delivery_address.prefecture_code_jis,
                 'prefecture' => delivery_address.prefecture.name,
                 'zip_code' => delivery_address.zip_code,
                 'city' => delivery_address.city,
@@ -74,7 +74,7 @@ RSpec.describe '[ Admin Users API ]' do
               'gender' => user_profile.gender,
             },
             'contact_address' => {
-              'prefecture_code' => contact_address.prefecture_code,
+              'prefecture_code' => contact_address.prefecture_code_jis,
               'prefecture' => contact_address.prefecture.name,
               'zip_code' => contact_address.zip_code,
               'city' => contact_address.city,

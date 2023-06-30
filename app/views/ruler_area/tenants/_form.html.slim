@@ -1,0 +1,12 @@
+= render 'ruler_area/shared/form_error', target: f.object
+.uk-margin
+  = f.label :id
+  = f.text_field :id, class: "uk-input"
+  p 大文字小文字を区別しない英数字とハイフンのみ使用可能
+.uk-margin
+  = f.label :name
+  = f.text_field :name, class: "uk-input"
+.uk-margin
+  = f.label :domain
+  = f.text_field :domain, class: "uk-input"
+= f.submit class: "uk-button uk-button-default"

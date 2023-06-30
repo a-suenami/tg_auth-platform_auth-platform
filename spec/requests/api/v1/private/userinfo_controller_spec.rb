@@ -54,7 +54,7 @@ RSpec.describe '[ Userinfo API ]' do
             'delivery_addresses' => [
               {
                 'is_default' => delivery_address.is_default,
-                'prefecture_code' => delivery_address.prefecture_code,
+                'prefecture_code' => delivery_address.prefecture_code_jis,
                 'prefecture' => delivery_address.prefecture.name,
                 'zip_code' => delivery_address.zip_code,
                 'city' => delivery_address.city,
@@ -73,7 +73,7 @@ RSpec.describe '[ Userinfo API ]' do
               'gender' => user_profile.gender,
             },
             'contact_address' => {
-              'prefecture_code' => contact_address.prefecture_code,
+              'prefecture_code' => contact_address.prefecture_code_jis,
               'prefecture' => contact_address.prefecture.name,
               'zip_code' => contact_address.zip_code,
               'city' => contact_address.city,
@@ -134,7 +134,7 @@ RSpec.describe '[ Userinfo API ]' do
               'gender' => user_profile.gender,
             },
             'contact_address' => {
-              'prefecture_code' => contact_address.prefecture_code,
+              'prefecture_code' => contact_address.prefecture_code_jis,
               'prefecture' => contact_address.prefecture.name,
             },
           })
@@ -149,7 +149,7 @@ RSpec.describe '[ Userinfo API ]' do
           expect(body_hash).to eq({
             'tel' => '09012345678',
             'contact_address' => {
-              'prefecture_code' => contact_address.prefecture_code,
+              'prefecture_code' => contact_address.prefecture_code_jis,
               'prefecture' => contact_address.prefecture.name,
               'zip_code' => contact_address.zip_code,
               'city' => contact_address.city,
@@ -170,7 +170,7 @@ RSpec.describe '[ Userinfo API ]' do
             'delivery_addresses' => [
               {
                 'is_default' => delivery_address.is_default,
-                'prefecture_code' => delivery_address.prefecture_code,
+                'prefecture_code' => delivery_address.prefecture_code_jis,
                 'prefecture' => delivery_address.prefecture.name,
                 'zip_code' => delivery_address.zip_code,
                 'city' => delivery_address.city,
