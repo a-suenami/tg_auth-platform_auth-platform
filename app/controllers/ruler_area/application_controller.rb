@@ -5,7 +5,6 @@ module RulerArea
     include Pagy::Backend
 
     before_action :authenticate!
-    before_action :set_tenant
 
     def authenticate!
       redirect_to ruler_area_login_path unless signed_in?
@@ -19,16 +18,6 @@ module RulerArea
       current_ruler.present?
     end
 
-    def root
-      flash[:alert] = 'this is an example message' # rubocop:disable Rails
-      flash[:notice] = 'you can also use notice level flash' # rubocop:disable Rails
-    end
-
-    private
-
-    def set_tenant
-      RequestStore.store[:current_tenant_domain] = request.host || '-'
-      Tenant.current
-    end
+    def root; end
   end
 end

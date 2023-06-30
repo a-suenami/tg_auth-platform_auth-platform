@@ -14,15 +14,20 @@ html lang='ja'
     .l-page-sidebar
         .uk-width-medium.uk-height-1-1.uk-section-secondary
           .uk-container.uk-height-1-1
-            h3.uk-padding.uk-padding-remove-horizontal
-              = Tenant.current.name
+            h3.uk-padding.uk-padding-remove-horizontal Ruler管理画面
             .tg-sidebar-section
               ul.uk-nav.uk-nav-default
                 ul.uk-parent
-                  = link_to 'LoginSpa設定', ruler_area_login_spa_applications_path
-                  ul.uk-nav-sub
-                    li
-                      = link_to 'Login Spa Applicatoin', ruler_area_login_spa_applications_path
+                  = link_to 'テナント一覧', ruler_area_tenants_path
+                  / ul.uk-nav-sub
+                  /   li
+                  /     = link_to 'テナント一覧', ruler_area_tenants_path
+            .tg-sidebar-section
+              - if @tenant_id.present?
+                ul.uk-nav.uk-nav-default
+                  ul.uk-parent
+                    = link_to 'Login Spa Application', ruler_area_tenant_login_spa_applications_path(@tenant_id)
+
             .tg-sidebar-section.bottom
               ul.uk-nav.uk-nav-default
                 li アカウント

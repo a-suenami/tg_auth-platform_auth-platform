@@ -1,0 +1,28 @@
+.uk-margin-top.uk-container
+  h2 テナント一覧
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    - if @tenants.empty?
+      p.uk-text-lead
+        | No tenant found
+    - else
+      .uk-flex.uk-flex-right
+        = link_to "新規登録", new_ruler_area_tenant_path, class: "uk-button uk-button-primary"
+
+      table.uk-table.uk-table-divider
+        tr
+          th = Tenant.human_attribute_name(:id)
+          th = Tenant.human_attribute_name(:name)
+          th = Tenant.human_attribute_name(:domain)
+        - @tenants.each do |tenant|
+          tr
+            td
+              = tenant.id
+            td
+              = tenant.name
+            td
+              = tenant.domain
+            td
+              = link_to "テナント設定", ruler_area_tenant_root_path(tenant), class: "uk-button uk-button-secondary"
+
+    == pagy_nav(@pagy)
