@@ -87,7 +87,10 @@ module GeneratedPathHelpersModule
   def edit_password_resets_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def edit_ruler_area_login_spa_application_path(*args); end
+  def edit_ruler_area_tenant_login_spa_application_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def health_check_path(*args); end
@@ -114,7 +117,10 @@ module GeneratedPathHelpersModule
   def new_registration_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def new_ruler_area_login_spa_application_path(*args); end
+  def new_ruler_area_tenant_login_spa_application_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_session_path(*args); end
@@ -192,16 +198,25 @@ module GeneratedPathHelpersModule
   def ruler_area_login_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def ruler_area_login_spa_application_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def ruler_area_login_spa_applications_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def ruler_area_logout_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_root_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_login_spa_application_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_login_spa_applications_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_root_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenants_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def send_verification_email_api_v1_authentication_registrations_path(*args); end
