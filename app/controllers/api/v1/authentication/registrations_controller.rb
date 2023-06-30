@@ -10,7 +10,8 @@ module API::V1::Authentication
     def verify_email
       @user = Users::VerifyEmailService.new.execute!(email_verification_code: params[:email_verification_code], user_id: params[:user_id])
 
-      session[:registering_user_id] = @user.id
+      # 新規登録時のみ、仮登録セッションを作成する
+      session[:registering_user_id] = @user.id if @user.enabled == false
 
       render :verify_email
     end

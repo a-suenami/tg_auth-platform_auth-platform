@@ -14,4 +14,9 @@ class ContactAddress < ApplicationRecord
   validates :country_code, inclusion: { in: ISO3166::Country.all.map(&:alpha2) }, allow_blank: true # rubocop:disable Naming/VariableNumber
 
   jp_prefecture :prefecture_code
+
+  sig { returns(String) }
+  def prefecture_code_jis
+    format('%02d', self.prefecture_code)
+  end
 end
