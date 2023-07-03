@@ -12,6 +12,7 @@ class DeliveryAddress < ApplicationRecord
   validates :city, presence: true
   validates :address_1, presence: true
   validates :country_code, inclusion: { in: ISO3166::Country.all.map(&:alpha2) }, allow_blank: true # rubocop:disable Naming/VariableNumber
+  validates :contact_tel, phone: { allow_blank: true }
 
   jp_prefecture :prefecture_code
 
