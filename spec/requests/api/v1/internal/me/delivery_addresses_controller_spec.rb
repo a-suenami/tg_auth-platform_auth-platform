@@ -61,7 +61,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         tenant_id: current_tenant.id,
         user_id: user_1.id,
         is_default: 'true',
-        zip_code: '155-0031',
+        zip_code: '1550031',
         prefecture_code: '13',
         city: '世田谷区北沢',
         address_1: '1-1-2',
@@ -140,7 +140,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
       let(:params) {
         {
           delivery_addresses: {
-            zip_code: '155-0031',
+            zip_code: '1550031',
             prefecture_code: '13',
             city: '世田谷区北沢',
             address_1: '1-1-2',
@@ -198,7 +198,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         tenant_id: current_tenant.id,
         user_id: user_1.id,
         is_default: 'true',
-        zip_code: '155-0031',
+        zip_code: '1550031',
         prefecture_code: '13',
         city: '世田谷区北沢',
         address_1: '1-1-2',
@@ -290,7 +290,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         tenant_id: current_tenant.id,
         user_id: user_1.id,
         is_default: 'true',
-        zip_code: '155-0031',
+        zip_code: '1550031',
         prefecture_code: '13',
         city: '世田谷区北沢',
         address_1: '1-1-2',

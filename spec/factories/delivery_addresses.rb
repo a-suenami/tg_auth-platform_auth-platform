@@ -5,7 +5,7 @@ FactoryBot.define do
     tenant_id { create(:tenant).id }
     user { create(:user) }
     is_default { false }
-    zip_code { '155-0033' }
+    zip_code { '1550033' }
     prefecture_code { '13' }
     city { '世田谷区代田' }
     address_1 { '1-1-1' }

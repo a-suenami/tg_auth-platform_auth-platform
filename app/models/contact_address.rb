@@ -19,4 +19,10 @@ class ContactAddress < ApplicationRecord
   def prefecture_code_jis
     format('%02d', self.prefecture_code)
   end
+
+  sig { returns(T.nilable(String)) }
+  def zip_code
+    # 3文字目にハイフンを入れる
+    super&.clone&.insert(3, '-')
+  end
 end
