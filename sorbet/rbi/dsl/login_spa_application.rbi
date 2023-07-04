@@ -751,6 +751,9 @@ class LoginSpaApplication
     def restore_scopes!; end
 
     sig { void }
+    def restore_sign_up_url!; end
+
+    sig { void }
     def restore_tenant_id!; end
 
     sig { void }
@@ -800,6 +803,12 @@ class LoginSpaApplication
 
     sig { returns(T::Boolean) }
     def saved_change_to_scopes?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_sign_up_url; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_sign_up_url?; end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
@@ -863,6 +872,51 @@ class LoginSpaApplication
 
     sig { void }
     def scopes_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def sign_up_url; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def sign_up_url=(value); end
+
+    sig { returns(T::Boolean) }
+    def sign_up_url?; end
+
+    sig { returns(T.nilable(::String)) }
+    def sign_up_url_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def sign_up_url_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def sign_up_url_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def sign_up_url_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def sign_up_url_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def sign_up_url_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def sign_up_url_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def sign_up_url_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def sign_up_url_previously_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def sign_up_url_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def sign_up_url_was; end
+
+    sig { void }
+    def sign_up_url_will_change!; end
 
     sig { returns(::String) }
     def tenant_id; end
@@ -1019,6 +1073,9 @@ class LoginSpaApplication
 
     sig { returns(T::Boolean) }
     def will_save_change_to_scopes?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_sign_up_url?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end

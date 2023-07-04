@@ -13,6 +13,7 @@
           th = LoginSpaApplication.human_attribute_name(:id)
           th = LoginSpaApplication.human_attribute_name(:name)
           th = LoginSpaApplication.human_attribute_name(:login_url)
+          th = LoginSpaApplication.human_attribute_name(:sign_up_url)
           th = LoginSpaApplication.human_attribute_name(:redirect_url_on_password_reset)
           th = "操作"
 
@@ -24,6 +25,8 @@
               = login_spa_application.name
             td
               = login_spa_application.login_url
+            td
+              = login_spa_application.sign_up_url
             td
               = login_spa_application.redirect_url_on_password_reset
             td

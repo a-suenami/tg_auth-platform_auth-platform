@@ -28,6 +28,10 @@
       td
         = @login_spa_application.login_url
     tr
+      th = LoginSpaApplication.human_attribute_name(:sign_up_url)
+      td
+        = @login_spa_application.sign_up_url
+    tr
       th = LoginSpaApplication.human_attribute_name(:scopes)
       td
         = @login_spa_application.scopes
