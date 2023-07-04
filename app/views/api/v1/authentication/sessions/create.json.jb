@@ -1,0 +1,8 @@
+json = {}
+
+json[:id] = user.id
+json[:email] = user.email
+json[:enabled] = user.enabled
+json[:email_verified] = user.email_verified
+
+json
