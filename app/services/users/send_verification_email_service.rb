@@ -10,11 +10,10 @@ module Users
       end
 
       ActiveRecord::Base.transaction do
-        user = User.find_or_initialize_by(email:)
+        user = User.find_or_create_by(email:)
         email_verifier = Users::EmailVerifier.new(user:, email:, email_verifier_type: :registration)
         email_verifier.set_code
         email_verifier.save!
-        user.save!
 
         send_verification_email(user, email_verifier)
         user

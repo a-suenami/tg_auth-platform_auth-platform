@@ -9,7 +9,7 @@ module API::V1::Authentication
         # create session
         session[:current_user_id] = user.id
 
-        head :no_content
+        render :create, locals: { user: }
       else
         raise Exceptions::Auth::AuthError
       end
