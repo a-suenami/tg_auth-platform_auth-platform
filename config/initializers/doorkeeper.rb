@@ -18,7 +18,7 @@ Doorkeeper.configure do
       client = Tenant.current.login_spa_application
 
       if client.present?
-        if params[:prompt].present? && params[:prompt] == 'sign_up' && client.sign_up_url.present?
+        if params[:on_no_session].present? && params[:on_no_session] == 'sign_up' && client.sign_up_url.present?
           redirect_to client.sign_up_url_with_flag, allow_other_host: true
         elsif client.login_url.present?
           redirect_to client.login_url_with_flag, allow_other_host: true
