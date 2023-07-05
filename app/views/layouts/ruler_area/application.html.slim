@@ -5,7 +5,7 @@ html lang='ja'
     meta name='viewport' content='width=device-width,initial-scale=1.0,user-scalable=no'
     meta http-equiv='content-language' content='ja'
     / title = Tenant.current.name
-    title = "Tenant.current.name"
+    title Ruler管理画面
     / link rel='icon' href=vite_asset_path('images/ruler_area/favicon.svg')
     = vite_client_tag
     = vite_typescript_tag 'entrypoints/ruler_area/application'
@@ -22,12 +22,14 @@ html lang='ja'
                   / ul.uk-nav-sub
                   /   li
                   /     = link_to 'テナント一覧', ruler_area_tenants_path
-            .tg-sidebar-section
-              - if @tenant_id.present?
+            - if @tenant_id.present?
+              .tg-sidebar-section
                 ul.uk-nav.uk-nav-default
                   ul.uk-parent
-                    = link_to 'Login Spa Application', ruler_area_tenant_login_spa_applications_path(@tenant_id)
-
+                    = link_to 'テナント詳細設定'
+                    ul.uk-nav-sub
+                      li
+                        = link_to 'Login Spa Application設定', ruler_area_tenant_login_spa_applications_path(@tenant_id)
             .tg-sidebar-section.bottom
               ul.uk-nav.uk-nav-default
                 li アカウント
