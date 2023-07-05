@@ -44,8 +44,9 @@ RSpec.describe '[ Sessions API ]' do
         }
       }
 
-      it 'returns 204' do
-        is_expected.to eq 204
+      it 'returns 200' do
+        is_expected.to eq 200
+        expect(body_hash['id']).to eq(user_1.id)
       end
     end
   end

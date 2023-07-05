@@ -35,6 +35,7 @@ class User < ApplicationRecord
 
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :email, uniqueness: { scope: :tenant_id }
+  validates :tel, phone: { allow_blank: true }
 
   sig { params(password: String).returns(T::Boolean) }
   def authenticate!(password)

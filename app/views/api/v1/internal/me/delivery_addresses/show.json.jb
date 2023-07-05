@@ -5,8 +5,8 @@
   prefecture_code: @delivery_address.prefecture_code_jis,
   prefecture: @delivery_address&.prefecture&.name,
   city: @delivery_address.city,
-  address_1: @delivery_address.address_1,
-  address_2: @delivery_address.address_2,
+  street: @delivery_address.street,
+  building: @delivery_address.building,
   contact_tel: @delivery_address.contact_tel,
   country_code: @delivery_address.country_code,
 }

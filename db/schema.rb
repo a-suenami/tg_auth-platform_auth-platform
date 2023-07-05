@@ -32,8 +32,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "zip_code"
     t.integer "prefecture_code"
     t.string "city"
-    t.string "address_1"
-    t.string "address_2"
+    t.string "street"
+    t.string "building"
     t.string "country_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -48,8 +48,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "zip_code"
     t.integer "prefecture_code"
     t.string "city"
-    t.string "address_1"
-    t.string "address_2"
+    t.string "street"
+    t.string "building"
     t.string "contact_tel"
     t.string "country_code"
     t.datetime "created_at", null: false
@@ -79,6 +79,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "login_url"
+    t.string "sign_up_url"
     t.string "redirect_url_on_password_reset"
     t.index ["tenant_id"], name: "index_login_spa_applications_on_tenant_id"
     t.index ["uid"], name: "index_login_spa_applications_on_uid", unique: true

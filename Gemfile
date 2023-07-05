@@ -144,6 +144,8 @@ gem 'jp_prefecture', '~> 1.1.0'
 # gem 'google-apis-identitytoolkit_v3', '~> 0.13.0'
 # country code collection
 gem 'countries', '~> 5.5.0'
+# Phone number validator
+gem 'phonelib', '~> 0.8.2'
 
 # typing
 gem 'sorbet-runtime'
