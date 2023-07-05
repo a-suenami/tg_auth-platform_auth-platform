@@ -50,8 +50,8 @@ RSpec.describe '[ Profiles API ]' do
         expect(body_hash['contact_address']['prefecture']).to eq('東京都')
         expect(body_hash['contact_address']['zip_code']).to eq('155-0033')
         expect(body_hash['contact_address']['city']).to eq('世田谷区代田')
-        expect(body_hash['contact_address']['address_1']).to eq('1-1-1')
-        expect(body_hash['contact_address']['address_2']).to eq('代田アモーレ 101号室')
+        expect(body_hash['contact_address']['street']).to eq('1-1-1')
+        expect(body_hash['contact_address']['building']).to eq('代田アモーレ 101号室')
       end
     end
   end
@@ -81,8 +81,8 @@ RSpec.describe '[ Profiles API ]' do
               zip_code: '155-0033',
               prefecture_code: '13',
               city: '世田谷区代田',
-              address_1: '５丁目１３−８',
-              address_2: '代田フラット101',
+              street: '５丁目１３−８',
+              building: '代田フラット101',
             },
           },
         }
@@ -123,8 +123,8 @@ RSpec.describe '[ Profiles API ]' do
                 zip_code: '155-0031',
                 prefecture_code: '13',
                 city: '世田谷区北沢',
-                address_1: '1丁目1-1',
-                address_2: 'グレートオウル北沢101',
+                street: '1丁目1-1',
+                building: 'グレートオウル北沢101',
               },
             },
           }
@@ -142,8 +142,8 @@ RSpec.describe '[ Profiles API ]' do
           expect(body_hash['contact_address']['prefecture']).to eq('東京都')
           expect(body_hash['contact_address']['zip_code']).to eq('155-0031')
           expect(body_hash['contact_address']['city']).to eq('世田谷区北沢')
-          expect(body_hash['contact_address']['address_1']).to eq('1丁目1-1')
-          expect(body_hash['contact_address']['address_2']).to eq('グレートオウル北沢101')
+          expect(body_hash['contact_address']['street']).to eq('1丁目1-1')
+          expect(body_hash['contact_address']['building']).to eq('グレートオウル北沢101')
         end
       end
 
@@ -163,8 +163,8 @@ RSpec.describe '[ Profiles API ]' do
                 zip_code: nil,
                 prefecture_code: nil,
                 city: nil,
-                address_1: nil,
-                address_2: nil,
+                street: nil,
+                building: nil,
               },
             },
           }

@@ -6,8 +6,8 @@ DeliveryAddress.seed do |s|
   s.zip_code = '151-0033'
   s.prefecture_code = '13'
   s.city = '世田谷区'
-  s.address_1 = '代田１丁目１−１'
-  s.address_2 = '代田ビル 101号室'
+  s.street = '代田１丁目１−１'
+  s.building = '代田ビル 101号室'
 end
 
 DeliveryAddress.seed do |s|
@@ -18,6 +18,6 @@ DeliveryAddress.seed do |s|
   s.zip_code = '151-0033'
   s.prefecture_code = '13'
   s.city = '世田谷区'
-  s.address_1 = '代田2丁目2-2'
-  s.address_2 = 'フェミール代田 101号室'
+  s.street = '代田2丁目2-2'
+  s.building = 'フェミール代田 101号室'
 end

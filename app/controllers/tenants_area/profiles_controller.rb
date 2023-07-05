@@ -43,8 +43,8 @@ module TenantsArea
           :zip_code,
           :prefecture_code,
           :city,
-          :address_1,
-          :address_2,
+          :street,
+          :building,
         ],
       )
     end
