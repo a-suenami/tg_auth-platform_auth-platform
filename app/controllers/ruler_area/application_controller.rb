@@ -18,6 +18,8 @@ module RulerArea
       current_ruler.present?
     end
 
-    def root; end
+    def root
+      redirect_to ruler_area_tenants_path
+    end
   end
 end
