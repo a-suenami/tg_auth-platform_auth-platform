@@ -8,8 +8,8 @@ FactoryBot.define do
     zip_code { '1550033' }
     prefecture_code { '13' }
     city { '世田谷区代田' }
-    address_1 { '1-1-1' }
-    address_2 { '代田アモーレ 101号室' }
+    street { '1-1-1' }
+    building { '代田アモーレ 101号室' }
     contact_tel { '090-1234-5678' }
     country_code { 'JP' }
   end
