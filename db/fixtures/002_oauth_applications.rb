@@ -18,6 +18,7 @@ Doorkeeper::Application.seed do |s|
   s.tenant_id = 'twogate'
   s.name = 'Twogate Application'
   s.redirect_uri = 'http://localhost:4200/oauth/callback'
+  s.enable_client_credential_flow = true
   s.confidential = false
 end
 
