@@ -202,6 +202,19 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["user_id"], name: "index_users__email_verifiers_on_user_id"
   end
 
+  create_table "users__linked_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "oauth_application_id", null: false
+    t.string "scopes", null: false
+    t.datetime "last_linked_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["oauth_application_id"], name: "index_users__linked_applications_on_oauth_application_id"
+    t.index ["tenant_id"], name: "index_users__linked_applications_on_tenant_id"
+    t.index ["user_id"], name: "index_users__linked_applications_on_user_id"
+  end
+
   create_table "users__password_resets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
@@ -234,6 +247,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "users", "tenants", name: "fk_users_tenants"
   add_foreign_key "users__email_verifiers", "tenants", name: "fk_users__email_verifiers_tenants"
   add_foreign_key "users__email_verifiers", "users", name: "fk_users__email_verifiers_users"
+  add_foreign_key "users__linked_applications", "oauth_applications", name: "fk_users__linked_applications_oauth_applications"
+  add_foreign_key "users__linked_applications", "tenants", name: "fk_users__linked_applications_tenants"
+  add_foreign_key "users__linked_applications", "users", name: "fk_users__linked_applications_users"
   add_foreign_key "users__password_resets", "tenants", name: "fk_users__password_resets_tenants"
   add_foreign_key "users__password_resets", "users", name: "fk_users__password_resets_users"
 end

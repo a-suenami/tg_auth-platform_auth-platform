@@ -285,6 +285,22 @@ CREATE TABLE public.users__email_verifiers (
 
 
 --
+-- Name: users__linked_applications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users__linked_applications (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    oauth_application_id uuid NOT NULL,
+    scopes character varying NOT NULL,
+    last_linked_at timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: users__password_resets; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -402,6 +418,14 @@ ALTER TABLE ONLY public.user_profiles
 
 ALTER TABLE ONLY public.users__email_verifiers
     ADD CONSTRAINT users__email_verifiers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users__linked_applications users__linked_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__linked_applications
+    ADD CONSTRAINT users__linked_applications_pkey PRIMARY KEY (id);
 
 
 --
@@ -596,6 +620,27 @@ CREATE INDEX index_users__email_verifiers_on_user_id ON public.users__email_veri
 
 
 --
+-- Name: index_users__linked_applications_on_oauth_application_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__linked_applications_on_oauth_application_id ON public.users__linked_applications USING btree (oauth_application_id);
+
+
+--
+-- Name: index_users__linked_applications_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__linked_applications_on_tenant_id ON public.users__linked_applications USING btree (tenant_id);
+
+
+--
+-- Name: index_users__linked_applications_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__linked_applications_on_user_id ON public.users__linked_applications USING btree (user_id);
+
+
+--
 -- Name: index_users__password_resets_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -773,6 +818,30 @@ ALTER TABLE ONLY public.users__email_verifiers
 
 ALTER TABLE ONLY public.users__email_verifiers
     ADD CONSTRAINT fk_users__email_verifiers_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: users__linked_applications fk_users__linked_applications_oauth_applications; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__linked_applications
+    ADD CONSTRAINT fk_users__linked_applications_oauth_applications FOREIGN KEY (oauth_application_id) REFERENCES public.oauth_applications(id);
+
+
+--
+-- Name: users__linked_applications fk_users__linked_applications_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__linked_applications
+    ADD CONSTRAINT fk_users__linked_applications_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: users__linked_applications fk_users__linked_applications_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__linked_applications
+    ADD CONSTRAINT fk_users__linked_applications_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
