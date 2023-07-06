@@ -6,9 +6,8 @@ module Users
     include Multitenancy
 
     belongs_to :user
-    belongs_to :oauth_applications,
+    belongs_to :oauth_application,
       class_name: 'OauthApplication',
-      foreign_key: :oauth_application_id,
       inverse_of: :linked_applications
   end
 end
