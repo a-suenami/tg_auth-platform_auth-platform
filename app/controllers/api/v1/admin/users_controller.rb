@@ -24,7 +24,7 @@ module API::V1::Admin
 
     def show
       @doorkeeper_token = doorkeeper_token
-      user = current_application.users.find(params[:id])
+      user = User.find(params[:id])
       # TODO: linked_application.scopesを反映させる
       render :show, locals: { user: }
     end
