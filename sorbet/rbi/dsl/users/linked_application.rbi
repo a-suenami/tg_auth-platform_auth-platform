@@ -281,16 +281,16 @@ class Users::LinkedApplication
 
   module GeneratedAssociationMethods
     sig { params(args: T.untyped, blk: T.untyped).returns(::OauthApplication) }
-    def build_oauth_applications(*args, &blk); end
+    def build_oauth_application(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::OauthApplication) }
-    def create_oauth_applications(*args, &blk); end
+    def create_oauth_application(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::OauthApplication) }
-    def create_oauth_applications!(*args, &blk); end
+    def create_oauth_application!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user(*args, &blk); end
@@ -299,13 +299,13 @@ class Users::LinkedApplication
     def create_user!(*args, &blk); end
 
     sig { returns(T.nilable(::OauthApplication)) }
-    def oauth_applications; end
+    def oauth_application; end
 
     sig { params(value: T.nilable(::OauthApplication)).void }
-    def oauth_applications=(value); end
+    def oauth_application=(value); end
 
     sig { returns(T.nilable(::OauthApplication)) }
-    def reload_oauth_applications; end
+    def reload_oauth_application; end
 
     sig { returns(T.nilable(::User)) }
     def reload_user; end

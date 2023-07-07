@@ -319,6 +319,34 @@ class OauthApplication
 
     sig { params(value: T::Enumerable[::OauthAccessToken]).void }
     def authorized_tokens=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def linked_application_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def linked_application_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `OauthApplication` class because it declared `has_many :linked_applications`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Users::LinkedApplication::PrivateCollectionProxy) }
+    def linked_applications; end
+
+    sig { params(value: T::Enumerable[::Users::LinkedApplication]).void }
+    def linked_applications=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def user_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def user_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `OauthApplication` class because it declared `has_many :users, through: :linked_applications`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
+    sig { returns(::User::PrivateCollectionProxy) }
+    def users; end
+
+    sig { params(value: T::Enumerable[::User]).void }
+    def users=(value); end
   end
 
   module GeneratedAssociationRelationMethods

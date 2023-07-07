@@ -48,6 +48,9 @@ module GeneratedPathHelpersModule
   def api_v1_admin_user_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def api_v1_admin_users_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def api_v1_authentication_logout_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
