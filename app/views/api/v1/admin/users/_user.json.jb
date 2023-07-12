@@ -1,0 +1,50 @@
+# build userinfo by scopes
+json = {}
+profile_json = {}
+contact_address_json = {}
+
+json[:uid] = user.id if @doorkeeper_token.acceptable?(:uid)
+json[:email] = user.email if @doorkeeper_token.acceptable?(:email)
+if @doorkeeper_token.acceptable?(:name)
+  profile_json[:first_name] = user.user_profile&.first_name
+  profile_json[:last_name] = user.user_profile&.last_name
+  profile_json[:first_name_kana] = user.user_profile&.first_name_kana
+  profile_json[:last_name_kana] = user.user_profile&.last_name_kana
+end
+if @doorkeeper_token.acceptable?(:profile)
+  profile_json[:birth_date] = user.user_profile&.birth_date
+  profile_json[:gender] = user.user_profile&.gender
+  contact_address_json[:prefecture_code] = user.contact_address&.prefecture_code_jis
+  contact_address_json[:prefecture] = user.contact_address&.prefecture&.name
+end
+if @doorkeeper_token.acceptable?(:contact)
+  json[:tel] = user.tel
+  contact_address_json[:prefecture_code] = user.contact_address&.prefecture_code_jis
+  contact_address_json[:prefecture] = user.contact_address&.prefecture&.name
+  contact_address_json[:zip_code] = user.contact_address&.zip_code
+  contact_address_json[:city] = user.contact_address&.city
+  contact_address_json[:street] = user.contact_address&.street
+  contact_address_json[:building] = user.contact_address&.building
+  contact_address_json[:country_code] = user.contact_address&.country_code
+end
+if @doorkeeper_token.acceptable?(:delivery_address)
+  json[:delivery_addresses] = user.delivery_addresses.map do |address|
+    address_json = {}
+    address_json[:is_default] = address&.is_default
+    address_json[:prefecture_code] = address&.prefecture_code_jis
+    address_json[:prefecture] = address&.prefecture&.name
+    address_json[:zip_code] = address&.zip_code
+    address_json[:city] = address&.city
+    address_json[:street] = address&.street
+    address_json[:building] = address&.building
+    address_json[:contact_tel] = address&.contact_tel
+    address_json[:country_code] = address&.country_code
+    address_json
+  end
+end
+
+profile_json[:birth_date]
+json[:profile] = profile_json if @doorkeeper_token.acceptable?([:name, :profile])
+json[:contact_address] = contact_address_json if @doorkeeper_token.acceptable?([:profile, :contact])
+
+json

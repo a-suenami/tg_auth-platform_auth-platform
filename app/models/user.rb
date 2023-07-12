@@ -33,6 +33,13 @@ class User < ApplicationRecord
     dependent: :delete_all,
     inverse_of: :user
 
+  has_many :linked_applications,
+    class_name: 'Users::LinkedApplication',
+    inverse_of: :user
+  has_many :oauth_applications,
+    through: :linked_applications,
+    inverse_of: :users
+
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :email, uniqueness: { scope: :tenant_id }
   validates :tel, phone: { allow_blank: true }

@@ -317,6 +317,34 @@ class User
     sig { params(value: T::Enumerable[::Users::EmailVerifier]).void }
     def email_verifiers=(value); end
 
+    sig { returns(T::Array[T.untyped]) }
+    def linked_application_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def linked_application_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :linked_applications`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Users::LinkedApplication::PrivateCollectionProxy) }
+    def linked_applications; end
+
+    sig { params(value: T::Enumerable[::Users::LinkedApplication]).void }
+    def linked_applications=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def oauth_application_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def oauth_application_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :oauth_applications, through: :linked_applications`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
+    sig { returns(::OauthApplication::PrivateCollectionProxy) }
+    def oauth_applications; end
+
+    sig { params(value: T::Enumerable[::OauthApplication]).void }
+    def oauth_applications=(value); end
+
     sig { returns(T.nilable(::ContactAddress)) }
     def reload_contact_address; end
 
