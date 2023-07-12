@@ -143,8 +143,8 @@ Doorkeeper.configure do
   # +ActionController::API+. The return value of this option must be a stringified class name.
   # See https://doorkeeper.gitbook.io/guides/configuration/other-configurations#custom-controllers
   #
-  base_controller 'TenantsArea::ApplicationController'
-  base_metal_controller 'TenantsArea::ApplicationMetalController'
+  base_controller 'OauthArea::ApplicationController'
+  base_metal_controller 'OauthArea::ApplicationMetalController'
 
 
   # Reuse access token for the same resource owner within an application (disabled by default).
