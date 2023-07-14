@@ -2,10 +2,14 @@ RATELIMIT_PATHS = [
   '/api/v1/authentication/sessions',
   '/api/v1/authentication/registrations/verify_email',
   '/api/v1/authentication/password_resets',
+  '/api/v1/internal/email_change',
+  '/oauth/token',
 ].freeze
 
-Rack::Attack.throttle('new session throttling', limit: 2, period: 2) do |request|
-  if request.post? && RATELIMIT_PATHS.include?(request.path)
-    request.ip
+RATELIMIT_PATHS.each do |path|
+  Rack::Attack.throttle("limit #{path}", limit: 4, period: 2) do |request|
+    if request.post? && request.path == path
+      request.ip
+    end
   end
 end
