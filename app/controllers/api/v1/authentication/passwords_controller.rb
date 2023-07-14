@@ -8,6 +8,7 @@ module API::V1::Authentication
       raise Exceptions::Services::Users::PasswordAlreadySet if @current_user.password_digest.present?
 
       @current_user.update!(password_params)
+      session[:registering_user_id] = nil
       session[:current_user_id] = @current_user.id
       head :no_content
     end

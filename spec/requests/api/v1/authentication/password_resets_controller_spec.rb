@@ -135,6 +135,8 @@ RSpec.describe '[ Password Resets API ]' do
 
       it 'returns 204' do
         is_expected.to eq 204
+        expect(Users::PasswordReset.find(users_password_resets.id).used_at).to be_between(1.minute.ago, Time.zone.now)
+        expect(user_1.reload.authenticate('Abc123456$%')).to be_truthy
       end
     end
 

@@ -21,6 +21,7 @@ module Users
           raise Exceptions::Services::Users::PasswordResetCodeUsed
         else
           user.update!(params)
+          password_reset.update!(used_at: Time.zone.now)
         end
 
         user
