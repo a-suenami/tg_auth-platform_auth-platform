@@ -6,7 +6,7 @@ module API::V1::Authentication
       if client.present?
         Users::SendPasswordResetEmailService.new.execute!(email: params[:email], base_url: client.redirect_url_on_password_reset)
       else
-        Users::SendPasswordResetEmailService.new.execute!(email: params[:email], base_url: "#{request.protocol}#{request.host_with_port}/password_resets/edit")
+        raise ActiveRecord::RecordNotFound
       end
       head :no_content
     end
