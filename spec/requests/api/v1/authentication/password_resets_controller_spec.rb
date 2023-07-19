@@ -18,6 +18,9 @@ RSpec.describe '[ Password Resets API ]' do
         TEXT
       )
     }
+    let(:login_spa_application) {
+      create(:login_spa_application, tenant_id: current_tenant.id)
+    }
     let(:blastengine_mock) {
       instance_double(Blastengine::API)
     }
@@ -25,6 +28,7 @@ RSpec.describe '[ Password Resets API ]' do
     before do
       user_1
       email_template
+      login_spa_application
       allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
       allow(blastengine_mock).to receive(:send_email).and_return({
         delivery_id: 1,

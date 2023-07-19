@@ -594,10 +594,10 @@ class LoginSpaApplication
     sig { void }
     def id_will_change!; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(::String) }
     def login_url; end
 
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    sig { params(value: ::String).returns(::String) }
     def login_url=(value); end
 
     sig { returns(T::Boolean) }
@@ -612,10 +612,10 @@ class LoginSpaApplication
     sig { returns(T::Boolean) }
     def login_url_came_from_user?; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def login_url_change; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def login_url_change_to_be_saved; end
 
     sig { returns(T::Boolean) }
@@ -624,7 +624,7 @@ class LoginSpaApplication
     sig { returns(T.nilable(::String)) }
     def login_url_in_database; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def login_url_previous_change; end
 
     sig { returns(T::Boolean) }
@@ -684,10 +684,10 @@ class LoginSpaApplication
     sig { void }
     def name_will_change!; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(::String) }
     def redirect_url_on_password_reset; end
 
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    sig { params(value: ::String).returns(::String) }
     def redirect_url_on_password_reset=(value); end
 
     sig { returns(T::Boolean) }
@@ -702,10 +702,10 @@ class LoginSpaApplication
     sig { returns(T::Boolean) }
     def redirect_url_on_password_reset_came_from_user?; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def redirect_url_on_password_reset_change; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def redirect_url_on_password_reset_change_to_be_saved; end
 
     sig { returns(T::Boolean) }
@@ -714,7 +714,7 @@ class LoginSpaApplication
     sig { returns(T.nilable(::String)) }
     def redirect_url_on_password_reset_in_database; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def redirect_url_on_password_reset_previous_change; end
 
     sig { returns(T::Boolean) }
@@ -780,7 +780,7 @@ class LoginSpaApplication
     sig { returns(T::Boolean) }
     def saved_change_to_id?; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_login_url; end
 
     sig { returns(T::Boolean) }
@@ -792,7 +792,7 @@ class LoginSpaApplication
     sig { returns(T::Boolean) }
     def saved_change_to_name?; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_redirect_url_on_password_reset; end
 
     sig { returns(T::Boolean) }
