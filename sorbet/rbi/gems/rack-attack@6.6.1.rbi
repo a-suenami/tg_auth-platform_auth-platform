@@ -32,15 +32,15 @@ end
 class Rack::Attack
   # @return [Attack] a new instance of Attack
   #
-  # source://rack-attack//lib/rack/attack.rb#93
+  # source://rack-attack//lib/rack/attack.rb#97
   def initialize(app); end
 
-  # source://rack-attack//lib/rack/attack.rb#98
+  # source://rack-attack//lib/rack/attack.rb#102
   def call(env); end
 
   # Returns the value of attribute configuration.
   #
-  # source://rack-attack//lib/rack/attack.rb#91
+  # source://rack-attack//lib/rack/attack.rb#95
   def configuration; end
 
   class << self
@@ -49,6 +49,12 @@ class Rack::Attack
 
     # source://forwardable/1.3.3/forwardable.rb#231
     def blocklist_ip(*args, **_arg1, &block); end
+
+    # source://forwardable/1.3.3/forwardable.rb#231
+    def blocklisted_responder(*args, **_arg1, &block); end
+
+    # source://forwardable/1.3.3/forwardable.rb#231
+    def blocklisted_responder=(*args, **_arg1, &block); end
 
     # source://forwardable/1.3.3/forwardable.rb#231
     def blocklisted_response(*args, **_arg1, &block); end
@@ -126,6 +132,12 @@ class Rack::Attack
     #
     # source://rack-attack//lib/rack/attack.rb#34
     def throttle_discriminator_normalizer=(_arg0); end
+
+    # source://forwardable/1.3.3/forwardable.rb#231
+    def throttled_responder(*args, **_arg1, &block); end
+
+    # source://forwardable/1.3.3/forwardable.rb#231
+    def throttled_responder=(*args, **_arg1, &block); end
 
     # source://forwardable/1.3.3/forwardable.rb#231
     def throttled_response(*args, **_arg1, &block); end
@@ -293,7 +305,7 @@ end
 class Rack::Attack::Configuration
   # @return [Configuration] a new instance of Configuration
   #
-  # source://rack-attack//lib/rack/attack/configuration.rb#25
+  # source://rack-attack//lib/rack/attack/configuration.rb#39
   def initialize; end
 
   # Returns the value of attribute anonymous_blocklists.
@@ -306,46 +318,54 @@ class Rack::Attack::Configuration
   # source://rack-attack//lib/rack/attack/configuration.rb#22
   def anonymous_safelists; end
 
-  # source://rack-attack//lib/rack/attack/configuration.rb#39
+  # source://rack-attack//lib/rack/attack/configuration.rb#53
   def blocklist(name = T.unsafe(nil), &block); end
 
-  # source://rack-attack//lib/rack/attack/configuration.rb#49
+  # source://rack-attack//lib/rack/attack/configuration.rb#63
   def blocklist_ip(ip_address); end
 
   # @return [Boolean]
   #
-  # source://rack-attack//lib/rack/attack/configuration.rb#70
+  # source://rack-attack//lib/rack/attack/configuration.rb#84
   def blocklisted?(request); end
 
-  # Returns the value of attribute blocklisted_response.
+  # Returns the value of attribute blocklisted_responder.
   #
   # source://rack-attack//lib/rack/attack/configuration.rb#23
+  def blocklisted_responder; end
+
+  # Sets the attribute blocklisted_responder
+  #
+  # @param value the value to set the attribute blocklisted_responder to.
+  #
+  # source://rack-attack//lib/rack/attack/configuration.rb#23
+  def blocklisted_responder=(_arg0); end
+
+  # Keeping these for backwards compatibility
+  #
+  # source://rack-attack//lib/rack/attack/configuration.rb#25
   def blocklisted_response; end
 
-  # Sets the attribute blocklisted_response
-  #
-  # @param value the value to set the attribute blocklisted_response to.
-  #
-  # source://rack-attack//lib/rack/attack/configuration.rb#23
-  def blocklisted_response=(_arg0); end
+  # source://rack-attack//lib/rack/attack/configuration.rb#27
+  def blocklisted_response=(responder); end
 
   # Returns the value of attribute blocklists.
   #
   # source://rack-attack//lib/rack/attack/configuration.rb#22
   def blocklists; end
 
-  # source://rack-attack//lib/rack/attack/configuration.rb#87
+  # source://rack-attack//lib/rack/attack/configuration.rb#101
   def clear_configuration; end
 
-  # source://rack-attack//lib/rack/attack/configuration.rb#29
+  # source://rack-attack//lib/rack/attack/configuration.rb#43
   def safelist(name = T.unsafe(nil), &block); end
 
-  # source://rack-attack//lib/rack/attack/configuration.rb#53
+  # source://rack-attack//lib/rack/attack/configuration.rb#67
   def safelist_ip(ip_address); end
 
   # @return [Boolean]
   #
-  # source://rack-attack//lib/rack/attack/configuration.rb#65
+  # source://rack-attack//lib/rack/attack/configuration.rb#79
   def safelisted?(request); end
 
   # Returns the value of attribute safelists.
@@ -353,25 +373,33 @@ class Rack::Attack::Configuration
   # source://rack-attack//lib/rack/attack/configuration.rb#22
   def safelists; end
 
-  # source://rack-attack//lib/rack/attack/configuration.rb#57
+  # source://rack-attack//lib/rack/attack/configuration.rb#71
   def throttle(name, options, &block); end
 
   # @return [Boolean]
   #
-  # source://rack-attack//lib/rack/attack/configuration.rb#75
+  # source://rack-attack//lib/rack/attack/configuration.rb#89
   def throttled?(request); end
 
-  # Returns the value of attribute throttled_response.
+  # Returns the value of attribute throttled_responder.
   #
   # source://rack-attack//lib/rack/attack/configuration.rb#23
+  def throttled_responder; end
+
+  # Sets the attribute throttled_responder
+  #
+  # @param value the value to set the attribute throttled_responder to.
+  #
+  # source://rack-attack//lib/rack/attack/configuration.rb#23
+  def throttled_responder=(_arg0); end
+
+  # Keeping these for backwards compatibility
+  #
+  # source://rack-attack//lib/rack/attack/configuration.rb#25
   def throttled_response; end
 
-  # Sets the attribute throttled_response
-  #
-  # @param value the value to set the attribute throttled_response to.
-  #
-  # source://rack-attack//lib/rack/attack/configuration.rb#23
-  def throttled_response=(_arg0); end
+  # source://rack-attack//lib/rack/attack/configuration.rb#33
+  def throttled_response=(responder); end
 
   # Returns the value of attribute throttled_response_retry_after_header.
   #
@@ -390,25 +418,25 @@ class Rack::Attack::Configuration
   # source://rack-attack//lib/rack/attack/configuration.rb#22
   def throttles; end
 
-  # source://rack-attack//lib/rack/attack/configuration.rb#61
+  # source://rack-attack//lib/rack/attack/configuration.rb#75
   def track(name, options = T.unsafe(nil), &block); end
 
   # @return [Boolean]
   #
-  # source://rack-attack//lib/rack/attack/configuration.rb#81
+  # source://rack-attack//lib/rack/attack/configuration.rb#95
   def tracked?(request); end
 
   private
 
-  # source://rack-attack//lib/rack/attack/configuration.rb#93
+  # source://rack-attack//lib/rack/attack/configuration.rb#107
   def set_defaults; end
 end
 
 # source://rack-attack//lib/rack/attack/configuration.rb#8
-Rack::Attack::Configuration::DEFAULT_BLOCKLISTED_RESPONSE = T.let(T.unsafe(nil), Proc)
+Rack::Attack::Configuration::DEFAULT_BLOCKLISTED_RESPONDER = T.let(T.unsafe(nil), Proc)
 
 # source://rack-attack//lib/rack/attack/configuration.rb#10
-Rack::Attack::Configuration::DEFAULT_THROTTLED_RESPONSE = T.let(T.unsafe(nil), Proc)
+Rack::Attack::Configuration::DEFAULT_THROTTLED_RESPONDER = T.let(T.unsafe(nil), Proc)
 
 # source://rack-attack//lib/rack/attack.rb#20
 class Rack::Attack::Error < ::StandardError; end
@@ -547,6 +575,9 @@ end
 # source://rack-attack//lib/rack/attack/store_proxy/mem_cache_store_proxy.rb#8
 class Rack::Attack::StoreProxy::MemCacheStoreProxy < ::Rack::Attack::BaseProxy
   # source://rack-attack//lib/rack/attack/store_proxy/mem_cache_store_proxy.rb#15
+  def read(name, options = T.unsafe(nil)); end
+
+  # source://rack-attack//lib/rack/attack/store_proxy/mem_cache_store_proxy.rb#19
   def write(name, value, options = T.unsafe(nil)); end
 
   class << self

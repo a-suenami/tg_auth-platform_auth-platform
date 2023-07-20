@@ -13,3 +13,27 @@ RATELIMIT_PATHS.each do |path|
     end
   end
 end
+
+Rack::Attack.throttled_responder = lambda do |_request|
+  # NB: you have access to the name and other data about the matched throttle
+  # request.env['rack.attack.matched']
+  # request.env['rack.attack.match_type']
+  # request.env['rack.attack.match_data']
+  # request.env['rack.attack.match_discriminator']
+
+  # Using 503 because it may make attacker think that they have successfully
+  # DOSed the site. Rack::Attack returns 429 for throttling by default
+  [
+    429,
+    { 'Content-Type': 'application/json; charset=utf-8' },
+    [
+      {
+        error: {
+          type: 'too_many_requests',
+          code: 'too_many_requests',
+          message: 'Retry later',
+        },
+      }.to_json,
+    ],
+  ]
+end
