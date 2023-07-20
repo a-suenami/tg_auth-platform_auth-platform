@@ -7,7 +7,7 @@ RATELIMIT_PATHS = [
 ].freeze
 
 RATELIMIT_PATHS.each do |path|
-  Rack::Attack.throttle("limit #{path}", limit: 4, period: 2) do |request|
+  Rack::Attack.throttle("limit #{path}", limit: 6, period: 60) do |request|
     if request.post? && request.path == path
       request.ip
     end
