@@ -260,6 +260,9 @@ CREATE TABLE public.users (
     tel_verified boolean DEFAULT false,
     email_verified boolean DEFAULT false,
     password_reset_code character varying,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    unlock_token character varying,
+    lock_expired_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );

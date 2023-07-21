@@ -3,6 +3,7 @@
 class User < ApplicationRecord
   extend T::Sig
   include Multitenancy
+  include Lockable
   has_secure_password validations: false
   # password validation 英数字大文字小文字記号をそれぞれ1文字以上含む8文字以上
   PASSWORD_VALIDATION_REGEX = %r#\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!-/:-@\[-`{-~])[!-~]{8,100}\z#
@@ -46,8 +47,18 @@ class User < ApplicationRecord
 
   sig { params(password: String).returns(T::Boolean) }
   def authenticate!(password)
+    if locked?
+      raise Exceptions::Auth::AccountLocked
+    end
+
     # authenticate password
-    BCrypt::Password.new(self.password_digest) == password
+    if self.password_digest.present? && BCrypt::Password.new(self.password_digest).is_password?(password) && self
+      reset_failed_attempts
+      true
+    else
+      increment_failed_attempts
+      false
+    end
   end
 
   sig { returns(T::Boolean) }

@@ -5,7 +5,7 @@ module API::V1::Authentication
 
     def create
       user = User.find_by(email: params[:email])
-      if user&.authenticate(params[:password])
+      if user&.authenticate!(params[:password])
         # create session
         cookie_session[:current_user_id] = user.id
 

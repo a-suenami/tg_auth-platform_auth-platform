@@ -181,6 +181,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "tel_verified", default: false
     t.boolean "email_verified", default: false
     t.string "password_reset_code"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "lock_expired_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id", "email"], name: "index_users_on_tenant_id_email", unique: true

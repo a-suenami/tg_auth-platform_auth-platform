@@ -27,5 +27,17 @@ module Exceptions
         'access tokenの有効期限が切れています'
       end
     end
+
+    class AccountLocked < BaseError
+      sig { returns(Symbol) }
+      def code
+        :account_locked
+      end
+
+      sig { returns(String) }
+      def message
+        '一定回数続けてログインに失敗したため、アカウントをロックしました。解除するには登録済みのメールアドレスに送られた案内を確認するか、しばらく時間を開けてお試しください。'
+      end
+    end
   end
 end
