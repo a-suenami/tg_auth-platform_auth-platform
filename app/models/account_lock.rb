@@ -30,7 +30,12 @@ class AccountLock < ApplicationRecord
 
   sig { void }
   def increment_failed_attempts
+    if self.last_failed_at && T.must(self.last_failed_at) < (Time.zone.now - Settings.account_lock.lockout_period_min&.minutes)
+      self.failed_attempts = 0
+    end
+
     self.failed_attempts += 1
+    self.last_failed_at = Time.zone.now
     self.save
     if locked?
       lock!

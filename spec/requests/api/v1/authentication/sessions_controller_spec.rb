@@ -123,5 +123,34 @@ RSpec.describe '[ Sessions API ]' do
         expect(AccountLock.find_by(email: 'test-user1@example.com').failed_attempts).to be 0
       end
     end
+
+    context 'when enough time has passed from last_failed_at' do
+      let(:account_lock) {
+        create(:account_lock,
+          tenant_id: current_tenant.id,
+          user_id: user_1.id,
+          email: 'test-user1@example.com',
+          failed_attempts: 5,
+          unlock_token: nil,
+          lock_expired_at: nil,
+          last_failed_at: 30.minutes.ago,)
+      }
+
+      let(:params) {
+        {
+          email: 'test-user1@example.com',
+          password: 'hogehoge',
+        }
+      }
+
+      before do
+        account_lock
+      end
+
+      it 'returns 401' do
+        is_expected.to eq 401
+        expect(AccountLock.find_by(email: 'test-user1@example.com').failed_attempts).to be 1
+      end
+    end
   end
 end
