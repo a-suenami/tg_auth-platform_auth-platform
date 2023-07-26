@@ -16,6 +16,20 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
+  create_table "account_locks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id"
+    t.string "email", null: false
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "lock_expired_at"
+    t.datetime "last_failed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_account_locks_on_tenant_id"
+    t.index ["user_id"], name: "index_account_locks_on_user_id"
+  end
+
   create_table "admins", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "name"
@@ -230,6 +244,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["user_id"], name: "index_users__password_resets_on_user_id"
   end
 
+  add_foreign_key "account_locks", "tenants", name: "fk_account_locks_tenants"
   add_foreign_key "admins", "tenants", name: "fk_admins_tenants"
   add_foreign_key "contact_addresses", "tenants", name: "fk_contact_addresses_tenants"
   add_foreign_key "contact_addresses", "users", name: "fk_contact_addresses_users"
