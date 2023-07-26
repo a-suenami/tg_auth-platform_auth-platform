@@ -50,7 +50,7 @@ class AccountLock < ApplicationRecord
     self.save!
   end
 
-  sig { returns(T::Boolean) }
+  sig { returns(AccountLock) }
   def unlock!
     self.failed_attempts = 0
     self.unlock_token = nil

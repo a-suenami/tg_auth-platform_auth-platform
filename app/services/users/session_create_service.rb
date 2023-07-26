@@ -3,6 +3,10 @@
 module Users
   class SessionCreateService < BaseService
     def execute!(email:, password:)
+      unless email =~ URI::MailTo::EMAIL_REGEXP
+        raise Exceptions::Auth::AuthError
+      end
+
       account_lock = AccountLock.check_lock!(email:)
 
       user = User.find_by(email:)
