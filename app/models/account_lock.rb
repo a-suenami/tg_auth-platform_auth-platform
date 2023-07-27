@@ -5,6 +5,8 @@ class AccountLock < ApplicationRecord
   include Multitenancy
   extend T::Helpers
 
+  belongs_to :user, optional: true
+
   sig { params(email: String).returns(T.nilable(AccountLock)) }
   def self.check_lock!(email:)
     account_lock = AccountLock.find_or_initialize_by(email:)
@@ -45,13 +47,21 @@ class AccountLock < ApplicationRecord
   sig { returns(T::Boolean) }
   def reset_failed_attempts
     self.failed_attempts = 0
+    self.unlock_token = nil
+    self.lock_expired_at = nil
     self.save
   end
 
   sig { returns(T::Boolean) }
   def lock!
-    self.unlock_token = SecureRandom.hex(32)
-    self.lock_expired_at = Time.zone.now + Settings.account_lock.lockout_period_min&.minutes
+    if unlock_token.blank?
+      self.unlock_token = SecureRandom.hex(32)
+      self.lock_expired_at = Time.zone.now + Settings.account_lock.lockout_period_min&.minutes
+      self.save!
+      if self.user.present?
+        Users::SendAccountLockEmailService.new.execute!(email: self.email)
+      end
+    end
     self.save!
   end
 

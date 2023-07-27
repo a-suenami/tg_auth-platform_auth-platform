@@ -48,3 +48,15 @@ EmailTemplate.seed do |s|
   TEXT
 end
 
+EmailTemplate.seed do |s|
+  s.id = '9466a31e-e2d4-4daf-8f36-32616abe1e68'
+  s.tenant_id = 'sample'
+  s.name = 'アカウントロック メールテンプレート'
+  s.template_type = 'account_lock'
+  s.subject = 'アカウントロック メール'
+  s.body = <<~TEXT
+    <p>アカウントロックを解除するには以下のリンクをクリックしてください</p>
+    <p>{{ unlock_url }}</p>
+  TEXT
+end
+

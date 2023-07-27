@@ -5,6 +5,7 @@
 # Please instead update this file by running `bin/tapioca dsl AccountLock`.
 
 class AccountLock
+  include GeneratedAssociationMethods
   include GeneratedAttributeMethods
   extend CommonRelationMethods
   extend GeneratedRelationMethods
@@ -260,6 +261,26 @@ class AccountLock
 
     sig { returns(::AccountLock) }
     def third_to_last!; end
+  end
+
+  module GeneratedAssociationMethods
+    sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+    def build_user(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+    def create_user(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+    def create_user!(*args, &blk); end
+
+    sig { returns(T.nilable(::User)) }
+    def reload_user; end
+
+    sig { returns(T.nilable(::User)) }
+    def user; end
+
+    sig { params(value: T.nilable(::User)).void }
+    def user=(value); end
   end
 
   module GeneratedAssociationRelationMethods

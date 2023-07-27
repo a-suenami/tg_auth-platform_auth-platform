@@ -207,5 +207,8 @@ module GeneratedPathHelpersModule
   def turbo_resume_historical_location_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def unlock_account_locks_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def verify_email_api_v1_authentication_registrations_path(*args); end
 end
