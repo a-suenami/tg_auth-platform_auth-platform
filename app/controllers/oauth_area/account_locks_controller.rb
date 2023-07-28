@@ -7,6 +7,10 @@ module OauthArea
         if account_lock.present?
           account_lock.reset_failed_attempts
           account_lock.save
+
+          @login_url = if session[:auth_url].present?
+            Tenant.current.login_spa_application.login_url_with_flag
+          end
           render 'unlock'
         else
           render 'oauth_area/sessions/error'
