@@ -2,9 +2,9 @@
   h2 OAuth Application詳細
 
   .uk-flex.uk-flex-right
-    = link_to "編集", edit_admin_area_oauth_application_path(@oauth_application), class: "uk-button uk-button-primary"
+    = link_to "編集", edit_ruler_area_tenant_oauth_application_path(@tenant_id, @oauth_application), class: "uk-button uk-button-primary"
     .uk-margin-left
-    = link_to "削除", admin_area_oauth_application_path(@oauth_application), data: { turbo_method: :delete, turbo_confirm: "一度削除したデータを戻せません。本当に削除しますか？" }, class: 'uk-button uk-button-danger'
+    = link_to "削除", ruler_area_tenant_oauth_application_path(@tenant_id, @oauth_application), data: { turbo_method: :delete, turbo_confirm: "一度削除したデータを戻せません。本当に削除しますか？" }, class: 'uk-button uk-button-danger'
 
   table.uk-table
     tr
