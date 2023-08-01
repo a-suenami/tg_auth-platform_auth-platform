@@ -1,4 +1,4 @@
-module AdminArea
+module RulerArea::Tenants
   class OauthApplicationsController < ApplicationController
     def index
       @oauth_applications = OauthApplication.all
@@ -20,7 +20,7 @@ module AdminArea
     def create
       @oauth_application = OauthApplication.create(oauth_application_params)
       if @oauth_application.persisted?
-        redirect_to admin_area_oauth_applications_path, notice: t('helpers.messages.created')
+        redirect_to ruler_area_tenant_oauth_applications_path, notice: t('helpers.messages.created')
       else
         render :new, status: :unprocessable_entity
       end
@@ -30,7 +30,7 @@ module AdminArea
     def update
       @oauth_application = OauthApplication.find(params[:id])
       if @oauth_application.update(oauth_application_params)
-        redirect_to admin_area_oauth_applications_path, notice: t('helpers.messages.updated')
+        redirect_to ruler_area_tenant_oauth_applications_path, notice: t('helpers.messages.updated')
       else
         render :edit, status: :unprocessable_entity
       end
@@ -39,7 +39,7 @@ module AdminArea
     def destroy
       oauth_application = OauthApplication.find(params[:id])
       oauth_application.destroy!
-      redirect_to admin_area_oauth_applications_path, notice: t('helpers.messages.destroyed'),  status: :see_other
+      redirect_to ruler_area_tenant_oauth_applications_path, notice: t('helpers.messages.destroyed'),  status: :see_other
     end
 
     private

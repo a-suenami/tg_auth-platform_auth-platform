@@ -1,4 +1,4 @@
-module AdminArea
+module RulerArea::Tenants
   class EmailTemplatesController < ApplicationController
     def index
       @email_templates = EmailTemplate.all
@@ -20,7 +20,7 @@ module AdminArea
     def create
       @email_template = EmailTemplate.create(email_template_params)
       if @email_template.persisted?
-        redirect_to admin_area_email_templates_path, notice: t('helpers.messages.created')
+        redirect_to ruler_area_tenant_email_templates_path, notice: t('helpers.messages.created')
       else
         render :new, status: :unprocessable_entity
       end
@@ -30,7 +30,7 @@ module AdminArea
     def update
       @email_template = EmailTemplate.find(params[:id])
       if @email_template.update(email_template_params)
-        redirect_to admin_area_email_templates_path, notice: t('helpers.messages.updated')
+        redirect_to ruler_area_tenant_email_templates_path, notice: t('helpers.messages.updated')
       else
         render :edit, status: :unprocessable_entity
       end
@@ -39,7 +39,7 @@ module AdminArea
     def destroy
       email_template = EmailTemplate.find(params[:id])
       email_template.destroy!
-      redirect_to admin_area_email_templates_path, notice: t('helpers.messages.destroyed'),  status: :see_other
+      redirect_to ruler_area_tenant_email_templates_path, notice: t('helpers.messages.destroyed'),  status: :see_other
     end
 
     private

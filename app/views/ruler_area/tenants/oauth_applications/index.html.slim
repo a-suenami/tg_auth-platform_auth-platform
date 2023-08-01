@@ -7,7 +7,7 @@
         | No OAuth Applications found
     - else
       .uk-flex.uk-flex-right
-        = link_to "新規登録", new_admin_area_oauth_application_path, class: "uk-button uk-button-primary"
+        = link_to "新規登録", new_ruler_area_tenant_oauth_application_path(@tenant_id), class: "uk-button uk-button-primary"
 
       table.uk-table.uk-table-divider
         tr
@@ -29,6 +29,6 @@
             td
               = oauth_application.enable_client_credential_flow
             td
-              = link_to "詳細", admin_area_oauth_application_path(oauth_application), class: "uk-button uk-button-secondary"
+              = link_to "詳細", ruler_area_tenant_oauth_application_path(@tenant_id, oauth_application), class: "uk-button uk-button-secondary"
 
     == pagy_nav(@pagy)
