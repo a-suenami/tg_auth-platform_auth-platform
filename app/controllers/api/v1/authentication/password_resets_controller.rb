@@ -13,7 +13,7 @@ module API::V1::Authentication
 
     def create
       user = Users::PasswordResetService.new(password_params).execute!(password_reset_code: params[:password_reset_code], email: params[:email])
-      session[:current_user_id] = user.id
+      cookie_session[:current_user_id] = user.id
       head :no_content
     rescue ActiveRecord::RecordInvalid
       handle_400 error_details: ['validation error']

@@ -10,9 +10,9 @@ Doorkeeper.configure do
     # 一応テナントを設定処理
     RequestStore.store[:current_tenant_domain] = request.host || '-'
 
-    session[:auth_url] = request.fullpath
+    cookie_session[:auth_url] = request.fullpath
 
-    resource_owner = User.find_by(id: session[:current_user_id])
+    resource_owner = User.find_by(id: cookie_session[:current_user_id])
 
     if resource_owner.nil?
       client = Tenant.current.login_spa_application

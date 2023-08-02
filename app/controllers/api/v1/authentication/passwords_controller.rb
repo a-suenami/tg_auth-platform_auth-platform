@@ -8,8 +8,8 @@ module API::V1::Authentication
       raise Exceptions::Services::Users::PasswordAlreadySet if @current_user.password_digest.present?
 
       @current_user.update!(password_params)
-      session[:registering_user_id] = nil
-      session[:current_user_id] = @current_user.id
+      cookie_session[:registering_user_id] = nil
+      cookie_session[:current_user_id] = @current_user.id
       head :no_content
     end
 
@@ -21,9 +21,9 @@ module API::V1::Authentication
     private
 
     def registrations_session_authenticate
-      raise Exceptions::Auth::AuthError if session[:registering_user_id].blank?
+      raise Exceptions::Auth::AuthError if cookie_session[:registering_user_id].blank?
 
-      @current_user = User.find session[:registering_user_id]
+      @current_user = User.find cookie_session[:registering_user_id]
     end
 
     def password_params

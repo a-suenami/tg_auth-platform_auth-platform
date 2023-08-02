@@ -3,6 +3,7 @@
 module API
   class ApplicationController < ActionController::API
     include API::ExceptionRescuable
+    include SecureCookieStoreUseable
     before_action :set_tenant
 
     private

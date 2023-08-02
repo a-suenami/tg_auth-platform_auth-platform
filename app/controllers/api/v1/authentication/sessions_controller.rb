@@ -7,7 +7,7 @@ module API::V1::Authentication
       user = User.find_by(email: params[:email])
       if user&.authenticate(params[:password])
         # create session
-        session[:current_user_id] = user.id
+        cookie_session[:current_user_id] = user.id
 
         render :create, locals: { user: }
       else
