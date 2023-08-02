@@ -15,21 +15,19 @@ RSpec.describe '[ DeliveryAddresses API ]' do
       create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: user_1.id)
     }
 
-    let(:session_mock) {
-      instance_double(ActionDispatch::Request::Session)
-    }
-
     before do
       user_1
       user_1_profile
       user_1_contact_address
       user_1_delivery_addresses
-      allow_any_instance_of(ActionDispatch::Request).to receive(:session).and_return(session_mock)
-      allow(session_mock).to receive(:[]).and_return(user_1.id)
-      allow(session_mock).to receive(:key?).and_return(false)
-      allow(session_mock).to receive(:loaded?).and_return(false)
-      allow(session_mock).to receive(:enabled?).and_return(true)
-      allow(session_mock).to receive(:[]=).and_return(nil)
+      allow(session_mock).to receive(:[]) do |key|
+        case key
+        when :current_user_id
+          user_1.id
+        when :current_user_id_expired_at
+          1.week.from_now
+        end
+      end
     end
 
     context 'when present delivery_addresses' do
@@ -73,22 +71,20 @@ RSpec.describe '[ DeliveryAddresses API ]' do
     }
     let(:id) { user_1_delivery_street.id }
 
-    let(:session_mock) {
-      instance_double(ActionDispatch::Request::Session)
-    }
-
     before do
       user_1
       user_1_profile
       user_1_contact_address
       user_1_delivery_street
       user_1_delivery_addresses
-      allow_any_instance_of(ActionDispatch::Request).to receive(:session).and_return(session_mock)
-      allow(session_mock).to receive(:[]).and_return(user_1.id)
-      allow(session_mock).to receive(:key?).and_return(false)
-      allow(session_mock).to receive(:loaded?).and_return(false)
-      allow(session_mock).to receive(:enabled?).and_return(true)
-      allow(session_mock).to receive(:[]=).and_return(nil)
+      allow(session_mock).to receive(:[]) do |key|
+        case key
+        when :current_user_id
+          user_1.id
+        when :current_user_id_expired_at
+          1.week.from_now
+        end
+      end
     end
 
     context 'when present delivery_addresses' do
@@ -119,21 +115,19 @@ RSpec.describe '[ DeliveryAddresses API ]' do
       create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: user_1.id)
     }
 
-    let(:session_mock) {
-      instance_double(ActionDispatch::Request::Session)
-    }
-
     before do
       user_1
       user_1_profile
       user_1_contact_address
       user_1_delivery_addresses
-      allow_any_instance_of(ActionDispatch::Request).to receive(:session).and_return(session_mock)
-      allow(session_mock).to receive(:[]).and_return(user_1.id)
-      allow(session_mock).to receive(:key?).and_return(false)
-      allow(session_mock).to receive(:loaded?).and_return(false)
-      allow(session_mock).to receive(:enabled?).and_return(true)
-      allow(session_mock).to receive(:[]=).and_return(nil)
+      allow(session_mock).to receive(:[]) do |key|
+        case key
+        when :current_user_id
+          user_1.id
+        when :current_user_id_expired_at
+          1.week.from_now
+        end
+      end
     end
 
     context 'when params vaild' do
@@ -210,21 +204,19 @@ RSpec.describe '[ DeliveryAddresses API ]' do
     }
     let(:id) { user_1_delivery_street.id }
 
-    let(:session_mock) {
-      instance_double(ActionDispatch::Request::Session)
-    }
-
     before do
       user_1
       user_1_profile
       user_1_contact_address
       user_1_delivery_addresses
-      allow_any_instance_of(ActionDispatch::Request).to receive(:session).and_return(session_mock)
-      allow(session_mock).to receive(:[]).and_return(user_1.id)
-      allow(session_mock).to receive(:key?).and_return(false)
-      allow(session_mock).to receive(:loaded?).and_return(false)
-      allow(session_mock).to receive(:enabled?).and_return(true)
-      allow(session_mock).to receive(:[]=).and_return(nil)
+      allow(session_mock).to receive(:[]) do |key|
+        case key
+        when :current_user_id
+          user_1.id
+        when :current_user_id_expired_at
+          1.week.from_now
+        end
+      end
     end
 
     context 'when params vaild' do
@@ -302,21 +294,19 @@ RSpec.describe '[ DeliveryAddresses API ]' do
     }
     let(:id) { user_1_delivery_street.id }
 
-    let(:session_mock) {
-      instance_double(ActionDispatch::Request::Session)
-    }
-
     before do
       user_1
       user_1_profile
       user_1_contact_address
       user_1_delivery_addresses
-      allow_any_instance_of(ActionDispatch::Request).to receive(:session).and_return(session_mock)
-      allow(session_mock).to receive(:[]).and_return(user_1.id)
-      allow(session_mock).to receive(:key?).and_return(false)
-      allow(session_mock).to receive(:loaded?).and_return(false)
-      allow(session_mock).to receive(:enabled?).and_return(true)
-      allow(session_mock).to receive(:[]=).and_return(nil)
+      allow(session_mock).to receive(:[]) do |key|
+        case key
+        when :current_user_id
+          user_1.id
+        when :current_user_id_expired_at
+          1.week.from_now
+        end
+      end
     end
 
     context 'when params vaild' do
