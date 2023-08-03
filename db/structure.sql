@@ -241,6 +241,7 @@ CREATE TABLE public.tenants (
     id public.citext NOT NULL,
     name character varying,
     domain character varying,
+    set_parent_domain_cookie boolean DEFAULT false,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
