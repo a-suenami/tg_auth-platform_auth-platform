@@ -5,7 +5,7 @@ module API::V1::Authentication
     include CookieAuthable
 
     def create
-      session[:current_user_id] = nil
+      cookie_session.session_clear
 
       head :no_content
     end
