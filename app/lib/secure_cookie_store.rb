@@ -10,7 +10,7 @@ class SecureCookieStore
 
   sig { params(key: Symbol).returns(T.untyped) }
   def [](key)
-    session_clear if check_expires(key)
+    delete_session(key) if check_expires(key)
     @session[key]
   end
 
@@ -23,6 +23,12 @@ class SecureCookieStore
   sig { void }
   def session_clear
     @session.clear
+  end
+
+  sig { params(key: Symbol).void }
+  def delete_session(key)
+    @session.delete(key)
+    @session.delete(:"#{key}_expired_at")
   end
 
   private
