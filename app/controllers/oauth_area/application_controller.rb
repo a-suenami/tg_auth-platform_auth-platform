@@ -3,7 +3,7 @@
 module OauthArea
   class ApplicationController < ActionController::Base
     include Pagy::Backend
-    include SecureCookieStoreUseable
+    include ExpirableCookieUseable
     rescue_from Exception, with: :handle_500 if Rails.env.production?
 
     before_action :set_tenant

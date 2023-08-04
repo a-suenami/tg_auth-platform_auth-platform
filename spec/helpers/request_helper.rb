@@ -18,11 +18,11 @@ module RequestHelpers
       let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com') }
       let(:current_user) { create(:user, tenant_id: current_tenant.id) }
       let(:session_mock) {
-        instance_double(SecureCookieStore)
+        instance_double(ExpirableCookie)
       }
 
       before do
-        allow(SecureCookieStore).to receive(:new).and_return(session_mock)
+        allow(ExpirableCookie).to receive(:new).and_return(session_mock)
         allow(session_mock).to receive(:[]).and_return(nil)
         allow(session_mock).to receive(:[]=).and_return(nil)
         allow(session_mock).to receive(:session_clear).and_return(nil)

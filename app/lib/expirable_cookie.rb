@@ -1,6 +1,6 @@
 # typed: strict
 
-class SecureCookieStore
+class ExpirableCookie
   extend T::Sig
 
   sig { params(session: T.untyped).void }

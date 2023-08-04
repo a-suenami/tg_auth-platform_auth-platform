@@ -1,4 +1,4 @@
-module SecureCookieStoreUseable
+module ExpirableCookieUseable
   extend ActiveSupport::Concern
 
   included do
@@ -6,7 +6,7 @@ module SecureCookieStoreUseable
   end
 
   def init_session
-    @session = SecureCookieStore.new(session)
+    @session = ExpirableCookie.new(session)
   end
 
   def cookie_session
