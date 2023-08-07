@@ -2,32 +2,26 @@
 
 RSpec.describe '[ DeliveryAddresses API ]' do
   describe 'GET /api/v1/internal/me/delivery_addresses' do
-    let(:user_1) {
+    let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password_digest: nil)
     }
-    let(:user_1_profile) {
-      create(:user_profile, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_profile) {
+      create(:user_profile, tenant_id: current_tenant.id, user_id: current_user.id)
     }
-    let(:user_1_contact_address) {
-      create(:contact_address, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_contact_address) {
+      create(:contact_address, tenant_id: current_tenant.id, user_id: current_user.id)
     }
-    let(:user_1_delivery_addresses) {
-      create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_delivery_addresses) {
+      create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: current_user.id)
     }
 
+    include_context 'current user session is present'
+
     before do
-      user_1
-      user_1_profile
-      user_1_contact_address
-      user_1_delivery_addresses
-      allow(session_mock).to receive(:[]) do |key|
-        case key
-        when :current_user_id
-          user_1.id
-        when :current_user_id_expired_at
-          1.week.from_now
-        end
-      end
+      current_user
+      current_user_profile
+      current_user_contact_address
+      current_user_delivery_addresses
     end
 
     context 'when present delivery_addresses' do
@@ -45,19 +39,19 @@ RSpec.describe '[ DeliveryAddresses API ]' do
   end
 
   describe 'GET /api/v1/internal/me/delivery_addresses/:id' do
-    let(:user_1) {
+    let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password_digest: nil)
     }
-    let(:user_1_profile) {
-      create(:user_profile, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_profile) {
+      create(:user_profile, tenant_id: current_tenant.id, user_id: current_user.id)
     }
-    let(:user_1_contact_address) {
-      create(:contact_address, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_contact_address) {
+      create(:contact_address, tenant_id: current_tenant.id, user_id: current_user.id)
     }
-    let(:user_1_delivery_street) {
+    let(:current_user_delivery_street) {
       create(:delivery_address,
         tenant_id: current_tenant.id,
-        user_id: user_1.id,
+        user_id: current_user.id,
         is_default: 'true',
         zip_code: '1550031',
         prefecture_code: '13',
@@ -66,25 +60,19 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         building: '北沢アモーレ 101号室',
         contact_tel: '080-1234-5678',)
     }
-    let(:user_1_delivery_addresses) {
-      create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_delivery_addresses) {
+      create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: current_user.id)
     }
-    let(:id) { user_1_delivery_street.id }
+    let(:id) { current_user_delivery_street.id }
+
+    include_context 'current user session is present'
 
     before do
-      user_1
-      user_1_profile
-      user_1_contact_address
-      user_1_delivery_street
-      user_1_delivery_addresses
-      allow(session_mock).to receive(:[]) do |key|
-        case key
-        when :current_user_id
-          user_1.id
-        when :current_user_id_expired_at
-          1.week.from_now
-        end
-      end
+      current_user
+      current_user_profile
+      current_user_contact_address
+      current_user_delivery_street
+      current_user_delivery_addresses
     end
 
     context 'when present delivery_addresses' do
@@ -102,32 +90,26 @@ RSpec.describe '[ DeliveryAddresses API ]' do
   end
 
   describe 'POST /api/v1/internal/me/delivery_addresses' do
-    let(:user_1) {
+    let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password_digest: nil)
     }
-    let(:user_1_profile) {
-      create(:user_profile, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_profile) {
+      create(:user_profile, tenant_id: current_tenant.id, user_id: current_user.id)
     }
-    let(:user_1_contact_address) {
-      create(:contact_address, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_contact_address) {
+      create(:contact_address, tenant_id: current_tenant.id, user_id: current_user.id)
     }
-    let(:user_1_delivery_addresses) {
-      create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_delivery_addresses) {
+      create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: current_user.id)
     }
 
+    include_context 'current user session is present'
+
     before do
-      user_1
-      user_1_profile
-      user_1_contact_address
-      user_1_delivery_addresses
-      allow(session_mock).to receive(:[]) do |key|
-        case key
-        when :current_user_id
-          user_1.id
-        when :current_user_id_expired_at
-          1.week.from_now
-        end
-      end
+      current_user
+      current_user_profile
+      current_user_contact_address
+      current_user_delivery_addresses
     end
 
     context 'when params vaild' do
@@ -177,20 +159,20 @@ RSpec.describe '[ DeliveryAddresses API ]' do
   end
 
   describe 'PUT /api/v1/internal/me/delivery_addresses/:id' do
-    let(:user_1) {
+    let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password_digest: nil)
     }
-    let(:user_1_profile) {
-      create(:user_profile, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_profile) {
+      create(:user_profile, tenant_id: current_tenant.id, user_id: current_user.id)
     }
-    let(:user_1_contact_address) {
-      create(:contact_address, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_contact_address) {
+      create(:contact_address, tenant_id: current_tenant.id, user_id: current_user.id)
     }
 
-    let(:user_1_delivery_street) {
+    let(:current_user_delivery_street) {
       create(:delivery_address,
         tenant_id: current_tenant.id,
-        user_id: user_1.id,
+        user_id: current_user.id,
         is_default: 'true',
         zip_code: '1550031',
         prefecture_code: '13',
@@ -199,24 +181,18 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         building: '北沢アモーレ 101号室',
         contact_tel: '080-1234-5678',)
     }
-    let(:user_1_delivery_addresses) {
-      create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_delivery_addresses) {
+      create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: current_user.id)
     }
-    let(:id) { user_1_delivery_street.id }
+    let(:id) { current_user_delivery_street.id }
+
+    include_context 'current user session is present'
 
     before do
-      user_1
-      user_1_profile
-      user_1_contact_address
-      user_1_delivery_addresses
-      allow(session_mock).to receive(:[]) do |key|
-        case key
-        when :current_user_id
-          user_1.id
-        when :current_user_id_expired_at
-          1.week.from_now
-        end
-      end
+      current_user
+      current_user_profile
+      current_user_contact_address
+      current_user_delivery_addresses
     end
 
     context 'when params vaild' do
@@ -267,20 +243,20 @@ RSpec.describe '[ DeliveryAddresses API ]' do
 
 
   describe 'DELETE /api/v1/internal/me/delivery_addresses/:id' do
-    let(:user_1) {
+    let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password_digest: nil)
     }
-    let(:user_1_profile) {
-      create(:user_profile, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_profile) {
+      create(:user_profile, tenant_id: current_tenant.id, user_id: current_user.id)
     }
-    let(:user_1_contact_address) {
-      create(:contact_address, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_contact_address) {
+      create(:contact_address, tenant_id: current_tenant.id, user_id: current_user.id)
     }
 
-    let(:user_1_delivery_street) {
+    let(:current_user_delivery_street) {
       create(:delivery_address,
         tenant_id: current_tenant.id,
-        user_id: user_1.id,
+        user_id: current_user.id,
         is_default: 'true',
         zip_code: '1550031',
         prefecture_code: '13',
@@ -289,31 +265,25 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         building: '北沢アモーレ 101号室',
         contact_tel: '080-1234-5678',)
     }
-    let(:user_1_delivery_addresses) {
-      create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: user_1.id)
+    let(:current_user_delivery_addresses) {
+      create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: current_user.id)
     }
-    let(:id) { user_1_delivery_street.id }
+    let(:id) { current_user_delivery_street.id }
+
+    include_context 'current user session is present'
 
     before do
-      user_1
-      user_1_profile
-      user_1_contact_address
-      user_1_delivery_addresses
-      allow(session_mock).to receive(:[]) do |key|
-        case key
-        when :current_user_id
-          user_1.id
-        when :current_user_id_expired_at
-          1.week.from_now
-        end
-      end
+      current_user
+      current_user_profile
+      current_user_contact_address
+      current_user_delivery_addresses
     end
 
     context 'when params vaild' do
       it 'returns 204' do
-        expect(DeliveryAddress.find_by(id: user_1_delivery_street.id)).not_to be_nil
+        expect(DeliveryAddress.find_by(id: current_user_delivery_street.id)).not_to be_nil
         is_expected.to eq 204
-        expect(DeliveryAddress.find_by(id: user_1_delivery_street.id)).to be_nil
+        expect(DeliveryAddress.find_by(id: current_user_delivery_street.id)).to be_nil
       end
     end
   end

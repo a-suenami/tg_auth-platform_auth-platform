@@ -22,6 +22,8 @@ RSpec.describe '[ email change API ]' do
       instance_double(Blastengine::API)
     }
 
+    include_context 'current user session is present'
+
     before do
       current_user
       email_template
@@ -29,14 +31,6 @@ RSpec.describe '[ email change API ]' do
       allow(blastengine_mock).to receive(:send_email).and_return({
         delivery_id: 1,
       })
-      allow(session_mock).to receive(:[]) do |key|
-        case key
-        when :current_user_id
-          current_user.id
-        when :current_user_id_expired_at
-          1.week.from_now
-        end
-      end
     end
 
     context 'when email vaild' do
@@ -123,6 +117,8 @@ email: 'change-email@example.com',)
 email: 'change-email@example.com',)
     }
 
+    include_context 'current user session is present'
+
     before do
       current_user
       account_lock
@@ -130,14 +126,6 @@ email: 'change-email@example.com',)
       other_email_verifier
       other_type_email_verifier
       other_user_email_verifier
-      allow(session_mock).to receive(:[]) do |key|
-        case key
-        when :current_user_id
-          current_user.id
-        when :current_user_id_expired_at
-          1.week.from_now
-        end
-      end
     end
 
     context 'when code vaild' do

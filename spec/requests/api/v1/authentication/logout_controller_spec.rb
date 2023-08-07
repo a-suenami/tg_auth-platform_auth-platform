@@ -2,12 +2,12 @@
 
 RSpec.describe '[ Logout API ]' do
   describe 'POST /api/v1/authentication/logout' do
-    let(:user_1) {
+    let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
     }
 
     before do
-      user_1
+      current_user
     end
 
     context 'when no session' do
@@ -17,16 +17,7 @@ RSpec.describe '[ Logout API ]' do
     end
 
     context 'when present session' do
-      before do
-        allow(session_mock).to receive(:[]) do |key|
-          case key
-          when :current_user_id
-            user_1.id
-          when :current_user_id_expired_at
-            1.week.from_now
-          end
-        end
-      end
+      include_context 'current user session is present'
 
       it 'returns 204' do
         is_expected.to eq 204

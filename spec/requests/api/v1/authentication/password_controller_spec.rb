@@ -2,12 +2,12 @@
 
 RSpec.describe '[ Password API ]' do
   describe 'POST /api/v1/authentication/passwords' do
-    let(:user_1) {
+    let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password_digest: nil)
     }
 
     before do
-      user_1
+      current_user
     end
 
     context 'when no session' do
@@ -25,7 +25,7 @@ RSpec.describe '[ Password API ]' do
     end
 
     context 'when password already seted' do
-      let(:user_1) {
+      let(:current_user) {
         create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'This_is_past_password1234')
       }
       let(:params) {
@@ -36,13 +36,17 @@ RSpec.describe '[ Password API ]' do
         }
       }
 
+      let(:session_mock) {
+        instance_double(ExpirableCookie)
+      }
+
       before do
         allow(session_mock).to receive(:[]) do |key|
           case key
           when :current_user_id, :current_user_id_expired_at
             nil
           when :registering_user_id
-            user_1.id
+            current_user.id
           when :registering_user_id_expired_at
             1.week.from_now
           end
@@ -55,13 +59,17 @@ RSpec.describe '[ Password API ]' do
     end
 
     context 'when present session' do
+      let(:session_mock) {
+        instance_double(ExpirableCookie)
+      }
+
       before do
         allow(session_mock).to receive(:[]) do |key|
           case key
           when :current_user_id, :current_user_id_expired_at
             nil
           when :registering_user_id
-            user_1.id
+            current_user.id
           when :registering_user_id_expired_at
             1.week.from_now
           end
@@ -171,12 +179,12 @@ RSpec.describe '[ Password API ]' do
   end
 
   describe 'PUT /api/v1/authentication/passwords' do
-    let(:user_1) {
+    let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'This_is_past_password1234')
     }
 
     before do
-      user_1
+      current_user
     end
 
     context 'when no session' do
@@ -194,16 +202,7 @@ RSpec.describe '[ Password API ]' do
     end
 
     context 'when present session' do
-      before do
-        allow(session_mock).to receive(:[]) do |key|
-          case key
-          when :current_user_id
-            user_1.id
-          when :current_user_id_expired_at
-            1.week.from_now
-          end
-        end
-      end
+      include_context 'current user session is present'
 
       context 'when password vaild' do
         let(:params) {

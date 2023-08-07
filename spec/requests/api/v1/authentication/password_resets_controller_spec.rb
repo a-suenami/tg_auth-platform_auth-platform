@@ -2,7 +2,7 @@
 
 RSpec.describe '[ Password Resets API ]' do
   describe 'POST /api/v1/authentication/password_resets/request' do
-    let(:user_1) {
+    let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
     }
 
@@ -26,7 +26,7 @@ RSpec.describe '[ Password Resets API ]' do
     }
 
     before do
-      user_1
+      current_user
       email_template
       login_spa_application
       allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
@@ -74,11 +74,11 @@ RSpec.describe '[ Password Resets API ]' do
   end
 
   describe 'POST /api/v1/authentication/password_resets' do
-    let(:user_1) {
+    let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true)
     }
     let(:users_password_resets) {
-      create(:users__password_resets, tenant_id: current_tenant.id, user_id: user_1.id, code: 'this_is_code', expired_at: 1.hour.from_now)
+      create(:users__password_resets, tenant_id: current_tenant.id, user_id: current_user.id, code: 'this_is_code', expired_at: 1.hour.from_now)
     }
     let(:account_lock) {
       create(:account_lock,
@@ -92,7 +92,7 @@ RSpec.describe '[ Password Resets API ]' do
     }
 
     before do
-      user_1
+      current_user
       users_password_resets
       account_lock
     end
@@ -154,8 +154,8 @@ RSpec.describe '[ Password Resets API ]' do
       it 'returns 204' do
         is_expected.to eq 204
         expect(Users::PasswordReset.find(users_password_resets.id).used_at).to be_between(1.minute.ago, Time.zone.now)
-        expect(user_1.reload.authenticate('Abc123456$%')).to be_truthy
-        expect(user_1.account_lock).not_to be_locked
+        expect(current_user.reload.authenticate('Abc123456$%')).to be_truthy
+        expect(current_user.account_lock).not_to be_locked
       end
     end
 

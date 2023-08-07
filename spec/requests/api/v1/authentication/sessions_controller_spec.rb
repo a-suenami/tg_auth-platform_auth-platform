@@ -2,12 +2,12 @@
 
 RSpec.describe '[ Sessions API ]' do
   describe 'POST /api/v1/authentication/sessions' do
-    let(:user_1) {
+    let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
     }
 
     before do
-      user_1
+      current_user
     end
 
     context 'when email invaild' do
@@ -61,7 +61,7 @@ RSpec.describe '[ Sessions API ]' do
 
       it 'returns 200' do
         is_expected.to eq 200
-        expect(body_hash['id']).to eq(user_1.id)
+        expect(body_hash['id']).to eq(current_user.id)
       end
     end
 

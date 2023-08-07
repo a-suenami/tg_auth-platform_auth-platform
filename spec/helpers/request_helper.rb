@@ -34,4 +34,24 @@ module RequestHelpers
       end
     end
   end
+
+  shared_context 'current user session is present' do
+    let(:session_mock) {
+      instance_double(ExpirableCookie)
+    }
+
+    before do
+      allow(ExpirableCookie).to receive(:new).and_return(session_mock)
+      allow(session_mock).to receive(:[]=).and_return(nil)
+      allow(session_mock).to receive(:session_clear).and_return(nil)
+      allow(session_mock).to receive(:[]) do |key|
+        case key
+        when :current_user_id
+          current_user.id
+        when :current_user_id_expired_at
+          1.week.from_now
+        end
+      end
+    end
+  end
 end
