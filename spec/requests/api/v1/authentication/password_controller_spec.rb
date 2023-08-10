@@ -41,6 +41,9 @@ RSpec.describe '[ Password API ]' do
       }
 
       before do
+        allow(ExpirableCookie).to receive(:new).and_return(session_mock)
+        allow(session_mock).to receive(:[]=).and_return(nil)
+        allow(session_mock).to receive(:session_clear).and_return(nil)
         allow(session_mock).to receive(:[]) do |key|
           case key
           when :current_user_id, :current_user_id_expired_at
@@ -64,6 +67,9 @@ RSpec.describe '[ Password API ]' do
       }
 
       before do
+        allow(ExpirableCookie).to receive(:new).and_return(session_mock)
+        allow(session_mock).to receive(:[]=).and_return(nil)
+        allow(session_mock).to receive(:session_clear).and_return(nil)
         allow(session_mock).to receive(:[]) do |key|
           case key
           when :current_user_id, :current_user_id_expired_at
