@@ -59,9 +59,23 @@ RSpec.describe '[ Sessions API ]' do
         }
       }
 
-      it 'returns 200' do
-        is_expected.to eq 200
-        expect(body_hash['id']).to eq(current_user.id)
+      context 'when set_parent_domain_cookie is true' do
+        it 'returns 200' do
+          is_expected.to eq 200
+          expect(body_hash['id']).to eq(current_user.id)
+          expect(response.get_header('Set-Cookie').match(/domain=([^;]+)/)[1]).to eq 'localhost.com'
+        end
+      end
+
+      context 'when set_parent_domain_cookie is false' do
+        let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com', set_parent_domain_cookie: false) }
+
+        it 'returns 200' do
+          is_expected.to eq 200
+          expect(body_hash['id']).to eq(current_user.id)
+          # ドメインが指定されない状態が最も安全なので、ドメイン指定がないことを確認する
+          expect(response.get_header('Set-Cookie').match(/domain=([^;]+)/)).to be_nil
+        end
       end
     end
 
