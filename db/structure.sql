@@ -277,6 +277,7 @@ CREATE TABLE public.users (
     tel character varying,
     tel_verified boolean DEFAULT false,
     email_verified boolean DEFAULT false,
+    deleted boolean DEFAULT false,
     password_reset_code character varying,
     failed_attempts integer DEFAULT 0 NOT NULL,
     unlock_token character varying,
@@ -708,7 +709,7 @@ CREATE INDEX index_users_on_tenant_id ON public.users USING btree (tenant_id);
 -- Name: index_users_on_tenant_id_email; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_tenant_id_email ON public.users USING btree (tenant_id, email);
+CREATE UNIQUE INDEX index_users_on_tenant_id_email ON public.users USING btree (tenant_id, email, deleted) WHERE (deleted = false);
 
 
 --

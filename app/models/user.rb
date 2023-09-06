@@ -42,8 +42,10 @@ class User < ApplicationRecord
   has_one :account_lock, dependent: :delete
 
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :email, uniqueness: { scope: :tenant_id }
+  validates :email, uniqueness: { scope: :tenant_id, conditions: -> { where(deleted: false) } }
   validates :tel, phone: { allow_blank: true }
+
+  scope :active, -> { where(deleted: false) }
 
   sig { params(password: String).returns(T::Boolean) }
   def authenticate!(password)
