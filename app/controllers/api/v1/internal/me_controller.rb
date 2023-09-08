@@ -9,7 +9,8 @@ module API::V1::Internal
     def destroy
       # 論理削除
       Users::DestroyService.new.execute(user: current_user)
-      # TODO: Serviceでaws snsにイベント発行
+      # aws sqsにイベント発行
+      ChangeNotifications::SendService.new.execute(user: current_user, action_code: 'deleted')
     end
   end
 end

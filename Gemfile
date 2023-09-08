@@ -109,7 +109,7 @@ gem 'enumerize', '~> 2.5.0'
 # # AWS client gems
 # gem 'aws-record', '~> 2.10.1'
 # gem 'aws-sdk-dynamodb', '~> 1.81.0'
-# gem 'aws-sdk-rails', '~> 3.7.1'
+gem 'aws-sdk-rails', '~> 3.7.1'
 # gem 'aws-sdk-s3', '~> 1.119.1'
 # gem 'aws-sdk-sqs', '~> 1.53.0'
 # Encrypt yaml
