@@ -289,6 +289,7 @@ RSpec.describe '[ Admin Users API ]' do
             'tel' => '09012345678',
             'uid' => user.id,
             'email' => user.email,
+            'deleted' => false,
             'delivery_addresses' => [
               {
                 'is_default' => delivery_address.is_default,

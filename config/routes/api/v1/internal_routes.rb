@@ -14,7 +14,7 @@ Rails.application.routes.draw do
         end
 
         resource :email_change, only: [:create] do
-          post :requuest, to: 'email_changes#email_change_request'
+          post :request, to: 'email_changes#email_change_request'
         end
       end
     end

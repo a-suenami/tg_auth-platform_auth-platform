@@ -1,6 +1,6 @@
 # typed: false
 
-module ChangeNotifications
+module PublishEvents
   class BaseService < ::BaseService
     DEFAULT_PARAMS = {}.freeze
 
