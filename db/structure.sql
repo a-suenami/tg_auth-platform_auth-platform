@@ -42,6 +42,24 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: account_locks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.account_locks (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid,
+    email character varying NOT NULL,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    unlock_token character varying,
+    lock_expired_at timestamp(6) without time zone,
+    last_failed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: admins; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -260,6 +278,9 @@ CREATE TABLE public.users (
     tel_verified boolean DEFAULT false,
     email_verified boolean DEFAULT false,
     password_reset_code character varying,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    unlock_token character varying,
+    lock_expired_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -314,6 +335,14 @@ CREATE TABLE public.users__password_resets (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: account_locks account_locks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_locks
+    ADD CONSTRAINT account_locks_pkey PRIMARY KEY (id);
 
 
 --
@@ -442,6 +471,20 @@ ALTER TABLE ONLY public.users__password_resets
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_account_locks_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_account_locks_on_tenant_id ON public.account_locks USING btree (tenant_id);
+
+
+--
+-- Name: index_account_locks_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_account_locks_on_user_id ON public.account_locks USING btree (user_id);
 
 
 --
@@ -666,6 +709,14 @@ CREATE INDEX index_users_on_tenant_id ON public.users USING btree (tenant_id);
 --
 
 CREATE UNIQUE INDEX index_users_on_tenant_id_email ON public.users USING btree (tenant_id, email);
+
+
+--
+-- Name: account_locks fk_account_locks_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_locks
+    ADD CONSTRAINT fk_account_locks_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --

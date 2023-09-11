@@ -39,6 +39,7 @@ class User < ApplicationRecord
   has_many :oauth_applications,
     through: :linked_applications,
     inverse_of: :users
+  has_one :account_lock, dependent: :delete
 
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :email, uniqueness: { scope: :tenant_id }
@@ -46,8 +47,7 @@ class User < ApplicationRecord
 
   sig { params(password: String).returns(T::Boolean) }
   def authenticate!(password)
-    # authenticate password
-    BCrypt::Password.new(self.password_digest) == password
+    self.password_digest.present? && BCrypt::Password.new(self.password_digest).is_password?(password)
   end
 
   sig { returns(T::Boolean) }

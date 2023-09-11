@@ -207,5 +207,8 @@ module GeneratedUrlHelpersModule
   def turbo_resume_historical_location_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def unlock_account_locks_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def verify_email_api_v1_authentication_registrations_url(*args); end
 end

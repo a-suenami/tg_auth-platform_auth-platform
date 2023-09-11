@@ -95,6 +95,16 @@ RSpec.describe '[ email change API ]' do
     let(:other_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-other-user1@example.com', email_verified: false)
     }
+    let(:account_lock) {
+      create(:account_lock,
+        tenant_id: current_tenant.id,
+        user_id: current_user.id,
+        email: 'test-user1@example.com',
+        failed_attempts: 0,
+        unlock_token: nil,
+        lock_expired_at: nil,
+        last_failed_at: Time.zone.now,)
+    }
 
     let(:email_verifier) {
       create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 5, email_verifier_type: :email_change,
@@ -115,6 +125,7 @@ email: 'change-email@example.com',)
 
     before do
       current_user
+      account_lock
       email_verifier
       other_email_verifier
       other_type_email_verifier
@@ -137,8 +148,12 @@ email: 'change-email@example.com',)
       }
 
       it 'returns 200' do
+        # AccountLockの存在確認
+        expect(AccountLock.find_by(id: account_lock.id)).to eq account_lock
+
         is_expected.to eq 200
         expect(User.find(current_user.id).email).to eq 'change-email@example.com'
+        expect(AccountLock.find_by(id: account_lock.id)).to be_nil
       end
     end
 
