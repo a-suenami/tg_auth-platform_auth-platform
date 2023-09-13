@@ -8,35 +8,14 @@ Doorkeeper::OpenidConnect.configure do
   # TODO: OpenID Connect用のPrivateキーは環境変数に含めるようにする
   # とりあえず開発用キーをセット　使いまわさないこと
   signing_key <<~KEY
-    -----BEGIN PRIVATE KEY-----
-    MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDLgIpjNYE1fbqf
-    1KEk1fSNPjNkTFIOxFWVie30bECMHBDvdl2Bs/SR8ubWgqNaAAp83Xwr+IVbDT2w
-    p2Tybs9y2j2zyjT+IsxM/IAphl4SiGWKjFfJm1YSpnpfYeDDxKwzkTpUBQFSkC16
-    ZsCftsvg2osIeDSL4CwJNX0q2B7MHuiEHTaNv7T6vZXkZUbhzzZ5e7OMagBtiABd
-    LNiFOkdpmQBNbk2vx/HxDhISeJeU8o2HXikc1E3Gwc8shra+w3ecyCUSKz0TSeir
-    UKFBlbAGi1quVQGekOnui3fRNZQl1mzvEJcdbia2HK0sZqd8Q1Bon1JxQ+Xnbdha
-    qSJ6NC5VAgMBAAECggEAJyWH+YOuYlrYTqy5fvuFerIvcqjX1C1ihUyuMKmuVQWF
-    IHt1i2DRuE2wqC0jPUnqupBktZSuGpDWgCgDXDuCvoZK/k30mbqZ8GlWQiat7AS+
-    +8L5lDfEe/v4aGbMtPwdYCIcxVLdKUPA693eShsA5zVDL5LoEMxDzFW0yUwfyIYF
-    TGbeOoSblPzTbi66LhLF7r76QHmk6ErYxwBon0Z30ar0i+H5oCCgLiPmncSeZXOV
-    M/XBmqJyTt7o7YaqXpFTKV+iGDwQFysvRQ6D9ql2gblc39pCSZm99JMtnCg2yVIE
-    GyvVwoBzO1WiWp/B5jOvDfCUvK637TsBeRTbH4WL4QKBgQD9QCBjfIDq/cN+NH2q
-    M7hmJYq923jk4CZR258P+ZCxm3wLWYfTtZ++b0XOVVpSuzIniD4NEPCnJofi3KTV
-    a/GiCpK0NXOyBCfZi9KowNIZ1apkQlVlTP4kwo0auZhn8eCx0sp3ZFHpCjPmwiOc
-    Ik6xggNbyA/O0K8bNZ4n2/iuvQKBgQDNtiVC94VKQA9tA3YiPOIUGXDjggli1Agh
-    R5iib/FTMrbp+GsBLHNJhguA2MU+Sk8jOAYv+qspBpXVPEEorLio/CFEb1g9XOuh
-    LjK3Mdh1QCGgKCcfpD06spSLXPvCjzMWZzmoRnpIw1hnihRUWlmOuXSoRhRrpRKM
-    aHkYYRjjeQKBgFeQSKKddeXKgEGu3JRw9Z079dDXheF9L0K2cTUQ0VrXq/gwqKom
-    7mjmCHjjQivA1gKdNPdHmC3zQKDMMaIphI7GoRr2MF6o2S57DgeTRBHyssufs+8m
-    w+jp6+gFrBCkrVBO1fqaEUhGYtOy5KUjp5nwnkCp1+1mcmUyENEvWbjxAoGBAJr4
-    yYF1rziMohJiNTD95ON3dxAt+pw1WBqaMWbOJmOjJSGGQDaWIhQVo7zhkVan7I5/
-    ukmS8jbp+x61UfEujb7gkr9XkoZH5kt63kIcjxFlyu840KCJvobl2fpThmbAMqCC
-    C3G2BpGieIsn/sC9gBKBrFzIzsF5jkuwuOmg3HshAoGABuOJYVHD8SFQdVaQ4Boa
-    F8k0KT1nEvV2NlyDrZ5P/Xo9AsBEf27rCtW6cCGGj/jkuRj8fXNni7w73IMLlOjH
-    qIt0tZn+v1A39hqFyGwX3EiICNIdXR2iiwMUrGBehY+xyxBpaoARir6FqiC7WIRT
-    DXZvXueNX6kUAiQxjfFxduI=
-    -----END PRIVATE KEY-----
+    -----BEGIN EC PRIVATE KEY-----
+    MHcCAQEEIOjqMt5UrRTm6Q829J3pYqGpTv1R0mPT6KplnHvVJ54OoAoGCCqGSM49
+    AwEHoUQDQgAEGBmEHEJVYlRvYhP90Lh4qEWcuFvfIbMwaAToP7Y0QflzviA5QyRx
+    VGLbtybKaepTD83xYffKouOzH19hvCA4NQ==
+    -----END EC PRIVATE KEY-----
   KEY
+
+  signing_algorithm :es256
 
   subject_types_supported [:public]
 
