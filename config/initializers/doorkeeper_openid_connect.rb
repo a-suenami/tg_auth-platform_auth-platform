@@ -15,7 +15,9 @@ Doorkeeper::OpenidConnect.configure do
     -----END EC PRIVATE KEY-----
   KEY
 
+  # rubocop:disable Naming/VariableNumber
   signing_algorithm :es256
+  # rubocop:enable Naming/VariableNumber
 
   subject_types_supported [:public]
 
@@ -66,9 +68,7 @@ Doorkeeper::OpenidConnect.configure do
 
   # Example claims:
   claims do
-    normal_claim :email, response: :id_token, scope: :email do |resource_owner|
-      resource_owner.email
-    end
+    normal_claim :email, response: :id_token, scope: :email, &:email
     normal_claim :name, response: :id_token, scope: :name do |resource_owner|
       "#{resource_owner&.user_profile&.last_name} #{resource_owner&.user_profile&.first_name}"
     end
@@ -84,8 +84,6 @@ Doorkeeper::OpenidConnect.configure do
     normal_claim :gender, response: :id_token, scope: :profile do |resource_owner|
       resource_owner&.user_profile&.gender
     end
-    normal_claim :tenant_id, response: :id_token do |resource_owner|
-      resource_owner.tenant_id
-    end
+    normal_claim :tenant_id, response: :id_token, &:tenant_id
   end
 end
