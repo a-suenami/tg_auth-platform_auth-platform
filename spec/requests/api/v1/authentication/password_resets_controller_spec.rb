@@ -83,7 +83,7 @@ RSpec.describe '[ Password Resets API ]' do
     let(:account_lock) {
       create(:account_lock,
         tenant_id: current_tenant.id,
-        user_id: user_1.id,
+        user_id: current_user.id,
         email: 'test-user1@example.com',
         failed_attempts: 10,
         unlock_token: SecureRandom.hex(32),
@@ -108,7 +108,7 @@ RSpec.describe '[ Password Resets API ]' do
 
       it 'returns 400' do
         is_expected.to eq 400
-        expect(user_1.account_lock).to be_locked
+        expect(current_user.account_lock).to be_locked
       end
     end
 
@@ -123,7 +123,7 @@ RSpec.describe '[ Password Resets API ]' do
 
       it 'returns 400' do
         is_expected.to eq 400
-        expect(user_1.account_lock).to be_locked
+        expect(current_user.account_lock).to be_locked
       end
     end
 
@@ -138,7 +138,7 @@ RSpec.describe '[ Password Resets API ]' do
 
       it 'returns 400' do
         is_expected.to eq 400
-        expect(user_1.account_lock).to be_locked
+        expect(current_user.account_lock).to be_locked
       end
     end
 
@@ -170,7 +170,7 @@ RSpec.describe '[ Password Resets API ]' do
 
       it 'returns 400' do
         is_expected.to eq 400
-        expect(user_1.account_lock).to be_locked
+        expect(current_user.account_lock).to be_locked
       end
     end
   end

@@ -83,7 +83,7 @@ RSpec.describe '[ Sessions API ]' do
       let(:account_lock) {
         create(:account_lock,
           tenant_id: current_tenant.id,
-          user_id: user_1.id,
+          user_id: current_user.id,
           email: 'test-user1@example.com',
           failed_attempts: 10,
           unlock_token: SecureRandom.hex(32),
@@ -112,7 +112,7 @@ RSpec.describe '[ Sessions API ]' do
       let(:account_lock) {
         create(:account_lock,
           tenant_id: current_tenant.id,
-          user_id: user_1.id,
+          user_id: current_user.id,
           email: 'test-user1@example.com',
           failed_attempts: 10,
           unlock_token: SecureRandom.hex(32),
@@ -133,7 +133,7 @@ RSpec.describe '[ Sessions API ]' do
 
       it 'returns 200' do
         is_expected.to eq 200
-        expect(body_hash['id']).to eq(user_1.id)
+        expect(body_hash['id']).to eq(current_user.id)
         expect(AccountLock.find_by(email: 'test-user1@example.com').failed_attempts).to be 0
       end
     end
@@ -142,7 +142,7 @@ RSpec.describe '[ Sessions API ]' do
       let(:account_lock) {
         create(:account_lock,
           tenant_id: current_tenant.id,
-          user_id: user_1.id,
+          user_id: current_user.id,
           email: 'test-user1@example.com',
           failed_attempts: 5,
           unlock_token: nil,
