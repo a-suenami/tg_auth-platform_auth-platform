@@ -112,6 +112,7 @@ gem 'enumerize', '~> 2.5.0'
 gem 'aws-sdk-rails', '~> 3.7.1'
 # gem 'aws-sdk-s3', '~> 1.119.1'
 # gem 'aws-sdk-sqs', '~> 1.53.0'
+gem 'aws-sdk-eventbridge', '~> 1.3'
 # Encrypt yaml
 gem 'yaml_vault', '~> 1.3.2'
 # # For counter caches
