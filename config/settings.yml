@@ -21,5 +21,3 @@ aws:
   secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
   region: <%= ENV['AWS_REGION'] %>
   event_bus_name: <%= ENV['AWS_EVENT_BUS_NAME'] %>
-aws_sqs:
-  queue_url: <%= ENV['AWS_SQS_QUEUE_URL'] %>
