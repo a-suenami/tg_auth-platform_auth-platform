@@ -30,12 +30,6 @@ class SettingsConfigOptions < ::Config::Options
   def aws=(value); end
 
   sig { returns(T.untyped) }
-  def aws_sqs; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def aws_sqs=(value); end
-
-  sig { returns(T.untyped) }
   def blastengine; end
 
   sig { params(value: T.untyped).returns(T.untyped) }
