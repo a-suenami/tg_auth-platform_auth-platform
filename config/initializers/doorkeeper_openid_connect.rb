@@ -7,13 +7,7 @@ Doorkeeper::OpenidConnect.configure do
 
   # TODO: OpenID Connect用のPrivateキーは環境変数に含めるようにする
   # とりあえず開発用キーをセット　使いまわさないこと
-  signing_key <<~KEY
-    -----BEGIN EC PRIVATE KEY-----
-    MHcCAQEEIOjqMt5UrRTm6Q829J3pYqGpTv1R0mPT6KplnHvVJ54OoAoGCCqGSM49
-    AwEHoUQDQgAEGBmEHEJVYlRvYhP90Lh4qEWcuFvfIbMwaAToP7Y0QflzviA5QyRx
-    VGLbtybKaepTD83xYffKouOzH19hvCA4NQ==
-    -----END EC PRIVATE KEY-----
-  KEY
+  signing_key Settings.doorkeeper.openid_connect.signing_key
 
   # rubocop:disable Naming/VariableNumber
   signing_algorithm :es256
@@ -68,7 +62,9 @@ Doorkeeper::OpenidConnect.configure do
 
   # Example claims:
   claims do
-    normal_claim :email, response: :id_token, scope: :email, &:email
+    normal_claim :email, response: :id_token, scope: :email do |resource_owner|
+      resource_owner&.email
+    end
     normal_claim :name, response: :id_token, scope: :name do |resource_owner|
       "#{resource_owner&.user_profile&.last_name} #{resource_owner&.user_profile&.first_name}"
     end
@@ -84,6 +80,8 @@ Doorkeeper::OpenidConnect.configure do
     normal_claim :gender, response: :id_token, scope: :profile do |resource_owner|
       resource_owner&.user_profile&.gender
     end
-    normal_claim :tenant_id, response: :id_token, &:tenant_id
+    normal_claim :tenant_id, response: :id_token do |resource_owner|
+      resource_owner&.tenant_id
+    end
   end
 end
