@@ -11,8 +11,6 @@ module API::V1::Internal
       Users::DestroyService.new.execute(user: current_user)
       # ログアウト処理
       cookie_session.session_clear
-      # aws sqsにイベント発行
-      PublishEvents::PublishService.new.execute(user: current_user, action_code: 'deleted')
     end
   end
 end

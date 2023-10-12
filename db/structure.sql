@@ -203,7 +203,8 @@ CREATE TABLE public.oauth_applications (
     confidential boolean DEFAULT true NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    enable_client_credential_flow boolean DEFAULT false
+    enable_client_credential_flow boolean DEFAULT false,
+    enable_push_event boolean DEFAULT false
 );
 
 
