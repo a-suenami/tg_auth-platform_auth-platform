@@ -62,26 +62,29 @@ Doorkeeper::OpenidConnect.configure do
 
   # Example claims:
   claims do
-    normal_claim :email, response: :id_token, scope: :email do |resource_owner|
-      resource_owner&.email
-    end
-    normal_claim :name, response: :id_token, scope: :name do |resource_owner|
-      "#{resource_owner&.user_profile&.last_name} #{resource_owner&.user_profile&.first_name}"
-    end
-    normal_claim :given_name, response: :id_token, scope: :name do |resource_owner|
-      resource_owner&.user_profile&.first_name
-    end
-    normal_claim :family_name, response: :id_token, scope: :name do |resource_owner|
-      resource_owner&.user_profile&.last_name
-    end
-    normal_claim :birthdate, response: :id_token, scope: :profile do |resource_owner|
-      resource_owner&.user_profile&.birth_date
-    end
-    normal_claim :gender, response: :id_token, scope: :profile do |resource_owner|
-      resource_owner&.user_profile&.gender
-    end
     normal_claim :tenant_id, response: :id_token do |resource_owner|
       resource_owner&.tenant_id
+    end
+    normal_claim :triple_user, response: :id_token, scope: :triple_user do |resource_owner|
+      {
+        uid: resource_owner.id,
+        first_name: resource_owner.user_profile&.first_name,
+        last_name: resource_owner.user_profile&.last_name,
+        first_name_pron: resource_owner.user_profile&.first_name_kana,
+        last_name_pron: resource_owner.user_profile&.last_name_kana,
+        email: resource_owner.email,
+        phone_number: resource_owner.tel,
+        birth_date: resource_owner.user_profile&.birth_date,
+        gender: resource_owner.user_profile&.gender,
+        zip_code: resource_owner.contact_address&.zip_code,
+        prefecture: resource_owner.contact_address&.prefecture&.name,
+        city: resource_owner.contact_address&.city,
+        address_1: resource_owner.contact_address&.street,
+        address_2: resource_owner.contact_address&.building,
+        id_provider: 'auth-platform',
+        member_rank: nil,
+        extra: nil,
+      }
     end
   end
 end
