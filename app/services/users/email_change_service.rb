@@ -29,6 +29,9 @@ module Users
         raise Exceptions::Services::Users::ExpiredEmailVerificationCode
       end
 
+      # aws event bridgeにイベント発行
+      PublishEvents::PublishService.new.execute(user:, action_code: :update)
+
       user
     end
   end

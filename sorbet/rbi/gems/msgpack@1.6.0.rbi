@@ -35,6 +35,8 @@ class Float < ::Numeric
   def to_msgpack_with_packer(packer); end
 end
 
+# Really ugly, horrible, extremely fun hack.
+#
 # source://msgpack//lib/msgpack/core_ext.rb#77
 class Hash
   include ::Enumerable
@@ -281,6 +283,11 @@ class NilClass
   def to_msgpack_with_packer(packer); end
 end
 
+# String inflections define new methods on the String class to transform names for different purposes.
+# For instance, you can figure out the name of a table from the name of a class.
+#
+#   'ScaleScore'.tableize # => "scale_scores"
+#
 # source://msgpack//lib/msgpack/core_ext.rb#57
 class String
   include ::Comparable

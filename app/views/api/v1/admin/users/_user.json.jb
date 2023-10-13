@@ -5,6 +5,7 @@ contact_address_json = {}
 
 json[:uid] = user.id if @doorkeeper_token.acceptable?(:uid)
 json[:email] = user.email if @doorkeeper_token.acceptable?(:email)
+json[:deleted] = user.deleted
 if @doorkeeper_token.acceptable?(:name)
   profile_json[:first_name] = user.user_profile&.first_name
   profile_json[:last_name] = user.user_profile&.last_name

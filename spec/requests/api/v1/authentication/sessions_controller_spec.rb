@@ -152,5 +152,22 @@ RSpec.describe '[ Sessions API ]' do
         expect(AccountLock.find_by(email: 'test-user1@example.com').failed_attempts).to be 1
       end
     end
+
+    context 'when user has deleted' do
+      let(:user_1) {
+        create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', deleted: true)
+      }
+
+      let(:params) {
+        {
+          email: 'test-user1@example.com',
+          password: 'Password1234!',
+        }
+      }
+
+      it 'returns 401' do
+        is_expected.to eq 401
+      end
+    end
   end
 end

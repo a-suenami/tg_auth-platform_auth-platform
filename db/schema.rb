@@ -146,6 +146,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "enable_client_credential_flow", default: false
+    t.boolean "enable_push_event", default: false
     t.index ["tenant_id"], name: "index_oauth_applications_on_tenant_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
@@ -194,13 +195,14 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "tel"
     t.boolean "tel_verified", default: false
     t.boolean "email_verified", default: false
+    t.boolean "deleted", default: false
     t.string "password_reset_code"
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "lock_expired_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tenant_id", "email"], name: "index_users_on_tenant_id_email", unique: true
+    t.index ["tenant_id", "email", "deleted"], name: "index_users_on_tenant_id_email", unique: true, where: "(deleted = false)"
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
   end
 

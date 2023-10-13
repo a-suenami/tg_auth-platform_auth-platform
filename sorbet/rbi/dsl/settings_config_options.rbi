@@ -24,6 +24,12 @@ class SettingsConfigOptions < ::Config::Options
   def admin=(value); end
 
   sig { returns(T.untyped) }
+  def aws; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def aws=(value); end
+
+  sig { returns(T.untyped) }
   def blastengine; end
 
   sig { params(value: T.untyped).returns(T.untyped) }

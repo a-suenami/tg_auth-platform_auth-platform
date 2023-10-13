@@ -16,3 +16,8 @@ blastengine:
 account_lock:
   max_attempts: <%= ENV['ACCOUNT_LOCK_MAX_ATTEMPTS'] || 10 %>
   lockout_period_min: <%= ENV['LOCKOUT_PERIOD_MIN'] || 30 %>
+aws:
+  access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
+  secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
+  region: <%= ENV['AWS_REGION'] %>
+  event_bus_name: <%= ENV['AWS_EVENT_BUS_NAME'] %>
