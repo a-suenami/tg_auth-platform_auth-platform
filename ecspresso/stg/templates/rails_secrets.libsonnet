@@ -30,5 +30,17 @@
   {
     "valueFrom": "/id-platform/stg/ecs/main/blastengine_api_key",
     "name": "BLASTENGINE_API_KEY"
+  },
+  {
+    "valueFrom": "/id-platform/stg/ecs/main/aws_access_key_id",
+    "name": "AWS_ACCESS_KEY_ID"
+  },
+  {
+    "valueFrom": "/id-platform/stg/ecs/main/aws_secret_access_key",
+    "name": "AWS_SECRET_ACCESS_KEY"
+  },
+  {
+    "valueFrom": "/id-platform/stg/ecs/main/doorkeeper_openid_connect_signing_key",
+    "name": "DOORKEEPER_OPENID_CONNECT_SIGNING_KEY"
   }
 ]
