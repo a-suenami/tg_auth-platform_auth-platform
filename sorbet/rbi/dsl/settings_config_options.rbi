@@ -36,6 +36,12 @@ class SettingsConfigOptions < ::Config::Options
   def blastengine=(value); end
 
   sig { returns(T.untyped) }
+  def doorkeeper; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def doorkeeper=(value); end
+
+  sig { returns(T.untyped) }
   def redis; end
 
   sig { params(value: T.untyped).returns(T.untyped) }
