@@ -21,3 +21,6 @@ aws:
   secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
   region: <%= ENV['AWS_REGION'] %>
   event_bus_name: <%= ENV['AWS_EVENT_BUS_NAME'] %>
+doorkeeper:
+  openid_connect:
+    signing_key: <%= ENV['DOORKEEPER_OPENID_CONNECT_SIGNING_KEY'] %>
