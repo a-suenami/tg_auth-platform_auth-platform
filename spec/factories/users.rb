@@ -8,5 +8,6 @@ FactoryBot.define do
     sequence(:email) { |n| "test#{n}@example.com" }
     enabled { true }
     tel { '09012345678' }
+    deleted { false }
   end
 end

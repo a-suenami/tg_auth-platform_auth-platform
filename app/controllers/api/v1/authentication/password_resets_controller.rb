@@ -6,14 +6,14 @@ module API::V1::Authentication
       if client.present?
         Users::SendPasswordResetEmailService.new.execute!(email: params[:email], base_url: client.redirect_url_on_password_reset)
       else
-        Users::SendPasswordResetEmailService.new.execute!(email: params[:email], base_url: "#{request.protocol}#{request.host_with_port}/password_resets/edit")
+        raise ActiveRecord::RecordNotFound
       end
       head :no_content
     end
 
     def create
       user = Users::PasswordResetService.new(password_params).execute!(password_reset_code: params[:password_reset_code], email: params[:email])
-      session[:current_user_id] = user.id
+      cookie_session[:current_user_id] = user.id
       head :no_content
     rescue ActiveRecord::RecordInvalid
       handle_400 error_details: ['validation error']

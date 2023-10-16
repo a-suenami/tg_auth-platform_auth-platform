@@ -1,0 +1,14 @@
+= render 'ruler_area/shared/form_error', target: f.object
+.uk-margin
+  = f.label :template_type
+  = f.select :template_type, EmailTemplate.template_type.values, {}, class: "uk-select"
+.uk-margin
+  = f.label :name
+  = f.text_field :name, class: "uk-input"
+.uk-margin
+  = f.label :subject
+  = f.text_field :subject, class: "uk-input"
+.uk-margin
+  = f.label :body
+  = f.text_area :body, class: "uk-textarea", rows: 20
+= f.submit class: "uk-button uk-button-default"

@@ -12,6 +12,14 @@
     "value": "id-platform-stg.jp.auth0.com"
   },
   {
+    "name": "AWS_REGION",
+    "value": "ap-northeast-1"
+  },
+  {
+    "name": "AWS_EVENT_BUS_NAME",
+    "value": "custom-event-bus"
+  },
+  {
     "name": "CLOUDFRONT_HOST",
     "value": "media.app-staging.id-platform.net"
   },

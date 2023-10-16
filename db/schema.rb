@@ -16,6 +16,20 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
+  create_table "account_locks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id"
+    t.string "email", null: false
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "lock_expired_at"
+    t.datetime "last_failed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_account_locks_on_tenant_id"
+    t.index ["user_id"], name: "index_account_locks_on_user_id"
+  end
+
   create_table "admins", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "name"
@@ -78,9 +92,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "confidential", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "login_url"
+    t.string "login_url", null: false
     t.string "sign_up_url"
-    t.string "redirect_url_on_password_reset"
+    t.string "redirect_url_on_password_reset", null: false
     t.index ["tenant_id"], name: "index_login_spa_applications_on_tenant_id"
     t.index ["uid"], name: "index_login_spa_applications_on_uid", unique: true
   end
@@ -132,6 +146,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "enable_client_credential_flow", default: false
+    t.boolean "enable_push_event", default: false
     t.index ["tenant_id"], name: "index_oauth_applications_on_tenant_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
@@ -180,10 +195,14 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "tel"
     t.boolean "tel_verified", default: false
     t.boolean "email_verified", default: false
+    t.boolean "deleted", default: false
     t.string "password_reset_code"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
+    t.datetime "lock_expired_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tenant_id", "email"], name: "index_users_on_tenant_id_email", unique: true
+    t.index ["tenant_id", "email", "deleted"], name: "index_users_on_tenant_id_email", unique: true, where: "(deleted = false)"
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
   end
 
@@ -202,6 +221,19 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["user_id"], name: "index_users__email_verifiers_on_user_id"
   end
 
+  create_table "users__linked_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "oauth_application_id", null: false
+    t.string "scopes", null: false
+    t.datetime "last_linked_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["oauth_application_id"], name: "index_users__linked_applications_on_oauth_application_id"
+    t.index ["tenant_id"], name: "index_users__linked_applications_on_tenant_id"
+    t.index ["user_id"], name: "index_users__linked_applications_on_user_id"
+  end
+
   create_table "users__password_resets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
@@ -214,6 +246,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["user_id"], name: "index_users__password_resets_on_user_id"
   end
 
+  add_foreign_key "account_locks", "tenants", name: "fk_account_locks_tenants"
   add_foreign_key "admins", "tenants", name: "fk_admins_tenants"
   add_foreign_key "contact_addresses", "tenants", name: "fk_contact_addresses_tenants"
   add_foreign_key "contact_addresses", "users", name: "fk_contact_addresses_users"
@@ -234,6 +267,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "users", "tenants", name: "fk_users_tenants"
   add_foreign_key "users__email_verifiers", "tenants", name: "fk_users__email_verifiers_tenants"
   add_foreign_key "users__email_verifiers", "users", name: "fk_users__email_verifiers_users"
+  add_foreign_key "users__linked_applications", "oauth_applications", name: "fk_users__linked_applications_oauth_applications"
+  add_foreign_key "users__linked_applications", "tenants", name: "fk_users__linked_applications_tenants"
+  add_foreign_key "users__linked_applications", "users", name: "fk_users__linked_applications_users"
   add_foreign_key "users__password_resets", "tenants", name: "fk_users__password_resets_tenants"
   add_foreign_key "users__password_resets", "users", name: "fk_users__password_resets_users"
 end

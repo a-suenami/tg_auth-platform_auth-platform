@@ -57,6 +57,7 @@ gem 'doorkeeper-openid_connect', '~> 1.8.4'
 gem 'omniauth-auth0', '~> 3.0'
 gem 'omniauth-rails_csrf_protection', '~> 1.0'
 gem 'auth0', '~> 5.12'
+gem 'rack-attack', '~> 6.6.1'
 # ------------------------------------------------------------------------------
 # Front
 # ------------------------------------------------------------------------------
@@ -108,9 +109,10 @@ gem 'enumerize', '~> 2.5.0'
 # # AWS client gems
 # gem 'aws-record', '~> 2.10.1'
 # gem 'aws-sdk-dynamodb', '~> 1.81.0'
-# gem 'aws-sdk-rails', '~> 3.7.1'
+gem 'aws-sdk-rails', '~> 3.7.1'
 # gem 'aws-sdk-s3', '~> 1.119.1'
 # gem 'aws-sdk-sqs', '~> 1.53.0'
+gem 'aws-sdk-eventbridge', '~> 1.3'
 # Encrypt yaml
 gem 'yaml_vault', '~> 1.3.2'
 # # For counter caches

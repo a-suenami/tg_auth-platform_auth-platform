@@ -10,9 +10,9 @@ Doorkeeper.configure do
     # 一応テナントを設定処理
     RequestStore.store[:current_tenant_domain] = request.host || '-'
 
-    session[:auth_url] = request.fullpath
+    cookie_session[:auth_url] = request.fullpath
 
-    resource_owner = User.find_by(id: session[:current_user_id])
+    resource_owner = User.find_by(id: cookie_session[:current_user_id])
 
     if resource_owner.nil?
       client = Tenant.current.login_spa_application
@@ -20,11 +20,11 @@ Doorkeeper.configure do
       if client.present?
         if params[:on_no_session].present? && params[:on_no_session] == 'sign_up' && client.sign_up_url.present?
           redirect_to client.sign_up_url_with_flag, allow_other_host: true
-        elsif client.login_url.present?
-          redirect_to client.login_url_with_flag, allow_other_host: true
         else
-          redirect_to new_session_path
+          redirect_to client.login_url_with_flag, allow_other_host: true
         end
+      else
+        raise ActiveRecord::RecordNotFound
       end
     else
       resource_owner
@@ -143,8 +143,8 @@ Doorkeeper.configure do
   # +ActionController::API+. The return value of this option must be a stringified class name.
   # See https://doorkeeper.gitbook.io/guides/configuration/other-configurations#custom-controllers
   #
-  base_controller 'TenantsArea::ApplicationController'
-  base_metal_controller 'TenantsArea::ApplicationMetalController'
+  base_controller 'OauthArea::ApplicationController'
+  base_metal_controller 'OauthArea::ApplicationMetalController'
 
 
   # Reuse access token for the same resource owner within an application (disabled by default).

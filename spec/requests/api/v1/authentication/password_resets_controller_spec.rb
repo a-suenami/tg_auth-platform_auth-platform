@@ -18,6 +18,9 @@ RSpec.describe '[ Password Resets API ]' do
         TEXT
       )
     }
+    let(:login_spa_application) {
+      create(:login_spa_application, tenant_id: current_tenant.id)
+    }
     let(:blastengine_mock) {
       instance_double(Blastengine::API)
     }
@@ -25,6 +28,7 @@ RSpec.describe '[ Password Resets API ]' do
     before do
       user_1
       email_template
+      login_spa_application
       allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
       allow(blastengine_mock).to receive(:send_email).and_return({
         delivery_id: 1,
@@ -76,10 +80,21 @@ RSpec.describe '[ Password Resets API ]' do
     let(:users_password_resets) {
       create(:users__password_resets, tenant_id: current_tenant.id, user_id: user_1.id, code: 'this_is_code', expired_at: 1.hour.from_now)
     }
+    let(:account_lock) {
+      create(:account_lock,
+        tenant_id: current_tenant.id,
+        user_id: user_1.id,
+        email: 'test-user1@example.com',
+        failed_attempts: 10,
+        unlock_token: SecureRandom.hex(32),
+        lock_expired_at: 1.minute.from_now,
+        last_failed_at: Time.zone.now,)
+    }
 
     before do
       user_1
       users_password_resets
+      account_lock
     end
 
     context 'when email invaild' do
@@ -93,6 +108,7 @@ RSpec.describe '[ Password Resets API ]' do
 
       it 'returns 400' do
         is_expected.to eq 400
+        expect(user_1.account_lock).to be_locked
       end
     end
 
@@ -107,6 +123,7 @@ RSpec.describe '[ Password Resets API ]' do
 
       it 'returns 400' do
         is_expected.to eq 400
+        expect(user_1.account_lock).to be_locked
       end
     end
 
@@ -121,6 +138,7 @@ RSpec.describe '[ Password Resets API ]' do
 
       it 'returns 400' do
         is_expected.to eq 400
+        expect(user_1.account_lock).to be_locked
       end
     end
 
@@ -135,6 +153,9 @@ RSpec.describe '[ Password Resets API ]' do
 
       it 'returns 204' do
         is_expected.to eq 204
+        expect(Users::PasswordReset.find(users_password_resets.id).used_at).to be_between(1.minute.ago, Time.zone.now)
+        expect(user_1.reload.authenticate('Abc123456$%')).to be_truthy
+        expect(user_1.account_lock).not_to be_locked
       end
     end
 
@@ -149,6 +170,7 @@ RSpec.describe '[ Password Resets API ]' do
 
       it 'returns 400' do
         is_expected.to eq 400
+        expect(user_1.account_lock).to be_locked
       end
     end
   end

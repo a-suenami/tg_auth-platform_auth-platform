@@ -9,9 +9,9 @@ module CookieAuthable
   end
 
   def session_authenticate
-    raise Exceptions::Auth::AuthError if session[:current_user_id].blank?
+    raise Exceptions::Auth::AuthError if cookie_session[:current_user_id].blank?
 
-    @current_user = User.find session[:current_user_id]
+    @current_user = User.active.find cookie_session[:current_user_id]
   end
 
   def current_user

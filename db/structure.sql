@@ -42,6 +42,24 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: account_locks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.account_locks (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid,
+    email character varying NOT NULL,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    unlock_token character varying,
+    lock_expired_at timestamp(6) without time zone,
+    last_failed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: admins; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -125,9 +143,9 @@ CREATE TABLE public.login_spa_applications (
     confidential boolean DEFAULT true NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    login_url character varying,
+    login_url character varying NOT NULL,
     sign_up_url character varying,
-    redirect_url_on_password_reset character varying
+    redirect_url_on_password_reset character varying NOT NULL
 );
 
 
@@ -185,7 +203,8 @@ CREATE TABLE public.oauth_applications (
     confidential boolean DEFAULT true NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    enable_client_credential_flow boolean DEFAULT false
+    enable_client_credential_flow boolean DEFAULT false,
+    enable_push_event boolean DEFAULT false
 );
 
 
@@ -259,7 +278,11 @@ CREATE TABLE public.users (
     tel character varying,
     tel_verified boolean DEFAULT false,
     email_verified boolean DEFAULT false,
+    deleted boolean DEFAULT false,
     password_reset_code character varying,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    unlock_token character varying,
+    lock_expired_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -285,6 +308,22 @@ CREATE TABLE public.users__email_verifiers (
 
 
 --
+-- Name: users__linked_applications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users__linked_applications (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    oauth_application_id uuid NOT NULL,
+    scopes character varying NOT NULL,
+    last_linked_at timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: users__password_resets; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -298,6 +337,14 @@ CREATE TABLE public.users__password_resets (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: account_locks account_locks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_locks
+    ADD CONSTRAINT account_locks_pkey PRIMARY KEY (id);
 
 
 --
@@ -405,6 +452,14 @@ ALTER TABLE ONLY public.users__email_verifiers
 
 
 --
+-- Name: users__linked_applications users__linked_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__linked_applications
+    ADD CONSTRAINT users__linked_applications_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: users__password_resets users__password_resets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -418,6 +473,20 @@ ALTER TABLE ONLY public.users__password_resets
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_account_locks_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_account_locks_on_tenant_id ON public.account_locks USING btree (tenant_id);
+
+
+--
+-- Name: index_account_locks_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_account_locks_on_user_id ON public.account_locks USING btree (user_id);
 
 
 --
@@ -596,6 +665,27 @@ CREATE INDEX index_users__email_verifiers_on_user_id ON public.users__email_veri
 
 
 --
+-- Name: index_users__linked_applications_on_oauth_application_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__linked_applications_on_oauth_application_id ON public.users__linked_applications USING btree (oauth_application_id);
+
+
+--
+-- Name: index_users__linked_applications_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__linked_applications_on_tenant_id ON public.users__linked_applications USING btree (tenant_id);
+
+
+--
+-- Name: index_users__linked_applications_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__linked_applications_on_user_id ON public.users__linked_applications USING btree (user_id);
+
+
+--
 -- Name: index_users__password_resets_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -620,7 +710,15 @@ CREATE INDEX index_users_on_tenant_id ON public.users USING btree (tenant_id);
 -- Name: index_users_on_tenant_id_email; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_tenant_id_email ON public.users USING btree (tenant_id, email);
+CREATE UNIQUE INDEX index_users_on_tenant_id_email ON public.users USING btree (tenant_id, email, deleted) WHERE (deleted = false);
+
+
+--
+-- Name: account_locks fk_account_locks_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_locks
+    ADD CONSTRAINT fk_account_locks_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
@@ -773,6 +871,30 @@ ALTER TABLE ONLY public.users__email_verifiers
 
 ALTER TABLE ONLY public.users__email_verifiers
     ADD CONSTRAINT fk_users__email_verifiers_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: users__linked_applications fk_users__linked_applications_oauth_applications; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__linked_applications
+    ADD CONSTRAINT fk_users__linked_applications_oauth_applications FOREIGN KEY (oauth_application_id) REFERENCES public.oauth_applications(id);
+
+
+--
+-- Name: users__linked_applications fk_users__linked_applications_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__linked_applications
+    ADD CONSTRAINT fk_users__linked_applications_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: users__linked_applications fk_users__linked_applications_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__linked_applications
+    ADD CONSTRAINT fk_users__linked_applications_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --

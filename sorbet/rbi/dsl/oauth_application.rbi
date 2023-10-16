@@ -319,6 +319,34 @@ class OauthApplication
 
     sig { params(value: T::Enumerable[::OauthAccessToken]).void }
     def authorized_tokens=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def linked_application_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def linked_application_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `OauthApplication` class because it declared `has_many :linked_applications`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Users::LinkedApplication::PrivateCollectionProxy) }
+    def linked_applications; end
+
+    sig { params(value: T::Enumerable[::Users::LinkedApplication]).void }
+    def linked_applications=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def user_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def user_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `OauthApplication` class because it declared `has_many :users, through: :linked_applications`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
+    sig { returns(::User::PrivateCollectionProxy) }
+    def users; end
+
+    sig { params(value: T::Enumerable[::User]).void }
+    def users=(value); end
   end
 
   module GeneratedAssociationRelationMethods
@@ -637,6 +665,51 @@ class OauthApplication
     sig { void }
     def enable_client_credential_flow_will_change!; end
 
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_push_event; end
+
+    sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+    def enable_push_event=(value); end
+
+    sig { returns(T::Boolean) }
+    def enable_push_event?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_push_event_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def enable_push_event_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def enable_push_event_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def enable_push_event_change; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def enable_push_event_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def enable_push_event_changed?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_push_event_in_database; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def enable_push_event_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def enable_push_event_previously_changed?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_push_event_previously_was; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_push_event_was; end
+
+    sig { void }
+    def enable_push_event_will_change!; end
+
     sig { returns(T.untyped) }
     def id; end
 
@@ -782,6 +855,9 @@ class OauthApplication
     def restore_enable_client_credential_flow!; end
 
     sig { void }
+    def restore_enable_push_event!; end
+
+    sig { void }
     def restore_id!; end
 
     sig { void }
@@ -822,6 +898,12 @@ class OauthApplication
 
     sig { returns(T::Boolean) }
     def saved_change_to_enable_client_credential_flow?; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def saved_change_to_enable_push_event; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_enable_push_event?; end
 
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_id; end
@@ -1104,6 +1186,9 @@ class OauthApplication
 
     sig { returns(T::Boolean) }
     def will_save_change_to_enable_client_credential_flow?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_enable_push_event?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_id?; end

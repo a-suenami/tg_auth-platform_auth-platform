@@ -1,6 +1,0 @@
-.uk-margin-top.uk-container
-  h2 OAuth Application 新規作成
-
-  .uk-margin-top.uk-card.uk-card-default.uk-card-body
-    = form_with model: @oauth_application, url: admin_area_oauth_applications_path, method: :post do |f|
-      = render 'form', f: f

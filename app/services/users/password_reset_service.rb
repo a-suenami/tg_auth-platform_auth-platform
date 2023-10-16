@@ -21,6 +21,12 @@ module Users
           raise Exceptions::Services::Users::PasswordResetCodeUsed
         else
           user.update!(params)
+          password_reset.update!(used_at: Time.zone.now)
+        end
+
+        # パスワード変更時アカウントロックがある場合解除
+        if user.account_lock.present?
+          user.account_lock.unlock!
         end
 
         user

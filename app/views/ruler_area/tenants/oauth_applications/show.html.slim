@@ -1,0 +1,49 @@
+.uk-margin-top.uk-container
+  h2 OAuth Application詳細
+
+  .uk-flex.uk-flex-right
+    = link_to "編集", edit_ruler_area_tenant_oauth_application_path(@tenant_id, @oauth_application), class: "uk-button uk-button-primary"
+    .uk-margin-left
+    = link_to "削除", ruler_area_tenant_oauth_application_path(@tenant_id, @oauth_application), data: { turbo_method: :delete, turbo_confirm: "一度削除したデータを戻せません。本当に削除しますか？" }, class: 'uk-button uk-button-danger'
+
+  table.uk-table
+    tr
+      th = OauthApplication.human_attribute_name(:id)
+      td
+        = @oauth_application.id
+    tr
+      th = OauthApplication.human_attribute_name(:name)
+      td
+        = @oauth_application.name
+    tr
+      th = OauthApplication.human_attribute_name(:uid)
+      td
+        = @oauth_application.uid
+    tr
+      th = OauthApplication.human_attribute_name(:secret)
+      td
+        = @oauth_application.secret
+    tr
+      th = OauthApplication.human_attribute_name(:redirect_uri)
+      td
+        = @oauth_application.redirect_uri
+    tr
+      th = OauthApplication.human_attribute_name(:scopes)
+      td
+        = @oauth_application.scopes
+    tr
+      th = OauthApplication.human_attribute_name(:confidential)
+      td
+        = @oauth_application.confidential
+    tr
+      th = OauthApplication.human_attribute_name(:created_at)
+      td
+        = @oauth_application.created_at
+    tr
+      th = OauthApplication.human_attribute_name(:updated_at)
+      td
+        = @oauth_application.updated_at
+    tr
+      th = OauthApplication.human_attribute_name(:enable_client_credential_flow)
+      td
+        = @oauth_application.enable_client_credential_flow

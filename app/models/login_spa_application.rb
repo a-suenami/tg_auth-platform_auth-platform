@@ -4,6 +4,10 @@ class LoginSpaApplication < ApplicationRecord
   extend T::Sig
   include Multitenancy
 
+  validates :login_url, format: /\A#{URI::DEFAULT_PARSER.make_regexp(%w[http https])}\z/
+  validates :sign_up_url, format: /\A#{URI::DEFAULT_PARSER.make_regexp(%w[http https])}\z/, allow_blank: true
+  validates :redirect_url_on_password_reset, format: /\A#{URI::DEFAULT_PARSER.make_regexp(%w[http https])}\z/
+
   sig { returns(String) }
   def login_url_with_flag
     attach_oauth_flow_flag(login_url)

@@ -63,6 +63,19 @@ class Net::HTTPResponse
   def end_reading_body_hacked; end
 end
 
+# Rack::Attack::Request is the same as ::Rack::Request by default.
+#
+# This is a safe place to add custom helper methods to the request object
+# through monkey patching:
+#
+#   class Rack::Attack::Request < ::Rack::Request
+#     def localhost?
+#       ip == "127.0.0.1"
+#     end
+#   end
+#
+#   Rack::Attack.safelist("localhost") {|req| req.localhost? }
+#
 # source://rack-proxy//lib/rack/http_streaming_response.rb#4
 module Rack
   class << self

@@ -1,0 +1,22 @@
+= render 'ruler_area/shared/form_error', target: f.object
+.uk-margin
+  = f.label :name
+  = f.text_field :name, class: "uk-input"
+.uk-margin
+  = f.label :redirect_uri
+  .uk-article
+    p.uk-article-meta 複数のURIを設定する場合は、URLごと改行で区切って入力してください
+  = f.text_area :redirect_uri, class: "uk-textarea"
+.uk-margin
+  = f.label :scopes
+  .uk-article
+    p.uk-article-meta
+      | 設定可能なスコープ(public uid email name profile contact delivery_address openid admin_users)
+      br
+      | 複数のScopeを設定する場合は、スペースで区切って入力してください(ex "uid email")
+  = f.text_field :scopes, class: "uk-input"
+.uk-margin
+  = f.label :enable_client_credential_flow
+  p.uk-article-meta Admin APIを利用する場合はチェックを入れ、スコープにadmin_usersを設定してください
+  = f.check_box :enable_client_credential_flow, :as => :boolean, class: "uk-checkbox"
+= f.submit class: "uk-button uk-button-default"

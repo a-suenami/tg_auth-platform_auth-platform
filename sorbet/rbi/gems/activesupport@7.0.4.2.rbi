@@ -11506,6 +11506,20 @@ class ActiveSupport::Testing::SimpleStubs::Stub < ::Struct
   end
 end
 
+# source://activesupport//lib/active_support/testing/stream.rb#5
+module ActiveSupport::Testing::Stream
+  private
+
+  # source://activesupport//lib/active_support/testing/stream.rb#23
+  def capture(stream); end
+
+  # source://activesupport//lib/active_support/testing/stream.rb#17
+  def quietly(&block); end
+
+  # source://activesupport//lib/active_support/testing/stream.rb#7
+  def silence_stream(stream); end
+end
+
 # Logs a "PostsControllerTest: test name" heading before each test to
 # make test.log easier to search and follow along with.
 #

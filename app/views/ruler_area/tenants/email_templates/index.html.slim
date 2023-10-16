@@ -1,0 +1,31 @@
+.uk-margin-top.uk-container
+  h2 メールテンプレート一覧
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    - if @email_templates.empty?
+      p.uk-text-lead
+        | No users found
+    - else
+      .uk-flex.uk-flex-right
+        = link_to "新規登録", new_ruler_area_tenant_email_template_path(@tenant_id), class: "uk-button uk-button-primary"
+
+      table.uk-table.uk-table-divider
+        tr
+          th = EmailTemplate.human_attribute_name(:id)
+          th = EmailTemplate.human_attribute_name(:template_type)
+          th = EmailTemplate.human_attribute_name(:name)
+          th = EmailTemplate.human_attribute_name(:subject)
+        - @email_templates.each do |email_template|
+          tr
+            td
+              = email_template.id
+            td
+              = email_template.template_type
+            td
+              = email_template.name
+            td
+              = email_template.subject
+            td
+              = link_to "詳細", ruler_area_tenant_email_template_path(@tenant_id, email_template), class: "uk-button uk-button-secondary"
+
+    == pagy_nav(@pagy)

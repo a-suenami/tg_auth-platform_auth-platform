@@ -21,9 +21,16 @@ module Users
         user.save!
         email_verifier.used_at = Time.zone.now
         email_verifier.save!
+        # アカウントロックはemailを元にカウントするので、email変更時削除
+        if user.account_lock.present?
+          user.account_lock.destroy
+        end
       else
         raise Exceptions::Services::Users::ExpiredEmailVerificationCode
       end
+
+      # aws event bridgeにイベント発行
+      PublishEvents::PublishService.new.execute(user:, action_code: :update)
 
       user
     end

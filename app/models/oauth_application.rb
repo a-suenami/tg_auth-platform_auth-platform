@@ -6,4 +6,11 @@ class OauthApplication < ApplicationRecord
   include Multitenancy
 
   validates :scopes, presence: true
+
+  has_many :linked_applications,
+    class_name: 'Users::LinkedApplication',
+    inverse_of: :oauth_application
+  has_many :users,
+    through: :linked_applications,
+    inverse_of: :oauth_applications
 end

@@ -1,0 +1,6 @@
+.uk-margin-top.uk-container
+  h2 メールテンプレート新規作成
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with model: @email_template, url: ruler_area_tenant_email_templates_path(@tenant_id), method: :post do |f|
+      = render 'form', f: f

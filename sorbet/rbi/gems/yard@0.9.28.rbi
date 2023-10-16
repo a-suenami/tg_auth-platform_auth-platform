@@ -531,6 +531,11 @@ class Rack::Request
   end
 end
 
+# String inflections define new methods on the String class to transform names for different purposes.
+# For instance, you can figure out the name of a table from the name of a class.
+#
+#   'ScaleScore'.tableize # => "scale_scores"
+#
 # source://yard//lib/yard/core_ext/string.rb#2
 class String
   include ::Comparable

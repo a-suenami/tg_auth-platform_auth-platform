@@ -4,6 +4,8 @@ User.seed do |s|
   s.tenant_id = 'sample'
   s.email = 'test1@example.com'
   s.password = 'password'
+  s.enabled = true
+  s.email_verified = true
 end
 
 User.seed do |s|
@@ -11,6 +13,8 @@ User.seed do |s|
   s.tenant_id = 'sample'
   s.email = 'test2@example.com'
   s.password = 'password'
+  s.enabled = true
+  s.email_verified = true
 end
 
 # seed users
@@ -19,6 +23,8 @@ User.seed do |s|
   s.tenant_id = 'twogate'
   s.email = 'twogate-test1@example.com'
   s.password = 'password'
+  s.enabled = true
+  s.email_verified = true
 end
 
 User.seed do |s|
@@ -26,4 +32,6 @@ User.seed do |s|
   s.tenant_id = 'twogate'
   s.email = 'twogate-test2@example.com'
   s.password = 'password'
+  s.enabled = true
+  s.email_verified = true
 end

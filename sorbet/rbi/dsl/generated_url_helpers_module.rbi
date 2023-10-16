@@ -18,22 +18,10 @@ module GeneratedUrlHelpersModule
   def admin_area_auth_logout_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def admin_area_email_template_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def admin_area_email_templates_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def admin_area_login_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def admin_area_logout_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def admin_area_oauth_application_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def admin_area_oauth_applications_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def admin_area_root_url(*args); end
@@ -46,6 +34,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def api_v1_admin_user_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_admin_users_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def api_v1_authentication_logout_url(*args); end
@@ -78,16 +69,13 @@ module GeneratedUrlHelpersModule
   def api_v1_private_userinfo_index_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def edit_admin_area_email_template_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def edit_admin_area_oauth_application_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def edit_password_resets_url(*args); end
+  def edit_ruler_area_tenant_email_template_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_login_spa_application_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_oauth_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_url(*args); end
@@ -99,31 +87,16 @@ module GeneratedUrlHelpersModule
   def native_oauth_authorization_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def new_admin_area_email_template_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def new_admin_area_oauth_application_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def new_password_reset_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def new_password_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def new_profile_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def new_registration_url(*args); end
+  def new_ruler_area_tenant_email_template_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_login_spa_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def new_ruler_area_tenant_url(*args); end
+  def new_ruler_area_tenant_oauth_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def new_session_url(*args); end
+  def new_ruler_area_tenant_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def oauth_authorization_url(*args); end
@@ -157,15 +130,6 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def oauth_userinfo_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def password_resets_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def passwords_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def profiles_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def rails_info_properties_url(*args); end
@@ -204,10 +168,22 @@ module GeneratedUrlHelpersModule
   def ruler_area_root_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_email_template_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_email_templates_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_login_spa_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_login_spa_applications_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_oauth_application_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_oauth_applications_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_root_url(*args); end
@@ -222,12 +198,6 @@ module GeneratedUrlHelpersModule
   def send_verification_email_api_v1_authentication_registrations_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def send_verification_email_registrations_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def sessions_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def turbo_recede_historical_location_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -237,8 +207,8 @@ module GeneratedUrlHelpersModule
   def turbo_resume_historical_location_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def verify_email_api_v1_authentication_registrations_url(*args); end
+  def unlock_account_locks_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def verify_email_registrations_url(*args); end
+  def verify_email_api_v1_authentication_registrations_url(*args); end
 end

@@ -3,6 +3,7 @@
 module API
   class ApplicationController < ActionController::API
     include API::ExceptionRescuable
+    include ExpirableCookieUseable
     before_action :set_tenant
 
     private
