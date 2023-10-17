@@ -12,10 +12,6 @@
     "name": "DATABASE_URL"
   },
   {
-    "name": "DOORKEEPER_OPENID_CONNECT_SIGNING_KEY",
-    "valueFrom": "/id-platform/stg/ecs/main/doorkeeper_openid_connect_signing_key"
-  },
-  {
     "valueFrom": "/id-platform/stg/ecs/main/redis_url",
     "name": "REDIS_URL"
   },
