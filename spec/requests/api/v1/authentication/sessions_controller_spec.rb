@@ -59,22 +59,24 @@ RSpec.describe '[ Sessions API ]' do
         }
       }
 
-      context 'when set_parent_domain_cookie is true' do
+      context 'when cookie_domain_remove_length is 0' do
+        let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com', cookie_domain_remove_length: 0) }
+
         it 'returns 200' do
           is_expected.to eq 200
           expect(body_hash['id']).to eq(current_user.id)
-          expect(response.get_header('Set-Cookie').match(/domain=([^;]+)/)[1]).to eq 'localhost.com'
+          expect(response.get_header('Set-Cookie').match(/domain=([^;]+)/)[1]).to eq 'sample.localhost.com'
         end
       end
 
-      context 'when set_parent_domain_cookie is false' do
-        let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com', set_parent_domain_cookie: false) }
+      context 'when cookie_domain_remove_length is 1' do
+        let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com', cookie_domain_remove_length: 1) }
 
         it 'returns 200' do
           is_expected.to eq 200
           expect(body_hash['id']).to eq(current_user.id)
           # ドメインが指定されない状態が最も安全なので、ドメイン指定がないことを確認する
-          expect(response.get_header('Set-Cookie').match(/domain=([^;]+)/)).to be_nil
+          expect(response.get_header('Set-Cookie').match(/domain=([^;]+)/)[1]).to eq 'localhost.com'
         end
       end
     end
