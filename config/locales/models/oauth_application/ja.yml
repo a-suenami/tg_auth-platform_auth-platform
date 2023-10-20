@@ -13,6 +13,7 @@ ja:
         scopes: スコープ
         confidential: confidential
         enable_client_credential_flow: Admin APIの利用
+        enable_push_event: 変更通知Event発行
   enumerize:
     oauth_application:
       template_type:

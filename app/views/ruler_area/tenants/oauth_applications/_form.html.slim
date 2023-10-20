@@ -19,4 +19,8 @@
   = f.label :enable_client_credential_flow
   p.uk-article-meta Admin APIを利用する場合はチェックを入れ、スコープにadmin_usersを設定してください
   = f.check_box :enable_client_credential_flow, :as => :boolean, class: "uk-checkbox"
+.uk-margin
+  = f.label :enable_push_event
+  p.uk-article-meta プロフィール更新時EventBridgeによる変更通知を発行するかどうかのフラグ。オンの場合このOAuthApplication向けにeventが発行される。
+  = f.check_box :enable_push_event, :as => :boolean, class: "uk-checkbox"
 = f.submit class: "uk-button uk-button-default"
