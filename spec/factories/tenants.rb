@@ -4,6 +4,6 @@ FactoryBot.define do
   factory :tenant do
     id { 'twogate' }
     name { 'TwoGate' }
-    set_parent_domain_cookie { true }
+    cookie_domain_remove_length { 0 }
   end
 end
