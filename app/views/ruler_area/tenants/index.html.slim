@@ -14,6 +14,7 @@
           th = Tenant.human_attribute_name(:id)
           th = Tenant.human_attribute_name(:name)
           th = Tenant.human_attribute_name(:domain)
+          th = '操作'
         - @tenants.each do |tenant|
           tr
             td
@@ -24,5 +25,6 @@
               = tenant.domain
             td
               = link_to "テナント設定へ", ruler_area_tenant_root_path(tenant), class: "uk-button uk-button-secondary"
+              = link_to "編集", edit_ruler_area_tenant_path(tenant), class: "uk-margin-left uk-button uk-button-primary"
 
     == pagy_nav(@pagy)

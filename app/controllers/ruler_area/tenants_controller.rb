@@ -39,7 +39,7 @@ module RulerArea
     private
 
     def tenant_params
-      params.require(:tenant).permit(:id, :name, :domain)
+      params.require(:tenant).permit(:id, :name, :domain, :set_parent_domain_cookie)
     end
   end
 end
