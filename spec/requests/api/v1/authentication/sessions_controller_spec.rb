@@ -168,7 +168,7 @@ RSpec.describe '[ Sessions API ]' do
     end
 
     context 'when user has deleted' do
-      let(:user_1) {
+      let(:current_user) {
         create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', deleted: true)
       }
 
