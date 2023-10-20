@@ -9,6 +9,9 @@ class Tenant < ApplicationRecord
 
   has_one :login_spa_application, dependent: :destroy
 
+  # 万が一設定ミスするとクッキーモンスター問題等で情報漏洩のリスクがあるので、あらかじめ制限をかける。
+  validates :cookie_domain_remove_length, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 2 }
+
   class << self
     extend T::Sig
 

@@ -168,7 +168,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   create_table "tenants", id: :citext, force: :cascade do |t|
     t.string "name"
     t.string "domain"
-    t.boolean "set_parent_domain_cookie", default: false
+    t.integer "cookie_domain_remove_length", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

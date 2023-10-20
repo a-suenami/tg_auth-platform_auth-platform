@@ -6,8 +6,8 @@ module ActionDispatch
       private
 
       def set_cookie(request, session_id, cookie)
-        if (request.path.start_with?('/api') || request.path.start_with?('/oauth')) && (Tenant.current.present? && Tenant.current.set_parent_domain_cookie)
-          cookie[:domain] = request.host.split('.').drop(1).join('.')
+        if (request.path.start_with?('/api') || request.path.start_with?('/oauth')) && Tenant.current.present?
+          cookie[:domain] = request.host.split('.').drop(Tenant.current.cookie_domain_remove_length).join('.')
           return cookie_jar(request)[@key] = cookie
         end
         super(request, session_id, cookie)

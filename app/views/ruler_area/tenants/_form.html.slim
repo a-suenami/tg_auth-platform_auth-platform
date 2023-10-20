@@ -10,7 +10,7 @@
   = f.label :domain
   = f.text_field :domain, class: "uk-input"
 .uk-margin
-  = f.label :set_parent_domain_cookie
-  p.uk-article-meta cookieのドメインを現在のドメインから一段上の親ドメインに設定する場合は有効にしてください
-  = f.check_box :set_parent_domain_cookie, :as => :boolean, class: "uk-checkbox"
+  = f.label :cookie_domain_remove_length
+  p.uk-article-meta cookieのドメイン属性に設定するドメインを調整するカラム。指定した数値分左から子ドメインを取り除く。
+  = f.number_field :cookie_domain_remove_length
 = f.submit class: "uk-button uk-button-default"
