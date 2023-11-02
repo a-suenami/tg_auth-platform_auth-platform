@@ -2,6 +2,10 @@ module API::V1::Authentication
   class RegistrationsController < ApplicationController
     # send email address verification email
     def send_verification_email
+      captcha_token = T.cast(params[:captcha_token], String)
+      captcha_valid, = RecaptchaEnterpriseUtils.new(tenant: T.must(Tenant.current), token: captcha_token).validate
+      raise unless captcha_valid
+
       @user = Authentication::SendVerificationEmailService.new.execute!(email: params[:email])
       render :send_verification_email
     end

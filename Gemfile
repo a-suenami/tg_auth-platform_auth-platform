@@ -159,6 +159,9 @@ gem 'phony_rails'
 # typing
 gem 'sorbet-runtime'
 
+# reCAPTCHA Enterprise Client
+gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.15.0'
+
 # ------------------------------------------------------------------------------
 # Development and Test Only
 # ------------------------------------------------------------------------------
