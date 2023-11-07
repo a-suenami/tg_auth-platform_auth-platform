@@ -440,6 +440,8 @@ GEM
       rspec-mocks (~> 3.11)
       rspec-support (~> 3.11)
     rspec-request_describer (0.3.2)
+    rspec-sorbet (1.9.2)
+      sorbet-runtime
     rspec-support (3.12.0)
     rubocop (1.46.0)
       json (~> 2.3)
@@ -659,6 +661,7 @@ DEPENDENCIES
   ridgepole (~> 1.2.0)
   rspec-rails (~> 6.0.1)
   rspec-request_describer (~> 0.3.0)
+  rspec-sorbet (~> 1.9.2)
   rubocop (~> 1.46.0)
   rubocop-rails (~> 2.18)
   rubocop-rspec (~> 2.18.1)

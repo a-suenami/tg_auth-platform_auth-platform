@@ -39,5 +39,17 @@ module Exceptions
         I18n.t 'exceptions.auth.account_locked'
       end
     end
+
+    class RecaptchaTokenInvaild < BaseError
+      sig { returns(Symbol) }
+      def code
+        :recaptcha_token_invaild
+      end
+
+      sig { returns(String) }
+      def message
+        'reCAPTCHAによりBOTによるアクセスと判定されました。しばらく時間をおいてお試しください。'
+      end
+    end
   end
 end

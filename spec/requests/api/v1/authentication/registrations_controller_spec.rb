@@ -1,6 +1,8 @@
 # typed: false
 
 RSpec.describe '[ Registrations API ]' do
+  include RecaptchaEnterpriseHelper
+
   describe 'POST /api/v1/authentication/registrations/send_verification_email' do
 
     let(:email_template) {
@@ -31,6 +33,7 @@ RSpec.describe '[ Registrations API ]' do
       let(:params) {
         {
           email: 'test-user1@example.com',
+          captcha_token:
         }
       }
 
@@ -92,11 +95,26 @@ RSpec.describe '[ Registrations API ]' do
       let(:params) {
         {
           email: 'hogehoge',
+          captcha_token:
         }
       }
 
       it 'returns 400' do
         is_expected.to eq 400
+      end
+    end
+
+    context 'when captcha validity failed' do
+      let(:captcha_validity) { false }
+      let(:params) {
+        {
+          email: 'test-user1@example.com',
+          captcha_token: 'hoge'
+        }
+      }
+
+      it 'returns 401' do
+        is_expected.to eq 401
       end
     end
   end

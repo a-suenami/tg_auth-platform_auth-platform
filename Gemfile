@@ -177,6 +177,8 @@ group :development, :test do
   gem 'rubocop-rspec', '~> 2.18.1'
   # Testing framework
   gem 'rspec-rails', '~> 6.0.1'
+  # Sorbet type checking for RSpec
+  gem 'rspec-sorbet', '~> 1.9.2'
   # Speed up RSpec using Spring
   gem 'spring-commands-rspec', '~> 1.0.4'
   # # Simplify test code
