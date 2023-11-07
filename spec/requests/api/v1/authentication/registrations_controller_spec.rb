@@ -33,7 +33,7 @@ RSpec.describe '[ Registrations API ]' do
       let(:params) {
         {
           email: 'test-user1@example.com',
-          captcha_token:
+          captcha_token:,
         }
       }
 
@@ -95,7 +95,7 @@ RSpec.describe '[ Registrations API ]' do
       let(:params) {
         {
           email: 'hogehoge',
-          captcha_token:
+          captcha_token:,
         }
       }
 
@@ -109,7 +109,7 @@ RSpec.describe '[ Registrations API ]' do
       let(:params) {
         {
           email: 'test-user1@example.com',
-          captcha_token: 'hoge'
+          captcha_token: 'hoge',
         }
       }
 

@@ -42,6 +42,12 @@ class SettingsConfigOptions < ::Config::Options
   def doorkeeper=(value); end
 
   sig { returns(T.untyped) }
+  def google_cloud_platform; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def google_cloud_platform=(value); end
+
+  sig { returns(T.untyped) }
   def redis; end
 
   sig { params(value: T.untyped).returns(T.untyped) }
