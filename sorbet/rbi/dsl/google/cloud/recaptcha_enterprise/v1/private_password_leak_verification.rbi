@@ -13,7 +13,7 @@ class Google::Cloud::RecaptchaEnterprise::V1::PrivatePasswordLeakVerification
       reencrypted_user_credentials_hash: T.nilable(String)
     ).void
   end
-  def initialize(encrypted_leak_match_prefixes: Google::Protobuf::RepeatedField.new(:bytes), encrypted_user_credentials_hash: nil, lookup_hash_prefix: nil, reencrypted_user_credentials_hash: nil); end
+  def initialize(encrypted_leak_match_prefixes: T.unsafe(nil), encrypted_user_credentials_hash: nil, lookup_hash_prefix: nil, reencrypted_user_credentials_hash: nil); end
 
   sig { void }
   def clear_encrypted_leak_match_prefixes; end

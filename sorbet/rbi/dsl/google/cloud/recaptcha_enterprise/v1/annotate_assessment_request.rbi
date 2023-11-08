@@ -14,7 +14,7 @@ class Google::Cloud::RecaptchaEnterprise::V1::AnnotateAssessmentRequest
       transaction_event: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::TransactionEvent)
     ).void
   end
-  def initialize(annotation: nil, hashed_account_id: nil, name: nil, reasons: Google::Protobuf::RepeatedField.new(:enum, T.any(Symbol, Integer)), transaction_event: nil); end
+  def initialize(annotation: nil, hashed_account_id: nil, name: nil, reasons: T.unsafe(nil), transaction_event: nil); end
 
   sig { returns(T.any(Symbol, Integer)) }
   def annotation; end

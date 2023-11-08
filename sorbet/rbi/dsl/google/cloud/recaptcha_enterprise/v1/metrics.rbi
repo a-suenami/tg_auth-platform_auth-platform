@@ -13,7 +13,7 @@ class Google::Cloud::RecaptchaEnterprise::V1::Metrics
       start_time: T.nilable(Google::Protobuf::Timestamp)
     ).void
   end
-  def initialize(challenge_metrics: Google::Protobuf::RepeatedField.new(:message, Google::Cloud::RecaptchaEnterprise::V1::ChallengeMetrics), name: nil, score_metrics: Google::Protobuf::RepeatedField.new(:message, Google::Cloud::RecaptchaEnterprise::V1::ScoreMetrics), start_time: nil); end
+  def initialize(challenge_metrics: T.unsafe(nil), name: nil, score_metrics: T.unsafe(nil), start_time: nil); end
 
   sig { returns(Google::Protobuf::RepeatedField[Google::Cloud::RecaptchaEnterprise::V1::ChallengeMetrics]) }
   def challenge_metrics; end

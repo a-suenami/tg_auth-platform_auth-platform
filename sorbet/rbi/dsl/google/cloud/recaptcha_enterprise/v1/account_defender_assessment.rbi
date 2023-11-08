@@ -10,7 +10,7 @@ class Google::Cloud::RecaptchaEnterprise::V1::AccountDefenderAssessment
       labels: T.nilable(T.any(Google::Protobuf::RepeatedField[T.any(Symbol, Integer)], T::Array[T.any(Symbol, Integer)]))
     ).void
   end
-  def initialize(labels: Google::Protobuf::RepeatedField.new(:enum, T.any(Symbol, Integer))); end
+  def initialize(labels: T.unsafe(nil)); end
 
   sig { void }
   def clear_labels; end

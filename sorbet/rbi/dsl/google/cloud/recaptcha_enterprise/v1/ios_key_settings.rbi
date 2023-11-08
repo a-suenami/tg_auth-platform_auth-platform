@@ -11,7 +11,7 @@ class Google::Cloud::RecaptchaEnterprise::V1::IOSKeySettings
       allowed_bundle_ids: T.nilable(T.any(Google::Protobuf::RepeatedField[String], T::Array[String]))
     ).void
   end
-  def initialize(allow_all_bundle_ids: nil, allowed_bundle_ids: Google::Protobuf::RepeatedField.new(:string)); end
+  def initialize(allow_all_bundle_ids: nil, allowed_bundle_ids: T.unsafe(nil)); end
 
   sig { returns(T::Boolean) }
   def allow_all_bundle_ids; end

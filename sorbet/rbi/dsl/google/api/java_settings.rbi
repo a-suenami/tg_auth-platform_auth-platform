@@ -9,10 +9,10 @@ class Google::Api::JavaSettings
     params(
       common: T.nilable(Google::Api::CommonLanguageSettings),
       library_package: T.nilable(String),
-      service_class_names: T.nilable(T.any(Google::Protobuf::RepeatedField[], T::Array[]))
+      service_class_names: T.nilable(T.any(Google::Protobuf::Map[String, String], T::Hash[String, String]))
     ).void
   end
-  def initialize(common: nil, library_package: nil, service_class_names: Google::Protobuf::RepeatedField.new(:message, )); end
+  def initialize(common: nil, library_package: nil, service_class_names: T.unsafe(nil)); end
 
   sig { void }
   def clear_common; end
@@ -35,9 +35,9 @@ class Google::Api::JavaSettings
   sig { params(value: String).void }
   def library_package=(value); end
 
-  sig { returns(Google::Protobuf::RepeatedField[]) }
+  sig { returns(Google::Protobuf::Map[String, String]) }
   def service_class_names; end
 
-  sig { params(value: Google::Protobuf::RepeatedField[]).void }
+  sig { params(value: Google::Protobuf::Map[String, String]).void }
   def service_class_names=(value); end
 end

@@ -249,7 +249,6 @@ DomainName::Punycode::TMIN = T.let(T.unsafe(nil), Integer)
 # source://domain_name//lib/domain_name/version.rb#2
 DomainName::VERSION = T.let(T.unsafe(nil), String)
 
-# Same as above, except in Object.
 class Object < ::BasicObject
   include ::Kernel
   include ::PP::ObjectMixin

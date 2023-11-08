@@ -5,15 +5,19 @@
 # Please instead update this file by running `bin/tapioca dsl Google::Cloud::RecaptchaEnterprise::V1::ScoreDistribution`.
 
 class Google::Cloud::RecaptchaEnterprise::V1::ScoreDistribution
-  sig { params(score_buckets: T.nilable(T.any(Google::Protobuf::RepeatedField[], T::Array[]))).void }
-  def initialize(score_buckets: Google::Protobuf::RepeatedField.new(:message, )); end
+  sig do
+    params(
+      score_buckets: T.nilable(T.any(Google::Protobuf::Map[Integer, Integer], T::Hash[Integer, Integer]))
+    ).void
+  end
+  def initialize(score_buckets: T.unsafe(nil)); end
 
   sig { void }
   def clear_score_buckets; end
 
-  sig { returns(Google::Protobuf::RepeatedField[]) }
+  sig { returns(Google::Protobuf::Map[Integer, Integer]) }
   def score_buckets; end
 
-  sig { params(value: Google::Protobuf::RepeatedField[]).void }
+  sig { params(value: Google::Protobuf::Map[Integer, Integer]).void }
   def score_buckets=(value); end
 end

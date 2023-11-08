@@ -4052,6 +4052,7 @@ end
 # source://aws-sdk-core//lib/aws-sdk-core/pageable_response.rb#162
 module Aws::PageableResponse::Extension
   include ::Enumerable
+  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::Aws::PageableResponse::UnsafeEnumerableMethods
 
   # @api private

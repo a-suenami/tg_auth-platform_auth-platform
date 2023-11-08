@@ -11,7 +11,7 @@ class Google::Cloud::RecaptchaEnterprise::V1::ListKeysResponse
       next_page_token: T.nilable(String)
     ).void
   end
-  def initialize(keys: Google::Protobuf::RepeatedField.new(:message, Google::Cloud::RecaptchaEnterprise::V1::Key), next_page_token: nil); end
+  def initialize(keys: T.unsafe(nil), next_page_token: nil); end
 
   sig { void }
   def clear_keys; end

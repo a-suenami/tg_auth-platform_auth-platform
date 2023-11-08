@@ -210,9 +210,9 @@ group :development, :test do
   # gem 'knapsack_pro', '~> 3.7.0'
 
   # typing
-  gem 'sorbet'
+  gem 'sorbet', '~> 0.5.11048'
   gem 'rubocop-sorbet', require: false
-  gem 'tapioca', require: false
+  gem 'tapioca', git: 'https://github.com/twogate/tapioca', ref: 'd0a8227'
   gem 'spoom', require: false
 end
 

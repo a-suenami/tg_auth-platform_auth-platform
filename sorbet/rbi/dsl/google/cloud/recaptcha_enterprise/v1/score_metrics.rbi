@@ -7,16 +7,16 @@
 class Google::Cloud::RecaptchaEnterprise::V1::ScoreMetrics
   sig do
     params(
-      action_metrics: T.nilable(T.any(Google::Protobuf::RepeatedField[], T::Array[])),
+      action_metrics: T.nilable(T.any(Google::Protobuf::Map[String, Google::Cloud::RecaptchaEnterprise::V1::ScoreDistribution], T::Hash[String, Google::Cloud::RecaptchaEnterprise::V1::ScoreDistribution])),
       overall_metrics: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::ScoreDistribution)
     ).void
   end
-  def initialize(action_metrics: Google::Protobuf::RepeatedField.new(:message, ), overall_metrics: nil); end
+  def initialize(action_metrics: T.unsafe(nil), overall_metrics: nil); end
 
-  sig { returns(Google::Protobuf::RepeatedField[]) }
+  sig { returns(Google::Protobuf::Map[String, Google::Cloud::RecaptchaEnterprise::V1::ScoreDistribution]) }
   def action_metrics; end
 
-  sig { params(value: Google::Protobuf::RepeatedField[]).void }
+  sig { params(value: Google::Protobuf::Map[String, Google::Cloud::RecaptchaEnterprise::V1::ScoreDistribution]).void }
   def action_metrics=(value); end
 
   sig { void }

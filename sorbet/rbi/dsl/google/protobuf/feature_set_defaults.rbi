@@ -12,7 +12,7 @@ class Google::Protobuf::FeatureSetDefaults
       minimum_edition: T.nilable(T.any(Symbol, Integer))
     ).void
   end
-  def initialize(defaults: Google::Protobuf::RepeatedField.new(:message, Google::Protobuf::FeatureSetDefaults::FeatureSetEditionDefault), maximum_edition: nil, minimum_edition: nil); end
+  def initialize(defaults: T.unsafe(nil), maximum_edition: nil, minimum_edition: nil); end
 
   sig { void }
   def clear_defaults; end

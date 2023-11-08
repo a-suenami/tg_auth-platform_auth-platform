@@ -11,7 +11,7 @@ class Google::Cloud::RecaptchaEnterprise::V1::AndroidKeySettings
       allowed_package_names: T.nilable(T.any(Google::Protobuf::RepeatedField[String], T::Array[String]))
     ).void
   end
-  def initialize(allow_all_package_names: nil, allowed_package_names: Google::Protobuf::RepeatedField.new(:string)); end
+  def initialize(allow_all_package_names: nil, allowed_package_names: T.unsafe(nil)); end
 
   sig { returns(T::Boolean) }
   def allow_all_package_names; end

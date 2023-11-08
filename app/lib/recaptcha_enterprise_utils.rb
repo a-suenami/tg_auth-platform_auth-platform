@@ -15,7 +15,7 @@ class RecaptchaEnterpriseUtils
     @expected_action = T.let(expected_action, String)
     @client = T.let(
       Google::Cloud::RecaptchaEnterprise::V1::RecaptchaEnterpriseService::Client.new do |config|
-        config.credentials = JSON.parse(T.must(Settings.google_cloud_platform.recaptcha.google_cloud_service_account))
+        config.credentials = JSON.parse(Settings.google_cloud_platform.recaptcha.google_cloud_service_account)
       end,
       Google::Cloud::RecaptchaEnterprise::V1::RecaptchaEnterpriseService::Client,
     )
@@ -35,10 +35,10 @@ class RecaptchaEnterpriseUtils
   sig { returns(Google::Cloud::RecaptchaEnterprise::V1::Assessment) }
   def create_assessment
     request = Google::Cloud::RecaptchaEnterprise::V1::CreateAssessmentRequest.new(
-      parent: "projects/#{T.must(Settings.google_cloud_platform.recaptcha.project_id)}",
+      parent: "projects/#{Settings.google_cloud_platform.recaptcha.project_id}",
       assessment: Google::Cloud::RecaptchaEnterprise::V1::Assessment.new(
         event: Google::Cloud::RecaptchaEnterprise::V1::Event.new(
-          site_key: T.must(Settings.google_cloud_platform.recaptcha.key),
+          site_key: Settings.google_cloud_platform.recaptcha.key,
           token: @token,
           expected_action: @expected_action,
         ),

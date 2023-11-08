@@ -14,7 +14,7 @@ class Google::Cloud::RecaptchaEnterprise::V1::WebKeySettings
       integration_type: T.nilable(T.any(Symbol, Integer))
     ).void
   end
-  def initialize(allow_all_domains: nil, allow_amp_traffic: nil, allowed_domains: Google::Protobuf::RepeatedField.new(:string), challenge_security_preference: nil, integration_type: nil); end
+  def initialize(allow_all_domains: nil, allow_amp_traffic: nil, allowed_domains: T.unsafe(nil), challenge_security_preference: nil, integration_type: nil); end
 
   sig { returns(T::Boolean) }
   def allow_all_domains; end

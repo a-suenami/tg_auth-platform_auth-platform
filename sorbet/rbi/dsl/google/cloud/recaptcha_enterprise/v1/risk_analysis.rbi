@@ -11,7 +11,7 @@ class Google::Cloud::RecaptchaEnterprise::V1::RiskAnalysis
       score: T.nilable(Float)
     ).void
   end
-  def initialize(reasons: Google::Protobuf::RepeatedField.new(:enum, T.any(Symbol, Integer)), score: nil); end
+  def initialize(reasons: T.unsafe(nil), score: nil); end
 
   sig { void }
   def clear_reasons; end

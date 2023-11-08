@@ -11,14 +11,14 @@ class Google::Cloud::RecaptchaEnterprise::V1::Key
       create_time: T.nilable(Google::Protobuf::Timestamp),
       display_name: T.nilable(String),
       ios_settings: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::IOSKeySettings),
-      labels: T.nilable(T.any(Google::Protobuf::RepeatedField[], T::Array[])),
+      labels: T.nilable(T.any(Google::Protobuf::Map[String, String], T::Hash[String, String])),
       name: T.nilable(String),
       testing_options: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::TestingOptions),
       waf_settings: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::WafSettings),
       web_settings: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::WebKeySettings)
     ).void
   end
-  def initialize(android_settings: nil, create_time: nil, display_name: nil, ios_settings: nil, labels: Google::Protobuf::RepeatedField.new(:message, ), name: nil, testing_options: nil, waf_settings: nil, web_settings: nil); end
+  def initialize(android_settings: nil, create_time: nil, display_name: nil, ios_settings: nil, labels: T.unsafe(nil), name: nil, testing_options: nil, waf_settings: nil, web_settings: nil); end
 
   sig { returns(T.nilable(Google::Cloud::RecaptchaEnterprise::V1::AndroidKeySettings)) }
   def android_settings; end
@@ -71,10 +71,10 @@ class Google::Cloud::RecaptchaEnterprise::V1::Key
   sig { params(value: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::IOSKeySettings)).void }
   def ios_settings=(value); end
 
-  sig { returns(Google::Protobuf::RepeatedField[]) }
+  sig { returns(Google::Protobuf::Map[String, String]) }
   def labels; end
 
-  sig { params(value: Google::Protobuf::RepeatedField[]).void }
+  sig { params(value: Google::Protobuf::Map[String, String]).void }
   def labels=(value); end
 
   sig { returns(String) }

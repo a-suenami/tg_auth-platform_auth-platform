@@ -908,8 +908,6 @@ Bullet::StackTraceFilter::IS_RUBY_19 = T.let(T.unsafe(nil), FalseClass)
 # source://bullet//lib/bullet/stack_trace_filter.rb#6
 Bullet::StackTraceFilter::VENDOR_PATH = T.let(T.unsafe(nil), String)
 
-# Same as above, except in Object.
-#
 # source://bullet//lib/bullet/ext/object.rb#3
 class Object < ::BasicObject
   include ::Kernel
@@ -922,9 +920,6 @@ class Object < ::BasicObject
   def bullet_primary_key_value; end
 end
 
-# Enhance the String class with a XML escaped character version of
-# to_s.
-#
 # source://bullet//lib/bullet/ext/string.rb#3
 class String
   include ::Comparable

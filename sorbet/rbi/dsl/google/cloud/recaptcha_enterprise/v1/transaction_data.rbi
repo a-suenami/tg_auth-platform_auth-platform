@@ -22,7 +22,7 @@ class Google::Cloud::RecaptchaEnterprise::V1::TransactionData
       value: T.nilable(Float)
     ).void
   end
-  def initialize(billing_address: nil, card_bin: nil, card_last_four: nil, currency_code: nil, gateway_info: nil, items: Google::Protobuf::RepeatedField.new(:message, Google::Cloud::RecaptchaEnterprise::V1::TransactionData::Item), merchants: Google::Protobuf::RepeatedField.new(:message, Google::Cloud::RecaptchaEnterprise::V1::TransactionData::User), payment_method: nil, shipping_address: nil, shipping_value: nil, transaction_id: nil, user: nil, value: nil); end
+  def initialize(billing_address: nil, card_bin: nil, card_last_four: nil, currency_code: nil, gateway_info: nil, items: T.unsafe(nil), merchants: T.unsafe(nil), payment_method: nil, shipping_address: nil, shipping_value: nil, transaction_id: nil, user: nil, value: nil); end
 
   sig { returns(T.nilable(Symbol)) }
   def _transaction_id; end

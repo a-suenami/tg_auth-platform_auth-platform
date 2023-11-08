@@ -20,8 +20,6 @@ class BasicObject
   def __binding__; end
 end
 
-# Same as above, except in Object.
-#
 # source://pry//lib/pry/core_extensions.rb#24
 class Object < ::BasicObject
   include ::Kernel

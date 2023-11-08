@@ -15,7 +15,7 @@ class Google::Cloud::RecaptchaEnterprise::V1::TransactionData::Address
       region_code: T.nilable(String)
     ).void
   end
-  def initialize(address: Google::Protobuf::RepeatedField.new(:string), administrative_area: nil, locality: nil, postal_code: nil, recipient: nil, region_code: nil); end
+  def initialize(address: T.unsafe(nil), administrative_area: nil, locality: nil, postal_code: nil, recipient: nil, region_code: nil); end
 
   sig { returns(Google::Protobuf::RepeatedField[String]) }
   def address; end

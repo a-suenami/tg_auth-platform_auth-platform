@@ -13,7 +13,7 @@ class Google::Protobuf::ExtensionRangeOptions
       verification: T.nilable(T.any(Symbol, Integer))
     ).void
   end
-  def initialize(declaration: Google::Protobuf::RepeatedField.new(:message, Google::Protobuf::ExtensionRangeOptions::Declaration), features: nil, uninterpreted_option: Google::Protobuf::RepeatedField.new(:message, Google::Protobuf::UninterpretedOption), verification: nil); end
+  def initialize(declaration: T.unsafe(nil), features: nil, uninterpreted_option: T.unsafe(nil), verification: nil); end
 
   sig { void }
   def clear_declaration; end

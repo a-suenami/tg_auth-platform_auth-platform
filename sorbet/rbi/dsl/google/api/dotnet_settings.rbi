@@ -11,11 +11,11 @@ class Google::Api::DotnetSettings
       forced_namespace_aliases: T.nilable(T.any(Google::Protobuf::RepeatedField[String], T::Array[String])),
       handwritten_signatures: T.nilable(T.any(Google::Protobuf::RepeatedField[String], T::Array[String])),
       ignored_resources: T.nilable(T.any(Google::Protobuf::RepeatedField[String], T::Array[String])),
-      renamed_resources: T.nilable(T.any(Google::Protobuf::RepeatedField[], T::Array[])),
-      renamed_services: T.nilable(T.any(Google::Protobuf::RepeatedField[], T::Array[]))
+      renamed_resources: T.nilable(T.any(Google::Protobuf::Map[String, String], T::Hash[String, String])),
+      renamed_services: T.nilable(T.any(Google::Protobuf::Map[String, String], T::Hash[String, String]))
     ).void
   end
-  def initialize(common: nil, forced_namespace_aliases: Google::Protobuf::RepeatedField.new(:string), handwritten_signatures: Google::Protobuf::RepeatedField.new(:string), ignored_resources: Google::Protobuf::RepeatedField.new(:string), renamed_resources: Google::Protobuf::RepeatedField.new(:message, ), renamed_services: Google::Protobuf::RepeatedField.new(:message, )); end
+  def initialize(common: nil, forced_namespace_aliases: T.unsafe(nil), handwritten_signatures: T.unsafe(nil), ignored_resources: T.unsafe(nil), renamed_resources: T.unsafe(nil), renamed_services: T.unsafe(nil)); end
 
   sig { void }
   def clear_common; end
@@ -59,15 +59,15 @@ class Google::Api::DotnetSettings
   sig { params(value: Google::Protobuf::RepeatedField[String]).void }
   def ignored_resources=(value); end
 
-  sig { returns(Google::Protobuf::RepeatedField[]) }
+  sig { returns(Google::Protobuf::Map[String, String]) }
   def renamed_resources; end
 
-  sig { params(value: Google::Protobuf::RepeatedField[]).void }
+  sig { params(value: Google::Protobuf::Map[String, String]).void }
   def renamed_resources=(value); end
 
-  sig { returns(Google::Protobuf::RepeatedField[]) }
+  sig { returns(Google::Protobuf::Map[String, String]) }
   def renamed_services; end
 
-  sig { params(value: Google::Protobuf::RepeatedField[]).void }
+  sig { params(value: Google::Protobuf::Map[String, String]).void }
   def renamed_services=(value); end
 end

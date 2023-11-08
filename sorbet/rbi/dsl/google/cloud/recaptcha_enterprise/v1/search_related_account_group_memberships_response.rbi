@@ -11,7 +11,7 @@ class Google::Cloud::RecaptchaEnterprise::V1::SearchRelatedAccountGroupMembershi
       related_account_group_memberships: T.nilable(T.any(Google::Protobuf::RepeatedField[Google::Cloud::RecaptchaEnterprise::V1::RelatedAccountGroupMembership], T::Array[Google::Cloud::RecaptchaEnterprise::V1::RelatedAccountGroupMembership]))
     ).void
   end
-  def initialize(next_page_token: nil, related_account_group_memberships: Google::Protobuf::RepeatedField.new(:message, Google::Cloud::RecaptchaEnterprise::V1::RelatedAccountGroupMembership)); end
+  def initialize(next_page_token: nil, related_account_group_memberships: T.unsafe(nil)); end
 
   sig { void }
   def clear_next_page_token; end

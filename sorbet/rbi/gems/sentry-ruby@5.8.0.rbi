@@ -12,64 +12,33 @@ module Rake
   extend ::FileUtils
 end
 
-# Rake main application object.  When invoking +rake+ from the
-# command line, a Rake::Application object is created and run.
-#
 # @api private
 #
 # source://sentry-ruby//lib/sentry/rake.rb#34
 class Rake::Application
   include ::Sentry::Rake::Application
 
-  # Initialize a Rake::Application object.
-  #
-  # @return [Application] a new instance of Application
-  #
   # source://rake/13.0.6/lib/rake/application.rb#49
   def initialize; end
 
-  # Add a file to the list of files to be imported.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#777
   def add_import(fn); end
 
-  # Add a loader to handle imported files ending in the extension
-  # +ext+.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#139
   def add_loader(ext, loader); end
 
-  # Collect the list of tasks on the command line.  If no tasks are
-  # given, return a list containing only the default task.
-  # Environmental assignments are processed at this time as well.
-  #
-  # `args` is the list of arguments to peruse to get the list of tasks.
-  # It should be the command line that was given to rake, less any
-  # recognised command-line options, which OptionParser.parse will
-  # have taken care of already.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#758
   def collect_command_line_tasks(args); end
 
-  # Default task name ("default").
-  # (May be overridden by subclasses)
-  #
   # source://rake/13.0.6/lib/rake/application.rb#772
   def default_task_name; end
 
-  # Warn about deprecated usage.
-  #
-  # Example:
-  #    Rake.application.deprecate("import", "Rake.import", caller.first)
-  #
   # source://rake/13.0.6/lib/rake/application.rb#258
   def deprecate(old_usage, new_usage, call_site); end
 
   # source://rake/13.0.6/lib/rake/application.rb#222
   def display_cause_details(ex); end
 
-  # Display the error message that caused the exception.
-  #
   # source://sentry-ruby//lib/sentry/rake.rb#10
   def display_error_message(ex); end
 
@@ -85,18 +54,12 @@ class Rake::Application
   # source://rake/13.0.6/lib/rake/application.rb#237
   def display_exception_message_details(ex); end
 
-  # Display the tasks and prerequisites
-  #
   # source://rake/13.0.6/lib/rake/application.rb#381
   def display_prerequisites; end
 
-  # Display the tasks and comments.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#298
   def display_tasks_and_comments; end
 
-  # Calculate the dynamic width of the
-  #
   # source://rake/13.0.6/lib/rake/application.rb#349
   def dynamic_width; end
 
@@ -106,65 +69,39 @@ class Rake::Application
   # source://rake/13.0.6/lib/rake/application.rb#357
   def dynamic_width_tput; end
 
-  # Exit the program because of an unhandled exception.
-  # (may be overridden by subclasses)
-  #
   # source://rake/13.0.6/lib/rake/application.rb#201
   def exit_because_of_exception(ex); end
 
   # source://rake/13.0.6/lib/rake/application.rb#678
   def find_rakefile_location; end
 
-  # Read and handle the command line options.  Returns the command line
-  # arguments that we didn't understand, which should (in theory) be just
-  # task names and env vars.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#644
   def handle_options(argv); end
 
-  # @return [Boolean]
-  #
   # source://rake/13.0.6/lib/rake/application.rb#233
   def has_cause?(ex); end
 
-  # True if one of the files in RAKEFILES is in the current directory.
-  # If a match is found, it is copied into @rakefile.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#274
   def have_rakefile; end
 
-  # Initialize the command line parameters and app name.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#88
   def init(app_name = T.unsafe(nil), argv = T.unsafe(nil)); end
 
-  # Invokes a task with arguments that are extracted from +task_string+
-  #
   # source://rake/13.0.6/lib/rake/application.rb#157
   def invoke_task(task_string); end
 
-  # Load the pending list of imported files.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#782
   def load_imports; end
 
-  # Find the rakefile and then load it and any pending imports.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#102
   def load_rakefile; end
 
-  # The name of the application (typically 'rake')
-  #
   # source://rake/13.0.6/lib/rake/application.rb#24
   def name; end
 
-  # Application options from the command line
-  #
   # source://rake/13.0.6/lib/rake/application.rb#145
   def options; end
 
-  # The original directory where rake was invoked.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#27
   def original_dir; end
 
@@ -174,14 +111,9 @@ class Rake::Application
   # source://rake/13.0.6/lib/rake/application.rb#690
   def print_rakefile_directory(location); end
 
-  # Similar to the regular Ruby +require+ command, but will check
-  # for *.rake files in addition to *.rb files.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#664
   def rake_require(file_name, paths = T.unsafe(nil), loaded = T.unsafe(nil)); end
 
-  # Name of the actual rakefile used.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#30
   def rakefile; end
 
@@ -191,69 +123,39 @@ class Rake::Application
   # source://rake/13.0.6/lib/rake/application.rb#695
   def raw_load_rakefile; end
 
-  # Run the Rake application.  The run method performs the following
-  # three steps:
-  #
-  # * Initialize the command line options (+init+).
-  # * Define the tasks (+load_rakefile+).
-  # * Run the top level tasks (+top_level+).
-  #
-  # If you wish to build a custom rake command, you should call
-  # +init+ on your application.  Then define any tasks.  Finally,
-  # call +top_level+ to run your top level tasks.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#79
   def run(argv = T.unsafe(nil)); end
 
-  # Run the given block with the thread startup and shutdown.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#122
   def run_with_threads; end
 
   # source://rake/13.0.6/lib/rake/application.rb#807
   def set_default_options; end
 
-  # Provide standard exception handling for the given block.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#185
   def standard_exception_handling; end
 
-  # A list of all the standard options used in rake, suitable for
-  # passing to OptionParser.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#402
   def standard_rake_options; end
 
-  # The directory path containing the system wide rakefiles.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#727
   def system_dir; end
 
-  # Number of columns on the terminal
-  #
   # source://rake/13.0.6/lib/rake/application.rb#33
   def terminal_columns; end
 
-  # Number of columns on the terminal
-  #
   # source://rake/13.0.6/lib/rake/application.rb#33
   def terminal_columns=(_arg0); end
 
   # source://rake/13.0.6/lib/rake/application.rb#337
   def terminal_width; end
 
-  # Return the thread pool used for multithreaded processing.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#150
   def thread_pool; end
 
-  # Run the top level tasks of a Rake application.
-  #
   # source://rake/13.0.6/lib/rake/application.rb#109
   def top_level; end
 
-  # List of the top level task names (task names from the command line).
-  #
   # source://rake/13.0.6/lib/rake/application.rb#36
   def top_level_tasks; end
 
@@ -263,33 +165,18 @@ class Rake::Application
   # source://rake/13.0.6/lib/rake/application.rb#370
   def truncate(string, width); end
 
-  # We will truncate output if we are outputting to a TTY or if we've been
-  # given an explicit column width to honor
-  #
-  # @return [Boolean]
-  #
   # source://rake/13.0.6/lib/rake/application.rb#293
   def truncate_output?; end
 
-  # Override the detected TTY output state (mostly for testing)
-  #
   # source://rake/13.0.6/lib/rake/application.rb#39
   def tty_output=(_arg0); end
 
-  # True if we are outputting to TTY, false otherwise
-  #
-  # @return [Boolean]
-  #
   # source://rake/13.0.6/lib/rake/application.rb#287
   def tty_output?; end
 
-  # @return [Boolean]
-  #
   # source://rake/13.0.6/lib/rake/application.rb#361
   def unix?; end
 
-  # @return [Boolean]
-  #
   # source://rake/13.0.6/lib/rake/application.rb#366
   def windows?; end
 
@@ -298,10 +185,6 @@ class Rake::Application
   # source://rake/13.0.6/lib/rake/application.rb#721
   def glob(path, &block); end
 
-  # Does the exception have a task invocation chain?
-  #
-  # @return [Boolean]
-  #
   # source://rake/13.0.6/lib/rake/application.rb#267
   def has_chain?(exception); end
 
@@ -318,233 +201,132 @@ class Rake::Application
   def standard_system_dir; end
 end
 
-# A Task is the basic unit of work in a Rakefile.  Tasks have associated
-# actions (possibly more than one) and a list of prerequisites.  When
-# invoked, a task will first ensure that all of its prerequisites have an
-# opportunity to run and then it will execute its own actions.
-#
-# Tasks are not usually created directly using the new method, but rather
-# use the +file+ and +task+ convenience methods.
-#
 # @api private
 #
 # source://sentry-ruby//lib/sentry/rake.rb#38
 class Rake::Task
   include ::Sentry::Rake::Task
 
-  # Create a task named +task_name+ with no actions or prerequisites. Use
-  # +enhance+ to add actions and prerequisites.
-  #
-  # @return [Task] a new instance of Task
-  #
   # source://rake/13.0.6/lib/rake/task.rb#99
   def initialize(task_name, app); end
 
-  # List of actions attached to a task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#24
   def actions; end
 
-  # Add a description to the task.  The description can consist of an option
-  # argument list (enclosed brackets) and an optional comment.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#298
   def add_description(description); end
 
-  # List of all unique prerequisite tasks including prerequisite tasks'
-  # prerequisites.
-  # Includes self when cyclic dependencies are found.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#77
   def all_prerequisite_tasks; end
 
-  # Has this task already been invoked?  Already invoked tasks
-  # will be skipped unless you reenable them.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#39
   def already_invoked; end
 
-  # Application owning this task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#27
   def application; end
 
-  # Application owning this task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#27
   def application=(_arg0); end
 
-  # Argument description (nil if none).
-  #
   # source://rake/13.0.6/lib/rake/task.rb#136
   def arg_description; end
 
-  # Name of arguments for this task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#141
   def arg_names; end
 
-  # Clear the existing prerequisites, actions, comments, and arguments of a rake task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#153
   def clear; end
 
-  # Clear the existing actions on a rake task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#168
   def clear_actions; end
 
-  # Clear the existing arguments on a rake task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#180
   def clear_args; end
 
-  # Clear the existing comments on a rake task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#174
   def clear_comments; end
 
-  # Clear the existing prerequisites of a rake task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#162
   def clear_prerequisites; end
 
-  # First line (or sentence) of all comments. Multiple comments are
-  # separated by a "/".
-  #
   # source://rake/13.0.6/lib/rake/task.rb#322
   def comment; end
 
   # source://rake/13.0.6/lib/rake/task.rb#304
   def comment=(comment); end
 
-  # Enhance a task with prerequisites or actions.  Returns self.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#115
   def enhance(deps = T.unsafe(nil), &block); end
 
-  # Execute the actions associated with this task.
-  #
   # source://sentry-ruby//lib/sentry/rake.rb#23
   def execute(args = T.unsafe(nil)); end
 
-  # Full collection of comments. Multiple comments are separated by
-  # newlines.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#316
   def full_comment; end
 
   # source://rake/13.0.6/lib/rake/task.rb#46
   def inspect; end
 
-  # Return a string describing the internal state of a task.  Useful for
-  # debugging.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#354
   def investigation; end
 
-  # Invoke the task if it is needed.  Prerequisites are invoked first.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#186
   def invoke(*args); end
 
-  # Invoke all the prerequisites of a task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#237
   def invoke_prerequisites(task_args, invocation_chain); end
 
-  # Invoke all the prerequisites of a task in parallel.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#249
   def invoke_prerequisites_concurrently(task_args, invocation_chain); end
 
-  # File/Line locations of each of the task definitions for this
-  # task (only valid if the task was defined with the detect
-  # location option set).
-  #
   # source://rake/13.0.6/lib/rake/task.rb#35
   def locations; end
 
-  # Name of the task, including any namespace qualifiers.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#122
   def name; end
 
-  # Name of task with argument list description.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#127
   def name_with_args; end
 
-  # Is this task needed?
-  #
-  # @return [Boolean]
-  #
   # source://rake/13.0.6/lib/rake/task.rb#286
   def needed?; end
 
-  # List of order only prerequisites for a task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#21
   def order_only_prerequisites; end
 
-  # List of prerequisites for a task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#17
   def prereqs; end
 
-  # List of prerequisite tasks
-  #
   # source://rake/13.0.6/lib/rake/task.rb#61
   def prerequisite_tasks; end
 
-  # List of prerequisites for a task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#17
   def prerequisites; end
 
-  # Reenable the task, allowing its tasks to be executed if the task
-  # is invoked again.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#147
   def reenable; end
 
-  # Array of nested namespaces names used for task lookup by this task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#30
   def scope; end
 
-  # Set the names of the arguments for this task. +args+ should be
-  # an array of symbols, one for each argument name.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#348
   def set_arg_names(args); end
 
-  # First source from a rule (nil if no sources)
-  #
   # source://rake/13.0.6/lib/rake/task.rb#93
   def source; end
 
   # source://rake/13.0.6/lib/rake/task.rb#52
   def sources; end
 
-  # List of sources for task.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#51
   def sources=(_arg0); end
 
-  # Timestamp for this task.  Basic tasks return the current time for their
-  # time stamp.  Other tasks can be more sophisticated.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#292
   def timestamp; end
 
-  # Return task name
-  #
   # source://rake/13.0.6/lib/rake/task.rb#42
   def to_s; end
 
-  # Add order only dependencies.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#379
   def |(deps); end
 
@@ -553,13 +335,6 @@ class Rake::Task
   # source://rake/13.0.6/lib/rake/task.rb#83
   def collect_prerequisites(seen); end
 
-  # Same as invoke, but explicitly pass a call chain to detect
-  # circular dependencies.
-  #
-  # If multiple tasks depend on this
-  # one in parallel, they will all fail if the first execution of
-  # this task fails.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#197
   def invoke_with_call_chain(task_args, invocation_chain); end
 
@@ -571,75 +346,40 @@ class Rake::Task
   # source://rake/13.0.6/lib/rake/task.rb#308
   def add_comment(comment); end
 
-  # Get the first sentence in a string. The sentence is terminated
-  # by the first period, exclamation mark, or the end of the line.
-  # Decimal points do not count as periods.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#341
   def first_sentence(string); end
 
-  # Format the trace flags for display.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#261
   def format_trace_flags; end
 
   # source://rake/13.0.6/lib/rake/task.rb#65
   def lookup_prerequisite(prerequisite_name); end
 
-  # Transform the list of comments as specified by the block and
-  # join with the separator.
-  #
   # source://rake/13.0.6/lib/rake/task.rb#328
   def transform_comments(separator, &block); end
 
   class << self
-    # Return a task with the given name.  If the task is not currently
-    # known, try to synthesize one from the defined rules.  If no rules are
-    # found, but an existing file matches the task name, assume it is a file
-    # task with no dependencies or actions.
-    #
     # source://rake/13.0.6/lib/rake/task.rb#404
     def [](task_name); end
 
-    # Clear the task list.  This cause rake to immediately forget all the
-    # tasks that have been assigned.  (Normally used in the unit tests.)
-    #
     # source://rake/13.0.6/lib/rake/task.rb#391
     def clear; end
 
-    # Define a rule for synthesizing tasks.
-    #
     # source://rake/13.0.6/lib/rake/task.rb#421
     def create_rule(*args, &block); end
 
-    # Define a task given +args+ and an option block.  If a rule with the
-    # given name already exists, the prerequisites and actions are added to
-    # the existing task.  Returns the defined task.
-    #
     # source://rake/13.0.6/lib/rake/task.rb#416
     def define_task(*args, &block); end
 
-    # Format dependencies parameter to pass to task.
-    #
     # source://rake/13.0.6/lib/rake/task.rb#373
     def format_deps(deps); end
 
-    # Apply the scope to the task name according to the rules for
-    # this kind of task.  Generic tasks will accept the scope as
-    # part of the name.
-    #
     # source://rake/13.0.6/lib/rake/task.rb#428
     def scope_name(scope, task_name); end
 
-    # TRUE if the task name is already defined.
-    #
-    # @return [Boolean]
-    #
     # source://rake/13.0.6/lib/rake/task.rb#409
     def task_defined?(task_name); end
 
-    # List of all defined tasks.
-    #
     # source://rake/13.0.6/lib/rake/task.rb#396
     def tasks; end
   end
@@ -1946,8 +1686,6 @@ class Sentry::Configuration
   # source://sentry-ruby//lib/sentry/configuration.rb#177
   def rack_env_whitelist=(_arg0); end
 
-  # Returns the value of attribute rails.
-  #
   # source://sentry-rails/5.8.0/lib/sentry/rails/configuration.rb#8
   def rails; end
 

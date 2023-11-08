@@ -5,15 +5,19 @@
 # Please instead update this file by running `bin/tapioca dsl Google::Protobuf::Struct`.
 
 class Google::Protobuf::Struct
-  sig { params(fields: T.nilable(T.any(Google::Protobuf::RepeatedField[], T::Array[]))).void }
-  def initialize(fields: Google::Protobuf::RepeatedField.new(:message, )); end
+  sig do
+    params(
+      fields: T.nilable(T.any(Google::Protobuf::Map[String, Google::Protobuf::Value], T::Hash[String, Google::Protobuf::Value]))
+    ).void
+  end
+  def initialize(fields: T.unsafe(nil)); end
 
   sig { void }
   def clear_fields; end
 
-  sig { returns(Google::Protobuf::RepeatedField[]) }
+  sig { returns(Google::Protobuf::Map[String, Google::Protobuf::Value]) }
   def fields; end
 
-  sig { params(value: Google::Protobuf::RepeatedField[]).void }
+  sig { params(value: Google::Protobuf::Map[String, Google::Protobuf::Value]).void }
   def fields=(value); end
 end

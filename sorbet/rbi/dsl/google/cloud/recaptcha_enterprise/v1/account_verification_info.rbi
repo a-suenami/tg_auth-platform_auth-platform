@@ -13,7 +13,7 @@ class Google::Cloud::RecaptchaEnterprise::V1::AccountVerificationInfo
       username: T.nilable(String)
     ).void
   end
-  def initialize(endpoints: Google::Protobuf::RepeatedField.new(:message, Google::Cloud::RecaptchaEnterprise::V1::EndpointVerificationInfo), language_code: nil, latest_verification_result: nil, username: nil); end
+  def initialize(endpoints: T.unsafe(nil), language_code: nil, latest_verification_result: nil, username: nil); end
 
   sig { void }
   def clear_endpoints; end
