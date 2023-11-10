@@ -28,10 +28,13 @@ gem 'rack-cors', '~> 2.0.0'
 gem 'bootsnap', '~> 1.16.0', require: false
 # Use ridgepole for schema management
 gem 'ridgepole', '~> 1.2.0'
-# # Simple, efficient background processing for Ruby
-# gem 'sidekiq', '~> 6.5.0'
-# # adds support for queueing jobs in a recurring way to sidekiq
-# gem 'sidekiq-scheduler', '~> 4.0.0'
+# Simple, efficient background processing for Ruby
+gem 'sidekiq', '~> 7.1.6'
+source 'https://gems.contribsys.com/' do
+  gem 'sidekiq-pro', '~> 7.1.6'
+end
+# adds support for queueing jobs in a recurring way to sidekiq
+gem 'sidekiq-scheduler', '~> 5.0', '>= 5.0.3'
 # # An extension to the sidekiq message processing to track your jobs
 # gem 'sidekiq-status', '~> 2.1.0'
 # # Ensure uniqueness of your Sidekiq jobs

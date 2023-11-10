@@ -1,4 +1,10 @@
 GEM
+  remote: https://gems.contribsys.com/
+  specs:
+    sidekiq-pro (7.1.6)
+      sidekiq (>= 7.1.5, < 8)
+
+GEM
   remote: https://rubygems.org/
   specs:
     actioncable (7.0.4.2)
@@ -191,6 +197,8 @@ GEM
     enumerize (2.5.0)
       activesupport (>= 3.2)
     erubi (1.12.0)
+    et-orbi (1.2.7)
+      tzinfo
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
@@ -201,6 +209,9 @@ GEM
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
     ffi (1.15.5)
+    fugit (1.9.0)
+      et-orbi (~> 1, >= 1.2.7)
+      raabro (~> 1.4)
     globalid (1.1.0)
       activesupport (>= 5.0)
     hashie (5.0.0)
@@ -295,6 +306,7 @@ GEM
     public_suffix (5.0.1)
     puma (6.1.0)
       nio4r (~> 2.0)
+    raabro (1.4.0)
     racc (1.6.2)
     rack (2.2.6.3)
     rack-attack (6.6.1)
@@ -353,7 +365,7 @@ GEM
       unparser
     redis (5.0.6)
       redis-client (>= 0.9.0)
-    redis-client (0.12.2)
+    redis-client (0.18.0)
       connection_pool
     redis-namespace (1.10.0)
       redis (>= 4)
@@ -424,6 +436,8 @@ GEM
       syntax_tree (>= 6, < 7)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
+    rufus-scheduler (3.9.1)
+      fugit (~> 1.1, >= 1.1.6)
     seed-fu (2.3.9)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
@@ -435,11 +449,15 @@ GEM
     sentry-sidekiq (5.8.0)
       sentry-ruby (~> 5.8.0)
       sidekiq (>= 3.0)
-    sidekiq (7.0.6)
+    sidekiq (7.1.6)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)
-      redis-client (>= 0.11.0)
+      redis-client (>= 0.14.0)
+    sidekiq-scheduler (5.0.3)
+      rufus-scheduler (~> 3.2)
+      sidekiq (>= 6, < 8)
+      tilt (>= 1.4.0)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -602,6 +620,9 @@ DEPENDENCIES
   sentry-rails (~> 5.8.0)
   sentry-ruby (~> 5.8.0)
   sentry-sidekiq (~> 5.8.0)
+  sidekiq (~> 7.1.6)
+  sidekiq-pro (~> 7.1.6)!
+  sidekiq-scheduler (~> 5.0, >= 5.0.3)
   simplecov (~> 0.22.0)
   slim-rails (~> 3.6.1)
   solargraph (~> 0.48.0)
