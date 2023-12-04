@@ -38,17 +38,17 @@ services:
     tty: true
 
 
-  # # ----------------------------------------------------------------------------
-  # worker:
-  # # ----------------------------------------------------------------------------
-  #   <<: *auth-platform-app-base
-  #   build:
-  #     context: .
-  #     dockerfile: docker/local.Dockerfile
-  #     args:
-  #       RAILS_ENV: development
-  #   ports: []
-  #   command: bundle exec sidekiq -C config/sidekiq.yml
+  # ----------------------------------------------------------------------------
+  worker:
+  # ----------------------------------------------------------------------------
+    <<: *auth-platform-app-base
+    build:
+      context: .
+      dockerfile: docker/local.Dockerfile
+      args:
+        RAILS_ENV: development
+    ports: []
+    command: bundle exec sidekiq -C config/sidekiq.yml
 
 
   # ----------------------------------------------------------------------------

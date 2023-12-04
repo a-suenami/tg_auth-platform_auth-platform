@@ -6,5 +6,3 @@
 
 module ActionDispatch::Request::Session; end
 module ActionDispatch::Response::Header; end
-module Sidekiq::Process; end
-module Sidekiq::SortedEntry; end
