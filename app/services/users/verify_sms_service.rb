@@ -1,0 +1,33 @@
+# typed: false
+
+module Users
+  class VerifySmsService < BaseService
+    def execute!(verification_code:, user_id:)
+      user = User.find user_id
+      sms_verifier = Users::SmsVerifier.find_by(user:, code: verification_code, verifier_type: :registration, used_at: nil)
+
+      if sms_verifier.blank?
+        user.sms_verifiers.enabled.where(verifier_type: :registration).each do |ev|
+          ev.remaining_attempts -= 1
+          ev.save!
+        end
+        return raise Exceptions::Services::Users::InvalidCode
+      end
+
+      if sms_verifier.remaining_attempts <= 0
+        raise Exceptions::Services::Users::SmsVerificationCodeAttemptsIsOver
+      elsif Time.zone.now < sms_verifier.expired_at
+        user.sms_verified = true
+        user.phone_number = sms_verifier.phone_number
+        user.phone_country_code = sms_verifier.phone_country_code
+        user.save!
+        sms_verifier.used_at = Time.zone.now
+        sms_verifier.save!
+      else
+        raise Exceptions::Services::Users::ExpiredEmailVerificationCode
+      end
+
+      user
+    end
+  end
+end

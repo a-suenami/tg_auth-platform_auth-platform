@@ -194,7 +194,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "password_digest"
     t.boolean "enabled", default: false
     t.string "tel"
-    t.boolean "tel_verified", default: false
+    t.string "phone_number"
+    t.string "phone_country_code"
+    t.boolean "sms_verified", default: false
     t.boolean "email_verified", default: false
     t.boolean "deleted", default: false
     t.string "password_reset_code"
@@ -247,6 +249,22 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.index ["user_id"], name: "index_users__password_resets_on_user_id"
   end
 
+  create_table "users__sms_verifiers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.string "code", null: false
+    t.datetime "expired_at", null: false
+    t.integer "remaining_attempts", default: 0
+    t.string "verifier_type", null: false
+    t.string "phone_number"
+    t.string "phone_country_code"
+    t.datetime "used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_users__sms_verifiers_on_tenant_id"
+    t.index ["user_id"], name: "index_users__sms_verifiers_on_user_id"
+  end
+
   add_foreign_key "account_locks", "tenants", name: "fk_account_locks_tenants"
   add_foreign_key "admins", "tenants", name: "fk_admins_tenants"
   add_foreign_key "contact_addresses", "tenants", name: "fk_contact_addresses_tenants"
@@ -273,4 +291,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
   add_foreign_key "users__linked_applications", "users", name: "fk_users__linked_applications_users"
   add_foreign_key "users__password_resets", "tenants", name: "fk_users__password_resets_tenants"
   add_foreign_key "users__password_resets", "users", name: "fk_users__password_resets_users"
+  add_foreign_key "users__sms_verifiers", "tenants", name: "fk_users__sms_verifiers_tenants"
+  add_foreign_key "users__sms_verifiers", "users", name: "fk_users__sms_verifiers_users"
 end

@@ -7,7 +7,7 @@ FactoryBot.define do
     tenant_id { create(:tenant).id }
     sequence(:email) { |n| "test#{n}@example.com" }
     enabled { true }
-    tel { '09012345678' }
+    phone_number { '09012345678' }
     deleted { false }
   end
 end

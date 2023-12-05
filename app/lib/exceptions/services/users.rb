@@ -100,6 +100,30 @@ module Exceptions
           'パスワードはすでに設定済みです'
         end
       end
+
+      class TelAlreadySet < BaseError
+        sig { returns(Symbol) }
+        def code
+          :tel_already_set
+        end
+
+        sig { returns(String) }
+        def message
+          '電話番号はすでに設定済みです'
+        end
+      end
+
+      class SmsVerificationCodeAttemptsIsOver < BaseError
+        sig { returns(Symbol) }
+        def code
+          :sms_verification_code_attempts_is_over
+        end
+
+        sig { returns(String) }
+        def message
+          'codeの試行回数が上限に達しました'
+        end
+      end
     end
   end
 end

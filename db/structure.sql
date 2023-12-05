@@ -277,7 +277,9 @@ CREATE TABLE public.users (
     password_digest character varying,
     enabled boolean DEFAULT false,
     tel character varying,
-    tel_verified boolean DEFAULT false,
+    phone_number character varying,
+    phone_country_code character varying,
+    sms_verified boolean DEFAULT false,
     email_verified boolean DEFAULT false,
     deleted boolean DEFAULT false,
     password_reset_code character varying,
@@ -334,6 +336,26 @@ CREATE TABLE public.users__password_resets (
     user_id uuid NOT NULL,
     code character varying NOT NULL,
     expired_at timestamp(6) without time zone NOT NULL,
+    used_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: users__sms_verifiers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users__sms_verifiers (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    code character varying NOT NULL,
+    expired_at timestamp(6) without time zone NOT NULL,
+    remaining_attempts integer DEFAULT 0,
+    verifier_type character varying NOT NULL,
+    phone_number character varying,
+    phone_country_code character varying,
     used_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -466,6 +488,14 @@ ALTER TABLE ONLY public.users__linked_applications
 
 ALTER TABLE ONLY public.users__password_resets
     ADD CONSTRAINT users__password_resets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users__sms_verifiers users__sms_verifiers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__sms_verifiers
+    ADD CONSTRAINT users__sms_verifiers_pkey PRIMARY KEY (id);
 
 
 --
@@ -701,6 +731,20 @@ CREATE INDEX index_users__password_resets_on_user_id ON public.users__password_r
 
 
 --
+-- Name: index_users__sms_verifiers_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__sms_verifiers_on_tenant_id ON public.users__sms_verifiers USING btree (tenant_id);
+
+
+--
+-- Name: index_users__sms_verifiers_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__sms_verifiers_on_user_id ON public.users__sms_verifiers USING btree (user_id);
+
+
+--
 -- Name: index_users_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -912,6 +956,22 @@ ALTER TABLE ONLY public.users__password_resets
 
 ALTER TABLE ONLY public.users__password_resets
     ADD CONSTRAINT fk_users__password_resets_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: users__sms_verifiers fk_users__sms_verifiers_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__sms_verifiers
+    ADD CONSTRAINT fk_users__sms_verifiers_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: users__sms_verifiers fk_users__sms_verifiers_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__sms_verifiers
+    ADD CONSTRAINT fk_users__sms_verifiers_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --

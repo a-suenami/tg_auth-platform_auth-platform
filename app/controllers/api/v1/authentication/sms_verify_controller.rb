@@ -1,0 +1,30 @@
+module API::V1::Authentication
+  class SmsVerifyController < ApplicationController
+    before_action :registrations_session_authenticate, only: [:send_verification_sms, :verify_sms]
+
+    # send verification sms
+    def send_verification_sms
+      raise Exceptions::Services::Users::TelAlreadySet if @current_user.sms_verified
+
+      @user = Users::SendVerificationSmsService.new.execute!(phone_number: params[:phone_number], phone_country_code: params[:phone_country_code], user_id: @current_user.id)
+      render :send_verification_sms
+    end
+
+    # verify sms endpoint
+    def verify_sms
+      raise Exceptions::Services::Users::TelAlreadySet if @current_user.sms_verified
+
+      @user = Users::VerifySmsService.new.execute!(verification_code: params[:sms_verification_code], user_id: @current_user.id)
+
+      render :verify_sms
+    end
+
+    private
+
+    def registrations_session_authenticate
+      raise Exceptions::Auth::AuthError if cookie_session[:registering_user_id].blank?
+
+      @current_user = User.find cookie_session[:registering_user_id]
+    end
+  end
+end

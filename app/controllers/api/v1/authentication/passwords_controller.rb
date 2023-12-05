@@ -7,6 +7,8 @@ module API::V1::Authentication
     def create
       raise Exceptions::Services::Users::PasswordAlreadySet if @current_user.password_digest.present?
 
+      # TODO: 電話番号検証が有効の場合、未検証時はエラー
+
       @current_user.update!(password_params)
       cookie_session[:registering_user_id] = nil
       cookie_session[:current_user_id] = @current_user.id
