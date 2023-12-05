@@ -160,7 +160,7 @@ build:app:staging:
     BUNDLE_GIT__L__TWOGATE__NET: $BUNDLE_GIT__L__TWOGATE__NET
   script:
     - eval $(aws --region ap-northeast-1 ecr get-login --no-include-email --registry-ids 287511440462)
-    - docker build . -f docker/Dockerfile -t rails_app:latest --build-arg BUNDLE_GIT__L__TWOGATE__NET
+    - docker build . -f docker/Dockerfile -t rails_app:latest --build-arg BUNDLE_GIT__L__TWOGATE__NET --build-arg BUNDLE_GEMS__CONTRIBSYS__COM
     - docker tag rails_app:latest 287511440462.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-stg:latest
     - docker tag rails_app:latest 287511440462.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-stg:$CI_COMMIT_SHA
     - docker push 287511440462.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-stg:latest
