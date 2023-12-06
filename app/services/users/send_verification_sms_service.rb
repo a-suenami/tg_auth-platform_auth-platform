@@ -21,7 +21,14 @@ module Users
     end
 
     def send_verification_sms(user, sms_verifier)
-      # TODO: sms送信
+      # 国内電話番号はSmsLink、それ以外はTwilioを使う。
+      if sms_verifier.phone_country_code == '81'
+        response = SmsLink::API.new.send_sms(send_to: sms_verifier.phone_number, body: "認証コードは#{sms_verifier.code}です。#{Tenant.current.name}")
+        # 一応ログとして出力
+        Rails.logger.info(response)
+      else
+        # TODO:
+      end
     end
   end
 end
