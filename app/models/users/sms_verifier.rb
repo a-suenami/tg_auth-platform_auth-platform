@@ -9,6 +9,8 @@ module Users
     belongs_to :user
     enumerize :verifier_type, in: [:registration], default: :registration
 
+    validates :phone_number, phony_plausible: true
+
     scope :enabled, -> { where(expired_at: Time.zone.now.., used_at: nil).where.not(remaining_attempts: 0) }
 
     sig { returns(T::Boolean) }
@@ -17,6 +19,11 @@ module Users
       self.expired_at = 1.hour.from_now
       self.remaining_attempts = CODE_ATTEMPTS_LIMIT
       true
+    end
+
+    sig { returns(String) }
+    def japan_local_phone_number
+      self.phone_number.gsub(/\A\+81/, '0')
     end
   end
 end

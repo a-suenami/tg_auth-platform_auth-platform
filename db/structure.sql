@@ -279,7 +279,6 @@ CREATE TABLE public.users (
     enabled boolean DEFAULT false,
     tel character varying,
     phone_number character varying,
-    phone_country_code character varying,
     sms_verified boolean DEFAULT false,
     email_verified boolean DEFAULT false,
     deleted boolean DEFAULT false,
@@ -356,8 +355,9 @@ CREATE TABLE public.users__sms_verifiers (
     remaining_attempts integer DEFAULT 0,
     verifier_type character varying NOT NULL,
     phone_number character varying,
-    phone_country_code character varying,
     used_at timestamp(6) without time zone,
+    sms_sender character varying,
+    sms_sid character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -763,7 +763,7 @@ CREATE UNIQUE INDEX index_users_on_tenant_id_email ON public.users USING btree (
 -- Name: index_users_on_tenant_id_phone_number; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_tenant_id_phone_number ON public.users USING btree (tenant_id, phone_country_code, phone_number);
+CREATE UNIQUE INDEX index_users_on_tenant_id_phone_number ON public.users USING btree (tenant_id, phone_number);
 
 
 --

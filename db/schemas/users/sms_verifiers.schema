@@ -6,8 +6,9 @@ create_table :users__sms_verifiers, force: :cascade, id: :uuid, default: -> { 'g
   t.integer  :remaining_attempts, default: 0
   t.string :verifier_type, null: false
   t.string :phone_number
-  t.string :phone_country_code
   t.datetime  :used_at
+  t.string :sms_sender
+  t.string :sms_sid
 
   t.timestamps null: false
 end

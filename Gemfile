@@ -151,6 +151,10 @@ gem 'jp_prefecture', '~> 1.1.0'
 gem 'countries', '~> 5.5.0'
 # Phone number validator
 gem 'phonelib', '~> 0.8.2'
+# SMS api client
+gem 'twilio-ruby', '~> 6.8.3'
+# normalizes, formats and splits international phone number
+gem 'phony_rails'
 
 # typing
 gem 'sorbet-runtime'

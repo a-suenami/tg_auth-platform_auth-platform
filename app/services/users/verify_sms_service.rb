@@ -20,7 +20,6 @@ module Users
         ActiveRecord::Base.transaction do
           user.sms_verified = true
           user.phone_number = sms_verifier.phone_number
-          user.phone_country_code = sms_verifier.phone_country_code
           user.save!
           sms_verifier.used_at = Time.zone.now
           sms_verifier.save!

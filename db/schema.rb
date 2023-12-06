@@ -196,7 +196,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.boolean "enabled", default: false
     t.string "tel"
     t.string "phone_number"
-    t.string "phone_country_code"
     t.boolean "sms_verified", default: false
     t.boolean "email_verified", default: false
     t.boolean "deleted", default: false
@@ -207,7 +206,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id", "email", "deleted"], name: "index_users_on_tenant_id_email", unique: true, where: "(deleted = false)"
-    t.index ["tenant_id", "phone_country_code", "phone_number"], name: "index_users_on_tenant_id_phone_number", unique: true
+    t.index ["tenant_id", "phone_number"], name: "index_users_on_tenant_id_phone_number", unique: true
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
   end
 
@@ -259,8 +258,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "remaining_attempts", default: 0
     t.string "verifier_type", null: false
     t.string "phone_number"
-    t.string "phone_country_code"
     t.datetime "used_at"
+    t.string "sms_sender"
+    t.string "sms_sid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id"], name: "index_users__sms_verifiers_on_tenant_id"

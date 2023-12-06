@@ -148,6 +148,18 @@ module Exceptions
           'その電話番号はすでに使用されています。'
         end
       end
+
+      class PhoneNumberInvaild < BaseError
+        sig { returns(Symbol) }
+        def code
+          :phone_number_invaild
+        end
+
+        sig { returns(String) }
+        def message
+          '電話番号の形式が不正です'
+        end
+      end
     end
   end
 end

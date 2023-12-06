@@ -3,10 +3,9 @@ create_table :users, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid(
   t.string  :email
   t.string  :password_digest
   t.boolean :enabled, default: false
-  # TODO: 電話番号はphone_number+phone_country_codeにするのでtelは移行済み次第消す
+  # TODO: 電話番号はphone_numberにするのでtelは移行済み次第消す
   t.string  :tel
   t.string :phone_number
-  t.string :phone_country_code
   t.boolean :sms_verified, default: false
   t.boolean :email_verified, default: false
   t.boolean :deleted, default: false
@@ -19,7 +18,7 @@ create_table :users, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid(
 
   t.timestamps null: false
   t.index [:tenant_id, :email, :deleted], name: :index_users_on_tenant_id_email, using: :btree, unique: true, where: '("deleted" = false)'
-  t.index [:tenant_id, :phone_country_code, :phone_number], name: :index_users_on_tenant_id_phone_number, using: :btree, unique: true
+  t.index [:tenant_id, :phone_number], name: :index_users_on_tenant_id_phone_number, using: :btree, unique: true
 end
 
 add_foreign_key :users, :tenants, name: :fk_users_tenants

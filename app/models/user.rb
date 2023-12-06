@@ -48,6 +48,7 @@ class User < ApplicationRecord
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :email, uniqueness: { scope: :tenant_id, conditions: -> { where(deleted: false) } }
   validates :tel, phone: { allow_blank: true }
+  validates :phone_number, phony_plausible: true
 
   scope :active, -> { where(deleted: false) }
 
