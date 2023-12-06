@@ -8,8 +8,8 @@ module API::V1::Authentication
       raise Exceptions::Services::Users::PasswordAlreadySet if @current_user.password_digest.present?
 
       # 電話番号検証が有効の場合、未検証時はエラー
-      if Tenant.current.sms_verification_required
-        raise Exceptions::Auth::AuthError unless @current_user.sms_verified
+      if Tenant.current.sms_verification_required && !@current_user.sms_verified
+        raise Exceptions::Auth::AuthError
       end
 
       @current_user.update!(password_params)

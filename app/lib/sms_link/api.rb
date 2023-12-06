@@ -15,7 +15,7 @@ module SmsLink
         f.headers = {
           token: Settings.sms_link.access_token,
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          Accept: 'application/json',
         }
       end, T.untyped,)
     end
@@ -24,10 +24,12 @@ module SmsLink
     sig { params(send_to: String, body: String).returns(T.untyped) }
     def send_sms(send_to:, body:)
       request(:post, '/api/v1/delivery', {
-        "contacts": [{
-            "phone_number": send_to
-        }],
-        "text_message": body
+        contacts: [
+          {
+            phone_number: send_to,
+          },
+        ],
+        text_message: body,
       },)
     end
 

@@ -16,20 +16,19 @@ module Users
         sms_verifier.save!
 
         # TODO: 1ユーザが送信可能なsmsを制限orクールタイムを設ける。
-        send_verification_sms(user, sms_verifier)
+        send_verification_sms(sms_verifier)
         user
       end
     end
 
-    def send_verification_sms(user, sms_verifier)
+    def send_verification_sms(sms_verifier)
       # 国内電話番号はSmsLink、それ以外はTwilioを使う。
       if sms_verifier.phone_country_code == '81'
         response = SmsLink::API.new.send_sms(send_to: sms_verifier.phone_number, body: "認証コードは#{sms_verifier.code}です。#{Tenant.current.name}")
         # 一応ログとして出力
         Rails.logger.info(response)
-      else
-        # TODO:
       end
+      # TODO: 海外電話番号対応
     end
   end
 end
