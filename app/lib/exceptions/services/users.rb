@@ -136,6 +136,18 @@ module Exceptions
           'SMS確認機能が無効です'
         end
       end
+
+      class PhoneNumberDuplicated < BaseError
+        sig { returns(Symbol) }
+        def code
+          :phone_number_duplicated
+        end
+
+        sig { returns(String) }
+        def message
+          'その電話番号はすでに使用されています。'
+        end
+      end
     end
   end
 end

@@ -4,10 +4,10 @@ module Users
   class SendVerificationSmsService < BaseService
 
     def execute!(phone_number:, phone_country_code:, user_id:)
-      # TODO: tel validate
-      # unless email =~ URI::MailTo::EMAIL_REGEXP
-      #   raise Exceptions::Services::Users::InvalidEmail
-      # end
+      # TODO: phone number validate
+
+      # 電話番号重複チェック
+      raise Exceptions::Services::Users::PhoneNumberDuplicated if User.find_by(phone_number:, phone_country_code:).present?
 
       ActiveRecord::Base.transaction do
         user = User.find user_id
@@ -15,6 +15,7 @@ module Users
         sms_verifier.set_code
         sms_verifier.save!
 
+        # TODO: 1ユーザが送信可能なsmsを制限orクールタイムを設ける。
         send_verification_sms(user, sms_verifier)
         user
       end

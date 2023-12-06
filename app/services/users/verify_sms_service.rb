@@ -17,12 +17,14 @@ module Users
       if sms_verifier.remaining_attempts <= 0
         raise Exceptions::Services::Users::SmsVerificationCodeAttemptsIsOver
       elsif Time.zone.now < sms_verifier.expired_at
-        user.sms_verified = true
-        user.phone_number = sms_verifier.phone_number
-        user.phone_country_code = sms_verifier.phone_country_code
-        user.save!
-        sms_verifier.used_at = Time.zone.now
-        sms_verifier.save!
+        ActiveRecord::Base.transaction do
+          user.sms_verified = true
+          user.phone_number = sms_verifier.phone_number
+          user.phone_country_code = sms_verifier.phone_country_code
+          user.save!
+          sms_verifier.used_at = Time.zone.now
+          sms_verifier.save!
+        end
       else
         raise Exceptions::Services::Users::ExpiredEmailVerificationCode
       end
