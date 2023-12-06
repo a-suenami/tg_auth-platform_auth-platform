@@ -42,6 +42,12 @@ class SettingsConfigOptions < ::Config::Options
   def doorkeeper=(value); end
 
   sig { returns(T.untyped) }
+  def google_cloud_platform; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def google_cloud_platform=(value); end
+
+  sig { returns(T.untyped) }
   def redis; end
 
   sig { params(value: T.untyped).returns(T.untyped) }
@@ -52,4 +58,10 @@ class SettingsConfigOptions < ::Config::Options
 
   sig { params(value: T.untyped).returns(T.untyped) }
   def ruler=(value); end
+
+  sig { returns(T.untyped) }
+  def sms_link; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def sms_link=(value); end
 end
