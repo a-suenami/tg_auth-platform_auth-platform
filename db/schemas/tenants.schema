@@ -3,6 +3,7 @@ create_table :tenants, force: :cascade, id: :citext do |t|
 
   t.string :domain
   t.integer :cookie_domain_remove_length, default: 0
+  t.boolean :sms_verification_required, default: false
 
   t.timestamps null: false
 end

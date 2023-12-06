@@ -101,10 +101,10 @@ module Exceptions
         end
       end
 
-      class TelAlreadySet < BaseError
+      class PhoneNumberAlreadySet < BaseError
         sig { returns(Symbol) }
         def code
-          :tel_already_set
+          :phone_number_already_set
         end
 
         sig { returns(String) }
@@ -122,6 +122,18 @@ module Exceptions
         sig { returns(String) }
         def message
           'codeの試行回数が上限に達しました'
+        end
+      end
+
+      class SmsVerificationDisabled < BaseError
+        sig { returns(Symbol) }
+        def code
+          :sms_verification_disabled
+        end
+
+        sig { returns(String) }
+        def message
+          'SMS確認機能が無効です'
         end
       end
     end

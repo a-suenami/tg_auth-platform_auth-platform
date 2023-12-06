@@ -242,6 +242,7 @@ CREATE TABLE public.tenants (
     name character varying,
     domain character varying,
     cookie_domain_remove_length integer DEFAULT 0,
+    sms_verification_required boolean DEFAULT false,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );

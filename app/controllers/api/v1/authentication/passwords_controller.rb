@@ -7,7 +7,10 @@ module API::V1::Authentication
     def create
       raise Exceptions::Services::Users::PasswordAlreadySet if @current_user.password_digest.present?
 
-      # TODO: 電話番号検証が有効の場合、未検証時はエラー
+      # 電話番号検証が有効の場合、未検証時はエラー
+      if Tenant.current.sms_verification_required
+        raise Exceptions::Auth::AuthError unless @current_user.sms_verified
+      end
 
       @current_user.update!(password_params)
       cookie_session[:registering_user_id] = nil

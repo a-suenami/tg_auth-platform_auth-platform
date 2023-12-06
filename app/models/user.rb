@@ -32,6 +32,10 @@ class User < ApplicationRecord
     class_name: 'Users::EmailVerifier',
     dependent: :delete_all,
     inverse_of: :user
+  has_many :sms_verifiers,
+    class_name: 'Users::SmsVerifier',
+    dependent: :delete_all,
+    inverse_of: :user
 
   has_many :linked_applications,
     class_name: 'Users::LinkedApplication',

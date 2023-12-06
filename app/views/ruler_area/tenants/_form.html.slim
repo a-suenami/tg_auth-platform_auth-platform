@@ -10,6 +10,9 @@
   = f.label :domain
   = f.text_field :domain, class: "uk-input"
 .uk-margin
+  = f.label :sms_verification_required
+  = f.check_box :sms_verification_required, :as => :boolean, class: "uk-checkbox"
+.uk-margin
   = f.label :cookie_domain_remove_length
   p.uk-article-meta cookieのドメイン属性に設定するドメインを調整するカラム。指定した数値分左から子ドメインを取り除く。
   = f.number_field :cookie_domain_remove_length

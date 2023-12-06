@@ -169,6 +169,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "name"
     t.string "domain"
     t.integer "cookie_domain_remove_length", default: 0
+    t.boolean "sms_verification_required", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
