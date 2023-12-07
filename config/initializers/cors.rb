@@ -7,6 +7,8 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     %r{^(http|https)://localhost:\d{4,5}$},
     %r{^(http|https)://127.0.0.1:\d{4,5}$},
     %r{^(ionic|capacitor)://localhost$},
+    %r{^https://.+\.auth\.app-staging\.id-platform\.net$},
+    %r{^https://.+\.auth\.app\.id-platform\.net$},
   ].map(&:freeze).freeze
 
   allow do
