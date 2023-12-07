@@ -74,7 +74,6 @@ Doorkeeper::OpenidConnect.configure do
         last_name_pron: resource_owner.user_profile&.last_name_kana,
         email: resource_owner.email,
         phone_number: resource_owner&.contact_address&.phone_number,
-        verified_phone_number: resource_owner&.phone_number,
         birth_date: resource_owner.user_profile&.birth_date,
         gender: resource_owner.user_profile&.gender,
         zip_code: resource_owner.contact_address&.zip_code,
