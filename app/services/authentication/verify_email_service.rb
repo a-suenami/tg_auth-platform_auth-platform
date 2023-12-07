@@ -1,6 +1,6 @@
 # typed: false
 
-module Users
+module Authentication
   class VerifyEmailService < BaseService
     def execute!(email_verification_code:, user_id:)
       user = User.find user_id
@@ -11,18 +11,18 @@ module Users
           ev.remaining_attempts -= 1
           ev.save!
         end
-        return raise Exceptions::Services::Users::InvalidCode
+        return raise Exceptions::Services::Authentication::InvalidCode
       end
 
       if email_verifier.remaining_attempts <= 0
-        raise Exceptions::Services::Users::EmailVerificationCodeAttemptsIsOver
+        raise Exceptions::Services::Authentication::EmailVerificationCodeAttemptsIsOver
       elsif Time.zone.now < email_verifier.expired_at
         user.email_verified = true
         user.save!
         email_verifier.used_at = Time.zone.now
         email_verifier.save!
       else
-        raise Exceptions::Services::Users::ExpiredEmailVerificationCode
+        raise Exceptions::Services::Authentication::ExpiredEmailVerificationCode
       end
 
       user

@@ -1,6 +1,6 @@
 # typed: true
 
-module Users
+module Authentication
   class SessionCreateService < BaseService
     def execute!(email:, password:)
       unless email =~ URI::MailTo::EMAIL_REGEXP

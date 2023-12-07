@@ -1,12 +1,12 @@
 # typed: true
 
-module Users
+module Authentication
   class SendVerificationEmailService < BaseService
 
     def execute!(email:)
       # email validate
       unless email =~ URI::MailTo::EMAIL_REGEXP
-        raise Exceptions::Services::Users::InvalidEmail
+        raise Exceptions::Services::Authentication::InvalidEmail
       end
 
       ActiveRecord::Base.transaction do
