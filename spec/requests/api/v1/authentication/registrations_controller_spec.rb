@@ -110,16 +110,16 @@ RSpec.describe '[ Registrations API ]' do
     }
 
     let(:email_verifier) {
-      create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 5, email_verifier_type: :registration)
+      create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 5, verifier_type: :registration)
     }
     let(:other_email_verifier) {
-      create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '654321', expired_at: 1.hour.from_now, remaining_attempts: 5, email_verifier_type: :registration)
+      create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '654321', expired_at: 1.hour.from_now, remaining_attempts: 5, verifier_type: :registration)
     }
     let(:other_type_email_verifier) {
-      create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '654321', expired_at: 1.hour.from_now, remaining_attempts: 5, email_verifier_type: :email_change)
+      create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '654321', expired_at: 1.hour.from_now, remaining_attempts: 5, verifier_type: :email_change)
     }
     let(:other_user_email_verifier) {
-      create(:users__email_verifier, tenant_id: current_tenant.id, user: other_user, code: '111111', expired_at: 1.hour.from_now, remaining_attempts: 5,  email_verifier_type: :registration)
+      create(:users__email_verifier, tenant_id: current_tenant.id, user: other_user, code: '111111', expired_at: 1.hour.from_now, remaining_attempts: 5,  verifier_type: :registration)
     }
 
     before do
@@ -185,7 +185,7 @@ RSpec.describe '[ Registrations API ]' do
 
     context 'when code expired' do
       let(:email_verifier) {
-        create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.ago, remaining_attempts: 5, email_verifier_type: :registration)
+        create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.ago, remaining_attempts: 5, verifier_type: :registration)
       }
       let(:params) {
         {
@@ -201,7 +201,7 @@ RSpec.describe '[ Registrations API ]' do
 
     context 'when remaining_attempts is 0' do
       let(:email_verifier) {
-        create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 0, email_verifier_type: :registration)
+        create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 0, verifier_type: :registration)
       }
       let(:params) {
         {
@@ -218,7 +218,7 @@ RSpec.describe '[ Registrations API ]' do
     context 'when code has already been used' do
       let(:email_verifier) {
         create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 5, used_at: 1.hour.ago,
-email_verifier_type: :registration,)
+verifier_type: :registration,)
       }
       let(:params) {
         {

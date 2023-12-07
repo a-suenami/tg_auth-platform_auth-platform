@@ -10,7 +10,7 @@ module Users
       end
 
       ActiveRecord::Base.transaction do
-        email_verifier = Users::EmailVerifier.new(user:, email:, email_verifier_type: :email_change)
+        email_verifier = Users::EmailVerifier.new(user:, email:, verifier_type: :email_change)
         email_verifier.set_code
         email_verifier.save!
         user.save!

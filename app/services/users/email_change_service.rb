@@ -3,10 +3,10 @@
 module Users
   class EmailChangeService < BaseService
     def execute!(user:, email_verification_code:)
-      email_verifier = Users::EmailVerifier.find_by(user:, code: email_verification_code, email_verifier_type: :email_change, used_at: nil)
+      email_verifier = Users::EmailVerifier.find_by(user:, code: email_verification_code, verifier_type: :email_change, used_at: nil)
 
       if email_verifier.blank?
-        user.email_verifiers.enabled.where(email_verifier_type: :email_change).each do |ev|
+        user.email_verifiers.enabled.where(verifier_type: :email_change).each do |ev|
           ev.remaining_attempts -= 1
           ev.save!
         end

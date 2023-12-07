@@ -613,49 +613,49 @@ class Users::EmailVerifier
     def email_previously_was; end
 
     sig { returns(T.untyped) }
-    def email_verifier_type; end
+    def verifier_type; end
 
     sig { params(value: T.untyped).returns(T.untyped) }
-    def email_verifier_type=(value); end
+    def verifier_type=(value); end
 
     sig { returns(T::Boolean) }
-    def email_verifier_type?; end
+    def verifier_type?; end
 
     sig { returns(T.untyped) }
-    def email_verifier_type_before_last_save; end
+    def verifier_type_before_last_save; end
 
     sig { returns(T.untyped) }
-    def email_verifier_type_before_type_cast; end
+    def verifier_type_before_type_cast; end
 
     sig { returns(T::Boolean) }
-    def email_verifier_type_came_from_user?; end
+    def verifier_type_came_from_user?; end
 
     sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def email_verifier_type_change; end
+    def verifier_type_change; end
 
     sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def email_verifier_type_change_to_be_saved; end
+    def verifier_type_change_to_be_saved; end
 
     sig { returns(T::Boolean) }
-    def email_verifier_type_changed?; end
+    def verifier_type_changed?; end
 
     sig { returns(T.untyped) }
-    def email_verifier_type_in_database; end
+    def verifier_type_in_database; end
 
     sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def email_verifier_type_previous_change; end
+    def verifier_type_previous_change; end
 
     sig { returns(T::Boolean) }
-    def email_verifier_type_previously_changed?; end
+    def verifier_type_previously_changed?; end
 
     sig { returns(T.untyped) }
-    def email_verifier_type_previously_was; end
+    def verifier_type_previously_was; end
 
     sig { returns(T.untyped) }
-    def email_verifier_type_was; end
+    def verifier_type_was; end
 
     sig { void }
-    def email_verifier_type_will_change!; end
+    def verifier_type_will_change!; end
 
     sig { returns(T.nilable(::String)) }
     def email_was; end
@@ -808,7 +808,7 @@ class Users::EmailVerifier
     def restore_email!; end
 
     sig { void }
-    def restore_email_verifier_type!; end
+    def restore_verifier_type!; end
 
     sig { void }
     def restore_expired_at!; end
@@ -850,10 +850,10 @@ class Users::EmailVerifier
     def saved_change_to_email?; end
 
     sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def saved_change_to_email_verifier_type; end
+    def saved_change_to_verifier_type; end
 
     sig { returns(T::Boolean) }
-    def saved_change_to_email_verifier_type?; end
+    def saved_change_to_verifier_type?; end
 
     sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
     def saved_change_to_expired_at; end
@@ -1087,7 +1087,7 @@ class Users::EmailVerifier
     def will_save_change_to_email?; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_email_verifier_type?; end
+    def will_save_change_to_verifier_type?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_expired_at?; end
