@@ -21,7 +21,7 @@ module SmsLink
     end
 
     # SMS配信API
-    sig { params(send_to: String, body: String).returns(T.untyped) }
+    sig { params(send_to: String, body: String).returns(T::Hash[T.untyped, T.untyped]) }
     def send_sms(send_to:, body:)
       request(:post, '/api/v1/delivery', {
         contacts: [
@@ -34,7 +34,7 @@ module SmsLink
     end
 
     # SMS配信結果取得API
-    sig { params(delivery_id: String) }
+    sig { params(delivery_id: String).returns(T::Hash[T.untyped, T.untyped]) }
     def fetch_sms_detail(delivery_id:)
       request(:get, "/api/v1/delivery_id/#{delivery_id}")
     end

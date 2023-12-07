@@ -21,9 +21,9 @@ module Users
       true
     end
 
-    sig { returns(String) }
+    sig { returns(T.nilable(String)) }
     def japan_local_phone_number
-      self.phone_number.gsub(/\A\+81/, '0')
+      self.phone_number&.gsub(/\A\+81/, '0')
     end
   end
 end

@@ -26,11 +26,11 @@ module Authentication
     def send_verification_sms(sms_verifier)
       # 国内電話番号はSmsLink、それ以外はTwilioを使う。
       if PhonyRails.country_code_from_number(sms_verifier.phone_number) == '81'
-        response = SmsLink::API.new.send_sms(send_to: sms_verifier.japan_local_phone_number, body: "認証コードは#{sms_verifier.code}です。#{Tenant.current.name}")
+        response = SmsLink::API.new.send_sms(send_to: sms_verifier.japan_local_phone_number, body: "認証コードは#{sms_verifier.code}です。#{Tenant.current&.name}")
         sms_verifier.sms_sender = 'smslink'
         sms_verifier.sms_sid = response['delivery_id']
       else
-        response = Twilio::API.new.send_sms(send_to: sms_verifier.phone_number, body: "認証コードは#{sms_verifier.code}です。#{Tenant.current.name}")
+        response = Twilio::API.new.send_sms(send_to: sms_verifier.phone_number, body: "認証コードは#{sms_verifier.code}です。#{Tenant.current&.name}")
         sms_verifier.sms_sender = 'twilio'
         sms_verifier.sms_sid = response.sid
       end
