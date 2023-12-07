@@ -44,7 +44,7 @@ module PublishEvents
       {
         uid: user.id,
         email: user.email,
-        tel: user.tel,
+        phone_number: user.phone_number,
         profile: {
           first_name: user.user_profile&.first_name,
           last_name: user.user_profile&.last_name,
@@ -61,6 +61,7 @@ module PublishEvents
           street: user.contact_address&.street,
           building: user.contact_address&.building,
           country_code: user.contact_address&.country_code,
+          phone_number: user.contact_address&.phone_number,
         },
         delivery_addresses: user.delivery_addresses.map do |delivery_address|
           {
@@ -73,7 +74,7 @@ module PublishEvents
             street: delivery_address.street,
             building: delivery_address.building,
             country_code: delivery_address.country_code,
-            contact_tel: delivery_address.contact_tel,
+            phone_number: delivery_address.phone_number,
           }
         end,
       }

@@ -1028,51 +1028,6 @@ class User
     def password_reset_code_will_change!; end
 
     sig { returns(T.nilable(::String)) }
-    def phone_country_code; end
-
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def phone_country_code=(value); end
-
-    sig { returns(T::Boolean) }
-    def phone_country_code?; end
-
-    sig { returns(T.nilable(::String)) }
-    def phone_country_code_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def phone_country_code_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def phone_country_code_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def phone_country_code_change; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def phone_country_code_change_to_be_saved; end
-
-    sig { returns(T::Boolean) }
-    def phone_country_code_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def phone_country_code_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def phone_country_code_previous_change; end
-
-    sig { returns(T::Boolean) }
-    def phone_country_code_previously_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def phone_country_code_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def phone_country_code_was; end
-
-    sig { void }
-    def phone_country_code_will_change!; end
-
-    sig { returns(T.nilable(::String)) }
     def phone_number; end
 
     sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
@@ -1148,16 +1103,10 @@ class User
     def restore_password_reset_code!; end
 
     sig { void }
-    def restore_phone_country_code!; end
-
-    sig { void }
     def restore_phone_number!; end
 
     sig { void }
     def restore_sms_verified!; end
-
-    sig { void }
-    def restore_tel!; end
 
     sig { void }
     def restore_tenant_id!; end
@@ -1229,12 +1178,6 @@ class User
     def saved_change_to_password_reset_code?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_phone_country_code; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_phone_country_code?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_phone_number; end
 
     sig { returns(T::Boolean) }
@@ -1245,12 +1188,6 @@ class User
 
     sig { returns(T::Boolean) }
     def saved_change_to_sms_verified?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_tel; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_tel?; end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
@@ -1314,51 +1251,6 @@ class User
 
     sig { void }
     def sms_verified_will_change!; end
-
-    sig { returns(T.nilable(::String)) }
-    def tel; end
-
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def tel=(value); end
-
-    sig { returns(T::Boolean) }
-    def tel?; end
-
-    sig { returns(T.nilable(::String)) }
-    def tel_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def tel_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def tel_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def tel_change; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def tel_change_to_be_saved; end
-
-    sig { returns(T::Boolean) }
-    def tel_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def tel_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def tel_previous_change; end
-
-    sig { returns(T::Boolean) }
-    def tel_previously_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def tel_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def tel_was; end
-
-    sig { void }
-    def tel_will_change!; end
 
     sig { returns(::String) }
     def tenant_id; end
@@ -1526,16 +1418,10 @@ class User
     def will_save_change_to_password_reset_code?; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_phone_country_code?; end
-
-    sig { returns(T::Boolean) }
     def will_save_change_to_phone_number?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_sms_verified?; end
-
-    sig { returns(T::Boolean) }
-    def will_save_change_to_tel?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end

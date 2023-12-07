@@ -664,51 +664,6 @@ class Users::SmsVerifier
     def id_will_change!; end
 
     sig { returns(T.nilable(::String)) }
-    def phone_country_code; end
-
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def phone_country_code=(value); end
-
-    sig { returns(T::Boolean) }
-    def phone_country_code?; end
-
-    sig { returns(T.nilable(::String)) }
-    def phone_country_code_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def phone_country_code_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def phone_country_code_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def phone_country_code_change; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def phone_country_code_change_to_be_saved; end
-
-    sig { returns(T::Boolean) }
-    def phone_country_code_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def phone_country_code_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def phone_country_code_previous_change; end
-
-    sig { returns(T::Boolean) }
-    def phone_country_code_previously_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def phone_country_code_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def phone_country_code_was; end
-
-    sig { void }
-    def phone_country_code_will_change!; end
-
-    sig { returns(T.nilable(::String)) }
     def phone_number; end
 
     sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
@@ -811,13 +766,16 @@ class Users::SmsVerifier
     def restore_id!; end
 
     sig { void }
-    def restore_phone_country_code!; end
-
-    sig { void }
     def restore_phone_number!; end
 
     sig { void }
     def restore_remaining_attempts!; end
+
+    sig { void }
+    def restore_sms_sender!; end
+
+    sig { void }
+    def restore_sms_sid!; end
 
     sig { void }
     def restore_tenant_id!; end
@@ -859,12 +817,6 @@ class Users::SmsVerifier
     def saved_change_to_id?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_phone_country_code; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_phone_country_code?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_phone_number; end
 
     sig { returns(T::Boolean) }
@@ -875,6 +827,18 @@ class Users::SmsVerifier
 
     sig { returns(T::Boolean) }
     def saved_change_to_remaining_attempts?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_sms_sender; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_sms_sender?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_sms_sid; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_sms_sid?; end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
@@ -905,6 +869,96 @@ class Users::SmsVerifier
 
     sig { returns(T::Boolean) }
     def saved_change_to_verifier_type?; end
+
+    sig { returns(T.nilable(::String)) }
+    def sms_sender; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def sms_sender=(value); end
+
+    sig { returns(T::Boolean) }
+    def sms_sender?; end
+
+    sig { returns(T.nilable(::String)) }
+    def sms_sender_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def sms_sender_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def sms_sender_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def sms_sender_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def sms_sender_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def sms_sender_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def sms_sender_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def sms_sender_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def sms_sender_previously_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def sms_sender_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def sms_sender_was; end
+
+    sig { void }
+    def sms_sender_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def sms_sid; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def sms_sid=(value); end
+
+    sig { returns(T::Boolean) }
+    def sms_sid?; end
+
+    sig { returns(T.nilable(::String)) }
+    def sms_sid_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def sms_sid_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def sms_sid_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def sms_sid_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def sms_sid_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def sms_sid_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def sms_sid_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def sms_sid_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def sms_sid_previously_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def sms_sid_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def sms_sid_was; end
+
+    sig { void }
+    def sms_sid_will_change!; end
 
     sig { returns(::String) }
     def tenant_id; end
@@ -1144,13 +1198,16 @@ class Users::SmsVerifier
     def will_save_change_to_id?; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_phone_country_code?; end
-
-    sig { returns(T::Boolean) }
     def will_save_change_to_phone_number?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_remaining_attempts?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_sms_sender?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_sms_sid?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end

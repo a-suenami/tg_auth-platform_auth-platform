@@ -86,7 +86,6 @@ RSpec.describe '[ Admin Users API ]' do
         it 'returns 200' do
           is_expected.to eq 200
           expect(body_array[0]['email']).to eq('test-first-user@example.com')
-          expect(body_array[0]['tel']).to eq('09012345678')
           expect(body_array[0]['delivery_addresses'][0]['is_default']).to be(false)
           expect(body_array[0]['delivery_addresses'][0]['prefecture_code']).to eq('13')
           expect(body_array[0]['delivery_addresses'][0]['prefecture']).to eq('東京都')
@@ -94,7 +93,7 @@ RSpec.describe '[ Admin Users API ]' do
           expect(body_array[0]['delivery_addresses'][0]['city']).to eq('世田谷区代田')
           expect(body_array[0]['delivery_addresses'][0]['street']).to eq('1-1-1')
           expect(body_array[0]['delivery_addresses'][0]['building']).to eq('代田アモーレ 101号室')
-          expect(body_array[0]['delivery_addresses'][0]['contact_tel']).to eq('090-1234-5678')
+          expect(body_array[0]['delivery_addresses'][0]['phone_number']).to eq('090-1234-5678')
           expect(body_array[0]['delivery_addresses'][0]['country_code']).to eq('JP')
           expect(body_array[0]['profile']['first_name']).to eq('太郎')
           expect(body_array[0]['profile']['last_name']).to eq('山田')
@@ -108,6 +107,7 @@ RSpec.describe '[ Admin Users API ]' do
           expect(body_array[0]['contact_address']['city']).to eq('世田谷区代田')
           expect(body_array[0]['contact_address']['street']).to eq('1-1-1')
           expect(body_array[0]['contact_address']['building']).to eq('代田アモーレ 101号室')
+          expect(body_array[0]['contact_address']['phone_number']).to eq('090-1234-5678')
           expect(body_array[0]['contact_address']['country_code']).to eq('JP')
           expect(body_array.count).to eq(20)
         end
@@ -286,7 +286,6 @@ RSpec.describe '[ Admin Users API ]' do
         it 'returns user info' do
           is_expected.to eq 200
           expect(body_hash).to eq({
-            'tel' => '09012345678',
             'uid' => user.id,
             'email' => user.email,
             'deleted' => false,
@@ -300,7 +299,7 @@ RSpec.describe '[ Admin Users API ]' do
                 'street' => delivery_address.street,
                 'building' => delivery_address.building,
                 'country_code' => 'JP',
-                'contact_tel' => delivery_address.contact_tel,
+                'phone_number' => delivery_address.phone_number,
               },
             ],
             'profile' => {
@@ -319,6 +318,7 @@ RSpec.describe '[ Admin Users API ]' do
               'street' => contact_address.street,
               'building' => contact_address.building,
               'country_code' => 'JP',
+              'phone_number' => contact_address.phone_number,
             },
           })
         end

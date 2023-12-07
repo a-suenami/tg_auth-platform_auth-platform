@@ -48,6 +48,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "city"
     t.string "street"
     t.string "building"
+    t.string "phone_number"
     t.string "country_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -64,7 +65,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "city"
     t.string "street"
     t.string "building"
-    t.string "contact_tel"
+    t.string "phone_number"
     t.string "country_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -194,7 +195,6 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "email"
     t.string "password_digest"
     t.boolean "enabled", default: false
-    t.string "tel"
     t.string "phone_number"
     t.boolean "sms_verified", default: false
     t.boolean "email_verified", default: false

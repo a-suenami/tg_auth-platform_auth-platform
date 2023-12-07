@@ -87,6 +87,7 @@ CREATE TABLE public.contact_addresses (
     city character varying,
     street character varying,
     building character varying,
+    phone_number character varying,
     country_code character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -107,7 +108,7 @@ CREATE TABLE public.delivery_addresses (
     city character varying,
     street character varying,
     building character varying,
-    contact_tel character varying,
+    phone_number character varying,
     country_code character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -277,7 +278,6 @@ CREATE TABLE public.users (
     email character varying,
     password_digest character varying,
     enabled boolean DEFAULT false,
-    tel character varying,
     phone_number character varying,
     sms_verified boolean DEFAULT false,
     email_verified boolean DEFAULT false,

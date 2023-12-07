@@ -5,7 +5,7 @@ contact_address_json = {}
 
 json[:id] = current_user.id
 json[:email] = current_user.email
-json[:tel] = current_user.tel
+json[:phone_number] = current_user.phone_number
 json[:enabled] = current_user.enabled
 json[:email_verified] = current_user.email_verified
 profile_json[:first_name] = current_user.user_profile&.first_name
@@ -20,6 +20,7 @@ contact_address_json[:zip_code] = current_user.contact_address&.zip_code
 contact_address_json[:city] = current_user.contact_address&.city
 contact_address_json[:street] = current_user.contact_address&.street
 contact_address_json[:building] = current_user.contact_address&.building
+contact_address_json[:phone_number] = current_user.contact_address&.phone_number
 contact_address_json[:country_code] = current_user.contact_address&.country_code
 
 json[:delivery_addresses] = current_user.delivery_addresses.map do |address|
@@ -31,7 +32,7 @@ json[:delivery_addresses] = current_user.delivery_addresses.map do |address|
   address_json[:city] = address&.city
   address_json[:street] = address&.street
   address_json[:building] = address&.building
-  address_json[:contact_tel] = address&.contact_tel
+  address_json[:phone_number] = address&.phone_number
   address_json[:country_code] = address&.country_code
   address_json
 end

@@ -40,7 +40,7 @@ module API::V1::Internal
         :city,
         :street,
         :building,
-        :contact_tel,
+        :phone_number,
         :country_code,
       )
     end

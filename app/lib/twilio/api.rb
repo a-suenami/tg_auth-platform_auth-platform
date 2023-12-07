@@ -10,6 +10,7 @@ module Twilio
     sig { void }
     def initialize
       @client = Twilio::REST::Client.new Settings.twilio.api_key_sid, Settings.twilio.api_key_secret, Settings.twilio.account_sid
+      @client.edge = 'tokyo'
     end
 
     # SMS配信API
