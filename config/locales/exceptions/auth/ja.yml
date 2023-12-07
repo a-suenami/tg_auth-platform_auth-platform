@@ -1,0 +1,6 @@
+ja:
+  exceptions:
+    auth:
+      auth_error: '認証に失敗しました'
+      access_token_expired: access tokenの有効期限が切れています
+      account_locked: 一定回数続けてログインに失敗したため、アカウントをロックしました。解除するにはご登録のメールアドレスに送付される案内をご確認いただくか、しばらく時間を開けてお試しください。

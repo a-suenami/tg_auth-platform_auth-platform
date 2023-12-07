@@ -6,7 +6,7 @@ module Users
     def execute!(user:, email:)
       # email validate
       unless email =~ URI::MailTo::EMAIL_REGEXP
-        raise Exceptions::Services::Users::InvalidEmail
+        raise Exceptions::Users::InvalidEmail
       end
 
       ActiveRecord::Base.transaction do

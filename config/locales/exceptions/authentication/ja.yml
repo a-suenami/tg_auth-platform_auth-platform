@@ -1,0 +1,16 @@
+ja:
+  exceptions:
+    authentication:
+      invalid_email: emailの形式が不正です
+      invalid_code: codeが不正です
+      expired_email_verification_code: codeの有効期限が切れています
+      email_verification_code_attempts_is_over: codeの試行回数が上限に達しました
+      password_reset_code_invalid: password reset codeが不正です
+      password_reset_code_used: codeはすでに使用されています
+      password_reset_code_expired: codeの有効期限が切れています
+      password_already_set: パスワードはすでに設定済みです
+      phone_number_already_set: 電話番号はすでに設定済みです
+      sms_verification_code_attempts_is_over: codeの試行回数が上限に達しました
+      sms_verification_disabled: SMS確認機能が無効です
+      phone_number_duplicated: その電話番号はすでに使用されています
+      phone_number_invaild: 電話番号の形式が不正です

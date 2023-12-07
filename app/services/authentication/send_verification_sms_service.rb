@@ -4,12 +4,12 @@ module Authentication
   class SendVerificationSmsService < BaseService
 
     def execute!(local_phone_number:, phone_country_code:, user_id:)
-      raise Exceptions::Services::Authentication::PhoneNumberInvaild unless PhonyRails.plausible_number?(local_phone_number, country_number: phone_country_code)
+      raise Exceptions::Authentication::PhoneNumberInvaild unless PhonyRails.plausible_number?(local_phone_number, country_number: phone_country_code)
 
       phone_number = PhonyRails.normalize_number(local_phone_number, country_number: phone_country_code)
 
       # 電話番号重複チェック
-      raise Exceptions::Services::Authentication::PhoneNumberDuplicated if User.find_by(phone_number:).present?
+      raise Exceptions::Authentication::PhoneNumberDuplicated if User.find_by(phone_number:).present?
 
       ActiveRecord::Base.transaction do
         user = User.find user_id

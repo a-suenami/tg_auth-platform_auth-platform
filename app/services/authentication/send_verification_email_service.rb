@@ -6,7 +6,7 @@ module Authentication
     def execute!(email:)
       # email validate
       unless email =~ URI::MailTo::EMAIL_REGEXP
-        raise Exceptions::Services::Authentication::InvalidEmail
+        raise Exceptions::Authentication::InvalidEmail
       end
 
       ActiveRecord::Base.transaction do

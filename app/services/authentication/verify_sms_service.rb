@@ -11,11 +11,11 @@ module Authentication
           ev.remaining_attempts -= 1
           ev.save!
         end
-        return raise Exceptions::Services::Authentication::InvalidCode
+        return raise Exceptions::Authentication::InvalidCode
       end
 
       if sms_verifier.remaining_attempts <= 0
-        raise Exceptions::Services::Authentication::SmsVerificationCodeAttemptsIsOver
+        raise Exceptions::Authentication::SmsVerificationCodeAttemptsIsOver
       elsif Time.zone.now < sms_verifier.expired_at
         ActiveRecord::Base.transaction do
           user.sms_verified = true
@@ -25,7 +25,7 @@ module Authentication
           sms_verifier.save!
         end
       else
-        raise Exceptions::Services::Authentication::ExpiredEmailVerificationCode
+        raise Exceptions::Authentication::ExpiredEmailVerificationCode
       end
 
       user

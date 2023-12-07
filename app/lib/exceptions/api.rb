@@ -21,7 +21,7 @@ module Exceptions
 
       sig { returns(String) }
       def message
-        '外部APIがエラーしました'
+        I18n.t 'exceptions.api.server_error'
       end
     end
 
@@ -33,7 +33,7 @@ module Exceptions
 
       sig { returns(String) }
       def message
-        '不正なリクエストです'
+        I18n.t 'exceptions.api.invalid_request_error'
       end
     end
 
@@ -45,7 +45,7 @@ module Exceptions
 
       sig { returns(String) }
       def message
-        'アクセス制限に達しました。'
+        I18n.t 'exceptions.api.request_limit_error'
       end
     end
   end

@@ -11,18 +11,18 @@ module Authentication
           ev.remaining_attempts -= 1
           ev.save!
         end
-        return raise Exceptions::Services::Authentication::InvalidCode
+        return raise Exceptions::Authentication::InvalidCode
       end
 
       if email_verifier.remaining_attempts <= 0
-        raise Exceptions::Services::Authentication::EmailVerificationCodeAttemptsIsOver
+        raise Exceptions::Authentication::EmailVerificationCodeAttemptsIsOver
       elsif Time.zone.now < email_verifier.expired_at
         user.email_verified = true
         user.save!
         email_verifier.used_at = Time.zone.now
         email_verifier.save!
       else
-        raise Exceptions::Services::Authentication::ExpiredEmailVerificationCode
+        raise Exceptions::Authentication::ExpiredEmailVerificationCode
       end
 
       user

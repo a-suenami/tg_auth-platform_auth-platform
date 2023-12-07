@@ -5,7 +5,7 @@ module API::V1::Authentication
     before_action :registrations_session_authenticate, only: [:create]
 
     def create
-      raise Exceptions::Services::Authentication::PasswordAlreadySet if @current_user.password_digest.present?
+      raise Exceptions::Authentication::PasswordAlreadySet if @current_user.password_digest.present?
 
       # 電話番号検証が有効の場合、未検証時はエラー
       if Tenant.current.sms_verification_required && !@current_user.sms_verified

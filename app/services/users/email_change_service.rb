@@ -10,10 +10,10 @@ module Users
           ev.remaining_attempts -= 1
           ev.save!
         end
-        return raise Exceptions::Services::Users::InvalidCode
+        return raise Exceptions::Users::InvalidCode
       end
 
-      return raise Exceptions::Services::Users::EmailVerificationCodeAttemptsIsOver if email_verifier.remaining_attempts <= 0
+      return raise Exceptions::Users::EmailVerificationCodeAttemptsIsOver if email_verifier.remaining_attempts <= 0
 
       if Time.zone.now < email_verifier.expired_at
         user.email = email_verifier.email
@@ -26,7 +26,7 @@ module Users
           user.account_lock.destroy
         end
       else
-        raise Exceptions::Services::Users::ExpiredEmailVerificationCode
+        raise Exceptions::Users::ExpiredEmailVerificationCode
       end
 
       # aws event bridgeにイベント発行
