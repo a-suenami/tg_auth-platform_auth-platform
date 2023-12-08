@@ -3,21 +3,26 @@
 module Authentication
   class SendVerificationSmsService < BaseService
 
-    def execute!(local_phone_number:, phone_country_code:, user_id:)
+    def execute!(local_phone_number:, phone_country_code:, user_id:, ip_address:)
       raise Exceptions::Authentication::PhoneNumberInvaild unless PhonyRails.plausible_number?(local_phone_number, country_number: phone_country_code)
 
       phone_number = PhonyRails.normalize_number(local_phone_number, country_number: phone_country_code)
+      user = User.find user_id
 
       # 電話番号重複チェック
       raise Exceptions::Authentication::PhoneNumberDuplicated if User.find_by(phone_number:).present?
 
+      # レートリミット 24時間以内 and (user or ip address or phone number)
+      sent_sms = Users::SmsVerifier.where(created_at: 24.hours.ago..).where(user:)
+        .or(Users::SmsVerifier.where(ip_address:))
+        .or(Users::SmsVerifier.where(phone_number:))
+      raise Exceptions::Authentication::SmsSendLimit if sent_sms.count > Settings.sms.max_sms_per_day
+
       ActiveRecord::Base.transaction do
-        user = User.find user_id
-        sms_verifier = Users::SmsVerifier.new(user:, phone_number:, verifier_type: :registration)
+        sms_verifier = Users::SmsVerifier.new(user:, phone_number:, verifier_type: :registration, ip_address:)
         sms_verifier.set_code
         sms_verifier.save!
 
-        # TODO: 1ユーザが送信可能なsmsを制限orクールタイムを設ける。
         send_verification_sms(sms_verifier)
         user
       end

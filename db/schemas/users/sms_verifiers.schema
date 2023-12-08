@@ -9,6 +9,7 @@ create_table :users__sms_verifiers, force: :cascade, id: :uuid, default: -> { 'g
   t.datetime  :used_at
   t.string :sms_sender
   t.string :sms_sid
+  t.string :ip_address
 
   t.timestamps null: false
 end

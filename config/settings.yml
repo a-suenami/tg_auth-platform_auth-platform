@@ -31,3 +31,5 @@ twilio:
   api_key_sid: <%= ENV['TWILIO_API_KEY_SID'] %>
   api_key_secret: <%= ENV['TWILIO_API_KEY_SECRET'] %>
   sender_number: <%= ENV['TWILIO_SENDER_NUMBER'] %>
+sms:
+  max_sms_per_day: <%= ENV['SMS_MAX_SMS_PER_DAY'] || 10 %>

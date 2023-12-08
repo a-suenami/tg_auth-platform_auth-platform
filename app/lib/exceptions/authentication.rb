@@ -159,5 +159,17 @@ module Exceptions
         I18n.t 'exceptions.authentication.phone_number_invaild'
       end
     end
+
+    class SmsSendLimit < BaseError
+      sig { returns(Symbol) }
+      def code
+        :sms_send_limit
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.authentication.sms_send_limit'
+      end
+    end
   end
 end
