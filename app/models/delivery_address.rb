@@ -7,7 +7,7 @@ class DeliveryAddress < ApplicationRecord
 
   belongs_to :user, inverse_of: :delivery_addresses
 
-  validates :contact_tel, phone: { allow_blank: true }
+  validates :phone_number, phone: { allow_blank: true }
 
   sig { returns(String) }
   def prefecture_code_jis

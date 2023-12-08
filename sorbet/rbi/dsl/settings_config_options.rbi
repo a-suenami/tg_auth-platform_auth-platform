@@ -52,4 +52,16 @@ class SettingsConfigOptions < ::Config::Options
 
   sig { params(value: T.untyped).returns(T.untyped) }
   def ruler=(value); end
+
+  sig { returns(T.untyped) }
+  def sms_link; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def sms_link=(value); end
+
+  sig { returns(T.untyped) }
+  def twilio; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def twilio=(value); end
 end

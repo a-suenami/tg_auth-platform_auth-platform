@@ -33,7 +33,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         expect(body_array[0]['city']).to eq('世田谷区代田')
         expect(body_array[0]['street']).to eq('1-1-1')
         expect(body_array[0]['building']).to eq('代田アモーレ 101号室')
-        expect(body_array[0]['contact_tel']).to eq('090-1234-5678')
+        expect(body_array[0]['phone_number']).to eq('090-1234-5678')
       end
     end
   end
@@ -58,7 +58,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         city: '世田谷区北沢',
         street: '1-1-2',
         building: '北沢アモーレ 101号室',
-        contact_tel: '080-1234-5678',)
+        phone_number: '080-1234-5678',)
     }
     let(:current_user_delivery_addresses) {
       create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: current_user.id)
@@ -84,7 +84,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         expect(body_hash['city']).to eq('世田谷区北沢')
         expect(body_hash['street']).to eq('1-1-2')
         expect(body_hash['building']).to eq('北沢アモーレ 101号室')
-        expect(body_hash['contact_tel']).to eq('080-1234-5678')
+        expect(body_hash['phone_number']).to eq('080-1234-5678')
       end
     end
   end
@@ -121,7 +121,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
             city: '世田谷区北沢',
             street: '1-1-2',
             building: '北沢アモーレ 101号室',
-            contact_tel: '080-1234-5678',
+            phone_number: '080-1234-5678',
           },
         }
       }
@@ -134,7 +134,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         expect(body_hash['city']).to eq('世田谷区北沢')
         expect(body_hash['street']).to eq('1-1-2')
         expect(body_hash['building']).to eq('北沢アモーレ 101号室')
-        expect(body_hash['contact_tel']).to eq('080-1234-5678')
+        expect(body_hash['phone_number']).to eq('080-1234-5678')
       end
     end
 
@@ -147,7 +147,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
             city: nil,
             street: nil,
             building: nil,
-            contact_tel: nil,
+            phone_number: nil,
           },
         }
       }
@@ -179,7 +179,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         city: '世田谷区北沢',
         street: '1-1-2',
         building: '北沢アモーレ 101号室',
-        contact_tel: '080-1234-5678',)
+        phone_number: '080-1234-5678',)
     }
     let(:current_user_delivery_addresses) {
       create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: current_user.id)
@@ -204,7 +204,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
             city: '東京都港区芝公園',
             street: '４丁目２−８',
             building: '東京タワー 2F',
-            contact_tel: '080-1234-1234',
+            phone_number: '080-1234-1234',
           },
         }
       }
@@ -217,7 +217,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         expect(body_hash['city']).to eq('東京都港区芝公園')
         expect(body_hash['street']).to eq('４丁目２−８')
         expect(body_hash['building']).to eq('東京タワー 2F')
-        expect(body_hash['contact_tel']).to eq('080-1234-1234')
+        expect(body_hash['phone_number']).to eq('080-1234-1234')
       end
     end
 
@@ -230,7 +230,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
             city: nil,
             street: nil,
             building: nil,
-            contact_tel: nil,
+            phone_number: nil,
           },
         }
       }
@@ -263,7 +263,7 @@ RSpec.describe '[ DeliveryAddresses API ]' do
         city: '世田谷区北沢',
         street: '1-1-2',
         building: '北沢アモーレ 101号室',
-        contact_tel: '080-1234-5678',)
+        phone_number: '080-1234-5678',)
     }
     let(:current_user_delivery_addresses) {
       create_list(:delivery_address, 3, tenant_id: current_tenant.id, user_id: current_user.id)

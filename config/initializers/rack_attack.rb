@@ -1,6 +1,7 @@
 RATELIMIT_PATHS = [
   '/api/v1/authentication/sessions',
   '/api/v1/authentication/registrations/verify_email',
+  '/api/v1/authentication/sms_verify/verify_sms',
   '/api/v1/authentication/password_resets',
   '/api/v1/internal/email_change',
   '/oauth/token',

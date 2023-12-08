@@ -3,8 +3,8 @@ create_table :users, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid(
   t.string  :email
   t.string  :password_digest
   t.boolean :enabled, default: false
-  t.string  :tel
-  t.boolean :tel_verified, default: false
+  t.string :phone_number
+  t.boolean :sms_verified, default: false
   t.boolean :email_verified, default: false
   t.boolean :deleted, default: false
   t.string  :password_reset_code
@@ -16,6 +16,7 @@ create_table :users, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid(
 
   t.timestamps null: false
   t.index [:tenant_id, :email, :deleted], name: :index_users_on_tenant_id_email, using: :btree, unique: true, where: '("deleted" = false)'
+  t.index [:tenant_id, :phone_number], name: :index_users_on_tenant_id_phone_number, using: :btree, unique: true
 end
 
 add_foreign_key :users, :tenants, name: :fk_users_tenants

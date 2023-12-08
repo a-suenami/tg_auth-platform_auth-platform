@@ -8,7 +8,7 @@
     city: delivery_address.city,
     street: delivery_address.street,
     building: delivery_address.building,
-    contact_tel: delivery_address.contact_tel,
+    phone_number: delivery_address.phone_number,
     country_code: delivery_address.country_code,
   }
 end

@@ -369,6 +369,20 @@ class User
     sig { returns(T.nilable(::UserProfile)) }
     def reload_user_profile; end
 
+    sig { returns(T::Array[T.untyped]) }
+    def sms_verifier_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def sms_verifier_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :sms_verifiers`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Users::SmsVerifier::PrivateCollectionProxy) }
+    def sms_verifiers; end
+
+    sig { params(value: T::Enumerable[::Users::SmsVerifier]).void }
+    def sms_verifiers=(value); end
+
     sig { returns(T.nilable(::UserProfile)) }
     def user_profile; end
 
@@ -1013,6 +1027,51 @@ class User
     sig { void }
     def password_reset_code_will_change!; end
 
+    sig { returns(T.nilable(::String)) }
+    def phone_number; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def phone_number=(value); end
+
+    sig { returns(T::Boolean) }
+    def phone_number?; end
+
+    sig { returns(T.nilable(::String)) }
+    def phone_number_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def phone_number_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def phone_number_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def phone_number_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def phone_number_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def phone_number_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def phone_number_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def phone_number_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def phone_number_previously_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def phone_number_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def phone_number_was; end
+
+    sig { void }
+    def phone_number_will_change!; end
+
     sig { void }
     def restore_created_at!; end
 
@@ -1044,10 +1103,10 @@ class User
     def restore_password_reset_code!; end
 
     sig { void }
-    def restore_tel!; end
+    def restore_phone_number!; end
 
     sig { void }
-    def restore_tel_verified!; end
+    def restore_sms_verified!; end
 
     sig { void }
     def restore_tenant_id!; end
@@ -1119,16 +1178,16 @@ class User
     def saved_change_to_password_reset_code?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_tel; end
+    def saved_change_to_phone_number; end
 
     sig { returns(T::Boolean) }
-    def saved_change_to_tel?; end
+    def saved_change_to_phone_number?; end
 
     sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
-    def saved_change_to_tel_verified; end
+    def saved_change_to_sms_verified; end
 
     sig { returns(T::Boolean) }
-    def saved_change_to_tel_verified?; end
+    def saved_change_to_sms_verified?; end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
@@ -1148,95 +1207,50 @@ class User
     sig { returns(T::Boolean) }
     def saved_change_to_updated_at?; end
 
-    sig { returns(T.nilable(::String)) }
-    def tel; end
-
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def tel=(value); end
-
-    sig { returns(T::Boolean) }
-    def tel?; end
-
-    sig { returns(T.nilable(::String)) }
-    def tel_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def tel_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def tel_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def tel_change; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def tel_change_to_be_saved; end
-
-    sig { returns(T::Boolean) }
-    def tel_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def tel_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def tel_previous_change; end
-
-    sig { returns(T::Boolean) }
-    def tel_previously_changed?; end
-
-    sig { returns(T.nilable(::String)) }
-    def tel_previously_was; end
-
     sig { returns(T.nilable(T::Boolean)) }
-    def tel_verified; end
+    def sms_verified; end
 
     sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
-    def tel_verified=(value); end
+    def sms_verified=(value); end
 
     sig { returns(T::Boolean) }
-    def tel_verified?; end
+    def sms_verified?; end
 
     sig { returns(T.nilable(T::Boolean)) }
-    def tel_verified_before_last_save; end
+    def sms_verified_before_last_save; end
 
     sig { returns(T.untyped) }
-    def tel_verified_before_type_cast; end
+    def sms_verified_before_type_cast; end
 
     sig { returns(T::Boolean) }
-    def tel_verified_came_from_user?; end
+    def sms_verified_came_from_user?; end
 
     sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
-    def tel_verified_change; end
+    def sms_verified_change; end
 
     sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
-    def tel_verified_change_to_be_saved; end
+    def sms_verified_change_to_be_saved; end
 
     sig { returns(T::Boolean) }
-    def tel_verified_changed?; end
+    def sms_verified_changed?; end
 
     sig { returns(T.nilable(T::Boolean)) }
-    def tel_verified_in_database; end
+    def sms_verified_in_database; end
 
     sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
-    def tel_verified_previous_change; end
+    def sms_verified_previous_change; end
 
     sig { returns(T::Boolean) }
-    def tel_verified_previously_changed?; end
+    def sms_verified_previously_changed?; end
 
     sig { returns(T.nilable(T::Boolean)) }
-    def tel_verified_previously_was; end
+    def sms_verified_previously_was; end
 
     sig { returns(T.nilable(T::Boolean)) }
-    def tel_verified_was; end
+    def sms_verified_was; end
 
     sig { void }
-    def tel_verified_will_change!; end
-
-    sig { returns(T.nilable(::String)) }
-    def tel_was; end
-
-    sig { void }
-    def tel_will_change!; end
+    def sms_verified_will_change!; end
 
     sig { returns(::String) }
     def tenant_id; end
@@ -1404,10 +1418,10 @@ class User
     def will_save_change_to_password_reset_code?; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_tel?; end
+    def will_save_change_to_phone_number?; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_tel_verified?; end
+    def will_save_change_to_sms_verified?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end

@@ -4,7 +4,7 @@ module API::V1::Authentication
     def reset_requests
       client = Tenant.current.login_spa_application
       if client.present?
-        Users::SendPasswordResetEmailService.new.execute!(email: params[:email], base_url: client.redirect_url_on_password_reset)
+        Authentication::SendPasswordResetEmailService.new.execute!(email: params[:email], base_url: client.redirect_url_on_password_reset)
       else
         raise ActiveRecord::RecordNotFound
       end
@@ -12,7 +12,7 @@ module API::V1::Authentication
     end
 
     def create
-      user = Users::PasswordResetService.new(password_params).execute!(password_reset_code: params[:password_reset_code], email: params[:email])
+      user = Authentication::PasswordResetService.new(password_params).execute!(password_reset_code: params[:password_reset_code], email: params[:email])
       cookie_session[:current_user_id] = user.id
       head :no_content
     rescue ActiveRecord::RecordInvalid

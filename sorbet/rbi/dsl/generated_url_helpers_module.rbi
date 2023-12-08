@@ -198,6 +198,9 @@ module GeneratedUrlHelpersModule
   def send_verification_email_api_v1_authentication_registrations_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def send_verification_sms_api_v1_authentication_sms_verify_index_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def turbo_recede_historical_location_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -211,4 +214,7 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def verify_email_api_v1_authentication_registrations_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def verify_sms_api_v1_authentication_sms_verify_index_url(*args); end
 end

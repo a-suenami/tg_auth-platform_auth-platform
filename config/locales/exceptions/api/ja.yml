@@ -1,0 +1,6 @@
+ja:
+  exceptions:
+    api:
+      server_error: 外部APIがエラーしました
+      invalid_request_error: 不正なリクエストです
+      request_limit_error: アクセス制限に達しました。

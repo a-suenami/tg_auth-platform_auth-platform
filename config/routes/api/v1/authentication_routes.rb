@@ -14,6 +14,12 @@ Rails.application.routes.draw do
             post :verify_email
           end
         end
+        resources :sms_verify, only: [] do
+          collection do
+            post :send_verification_sms
+            post :verify_sms
+          end
+        end
         resource :passwords, only: [:create, :update]
         resources :password_resets, only: [:create] do
           collection do

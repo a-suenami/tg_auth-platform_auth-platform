@@ -42,6 +42,7 @@ RSpec.describe '[ Profiles API ]' do
         expect(body_hash['contact_address']['city']).to eq('世田谷区代田')
         expect(body_hash['contact_address']['street']).to eq('1-1-1')
         expect(body_hash['contact_address']['building']).to eq('代田アモーレ 101号室')
+        expect(body_hash['contact_address']['phone_number']).to eq('090-1234-5678')
       end
     end
   end
@@ -104,6 +105,7 @@ RSpec.describe '[ Profiles API ]' do
                 city: '世田谷区北沢',
                 street: '1丁目1-1',
                 building: 'グレートオウル北沢101',
+                phone_number: '090-1234-5678',
               },
             },
           }
@@ -123,6 +125,7 @@ RSpec.describe '[ Profiles API ]' do
           expect(body_hash['contact_address']['city']).to eq('世田谷区北沢')
           expect(body_hash['contact_address']['street']).to eq('1丁目1-1')
           expect(body_hash['contact_address']['building']).to eq('グレートオウル北沢101')
+          expect(body_hash['contact_address']['phone_number']).to eq('090-1234-5678')
         end
       end
 

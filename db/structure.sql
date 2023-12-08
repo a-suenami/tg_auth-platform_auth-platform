@@ -87,6 +87,7 @@ CREATE TABLE public.contact_addresses (
     city character varying,
     street character varying,
     building character varying,
+    phone_number character varying,
     country_code character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -107,7 +108,7 @@ CREATE TABLE public.delivery_addresses (
     city character varying,
     street character varying,
     building character varying,
-    contact_tel character varying,
+    phone_number character varying,
     country_code character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -242,6 +243,7 @@ CREATE TABLE public.tenants (
     name character varying,
     domain character varying,
     cookie_domain_remove_length integer DEFAULT 0,
+    sms_verification_required boolean DEFAULT false,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -276,8 +278,8 @@ CREATE TABLE public.users (
     email character varying,
     password_digest character varying,
     enabled boolean DEFAULT false,
-    tel character varying,
-    tel_verified boolean DEFAULT false,
+    phone_number character varying,
+    sms_verified boolean DEFAULT false,
     email_verified boolean DEFAULT false,
     deleted boolean DEFAULT false,
     password_reset_code character varying,
@@ -300,7 +302,7 @@ CREATE TABLE public.users__email_verifiers (
     code character varying NOT NULL,
     expired_at timestamp(6) without time zone NOT NULL,
     remaining_attempts integer DEFAULT 0,
-    email_verifier_type character varying NOT NULL,
+    verifier_type character varying DEFAULT 'registration'::character varying NOT NULL,
     email character varying,
     used_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
@@ -335,6 +337,27 @@ CREATE TABLE public.users__password_resets (
     code character varying NOT NULL,
     expired_at timestamp(6) without time zone NOT NULL,
     used_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: users__sms_verifiers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users__sms_verifiers (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    code character varying NOT NULL,
+    expired_at timestamp(6) without time zone NOT NULL,
+    remaining_attempts integer DEFAULT 0,
+    verifier_type character varying NOT NULL,
+    phone_number character varying,
+    used_at timestamp(6) without time zone,
+    sms_sender character varying,
+    sms_sid character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -466,6 +489,14 @@ ALTER TABLE ONLY public.users__linked_applications
 
 ALTER TABLE ONLY public.users__password_resets
     ADD CONSTRAINT users__password_resets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users__sms_verifiers users__sms_verifiers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__sms_verifiers
+    ADD CONSTRAINT users__sms_verifiers_pkey PRIMARY KEY (id);
 
 
 --
@@ -701,6 +732,20 @@ CREATE INDEX index_users__password_resets_on_user_id ON public.users__password_r
 
 
 --
+-- Name: index_users__sms_verifiers_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__sms_verifiers_on_tenant_id ON public.users__sms_verifiers USING btree (tenant_id);
+
+
+--
+-- Name: index_users__sms_verifiers_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users__sms_verifiers_on_user_id ON public.users__sms_verifiers USING btree (user_id);
+
+
+--
 -- Name: index_users_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -712,6 +757,13 @@ CREATE INDEX index_users_on_tenant_id ON public.users USING btree (tenant_id);
 --
 
 CREATE UNIQUE INDEX index_users_on_tenant_id_email ON public.users USING btree (tenant_id, email, deleted) WHERE (deleted = false);
+
+
+--
+-- Name: index_users_on_tenant_id_phone_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_tenant_id_phone_number ON public.users USING btree (tenant_id, phone_number);
 
 
 --
@@ -912,6 +964,22 @@ ALTER TABLE ONLY public.users__password_resets
 
 ALTER TABLE ONLY public.users__password_resets
     ADD CONSTRAINT fk_users__password_resets_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: users__sms_verifiers fk_users__sms_verifiers_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__sms_verifiers
+    ADD CONSTRAINT fk_users__sms_verifiers_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: users__sms_verifiers fk_users__sms_verifiers_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users__sms_verifiers
+    ADD CONSTRAINT fk_users__sms_verifiers_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --

@@ -7,7 +7,7 @@ module Users
     CODE_ATTEMPTS_LIMIT = T.let(5, Integer)
 
     belongs_to :user
-    enumerize :email_verifier_type, in: [:registration, :email_change]
+    enumerize :verifier_type, in: [:registration, :email_change]
 
     scope :enabled, -> { where(expired_at: Time.zone.now.., used_at: nil).where.not(remaining_attempts: 0) }
 

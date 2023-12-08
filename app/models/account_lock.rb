@@ -59,7 +59,7 @@ class AccountLock < ApplicationRecord
       self.lock_expired_at = Time.zone.now + Settings.account_lock.lockout_period_min&.minutes
       self.save!
       if self.user.present?
-        Users::SendAccountLockEmailService.new.execute!(email: self.email)
+        Authentication::SendAccountLockEmailService.new.execute!(email: self.email)
       end
     end
     self.save!

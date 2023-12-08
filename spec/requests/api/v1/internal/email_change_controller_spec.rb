@@ -43,7 +43,7 @@ RSpec.describe '[ email change API ]' do
       it 'returns 204' do
         is_expected.to eq 204
         expect(blastengine_mock).to have_received(:send_email)
-        expect(Users::EmailVerifier.find_by(user_id: current_user.id, email_verifier_type: :email_change, email: 'change-email@example.com').email).to eq('change-email@example.com')
+        expect(Users::EmailVerifier.find_by(user_id: current_user.id, verifier_type: :email_change, email: 'change-email@example.com').email).to eq('change-email@example.com')
       end
     end
 
@@ -65,7 +65,7 @@ RSpec.describe '[ email change API ]' do
       it 'returns 204' do
         is_expected.to eq 204
         expect(blastengine_mock).to have_received(:send_email)
-        expect(Users::EmailVerifier.find_by(user_id: current_user.id, email_verifier_type: :email_change, email: 'change-email@example.com').email).to eq('change-email@example.com')
+        expect(Users::EmailVerifier.find_by(user_id: current_user.id, verifier_type: :email_change, email: 'change-email@example.com').email).to eq('change-email@example.com')
       end
     end
 
@@ -101,19 +101,19 @@ RSpec.describe '[ email change API ]' do
     }
 
     let(:email_verifier) {
-      create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 5, email_verifier_type: :email_change,
+      create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 5, verifier_type: :email_change,
 email: 'change-email@example.com',)
     }
     let(:other_email_verifier) {
-      create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '654321', expired_at: 1.hour.from_now, remaining_attempts: 5, email_verifier_type: :email_change,
+      create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '654321', expired_at: 1.hour.from_now, remaining_attempts: 5, verifier_type: :email_change,
 email: 'change-email@example.com',)
     }
     let(:other_type_email_verifier) {
-      create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '654321', expired_at: 1.hour.from_now, remaining_attempts: 5, email_verifier_type: :registration,
+      create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '654321', expired_at: 1.hour.from_now, remaining_attempts: 5, verifier_type: :registration,
 email: 'change-email@example.com',)
     }
     let(:other_user_email_verifier) {
-      create(:users__email_verifier, tenant_id: current_tenant.id, user: other_user, code: '111111', expired_at: 1.hour.from_now, remaining_attempts: 5,  email_verifier_type: :email_change,
+      create(:users__email_verifier, tenant_id: current_tenant.id, user: other_user, code: '111111', expired_at: 1.hour.from_now, remaining_attempts: 5,  verifier_type: :email_change,
 email: 'change-email@example.com',)
     }
 
@@ -184,7 +184,7 @@ email: 'change-email@example.com',)
 
     context 'when code expired' do
       let(:email_verifier) {
-        create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.ago, remaining_attempts: 5, email_verifier_type: :email_change,
+        create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.ago, remaining_attempts: 5, verifier_type: :email_change,
 email: 'change-email@example.com',)
       }
       let(:params) {
@@ -200,7 +200,7 @@ email: 'change-email@example.com',)
 
     context 'when remaining_attempts is 0' do
       let(:email_verifier) {
-        create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 0, email_verifier_type: :email_change,
+        create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 0, verifier_type: :email_change,
 email: 'change-email@example.com',)
       }
       let(:params) {
@@ -217,7 +217,7 @@ email: 'change-email@example.com',)
     context 'when code has already been used' do
       let(:email_verifier) {
         create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 5, used_at: 1.hour.ago,
-email_verifier_type: :email_change, email: 'change-email@example.com',)
+verifier_type: :email_change, email: 'change-email@example.com',)
       }
       let(:params) {
         {

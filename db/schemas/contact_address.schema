@@ -6,6 +6,7 @@ create_table :contact_addresses, force: :cascade, id: :uuid, default: -> { 'gen_
   t.string :city
   t.string :street
   t.string :building
+  t.string :phone_number
   t.string :country_code
 
   t.timestamps null: false

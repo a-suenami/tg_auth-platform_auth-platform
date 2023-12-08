@@ -660,6 +660,9 @@ class Tenant
     def restore_name!; end
 
     sig { void }
+    def restore_sms_verification_required!; end
+
+    sig { void }
     def restore_updated_at!; end
 
     sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
@@ -692,11 +695,62 @@ class Tenant
     sig { returns(T::Boolean) }
     def saved_change_to_name?; end
 
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def saved_change_to_sms_verification_required; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_sms_verification_required?; end
+
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_updated_at; end
 
     sig { returns(T::Boolean) }
     def saved_change_to_updated_at?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def sms_verification_required; end
+
+    sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+    def sms_verification_required=(value); end
+
+    sig { returns(T::Boolean) }
+    def sms_verification_required?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def sms_verification_required_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def sms_verification_required_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def sms_verification_required_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def sms_verification_required_change; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def sms_verification_required_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def sms_verification_required_changed?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def sms_verification_required_in_database; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def sms_verification_required_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def sms_verification_required_previously_changed?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def sms_verification_required_previously_was; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def sms_verification_required_was; end
+
+    sig { void }
+    def sms_verification_required_will_change!; end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def updated_at; end
@@ -757,6 +811,9 @@ class Tenant
 
     sig { returns(T::Boolean) }
     def will_save_change_to_name?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_sms_verification_required?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_updated_at?; end

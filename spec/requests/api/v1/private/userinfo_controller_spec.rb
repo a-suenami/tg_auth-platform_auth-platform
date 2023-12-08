@@ -50,7 +50,6 @@ RSpec.describe '[ Userinfo API ]' do
           expect(body_hash).to eq({
             'uid' => current_user.id,
             'email' => current_user.email,
-            'tel' => '09012345678',
             'delivery_addresses' => [
               {
                 'is_default' => delivery_address.is_default,
@@ -61,7 +60,7 @@ RSpec.describe '[ Userinfo API ]' do
                 'street' => delivery_address.street,
                 'building' => delivery_address.building,
                 'country_code' => delivery_address.country_code,
-                'contact_tel' => delivery_address.contact_tel,
+                'phone_number' => delivery_address.phone_number,
               },
             ],
             'profile' => {
@@ -80,6 +79,7 @@ RSpec.describe '[ Userinfo API ]' do
               'street' => contact_address.street,
               'building' => contact_address.building,
               'country_code' => contact_address.country_code,
+              'phone_number' => contact_address.phone_number,
             },
           })
         end
@@ -147,7 +147,6 @@ RSpec.describe '[ Userinfo API ]' do
         it 'returns user info' do
           is_expected.to eq 200
           expect(body_hash).to eq({
-            'tel' => '09012345678',
             'contact_address' => {
               'prefecture_code' => contact_address.prefecture_code_jis,
               'prefecture' => contact_address.prefecture.name,
@@ -155,6 +154,7 @@ RSpec.describe '[ Userinfo API ]' do
               'city' => contact_address.city,
               'street' => contact_address.street,
               'building' => contact_address.building,
+              'phone_number' => contact_address.phone_number,
               'country_code' => contact_address.country_code,
             },
           })
@@ -177,7 +177,7 @@ RSpec.describe '[ Userinfo API ]' do
                 'street' => delivery_address.street,
                 'building' => delivery_address.building,
                 'country_code' => delivery_address.country_code,
-                'contact_tel' => delivery_address.contact_tel,
+                'phone_number' => delivery_address.phone_number,
               },
             ],
           })

@@ -7,7 +7,7 @@ create_table :delivery_addresses, force: :cascade, id: :uuid, default: -> { 'gen
   t.string :city
   t.string :street
   t.string :building
-  t.string :contact_tel
+  t.string :phone_number
   t.string :country_code
 
   t.timestamps null: false
