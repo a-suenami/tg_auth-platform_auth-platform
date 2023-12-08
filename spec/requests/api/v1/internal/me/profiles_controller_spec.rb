@@ -156,6 +156,48 @@ RSpec.describe '[ Profiles API ]' do
           is_expected.to eq 400
         end
       end
+
+      context 'when given overseas address' do
+        let(:params) {
+          {
+            user: {
+              user_profile_attributes: {
+                first_name: '太郎2',
+                last_name: '山田2',
+                first_name_kana: 'タロウツー',
+                last_name_kana: 'ヤマダツー',
+                birth_date: '2010-01-11',
+                gender: 'male',
+              },
+              contact_address_attributes: {
+                zip_code: nil,
+                prefecture_code: '48',
+                city: nil,
+                street: nil,
+                building: nil,
+                country_code: 'CN',
+              },
+            },
+          }
+        }
+
+        it 'returns 200' do
+          is_expected.to eq 200
+          expect(body_hash['profile']['first_name']).to eq('太郎2')
+          expect(body_hash['profile']['last_name']).to eq('山田2')
+          expect(body_hash['profile']['first_name_kana']).to eq('タロウツー')
+          expect(body_hash['profile']['last_name_kana']).to eq('ヤマダツー')
+          expect(body_hash['profile']['birth_date']).to eq('2010-01-11')
+          expect(body_hash['profile']['gender']).to eq('male')
+          expect(body_hash['contact_address']['prefecture_code']).to eq('48')
+          expect(body_hash['contact_address']['prefecture']).to eq('その他海外')
+          expect(body_hash['contact_address']['zip_code']).to be_nil
+          expect(body_hash['contact_address']['city']).to be_nil
+          expect(body_hash['contact_address']['street']).to be_nil
+          expect(body_hash['contact_address']['building']).to be_nil
+          expect(body_hash['contact_address']['country_code']).to eq('CN')
+        end
+      end
     end
   end
 end
