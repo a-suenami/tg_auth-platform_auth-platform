@@ -16,7 +16,7 @@ module Users
     sig { returns(T::Boolean) }
     def set_code
       self.code = format('%06d', SecureRandom.random_number(10**6))
-      self.expired_at = 1.hour.from_now
+      self.expired_at = 10.minutes.from_now
       self.remaining_attempts = CODE_ATTEMPTS_LIMIT
       true
     end
