@@ -12,7 +12,7 @@ module Exceptions
 
       sig { returns(String) }
       def message
-        I18n.t 'exceptions.api.auth_error'
+        I18n.t 'exceptions.auth.auth_error'
       end
     end
 
@@ -24,7 +24,7 @@ module Exceptions
 
       sig { returns(String) }
       def message
-        I18n.t 'exceptions.api.access_token_expired'
+        I18n.t 'exceptions.auth.access_token_expired'
       end
     end
 
@@ -36,7 +36,7 @@ module Exceptions
 
       sig { returns(String) }
       def message
-        I18n.t 'exceptions.api.account_locked'
+        I18n.t 'exceptions.auth.account_locked'
       end
     end
   end
