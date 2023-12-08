@@ -12,11 +12,7 @@ module Authentication
       # 電話番号重複チェック
       raise Exceptions::Authentication::PhoneNumberDuplicated if User.find_by(phone_number:).present?
 
-      # レートリミット 24時間以内 and (user or ip address or phone number)
-      sent_sms = Users::SmsVerifier.where(created_at: 24.hours.ago..).where(user:)
-        .or(Users::SmsVerifier.where(ip_address:))
-        .or(Users::SmsVerifier.where(phone_number:))
-      raise Exceptions::Authentication::SmsSendLimit if sent_sms.count > Settings.sms.max_sms_per_day
+      sms_rate_limit(phone_number:, user:, ip_address:)
 
       ActiveRecord::Base.transaction do
         sms_verifier = Users::SmsVerifier.new(user:, phone_number:, verifier_type: :registration, ip_address:)
@@ -40,6 +36,17 @@ module Authentication
         sms_verifier.sms_sid = response.sid
       end
       sms_verifier.save
+    end
+
+    def sms_rate_limit(phone_number:, user:, ip_address:)
+      # 同一電話番号 5件/3hours
+      raise Exceptions::Authentication::SmsSendLimit if Users::SmsVerifier.where(created_at: 3.hours.ago..).where(phone_number:).count > 5
+      # 同一電話番号 10件/24hours
+      raise Exceptions::Authentication::SmsSendLimit if Users::SmsVerifier.where(created_at: 24.hours.ago..).where(phone_number:).count > 10
+      # 同一IP      100件/1hours
+      raise Exceptions::Authentication::SmsSendLimit if Users::SmsVerifier.where(created_at: 1.hours.ago..).where(ip_address:).count > 100
+      # 同一ユーザ   10件/24hours
+      raise Exceptions::Authentication::SmsSendLimit if Users::SmsVerifier.where(created_at: 24.hours.ago..).where(user:).count > 10
     end
   end
 end
