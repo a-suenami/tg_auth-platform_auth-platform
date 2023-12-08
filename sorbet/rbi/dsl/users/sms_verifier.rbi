@@ -664,6 +664,51 @@ class Users::SmsVerifier
     def id_will_change!; end
 
     sig { returns(T.nilable(::String)) }
+    def ip_address; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def ip_address=(value); end
+
+    sig { returns(T::Boolean) }
+    def ip_address?; end
+
+    sig { returns(T.nilable(::String)) }
+    def ip_address_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def ip_address_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def ip_address_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def ip_address_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def ip_address_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def ip_address_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def ip_address_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def ip_address_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def ip_address_previously_changed?; end
+
+    sig { returns(T.nilable(::String)) }
+    def ip_address_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def ip_address_was; end
+
+    sig { void }
+    def ip_address_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
     def phone_number; end
 
     sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
@@ -766,6 +811,9 @@ class Users::SmsVerifier
     def restore_id!; end
 
     sig { void }
+    def restore_ip_address!; end
+
+    sig { void }
     def restore_phone_number!; end
 
     sig { void }
@@ -815,6 +863,12 @@ class Users::SmsVerifier
 
     sig { returns(T::Boolean) }
     def saved_change_to_id?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_ip_address; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_ip_address?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_phone_number; end
@@ -1196,6 +1250,9 @@ class Users::SmsVerifier
 
     sig { returns(T::Boolean) }
     def will_save_change_to_id?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_ip_address?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_phone_number?; end

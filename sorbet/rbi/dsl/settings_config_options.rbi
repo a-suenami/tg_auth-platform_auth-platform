@@ -54,6 +54,12 @@ class SettingsConfigOptions < ::Config::Options
   def ruler=(value); end
 
   sig { returns(T.untyped) }
+  def sms; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def sms=(value); end
+
+  sig { returns(T.untyped) }
   def sms_link; end
 
   sig { params(value: T.untyped).returns(T.untyped) }
