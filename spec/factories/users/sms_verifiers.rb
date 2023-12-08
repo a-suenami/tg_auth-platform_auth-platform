@@ -10,5 +10,6 @@ FactoryBot.define do
     verifier_type { 'registration' }
     phone_number { "+8190#{format('%08<number>d', number: rand(0..99_999_999))}" }
     used_at { nil }
+    ip_address { "#{rand(1..254)}.#{rand(1..254)}.#{rand(1..254)}.#{rand(1..254)}" }
   end
 end
