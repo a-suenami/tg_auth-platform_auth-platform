@@ -21,18 +21,12 @@ RSpec.describe '[ SmsVerify API ]' do
       current_user
       allow(SmsLink::API).to receive(:new).and_return(sms_link_mock)
       allow(sms_link_mock).to receive(:send_sms).and_return({
-        delivery_id: '1f6ad576fbf9902bc4705296e9dc84c5',
-        accepted_at: '2023-12-05T21:10:26+09:00',
-        reserved_at: '2023-12-05T21:10:26+09:00',
-        contacts: [
-          {
-            contact_id: 8_846_450,
-            phone_number: '08095863896',
-            result_code: 'RST200001',
-            result_message: '配信対象に登録しました。',
-          },
-        ],
-        click_count_urls: [],
+        'verification_code_id' => 34,
+        'accepted_at' => '2022-03-02T18:23:24+09:00',
+        'phone_number' => '090xxxxxxxx',
+        'verification_code' => 'sfas33',
+        'delivery_type' => 10,
+        'user_reference' => 'sample',
       })
       allow(Twilio::API).to receive(:new).and_return(twilio_mock)
       twilio_respo = Struct.new(:sid).new('SMXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
@@ -101,6 +95,7 @@ RSpec.describe '[ SmsVerify API ]' do
           is_expected.to eq 200
           expect(sms_link_mock).to have_received(:send_sms)
           expect(Users::SmsVerifier.find_by(user: current_user).phone_number).to eq '+818012345678'
+          expect(Users::SmsVerifier.find_by(user: current_user).sms_sid).to eq '34'
         end
       end
 
@@ -116,6 +111,7 @@ RSpec.describe '[ SmsVerify API ]' do
           is_expected.to eq 200
           expect(twilio_mock).to have_received(:send_sms)
           expect(Users::SmsVerifier.find_by(user: current_user).phone_number).to eq '+13181234567'
+          expect(Users::SmsVerifier.find_by(user: current_user).sms_sid).to eq 'SMXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
         end
       end
 

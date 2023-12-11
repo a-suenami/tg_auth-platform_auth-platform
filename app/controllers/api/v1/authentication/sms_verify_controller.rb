@@ -13,6 +13,7 @@ module API::V1::Authentication
         phone_country_code: params[:phone_country_code],
         user_id: @current_user.id,
         ip_address: request.ip,
+        delivery_type: params[:delivery_type],
       )
       render :send_verification_sms
     end

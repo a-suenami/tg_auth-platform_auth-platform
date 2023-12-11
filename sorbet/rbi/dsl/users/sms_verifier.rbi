@@ -583,6 +583,51 @@ class Users::SmsVerifier
     sig { void }
     def created_at_will_change!; end
 
+    sig { returns(T.untyped) }
+    def delivery_type; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def delivery_type=(value); end
+
+    sig { returns(T::Boolean) }
+    def delivery_type?; end
+
+    sig { returns(T.untyped) }
+    def delivery_type_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def delivery_type_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def delivery_type_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def delivery_type_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def delivery_type_change_to_be_saved; end
+
+    sig { returns(T::Boolean) }
+    def delivery_type_changed?; end
+
+    sig { returns(T.untyped) }
+    def delivery_type_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def delivery_type_previous_change; end
+
+    sig { returns(T::Boolean) }
+    def delivery_type_previously_changed?; end
+
+    sig { returns(T.untyped) }
+    def delivery_type_previously_was; end
+
+    sig { returns(T.untyped) }
+    def delivery_type_was; end
+
+    sig { void }
+    def delivery_type_will_change!; end
+
     sig { returns(::ActiveSupport::TimeWithZone) }
     def expired_at; end
 
@@ -815,6 +860,9 @@ class Users::SmsVerifier
     def restore_created_at!; end
 
     sig { void }
+    def restore_delivery_type!; end
+
+    sig { void }
     def restore_expired_at!; end
 
     sig { void }
@@ -861,6 +909,12 @@ class Users::SmsVerifier
 
     sig { returns(T::Boolean) }
     def saved_change_to_created_at?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_delivery_type; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_delivery_type?; end
 
     sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
     def saved_change_to_expired_at; end
@@ -1264,6 +1318,9 @@ class Users::SmsVerifier
 
     sig { returns(T::Boolean) }
     def will_save_change_to_created_at?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_delivery_type?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_expired_at?; end
