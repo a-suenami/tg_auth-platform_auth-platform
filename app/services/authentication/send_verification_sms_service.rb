@@ -39,6 +39,9 @@ module Authentication
     end
 
     def sms_rate_limit(phone_number:, user:, ip_address:)
+      # 開発環境,staging環境でratelimitが実装されていると検証が大変になるので無効化できるように
+      return if Settings.sms.disable_rate_limit
+
       # 同一電話番号 5件/3hours
       raise Exceptions::Authentication::SmsSendLimit if Users::SmsVerifier.where(created_at: 3.hours.ago..).where(phone_number:).count >= 5
       # 同一電話番号 10件/24hours
