@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       scope module: 'tenants' do
         get :root, to: 'application#root'
         resources :login_spa_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        resources :tenant_settings, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :email_templates, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :oauth_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
       end

@@ -18,8 +18,7 @@ module RulerArea
     end
 
     def create
-      @tenant = Tenant.new(tenant_params)
-      if @tenant.save
+      if ::Tenants::CreateService.new(tenant_params).execute
         redirect_to ruler_area_tenants_path, notice: t('helpers.messages.created')
       else
         render :new, status: :unprocessable_entity
@@ -39,7 +38,13 @@ module RulerArea
     private
 
     def tenant_params
-      params.require(:tenant).permit(:id, :name, :domain, :cookie_domain_remove_length, :sms_verification_required)
+      params.require(:tenant).permit(
+        :id,
+        :name,
+        :domain,
+        :cookie_domain_remove_length,
+        :sms_verification_required,
+      )
     end
   end
 end

@@ -1,0 +1,34 @@
+.uk-margin-top.uk-container
+  h2 Tenant詳細設定  一覧
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    - if @tenant_settings.empty?
+      p.uk-text-lead
+        | No Tenant詳細設定 found.
+      = link_to "新規登録", new_ruler_area_tenant_tenant_setting_path(@tenant_id), class: "uk-button uk-button-primary"
+
+    - else
+      table.uk-table.uk-table-divider
+        tr
+          th = TenantSetting.human_attribute_name(:google_cloud_service_account)
+          th = TenantSetting.human_attribute_name(:google_cloud_project_id)
+          th = TenantSetting.human_attribute_name(:recaptcha_enterprise_signup_site_key)
+          th = TenantSetting.human_attribute_name(:recaptcha_enterprise_score_based_site_key)
+          th = "操作"
+
+        - @tenant_settings.each do |tenant_setting|
+          tr
+            td
+              = tenant_setting.google_cloud_service_account&.truncate(20)
+            td
+              = tenant_setting.google_cloud_project_id
+            td
+              = tenant_setting.recaptcha_enterprise_signup_site_key
+            td
+              = tenant_setting.recaptcha_enterprise_score_based_site_key
+            td
+              = link_to "詳細", ruler_area_tenant_tenant_setting_path(@tenant_id, tenant_setting), class: "uk-button uk-button-secondary"
+              .uk-margin
+                = link_to "編集", edit_ruler_area_tenant_tenant_setting_path(@tenant_id, tenant_setting), class: "uk-button uk-button-primary"
+
+      == pagy_nav(@pagy)

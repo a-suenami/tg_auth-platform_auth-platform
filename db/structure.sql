@@ -235,6 +235,22 @@ CREATE TABLE public.rulers (
 
 
 --
+-- Name: tenant_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_settings (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    google_cloud_service_account character varying,
+    google_cloud_project_id character varying,
+    recaptcha_enterprise_signup_site_key character varying,
+    recaptcha_enterprise_score_based_site_key character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: tenants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -286,6 +302,7 @@ CREATE TABLE public.users (
     failed_attempts integer DEFAULT 0 NOT NULL,
     unlock_token character varying,
     lock_expired_at timestamp(6) without time zone,
+    captcha_score double precision,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -449,6 +466,14 @@ ALTER TABLE ONLY public.oauth_openid_requests
 
 ALTER TABLE ONLY public.rulers
     ADD CONSTRAINT rulers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tenant_settings tenant_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_settings
+    ADD CONSTRAINT tenant_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -666,6 +691,13 @@ CREATE UNIQUE INDEX index_oauth_applications_on_uid ON public.oauth_applications
 --
 
 CREATE INDEX index_oauth_openid_requests_on_access_grant_id ON public.oauth_openid_requests USING btree (access_grant_id);
+
+
+--
+-- Name: index_tenant_settings_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tenant_settings_on_tenant_id ON public.tenant_settings USING btree (tenant_id);
 
 
 --

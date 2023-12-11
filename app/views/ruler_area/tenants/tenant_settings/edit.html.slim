@@ -1,0 +1,6 @@
+.uk-margin-top.uk-container
+  h2 テナント詳細設定 編集
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with model: @tenant_setting, url: ruler_area_tenant_tenant_setting_path(@tenant_id), method: :put do |f|
+      = render 'form', f: f

@@ -3,7 +3,7 @@
 module Authentication
   class SendVerificationEmailService < BaseService
 
-    def execute!(email:)
+    def execute!(email:, captcha_score: nil)
       # email validate
       unless email =~ URI::MailTo::EMAIL_REGEXP
         raise Exceptions::Authentication::InvalidEmail
@@ -11,6 +11,8 @@ module Authentication
 
       ActiveRecord::Base.transaction do
         user = User.find_or_create_by(email:)
+        user.captcha_score = captcha_score
+        user.save!
         email_verifier = Users::EmailVerifier.new(user:, email:, verifier_type: :registration)
         email_verifier.set_code
         email_verifier.save!

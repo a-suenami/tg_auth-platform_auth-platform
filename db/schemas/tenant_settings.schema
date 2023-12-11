@@ -1,0 +1,10 @@
+create_table :tenant_settings, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }  do |t|
+  t.references :tenant, type: :citext, null: false
+
+  t.string :google_cloud_service_account
+  t.string :google_cloud_project_id
+  t.string :recaptcha_enterprise_signup_site_key
+  t.string :recaptcha_enterprise_score_based_site_key
+
+  t.timestamps null: false
+end

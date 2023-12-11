@@ -1,0 +1,37 @@
+.uk-margin-top.uk-container
+  h2 Tenant詳細設定 詳細
+
+  .uk-flex.uk-flex-right
+    = link_to "編集", edit_ruler_area_tenant_tenant_setting_path(@tenant_id, @tenant_setting), class: "uk-button uk-button-primary"
+    .uk-margin-left
+    = link_to "削除", ruler_area_tenant_tenant_setting_path(@tenant_id, @tenant_setting), data: { turbo_method: :delete, turbo_confirm: "一度削除したデータを戻せません。本当に削除しますか？" }, class: 'uk-button uk-button-danger'
+
+  table.uk-table
+    tr
+      th = TenantSetting.human_attribute_name(:id)
+      td
+        = @tenant_setting.id
+    tr
+      th = TenantSetting.human_attribute_name(:google_cloud_service_account)
+      td
+        = @tenant_setting.google_cloud_service_account
+    tr
+      th = TenantSetting.human_attribute_name(:google_cloud_project_id)
+      td
+        = @tenant_setting.google_cloud_project_id
+    tr
+      th = TenantSetting.human_attribute_name(:recaptcha_enterprise_signup_site_key)
+      td
+        = @tenant_setting.recaptcha_enterprise_signup_site_key
+    tr
+      th = TenantSetting.human_attribute_name(:recaptcha_enterprise_score_based_site_key)
+      td
+        = @tenant_setting.recaptcha_enterprise_score_based_site_key
+    tr
+      th = TenantSetting.human_attribute_name(:created_at)
+      td
+        = @tenant_setting.created_at
+    tr
+      th = TenantSetting.human_attribute_name(:updated_at)
+      td
+        = @tenant_setting.updated_at
