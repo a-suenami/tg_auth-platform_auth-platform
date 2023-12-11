@@ -213,11 +213,20 @@ class Tenant
     sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
     def build_login_spa_application(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::TenantSetting) }
+    def build_tenant_setting(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
     def create_login_spa_application(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
     def create_login_spa_application!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::TenantSetting) }
+    def create_tenant_setting(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::TenantSetting) }
+    def create_tenant_setting!(*args, &blk); end
 
     sig { returns(T.nilable(::LoginSpaApplication)) }
     def login_spa_application; end
@@ -227,6 +236,15 @@ class Tenant
 
     sig { returns(T.nilable(::LoginSpaApplication)) }
     def reload_login_spa_application; end
+
+    sig { returns(T.nilable(::TenantSetting)) }
+    def reload_tenant_setting; end
+
+    sig { returns(T.nilable(::TenantSetting)) }
+    def tenant_setting; end
+
+    sig { params(value: T.nilable(::TenantSetting)).void }
+    def tenant_setting=(value); end
   end
 
   module GeneratedAssociationRelationMethods
@@ -409,12 +427,13 @@ class Tenant
         name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         domain: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         cookie_domain_remove_length: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        sms_verification_required: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, name: nil, domain: nil, cookie_domain_remove_length: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, name: nil, domain: nil, cookie_domain_remove_length: nil, sms_verification_required: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def without(*args, &blk); end
@@ -733,8 +752,8 @@ class Tenant
     sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
     def sms_verification_required_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def sms_verification_required_changed?; end
+    sig { params(from: T.nilable(T::Boolean), to: T.nilable(T::Boolean)).returns(T::Boolean) }
+    def sms_verification_required_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(T::Boolean)) }
     def sms_verification_required_in_database; end
@@ -742,8 +761,8 @@ class Tenant
     sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
     def sms_verification_required_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def sms_verification_required_previously_changed?; end
+    sig { params(from: T.nilable(T::Boolean), to: T.nilable(T::Boolean)).returns(T::Boolean) }
+    def sms_verification_required_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(T::Boolean)) }
     def sms_verification_required_previously_was; end
@@ -949,12 +968,13 @@ class Tenant
         name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         domain: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         cookie_domain_remove_length: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        sms_verification_required: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, name: nil, domain: nil, cookie_domain_remove_length: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, name: nil, domain: nil, cookie_domain_remove_length: nil, sms_verification_required: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def without(*args, &blk); end

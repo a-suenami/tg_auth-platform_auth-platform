@@ -5,6 +5,7 @@
 # ==============================================================================
 require 'google/cloud/recaptcha_enterprise/v1'
 
+# rubocop:disable Style/AccessorGrouping
 class RecaptchaEnterpriseUtils
   extend T::Sig
 
@@ -183,3 +184,4 @@ class RecaptchaEnterpriseUtils
     response
   end
 end
+# rubocop:enable Style/AccessorGrouping

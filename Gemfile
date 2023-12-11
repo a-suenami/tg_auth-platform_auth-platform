@@ -157,7 +157,7 @@ gem 'twilio-ruby', '~> 6.8.3'
 gem 'phony_rails'
 
 # typing
-gem 'sorbet-runtime'
+gem 'sorbet-runtime', '~> 0.5.11048'
 
 # reCAPTCHA Enterprise Client
 gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.15.0'
@@ -211,9 +211,9 @@ group :development, :test do
 
   # typing
   gem 'sorbet', '~> 0.5.11048'
-  gem 'rubocop-sorbet', require: false
+  gem 'rubocop-sorbet', '~> 0.7.4', require: false
   gem 'tapioca', git: 'https://github.com/twogate/tapioca', ref: 'd0a8227'
-  gem 'spoom', require: false
+  gem 'spoom', '~> 1.2.4', require: false
 end
 
 # ------------------------------------------------------------------------------

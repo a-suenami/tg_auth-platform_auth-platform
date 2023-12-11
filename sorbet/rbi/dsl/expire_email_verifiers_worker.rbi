@@ -5,9 +5,6 @@
 # Please instead update this file by running `bin/tapioca dsl ExpireEmailVerifiersWorker`.
 
 class ExpireEmailVerifiersWorker
-  sig { returns(HelperProxy) }
-  def helpers; end
-
   class << self
     sig { returns(String) }
     def perform_async; end
@@ -17,20 +14,5 @@ class ExpireEmailVerifiersWorker
 
     sig { params(interval: Numeric).returns(String) }
     def perform_in(interval); end
-  end
-
-  module HelperMethods
-    include ::Turbo::DriveHelper
-    include ::Turbo::FramesHelper
-    include ::Turbo::IncludesHelper
-    include ::Turbo::StreamsHelper
-    include ::Turbo::Streams::ActionHelper
-    include ::ViteRails::TagHelpers
-    include ::ActionController::Base::HelperMethods
-    include ::ApplicationHelper
-  end
-
-  class HelperProxy < ::ActionView::Base
-    include HelperMethods
   end
 end
