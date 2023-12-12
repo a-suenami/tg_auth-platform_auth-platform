@@ -20,7 +20,7 @@ module SmsLink
       @client = T.let(Faraday.new(@endpoint_url) do |f|
         f.response :json
         f.headers = {
-          Authorization: "Bearer #{Settings.sms_link.access_token}",
+          Authorization: "Bearer #{Settings.sms_link.api_token}",
           'Content-Type': 'application/json',
         }
       end, T.untyped,)
