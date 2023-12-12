@@ -5,8 +5,23 @@
 # Please instead update this file by running `bin/tapioca dsl Google::Api::MethodSettings`.
 
 class Google::Api::MethodSettings
-  sig { params(long_running: T.nilable(Google::Api::MethodSettings::LongRunning), selector: T.nilable(String)).void }
-  def initialize(long_running: nil, selector: nil); end
+  sig do
+    params(
+      auto_populated_fields: T.nilable(T.any(Google::Protobuf::RepeatedField[String], T::Array[String])),
+      long_running: T.nilable(Google::Api::MethodSettings::LongRunning),
+      selector: T.nilable(String)
+    ).void
+  end
+  def initialize(auto_populated_fields: T.unsafe(nil), long_running: nil, selector: nil); end
+
+  sig { returns(Google::Protobuf::RepeatedField[String]) }
+  def auto_populated_fields; end
+
+  sig { params(value: Google::Protobuf::RepeatedField[String]).void }
+  def auto_populated_fields=(value); end
+
+  sig { void }
+  def clear_auto_populated_fields; end
 
   sig { void }
   def clear_long_running; end
