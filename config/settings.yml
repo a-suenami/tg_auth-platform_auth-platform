@@ -31,8 +31,3 @@ twilio:
   api_key_sid: <%= ENV['TWILIO_API_KEY_SID'] %>
   api_key_secret: <%= ENV['TWILIO_API_KEY_SECRET'] %>
   sender_number: <%= ENV['TWILIO_SENDER_NUMBER'] %>
-google_cloud_platform:
-  recaptcha:
-    project_id: <%= ENV['GOOGLE_CLOUD_PLATFORM_RECAPTCHA_PROJECT_ID'] %>
-    key: <%= ENV['GOOGLE_CLOUD_PLATFORM_RECAPTCHA_KEY'] %>
-    google_cloud_service_account: <%= ENV['GOOGLE_CLOUD_PLATFORM_RECAPTCHA_GOOGLE_CLOUD_SERVICE_ACCOUNT'] %>
