@@ -113,16 +113,16 @@ class RecaptchaEnterpriseUtils
     @expected_action = T.let(expected_action, Action)
     @client = T.let(
       Google::Cloud::RecaptchaEnterprise::V1::RecaptchaEnterpriseService::Client.new do |config|
-        config.credentials = JSON.parse(T.must(@tenant.tenant_setting.google_cloud_service_account))
+        config.credentials = JSON.parse(T.must(T.must(@tenant.tenant_setting).google_cloud_service_account))
       end,
       Google::Cloud::RecaptchaEnterprise::V1::RecaptchaEnterpriseService::Client,
     )
     @site_key = T.let(
       case @integration
       when Integration::ScoreBased
-        @tenant.tenant_setting.recaptcha_enterprise_score_based_site_key
+        T.must(@tenant.tenant_setting).recaptcha_enterprise_score_based_site_key
       when Integration::Checkbox
-        @tenant.tenant_setting.recaptcha_enterprise_checkbox_site_key
+        T.must(@tenant.tenant_setting).recaptcha_enterprise_checkbox_site_key
       else
         T.absurd(@integration)
       end,
@@ -170,7 +170,7 @@ class RecaptchaEnterpriseUtils
   sig { returns(Google::Cloud::RecaptchaEnterprise::V1::Assessment) }
   def create_assessment
     request = Google::Cloud::RecaptchaEnterprise::V1::CreateAssessmentRequest.new(
-      parent: "projects/#{T.must(tenant.tenant_setting.google_cloud_project_id)}",
+      parent: "projects/#{T.must(T.must(tenant.tenant_setting).google_cloud_project_id)}",
       assessment: Google::Cloud::RecaptchaEnterprise::V1::Assessment.new(
         event: Google::Cloud::RecaptchaEnterprise::V1::Event.new(
           site_key:,
