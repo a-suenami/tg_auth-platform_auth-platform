@@ -116,28 +116,53 @@ You should always type model scripts, service scripts and scripts under lib dire
 
 Typing of concern/helper scripts (which are included from another script) may be little bit hard, so you can `typed: false` for these scripts.
 
+## Run Sorbet LSP on local
+If you want to run Sorbet LSP on your native environment rather than docker container, create `dev.env` and then write:
+```
+USE_LOCAL_SORBET_LSP=1
+```
+
+And you should install some libraries locally. Then run bundle config (replace xxxx).
+Ensure the pristine shell (NOT `source env.sh`ed shell) when run these commands.
+```
+brew install libpq
+gem install pg -- --with-pg-config=/opt/homebrew/opt/libpq/bin/pg_config
+brew install watchman
+
+bundle config gems.contribsys.com xxxx:xxxx
+```
+
 ## Generating RBIs
 After **installing or updating gems**, you need to run this:
-- `bundle exec tapioca gem`
-- `bundle exec tapioca dsl` (You probably only need to run this if you’ve updated Tapioca)
+- `tapioca gem`
+- `tapioca dsl` (You probably only need to run this if you’ve updated Tapioca)
 After running **database migrations**
-- `bundle exec tapioca dsl`
+- `tapioca dsl`
 After updating the **routes file**
-- `bundle exec tapioca dsl`
+- `tapioca dsl`
 
 ## Fixing broken gem types
+### `tapioca annotations`
+This command pulls RBI annotations from https://github.com/Shopify/rbi-central .
+When you update gems and get some errors, try this command.
+
+```
+bundle exec tapioca annotations
+```
+
+### `gem --all`
 Sometimes typings of gems will break. To fix that, redo tapioca gem for all. It takes a very very long time. (~30min)
 
 ```
-bundle exec tapioca gems --all
+tapioca gem --all
 ```
 
 ## Check Gems & DSLs are typed
 To ensure all RBI files for DSLs are up-to-date with the latest changes in your application or database, run these commands before commit.
 
 ```
-bundle exec tapioca gems --verify
-bundle exec tapioca dsl --verify
+tapioca gems --verify
+tapioca dsl --verify
 ```
 
 These commands checks that RBIs are kept updated or not, and if not, the command shows you to how to update.
@@ -159,9 +184,3 @@ Associations order should be:
 - `has_one through` / `has_many through`
 
 Arrange by column name in alphabetical order. (However, columns with strong relationships may be ignored in exceptional cases.)
-
-## Ordering table schema
-To create a table for the scope of a tenant, the first column should be `tenant_id`. The last column should be timestamps.
-
-## Do/Don'ts
-- Don't install unnecessary Gems.

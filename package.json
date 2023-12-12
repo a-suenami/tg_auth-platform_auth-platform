@@ -1,12 +1,12 @@
 {
   "devDependencies": {
-    "sass": "^1.58.3",
-    "typescript": "^5.0.1-rc",
-    "vite": "^2.7.7",
-    "vite-plugin-ruby": "^3.0.5"
+    "sass": "^1.69.4",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0",
+    "vite-plugin-ruby": "^5.0.0"
   },
   "dependencies": {
-    "@hotwired/stimulus": "^3.2.1",
+    "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo": "^7.3.0",
     "pug": "^3.0.2",
     "pug-plain-loader": "^1.1.0",
