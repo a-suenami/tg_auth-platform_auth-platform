@@ -8,7 +8,12 @@ module API::V1::Authentication
       # 必須でない場合一旦このAPIは無効。攻撃の対象に利用されないように。
       raise Exceptions::Authentication::SmsVerificationDisabled unless Tenant.current.sms_verification_required
 
-      @user = Authentication::SendVerificationSmsService.new.execute!(local_phone_number: params[:phone_number], phone_country_code: params[:phone_country_code], user_id: @current_user.id)
+      @user = Authentication::SendVerificationSmsService.new.execute!(
+        local_phone_number: params[:phone_number],
+        phone_country_code: params[:phone_country_code],
+        user_id: @current_user.id,
+        ip_address: request.ip,
+      )
       render :send_verification_sms
     end
 

@@ -171,6 +171,97 @@ RSpec.describe '[ SmsVerify API ]' do
           expect(body_hash['error']['code']).to eq 'phone_number_duplicated'
         end
       end
+
+      context 'when rate limit by 5/phone_nubmer/3hours' do
+        let(:sms_verifiers) {
+          create_list(:users__sms_verifier, 5, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 2.hours.from_now, remaining_attempts: 5, verifier_type: :registration,
+         phone_number: '+818012345678',)
+        }
+        let(:params) {
+          {
+            phone_number: '08012345678',
+            phone_country_code: '81',
+          }
+        }
+
+        before do
+          sms_verifiers
+        end
+
+        it 'returns 400' do
+          is_expected.to eq 400
+          expect(body_hash['error']['code']).to eq 'sms_send_limit'
+        end
+      end
+
+      context 'when rate limit by 10/phone_nubmer/24hours' do
+        let(:sms_verifiers) {
+          create_list(:users__sms_verifier, 10, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 23.hours.from_now, remaining_attempts: 5, verifier_type: :registration,
+         phone_number: '+818012345678',)
+        }
+        let(:params) {
+          {
+            phone_number: '08012345678',
+            phone_country_code: '81',
+          }
+        }
+
+        before do
+          sms_verifiers
+        end
+
+        it 'returns 400' do
+          is_expected.to eq 400
+          expect(body_hash['error']['code']).to eq 'sms_send_limit'
+        end
+      end
+
+      context 'when rate limit by 100/ip_address/1hours' do
+        let(:other_user) {
+          create(:user, tenant_id: current_tenant.id, email: 'test-other-user1@example.com', sms_verified: false)
+        }
+        let(:sms_verifiers) {
+          create_list(:users__sms_verifier, 100, tenant_id: current_tenant.id, user: other_user, code: '123456', expired_at: 59.minutes.from_now, remaining_attempts: 5, verifier_type: :registration,
+         ip_address: '127.0.0.1',)
+        }
+
+        let(:params) {
+          {
+            phone_number: '08012345678',
+            phone_country_code: '81',
+          }
+        }
+
+        before do
+          sms_verifiers
+        end
+
+        it 'returns 400' do
+          is_expected.to eq 400
+          expect(body_hash['error']['code']).to eq 'sms_send_limit'
+        end
+      end
+
+      context 'when rate limit by 10/user/24hours' do
+        let(:sms_verifiers) {
+          create_list(:users__sms_verifier, 10, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 23.hours.from_now, remaining_attempts: 5, verifier_type: :registration)
+        }
+        let(:params) {
+          {
+            phone_number: '08012345678',
+            phone_country_code: '81',
+          }
+        }
+
+        before do
+          sms_verifiers
+        end
+
+        it 'returns 400' do
+          is_expected.to eq 400
+          expect(body_hash['error']['code']).to eq 'sms_send_limit'
+        end
+      end
     end
   end
 

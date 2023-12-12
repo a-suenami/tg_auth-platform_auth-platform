@@ -261,6 +261,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.datetime "used_at"
     t.string "sms_sender"
     t.string "sms_sid"
+    t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id"], name: "index_users__sms_verifiers_on_tenant_id"

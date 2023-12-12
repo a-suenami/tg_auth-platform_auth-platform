@@ -1,0 +1,2 @@
+sms:
+  disable_rate_limit: true

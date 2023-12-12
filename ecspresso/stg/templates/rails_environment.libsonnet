@@ -66,5 +66,9 @@
   {
     "name": "USE_ECS_CREDENTIALS",
     "value": "true"
+  },
+  {
+    "name": "SMS_DISABLE_RATE_LIMIT",
+    "value": "true"
   }
 ]
