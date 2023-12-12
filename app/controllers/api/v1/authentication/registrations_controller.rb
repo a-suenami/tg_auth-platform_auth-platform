@@ -5,7 +5,8 @@ module API::V1::Authentication
       # google_cloud_service_accountが設定されている場合のみ、reCAPTCHAのスコアを取得する
       captcha_score = if Tenant.current.tenant_setting&.google_cloud_service_account.present?
         captcha_token = T.cast(params[:captcha_token], String)
-        captcha_integration = RecaptchaEnterpriseUtils::Integration.deserialize(params[:captcha_type] || 'signup')
+        captcha_integration = RecaptchaEnterpriseUtils::Integration.deserialize(params[:captcha_type] || 'checkbox')
+
         raise Exceptions::Auth::RecaptchaTokenInvaild if captcha_token.blank?
 
         assessment = RecaptchaEnterpriseUtils.new(tenant: T.must(Tenant.current), token: captcha_token, integration: captcha_integration).assess

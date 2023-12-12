@@ -454,14 +454,14 @@ class TenantSetting
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         google_cloud_service_account: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         google_cloud_project_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        recaptcha_enterprise_signup_site_key: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        recaptcha_enterprise_checkbox_site_key: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         recaptcha_enterprise_score_based_site_key: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, google_cloud_service_account: nil, google_cloud_project_id: nil, recaptcha_enterprise_signup_site_key: nil, recaptcha_enterprise_score_based_site_key: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, google_cloud_service_account: nil, google_cloud_project_id: nil, recaptcha_enterprise_checkbox_site_key: nil, recaptcha_enterprise_score_based_site_key: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def without(*args, &blk); end
@@ -694,49 +694,49 @@ class TenantSetting
     def recaptcha_enterprise_score_based_site_key_will_change!; end
 
     sig { returns(T.nilable(::String)) }
-    def recaptcha_enterprise_signup_site_key; end
+    def recaptcha_enterprise_checkbox_site_key; end
 
     sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def recaptcha_enterprise_signup_site_key=(value); end
+    def recaptcha_enterprise_checkbox_site_key=(value); end
 
     sig { returns(T::Boolean) }
-    def recaptcha_enterprise_signup_site_key?; end
+    def recaptcha_enterprise_checkbox_site_key?; end
 
     sig { returns(T.nilable(::String)) }
-    def recaptcha_enterprise_signup_site_key_before_last_save; end
+    def recaptcha_enterprise_checkbox_site_key_before_last_save; end
 
     sig { returns(T.untyped) }
-    def recaptcha_enterprise_signup_site_key_before_type_cast; end
+    def recaptcha_enterprise_checkbox_site_key_before_type_cast; end
 
     sig { returns(T::Boolean) }
-    def recaptcha_enterprise_signup_site_key_came_from_user?; end
+    def recaptcha_enterprise_checkbox_site_key_came_from_user?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def recaptcha_enterprise_signup_site_key_change; end
+    def recaptcha_enterprise_checkbox_site_key_change; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def recaptcha_enterprise_signup_site_key_change_to_be_saved; end
+    def recaptcha_enterprise_checkbox_site_key_change_to_be_saved; end
 
     sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
-    def recaptcha_enterprise_signup_site_key_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+    def recaptcha_enterprise_checkbox_site_key_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
-    def recaptcha_enterprise_signup_site_key_in_database; end
+    def recaptcha_enterprise_checkbox_site_key_in_database; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def recaptcha_enterprise_signup_site_key_previous_change; end
+    def recaptcha_enterprise_checkbox_site_key_previous_change; end
 
     sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
-    def recaptcha_enterprise_signup_site_key_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+    def recaptcha_enterprise_checkbox_site_key_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
-    def recaptcha_enterprise_signup_site_key_previously_was; end
+    def recaptcha_enterprise_checkbox_site_key_previously_was; end
 
     sig { returns(T.nilable(::String)) }
-    def recaptcha_enterprise_signup_site_key_was; end
+    def recaptcha_enterprise_checkbox_site_key_was; end
 
     sig { void }
-    def recaptcha_enterprise_signup_site_key_will_change!; end
+    def recaptcha_enterprise_checkbox_site_key_will_change!; end
 
     sig { void }
     def restore_created_at!; end
@@ -754,7 +754,7 @@ class TenantSetting
     def restore_recaptcha_enterprise_score_based_site_key!; end
 
     sig { void }
-    def restore_recaptcha_enterprise_signup_site_key!; end
+    def restore_recaptcha_enterprise_checkbox_site_key!; end
 
     sig { void }
     def restore_tenant_id!; end
@@ -793,10 +793,10 @@ class TenantSetting
     def saved_change_to_recaptcha_enterprise_score_based_site_key?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_recaptcha_enterprise_signup_site_key; end
+    def saved_change_to_recaptcha_enterprise_checkbox_site_key; end
 
     sig { returns(T::Boolean) }
-    def saved_change_to_recaptcha_enterprise_signup_site_key?; end
+    def saved_change_to_recaptcha_enterprise_checkbox_site_key?; end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
@@ -916,7 +916,7 @@ class TenantSetting
     def will_save_change_to_recaptcha_enterprise_score_based_site_key?; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_recaptcha_enterprise_signup_site_key?; end
+    def will_save_change_to_recaptcha_enterprise_checkbox_site_key?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end
@@ -1053,14 +1053,14 @@ class TenantSetting
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         google_cloud_service_account: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         google_cloud_project_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        recaptcha_enterprise_signup_site_key: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        recaptcha_enterprise_checkbox_site_key: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         recaptcha_enterprise_score_based_site_key: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, google_cloud_service_account: nil, google_cloud_project_id: nil, recaptcha_enterprise_signup_site_key: nil, recaptcha_enterprise_score_based_site_key: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, google_cloud_service_account: nil, google_cloud_project_id: nil, recaptcha_enterprise_checkbox_site_key: nil, recaptcha_enterprise_score_based_site_key: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def without(*args, &blk); end

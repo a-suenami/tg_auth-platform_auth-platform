@@ -243,7 +243,7 @@ CREATE TABLE public.tenant_settings (
     tenant_id public.citext NOT NULL,
     google_cloud_service_account character varying,
     google_cloud_project_id character varying,
-    recaptcha_enterprise_signup_site_key character varying,
+    recaptcha_enterprise_checkbox_site_key character varying,
     recaptcha_enterprise_score_based_site_key character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL

@@ -45,7 +45,7 @@ module RulerArea::Tenants
     private
 
     def tenant_setting_params
-      params.require(:tenant_setting).permit(:google_cloud_service_account, :google_cloud_project_id, :recaptcha_enterprise_signup_site_key, :recaptcha_enterprise_score_based_site_key)
+      params.require(:tenant_setting).permit(:google_cloud_service_account, :google_cloud_project_id, :recaptcha_enterprise_checkbox_site_key, :recaptcha_enterprise_score_based_site_key)
     end
   end
 end

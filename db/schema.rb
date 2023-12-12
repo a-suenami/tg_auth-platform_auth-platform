@@ -170,7 +170,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.citext "tenant_id", null: false
     t.string "google_cloud_service_account"
     t.string "google_cloud_project_id"
-    t.string "recaptcha_enterprise_signup_site_key"
+    t.string "recaptcha_enterprise_checkbox_site_key"
     t.string "recaptcha_enterprise_score_based_site_key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

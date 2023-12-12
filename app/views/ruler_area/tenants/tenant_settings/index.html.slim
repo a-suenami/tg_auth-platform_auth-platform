@@ -12,7 +12,7 @@
         tr
           th = TenantSetting.human_attribute_name(:google_cloud_service_account)
           th = TenantSetting.human_attribute_name(:google_cloud_project_id)
-          th = TenantSetting.human_attribute_name(:recaptcha_enterprise_signup_site_key)
+          th = TenantSetting.human_attribute_name(:recaptcha_enterprise_checkbox_site_key)
           th = TenantSetting.human_attribute_name(:recaptcha_enterprise_score_based_site_key)
           th = "操作"
 
@@ -23,7 +23,7 @@
             td
               = tenant_setting.google_cloud_project_id
             td
-              = tenant_setting.recaptcha_enterprise_signup_site_key
+              = tenant_setting.recaptcha_enterprise_checkbox_site_key
             td
               = tenant_setting.recaptcha_enterprise_score_based_site_key
             td

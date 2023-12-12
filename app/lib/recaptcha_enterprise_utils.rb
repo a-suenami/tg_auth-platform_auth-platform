@@ -12,7 +12,7 @@ class RecaptchaEnterpriseUtils
   class Integration < T::Enum
     enums do
       ScoreBased = new('score_based')
-      Signup   = new('signup')
+      Checkbox   = new('checkbox')
     end
   end
 
@@ -106,7 +106,7 @@ class RecaptchaEnterpriseUtils
   MINIMUM_ACCEPTABLE_SCORE = T.let(0.5, Float)
 
   sig { params(tenant: Tenant, token: String, integration: Integration, expected_action: Action).void }
-  def initialize(tenant:, token:, integration: Integration::Signup, expected_action: Action::Signup)
+  def initialize(tenant:, token:, integration: Integration::Checkbox, expected_action: Action::Signup)
     @tenant = T.let(tenant, Tenant)
     @token = T.let(token, String)
     @integration = T.let(integration, Integration)
@@ -121,8 +121,8 @@ class RecaptchaEnterpriseUtils
       case @integration
       when Integration::ScoreBased
         @tenant.tenant_setting.recaptcha_enterprise_score_based_site_key
-      when Integration::Signup
-        @tenant.tenant_setting.recaptcha_enterprise_signup_site_key
+      when Integration::Checkbox
+        @tenant.tenant_setting.recaptcha_enterprise_checkbox_site_key
       else
         T.absurd(@integration)
       end,
@@ -148,7 +148,7 @@ class RecaptchaEnterpriseUtils
         valid = false
         error = Errors::InvalidToken.new
       end
-    when Integration::Signup
+    when Integration::Checkbox
       if assessment.token_properties&.valid && assessment.token_properties&.action == expected_action.serialize
         valid = true
       else
