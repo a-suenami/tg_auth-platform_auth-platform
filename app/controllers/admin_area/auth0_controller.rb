@@ -16,7 +16,7 @@ module AdminArea
         redirect_to admin_area_users_path, notice: 'ログインしました。' # rubocop:disable Rails/I18nLocaleTexts
       else
         logout
-        flash.now[:error] = 'ログインに失敗しました'
+        flash.now[:error] = 'ログインに失敗しました' # rubocop:disable Rails/I18nLocaleTexts
         flash.keep
       end
     end
