@@ -7,7 +7,7 @@ module Authentication
       email_verifier = Users::EmailVerifier.find_by(user:, code: email_verification_code, verifier_type: :registration, used_at: nil)
 
       if email_verifier.blank?
-        user.email_verifiers.enabled.where(verifier_type: :registration).each do |ev|
+        user.email_verifiers.enabled.where(verifier_type: :registration).find_each do |ev|
           ev.remaining_attempts -= 1
           ev.save!
         end

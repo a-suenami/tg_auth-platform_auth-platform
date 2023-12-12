@@ -45,3 +45,4 @@ public/rspec.html
 cspell.yml
 
 env.fly
+dev.env

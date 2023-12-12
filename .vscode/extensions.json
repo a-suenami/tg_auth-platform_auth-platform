@@ -1,7 +1,12 @@
 {
   "recommendations": [
-    "shopify.ruby-extensions-pack",
+    "shopify.ruby-lsp",
     "sianglim.slim",
-    "EditorConfig.EditorConfig"
+    "editorconfig.editorconfig",
+    "sorbet.sorbet-vscode-extension",
+    "streetsidesoftware.code-spell-checker",
+    "GitHub.copilot",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode"
   ]
 }

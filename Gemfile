@@ -77,7 +77,7 @@ gem 'pagy', '~> 6.0.1'
 # # Nested form helper
 # gem 'cocoon', '~> 1.2', '>= 1.2.15'
 # Use Vite as frontend tool
-gem 'vite_rails', '~> 4.0.0.alpha1'
+gem 'vite_rails', '~> 3.0', '>= 3.0.17'
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem 'turbo-rails', '~> 1.1.0'
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]

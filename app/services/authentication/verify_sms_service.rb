@@ -7,7 +7,7 @@ module Authentication
       sms_verifier = Users::SmsVerifier.find_by(user:, code: verification_code, verifier_type: :registration, used_at: nil)
 
       if sms_verifier.blank?
-        user.sms_verifiers.enabled.where(verifier_type: :registration).each do |ev|
+        user.sms_verifiers.enabled.where(verifier_type: :registration).find_each do |ev|
           ev.remaining_attempts -= 1
           ev.save!
         end
