@@ -90,12 +90,6 @@ FileUtils::LN_SUPPORTED = T.let(T.unsafe(nil), Array)
 # source://rake//lib/rake/file_utils.rb#10
 FileUtils::RUBY = T.let(T.unsafe(nil), String)
 
-# Also, modules included into Object need to be scanned and have their
-# instance methods removed from blank slate.  In theory, modules
-# included into Kernel would have to be removed as well, but a
-# "feature" of Ruby prevents late includes into modules from being
-# exposed in the first place.
-#
 # source://rake//lib/rake/ext/core.rb#2
 class Module
   # Check for an existing method in the current class before extending.  If

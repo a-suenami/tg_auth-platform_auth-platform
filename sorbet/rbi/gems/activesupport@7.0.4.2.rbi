@@ -15099,6 +15099,7 @@ ERB::Util::TAG_NAME_START_REGEXP_SET = T.let(T.unsafe(nil), String)
 
 # source://activesupport//lib/active_support/core_ext/object/json.rb#139
 module Enumerable
+  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   extend ::ActiveSupport::EnumerableCoreExt::Constants
 
   # source://activesupport//lib/active_support/core_ext/object/json.rb#140
@@ -18056,8 +18057,6 @@ class Regexp
   # source://activesupport//lib/active_support/core_ext/regexp.rb#11
   def multiline?; end
 end
-
-class Regexp::TimeoutError < ::RegexpError; end
 
 # source://activesupport//lib/active_support/core_ext/securerandom.rb#5
 module SecureRandom

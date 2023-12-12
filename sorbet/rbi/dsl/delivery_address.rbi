@@ -146,9 +146,6 @@ class DeliveryAddress
     sig { params(arg: T.untyped, args: T.untyped).returns(::DeliveryAddress) }
     def find_sole_by(arg, *args); end
 
-    sig { params(limit: T.untyped).returns(T.untyped) }
-    def first(limit = nil); end
-
     sig { returns(::DeliveryAddress) }
     def first!; end
 
@@ -182,9 +179,6 @@ class DeliveryAddress
 
     sig { params(record: T.untyped).returns(T::Boolean) }
     def include?(record); end
-
-    sig { params(limit: T.untyped).returns(T.untyped) }
-    def last(limit = nil); end
 
     sig { returns(::DeliveryAddress) }
     def last!; end
@@ -243,9 +237,6 @@ class DeliveryAddress
       ).returns(T.untyped)
     end
     def sum(column_name = nil, &block); end
-
-    sig { params(limit: T.untyped).returns(T.untyped) }
-    def take(limit = nil); end
 
     sig { returns(::DeliveryAddress) }
     def take!; end
@@ -456,8 +447,26 @@ class DeliveryAddress
     end
     def upsert_all(attributes, returning: nil, unique_by: nil); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelationWhereChain) }
-    def where(*args, &blk); end
+    sig do
+      params(
+        string_query: String,
+        id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        is_default: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        zip_code: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        prefecture_code: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        city: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        street: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        building: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        phone_number: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        country_code: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
+      ).returns(PrivateAssociationRelationWhereChain)
+    end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, is_default: nil, zip_code: nil, prefecture_code: nil, city: nil, street: nil, building: nil, phone_number: nil, country_code: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def without(*args, &blk); end
@@ -488,8 +497,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def building_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def building_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def building_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def building_in_database; end
@@ -497,8 +506,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def building_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def building_previously_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def building_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def building_previously_was; end
@@ -533,8 +542,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def city_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def city_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def city_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def city_in_database; end
@@ -542,8 +551,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def city_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def city_previously_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def city_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def city_previously_was; end
@@ -578,8 +587,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def country_code_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def country_code_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def country_code_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def country_code_in_database; end
@@ -587,8 +596,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def country_code_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def country_code_previously_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def country_code_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def country_code_previously_was; end
@@ -623,8 +632,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def created_at_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def created_at_changed?; end
+    sig { params(from: ::ActiveSupport::TimeWithZone, to: ::ActiveSupport::TimeWithZone).returns(T::Boolean) }
+    def created_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def created_at_in_database; end
@@ -632,8 +641,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def created_at_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def created_at_previously_changed?; end
+    sig { params(from: ::ActiveSupport::TimeWithZone, to: ::ActiveSupport::TimeWithZone).returns(T::Boolean) }
+    def created_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def created_at_previously_was; end
@@ -668,8 +677,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def id_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def id_changed?; end
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.untyped) }
     def id_in_database; end
@@ -677,8 +686,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def id_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def id_previously_changed?; end
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.untyped) }
     def id_previously_was; end
@@ -713,8 +722,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
     def is_default_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def is_default_changed?; end
+    sig { params(from: T.nilable(T::Boolean), to: T.nilable(T::Boolean)).returns(T::Boolean) }
+    def is_default_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(T::Boolean)) }
     def is_default_in_database; end
@@ -722,8 +731,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
     def is_default_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def is_default_previously_changed?; end
+    sig { params(from: T.nilable(T::Boolean), to: T.nilable(T::Boolean)).returns(T::Boolean) }
+    def is_default_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(T::Boolean)) }
     def is_default_previously_was; end
@@ -758,8 +767,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def phone_number_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def phone_number_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def phone_number_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def phone_number_in_database; end
@@ -767,8 +776,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def phone_number_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def phone_number_previously_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def phone_number_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def phone_number_previously_was; end
@@ -803,8 +812,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
     def prefecture_code_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def prefecture_code_changed?; end
+    sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+    def prefecture_code_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::Integer)) }
     def prefecture_code_in_database; end
@@ -812,8 +821,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
     def prefecture_code_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def prefecture_code_previously_changed?; end
+    sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+    def prefecture_code_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::Integer)) }
     def prefecture_code_previously_was; end
@@ -965,8 +974,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def street_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def street_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def street_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def street_in_database; end
@@ -974,8 +983,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def street_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def street_previously_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def street_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def street_previously_was; end
@@ -1010,8 +1019,8 @@ class DeliveryAddress
     sig { returns(T.nilable([::String, ::String])) }
     def tenant_id_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def tenant_id_changed?; end
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def tenant_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def tenant_id_in_database; end
@@ -1019,8 +1028,8 @@ class DeliveryAddress
     sig { returns(T.nilable([::String, ::String])) }
     def tenant_id_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def tenant_id_previously_changed?; end
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def tenant_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def tenant_id_previously_was; end
@@ -1055,8 +1064,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def updated_at_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def updated_at_changed?; end
+    sig { params(from: ::ActiveSupport::TimeWithZone, to: ::ActiveSupport::TimeWithZone).returns(T::Boolean) }
+    def updated_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def updated_at_in_database; end
@@ -1064,8 +1073,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def updated_at_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def updated_at_previously_changed?; end
+    sig { params(from: ::ActiveSupport::TimeWithZone, to: ::ActiveSupport::TimeWithZone).returns(T::Boolean) }
+    def updated_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def updated_at_previously_was; end
@@ -1100,8 +1109,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def user_id_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def user_id_changed?; end
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def user_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.untyped) }
     def user_id_in_database; end
@@ -1109,8 +1118,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def user_id_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def user_id_previously_changed?; end
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def user_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.untyped) }
     def user_id_previously_was; end
@@ -1184,8 +1193,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def zip_code_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def zip_code_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def zip_code_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def zip_code_in_database; end
@@ -1193,8 +1202,8 @@ class DeliveryAddress
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def zip_code_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def zip_code_previously_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def zip_code_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def zip_code_previously_was; end
@@ -1327,8 +1336,26 @@ class DeliveryAddress
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def unscope(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelationWhereChain) }
-    def where(*args, &blk); end
+    sig do
+      params(
+        string_query: String,
+        id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        is_default: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        zip_code: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        prefecture_code: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        city: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        street: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        building: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        phone_number: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        country_code: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
+      ).returns(PrivateRelationWhereChain)
+    end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, is_default: nil, zip_code: nil, prefecture_code: nil, city: nil, street: nil, building: nil, phone_number: nil, country_code: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def without(*args, &blk); end

@@ -10,3 +10,9 @@ ruler:
     auth0_client_secret:
 redis:
   url: <%= ENV['REDIS_URL'] %>
+google_cloud_platform:
+  recaptcha:
+    project_id: this_id_project_id
+    key: this_is_key
+    google_cloud_service_account: |
+      {}

@@ -166,6 +166,17 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tenant_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "google_cloud_service_account"
+    t.string "google_cloud_project_id"
+    t.string "recaptcha_enterprise_checkbox_site_key"
+    t.string "recaptcha_enterprise_score_based_site_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_tenant_settings_on_tenant_id"
+  end
+
   create_table "tenants", id: :citext, force: :cascade do |t|
     t.string "name"
     t.string "domain"
@@ -203,6 +214,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "lock_expired_at"
+    t.float "captcha_score"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id", "email", "deleted"], name: "index_users_on_tenant_id_email", unique: true, where: "(deleted = false)"

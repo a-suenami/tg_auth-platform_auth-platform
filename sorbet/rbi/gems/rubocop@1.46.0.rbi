@@ -5176,7 +5176,6 @@ module RuboCop::Cop::EnforceSuperclass
   class << self
     # @api private
     # @private
-    # @private
     #
     # source://rubocop-rails/2.18.0/lib/rubocop/cop/mixin/enforce_superclass.rb#7
     def included(base); end

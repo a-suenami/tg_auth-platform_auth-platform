@@ -20,8 +20,8 @@ module API::ExceptionRescuable
     rescue_from ActiveRecord::RecordNotUnique, with: :handle_record_invalid
     # rescue_from ActionView::MissingTemplate, with: :handle_missing_template
 
-    rescue_from Exceptions::Auth::AuthError,      with: :handle_auth_error
-    rescue_from Exceptions::API::BaseError,     with: :handle_api_error
+    rescue_from Exceptions::Auth::AuthError,             with: :handle_auth_error
+    rescue_from Exceptions::API::BaseError,              with: :handle_api_error
     # rescue_from Exceptions::App::RecordInvalid, with: :handle_record_invalid_with_object
   end
 

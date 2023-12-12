@@ -11,7 +11,7 @@ module Users
 
     validates :phone_number, phony_plausible: true
 
-    scope :enabled, -> { where(expired_at: Time.zone.now.., used_at: nil).where.not(remaining_attempts: 0) }
+    scope :enabled, -> { where('expired_at > ?', Time.zone.now).where(used_at: nil).where.not(remaining_attempts: 0) }
 
     sig { returns(T::Boolean) }
     def set_code

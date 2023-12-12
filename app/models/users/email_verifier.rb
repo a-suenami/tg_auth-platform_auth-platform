@@ -9,7 +9,7 @@ module Users
     belongs_to :user
     enumerize :verifier_type, in: [:registration, :email_change]
 
-    scope :enabled, -> { where(expired_at: Time.zone.now.., used_at: nil).where.not(remaining_attempts: 0) }
+    scope :enabled, -> { where('expired_at > ?', Time.zone.now).where(used_at: nil).where.not(remaining_attempts: 0) }
 
     sig { returns(T::Boolean) }
     def set_code

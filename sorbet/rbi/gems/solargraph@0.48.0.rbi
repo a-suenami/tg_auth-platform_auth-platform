@@ -10,8 +10,6 @@ module ReverseMarkdown
     # source://reverse_markdown/2.1.1/lib/reverse_markdown.rb#60
     def cleaner; end
 
-    # @yield [@config]
-    #
     # source://reverse_markdown/2.1.1/lib/reverse_markdown.rb#54
     def config; end
 

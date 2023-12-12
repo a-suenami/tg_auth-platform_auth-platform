@@ -7,15 +7,4 @@
 class OauthArea::ApplicationController
   include GeneratedUrlHelpersModule
   include GeneratedPathHelpersModule
-
-  sig { returns(HelperProxy) }
-  def helpers; end
-
-  module HelperMethods
-    include ::ActionController::Base::HelperMethods
-  end
-
-  class HelperProxy < ::ActionView::Base
-    include HelperMethods
-  end
 end

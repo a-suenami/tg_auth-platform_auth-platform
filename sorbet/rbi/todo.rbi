@@ -3,6 +3,3 @@
 # Please instead update this file by running `bin/tapioca todo`.
 
 # typed: false
-
-module ActionDispatch::Request::Session; end
-module ActionDispatch::Response::Header; end

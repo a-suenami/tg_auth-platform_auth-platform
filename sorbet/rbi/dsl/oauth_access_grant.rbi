@@ -146,9 +146,6 @@ class OauthAccessGrant
     sig { params(arg: T.untyped, args: T.untyped).returns(::OauthAccessGrant) }
     def find_sole_by(arg, *args); end
 
-    sig { params(limit: T.untyped).returns(T.untyped) }
-    def first(limit = nil); end
-
     sig { returns(::OauthAccessGrant) }
     def first!; end
 
@@ -182,9 +179,6 @@ class OauthAccessGrant
 
     sig { params(record: T.untyped).returns(T::Boolean) }
     def include?(record); end
-
-    sig { params(limit: T.untyped).returns(T.untyped) }
-    def last(limit = nil); end
 
     sig { returns(::OauthAccessGrant) }
     def last!; end
@@ -243,9 +237,6 @@ class OauthAccessGrant
       ).returns(T.untyped)
     end
     def sum(column_name = nil, &block); end
-
-    sig { params(limit: T.untyped).returns(T.untyped) }
-    def take(limit = nil); end
 
     sig { returns(::OauthAccessGrant) }
     def take!; end
@@ -474,8 +465,25 @@ class OauthAccessGrant
     end
     def upsert_all(attributes, returning: nil, unique_by: nil); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelationWhereChain) }
-    def where(*args, &blk); end
+    sig do
+      params(
+        string_query: String,
+        id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        resource_owner_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        application_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        token: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        expires_in: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        redirect_uri: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        revoked_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        scopes: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        code_challenge: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        code_challenge_method: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
+      ).returns(PrivateAssociationRelationWhereChain)
+    end
+    def where(string_query = nil, id: nil, tenant_id: nil, resource_owner_id: nil, application_id: nil, token: nil, expires_in: nil, redirect_uri: nil, created_at: nil, revoked_at: nil, scopes: nil, code_challenge: nil, code_challenge_method: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def without(*args, &blk); end
@@ -506,8 +514,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def application_id_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def application_id_changed?; end
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def application_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.untyped) }
     def application_id_in_database; end
@@ -515,8 +523,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def application_id_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def application_id_previously_changed?; end
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def application_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.untyped) }
     def application_id_previously_was; end
@@ -551,8 +559,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def code_challenge_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def code_challenge_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def code_challenge_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def code_challenge_in_database; end
@@ -581,8 +589,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def code_challenge_method_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def code_challenge_method_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def code_challenge_method_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def code_challenge_method_in_database; end
@@ -590,8 +598,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def code_challenge_method_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def code_challenge_method_previously_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def code_challenge_method_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def code_challenge_method_previously_was; end
@@ -605,8 +613,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def code_challenge_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def code_challenge_previously_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def code_challenge_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def code_challenge_previously_was; end
@@ -641,8 +649,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def created_at_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def created_at_changed?; end
+    sig { params(from: ::ActiveSupport::TimeWithZone, to: ::ActiveSupport::TimeWithZone).returns(T::Boolean) }
+    def created_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def created_at_in_database; end
@@ -650,8 +658,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def created_at_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def created_at_previously_changed?; end
+    sig { params(from: ::ActiveSupport::TimeWithZone, to: ::ActiveSupport::TimeWithZone).returns(T::Boolean) }
+    def created_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def created_at_previously_was; end
@@ -686,8 +694,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([::Integer, ::Integer])) }
     def expires_in_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def expires_in_changed?; end
+    sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
+    def expires_in_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::Integer)) }
     def expires_in_in_database; end
@@ -695,8 +703,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([::Integer, ::Integer])) }
     def expires_in_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def expires_in_previously_changed?; end
+    sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
+    def expires_in_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::Integer)) }
     def expires_in_previously_was; end
@@ -731,8 +739,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def id_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def id_changed?; end
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.untyped) }
     def id_in_database; end
@@ -740,8 +748,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def id_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def id_previously_changed?; end
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.untyped) }
     def id_previously_was; end
@@ -776,8 +784,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([::String, ::String])) }
     def redirect_uri_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def redirect_uri_changed?; end
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def redirect_uri_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def redirect_uri_in_database; end
@@ -785,8 +793,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([::String, ::String])) }
     def redirect_uri_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def redirect_uri_previously_changed?; end
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def redirect_uri_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def redirect_uri_previously_was; end
@@ -821,8 +829,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def resource_owner_id_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def resource_owner_id_changed?; end
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def resource_owner_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.untyped) }
     def resource_owner_id_in_database; end
@@ -830,8 +838,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def resource_owner_id_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def resource_owner_id_previously_changed?; end
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def resource_owner_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.untyped) }
     def resource_owner_id_previously_was; end
@@ -902,8 +910,13 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def revoked_at_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def revoked_at_changed?; end
+    sig do
+      params(
+        from: T.nilable(::ActiveSupport::TimeWithZone),
+        to: T.nilable(::ActiveSupport::TimeWithZone)
+      ).returns(T::Boolean)
+    end
+    def revoked_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def revoked_at_in_database; end
@@ -911,8 +924,13 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def revoked_at_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def revoked_at_previously_changed?; end
+    sig do
+      params(
+        from: T.nilable(::ActiveSupport::TimeWithZone),
+        to: T.nilable(::ActiveSupport::TimeWithZone)
+      ).returns(T::Boolean)
+    end
+    def revoked_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def revoked_at_previously_was; end
@@ -1019,8 +1037,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def scopes_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def scopes_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def scopes_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def scopes_in_database; end
@@ -1028,8 +1046,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def scopes_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def scopes_previously_changed?; end
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def scopes_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def scopes_previously_was; end
@@ -1064,8 +1082,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([::String, ::String])) }
     def tenant_id_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def tenant_id_changed?; end
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def tenant_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def tenant_id_in_database; end
@@ -1073,8 +1091,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([::String, ::String])) }
     def tenant_id_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def tenant_id_previously_changed?; end
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def tenant_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def tenant_id_previously_was; end
@@ -1109,8 +1127,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([::String, ::String])) }
     def token_change_to_be_saved; end
 
-    sig { returns(T::Boolean) }
-    def token_changed?; end
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def token_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def token_in_database; end
@@ -1118,8 +1136,8 @@ class OauthAccessGrant
     sig { returns(T.nilable([::String, ::String])) }
     def token_previous_change; end
 
-    sig { returns(T::Boolean) }
-    def token_previously_changed?; end
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def token_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::String)) }
     def token_previously_was; end
@@ -1288,8 +1306,25 @@ class OauthAccessGrant
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def unscope(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelationWhereChain) }
-    def where(*args, &blk); end
+    sig do
+      params(
+        string_query: String,
+        id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        resource_owner_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        application_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        token: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        expires_in: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        redirect_uri: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        revoked_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        scopes: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        code_challenge: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        code_challenge_method: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
+      ).returns(PrivateRelationWhereChain)
+    end
+    def where(string_query = nil, id: nil, tenant_id: nil, resource_owner_id: nil, application_id: nil, token: nil, expires_in: nil, redirect_uri: nil, created_at: nil, revoked_at: nil, scopes: nil, code_challenge: nil, code_challenge_method: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def without(*args, &blk); end

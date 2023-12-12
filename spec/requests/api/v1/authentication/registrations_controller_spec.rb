@@ -1,6 +1,8 @@
 # typed: false
 
 RSpec.describe '[ Registrations API ]' do
+  include RecaptchaEnterpriseHelper
+
   describe 'POST /api/v1/authentication/registrations/send_verification_email' do
 
     let(:email_template) {
@@ -18,9 +20,14 @@ RSpec.describe '[ Registrations API ]' do
     let(:blastengine_mock) {
       instance_double(Blastengine::API)
     }
+    let(:tenant_setting) {
+      create(:tenant_setting, tenant_id: current_tenant.id, google_cloud_service_account: {}, google_cloud_project_id: 'project_id', recaptcha_enterprise_checkbox_site_key: 'checkbox_site_key',
+recaptcha_enterprise_score_based_site_key: 'score_based_site_key',)
+    }
 
     before do
       email_template
+      tenant_setting
       allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
       allow(blastengine_mock).to receive(:send_email).and_return({
         delivery_id: 1,
@@ -31,6 +38,8 @@ RSpec.describe '[ Registrations API ]' do
       let(:params) {
         {
           email: 'test-user1@example.com',
+          captcha_token:,
+          captcha_type:,
         }
       }
 
@@ -92,11 +101,28 @@ RSpec.describe '[ Registrations API ]' do
       let(:params) {
         {
           email: 'hogehoge',
+          captcha_token:,
+          captcha_type:,
         }
       }
 
       it 'returns 400' do
         is_expected.to eq 400
+      end
+    end
+
+    context 'when captcha validity failed' do
+      let(:captcha_validity) { false }
+      let(:params) {
+        {
+          email: 'test-user1@example.com',
+          captcha_token: 'hoge',
+          captcha_type:,
+        }
+      }
+
+      it 'returns 401' do
+        is_expected.to eq 401
       end
     end
   end

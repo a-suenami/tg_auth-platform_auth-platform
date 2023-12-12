@@ -157,7 +157,10 @@ gem 'twilio-ruby', '~> 6.8.3'
 gem 'phony_rails'
 
 # typing
-gem 'sorbet-runtime'
+gem 'sorbet-runtime', '~> 0.5.11048'
+
+# reCAPTCHA Enterprise Client
+gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.15.0'
 
 # ------------------------------------------------------------------------------
 # Development and Test Only
@@ -174,6 +177,8 @@ group :development, :test do
   gem 'rubocop-rspec', '~> 2.18.1'
   # Testing framework
   gem 'rspec-rails', '~> 6.0.1'
+  # Sorbet type checking for RSpec
+  gem 'rspec-sorbet', '~> 1.9.2'
   # Speed up RSpec using Spring
   gem 'spring-commands-rspec', '~> 1.0.4'
   # # Simplify test code
@@ -205,10 +210,10 @@ group :development, :test do
   # gem 'knapsack_pro', '~> 3.7.0'
 
   # typing
-  gem 'sorbet'
-  gem 'rubocop-sorbet', require: false
-  gem 'tapioca', require: false
-  gem 'spoom', require: false
+  gem 'sorbet', '~> 0.5.11048'
+  gem 'rubocop-sorbet', '~> 0.7.4', require: false
+  gem 'tapioca', git: 'https://github.com/twogate/tapioca', ref: 'd0a8227'
+  gem 'spoom', '~> 1.2.4', require: false
 end
 
 # ------------------------------------------------------------------------------
