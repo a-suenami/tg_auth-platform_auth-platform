@@ -21,7 +21,6 @@ module API::ExceptionRescuable
     # rescue_from ActionView::MissingTemplate, with: :handle_missing_template
 
     rescue_from Exceptions::Auth::AuthError,             with: :handle_auth_error
-    rescue_from Exceptions::Auth::RecaptchaTokenInvaild, with: :handle_recaptcha_error
     rescue_from Exceptions::API::BaseError,              with: :handle_api_error
     # rescue_from Exceptions::App::RecordInvalid, with: :handle_record_invalid_with_object
   end
@@ -90,14 +89,6 @@ module API::ExceptionRescuable
 
   def handle_api_error(exception)
     invalid_request_error(
-      code: exception.try(:error_code).presence || :invalid_request,
-      message: exception.message,
-    )
-  end
-
-  def handle_recaptcha_error(exception)
-    Sentry.capture_exception(exception)
-    authentication_error(
       code: exception.try(:error_code).presence || :invalid_request,
       message: exception.message,
     )

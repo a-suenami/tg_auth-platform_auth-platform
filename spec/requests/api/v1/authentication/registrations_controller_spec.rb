@@ -20,9 +20,14 @@ RSpec.describe '[ Registrations API ]' do
     let(:blastengine_mock) {
       instance_double(Blastengine::API)
     }
+    let(:tenant_setting) {
+      create(:tenant_setting, tenant_id: current_tenant.id, google_cloud_service_account: {}, google_cloud_project_id: 'project_id', recaptcha_enterprise_checkbox_site_key: 'checkbox_site_key',
+recaptcha_enterprise_score_based_site_key: 'score_based_site_key',)
+    }
 
     before do
       email_template
+      tenant_setting
       allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
       allow(blastengine_mock).to receive(:send_email).and_return({
         delivery_id: 1,
@@ -34,6 +39,7 @@ RSpec.describe '[ Registrations API ]' do
         {
           email: 'test-user1@example.com',
           captcha_token:,
+          captcha_type:,
         }
       }
 
@@ -96,6 +102,7 @@ RSpec.describe '[ Registrations API ]' do
         {
           email: 'hogehoge',
           captcha_token:,
+          captcha_type:,
         }
       }
 
@@ -110,6 +117,7 @@ RSpec.describe '[ Registrations API ]' do
         {
           email: 'test-user1@example.com',
           captcha_token: 'hoge',
+          captcha_type:,
         }
       }
 

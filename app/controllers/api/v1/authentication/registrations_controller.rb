@@ -13,7 +13,7 @@ module API::V1::Authentication
 
         unless assessment.valid
           error = T.must(assessment.error)
-          return invalid_request_error(message: error.message, code: error.code)
+          return authentication_error(message: error.message, code: error.code)
         end
 
         assessment.score
