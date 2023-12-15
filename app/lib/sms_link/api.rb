@@ -9,14 +9,14 @@ module SmsLink
       voice: 20,
       sms_voice: 30,
       voice_sms: 40,
-    }.freeze, T::Hash[String, Integer],)
+    }.freeze, T::Hash[Symbol, Integer],)
 
     sig { returns(T.untyped) }
     attr_accessor :client
 
     sig { void }
     def initialize
-      @endpoint_url = T.let('https://sandbox.sms2.nexlink2.jp', String)
+      @endpoint_url = T.let('https://ss.smslink.jp', String)
       @client = T.let(Faraday.new(@endpoint_url) do |f|
         f.response :json
         f.headers = {
@@ -29,14 +29,14 @@ module SmsLink
     # SMS配信API
     sig { params(sms_verifier: Users::SmsVerifier, delivery_type: T.nilable(String)).returns(T::Hash[T.untyped, T.untyped]) }
     def send_sms(sms_verifier:, delivery_type: 'sms')
-      delivery_type = 'sms' if delivery_type.nil?
-      delivery_type_code = DELIVERY_TYPE_CODE[delivery_type]
+      delivery_type = :sms if delivery_type.nil?
+      delivery_type_code = DELIVERY_TYPE_CODE[delivery_type.to_sym]
 
       request(:post, '/api/v1/verification_code/delivery', {
         phone_number: sms_verifier.japan_local_phone_number,
         delivery_type: delivery_type_code,
-        sms_message: "#{Tenant.current&.name}の認証コード:{{verification_code}}\n他人には教えないでください。5分間有効です。",
-        voice_message: "お客様の認証コードは:{{verification_code}}です。他人には教えないでください。#{Tenant.current&.name}",
+        sms_message: "[#{Tenant.current&.name}]\nコード:{{verification_code}}\n有効期限は5分です。他人には教えないでください。",
+        voice_message: 'これからお伝えするコードを認証画面に入力してください。認証コードは{{verification_code}}です。繰り返します{{verification_code}}',
         verification_code: sms_verifier.code,
         user_reference: Tenant.current&.id,
       },)
