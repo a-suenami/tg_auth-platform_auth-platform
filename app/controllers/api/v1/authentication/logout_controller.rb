@@ -6,6 +6,8 @@ module API::V1::Authentication
 
     def create
       cookie_session.session_clear
+      # 異なるドメインのクッキーを削除
+      Authentication::DeleteOldSessionService.new.execute(request:, response:)
 
       head :no_content
     end

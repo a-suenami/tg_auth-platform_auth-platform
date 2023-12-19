@@ -30,6 +30,9 @@ module API::V1::Authentication
       # 新規登録時のみ、仮登録セッションを作成する
       cookie_session[:registering_user_id] = @user.id if @user.enabled == false
 
+      # 異なるドメインのクッキーを削除
+      Authentication::DeleteOldSessionService.new.execute(request:, response:)
+
       render :verify_email
     end
   end
