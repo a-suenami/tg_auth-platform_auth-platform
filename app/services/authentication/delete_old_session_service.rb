@@ -12,7 +12,7 @@ module Authentication
           path: '/',
           secure: Rails.env.production?,
           httponly: true,
-          domain: request.host.split('.').drop(cookie_domain_remove_length).join('.')
+          domain: request.host.split('.').drop(cookie_domain_remove_length).join('.'),
         }
       end
     end

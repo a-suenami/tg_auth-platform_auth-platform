@@ -65,7 +65,10 @@ RSpec.describe '[ Sessions API ]' do
         it 'returns 200' do
           is_expected.to eq 200
           expect(body_hash['id']).to eq(current_user.id)
-          expect(response.get_header('Set-Cookie').match(/domain=([^;]+)/)[1]).to eq 'sample.localhost.com'
+          set_cookies = response.headers['Set-Cookie'].split("\n")
+          expected_cookie = set_cookies.find { |cookie| cookie.match?(/domain=sample.localhost.com/) }
+
+          expect(expected_cookie).to be_present
         end
       end
 
@@ -75,14 +78,15 @@ RSpec.describe '[ Sessions API ]' do
         it 'returns 200' do
           is_expected.to eq 200
           expect(body_hash['id']).to eq(current_user.id)
-          expect(response.get_header('Set-Cookie').match(/domain=([^;]+)/)[1]).to eq 'localhost.com'
+          set_cookies = response.headers['Set-Cookie'].split("\n")
+          expected_cookie = set_cookies.find { |cookie| cookie.match?(/domain=localhost.com/) }
+
+          expect(expected_cookie).to be_present
         end
       end
 
-      # クッキーがない状態でクッキー削除してもSet-Cookieがヘッダーに入ってこないので、挙動が再現できないので無効化
-      # クッキーの削除と設定を同時になっているのが原因？テスト環境だけで起こる。Set-Cookieは重複しても良いはずだが、それがテストだと無視されている？
-      # rubocop:disable RSpec/PendingWithoutReason
-      xcontext 'when present old session' do
+      # Set-Cookieヘッダーが複数あった場合、最初の一つ以外消されるためテストができない。
+      context 'when present old session' do
         let(:headers) {
           cookie_str = <<~STR
             _rails_app_session=R7Sn2dHuJwPakROI1Jsg4hGFv5JvQg5kkUo4qfzjwkK4L8oh9OAzclZNyPEemQI0%2FI36ij5fmQuYgMzf7HwsrFwYIJnmsKi8nf4sNqrjpthzZwo
@@ -105,8 +109,12 @@ RSpec.describe '[ Sessions API ]' do
           it 'returns 200' do
             is_expected.to eq 200
             expect(body_hash['id']).to eq(current_user.id)
-            expect(response.get_header('Set-Cookie').match(/domain=([^;]+)/)[1]).to eq 'sample.localhost.com'
-            expect(response.get_header('Set-Cookie').match(/domain=([^;]+)/)[1]).to eq 'localhost.com'
+            set_cookies = response.headers['Set-Cookie'].split("\n")
+            expected_cookie_1 = set_cookies.find { |cookie| cookie.start_with?('_rails_app_session=; domain=localhost.com;') }
+            expected_cookie_2 = set_cookies.find { |cookie| cookie.start_with?('_rails_app_session=; domain=com;') }
+
+            expect(expected_cookie_1).to be_present
+            expect(expected_cookie_2).to be_present
           end
         end
 
@@ -116,12 +124,15 @@ RSpec.describe '[ Sessions API ]' do
           it 'returns 200' do
             is_expected.to eq 200
             expect(body_hash['id']).to eq(current_user.id)
-            expect(response.get_header('Set-Cookie').match(/domain=([^;]+)/)[1]).to eq 'sample.localhost.com'
-            expect(response.get_header('Set-Cookie').match(/domain=([^;]+)/)[1]).to eq 'localhost.com'
+            set_cookies = response.headers['Set-Cookie'].split("\n")
+            expected_cookie_1 = set_cookies.find { |cookie| cookie.start_with?('_rails_app_session=; domain=sample.localhost.com;') }
+            expected_cookie_2 = set_cookies.find { |cookie| cookie.start_with?('_rails_app_session=; domain=com;') }
+
+            expect(expected_cookie_1).to be_present
+            expect(expected_cookie_2).to be_present
           end
         end
       end
-      # rubocop:enable RSpec/PendingWithoutReason
     end
 
     context 'when the user is locked' do
