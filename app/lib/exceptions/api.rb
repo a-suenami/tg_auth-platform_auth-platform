@@ -8,7 +8,7 @@ module Exceptions
       sig { returns(T.nilable(String)) }
       attr_accessor :status, :body
 
-      sig { params(status: T.nilable(String), body: T.nilable(String)).void }
+      sig { params(status: T.nilable(Integer), body: T.nilable(String)).void }
       def initialize(status: nil, body: nil)
         @status = T.let(status, T.untyped)
         @body = T.let(body, T.untyped)

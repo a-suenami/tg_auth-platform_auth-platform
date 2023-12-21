@@ -42,5 +42,9 @@
   {
     "valueFrom": "/id-platform/stg/ecs/main/doorkeeper_openid_connect_signing_key",
     "name": "DOORKEEPER_OPENID_CONNECT_SIGNING_KEY"
+  },
+  {
+    "valueFrom": "/id-platform/stg/ecs/main/sms_link_api_token",
+    "name": "SMS_LINK_API_TOKEN"
   }
 ]

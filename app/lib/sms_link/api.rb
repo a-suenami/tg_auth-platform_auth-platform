@@ -13,7 +13,7 @@ module SmsLink
       @client = T.let(Faraday.new(@endpoint_url) do |f|
         f.response :json
         f.headers = {
-          token: Settings.sms_link.access_token,
+          token: Settings.sms_link.api_token,
           'Content-Type': 'application/json',
           Accept: 'application/json',
         }

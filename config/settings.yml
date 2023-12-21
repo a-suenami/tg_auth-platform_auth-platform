@@ -25,7 +25,7 @@ doorkeeper:
   openid_connect:
     signing_key: <%= ENV['DOORKEEPER_OPENID_CONNECT_SIGNING_KEY'] %>
 sms_link:
-  access_token: <%= ENV['SMS_LINK_ACCESS_TOKEN'] %>
+  api_token: <%= ENV['SMS_LINK_API_TOKEN'] %>
 twilio:
   account_sid: <%= ENV['TWILIO_ACCOUNT_SID'] %>
   api_key_sid: <%= ENV['TWILIO_API_KEY_SID'] %>
