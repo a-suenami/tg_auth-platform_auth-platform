@@ -11,12 +11,13 @@
 .uk-margin
   = f.label :redirect_url_on_password_reset
   = f.text_field :redirect_url_on_password_reset, class: "uk-input"
-/ .uk-margin
-/   = f.label :scopes
-/   .uk-article
-/     p.uk-article-meta
-/       | 設定可能なスコープ(public uid email name profile contact delivery_address openid ruler_users)
-/       br
-/       | 複数のScopeを設定する場合は、スペースで区切って入力してください(ex "uid email")
-/   = f.text_field :scopes, class: "uk-input"
+.uk-margin
+  = f.label :confidential
+  = f.check_box :confidential, :as => :boolean, class: "uk-checkbox"
+.uk-margin
+  = f.label :scopes
+  .uk-article
+    p.uk-article-meta
+      | 現在未対応
+  = f.text_field :scopes, class: "uk-input"
 = f.submit class: "uk-button uk-button-default"

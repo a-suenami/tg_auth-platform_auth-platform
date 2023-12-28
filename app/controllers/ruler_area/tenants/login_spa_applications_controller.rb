@@ -46,7 +46,7 @@ module RulerArea::Tenants
     private
 
     def login_spa_application_params
-      params.require(:login_spa_application).permit(:name, :login_url, :sign_up_url, :redirect_url_on_password_reset)
+      params.require(:login_spa_application).permit(:name, :login_url, :sign_up_url, :redirect_url_on_password_reset, :confidential, :scopes)
     end
   end
 end
