@@ -8,6 +8,7 @@ module Users
 
     belongs_to :user
     enumerize :verifier_type, in: [:registration], default: :registration
+    enumerize :delivery_type, in: [:sms, :voice, :sms_voice, :voide_sms]
 
     validates :phone_number, phony_plausible: true
 

@@ -376,6 +376,7 @@ CREATE TABLE public.users__sms_verifiers (
     sms_sender character varying,
     sms_sid character varying,
     ip_address character varying,
+    delivery_type character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );

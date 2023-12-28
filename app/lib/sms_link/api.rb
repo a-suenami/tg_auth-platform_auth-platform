@@ -4,39 +4,50 @@ module SmsLink
   class API
     extend T::Sig
 
+    DELIVERY_TYPE_CODE = T.let({
+      sms: 10,
+      voice: 20,
+      sms_voice: 30,
+      voice_sms: 40,
+    }.freeze, T::Hash[Symbol, Integer],)
+
     sig { returns(T.untyped) }
     attr_accessor :client
 
     sig { void }
     def initialize
-      @endpoint_url = T.let('https://sand-api-smslink.nexlink2.jp', String)
+      @endpoint_url = T.let('https://ss.smslink.jp', String)
       @client = T.let(Faraday.new(@endpoint_url) do |f|
         f.response :json
         f.headers = {
-          token: Settings.sms_link.api_token,
+          Authorization: "Bearer #{Settings.sms_link.api_token}",
           'Content-Type': 'application/json',
-          Accept: 'application/json',
         }
       end, T.untyped,)
     end
 
     # SMS配信API
-    sig { params(send_to: String, body: String).returns(T::Hash[T.untyped, T.untyped]) }
-    def send_sms(send_to:, body:)
-      request(:post, '/api/v1/delivery', {
-        contacts: [
-          {
-            phone_number: send_to,
-          },
-        ],
-        text_message: body,
+    sig { params(sms_verifier: Users::SmsVerifier, delivery_type: T.nilable(String)).returns(T::Hash[T.untyped, T.untyped]) }
+    def send_sms(sms_verifier:, delivery_type: 'sms')
+      delivery_type = :sms if delivery_type.nil?
+      delivery_type_code = DELIVERY_TYPE_CODE[delivery_type.to_sym]
+
+      request(:post, '/api/v1/verification_code/delivery', {
+        phone_number: sms_verifier.japan_local_phone_number,
+        delivery_type: delivery_type_code,
+        sms_message: "[#{Tenant.current&.name}]\nコード:{{verification_code}}\n有効期限は5分です。他人には教えないでください。",
+        voice_message: 'これからお伝えするコードを認証画面に入力してください。認証コードは{{verification_code}}です。繰り返します{{verification_code}}',
+        verification_code: sms_verifier.code,
+        user_reference: Tenant.current&.id,
       },)
     end
 
     # SMS配信結果取得API
-    sig { params(delivery_id: String).returns(T::Hash[T.untyped, T.untyped]) }
-    def fetch_sms_detail(delivery_id:)
-      request(:get, "/api/v1/delivery_id/#{delivery_id}")
+    sig { params(verification_code_id: String).returns(T::Hash[T.untyped, T.untyped]) }
+    def fetch_sms_detail(verification_code_id:)
+      request(:get, '/api/v1/verification_code/delivery', {
+        verification_code_id:,
+      },)
     end
 
     private

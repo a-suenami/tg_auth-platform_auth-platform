@@ -481,12 +481,13 @@ class Users::SmsVerifier
         sms_sender: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         sms_sid: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         ip_address: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        delivery_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, code: nil, expired_at: nil, remaining_attempts: nil, verifier_type: nil, phone_number: nil, used_at: nil, sms_sender: nil, sms_sid: nil, ip_address: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, code: nil, expired_at: nil, remaining_attempts: nil, verifier_type: nil, phone_number: nil, used_at: nil, sms_sender: nil, sms_sid: nil, ip_address: nil, delivery_type: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def without(*args, &blk); end
@@ -582,6 +583,51 @@ class Users::SmsVerifier
 
     sig { void }
     def created_at_will_change!; end
+
+    sig { returns(T.untyped) }
+    def delivery_type; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def delivery_type=(value); end
+
+    sig { returns(T::Boolean) }
+    def delivery_type?; end
+
+    sig { returns(T.untyped) }
+    def delivery_type_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def delivery_type_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def delivery_type_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def delivery_type_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def delivery_type_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def delivery_type_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def delivery_type_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def delivery_type_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def delivery_type_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def delivery_type_previously_was; end
+
+    sig { returns(T.untyped) }
+    def delivery_type_was; end
+
+    sig { void }
+    def delivery_type_will_change!; end
 
     sig { returns(::ActiveSupport::TimeWithZone) }
     def expired_at; end
@@ -815,6 +861,9 @@ class Users::SmsVerifier
     def restore_created_at!; end
 
     sig { void }
+    def restore_delivery_type!; end
+
+    sig { void }
     def restore_expired_at!; end
 
     sig { void }
@@ -861,6 +910,12 @@ class Users::SmsVerifier
 
     sig { returns(T::Boolean) }
     def saved_change_to_created_at?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_delivery_type; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_delivery_type?; end
 
     sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
     def saved_change_to_expired_at; end
@@ -1266,6 +1321,9 @@ class Users::SmsVerifier
     def will_save_change_to_created_at?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_delivery_type?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_expired_at?; end
 
     sig { returns(T::Boolean) }
@@ -1441,12 +1499,13 @@ class Users::SmsVerifier
         sms_sender: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         sms_sid: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         ip_address: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        delivery_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, code: nil, expired_at: nil, remaining_attempts: nil, verifier_type: nil, phone_number: nil, used_at: nil, sms_sender: nil, sms_sid: nil, ip_address: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, code: nil, expired_at: nil, remaining_attempts: nil, verifier_type: nil, phone_number: nil, used_at: nil, sms_sender: nil, sms_sid: nil, ip_address: nil, delivery_type: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def without(*args, &blk); end
