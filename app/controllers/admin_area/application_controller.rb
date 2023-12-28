@@ -29,7 +29,7 @@ module AdminArea
     def set_tenant
       # OPTIMIZE: Tenant.current で再度DBアクセスが走るので要最適化
       RequestStore.store[:current_tenant] = request.subdomain.split('.').first&.to_sym || '-'
-      tenant = Tenant.find_by!(id: RequestStore.store[:current_tenant])
+      tenant = Tenant.find(RequestStore.store[:current_tenant])
       RequestStore.store[:current_tenant_domain] = tenant.domain
 
       Tenant.current
