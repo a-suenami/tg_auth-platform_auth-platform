@@ -130,6 +130,8 @@ gem install pg -- --with-pg-config=/opt/homebrew/opt/libpq/bin/pg_config
 brew install watchman
 
 bundle config gems.contribsys.com xxxx:xxxx
+
+bundle install # WITHOUT `source env.sh`
 ```
 
 ## Generating RBIs
