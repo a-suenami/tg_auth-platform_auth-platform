@@ -27,6 +27,6 @@ class UserProfile < ApplicationRecord
 
     age = Time.zone.today.year - T.must(birth_date).year
     age -= 1 if Time.zone.today < T.must(birth_date) + age.years
-    age
+    (age / 10) * 10
   end
 end
