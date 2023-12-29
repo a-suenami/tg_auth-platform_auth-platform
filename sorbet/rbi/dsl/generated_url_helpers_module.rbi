@@ -69,6 +69,9 @@ module GeneratedUrlHelpersModule
   def api_v1_private_userinfo_index_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_user_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_email_template_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }

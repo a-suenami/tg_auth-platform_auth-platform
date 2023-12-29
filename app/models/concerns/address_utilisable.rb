@@ -19,6 +19,7 @@ module AddressUtilisable
     # 日本住所の場合のみ、バリデーションを行う
     with_options if: :domestic_address? do
       validates :zip_code, presence: true
+      validates :zip_code, format: { with: /\A\d{3}-?\d{4}\z/ }, allow_blank: true
       validates :prefecture_code, presence: true
       validates :city, presence: true
       validates :street, presence: true
@@ -30,7 +31,9 @@ module AddressUtilisable
     sig { returns(T.nilable(String)) }
     def zip_code
       # 3文字目にハイフンを入れる
-      super&.clone&.insert(3, '-')
+      if super.present? && super.length >= 3
+        super&.clone&.insert(3, '-')
+      end
     end
 
     sig { returns(T::Boolean) }

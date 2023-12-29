@@ -171,7 +171,7 @@ RSpec.describe '[ Profiles API ]' do
               },
               contact_address_attributes: {
                 zip_code: nil,
-                prefecture_code: '48',
+                prefecture_code: '99',
                 city: nil,
                 street: nil,
                 building: nil,
@@ -189,7 +189,7 @@ RSpec.describe '[ Profiles API ]' do
           expect(body_hash['profile']['last_name_kana']).to eq('ヤマダツー')
           expect(body_hash['profile']['birth_date']).to eq('2010-01-11')
           expect(body_hash['profile']['gender']).to eq('male')
-          expect(body_hash['contact_address']['prefecture_code']).to eq('48')
+          expect(body_hash['contact_address']['prefecture_code']).to eq('99')
           expect(body_hash['contact_address']['prefecture']).to eq('その他海外')
           expect(body_hash['contact_address']['zip_code']).to be_nil
           expect(body_hash['contact_address']['city']).to be_nil

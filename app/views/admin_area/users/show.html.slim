@@ -1,35 +1,92 @@
 / show user profile
 .uk-margin-top.uk-container
-  h2 会員ID詳細
+  .uk-card.uk-card-default.uk-card-body
+    .uk-flex.uk-flex-right
+      = link_to "編集", edit_admin_area_user_path(@user), class: "uk-button uk-button-primary"
+    h3.uk-card-title ユーザ詳細
 
-  table.uk-table
-    tr
-      th
-        | ID
-      td
-        = @user.id
-    tr
-      th
-        | メールアドレス
-      td
-        = @user.email
-    tr
-      th
-        | 氏名
-      td
-        = @user.user_profile.name
-    tr
-      th
-        | 性別
-      td
-        = @user.user_profile.gender
-    tr
-      th
-        | 年代
-      td
-        = @user.user_profile.age_range
-    tr
-      th
-        | 都道府県
-      td
-        = @user.contact_address&.prefecture&.name
+
+    .uk-margin
+      dt.uk-text-bold ID
+      dd = @user.id
+    .uk-margin
+      dt.uk-text-bold メールアドレス
+      dd = @user.email
+    .uk-margin
+      dt.uk-text-bold 電話番号
+      dd = @user.phone_number
+    .uk-margin
+      dt.uk-text-bold 氏名
+      dd = @user.user_profile&.name
+    .uk-margin
+      dt.uk-text-bold 年代
+      dd
+        - if @user&.user_profile&.age_range.present?
+          = @user&.user_profile&.age_range
+          | 代
+        - else
+          | -
+    .uk-margin
+      dt.uk-text-bold = User.human_attribute_name(:enabled)
+      dd = @user.enabled
+    .uk-margin
+      dt.uk-text-bold = User.human_attribute_name(:sms_verified)
+      dd = @user.sms_verified
+    .uk-margin
+      dt.uk-text-bold = User.human_attribute_name(:email_verified)
+      dd = @user.email_verified
+    .uk-margin
+      dt.uk-text-bold = User.human_attribute_name(:deleted)
+      dd = @user.deleted
+    .uk-margin
+      dt.uk-text-bold = User.human_attribute_name(:lock_expired_at)
+      dd = @user.lock_expired_at
+
+    hr.uk-divider-icon
+    h2.uk-card-title プロフィール情報
+    .uk-margin
+      dt.uk-text-bold = UserProfile.human_attribute_name(:first_name)
+      dd = @user&.user_profile&.first_name
+    .uk-margin
+      dt.uk-text-bold = UserProfile.human_attribute_name(:last_name)
+      dd = @user&.user_profile&.last_name
+    .uk-margin
+      dt.uk-text-bold = UserProfile.human_attribute_name(:first_name_kana)
+      dd = @user&.user_profile&.first_name_kana
+    .uk-margin
+      dt.uk-text-bold = UserProfile.human_attribute_name(:last_name_kana)
+      dd = @user&.user_profile&.last_name_kana
+    .uk-margin
+      dt.uk-text-bold = UserProfile.human_attribute_name(:birth_date)
+      dd = @user&.user_profile&.birth_date
+    .uk-margin
+      dt.uk-text-bold = UserProfile.human_attribute_name(:gender)
+      dd = @user&.user_profile&.gender
+
+    hr.uk-divider-icon
+    h2.uk-card-title 連絡先住所
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:zip_code)
+      dd = @user&.contact_address&.zip_code
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:prefecture)
+      dd = @user&.contact_address&.prefecture&.name
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:city)
+      dd = @user&.contact_address&.city
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:street)
+      dd = @user&.contact_address&.street
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:building)
+      dd = @user&.contact_address&.building
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:phone_number)
+      dd = @user&.contact_address&.phone_number
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:country_code)
+      dd = @user&.contact_address&.country_code
+
+    .uk-margin
+      dt.uk-text-bold アカウント作成日
+      dd = @user.created_at.strftime("%Y年%m月%d日")

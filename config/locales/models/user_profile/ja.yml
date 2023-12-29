@@ -1,0 +1,15 @@
+ja:
+  activerecord:
+    models:
+      user_profile: ユーザプロフィール
+    attributes:
+      user_profile:
+        id: ID
+        first_name: 氏名
+        last_name: 苗字
+        first_name_kana: 氏名(カナ)
+        last_name_kana: 苗字(カナ)
+        birth_date: 誕生日
+        gender: 性別
+        created_at: 作成日時
+        updated_at: 更新日時

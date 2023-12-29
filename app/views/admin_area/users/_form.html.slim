@@ -1,0 +1,94 @@
+= render 'admin_area/shared/form_error', target: f.object
+.uk-margin
+  = f.label :email, class: 'uk-form-label'
+  .uk-form-controls
+    = f.text_field :email, class: "uk-input"
+.uk-margin
+  = f.label :phone_number, class: 'uk-form-label'
+  .uk-form-controls
+    em 注意: 国際電話番号のフォーマットにする必要あり(例: 818012345678)
+    = f.text_field :phone_number, class: "uk-input"
+.uk-margin
+  = f.label :enabled, class: 'uk-form-label'
+  .uk-form-controls
+    = f.check_box :enabled, :as => :boolean, class: "uk-checkbox"
+.uk-margin
+  = f.label :sms_verified, class: 'uk-form-label'
+  .uk-form-controls
+    = f.check_box :sms_verified, :as => :boolean, class: "uk-checkbox"
+.uk-margin
+  = f.label :email_verified, class: 'uk-form-label'
+  .uk-form-controls
+    = f.check_box :email_verified, :as => :boolean, class: "uk-checkbox"
+.uk-margin
+  = f.label :deleted, class: 'uk-form-label'
+  .uk-form-controls
+    = f.check_box :deleted, :as => :boolean, class: "uk-checkbox"
+.uk-margin
+  = f.label :lock_expired_at, class: 'uk-form-label'
+  .uk-form-controls
+    = f.datetime_select :lock_expired_at
+
+.uk-margin
+h2 プロフィール情報
+= f.fields_for :user_profile do |profile_form|
+  .uk-margin
+    = profile_form.label :first_name, class: 'uk-form-label'
+    .uk-form-controls
+      = profile_form.text_field :first_name, class: "uk-input"
+  .uk-margin
+    = profile_form.label :last_name, class: 'uk-form-label'
+    .uk-form-controls
+      = profile_form.text_field :last_name, class: "uk-input"
+  .uk-margin
+    = profile_form.label :first_name_kana, class: 'uk-form-label'
+    .uk-form-controls
+      = profile_form.text_field :first_name_kana, class: "uk-input"
+  .uk-margin
+    = profile_form.label :last_name_kana, class: 'uk-form-label'
+    .uk-form-controls
+      = profile_form.text_field :last_name_kana, class: "uk-input"
+  .uk-margin
+    = profile_form.label :birth_date, class: 'uk-form-label'
+    .uk-form-controls
+      = profile_form.date_select :birth_date, start_year: Date.current.year - 100, class: "uk-input"
+  .uk-margin
+    = profile_form.label :gender, class: 'uk-form-label'
+    .uk-form-controls
+      = profile_form.select :gender, UserProfile.gender.options, { include_blank: '選択してください' }
+
+.uk-margin
+h2 連絡先住所
+= f.fields_for :contact_address do |contact_address_form|
+  .uk-margin
+    = contact_address_form.label :zip_code, class: 'uk-form-label'
+    .uk-form-controls
+      = contact_address_form.text_field :zip_code, class: "uk-input"
+  .uk-margin
+    = contact_address_form.label :prefecture_code, class: 'uk-form-label'
+    .uk-form-controls
+      = contact_address_form.number_field :prefecture_code, class: "uk-input"
+  .uk-marginf
+    = contact_address_form.label :city, class: 'uk-form-label'
+    .uk-form-controls
+      = contact_address_form.text_field :city, class: "uk-input"
+  .uk-margin
+    = contact_address_form.label :street, class: 'uk-form-label'
+    .uk-form-controls
+      = contact_address_form.text_field :street, class: "uk-input"
+  .uk-margin
+    = contact_address_form.label :building, class: 'uk-form-label'
+    .uk-form-controls
+      = contact_address_form.text_field :building, class: "uk-input"
+  .uk-margin
+    = contact_address_form.label :phone_number, class: 'uk-form-label'
+    .uk-form-controls
+      em 注意: こちらは国内電話番号規格で入力(例: 08012345678)
+      = contact_address_form.text_field :phone_number, class: "uk-input"
+  .uk-margin
+    = contact_address_form.label :country_code, class: 'uk-form-label'
+    .uk-form-controls
+      = contact_address_form.text_field :country_code, class: "uk-input"
+
+
+= f.submit class: "uk-button uk-button-default"
