@@ -18,7 +18,7 @@ module AddressUtilisable
     T.bind(self, T.class_of(ApplicationRecord))
     # 日本住所の場合のみ、バリデーションを行う
     with_options if: :domestic_address? do
-      validates :zip_code, format: { with: /\A\d{3}-?\d{4}\z/, message: "は不正な値です" }, presence: true
+      validates :zip_code, format: { with: /\A\d{3}-?\d{4}\z/, message: 'は不正な値です' }, presence: true
       validates :prefecture_code, presence: true
       validates :city, presence: true
       validates :street, presence: true
@@ -32,8 +32,6 @@ module AddressUtilisable
       # 3文字目にハイフンを入れる
       if super.present? && super.length >= 3
         super&.clone&.insert(3, '-')
-      else
-        nil
       end
     end
 
