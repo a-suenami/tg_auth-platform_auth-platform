@@ -9,12 +9,16 @@ local memory_reservation = 512;
 {
   "containerDefinitions": [
     {
-      "command": [
+      "command":  [
+        "bash",
+        "bin/sidekiq-entrypoint.sh",
         "bundle",
         "exec",
         "sidekiq",
         "-C",
-        "config/sidekiq.yml"
+        "config/sidekiq.yml",
+        "-t",
+        "25"
       ],
       "cpu": cpu,
       "entryPoint": [],
