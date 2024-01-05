@@ -12,6 +12,7 @@ cache: &cache
 stages:
   - prepare
   - test
+  - post-test
   - build
   - pre-deploy
   - deploy
