@@ -10,3 +10,4 @@ apt-get update -qq && \
     libsodium-dev \
     git \
     curl \
+    libjemalloc2

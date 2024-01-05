@@ -13,6 +13,7 @@ apt-get update -qq && \
     gnupg2 \
     lsb-release \
     unzip \
+    libjemalloc2
 
 # pg_dump for pg15 のインストール
 curl -sS https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -

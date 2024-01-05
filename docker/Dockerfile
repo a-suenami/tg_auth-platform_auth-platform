@@ -31,8 +31,25 @@ RUN /bin/sh scripts/apt_install.sh && \
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
   truncate -s 0 /var/log/*log
 
+# アーキテクチャに応じた jemalloc の LD_PRELOAD
+ARG TARGETARCH
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+        echo "using jemalloc for amd64 arch"; \
+        export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2; \
+    else \
+        echo "using jemalloc for arm64 arch"; \
+        export LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libjemalloc.so.2; \
+    fi
+
 # Prepare App
 COPY . $APP_HOME
+
+RUN bundle exec bootsnap precompile --gemfile app/ lib/
+
+# Run and own only the runtime files as a non-root user for security
+RUN useradd rails --create-home --shell /bin/bash && \
+    mkdir -p log tmp && chown -R rails:rails log tmp
+USER rails:rails
 
 ## Expose assets for web container
 VOLUME $APP_HOME/public/packs
