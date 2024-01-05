@@ -111,22 +111,23 @@ sorbet:
   stage: test
   cache:
     <<: *cache
-    key: ${RUBY_VERSION}
-    policy: pull
+    # RAILS_ENV=development で bundle するので cache key 分ける
+    key: ${RUBY_VERSION}-development
   services:
     - ${POSTGRES_VERSION}
   variables:
+    RAILS_ENV: test
     POSTGRES_HOST: postgres
     POSTGRES_TEST_HOST: postgres
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: postgres
     RAILS_ENV: development
   before_script:
-    - /bin/sh docker/scripts/bundle_install.sh
+    - RAILS_ENV=development /bin/sh docker/scripts/bundle_install.sh
     - bundle exec rake db:create db:schema:load
   script:
-    - bundle exec tapioca gems --verify
-    - bundle exec tapioca dsl --verify
+    - bundle exec tapioca gems --verify --environment=development
+    - bundle exec tapioca dsl --verify --environment=development
     - bundle exec srb tc
   except:
     - /^deploy-.*$/
