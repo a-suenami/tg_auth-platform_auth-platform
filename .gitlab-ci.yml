@@ -183,6 +183,34 @@ build:app:staging:
   except:
     - schedules
 
+build:app:production:
+  image: containers.l.twogate.net/docker/docker-awscli:master
+  stage: build
+  cache:
+    paths:
+      - vendor/bundle
+    key: ${RUBY_VERSION}
+    policy: pull
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    BUNDLE_GIT__L__TWOGATE__NET: $BUNDLE_GIT__L__TWOGATE__NET
+  script:
+    - eval $(aws --region ap-northeast-1 ecr get-login --no-include-email --registry-ids 843188904699)
+    - docker build . -f docker/Dockerfile -t rails_app:latest --build-arg BUNDLE_GIT__L__TWOGATE__NET --build-arg BUNDLE_GEMS__CONTRIBSYS__COM
+    - docker tag rails_app:latest 843188904699.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-prod:latest
+    - docker tag rails_app:latest 843188904699.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-prod:$CI_COMMIT_SHA
+    - docker push 843188904699.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-prod:latest
+    - docker push 843188904699.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-prod:$CI_COMMIT_SHA
+  tags:
+    - docker
+  only:
+    - deploy-production
+  except:
+    - schedules
+
 # ------------------------------------------------------------------------------
 # Deploy Development
 # ------------------------------------------------------------------------------
@@ -222,19 +250,21 @@ deploy-dev:
   script:
     - ecspresso diff --color --ext-str APP_IMAGE_TAG=$CI_COMMIT_SHA --config ecspresso/stg/services/app/config.yaml
 
-🔧 pre-deploy:migration:staging:
-  <<: *deploy-staging-base
-  stage: pre-deploy
-  script:
-    - ecspresso run --watch-container app --ext-str APP_IMAGE_TAG=$CI_COMMIT_SHA --config ecspresso/stg/tasks/config.yaml --task-def ecspresso/stg/tasks/oneshot-task-def.jsonnet --overrides '{"containerOverrides":[{"name":"app","command":["bundle","exec","rails","ridgepole:apply"]}]}'
-  when: manual
-
 👍 pre-deploy:approval:staging:
   <<: *deploy-staging-base
   stage: pre-deploy
   script:
     - ecspresso deploy --dry-run --ext-str APP_IMAGE_TAG=$CI_COMMIT_SHA --config ecspresso/stg/services/app/config.yaml
   when: manual
+
+🔧 deploy:migration:staging:
+  <<: *deploy-staging-base
+  stage: deploy
+  script:
+    - ecspresso run --watch-container app --ext-str APP_IMAGE_TAG=$CI_COMMIT_SHA --config ecspresso/stg/tasks/config.yaml --task-def ecspresso/stg/tasks/oneshot-task-def.jsonnet --overrides '{"containerOverrides":[{"name":"app","command":["bundle","exec","rails","ridgepole:apply"]}]}'
+  needs:
+    - job: 👍 pre-deploy:approval:staging
+      artifacts: false
 
 🚀 deploy:app:staging:
   <<: *deploy-staging-base
@@ -244,6 +274,8 @@ deploy-dev:
   needs:
     - job: 👍 pre-deploy:approval:staging
       artifacts: false
+    - job: 🔧 deploy:migration:staging
+      artifacts: false
 
 🚀 deploy:worker:staging:
   <<: *deploy-staging-base
@@ -252,4 +284,66 @@ deploy-dev:
     - ecspresso deploy --ext-str APP_IMAGE_TAG=$CI_COMMIT_SHA --config ecspresso/stg/services/worker/config.yaml
   needs:
     - job: 👍 pre-deploy:approval:staging
+      artifacts: false
+    - job: 🔧 deploy:migration:staging
+      artifacts: false
+
+
+# ------------------------------------------------------------------------------
+# Deploy Production jobs
+# ------------------------------------------------------------------------------
+.deploy:production:base: &deploy-production-base
+  image: containers.l.twogate.net/docker/ecspresso:master
+  cache: {}
+  variables:
+    AWS_ASSUME_ROLE_ARN: arn:aws:iam::843188904699:role/ecspresso-ecs-role
+  before_script:
+    - STS=`aws sts assume-role --role-arn $AWS_ASSUME_ROLE_ARN --role-session-name ecspresso-$CI_PROJECT_ID-$CI_JOB_ID`;export AWS_ACCESS_KEY_ID=`echo "${STS}" | jq -r '.Credentials.AccessKeyId'`;export AWS_SECRET_ACCESS_KEY=`echo "${STS}" | jq -r '.Credentials.SecretAccessKey'`;export AWS_SESSION_TOKEN=`echo "${STS}" | jq -r '.Credentials.SessionToken'`
+  only:
+    - deploy-production
+  except:
+    - schedules
+
+🔍 pre-deploy:diff:app:production:
+  <<: *deploy-production-base
+  stage: pre-deploy
+  script:
+    - ecspresso diff --color --ext-str APP_IMAGE_TAG=$CI_COMMIT_SHA --config ecspresso/prod/services/app/config.yaml
+
+👍 pre-deploy:approval:production:
+  <<: *deploy-production-base
+  stage: pre-deploy
+  script:
+    - ecspresso deploy --dry-run --ext-str APP_IMAGE_TAG=$CI_COMMIT_SHA --config ecspresso/prod/services/app/config.yaml
+  when: manual
+
+🔧 deploy:migration:production:
+  <<: *deploy-production-base
+  stage: deploy
+  script:
+    - ecspresso run --watch-container app --ext-str APP_IMAGE_TAG=$CI_COMMIT_SHA --config ecspresso/prod/tasks/config.yaml --task-def ecspresso/prod/tasks/oneshot-task-def.jsonnet --overrides '{"containerOverrides":[{"name":"app","command":["bundle","exec","rails","ridgepole:apply"]}]}'
+  needs:
+    - job: 👍 pre-deploy:approval:production
+      artifacts: false
+
+🚀 deploy:app:production:
+  <<: *deploy-production-base
+  stage: deploy
+  script:
+    - ecspresso deploy --ext-str APP_IMAGE_TAG=$CI_COMMIT_SHA --config ecspresso/prod/services/app/config.yaml
+  needs:
+    - job: 👍 pre-deploy:approval:production
+      artifacts: false
+    - job: 🔧 deploy:migration:production
+      artifacts: false
+
+🚀 deploy:worker:production:
+  <<: *deploy-production-base
+  stage: deploy
+  script:
+    - ecspresso deploy --ext-str APP_IMAGE_TAG=$CI_COMMIT_SHA --config ecspresso/prod/services/worker/config.yaml
+  needs:
+    - job: 👍 pre-deploy:approval:production
+      artifacts: false
+    - job: 🔧 deploy:migration:production
       artifacts: false

@@ -1,0 +1,24 @@
+{
+  "deploymentConfiguration": {
+    "deploymentCircuitBreaker": {
+      "enable": true,
+      "rollback": true
+    }
+  },
+  "deploymentController": {
+    "type": "ECS"
+  },
+  "enableECSManagedTags": true,
+  "enableExecuteCommand": true,
+  "launchType": "EC2",
+  "loadBalancers": [],
+  "placementConstraints": [
+    {
+      "type": "distinctInstance"
+    }
+  ],
+  "placementStrategy": [],
+  "schedulingStrategy": "REPLICA",
+  "serviceRegistries": [],
+  "tags": []
+}

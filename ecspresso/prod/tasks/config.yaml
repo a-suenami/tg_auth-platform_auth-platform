@@ -1,0 +1,6 @@
+region: ap-northeast-1
+cluster: id-platform-app-prod
+service: id-platform-main-service-app-prod
+service_definition: ../services/app/ecs-service-def.json # 使わないはずだが設定しないと動かないのでとりあえず service-app を設定する
+task_definition: null
+timeout: 10m0s
