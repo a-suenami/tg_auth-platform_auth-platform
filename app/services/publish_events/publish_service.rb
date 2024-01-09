@@ -4,8 +4,6 @@ module PublishEvents
   class PublishService < ::BaseService
     def execute(user:, action_code:)
       return false if Settings&.aws&.region.blank?
-      return false if Settings&.aws&.access_key_id.blank?
-      return false if Settings&.aws&.secret_access_key.blank?
       return false if Settings&.aws&.event_bus_name.blank?
 
       enable_applications = OauthApplication.where(tenant_id: user.tenant_id, enable_push_event: true)
@@ -81,11 +79,21 @@ module PublishEvents
     end
     # rubocop:enable Metrics/CyclomaticComplexity
 
+    # sig { returns(Aws::EventBridge::Client) }
     def aws_event_bridge_client
       @aws_event_bridge_client ||= ::Aws::EventBridge::Client.new(
         region: Settings.aws.region,
-        credentials: ::Aws::Credentials.new(Settings.aws.access_key_id, Settings.aws.secret_access_key),
+        credentials:,
       )
+    end
+
+    # sig { returns(T.any(Aws::Credentials, Aws::ECSCredentials)) }
+    def credentials
+      if Settings.aws.access_key_id
+        ::Aws::Credentials.new(Settings.aws.access_key_id, Settings.aws.secret_access_key)
+      else
+        ::Aws::ECSCredentials.new
+      end
     end
   end
 end
