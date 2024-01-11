@@ -1,0 +1,6 @@
+region: ap-northeast-1
+cluster: id-platform-app-prod
+service: id-platform-main-service-app-prod
+service_definition: ecs-service-def.json
+task_definition: ecs-task-def.jsonnet
+timeout: 10m0s

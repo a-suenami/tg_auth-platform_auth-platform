@@ -1,0 +1,97 @@
+local app_environment = import '../../templates/rails_environment.libsonnet';
+local app_secrets = import '../../templates/rails_secrets.libsonnet';
+local app_image_tag = std.extVar('APP_IMAGE_TAG');
+
+local cpu = 512;
+local memory = 1700;
+local memory_reservation = 256;
+
+{
+  "containerDefinitions": [
+    {
+      "cpu": cpu,
+      "entryPoint": [],
+      "environment": app_environment,
+      "essential": true,
+      "image": "843188904699.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-prod:" + app_image_tag,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/id-platform-main-service-app/app",
+          "awslogs-region": "ap-northeast-1",
+          "awslogs-stream-prefix": "app"
+        },
+        "secretOptions": []
+      },
+      "memory": memory,
+      "memoryReservation": memory_reservation,
+      "mountPoints": [],
+      "name": "app",
+      "portMappings": [],
+      "secrets": app_secrets,
+      "volumesFrom": []
+    },
+    {
+      "command": [
+        "/bin/bash",
+        "-c",
+        "envsubst '$HEALTH_CHECK_ALLOW_IPS $RULER_ALLOW_IPS' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && exec nginx -g 'daemon off;'"
+      ],
+      "cpu": 256,
+      "environment": [
+        {
+          "name": "RULER_ALLOW_IPS",
+          "value": "allow 167.179.95.236/32; allow 219.104.123.178/32; allow 217.178.59.190/32; allow 240d:1b:5c:9600::/56; allow 240d:1b:ad::/56; allow 2409:10:2500:3700::/56;"
+        },
+        {
+          "name": "HEALTH_CHECK_ALLOW_IPS",
+          "value": "allow 10.84.0.0/16; allow 52.193.111.118/32; allow 52.196.125.133/32; allow 13.113.213.40/32; allow 52.197.186.229/32; allow 52.198.79.40/32; allow 13.114.12.29/32; allow 13.113.240.89/32; allow 52.68.245.9/32; allow 13.112.142.176/32;"
+        }
+      ],
+      "essential": true,
+      "image": "843188904699.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-nginx-prod:latest",
+      "links": [
+        "app"
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/id-platform-main-service-app/nginx",
+          "awslogs-region": "ap-northeast-1",
+          "awslogs-stream-prefix": "nginx"
+        },
+        "secretOptions": []
+      },
+      "memory": 256,
+      "memoryReservation": 128,
+      "mountPoints": [],
+      "name": "nginx",
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 0,
+          "protocol": "tcp"
+        }
+      ],
+      "volumesFrom": []
+    }
+  ],
+  "executionRoleArn": "arn:aws:iam::843188904699:role/id-platform-main-ecs-task-execution-prod",
+  "family": "id-platform-main-service-app-prod",
+  "placementConstraints": [],
+  "requiresCompatibilities": [
+    "EC2"
+  ],
+  "tags": [
+    {
+      "key": "env",
+      "value": "prod"
+    },
+    {
+      "key": "project",
+      "value": "id-platform"
+    }
+  ],
+  "taskRoleArn": "arn:aws:iam::843188904699:role/id-platform-main-ecs-task-prod",
+  "volumes": []
+}
