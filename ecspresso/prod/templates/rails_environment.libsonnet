@@ -41,11 +41,11 @@
   },
   {
     "name": "CLOUDFRONT_HOST",
-    "value": "media.app-staging.id-platform.net"
+    "value": "media.app.id-platform.net"
   },
   {
     "name": "ALLOW_ORIGINS",
-    "value": "['https://ticket.hikaruutada-tour-official.com']"
+    "value": "['https://web.account.hikaruutada-tour-official.com', 'https://ticket.hikaruutada-tour-official.com']"
   },
   {
     "name": "USE_ECS_CREDENTIALS",
