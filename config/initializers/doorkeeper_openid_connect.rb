@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 Doorkeeper::OpenidConnect.configure do
   issuer do |_resource_owner, _application|
     'auth-platform'
@@ -65,27 +66,58 @@ Doorkeeper::OpenidConnect.configure do
     normal_claim :tenant_id, response: :id_token do |resource_owner|
       resource_owner&.tenant_id
     end
-    normal_claim :triple_user, response: :id_token, scope: :triple_user do |resource_owner|
-      {
-        uid: resource_owner.id,
-        first_name: resource_owner.user_profile&.first_name,
-        last_name: resource_owner.user_profile&.last_name,
-        first_name_pron: resource_owner.user_profile&.first_name_kana,
-        last_name_pron: resource_owner.user_profile&.last_name_kana,
-        email: resource_owner.email,
-        phone_number: resource_owner&.phone_number,
-        contact_phone_number: resource_owner&.contact_address&.phone_number,
-        birth_date: resource_owner.user_profile&.birth_date,
-        gender: resource_owner.user_profile&.gender,
-        zip_code: resource_owner.contact_address&.zip_code,
-        prefecture: resource_owner.contact_address&.prefecture&.name,
-        city: resource_owner.contact_address&.city,
-        address_1: resource_owner.contact_address&.street,
-        address_2: resource_owner.contact_address&.building,
-        id_provider: 'auth-platform',
-        member_rank: nil,
-        extra: nil,
-      }
+
+    claim :user, response: :id_token do |resource_owner, scope|
+      json = {}
+      profile_json = {}
+      contact_address_json = {}
+
+      json[:uid] = resource_owner.id if scope.exists?(:uid)
+      json[:email] = resource_owner.email if scope.exists?(:email)
+      json[:phone_number] = resource_owner.phone_number if scope.exists?(:phone_number)
+      if scope.exists?(:name)
+        profile_json[:first_name] = resource_owner.user_profile&.first_name
+        profile_json[:last_name] = resource_owner.user_profile&.last_name
+        profile_json[:first_name_kana] = resource_owner.user_profile&.first_name_kana
+        profile_json[:last_name_kana] = resource_owner.user_profile&.last_name_kana
+      end
+      if scope.exists?(:profile)
+        profile_json[:birth_date] = resource_owner.user_profile&.birth_date
+        profile_json[:gender] = resource_owner.user_profile&.gender
+        contact_address_json[:prefecture_code] = resource_owner.contact_address&.prefecture_code_jis
+        contact_address_json[:prefecture] = resource_owner.contact_address&.prefecture&.name
+      end
+      if scope.exists?(:contact)
+        contact_address_json[:prefecture_code] = resource_owner.contact_address&.prefecture_code_jis
+        contact_address_json[:prefecture] = resource_owner.contact_address&.prefecture&.name
+        contact_address_json[:zip_code] = resource_owner.contact_address&.zip_code
+        contact_address_json[:city] = resource_owner.contact_address&.city
+        contact_address_json[:street] = resource_owner.contact_address&.street
+        contact_address_json[:building] = resource_owner.contact_address&.building
+        contact_address_json[:phone_number] = resource_owner.contact_address&.phone_number
+        contact_address_json[:country_code] = resource_owner.contact_address&.country_code
+      end
+      if scope.exists?(:delivery_address)
+        json[:delivery_addresses] = resource_owner.delivery_addresses.map do |address|
+          address_json = {}
+          address_json[:is_default] = address&.is_default
+          address_json[:prefecture_code] = address&.prefecture_code_jis
+          address_json[:prefecture] = address&.prefecture&.name
+          address_json[:zip_code] = address&.zip_code
+          address_json[:city] = address&.city
+          address_json[:street] = address&.street
+          address_json[:building] = address&.building
+          address_json[:phone_number] = address&.phone_number
+          address_json[:country_code] = address&.country_code
+          address_json
+        end
+      end
+
+      json[:profile] = profile_json if scope.exists?(:name) || scope.exists?(:profile)
+      json[:contact_address] = contact_address_json if scope.exists?(:profile) || scope.exists?(:contact)
+
+      json
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
