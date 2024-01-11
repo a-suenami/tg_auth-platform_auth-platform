@@ -45,7 +45,8 @@
   },
   {
     "name": "ALLOW_ORIGINS",
-    "value": "['https://ticket.hikaruutada-tour-official.com']"
+    "value": "['https://web.account.hikaruutada-tour-official.com', 'https://ticket.hikaruutada-tour-official.com']"
+
   },
   {
     "name": "USE_ECS_CREDENTIALS",
