@@ -1,6 +1,6 @@
 variables:
-  RUBY_VERSION: 'ruby-3.3.0-slim'
-  RUBY_IMAGE: containers.l.twogate.net/docker/ruby-slim-for-rails:ruby3.3-jemalloc
+  RUBY_VERSION: 'ruby-3.2.2-slim'
+  RUBY_IMAGE: containers.l.twogate.net/docker/ruby-slim-for-rails:ruby3.2.2
   POSTGRES_VERSION: 'postgres:15-alpine'
 
 cache: &cache
