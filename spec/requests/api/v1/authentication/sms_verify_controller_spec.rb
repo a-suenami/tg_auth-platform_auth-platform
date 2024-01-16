@@ -57,11 +57,9 @@ RSpec.describe '[ SmsVerify API ]' do
         allow(session_mock).to receive(:session_clear).and_return(nil)
         allow(session_mock).to receive(:[]) do |key|
           case key
-          when :current_user_id, :current_user_id_expired_at
-            nil
-          when :registering_user_id
+          when :current_user_id
             current_user.id
-          when :registering_user_id_expired_at
+          when :current_user_id_expired_at
             1.week.from_now
           end
         end
@@ -297,11 +295,9 @@ RSpec.describe '[ SmsVerify API ]' do
       allow(session_mock).to receive(:session_clear).and_return(nil)
       allow(session_mock).to receive(:[]) do |key|
         case key
-        when :current_user_id, :current_user_id_expired_at
-          nil
-        when :registering_user_id
+        when :current_user_id
           current_user.id
-        when :registering_user_id_expired_at
+        when :current_user_id_expired_at
           1.week.from_now
         end
       end
