@@ -426,65 +426,19 @@ class Tenant
         id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         domain: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        cookie_domain_remove_length: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         sms_verification_required: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, name: nil, domain: nil, cookie_domain_remove_length: nil, sms_verification_required: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, name: nil, domain: nil, sms_verification_required: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def without(*args, &blk); end
   end
 
   module GeneratedAttributeMethods
-    sig { returns(T.nilable(::Integer)) }
-    def cookie_domain_remove_length; end
-
-    sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
-    def cookie_domain_remove_length=(value); end
-
-    sig { returns(T::Boolean) }
-    def cookie_domain_remove_length?; end
-
-    sig { returns(T.nilable(::Integer)) }
-    def cookie_domain_remove_length_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def cookie_domain_remove_length_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def cookie_domain_remove_length_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
-    def cookie_domain_remove_length_change; end
-
-    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
-    def cookie_domain_remove_length_change_to_be_saved; end
-
-    sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
-    def cookie_domain_remove_length_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::Integer)) }
-    def cookie_domain_remove_length_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
-    def cookie_domain_remove_length_previous_change; end
-
-    sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
-    def cookie_domain_remove_length_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::Integer)) }
-    def cookie_domain_remove_length_previously_was; end
-
-    sig { returns(T.nilable(::Integer)) }
-    def cookie_domain_remove_length_was; end
-
-    sig { void }
-    def cookie_domain_remove_length_will_change!; end
-
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def created_at; end
 
@@ -666,9 +620,6 @@ class Tenant
     def name_will_change!; end
 
     sig { void }
-    def restore_cookie_domain_remove_length!; end
-
-    sig { void }
     def restore_created_at!; end
 
     sig { void }
@@ -685,12 +636,6 @@ class Tenant
 
     sig { void }
     def restore_updated_at!; end
-
-    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
-    def saved_change_to_cookie_domain_remove_length; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_cookie_domain_remove_length?; end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_created_at; end
@@ -817,9 +762,6 @@ class Tenant
 
     sig { void }
     def updated_at_will_change!; end
-
-    sig { returns(T::Boolean) }
-    def will_save_change_to_cookie_domain_remove_length?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_created_at?; end
@@ -967,14 +909,13 @@ class Tenant
         id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         domain: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        cookie_domain_remove_length: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         sms_verification_required: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, name: nil, domain: nil, cookie_domain_remove_length: nil, sms_verification_required: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, name: nil, domain: nil, sms_verification_required: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def without(*args, &blk); end

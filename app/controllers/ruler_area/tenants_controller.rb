@@ -42,7 +42,6 @@ module RulerArea
         :id,
         :name,
         :domain,
-        :cookie_domain_remove_length,
         :sms_verification_required,
       )
     end
