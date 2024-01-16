@@ -33,6 +33,7 @@ RSpec.describe '[ Password API ]' do
         expect(body_hash['email']).to eq(current_user.email)
         expect(body_hash['enabled']).to be(true)
         expect(body_hash['email_verified']).to be(true)
+        expect(body_hash['profile']['first_name']).to eq(current_user_profile.first_name)
       end
     end
   end
