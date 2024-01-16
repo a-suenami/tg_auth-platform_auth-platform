@@ -80,6 +80,9 @@ RSpec.describe '[ Password Resets API ]' do
     let(:users_password_resets) {
       create(:users__password_resets, tenant_id: current_tenant.id, user_id: current_user.id, code: 'this_is_code', expired_at: 1.hour.from_now)
     }
+    let(:old_users_password_resets) {
+      create(:users__password_resets, tenant_id: current_tenant.id, user_id: current_user.id, code: 'this_is_code', expired_at: 1.hour.ago)
+    }
     let(:account_lock) {
       create(:account_lock,
         tenant_id: current_tenant.id,
@@ -94,6 +97,7 @@ RSpec.describe '[ Password Resets API ]' do
     before do
       current_user
       users_password_resets
+      old_users_password_resets
       account_lock
     end
 
