@@ -16,7 +16,7 @@ module Authentication
           next true
         end
 
-        password_reset = Users::PasswordReset.find_or_initialize_by(user:)
+        password_reset = Users::PasswordReset.new(user:)
         password_reset.set_code
         password_reset.save!
 
