@@ -12,7 +12,7 @@
         = f.text_field :email, placeholder: "mail@example.com", value: params[:email], class: "uk-input"
       .uk-margin
         = f.label :phone_number, "電話番号"
-        = f.text_field :phone_number, placeholder: "818012345678 (国際電話番号フォーマット)", value: params[:phone_number], class: "uk-input"
+        = f.text_field :phone_number, placeholder: "+818012345678 (国際電話番号フォーマット)", value: params[:phone_number], class: "uk-input"
       = submit_tag "Search", class: "uk-button uk-button-secondary"
       = link_to "検索初期化", admin_area_users_path, class: "uk-button uk-button-default uk-margin-left"
     br

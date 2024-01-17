@@ -6,7 +6,7 @@
 .uk-margin
   = f.label :phone_number, class: 'uk-form-label'
   .uk-form-controls
-    em 注意: 国際電話番号のフォーマットにする必要あり(例: 818012345678)
+    em 注意: 国際電話番号のフォーマットにする必要あり(例: +818012345678)
     = f.text_field :phone_number, class: "uk-input"
 .uk-margin
   = f.label :enabled, class: 'uk-form-label'
@@ -83,7 +83,7 @@ h2 連絡先住所
   .uk-margin
     = contact_address_form.label :phone_number, class: 'uk-form-label'
     .uk-form-controls
-      em 注意: こちらは国内電話番号規格で入力(例: 08012345678)
+      em 注意: 国内電話番号でも国際電話番号でも可
       = contact_address_form.text_field :phone_number, class: "uk-input"
   .uk-margin
     = contact_address_form.label :country_code, class: 'uk-form-label'
