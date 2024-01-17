@@ -1,7 +1,7 @@
 ja:
   exceptions:
     users:
-      invalid_email: emailの形式が不正です
-      invalid_code: codeが不正です
-      expired_email_verification_code: codeの有効期限が切れています
-      email_verification_code_attempts_is_over: codeの試行回数が上限に達しました
+      invalid_email: メールアドレスの形式が不正です
+      invalid_code: コードが不正です
+      expired_email_verification_code: コードの有効期限が切れています
+      email_verification_code_attempts_is_over: コードの試行回数が上限に達しました

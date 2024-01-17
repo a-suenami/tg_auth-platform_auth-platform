@@ -172,6 +172,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "google_cloud_project_id"
     t.string "recaptcha_enterprise_checkbox_site_key"
     t.string "recaptcha_enterprise_score_based_site_key"
+    t.string "sender_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id"], name: "index_tenant_settings_on_tenant_id"

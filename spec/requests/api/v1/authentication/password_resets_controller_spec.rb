@@ -168,7 +168,7 @@ RSpec.describe '[ Password Resets API ]' do
         {
           email: 'test-user1@example.com',
           password_reset_code: 'this_is_code',
-          password: 'Abc123456',
+          password: 'abc',
         }
       }
 

@@ -149,8 +149,8 @@ RSpec.describe '[ Password API ]' do
           }
         }
 
-        it 'returns 400' do
-          is_expected.to eq 400
+        it 'returns 204' do
+          is_expected.to eq 204
         end
       end
 
@@ -276,8 +276,8 @@ RSpec.describe '[ Password API ]' do
           }
         }
 
-        it 'returns 400' do
-          is_expected.to eq 400
+        it 'returns 204' do
+          is_expected.to eq 204
         end
       end
 

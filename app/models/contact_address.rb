@@ -9,9 +9,9 @@ class ContactAddress < ApplicationRecord
 
   belongs_to :user, inverse_of: :contact_address
 
-  sig { returns(String) }
+  sig { returns(T.nilable(String)) }
   def prefecture_code_jis
     # T.bind(self, T.class_of(AddressUtilisable))
-    format('%02d', self.prefecture_code)
+    format('%02d', self.prefecture_code) if self.prefecture_code.present?
   end
 end

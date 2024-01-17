@@ -10,6 +10,10 @@ class UserProfile < ApplicationRecord
   validates :last_name, presence: true
   validates :first_name_kana, presence: true
   validates :last_name_kana, presence: true
+  validates :first_name, format: { with: /\A[\p{Hiragana}\p{Katakana}\p{Han}ー々a-zA-Z]+\z/, message: I18n.t('activerecord.errors.models.user.attributes.first_name.format') }
+  validates :last_name, format: { with: /\A[\p{Hiragana}\p{Katakana}\p{Han}ー々a-zA-Z]+\z/, message: I18n.t('activerecord.errors.models.user.attributes.last_name.format') }
+  validates :first_name_kana, format: { with: /\A[\p{Katakana}ー]+\z/, message: I18n.t('activerecord.errors.models.user.attributes.first_name_kana.format') }
+  validates :last_name_kana, format: { with: /\A[\p{Katakana}ー]+\z/, message: I18n.t('activerecord.errors.models.user.attributes.last_name_kana.format') }
   validates :birth_date, presence: true
   validates :birth_date, comparison: { less_than: Time.zone.today }
   validates :gender, presence: true

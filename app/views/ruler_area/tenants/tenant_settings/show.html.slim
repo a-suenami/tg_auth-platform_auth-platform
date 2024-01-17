@@ -28,6 +28,10 @@
       td
         = @tenant_setting.recaptcha_enterprise_score_based_site_key
     tr
+      th = TenantSetting.human_attribute_name(:sender_email)
+      td
+        = @tenant_setting.sender_email
+    tr
       th = TenantSetting.human_attribute_name(:created_at)
       td
         = @tenant_setting.created_at

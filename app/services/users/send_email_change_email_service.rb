@@ -28,7 +28,8 @@ module Users
         send_to: user.email,
         subject: email_template.subject,
         body: liquid_template.render('email_verification_code' => email_verifier.code),
-        name: Tenant.current&.name,
+        from_email: Tenant.current&.tenant_setting&.sender_email,
+        from_name: Tenant.current&.name,
       )
     end
   end

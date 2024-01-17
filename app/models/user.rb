@@ -4,8 +4,8 @@ class User < ApplicationRecord
   extend T::Sig
   include Multitenancy
   has_secure_password validations: false
-  # password validation 英数字大文字小文字記号をそれぞれ1文字以上含む8文字以上
-  PASSWORD_VALIDATION_REGEX = %r#\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!-/:-@\[-`{-~])[!-~]{8,100}\z#
+  # password validation 英数字大文字小文字をそれぞれ1文字以上含む8文字以上
+  PASSWORD_VALIDATION_REGEX = /\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[!-~]{8,100}\z/
   validates :password, allow_nil: true, format: { with: PASSWORD_VALIDATION_REGEX }
 
   has_many :access_grants,
