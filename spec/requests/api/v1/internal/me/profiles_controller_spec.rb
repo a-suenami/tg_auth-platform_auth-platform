@@ -87,13 +87,15 @@ RSpec.describe '[ Profiles API ]' do
     context 'when present session' do
       include_context 'current user session is present'
 
+
+
       context 'when params valid' do
         let(:params) {
           {
             user: {
               user_profile_attributes: {
-                first_name: '太郎2',
-                last_name: '山田2',
+                first_name: '太郎ニ',
+                last_name: '山田ニ',
                 first_name_kana: 'タロウツー',
                 last_name_kana: 'ヤマダツー',
                 birth_date: '2010-01-11',
@@ -113,12 +115,64 @@ RSpec.describe '[ Profiles API ]' do
 
         it 'returns 200' do
           is_expected.to eq 200
-          expect(body_hash['profile']['first_name']).to eq('太郎2')
-          expect(body_hash['profile']['last_name']).to eq('山田2')
+          expect(body_hash['profile']['first_name']).to eq('太郎ニ')
+          expect(body_hash['profile']['last_name']).to eq('山田ニ')
           expect(body_hash['profile']['first_name_kana']).to eq('タロウツー')
           expect(body_hash['profile']['last_name_kana']).to eq('ヤマダツー')
           expect(body_hash['profile']['birth_date']).to eq('2010-01-11')
           expect(body_hash['profile']['gender']).to eq('male')
+          expect(body_hash['contact_address']['prefecture_code']).to eq('13')
+          expect(body_hash['contact_address']['prefecture']).to eq('東京都')
+          expect(body_hash['contact_address']['zip_code']).to eq('155-0031')
+          expect(body_hash['contact_address']['city']).to eq('世田谷区北沢')
+          expect(body_hash['contact_address']['street']).to eq('1丁目1-1')
+          expect(body_hash['contact_address']['building']).to eq('グレートオウル北沢101')
+          expect(body_hash['contact_address']['phone_number']).to eq('090-1234-5678')
+        end
+      end
+
+      context 'when user profile already set' do
+        let(:current_user_profile) {
+          create(:user_profile,
+            tenant_id: current_tenant.id, user_id: current_user.id, first_name: '設定済み名', first_name_kana: 'セッテイズミメイ',
+            last_name: '設定済み姓', last_name_kana: 'セッテイズミセイ', birth_date: '2000-01-01', gender: 'female',)
+        }
+        let(:params) {
+          {
+            user: {
+              user_profile_attributes: {
+                first_name: '太郎ニ',
+                last_name: '山田ニ',
+                first_name_kana: 'タロウツー',
+                last_name_kana: 'ヤマダツー',
+                birth_date: '2010-01-11',
+                gender: 'male',
+              },
+              contact_address_attributes: {
+                zip_code: '155-0031',
+                prefecture_code: '13',
+                city: '世田谷区北沢',
+                street: '1丁目1-1',
+                building: 'グレートオウル北沢101',
+                phone_number: '090-1234-5678',
+              },
+            },
+          }
+        }
+
+        before do
+          current_user_profile
+        end
+
+
+        it 'returns 200' do
+          is_expected.to eq 200
+          expect(body_hash['profile']['first_name']).to eq('設定済み名')
+          expect(body_hash['profile']['last_name']).to eq('山田ニ')
+          expect(body_hash['profile']['first_name_kana']).to eq('セッテイズミメイ')
+          expect(body_hash['profile']['last_name_kana']).to eq('ヤマダツー')
+          expect(body_hash['profile']['birth_date']).to eq('2000-01-01')
+          expect(body_hash['profile']['gender']).to eq('female')
           expect(body_hash['contact_address']['prefecture_code']).to eq('13')
           expect(body_hash['contact_address']['prefecture']).to eq('東京都')
           expect(body_hash['contact_address']['zip_code']).to eq('155-0031')
@@ -162,8 +216,8 @@ RSpec.describe '[ Profiles API ]' do
           {
             user: {
               user_profile_attributes: {
-                first_name: '太郎2',
-                last_name: '山田2',
+                first_name: '太郎ニ',
+                last_name: '山田ニ',
                 first_name_kana: 'タロウツー',
                 last_name_kana: 'ヤマダツー',
                 birth_date: '2010-01-11',
@@ -183,8 +237,8 @@ RSpec.describe '[ Profiles API ]' do
 
         it 'returns 200' do
           is_expected.to eq 200
-          expect(body_hash['profile']['first_name']).to eq('太郎2')
-          expect(body_hash['profile']['last_name']).to eq('山田2')
+          expect(body_hash['profile']['first_name']).to eq('太郎ニ')
+          expect(body_hash['profile']['last_name']).to eq('山田ニ')
           expect(body_hash['profile']['first_name_kana']).to eq('タロウツー')
           expect(body_hash['profile']['last_name_kana']).to eq('ヤマダツー')
           expect(body_hash['profile']['birth_date']).to eq('2010-01-11')
