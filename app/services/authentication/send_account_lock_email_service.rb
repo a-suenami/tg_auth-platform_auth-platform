@@ -30,7 +30,8 @@ module Authentication
         send_to: user.email,
         subject: email_template.subject,
         body: liquid_template.render('unlock_url' => unlock_url),
-        name: Tenant.current&.name,
+        from_email: Tenant.current&.tenant_setting&.sender_email,
+        from_name: Tenant.current&.name,
       )
     end
   end

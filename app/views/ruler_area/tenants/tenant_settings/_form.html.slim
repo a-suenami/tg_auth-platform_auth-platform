@@ -1,4 +1,5 @@
 = render 'ruler_area/shared/form_error', target: f.object
+h3 reCAPTCHA設定
 .uk-margin
   = f.label :google_cloud_service_account
   = f.text_field :google_cloud_service_account, class: "uk-input"
@@ -11,4 +12,8 @@
 .uk-margin
   = f.label :recaptcha_enterprise_score_based_site_key
   = f.text_field :recaptcha_enterprise_score_based_site_key, class: "uk-input"
+h3 メール設定
+.uk-margin
+  = f.label :sender_email
+  = f.text_field :sender_email, class: "uk-input"
 = f.submit class: "uk-button uk-button-default"
