@@ -3,9 +3,8 @@ module AdminArea
     def index
       @users = User.all
       @users = @users.where(id: params[:id]) if params[:id].present?
-      @users = @users.where(email: params[:email]) if params[:email].present?
-      @email = params[:email]
-      @id = params[:id]
+      @users = @users.where('email ILIKE :param', param: "%#{ActiveRecord::Base.sanitize_sql_like(params[:email] || '')}%") if params[:email].present?
+      @users = @users.where(phone_number: params[:phone_number]) if params[:phone_number].present?
       @pagy, @users = pagy @users
     end
 

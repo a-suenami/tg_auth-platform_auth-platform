@@ -6,11 +6,15 @@
     = form_with url: admin_area_users_path, method: :get do |f|
       .uk-margin
         = f.label :id, "ID"
-        = f.text_field :id, value: @id, class: "uk-input"
+        = f.text_field :id, placeholder: "539dde46-68a2-4619-9866-63b7478ae36e", value: params[:id], class: "uk-input"
       .uk-margin
         = f.label :email, "メールアドレス"
-        = f.text_field :email, value: @email, class: "uk-input"
-      = submit_tag "Search", class: "uk-button uk-button-default"
+        = f.text_field :email, placeholder: "mail@example.com", value: params[:email], class: "uk-input"
+      .uk-margin
+        = f.label :phone_number, "電話番号"
+        = f.text_field :phone_number, placeholder: "818012345678 (国際電話番号フォーマット)", value: params[:phone_number], class: "uk-input"
+      = submit_tag "Search", class: "uk-button uk-button-secondary"
+      = link_to "検索初期化", admin_area_users_path, class: "uk-button uk-button-default uk-margin-left"
     br
 
   .uk-margin-top.uk-card.uk-card-default.uk-card-body
