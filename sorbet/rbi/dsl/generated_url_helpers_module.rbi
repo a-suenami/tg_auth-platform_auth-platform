@@ -27,6 +27,9 @@ module GeneratedUrlHelpersModule
   def admin_area_root_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_ruler_area_tenant_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_user_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }

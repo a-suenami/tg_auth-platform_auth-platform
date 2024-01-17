@@ -27,6 +27,9 @@ module GeneratedPathHelpersModule
   def admin_area_root_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_ruler_area_tenant_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_user_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }

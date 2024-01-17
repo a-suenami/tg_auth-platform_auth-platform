@@ -36,6 +36,12 @@ class SettingsConfigOptions < ::Config::Options
   def blastengine=(value); end
 
   sig { returns(T.untyped) }
+  def domains; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def domains=(value); end
+
+  sig { returns(T.untyped) }
   def doorkeeper; end
 
   sig { params(value: T.untyped).returns(T.untyped) }
