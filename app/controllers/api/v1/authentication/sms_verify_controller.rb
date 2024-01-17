@@ -1,6 +1,6 @@
 module API::V1::Authentication
   class SmsVerifyController < ApplicationController
-    before_action :registrations_session_authenticate, only: [:send_verification_sms, :verify_sms]
+    include CookieAuthable
 
     # send verification sms
     def send_verification_sms
@@ -27,14 +27,6 @@ module API::V1::Authentication
       @user = Authentication::VerifySmsService.new.execute!(verification_code: params[:sms_verification_code], user_id: @current_user.id)
 
       render :verify_sms
-    end
-
-    private
-
-    def registrations_session_authenticate
-      raise Exceptions::Auth::AuthError if cookie_session[:registering_user_id].blank?
-
-      @current_user = User.find cookie_session[:registering_user_id]
     end
   end
 end
