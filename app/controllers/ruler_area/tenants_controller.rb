@@ -35,6 +35,20 @@ module RulerArea
       end
     end
 
+    def admin_area
+      @tenant = Tenant.find(params[:id])
+      Admin.find_or_create_by(tenant_id: @tenant.id, uid: current_ruler.uid) do |admin|
+        admin.email = current_ruler.email
+        admin.name = current_ruler.name
+      end
+
+      scheme = Rails.env.development? ? 'http://' : 'https://'
+      host = "#{@tenant.id}.#{Settings.domains.admin}"
+      path = admin_area_root_path
+
+      redirect_to "#{scheme}#{host}#{path}", allow_other_host: true
+    end
+
     private
 
     def tenant_params

@@ -12,6 +12,10 @@
     "value": "id-platform-stg.jp.auth0.com"
   },
   {
+    "name": "ADMIN_DOMAIN",
+    "value": "admin.app-staging.id-platform.net"
+  },
+  {
     "name": "AWS_REGION",
     "value": "ap-northeast-1"
   },
@@ -58,6 +62,10 @@
   {
     "name": "RULER_AUTH0_DOMAIN",
     "value": "id-platform-stg.jp.auth0.com"
+  },
+  {
+    "name": "RULER_DOMAIN",
+    "value": "origin.app-staging.id-platform.net"
   },
   {
     "name": "S3_BUCKET",

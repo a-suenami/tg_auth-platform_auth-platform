@@ -24,7 +24,8 @@
             td
               = tenant.domain
             td
-              = link_to "テナント設定へ", ruler_area_tenant_root_path(tenant), class: "uk-button uk-button-secondary"
-              = link_to "編集", edit_ruler_area_tenant_path(tenant), class: "uk-margin-left uk-button uk-button-primary"
+              = link_to '管理画面', admin_area_ruler_area_tenant_path(tenant), class: 'uk-button uk-button-small uk-button-default uk-margin-small-right', target: '_blank'
+              = link_to "設定", ruler_area_tenant_root_path(tenant), class: "uk-button uk-button-small uk-button-secondary"
+              = link_to "編集", edit_ruler_area_tenant_path(tenant), class: "uk-margin-left uk-button uk-button-small uk-button-primary"
 
     == pagy_nav(@pagy)

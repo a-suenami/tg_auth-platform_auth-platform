@@ -62,5 +62,13 @@
   {
     "name": "RAILS_WORKERS",
     "value": "2"
+  },
+  {
+    "name": "ADMIN_DOMAIN",
+    "value": "admin.app.id-platform.net"
+  },
+  {
+    "name": "RULER_DOMAIN",
+    "value": "origin.app.id-platform.net"
   }
 ]

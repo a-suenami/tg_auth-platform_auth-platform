@@ -33,3 +33,6 @@ twilio:
   sender_number: <%= ENV['TWILIO_SENDER_NUMBER'] %>
 sms:
   disable_rate_limit: <%= ENV['SMS_DISABLE_RATE_LIMIT'] || false %>
+domains:
+  admin: <%= ENV['ADMIN_DOMAIN'] %>
+  ruler: <%= ENV['RULER_DOMAIN'] %>
