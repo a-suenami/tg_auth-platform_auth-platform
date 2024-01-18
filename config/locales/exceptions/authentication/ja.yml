@@ -2,7 +2,7 @@ ja:
   exceptions:
     authentication:
       invalid_email: メールアドレスの形式が不正です
-      invalid_code: コードが不正です
+      invalid_code: コードが間違っています
       expired_email_verification_code: コードの有効期限が切れています
       email_verification_code_attempts_is_over: コードの試行回数が上限に達しました
       password_reset_code_invalid: パスワードリセットコードが不正です
