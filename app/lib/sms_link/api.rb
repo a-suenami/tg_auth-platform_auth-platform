@@ -35,7 +35,7 @@ module SmsLink
       request(:post, '/api/v1/verification_code/delivery', {
         phone_number: sms_verifier.japan_local_phone_number,
         delivery_type: delivery_type_code,
-        sms_message: "[#{Tenant.current&.name}]\nコード:{{verification_code}}\n有効期限は5分です。他人には教えないでください。",
+        sms_message: "[#{Tenant.current&.name}]\nコード:{{verification_code}}\n有効期限は10分です。他人には教えないでください。",
         voice_message: 'これからお伝えするコードを認証画面に入力してください。認証コードは{{verification_code}}です。繰り返します{{verification_code}}',
         verification_code: sms_verifier.code,
         user_reference: Tenant.current&.id,
