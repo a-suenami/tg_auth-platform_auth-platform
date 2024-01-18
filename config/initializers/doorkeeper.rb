@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 Doorkeeper.configure do
   # Change the ORM that doorkeeper will use (requires ORM extensions installed).
   # Check the list of supported ORMs here: https://github.com/doorkeeper-gem/doorkeeper#orms
@@ -14,20 +15,25 @@ Doorkeeper.configure do
 
     resource_owner = User.find_by(id: cookie_session[:current_user_id])
 
+
     if resource_owner.nil?
       client = Tenant.current.login_spa_application
+      raise ActiveRecord::RecordNotFound if client.blank?
 
-      if client.present?
-        if params[:on_no_session].present? && params[:on_no_session] == 'sign_up' && client.sign_up_url.present?
-          redirect_to client.sign_up_url_with_flag, allow_other_host: true
-        else
-          redirect_to client.login_url_with_flag, allow_other_host: true
-        end
+      if params[:on_no_session].present? && params[:on_no_session] == 'sign_up' && client.sign_up_url.present?
+        redirect_to client.sign_up_url_with_flag, allow_other_host: true
       else
-        raise ActiveRecord::RecordNotFound
+        redirect_to client.login_url_with_flag, allow_other_host: true
       end
     else
-      resource_owner
+      if resource_owner&.enabled == false
+        client = Tenant.current.login_spa_application
+        raise ActiveRecord::RecordNotFound if client.blank?
+
+        redirect_to client.login_url_with_flag, allow_other_host: true
+      else
+        resource_owner
+      end
     end
   end
 
@@ -531,3 +537,4 @@ Doorkeeper.configure do
   #
   # realm "Doorkeeper"
 end
+# rubocop:enable Metrics/BlockLength
