@@ -5,9 +5,7 @@ module API::V1::Internal
 
     def update
       Users::UpdateService.new(user_params).execute(user: @current_user)
-      if @current_user.password_digest.present?
-        @current_user.set_enabled
-      end
+      @current_user.set_enabled_on_completion
 
       render :show
     end

@@ -265,6 +265,9 @@ class User
     sig { params(args: T.untyped, blk: T.untyped).returns(::ContactAddress) }
     def build_contact_address(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
+    def build_tenant(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::UserProfile) }
     def build_user_profile(*args, &blk); end
 
@@ -288,6 +291,12 @@ class User
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::ContactAddress) }
     def create_contact_address!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
+    def create_tenant(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
+    def create_tenant!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::UserProfile) }
     def create_user_profile(*args, &blk); end
@@ -357,6 +366,9 @@ class User
     sig { returns(T.nilable(::ContactAddress)) }
     def reload_contact_address; end
 
+    sig { returns(T.nilable(::Tenant)) }
+    def reload_tenant; end
+
     sig { returns(T.nilable(::UserProfile)) }
     def reload_user_profile; end
 
@@ -373,6 +385,12 @@ class User
 
     sig { params(value: T::Enumerable[::Users::SmsVerifier]).void }
     def sms_verifiers=(value); end
+
+    sig { returns(T.nilable(::Tenant)) }
+    def tenant; end
+
+    sig { params(value: T.nilable(::Tenant)).void }
+    def tenant=(value); end
 
     sig { returns(T.nilable(::UserProfile)) }
     def user_profile; end

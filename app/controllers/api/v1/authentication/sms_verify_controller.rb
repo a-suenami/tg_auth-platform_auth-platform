@@ -25,6 +25,8 @@ module API::V1::Authentication
       raise Exceptions::Authentication::SmsVerificationDisabled unless Tenant.current.sms_verification_required
 
       @user = Authentication::VerifySmsService.new.execute!(verification_code: params[:sms_verification_code], user_id: @current_user.id)
+      # あとから電話番号検証するケースを考慮して一応enabledを更新
+      @user.set_enabled_on_completion
 
       render :verify_sms
     end

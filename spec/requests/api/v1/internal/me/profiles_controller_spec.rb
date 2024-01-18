@@ -252,6 +252,67 @@ RSpec.describe '[ Profiles API ]' do
           expect(body_hash['contact_address']['country_code']).to eq('CN')
         end
       end
+
+      context 'when password already set' do
+        let(:current_user) {
+          create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password_digest: 'password_digest', enabled: false)
+        }
+        let(:sms_verification_required) { true }
+        let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com', sms_verification_required:) }
+
+        let(:params) {
+          {
+            user: {
+              user_profile_attributes: {
+                first_name: '太郎ニ',
+                last_name: '山田ニ',
+                first_name_kana: 'タロウツー',
+                last_name_kana: 'ヤマダツー',
+                birth_date: '2010-01-11',
+                gender: 'male',
+              },
+              contact_address_attributes: {
+                zip_code: nil,
+                prefecture_code: '99',
+                city: nil,
+                street: nil,
+                building: nil,
+                country_code: 'CN',
+              },
+            },
+          }
+        }
+
+        context 'when sms verification not required' do
+          let(:sms_verification_required) { false }
+
+          it 'should be set enabled to true' do
+            is_expected.to eq 200
+            expect(body_hash['enabled']).to be true
+          end
+        end
+
+        context 'when sms verification required' do
+          let(:sms_verification_required) { true }
+
+          it 'should be set enabled to true' do
+            is_expected.to eq 200
+            expect(body_hash['enabled']).to be false
+          end
+        end
+
+        context 'when sms verification required and sms verified' do
+          let(:sms_verification_required) { true }
+          let(:current_user) {
+            create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password_digest: 'password_digest', enabled: false, sms_verified: true, phone_number: '+819012345678')
+          }
+
+          it 'should be set enabled to true' do
+            is_expected.to eq 200
+            expect(body_hash['enabled']).to be true
+          end
+        end
+      end
     end
   end
 end
