@@ -3,4 +3,5 @@
   email_verified: @user.email_verified,
   sms_verified: @user.sms_verified,
   registered: @user.enabled,
+  password_registered: @user.password_digest.present?,
 }
