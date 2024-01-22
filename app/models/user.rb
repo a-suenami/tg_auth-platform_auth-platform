@@ -27,7 +27,7 @@ class User < ApplicationRecord
     dependent: :delete,
     inverse_of: :user
   has_many :delivery_addresses, dependent: :delete_all
-  accepts_nested_attributes_for :contact_address, :user_profile
+  accepts_nested_attributes_for :contact_address, :user_profile, update_only: true
 
   has_many :email_verifiers,
     class_name: 'Users::EmailVerifier',
