@@ -5,6 +5,10 @@ RSpec.describe '[ SmsVerify API ]' do
     let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password_digest: nil)
     }
+    let(:deleted_user) {
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, phone_number: '+818012345678',
+deleted: true,)
+    }
 
     let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com', sms_verification_required:) }
     let(:sms_verification_required) { true }
@@ -19,6 +23,7 @@ RSpec.describe '[ SmsVerify API ]' do
 
     before do
       current_user
+      deleted_user
       allow(SmsLink::API).to receive(:new).and_return(sms_link_mock)
       allow(sms_link_mock).to receive(:send_sms).and_return({
         'verification_code_id' => 34,
@@ -269,9 +274,14 @@ RSpec.describe '[ SmsVerify API ]' do
     let(:other_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-other-user1@example.com', sms_verified: false)
     }
+    let(:deleted_user) {
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, phone_number: '+818012345678',
+deleted: true,)
+    }
 
     let(:sms_verifier) {
-      create(:users__sms_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 5, verifier_type: :registration)
+      create(:users__sms_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', phone_number: '+818012345678', expired_at: 1.hour.from_now, remaining_attempts: 5,
+verifier_type: :registration,)
     }
     let(:other_sms_verifier) {
       create(:users__sms_verifier, tenant_id: current_tenant.id, user: current_user, code: '654321', expired_at: 1.hour.from_now, remaining_attempts: 5, verifier_type: :registration)
@@ -287,6 +297,7 @@ RSpec.describe '[ SmsVerify API ]' do
     before do
       current_user
       other_user
+      deleted_user
       sms_verifier
       other_sms_verifier
       other_user_sms_verifier

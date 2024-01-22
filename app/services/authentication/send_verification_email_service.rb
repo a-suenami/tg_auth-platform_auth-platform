@@ -10,7 +10,7 @@ module Authentication
       end
 
       ActiveRecord::Base.transaction do
-        user = User.find_or_create_by(email:)
+        user = User.active.find_or_create_by(email:)
         user.captcha_score = captcha_score
         user.save!
         email_verifier = Users::EmailVerifier.new(user:, email:, verifier_type: :registration)

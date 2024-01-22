@@ -9,7 +9,7 @@ module Authentication
       end
 
       ActiveRecord::Base.transaction do
-        user = User.find_by(email:)
+        user = User.active.find_by(email:)
 
         send_account_lock_email(user)
         user

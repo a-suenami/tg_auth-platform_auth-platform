@@ -51,9 +51,29 @@ RSpec.describe '[ Profiles API ]' do
     let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password_digest: nil)
     }
+    let(:email_template) {
+      create(:email_template,
+        tenant_id: current_tenant.id,
+        name: 'メールテンプレート名',
+        template_type: 'registered',
+        subject: '登録完了メール',
+        body: <<~TEXT,
+          <p>登録完了しました</p>
+          <p>{{ email }}</p>
+        TEXT
+      )
+    }
+    let(:blastengine_mock) {
+      instance_double(Blastengine::API)
+    }
 
     before do
       current_user
+      email_template
+      allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
+      allow(blastengine_mock).to receive(:send_email).and_return({
+        delivery_id: 1,
+      })
     end
 
     context 'when no session' do
@@ -289,6 +309,7 @@ RSpec.describe '[ Profiles API ]' do
           it 'should be set enabled to true' do
             is_expected.to eq 200
             expect(body_hash['enabled']).to be true
+            expect(blastengine_mock).to have_received(:send_email)
           end
         end
 
@@ -298,6 +319,7 @@ RSpec.describe '[ Profiles API ]' do
           it 'should be set enabled to true' do
             is_expected.to eq 200
             expect(body_hash['enabled']).to be false
+            expect(blastengine_mock).not_to have_received(:send_email)
           end
         end
 
@@ -310,6 +332,7 @@ RSpec.describe '[ Profiles API ]' do
           it 'should be set enabled to true' do
             is_expected.to eq 200
             expect(body_hash['enabled']).to be true
+            expect(blastengine_mock).to have_received(:send_email)
           end
         end
       end

@@ -7,10 +7,10 @@ module Authentication
       raise Exceptions::Authentication::PhoneNumberInvaild unless PhonyRails.plausible_number?(local_phone_number, country_number: phone_country_code)
 
       phone_number = PhonyRails.normalize_number(local_phone_number, country_number: phone_country_code)
-      user = User.find user_id
+      user = User.active.find user_id
 
       # 電話番号重複チェック
-      raise Exceptions::Authentication::PhoneNumberDuplicated if User.find_by(phone_number:).present?
+      raise Exceptions::Authentication::PhoneNumberDuplicated if User.active.find_by(phone_number:).present?
 
       sms_rate_limit(phone_number:, user:, ip_address:)
 
