@@ -797,7 +797,7 @@ CREATE UNIQUE INDEX index_users_on_tenant_id_email ON public.users USING btree (
 -- Name: index_users_on_tenant_id_phone_number; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_tenant_id_phone_number ON public.users USING btree (tenant_id, phone_number);
+CREATE UNIQUE INDEX index_users_on_tenant_id_phone_number ON public.users USING btree (tenant_id, phone_number, deleted) WHERE (deleted = false);
 
 
 --

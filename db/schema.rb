@@ -218,7 +218,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id", "email", "deleted"], name: "index_users_on_tenant_id_email", unique: true, where: "(deleted = false)"
-    t.index ["tenant_id", "phone_number"], name: "index_users_on_tenant_id_phone_number", unique: true
+    t.index ["tenant_id", "phone_number", "deleted"], name: "index_users_on_tenant_id_phone_number", unique: true, where: "(deleted = false)"
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
   end
 

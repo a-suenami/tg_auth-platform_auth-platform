@@ -24,10 +24,14 @@ RSpec.describe '[ Registrations API ]' do
       create(:tenant_setting, tenant_id: current_tenant.id, google_cloud_service_account: {}, google_cloud_project_id: 'project_id', recaptcha_enterprise_checkbox_site_key: 'checkbox_site_key',
 recaptcha_enterprise_score_based_site_key: 'score_based_site_key',)
     }
+    let(:deleted_user) {
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true)
+    }
 
     before do
       email_template
       tenant_setting
+      deleted_user
       allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
       allow(blastengine_mock).to receive(:send_email).and_return({
         delivery_id: 1,
@@ -134,6 +138,9 @@ recaptcha_enterprise_score_based_site_key: 'score_based_site_key',)
     let(:other_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-other-user1@example.com', email_verified: false)
     }
+    let(:deleted_user) {
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true)
+    }
 
     let(:email_verifier) {
       create(:users__email_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 5, verifier_type: :registration)
@@ -151,6 +158,7 @@ recaptcha_enterprise_score_based_site_key: 'score_based_site_key',)
     before do
       current_user
       other_user
+      deleted_user
       email_verifier
       other_email_verifier
       other_type_email_verifier

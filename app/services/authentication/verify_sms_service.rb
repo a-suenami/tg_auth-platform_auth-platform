@@ -3,7 +3,7 @@
 module Authentication
   class VerifySmsService < BaseService
     def execute!(verification_code:, user_id:)
-      user = User.find user_id
+      user = User.active.find user_id
       sms_verifier = Users::SmsVerifier.find_by(user:, code: verification_code, verifier_type: :registration, used_at: nil)
 
       if sms_verifier.blank?

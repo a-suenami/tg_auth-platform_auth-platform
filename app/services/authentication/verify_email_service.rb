@@ -3,7 +3,7 @@
 module Authentication
   class VerifyEmailService < BaseService
     def execute!(email_verification_code:, user_id:)
-      user = User.find user_id
+      user = User.active.find user_id
       email_verifier = Users::EmailVerifier.find_by(user:, code: email_verification_code, verifier_type: :registration, used_at: nil)
 
       if email_verifier.blank?
