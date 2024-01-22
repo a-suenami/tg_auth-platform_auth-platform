@@ -16,7 +16,7 @@ module Authentication
           next true
         end
 
-        password_reset = Users::PasswordReset.find_or_initialize_by(user:)
+        password_reset = Users::PasswordReset.new(user:)
         password_reset.set_code
         password_reset.save!
 
@@ -40,7 +40,8 @@ module Authentication
         send_to: user.email,
         subject: email_template.subject,
         body: liquid_template.render('password_reset_url' => password_reset_url),
-        name: Tenant.current&.name,
+        from_email: Tenant.current&.tenant_setting&.sender_email,
+        from_name: Tenant.current&.name,
       )
     end
   end

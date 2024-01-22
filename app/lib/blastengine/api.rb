@@ -20,12 +20,15 @@ module Blastengine
       end, T.untyped,)
     end
 
-    sig { params(send_to: String, subject: String, body: String, name: T.nilable(String)).returns(T.untyped) }
-    def send_email(send_to:, subject:, body:, name: 'ID Platform')
+    sig { params(send_to: String, subject: String, body: String, from_email: T.nilable(String), from_name: T.nilable(String)).returns(T.untyped) }
+    def send_email(send_to:, subject:, body:, from_email:, from_name:)
+      from_email = 'idp@id-platform.net' if from_email.blank?
+      from_name = 'ID Platform' if from_name.blank?
+
       request(:post, '/api/v1/deliveries/transaction', {
         from: {
-          email: 'idp@id-platform.net', # TODO: set sender email
-          name:,
+          email: from_email,
+          name: from_name,
         },
         to: send_to,
         subject:,

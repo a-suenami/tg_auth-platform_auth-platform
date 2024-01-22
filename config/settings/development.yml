@@ -1,2 +1,5 @@
 sms:
   disable_rate_limit: true
+domains:
+  admin: idp.localhost:3000
+  ruler: localhost:3000

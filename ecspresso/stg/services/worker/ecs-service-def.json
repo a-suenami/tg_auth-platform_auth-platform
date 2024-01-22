@@ -3,16 +3,13 @@
     "deploymentCircuitBreaker": {
       "enable": false,
       "rollback": false
-    },
-    "maximumPercent": 200,
-    "minimumHealthyPercent": 0
+    }
   },
   "deploymentController": {
     "type": "ECS"
   },
-  "desiredCount": 0,
-  "enableECSManagedTags": false,
-  "enableExecuteCommand": false,
+  "enableECSManagedTags": true,
+  "enableExecuteCommand": true,
   "launchType": "EC2",
   "loadBalancers": [],
   "placementConstraints": [],

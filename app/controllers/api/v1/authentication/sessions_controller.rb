@@ -6,8 +6,6 @@ module API::V1::Authentication
     def create
       user = Authentication::SessionCreateService.new.execute!(email: params[:email], password: params[:password])
       cookie_session[:current_user_id] = user.id
-      # 異なるドメインのクッキーを削除
-      Authentication::DeleteOldSessionService.new.execute(request:, response:)
 
       render :create, locals: { user: }
     end

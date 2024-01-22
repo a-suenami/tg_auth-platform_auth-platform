@@ -6,7 +6,7 @@ Doorkeeper::Application.seed do |s|
   s.tenant_id = 'sample'
   s.name = 'Sample Application'
   s.redirect_uri = 'http://localhost:4200/oauth/callback'
-  s.scopes = 'public admin_users uid email name profile contact delivery_address openid'
+  s.scopes = 'public admin_users uid email name profile contact delivery_address openid phone_number'
   s.enable_client_credential_flow = true
   s.confidential = false
 end
@@ -29,6 +29,6 @@ Doorkeeper::Application.seed do |s|
   s.tenant_id = 'sample'
   s.name = 'Admin Application'
   s.redirect_uri = 'http://localhost:3000/sample/oauth/callback2'
-  s.scopes = 'public admin_users uid email name profile contact delivery_address openid'
+  s.scopes = 'public admin_users uid email name profile contact delivery_address openid phone_number'
   s.enable_client_credential_flow = true
 end

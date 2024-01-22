@@ -75,6 +75,9 @@ Doorkeeper::OpenidConnect.configure do
       json[:uid] = resource_owner.id if scope.exists?(:uid)
       json[:email] = resource_owner.email if scope.exists?(:email)
       json[:phone_number] = resource_owner.phone_number if scope.exists?(:phone_number)
+      json[:enabled] = resource_owner.enabled
+      json[:email_verified] = resource_owner.email_verified if scope.exists?(:email)
+      json[:sms_verified] = resource_owner.sms_verified if scope.exists?(:phone_number)
       if scope.exists?(:name)
         profile_json[:first_name] = resource_owner.user_profile&.first_name
         profile_json[:last_name] = resource_owner.user_profile&.last_name

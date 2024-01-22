@@ -4,10 +4,11 @@ class User < ApplicationRecord
   extend T::Sig
   include Multitenancy
   has_secure_password validations: false
-  # password validation 英数字大文字小文字記号をそれぞれ1文字以上含む8文字以上
-  PASSWORD_VALIDATION_REGEX = %r#\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!-/:-@\[-`{-~])[!-~]{8,100}\z#
+  # password validation 英数字大文字小文字をそれぞれ1文字以上含む8文字以上
+  PASSWORD_VALIDATION_REGEX = /\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[!-~]{8,100}\z/
   validates :password, allow_nil: true, format: { with: PASSWORD_VALIDATION_REGEX }
 
+  belongs_to :tenant
   has_many :access_grants,
     class_name: 'OauthAccessGrant',
     foreign_key: :resource_owner_id,
@@ -57,10 +58,15 @@ class User < ApplicationRecord
   end
 
   sig { returns(T::Boolean) }
-  def set_enabled
+  def set_enabled_on_completion
     return true if self.enabled
-    # 同じemailで他に有効なユーザーがいる場合は、有効にしない
-    return false if User.find_by(email: self.email, enabled: true).present?
+
+    # 1. パスワードが登録済
+    return false if self.password_digest.blank?
+    # 2. プロフィールが登録済
+    return false if self.user_profile.blank?
+    # 3. 電話番号確認済(必須の場合)
+    return false if self.tenant&.sms_verification_required && (self.sms_verified == false)
 
     self.enabled = true
     self.save!

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     get '/auth/logout' => 'auth0#logout'
 
     resources :tenants, only: [:index, :new, :create, :edit, :update] do
+      get :admin_area, on: :member
       scope module: 'tenants' do
         get :root, to: 'application#root'
         resources :login_spa_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
