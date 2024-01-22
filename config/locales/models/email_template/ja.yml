@@ -13,7 +13,7 @@ ja:
   enumerize:
     email_template:
       template_type:
-        registration: 新規登録メール
+        registered: 登録完了メール
         email_address_verification: メールアドレス確認メール
         password_reset: パスワードリセットメール
         email_address_change: メールアドレス変更確認メール
