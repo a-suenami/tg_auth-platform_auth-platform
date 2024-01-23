@@ -26,6 +26,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.datetime "last_failed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["tenant_id", "email"], name: "idx_account_locks_tenant_id_email_uniq", unique: true
+    t.index ["tenant_id", "unlock_token"], name: "idx_account_locks_tenant_id_unlock_token_uniq", unique: true
     t.index ["tenant_id"], name: "index_account_locks_on_tenant_id"
     t.index ["user_id"], name: "index_account_locks_on_user_id"
   end
@@ -37,6 +39,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["tenant_id", "uid"], name: "idx_admins_tenant_id_uid_uniq", unique: true
     t.index ["tenant_id"], name: "index_admins_on_tenant_id"
   end
 
@@ -165,6 +168,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["uid"], name: "idx_rulers_uid_uniq", unique: true
   end
 
   create_table "tenant_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -248,6 +252,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["oauth_application_id"], name: "index_users__linked_applications_on_oauth_application_id"
+    t.index ["tenant_id", "user_id", "oauth_application_id"], name: "idx_linked_applications_tenant_user_oauth_application_uniq", unique: true
     t.index ["tenant_id"], name: "index_users__linked_applications_on_tenant_id"
     t.index ["user_id"], name: "index_users__linked_applications_on_user_id"
   end
@@ -279,6 +284,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "delivery_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "idx_users_created_at"
+    t.index ["ip_address"], name: "idx_users_ip_address"
+    t.index ["phone_number"], name: "idx_users_phone_number"
     t.index ["tenant_id"], name: "index_users__sms_verifiers_on_tenant_id"
     t.index ["user_id"], name: "index_users__sms_verifiers_on_user_id"
   end

@@ -10,7 +10,7 @@ RSpec.describe AccountLocks::UnlockByTokenService do
   let!(:user_1) {
     create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
   }
-  let!(:account_lock) {
+  let(:account_lock) {
     create(:account_lock,
       tenant_id: current_tenant.id,
       user_id: user_1.id,
@@ -22,6 +22,7 @@ RSpec.describe AccountLocks::UnlockByTokenService do
   }
 
   before do
+    account_lock
     RequestStore.store[:current_tenant_domain] = "#{current_tenant.id}.localhost.com" || '-'
   end
 
@@ -45,7 +46,7 @@ RSpec.describe AccountLocks::UnlockByTokenService do
   end
 
   context 'when token has already been used' do
-    let(:used_account_lock) {
+    let(:account_lock) {
       al = create(:account_lock,
         tenant_id: current_tenant.id,
         user_id: user_1.id,
@@ -58,10 +59,6 @@ RSpec.describe AccountLocks::UnlockByTokenService do
       al
     }
     let(:token) { 'fdb5fb62b785c2e649b5865e8cf5f670959762e4b8f14821755c2d683efc69b1' }
-
-    before do
-      used_account_lock
-    end
 
     it 'returns false' do
       result = execute

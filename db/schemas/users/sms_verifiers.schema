@@ -21,4 +21,3 @@ end
 
 add_foreign_key :users__sms_verifiers, :tenants, name: :fk_users__sms_verifiers_tenants
 add_foreign_key :users__sms_verifiers, :users, name: :fk_users__sms_verifiers_users
-``

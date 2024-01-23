@@ -535,6 +535,27 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: idx_account_locks_tenant_id_email_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_account_locks_tenant_id_email_uniq ON public.account_locks USING btree (tenant_id, email);
+
+
+--
+-- Name: idx_account_locks_tenant_id_unlock_token_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_account_locks_tenant_id_unlock_token_uniq ON public.account_locks USING btree (tenant_id, unlock_token);
+
+
+--
+-- Name: idx_admins_tenant_id_uid_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_admins_tenant_id_uid_uniq ON public.admins USING btree (tenant_id, uid);
+
+
+--
 -- Name: idx_contact_addresses_tenant_id_user_id_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -542,10 +563,45 @@ CREATE UNIQUE INDEX idx_contact_addresses_tenant_id_user_id_uniq ON public.conta
 
 
 --
+-- Name: idx_linked_applications_tenant_user_oauth_application_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_linked_applications_tenant_user_oauth_application_uniq ON public.users__linked_applications USING btree (tenant_id, user_id, oauth_application_id);
+
+
+--
+-- Name: idx_rulers_uid_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_rulers_uid_uniq ON public.rulers USING btree (uid);
+
+
+--
 -- Name: idx_user_profiles_tenant_id_user_id_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX idx_user_profiles_tenant_id_user_id_uniq ON public.user_profiles USING btree (tenant_id, user_id);
+
+
+--
+-- Name: idx_users_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_users_created_at ON public.users__sms_verifiers USING btree (created_at);
+
+
+--
+-- Name: idx_users_ip_address; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_users_ip_address ON public.users__sms_verifiers USING btree (ip_address);
+
+
+--
+-- Name: idx_users_phone_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_users_phone_number ON public.users__sms_verifiers USING btree (phone_number);
 
 
 --
