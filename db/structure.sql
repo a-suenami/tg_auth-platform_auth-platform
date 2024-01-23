@@ -535,6 +535,20 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: idx_contact_addresses_tenant_id_user_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_contact_addresses_tenant_id_user_id_uniq ON public.contact_addresses USING btree (tenant_id, user_id);
+
+
+--
+-- Name: idx_user_profiles_tenant_id_user_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_user_profiles_tenant_id_user_id_uniq ON public.user_profiles USING btree (tenant_id, user_id);
+
+
+--
 -- Name: index_account_locks_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 

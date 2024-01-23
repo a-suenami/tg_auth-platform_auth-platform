@@ -10,6 +10,8 @@ create_table :contact_addresses, force: :cascade, id: :uuid, default: -> { 'gen_
   t.string :country_code
 
   t.timestamps null: false
+
+  t.index [:tenant_id, :user_id], name: :idx_contact_addresses_tenant_id_user_id_uniq, using: :btree, unique: true
 end
 
 add_foreign_key :contact_addresses, :tenants, name: :fk_contact_addresses_tenants
