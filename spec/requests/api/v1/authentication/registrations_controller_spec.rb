@@ -133,7 +133,7 @@ recaptcha_enterprise_score_based_site_key: 'score_based_site_key',)
 
   describe 'POST /api/v1/authentication/registrations/verify_email' do
     let(:current_user) {
-      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', email_verified: false, enabled: false)
+      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', email_verified: false, enabled: false, password_digest: nil)
     }
     let(:other_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-other-user1@example.com', email_verified: false)

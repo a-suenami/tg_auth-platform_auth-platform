@@ -52,6 +52,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "country_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["tenant_id", "user_id"], name: "idx_contact_addresses_tenant_id_user_id_uniq", unique: true
     t.index ["tenant_id"], name: "index_contact_addresses_on_tenant_id"
     t.index ["user_id"], name: "index_contact_addresses_on_user_id"
   end
@@ -197,6 +198,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "gender"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["tenant_id", "user_id"], name: "idx_user_profiles_tenant_id_user_id_uniq", unique: true
     t.index ["tenant_id"], name: "index_user_profiles_on_tenant_id"
     t.index ["user_id"], name: "index_user_profiles_on_user_id"
   end

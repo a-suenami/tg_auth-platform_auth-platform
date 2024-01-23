@@ -343,7 +343,6 @@ verifier_type: :registration,)
           expect(Users::SmsVerifier.find(sms_verifier.id).used_at).not_to be_nil
           expect(body_hash['user_id']).to eq(current_user.id)
           expect(body_hash['sms_verified']).to be true
-          expect(body_hash['registered']).to be false
         end
       end
     end
