@@ -13,7 +13,12 @@ create_table :users__sms_verifiers, force: :cascade, id: :uuid, default: -> { 'g
   t.string :delivery_type
 
   t.timestamps null: false
+
+  t.index [:created_at], name: :idx_users_created_at, using: :btree
+  t.index [:phone_number], name: :idx_users_phone_number, using: :btree
+  t.index [:ip_address], name: :idx_users_ip_address, using: :btree
 end
 
 add_foreign_key :users__sms_verifiers, :tenants, name: :fk_users__sms_verifiers_tenants
 add_foreign_key :users__sms_verifiers, :users, name: :fk_users__sms_verifiers_users
+``

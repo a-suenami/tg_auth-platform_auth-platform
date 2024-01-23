@@ -4,4 +4,6 @@ create_table :rulers, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid
   t.string  :uid
 
   t.timestamps null: false
+
+  t.index :uid, name: :idx_rulers_uid_uniq, using: :btree, unique: true
 end
