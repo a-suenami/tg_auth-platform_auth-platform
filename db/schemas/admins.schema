@@ -5,6 +5,8 @@ create_table :admins, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid
   t.string  :uid
 
   t.timestamps null: false
+
+  t.index [:tenant_id, :uid], name: :idx_admins_tenant_id_uid_uniq, using: :btree, unique: true
 end
 
 add_foreign_key :admins, :tenants, name: :fk_admins_tenants
