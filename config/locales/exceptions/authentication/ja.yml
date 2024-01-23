@@ -8,7 +8,7 @@ ja:
       password_reset_code_invalid: パスワードリセットコードが間違っています
       password_reset_code_used: コードはすでに使用されています
       password_reset_code_expired: コードの有効期限が切れています
-      password_already_set: パスワードはすでに設定済みです
+      password_already_set: パスワードはすでに設定済みです。サイトTOPより、ご登録メールアドレスとパスワードでログインしてください。パスワードを忘れた方は「パスワードを忘れた方はこちら」より再設定してください。
       phone_number_already_set: 電話番号はすでに設定済みです
       sms_verification_code_attempts_is_over: コードの試行回数が上限に達しました
       sms_verification_disabled: SMS確認機能が無効です
