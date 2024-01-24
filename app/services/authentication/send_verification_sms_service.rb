@@ -10,6 +10,8 @@ module Authentication
 
       phone_number = PhonyRails.normalize_number(local_phone_number, country_number: phone_country_code)
 
+      # Phonelibの方が市外局番以降まで厳密にチェックしてくれるので、2重でチェック
+      # TODO: 国コードではなく国名コードを受け付けるようにすればPhonyRailsは不要
       raise Exceptions::Authentication::PhoneNumberStrictlyInvaild unless Phonelib.valid?(phone_number)
 
       # SMS送信対象外の国コードチェック
