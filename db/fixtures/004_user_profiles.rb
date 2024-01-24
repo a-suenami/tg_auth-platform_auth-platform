@@ -1,4 +1,5 @@
 UserProfile.seed do |s|
+  s.id = '49ffdddf-29df-46c5-8021-3e1599ea9339'
   s.tenant_id = 'sample'
   s.user_id = 'a07348fe-26b8-417b-ae18-aaf6851f7651'
   s.first_name = '太郎'
@@ -10,6 +11,7 @@ UserProfile.seed do |s|
 end
 
 UserProfile.seed do |s|
+  s.id = '25539345-7781-49a8-9dc2-88dc0f820246'
   s.tenant_id = 'sample'
   s.user_id = '9a7e3bd7-d340-4447-a139-565d58371c7d'
   s.first_name = '一郎'
@@ -21,6 +23,7 @@ UserProfile.seed do |s|
 end
 
 UserProfile.seed do |s|
+  s.id = 'f6bf44ed-5ced-46ac-84c8-ac27fc236ed0'
   s.tenant_id = 'sample'
   s.user_id = 'bbfde205-4fcb-40c8-9bcb-1c821c126ce1'
   s.first_name = '次郎'
@@ -32,6 +35,7 @@ UserProfile.seed do |s|
 end
 
 UserProfile.seed do |s|
+  s.id = '969a82bb-e37e-44ee-8fec-f44a7b43bd27'
   s.tenant_id = 'sample'
   s.user_id = 'f92a0891-c5ac-484a-b509-605a2ac54a73'
   s.first_name = '三郎'

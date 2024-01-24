@@ -2,11 +2,21 @@
 
 module Authentication
   class SendVerificationSmsService < BaseService
+    # SMS送信対象外の国コードリスト
+    EXCLUDED_COUNTRY_CODE = %w[AF AZ BI BZ ET ID IQ LB LK LY MG PK PS RU SY TD TJ TN UZ ZM].freeze
 
     def execute!(local_phone_number:, phone_country_code:, user_id:, ip_address:, delivery_type:)
       raise Exceptions::Authentication::PhoneNumberInvaild unless PhonyRails.plausible_number?(local_phone_number, country_number: phone_country_code)
 
       phone_number = PhonyRails.normalize_number(local_phone_number, country_number: phone_country_code)
+
+      # Phonelibの方が市外局番以降まで厳密にチェックしてくれるので、2重でチェック
+      # TODO: 国コードではなく国名コードを受け付けるようにすればPhonyRailsは不要
+      raise Exceptions::Authentication::PhoneNumberStrictlyInvaild unless Phonelib.valid?(phone_number)
+
+      # SMS送信対象外の国コードチェック
+      raise Exceptions::Authentication::NoSmsSupportedCountry if excluded_country_code?(phone_number)
+
       user = User.active.find user_id
 
       # 電話番号重複チェック
@@ -52,6 +62,12 @@ module Authentication
       raise Exceptions::Authentication::SmsSendLimit if Users::SmsVerifier.where('created_at > ?', 1.hour.ago).where(ip_address:).count >= 100
       # 同一ユーザ   10件/24hours
       raise Exceptions::Authentication::SmsSendLimit if Users::SmsVerifier.where('created_at > ?', 24.hours.ago).where(user:).count >= 10
+    end
+
+    def excluded_country_code?(phone_number)
+      phone = Phonelib.parse(phone_number)
+
+      EXCLUDED_COUNTRY_CODE.intersect?(phone.valid_countries)
     end
   end
 end

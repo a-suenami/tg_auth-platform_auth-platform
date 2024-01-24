@@ -105,7 +105,7 @@ deleted: true,)
       context 'when given a oversea phone number' do
         let(:params) {
           {
-            phone_number: '3181234567',
+            phone_number: '3185555555',
             phone_country_code: '1',
           }
         }
@@ -113,8 +113,68 @@ deleted: true,)
         it 'returns 200' do
           is_expected.to eq 200
           expect(twilio_mock).to have_received(:send_sms)
-          expect(Users::SmsVerifier.find_by(user: current_user).phone_number).to eq '+13181234567'
+          expect(Users::SmsVerifier.find_by(user: current_user).phone_number).to eq '+13185555555'
           expect(Users::SmsVerifier.find_by(user: current_user).sms_sid).to eq 'SMXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+        end
+      end
+
+      context 'when given afghanistan phone number' do
+        let(:params) {
+          {
+            phone_number: '202222222',
+            phone_country_code: '93',
+          }
+        }
+
+        it 'returns 400' do
+          is_expected.to eq 400
+          expect(body_hash['error']['code']).to eq 'no_sms_supported_country'
+          expect(twilio_mock).not_to have_received(:send_sms)
+        end
+      end
+
+      context 'when given azerbaijan phone number' do
+        let(:params) {
+          {
+            phone_number: '125555555',
+            phone_country_code: '994',
+          }
+        }
+
+        it 'returns 400' do
+          is_expected.to eq 400
+          expect(body_hash['error']['code']).to eq 'no_sms_supported_country'
+          expect(twilio_mock).not_to have_received(:send_sms)
+        end
+      end
+
+      # ロシアとカザフスタンは国際電話番号国コードが同じだが、ロシアのみエラーを返すか確認
+      context 'when given russia phone number' do
+        let(:params) {
+          {
+            phone_number: '4951234567',
+            phone_country_code: '7',
+          }
+        }
+
+        it 'returns 400' do
+          is_expected.to eq 400
+          expect(body_hash['error']['code']).to eq 'no_sms_supported_country'
+          expect(twilio_mock).not_to have_received(:send_sms)
+        end
+      end
+
+      context 'when given kazakhstan phone number' do
+        let(:params) {
+          {
+            phone_number: '7272517123',
+            phone_country_code: '7',
+          }
+        }
+
+        it 'returns 200' do
+          is_expected.to eq 200
+          expect(twilio_mock).to have_received(:send_sms)
         end
       end
 
