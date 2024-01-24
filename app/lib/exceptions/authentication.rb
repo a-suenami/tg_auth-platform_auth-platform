@@ -160,6 +160,18 @@ module Exceptions
       end
     end
 
+    class NoSmsSupportedCountry < BaseError
+      sig { returns(Symbol) }
+      def code
+        :no_sms_supported_country
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.authentication.no_sms_supported_country'
+      end
+    end
+
     class SmsSendLimit < BaseError
       sig { returns(Symbol) }
       def code

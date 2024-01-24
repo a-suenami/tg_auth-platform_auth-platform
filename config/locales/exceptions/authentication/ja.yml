@@ -15,3 +15,4 @@ ja:
       phone_number_duplicated: その電話番号はすでに使用されています
       phone_number_invaild: 電話番号の形式が間違っています
       sms_send_limit: 1日に送信できるSMSの上限を超えました。24時間後再度お試しください。
+      no_sms_supported_country: ご指定された国の電話番号は当サービスのSMS送信機能の対応範囲外です。対応している国をご確認の上、再度お試しください。

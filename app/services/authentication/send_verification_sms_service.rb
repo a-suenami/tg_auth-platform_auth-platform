@@ -2,9 +2,14 @@
 
 module Authentication
   class SendVerificationSmsService < BaseService
+    # SMS送信対象外の国コードリスト
+    EXCLUDED_COUNTRY_CODE = %w[93 994 257 501 251 62 964 961 94 218 261 92 970 963 235 992 216 998 260].freeze
 
     def execute!(local_phone_number:, phone_country_code:, user_id:, ip_address:, delivery_type:)
       raise Exceptions::Authentication::PhoneNumberInvaild unless PhonyRails.plausible_number?(local_phone_number, country_number: phone_country_code)
+
+      # SMS送信対象外の国コードチェック
+      raise Exceptions::Authentication::NoSmsSupportedCountry if EXCLUDED_COUNTRY_CODE.include?(phone_country_code)
 
       phone_number = PhonyRails.normalize_number(local_phone_number, country_number: phone_country_code)
       user = User.active.find user_id
