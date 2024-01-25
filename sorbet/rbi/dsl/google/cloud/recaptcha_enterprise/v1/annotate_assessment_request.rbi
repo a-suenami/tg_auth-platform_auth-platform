@@ -7,6 +7,7 @@
 class Google::Cloud::RecaptchaEnterprise::V1::AnnotateAssessmentRequest
   sig do
     params(
+      account_id: T.nilable(String),
       annotation: T.nilable(T.any(Symbol, Integer)),
       hashed_account_id: T.nilable(String),
       name: T.nilable(String),
@@ -14,13 +15,22 @@ class Google::Cloud::RecaptchaEnterprise::V1::AnnotateAssessmentRequest
       transaction_event: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::TransactionEvent)
     ).void
   end
-  def initialize(annotation: nil, hashed_account_id: nil, name: nil, reasons: T.unsafe(nil), transaction_event: nil); end
+  def initialize(account_id: nil, annotation: nil, hashed_account_id: nil, name: nil, reasons: T.unsafe(nil), transaction_event: nil); end
+
+  sig { returns(String) }
+  def account_id; end
+
+  sig { params(value: String).void }
+  def account_id=(value); end
 
   sig { returns(T.any(Symbol, Integer)) }
   def annotation; end
 
   sig { params(value: T.any(Symbol, Integer)).void }
   def annotation=(value); end
+
+  sig { void }
+  def clear_account_id; end
 
   sig { void }
   def clear_annotation; end

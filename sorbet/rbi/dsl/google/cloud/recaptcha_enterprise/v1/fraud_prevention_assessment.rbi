@@ -7,12 +7,23 @@
 class Google::Cloud::RecaptchaEnterprise::V1::FraudPreventionAssessment
   sig do
     params(
+      behavioral_trust_verdict: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FraudPreventionAssessment::BehavioralTrustVerdict),
       card_testing_verdict: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FraudPreventionAssessment::CardTestingVerdict),
       stolen_instrument_verdict: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FraudPreventionAssessment::StolenInstrumentVerdict),
       transaction_risk: T.nilable(Float)
     ).void
   end
-  def initialize(card_testing_verdict: nil, stolen_instrument_verdict: nil, transaction_risk: nil); end
+  def initialize(behavioral_trust_verdict: nil, card_testing_verdict: nil, stolen_instrument_verdict: nil, transaction_risk: nil); end
+
+  sig { returns(T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FraudPreventionAssessment::BehavioralTrustVerdict)) }
+  def behavioral_trust_verdict; end
+
+  sig do
+    params(
+      value: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FraudPreventionAssessment::BehavioralTrustVerdict)
+    ).void
+  end
+  def behavioral_trust_verdict=(value); end
 
   sig { returns(T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FraudPreventionAssessment::CardTestingVerdict)) }
   def card_testing_verdict; end
@@ -23,6 +34,9 @@ class Google::Cloud::RecaptchaEnterprise::V1::FraudPreventionAssessment
     ).void
   end
   def card_testing_verdict=(value); end
+
+  sig { void }
+  def clear_behavioral_trust_verdict; end
 
   sig { void }
   def clear_card_testing_verdict; end

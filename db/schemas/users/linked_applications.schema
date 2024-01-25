@@ -2,8 +2,8 @@ create_table :users__linked_applications, force: :cascade, id: :uuid, default: -
   t.references :tenant, type: :citext, null: false
   t.references :user, type: :uuid, null: false
   t.references :oauth_application, type: :uuid, null: false
-  t.string  :scopes, null: false
-  t.datetime  :last_linked_at, null: false
+  t.string :scopes, null: false
+  t.datetime :last_linked_at, null: false
 
   t.timestamps null: false
 

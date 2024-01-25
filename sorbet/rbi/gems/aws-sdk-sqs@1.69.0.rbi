@@ -7,28 +7,28 @@
 # source://aws-sdk-sqs//lib/aws-sdk-sqs/plugins/queue_urls.rb#3
 module Aws
   class << self
-    # source://aws-sdk-core/3.190.0/lib/aws-sdk-core.rb#133
+    # source://aws-sdk-core/3.190.3/lib/aws-sdk-core.rb#133
     def config; end
 
-    # source://aws-sdk-core/3.190.0/lib/aws-sdk-core.rb#136
+    # source://aws-sdk-core/3.190.3/lib/aws-sdk-core.rb#136
     def config=(config); end
 
-    # source://aws-sdk-core/3.190.0/lib/aws-sdk-core.rb#195
+    # source://aws-sdk-core/3.190.3/lib/aws-sdk-core.rb#195
     def eager_autoload!(*args); end
 
-    # source://aws-sdk-core/3.190.0/lib/aws-sdk-core.rb#188
+    # source://aws-sdk-core/3.190.3/lib/aws-sdk-core.rb#188
     def empty_connection_pools!; end
 
-    # source://aws-sdk-core/3.190.0/lib/aws-sdk-core.rb#145
+    # source://aws-sdk-core/3.190.3/lib/aws-sdk-core.rb#145
     def partition(partition_name); end
 
-    # source://aws-sdk-core/3.190.0/lib/aws-sdk-core.rb#150
+    # source://aws-sdk-core/3.190.3/lib/aws-sdk-core.rb#150
     def partitions; end
 
-    # source://aws-sdk-core/3.190.0/lib/aws-sdk-core.rb#126
+    # source://aws-sdk-core/3.190.3/lib/aws-sdk-core.rb#126
     def shared_config; end
 
-    # source://aws-sdk-core/3.190.0/lib/aws-sdk-core.rb#165
+    # source://aws-sdk-core/3.190.3/lib/aws-sdk-core.rb#165
     def use_bundled_cert!; end
   end
 end
@@ -2808,7 +2808,7 @@ class Aws::SQS::Message
   # @api private
   # @deprecated
   #
-  # source://aws-sdk-core/3.190.0/lib/aws-sdk-core/deprecations.rb#65
+  # source://aws-sdk-core/3.190.3/lib/aws-sdk-core/deprecations.rb#65
   def identifiers(*args, &block); end
 
   # @api private
@@ -3167,7 +3167,7 @@ class Aws::SQS::Queue
   # @api private
   # @deprecated
   #
-  # source://aws-sdk-core/3.190.0/lib/aws-sdk-core/deprecations.rb#65
+  # source://aws-sdk-core/3.190.3/lib/aws-sdk-core/deprecations.rb#65
   def identifiers(*args, &block); end
 
   # Loads, or reloads {#data} for the current {Queue}.

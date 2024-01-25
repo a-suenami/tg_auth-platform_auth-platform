@@ -7,13 +7,23 @@
 class Google::Cloud::RecaptchaEnterprise::V1::SearchRelatedAccountGroupMembershipsRequest
   sig do
     params(
+      account_id: T.nilable(String),
       hashed_account_id: T.nilable(String),
       page_size: T.nilable(Integer),
       page_token: T.nilable(String),
       project: T.nilable(String)
     ).void
   end
-  def initialize(hashed_account_id: nil, page_size: nil, page_token: nil, project: nil); end
+  def initialize(account_id: nil, hashed_account_id: nil, page_size: nil, page_token: nil, project: nil); end
+
+  sig { returns(String) }
+  def account_id; end
+
+  sig { params(value: String).void }
+  def account_id=(value); end
+
+  sig { void }
+  def clear_account_id; end
 
   sig { void }
   def clear_hashed_account_id; end

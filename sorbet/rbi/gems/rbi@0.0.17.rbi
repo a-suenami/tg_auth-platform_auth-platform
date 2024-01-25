@@ -1722,7 +1722,7 @@ class RBI::Rewriters::Merge::Conflict < ::T::Struct
   def to_s; end
 
   class << self
-    # source://sorbet-runtime/0.5.11120/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.11218/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1939,7 +1939,7 @@ class RBI::Rewriters::RemoveKnownDefinitions::Operation < ::T::Struct
   def to_s; end
 
   class << self
-    # source://sorbet-runtime/0.5.11120/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.11218/lib/types/struct.rb#13
     def inherited(s); end
   end
 end

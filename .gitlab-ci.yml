@@ -128,6 +128,7 @@ sorbet:
   script:
     - bundle exec tapioca gems --verify --environment=development
     - bundle exec tapioca dsl --verify --environment=development
+    - bundle exec tapioca check-shims
     - bundle exec srb tc
   except:
     - /^deploy-.*$/

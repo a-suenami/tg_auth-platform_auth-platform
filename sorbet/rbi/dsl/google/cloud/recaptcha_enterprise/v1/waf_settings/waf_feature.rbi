@@ -19,5 +19,6 @@ end
 
 Google::Cloud::RecaptchaEnterprise::V1::WafSettings::WafFeature::ACTION_TOKEN = 3
 Google::Cloud::RecaptchaEnterprise::V1::WafSettings::WafFeature::CHALLENGE_PAGE = 1
+Google::Cloud::RecaptchaEnterprise::V1::WafSettings::WafFeature::EXPRESS = 5
 Google::Cloud::RecaptchaEnterprise::V1::WafSettings::WafFeature::SESSION_TOKEN = 2
 Google::Cloud::RecaptchaEnterprise::V1::WafSettings::WafFeature::WAF_FEATURE_UNSPECIFIED = 0

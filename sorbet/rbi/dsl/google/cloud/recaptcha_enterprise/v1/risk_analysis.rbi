@@ -7,17 +7,27 @@
 class Google::Cloud::RecaptchaEnterprise::V1::RiskAnalysis
   sig do
     params(
+      extended_verdict_reasons: T.nilable(T.any(Google::Protobuf::RepeatedField[String], T::Array[String])),
       reasons: T.nilable(T.any(Google::Protobuf::RepeatedField[T.any(Symbol, Integer)], T::Array[T.any(Symbol, Integer)])),
       score: T.nilable(Float)
     ).void
   end
-  def initialize(reasons: T.unsafe(nil), score: nil); end
+  def initialize(extended_verdict_reasons: T.unsafe(nil), reasons: T.unsafe(nil), score: nil); end
+
+  sig { void }
+  def clear_extended_verdict_reasons; end
 
   sig { void }
   def clear_reasons; end
 
   sig { void }
   def clear_score; end
+
+  sig { returns(Google::Protobuf::RepeatedField[String]) }
+  def extended_verdict_reasons; end
+
+  sig { params(value: Google::Protobuf::RepeatedField[String]).void }
+  def extended_verdict_reasons=(value); end
 
   sig { returns(Google::Protobuf::RepeatedField[T.any(Symbol, Integer)]) }
   def reasons; end

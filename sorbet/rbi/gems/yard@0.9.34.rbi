@@ -635,6 +635,28 @@ class SymbolHash < ::Hash
   end
 end
 
+# @private
+#
+# source://yard//lib/yard/server/webrick_adapter.rb#42
+class WEBrick::HTTPRequest
+  # Returns the value of attribute version_supplied.
+  #
+  # source://yard//lib/yard/server/webrick_adapter.rb#43
+  def version_supplied; end
+
+  # Sets the attribute version_supplied
+  #
+  # @param value the value to set the attribute version_supplied to.
+  #
+  # source://yard//lib/yard/server/webrick_adapter.rb#43
+  def version_supplied=(_arg0); end
+
+  # @return [Boolean]
+  #
+  # source://yard//lib/yard/server/webrick_adapter.rb#44
+  def xhr?; end
+end
+
 # Gem::YARDoc provides methods to generate YARDoc and yri data for installed gems
 # upon gem installation.
 #
@@ -14666,6 +14688,50 @@ module YARD::Server::StaticCaching
   #
   # source://yard//lib/yard/server/static_caching.rb#34
   def check_static_cache; end
+end
+
+# The main adapter to initialize a WEBrick server.
+#
+# @since 0.6.0
+#
+# source://yard//lib/yard/server/webrick_adapter.rb#7
+class YARD::Server::WebrickAdapter < ::YARD::Server::Adapter
+  # Initializes a WEBrick server. If {Adapter#server_options} contains a
+  # +:daemonize+ key set to true, the server will be daemonized.
+  #
+  # @since 0.6.0
+  #
+  # source://yard//lib/yard/server/webrick_adapter.rb#10
+  def start; end
+end
+
+# The main WEBrick servlet implementation, accepting only GET requests.
+#
+# @since 0.6.0
+#
+# source://yard//lib/yard/server/webrick_adapter.rb#20
+class YARD::Server::WebrickServlet < ::WEBrick::HTTPServlet::AbstractServlet
+  # @return [WebrickServlet] a new instance of WebrickServlet
+  # @since 0.6.0
+  #
+  # source://yard//lib/yard/server/webrick_adapter.rb#23
+  def initialize(server, adapter); end
+
+  # @since 0.6.0
+  #
+  # source://yard//lib/yard/server/webrick_adapter.rb#21
+  def adapter; end
+
+  # @since 0.6.0
+  #
+  # source://yard//lib/yard/server/webrick_adapter.rb#21
+  def adapter=(_arg0); end
+
+  # @private
+  # @since 0.6.0
+  #
+  # source://yard//lib/yard/server/webrick_adapter.rb#29
+  def do_GET(request, response); end
 end
 
 # Stubs marshal dumps and acts a delegate class for an object by path

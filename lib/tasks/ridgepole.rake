@@ -23,10 +23,12 @@ namespace :ridgepole do # rubocop:disable Metrics/BlockLength
         ridgepole('--apply', "--file #{schema_file}", '--env test')
 
         # schema.rb と structure.sql の両方吐かせる
-        ActiveRecord::Base.schema_format = :ruby
+        ENV['SCHEMA_FORMAT'] = 'ruby'
         Rake::Task['db:schema:dump'].invoke
-        ActiveRecord::Base.schema_format = :sql
+        ENV['SCHEMA_FORMAT'] = 'sql'
         Rake::Task['db:schema:dump'].invoke
+
+        system('FORCE_TEST_DATABASE=true bin/tapioca dsl', exception: true)
       end
       puts 'done'
     end
@@ -83,7 +85,7 @@ namespace :ridgepole do # rubocop:disable Metrics/BlockLength
   end
 
   def ridgepole(*options)
-    command = ['bundle exec ridgepole', "--config #{config_file}", '--dump-with-default-fk-name']
+    command = ['bundle exec ridgepole', "--config #{config_file}"]
     system([command + options].join(' '), exception: true)
   end
 

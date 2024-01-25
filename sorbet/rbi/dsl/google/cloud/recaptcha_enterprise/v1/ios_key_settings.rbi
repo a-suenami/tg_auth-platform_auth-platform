@@ -8,10 +8,11 @@ class Google::Cloud::RecaptchaEnterprise::V1::IOSKeySettings
   sig do
     params(
       allow_all_bundle_ids: T.nilable(T::Boolean),
-      allowed_bundle_ids: T.nilable(T.any(Google::Protobuf::RepeatedField[String], T::Array[String]))
+      allowed_bundle_ids: T.nilable(T.any(Google::Protobuf::RepeatedField[String], T::Array[String])),
+      apple_developer_id: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::AppleDeveloperId)
     ).void
   end
-  def initialize(allow_all_bundle_ids: nil, allowed_bundle_ids: T.unsafe(nil)); end
+  def initialize(allow_all_bundle_ids: nil, allowed_bundle_ids: T.unsafe(nil), apple_developer_id: nil); end
 
   sig { returns(T::Boolean) }
   def allow_all_bundle_ids; end
@@ -25,9 +26,18 @@ class Google::Cloud::RecaptchaEnterprise::V1::IOSKeySettings
   sig { params(value: Google::Protobuf::RepeatedField[String]).void }
   def allowed_bundle_ids=(value); end
 
+  sig { returns(T.nilable(Google::Cloud::RecaptchaEnterprise::V1::AppleDeveloperId)) }
+  def apple_developer_id; end
+
+  sig { params(value: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::AppleDeveloperId)).void }
+  def apple_developer_id=(value); end
+
   sig { void }
   def clear_allow_all_bundle_ids; end
 
   sig { void }
   def clear_allowed_bundle_ids; end
+
+  sig { void }
+  def clear_apple_developer_id; end
 end

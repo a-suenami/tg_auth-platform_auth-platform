@@ -7,63 +7,63 @@
 # source://spring-watcher-listen//lib/spring/watcher/listen.rb#19
 module Spring
   class << self
-    # source://spring/4.1.1/lib/spring/configuration.rb#31
+    # source://spring/4.1.3/lib/spring/configuration.rb#31
     def after_fork(&block); end
 
-    # source://spring/4.1.1/lib/spring/configuration.rb#27
+    # source://spring/4.1.3/lib/spring/configuration.rb#27
     def after_fork_callbacks; end
 
-    # source://spring/4.1.1/lib/spring/configuration.rb#5
+    # source://spring/4.1.3/lib/spring/configuration.rb#5
     def application_root; end
 
-    # source://spring/4.1.1/lib/spring/configuration.rb#5
+    # source://spring/4.1.3/lib/spring/configuration.rb#5
     def application_root=(_arg0); end
 
-    # source://spring/4.1.1/lib/spring/configuration.rb#39
+    # source://spring/4.1.3/lib/spring/configuration.rb#39
     def application_root_path; end
 
-    # source://spring/4.1.1/lib/spring/configuration.rb#8
+    # source://spring/4.1.3/lib/spring/configuration.rb#8
     def gemfile; end
 
-    # source://spring/4.1.1/lib/spring/configuration.rb#18
+    # source://spring/4.1.3/lib/spring/configuration.rb#18
     def gemfile_lock; end
 
-    # source://spring/4.1.1/lib/spring/configuration.rb#52
+    # source://spring/4.1.3/lib/spring/configuration.rb#52
     def project_root_path; end
 
-    # source://spring/4.1.1/lib/spring/configuration.rb#56
+    # source://spring/4.1.3/lib/spring/configuration.rb#56
     def quiet; end
 
-    # source://spring/4.1.1/lib/spring/configuration.rb#6
+    # source://spring/4.1.3/lib/spring/configuration.rb#6
     def quiet=(_arg0); end
 
-    # source://spring/4.1.1/lib/spring/configuration.rb#35
+    # source://spring/4.1.3/lib/spring/configuration.rb#35
     def verify_environment; end
 
-    # source://spring/4.1.1/lib/spring/watcher.rb#27
+    # source://spring/4.1.3/lib/spring/watcher.rb#27
     def watch(*items); end
 
-    # source://spring/4.1.1/lib/spring/watcher.rb#6
+    # source://spring/4.1.3/lib/spring/watcher.rb#6
     def watch_interval; end
 
-    # source://spring/4.1.1/lib/spring/watcher.rb#6
+    # source://spring/4.1.3/lib/spring/watcher.rb#6
     def watch_interval=(_arg0); end
 
-    # source://spring/4.1.1/lib/spring/watcher.rb#8
+    # source://spring/4.1.3/lib/spring/watcher.rb#8
     def watch_method; end
 
-    # source://spring/4.1.1/lib/spring/watcher.rb#11
+    # source://spring/4.1.3/lib/spring/watcher.rb#11
     def watch_method=(method); end
 
-    # source://spring/4.1.1/lib/spring/watcher.rb#23
+    # source://spring/4.1.3/lib/spring/watcher.rb#23
     def watcher; end
 
-    # source://spring/4.1.1/lib/spring/watcher.rb#7
+    # source://spring/4.1.3/lib/spring/watcher.rb#7
     def watcher=(_arg0); end
 
     private
 
-    # source://spring/4.1.1/lib/spring/configuration.rb#62
+    # source://spring/4.1.3/lib/spring/configuration.rb#62
     def find_project_root(current_dir); end
   end
 end

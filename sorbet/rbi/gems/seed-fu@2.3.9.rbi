@@ -6,902 +6,990 @@
 
 # source://seed-fu//lib/seed-fu.rb#34
 class ActiveRecord::Base
+  include ::ActiveModel::Access
   include ::ActiveModel::ForbiddenAttributesProtection
   include ::ActiveModel::AttributeAssignment
   include ::ActiveModel::Serialization
   extend ::SeedFu::ActiveRecordExtension
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks?; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _before_commit_callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _commit_callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _create_callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _destroy_callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _find_callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _initialize_callbacks; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#11
+  # source://activerecord/7.1.3/lib/active_record/reflection.rb#11
   def _reflections; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#11
+  # source://activerecord/7.1.3/lib/active_record/reflection.rb#11
   def _reflections?; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _rollback_callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_before_commit_callbacks(&block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_commit_callbacks(&block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_create_callbacks(&block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_destroy_callbacks(&block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_find_callbacks(&block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_initialize_callbacks(&block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_rollback_callbacks(&block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_save_callbacks(&block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_touch_callbacks(&block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_update_callbacks(&block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_validate_callbacks(&block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_validation_callbacks(&block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _save_callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _touch_callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _update_callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _validate_callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _validation_callbacks; end
 
-  # source://activemodel/7.0.4.2/lib/active_model/validations.rb#52
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#71
   def _validators; end
 
-  # source://activemodel/7.0.4.2/lib/active_model/validations.rb#52
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#71
   def _validators?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#12
+  # source://activerecord/7.1.3/lib/active_record/reflection.rb#12
   def aggregate_reflections; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#12
+  # source://activerecord/7.1.3/lib/active_record/reflection.rb#12
   def aggregate_reflections?; end
 
-  # source://activemodel/7.0.4.2/lib/active_model/attribute_methods.rb#73
+  # source://activemodel/7.1.3/lib/active_model/attribute_methods.rb#72
   def attribute_aliases; end
 
-  # source://activemodel/7.0.4.2/lib/active_model/attribute_methods.rb#73
+  # source://activemodel/7.1.3/lib/active_model/attribute_methods.rb#72
   def attribute_aliases?; end
 
-  # source://activemodel/7.0.4.2/lib/active_model/attribute_methods.rb#74
-  def attribute_method_matchers; end
+  # source://activemodel/7.1.3/lib/active_model/attribute_methods.rb#73
+  def attribute_method_patterns; end
 
-  # source://activemodel/7.0.4.2/lib/active_model/attribute_methods.rb#74
-  def attribute_method_matchers?; end
+  # source://activemodel/7.1.3/lib/active_model/attribute_methods.rb#73
+  def attribute_method_patterns?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#13
+  # source://activerecord/7.1.3/lib/active_record/reflection.rb#13
   def automatic_scope_inversing; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#13
+  # source://activerecord/7.1.3/lib/active_record/reflection.rb#13
   def automatic_scope_inversing?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/integration.rb#16
+  # source://activerecord/7.1.3/lib/active_record/integration.rb#16
   def cache_timestamp_format; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/integration.rb#16
+  # source://activerecord/7.1.3/lib/active_record/integration.rb#16
   def cache_timestamp_format?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/integration.rb#24
+  # source://activerecord/7.1.3/lib/active_record/integration.rb#24
   def cache_versioning; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/integration.rb#24
+  # source://activerecord/7.1.3/lib/active_record/integration.rb#24
   def cache_versioning?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/integration.rb#32
+  # source://activerecord/7.1.3/lib/active_record/integration.rb#32
   def collection_cache_versioning; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/integration.rb#32
+  # source://activerecord/7.1.3/lib/active_record/integration.rb#32
   def collection_cache_versioning?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#171
-  def column_for_attribute(*_arg0, **_arg1, &_arg2); end
+  # source://activerecord/7.1.3/lib/active_record/model_schema.rb#178
+  def column_for_attribute(name, &block); end
 
-  # source://activerecord/7.0.4.2/lib/active_record/core.rb#74
+  # source://activerecord/7.1.3/lib/active_record/core.rb#97
   def default_connection_handler; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/core.rb#74
+  # source://activerecord/7.1.3/lib/active_record/core.rb#97
   def default_connection_handler?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/core.rb#76
+  # source://activerecord/7.1.3/lib/active_record/core.rb#99
   def default_role; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/core.rb#76
+  # source://activerecord/7.1.3/lib/active_record/core.rb#99
   def default_role?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/scoping/default.rb#20
+  # source://activerecord/7.1.3/lib/active_record/scoping/default.rb#20
   def default_scope_override; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/scoping/default.rb#19
+  # source://activerecord/7.1.3/lib/active_record/scoping/default.rb#19
   def default_scopes; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/core.rb#78
+  # source://activerecord/7.1.3/lib/active_record/core.rb#101
   def default_shard; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/core.rb#78
+  # source://activerecord/7.1.3/lib/active_record/core.rb#101
   def default_shard?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/enum.rb#116
+  # source://activerecord/7.1.3/lib/active_record/enum.rb#167
   def defined_enums; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/enum.rb#116
+  # source://activerecord/7.1.3/lib/active_record/enum.rb#167
   def defined_enums?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/core.rb#26
-  def destroy_association_async_job; end
+  # source://activerecord/7.1.3/lib/active_record/core.rb#47
+  def destroy_association_async_batch_size; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/encryption/encryptable_record.rb#11
+  # source://activerecord/7.1.3/lib/active_record/core.rb#37
+  def destroy_association_async_job(&block); end
+
+  # source://activerecord/7.1.3/lib/active_record/encryption/encryptable_record.rb#11
   def encrypted_attributes; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/encryption/encryptable_record.rb#11
+  # source://activerecord/7.1.3/lib/active_record/encryption/encryptable_record.rb#11
   def encrypted_attributes=(_arg0); end
 
-  # source://activerecord/7.0.4.2/lib/active_record/encryption/encryptable_record.rb#11
+  # source://activerecord/7.1.3/lib/active_record/encryption/encryptable_record.rb#11
   def encrypted_attributes?; end
 
-  # source://activemodel/7.0.4.2/lib/active_model/serializers/json.rb#15
+  # source://activemodel/7.1.3/lib/active_model/serializers/json.rb#15
   def include_root_in_json; end
 
-  # source://activemodel/7.0.4.2/lib/active_model/serializers/json.rb#15
+  # source://activemodel/7.1.3/lib/active_model/serializers/json.rb#15
   def include_root_in_json?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/locking/optimistic.rb#56
+  # source://activerecord/7.1.3/lib/active_record/locking/optimistic.rb#56
   def lock_optimistically; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/locking/optimistic.rb#56
+  # source://activerecord/7.1.3/lib/active_record/locking/optimistic.rb#56
   def lock_optimistically?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/core.rb#20
+  # source://activerecord/7.1.3/lib/active_record/core.rb#22
   def logger; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/core.rb#20
+  # source://activerecord/7.1.3/lib/active_record/core.rb#22
   def logger?; end
 
-  # source://activemodel/7.0.4.2/lib/active_model/naming.rb#244
-  def model_name(*_arg0, **_arg1, &_arg2); end
+  # source://activemodel/7.1.3/lib/active_model/naming.rb#255
+  def model_name(&block); end
 
-  # source://activerecord/7.0.4.2/lib/active_record/nested_attributes.rb#15
+  # source://activerecord/7.1.3/lib/active_record/nested_attributes.rb#15
   def nested_attributes_options; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/nested_attributes.rb#15
+  # source://activerecord/7.1.3/lib/active_record/nested_attributes.rb#15
   def nested_attributes_options?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/dirty.rb#18
+  # source://activerecord/7.1.3/lib/active_record/normalization.rb#8
+  def normalized_attributes; end
+
+  # source://activerecord/7.1.3/lib/active_record/normalization.rb#8
+  def normalized_attributes=(_arg0); end
+
+  # source://activerecord/7.1.3/lib/active_record/normalization.rb#8
+  def normalized_attributes?; end
+
+  # source://activemodel/7.1.3/lib/active_model/conversion.rb#32
+  def param_delimiter=(_arg0); end
+
+  # source://activerecord/7.1.3/lib/active_record/attribute_methods/dirty.rb#50
   def partial_inserts; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/dirty.rb#18
+  # source://activerecord/7.1.3/lib/active_record/attribute_methods/dirty.rb#50
   def partial_inserts?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/dirty.rb#17
+  # source://activerecord/7.1.3/lib/active_record/attribute_methods/dirty.rb#49
   def partial_updates; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/dirty.rb#17
+  # source://activerecord/7.1.3/lib/active_record/attribute_methods/dirty.rb#49
   def partial_updates?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#156
+  # source://activerecord/7.1.3/lib/active_record/model_schema.rb#163
   def pluralize_table_names; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#156
+  # source://activerecord/7.1.3/lib/active_record/model_schema.rb#163
   def pluralize_table_names?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#151
+  # source://activerecord/7.1.3/lib/active_record/model_schema.rb#158
   def primary_key_prefix_type; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#151
+  # source://activerecord/7.1.3/lib/active_record/model_schema.rb#158
   def primary_key_prefix_type?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/timestamp.rb#47
+  # source://activerecord/7.1.3/lib/active_record/timestamp.rb#47
   def record_timestamps; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/timestamp.rb#47
+  # source://activerecord/7.1.3/lib/active_record/timestamp.rb#47
   def record_timestamps=(_arg0); end
 
-  # source://activerecord/7.0.4.2/lib/active_record/timestamp.rb#47
+  # source://activerecord/7.1.3/lib/active_record/timestamp.rb#47
   def record_timestamps?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/signed_id.rb#13
+  # source://activerecord/7.1.3/lib/active_record/signed_id.rb#13
   def signed_id_verifier_secret; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/signed_id.rb#13
+  # source://activerecord/7.1.3/lib/active_record/signed_id.rb#13
   def signed_id_verifier_secret?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#71
+  # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#67
   def skip_time_zone_conversion_for_attributes; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#71
+  # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#67
   def skip_time_zone_conversion_for_attributes?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/inheritance.rb#42
+  # source://activerecord/7.1.3/lib/active_record/inheritance.rb#43
   def store_full_class_name; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/inheritance.rb#42
+  # source://activerecord/7.1.3/lib/active_record/inheritance.rb#43
   def store_full_class_name?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/inheritance.rb#46
+  # source://activerecord/7.1.3/lib/active_record/inheritance.rb#47
   def store_full_sti_class; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/inheritance.rb#46
+  # source://activerecord/7.1.3/lib/active_record/inheritance.rb#47
   def store_full_sti_class?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#152
+  # source://activerecord/7.1.3/lib/active_record/model_schema.rb#159
   def table_name_prefix; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#152
+  # source://activerecord/7.1.3/lib/active_record/model_schema.rb#159
   def table_name_prefix?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#153
+  # source://activerecord/7.1.3/lib/active_record/model_schema.rb#160
   def table_name_suffix; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#153
+  # source://activerecord/7.1.3/lib/active_record/model_schema.rb#160
   def table_name_suffix?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#70
+  # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#66
   def time_zone_aware_attributes; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#70
+  # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#66
   def time_zone_aware_attributes?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#72
+  # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#68
   def time_zone_aware_types; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#72
+  # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#68
   def time_zone_aware_types?; end
 
-  # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#171
-  def type_for_attribute(*_arg0, **_arg1, &_arg2); end
+  # source://activerecord/7.1.3/lib/active_record/model_schema.rb#178
+  def type_for_attribute(attr_name, &block); end
 
-  # source://activemodel/7.0.4.2/lib/active_model/validations.rb#48
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#67
   def validation_context; end
 
   private
 
-  # source://activemodel/7.0.4.2/lib/active_model/validations.rb#48
+  # source://phony_rails/0.15.0/lib/phony_rails.rb#169
+  def assign_values_for_phony_symbol_options(options); end
+
+  # source://phony_rails/0.15.0/lib/phony_rails.rb#152
+  def set_phony_normalized_numbers(current_instance, attributes, options = T.unsafe(nil)); end
+
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#67
   def validation_context=(_arg0); end
 
   class << self
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/readonly_attributes.rb#8
+    # source://activerecord/7.1.3/lib/active_record/readonly_attributes.rb#11
     def _attr_readonly; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/readonly_attributes.rb#8
+    # source://activerecord/7.1.3/lib/active_record/readonly_attributes.rb#11
     def _attr_readonly=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/readonly_attributes.rb#8
+    # source://activerecord/7.1.3/lib/active_record/readonly_attributes.rb#11
     def _attr_readonly?; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _before_commit_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _before_commit_callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _commit_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _commit_callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activerecord/7.1.3/lib/active_record/counter_cache.rb#9
+    def _counter_cache_columns; end
+
+    # source://activerecord/7.1.3/lib/active_record/counter_cache.rb#9
+    def _counter_cache_columns=(value); end
+
+    # source://activerecord/7.1.3/lib/active_record/counter_cache.rb#9
+    def _counter_cache_columns?; end
+
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _create_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _create_callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activerecord/7.1.3/lib/active_record/core.rb#24
+    def _destroy_association_async_job; end
+
+    # source://activerecord/7.1.3/lib/active_record/core.rb#24
+    def _destroy_association_async_job=(value); end
+
+    # source://activerecord/7.1.3/lib/active_record/core.rb#24
+    def _destroy_association_async_job?; end
+
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _destroy_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _destroy_callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _find_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _find_callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _initialize_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _initialize_callbacks=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#11
+    # source://activerecord/7.1.3/lib/active_record/reflection.rb#11
     def _reflections; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#11
+    # source://activerecord/7.1.3/lib/active_record/reflection.rb#11
     def _reflections=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#11
+    # source://activerecord/7.1.3/lib/active_record/reflection.rb#11
     def _reflections?; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _rollback_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _rollback_callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _save_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _save_callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _touch_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _touch_callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _update_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _update_callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _validate_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _validate_callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _validation_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _validation_callbacks=(value); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators; end
 
-    # source://activemodel/7.0.4.2/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators=(value); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators?; end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#144
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#144
     def after_create(*args, **options, &block); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#144
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#144
     def after_destroy(*args, **options, &block); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#144
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#144
     def after_find(*args, **options, &block); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#144
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#144
     def after_initialize(*args, **options, &block); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#144
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#144
     def after_save(*args, **options, &block); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#144
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#144
     def after_touch(*args, **options, &block); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#144
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#144
     def after_update(*args, **options, &block); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#12
+    # source://activerecord/7.1.3/lib/active_record/reflection.rb#12
     def aggregate_reflections; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#12
+    # source://activerecord/7.1.3/lib/active_record/reflection.rb#12
     def aggregate_reflections=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#12
+    # source://activerecord/7.1.3/lib/active_record/reflection.rb#12
     def aggregate_reflections?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#82
+    # source://activerecord/7.1.3/lib/active_record/core.rb#105
     def application_record_class?; end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#137
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#137
     def around_create(*args, **options, &block); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#137
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#137
     def around_destroy(*args, **options, &block); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#137
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#137
     def around_save(*args, **options, &block); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#137
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#137
     def around_update(*args, **options, &block); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#129
+    # source://activerecord/7.1.3/lib/active_record/core.rb#125
     def asynchronous_queries_session; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#133
+    # source://activerecord/7.1.3/lib/active_record/core.rb#129
     def asynchronous_queries_tracker; end
 
-    # source://activemodel/7.0.4.2/lib/active_model/attribute_methods.rb#73
+    # source://activemodel/7.1.3/lib/active_model/attribute_methods.rb#72
     def attribute_aliases; end
 
-    # source://activemodel/7.0.4.2/lib/active_model/attribute_methods.rb#73
+    # source://activemodel/7.1.3/lib/active_model/attribute_methods.rb#72
     def attribute_aliases=(value); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/attribute_methods.rb#73
+    # source://activemodel/7.1.3/lib/active_model/attribute_methods.rb#72
     def attribute_aliases?; end
 
-    # source://activemodel/7.0.4.2/lib/active_model/attribute_methods.rb#74
-    def attribute_method_matchers; end
+    # source://activemodel/7.1.3/lib/active_model/attribute_methods.rb#73
+    def attribute_method_patterns; end
 
-    # source://activemodel/7.0.4.2/lib/active_model/attribute_methods.rb#74
-    def attribute_method_matchers=(value); end
+    # source://activemodel/7.1.3/lib/active_model/attribute_methods.rb#73
+    def attribute_method_patterns=(value); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/attribute_methods.rb#74
-    def attribute_method_matchers?; end
+    # source://activemodel/7.1.3/lib/active_model/attribute_methods.rb#73
+    def attribute_method_patterns?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attributes.rb#11
+    # source://activerecord/7.1.3/lib/active_record/attributes.rb#11
     def attributes_to_define_after_schema_loads; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attributes.rb#11
+    # source://activerecord/7.1.3/lib/active_record/attributes.rb#11
     def attributes_to_define_after_schema_loads=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attributes.rb#11
+    # source://activerecord/7.1.3/lib/active_record/attributes.rb#11
     def attributes_to_define_after_schema_loads?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#13
+    # source://activerecord/7.1.3/lib/active_record/reflection.rb#13
     def automatic_scope_inversing; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#13
+    # source://activerecord/7.1.3/lib/active_record/reflection.rb#13
     def automatic_scope_inversing=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/reflection.rb#13
+    # source://activerecord/7.1.3/lib/active_record/reflection.rb#13
     def automatic_scope_inversing?; end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#130
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#130
     def before_create(*args, **options, &block); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#130
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#130
     def before_destroy(*args, **options, &block); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#130
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#130
     def before_save(*args, **options, &block); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/callbacks.rb#130
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#130
     def before_update(*args, **options, &block); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#68
+    # source://activerecord/7.1.3/lib/active_record/core.rb#89
     def belongs_to_required_by_default; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#68
+    # source://activerecord/7.1.3/lib/active_record/core.rb#89
     def belongs_to_required_by_default=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#68
+    # source://activerecord/7.1.3/lib/active_record/core.rb#89
     def belongs_to_required_by_default?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/integration.rb#16
+    # source://activerecord/7.1.3/lib/active_record/integration.rb#16
     def cache_timestamp_format; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/integration.rb#16
+    # source://activerecord/7.1.3/lib/active_record/integration.rb#16
     def cache_timestamp_format=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/integration.rb#16
+    # source://activerecord/7.1.3/lib/active_record/integration.rb#16
     def cache_timestamp_format?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/integration.rb#24
+    # source://activerecord/7.1.3/lib/active_record/integration.rb#24
     def cache_versioning; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/integration.rb#24
+    # source://activerecord/7.1.3/lib/active_record/integration.rb#24
     def cache_versioning=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/integration.rb#24
+    # source://activerecord/7.1.3/lib/active_record/integration.rb#24
     def cache_versioning?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/integration.rb#32
+    # source://activerecord/7.1.3/lib/active_record/integration.rb#32
     def collection_cache_versioning; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/integration.rb#32
+    # source://activerecord/7.1.3/lib/active_record/integration.rb#32
     def collection_cache_versioning=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/integration.rb#32
+    # source://activerecord/7.1.3/lib/active_record/integration.rb#32
     def collection_cache_versioning?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#56
+    # source://activerecord/7.1.3/lib/active_record/core.rb#77
     def configurations; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#50
+    # source://activerecord/7.1.3/lib/active_record/core.rb#71
     def configurations=(config); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#201
+    # source://activerecord/7.1.3/lib/active_record/core.rb#189
     def connected_to_stack; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#215
+    # source://activerecord/7.1.3/lib/active_record/core.rb#203
     def connection_class; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#211
+    # source://activerecord/7.1.3/lib/active_record/core.rb#199
     def connection_class=(b); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#219
+    # source://activerecord/7.1.3/lib/active_record/core.rb#207
     def connection_class?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#223
+    # source://activerecord/7.1.3/lib/active_record/core.rb#211
     def connection_class_for_self; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#94
+    # source://activerecord/7.1.3/lib/active_record/core.rb#117
     def connection_handler; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#98
+    # source://activerecord/7.1.3/lib/active_record/core.rb#121
     def connection_handler=(handler); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#102
-    def connection_handlers; end
-
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#111
-    def connection_handlers=(handlers); end
-
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#188
+    # source://activerecord/7.1.3/lib/active_record/core.rb#180
     def current_preventing_writes; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#147
+    # source://activerecord/7.1.3/lib/active_record/core.rb#143
     def current_role; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#169
+    # source://activerecord/7.1.3/lib/active_record/core.rb#161
     def current_shard; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#74
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/serialization.rb#20
+    def default_column_serializer; end
+
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/serialization.rb#20
+    def default_column_serializer=(value); end
+
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/serialization.rb#20
+    def default_column_serializer?; end
+
+    # source://activerecord/7.1.3/lib/active_record/core.rb#97
     def default_connection_handler; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#74
+    # source://activerecord/7.1.3/lib/active_record/core.rb#97
     def default_connection_handler=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#74
+    # source://activerecord/7.1.3/lib/active_record/core.rb#97
     def default_connection_handler?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#76
+    # source://activerecord/7.1.3/lib/active_record/core.rb#99
     def default_role; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#76
+    # source://activerecord/7.1.3/lib/active_record/core.rb#99
     def default_role=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#76
+    # source://activerecord/7.1.3/lib/active_record/core.rb#99
     def default_role?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/scoping/default.rb#20
+    # source://activerecord/7.1.3/lib/active_record/scoping/default.rb#20
     def default_scope_override; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/scoping/default.rb#20
+    # source://activerecord/7.1.3/lib/active_record/scoping/default.rb#20
     def default_scope_override=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/scoping/default.rb#19
+    # source://activerecord/7.1.3/lib/active_record/scoping/default.rb#19
     def default_scopes; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/scoping/default.rb#19
+    # source://activerecord/7.1.3/lib/active_record/scoping/default.rb#19
     def default_scopes=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#78
+    # source://activerecord/7.1.3/lib/active_record/core.rb#101
     def default_shard; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#78
+    # source://activerecord/7.1.3/lib/active_record/core.rb#101
     def default_shard=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#78
+    # source://activerecord/7.1.3/lib/active_record/core.rb#101
     def default_shard?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/enum.rb#116
+    # source://activerecord/7.1.3/lib/active_record/enum.rb#167
     def defined_enums; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/enum.rb#116
+    # source://activerecord/7.1.3/lib/active_record/enum.rb#167
     def defined_enums=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/enum.rb#116
+    # source://activerecord/7.1.3/lib/active_record/enum.rb#167
     def defined_enums?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#26
+    # source://activerecord/7.1.3/lib/active_record/core.rb#47
+    def destroy_association_async_batch_size; end
+
+    # source://activerecord/7.1.3/lib/active_record/core.rb#47
+    def destroy_association_async_batch_size=(value); end
+
+    # source://activerecord/7.1.3/lib/active_record/core.rb#27
     def destroy_association_async_job; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#26
+    # source://activerecord/7.1.3/lib/active_record/core.rb#24
     def destroy_association_async_job=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/encryption/encryptable_record.rb#11
+    # source://activerecord/7.1.3/lib/active_record/encryption/encryptable_record.rb#11
     def encrypted_attributes; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/encryption/encryptable_record.rb#11
+    # source://activerecord/7.1.3/lib/active_record/encryption/encryptable_record.rb#11
     def encrypted_attributes=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/encryption/encryptable_record.rb#11
+    # source://activerecord/7.1.3/lib/active_record/encryption/encryptable_record.rb#11
     def encrypted_attributes?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#66
+    # source://activerecord/7.1.3/lib/active_record/core.rb#87
     def enumerate_columns_in_select_statements; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#66
+    # source://activerecord/7.1.3/lib/active_record/core.rb#87
     def enumerate_columns_in_select_statements=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#66
+    # source://activerecord/7.1.3/lib/active_record/core.rb#87
     def enumerate_columns_in_select_statements?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#72
+    # source://activerecord/7.1.3/lib/active_record/token_for.rb#11
+    def generated_token_verifier; end
+
+    # source://activerecord/7.1.3/lib/active_record/token_for.rb#11
+    def generated_token_verifier=(value); end
+
+    # source://activerecord/7.1.3/lib/active_record/core.rb#93
     def has_many_inversing; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#72
+    # source://activerecord/7.1.3/lib/active_record/core.rb#93
     def has_many_inversing=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#72
+    # source://activerecord/7.1.3/lib/active_record/core.rb#93
     def has_many_inversing?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#158
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#165
     def immutable_strings_by_default; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#158
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#165
     def immutable_strings_by_default=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#158
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#165
     def immutable_strings_by_default?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#157
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#164
     def implicit_order_column; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#157
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#164
     def implicit_order_column=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#157
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#164
     def implicit_order_column?; end
 
-    # source://activemodel/7.0.4.2/lib/active_model/serializers/json.rb#15
+    # source://activemodel/7.1.3/lib/active_model/serializers/json.rb#15
     def include_root_in_json; end
 
-    # source://activemodel/7.0.4.2/lib/active_model/serializers/json.rb#15
+    # source://activemodel/7.1.3/lib/active_model/serializers/json.rb#15
     def include_root_in_json=(value); end
 
-    # source://activemodel/7.0.4.2/lib/active_model/serializers/json.rb#15
+    # source://activemodel/7.1.3/lib/active_model/serializers/json.rb#15
     def include_root_in_json?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#160
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#167
     def inheritance_column; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#311
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#321
     def inheritance_column=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#160
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#167
     def inheritance_column?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#155
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#162
     def internal_metadata_table_name; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#155
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#162
     def internal_metadata_table_name=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#155
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#162
     def internal_metadata_table_name?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/store.rb#99
+    # source://activerecord/7.1.3/lib/active_record/store.rb#101
     def local_stored_attributes; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/store.rb#99
+    # source://activerecord/7.1.3/lib/active_record/store.rb#101
     def local_stored_attributes=(_arg0); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/locking/optimistic.rb#56
+    # source://activerecord/7.1.3/lib/active_record/locking/optimistic.rb#56
     def lock_optimistically; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/locking/optimistic.rb#56
+    # source://activerecord/7.1.3/lib/active_record/locking/optimistic.rb#56
     def lock_optimistically=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/locking/optimistic.rb#56
+    # source://activerecord/7.1.3/lib/active_record/locking/optimistic.rb#56
     def lock_optimistically?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#20
+    # source://activerecord/7.1.3/lib/active_record/core.rb#22
     def logger; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#20
+    # source://activerecord/7.1.3/lib/active_record/core.rb#22
     def logger=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#20
+    # source://activerecord/7.1.3/lib/active_record/core.rb#22
     def logger?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/nested_attributes.rb#15
+    # source://activerecord/7.1.3/lib/active_record/nested_attributes.rb#15
     def nested_attributes_options; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/nested_attributes.rb#15
+    # source://activerecord/7.1.3/lib/active_record/nested_attributes.rb#15
     def nested_attributes_options=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/nested_attributes.rb#15
+    # source://activerecord/7.1.3/lib/active_record/nested_attributes.rb#15
     def nested_attributes_options?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/dirty.rb#18
+    # source://activerecord/7.1.3/lib/active_record/normalization.rb#8
+    def normalized_attributes; end
+
+    # source://activerecord/7.1.3/lib/active_record/normalization.rb#8
+    def normalized_attributes=(value); end
+
+    # source://activerecord/7.1.3/lib/active_record/normalization.rb#8
+    def normalized_attributes?; end
+
+    # source://activemodel/7.1.3/lib/active_model/conversion.rb#32
+    def param_delimiter; end
+
+    # source://activemodel/7.1.3/lib/active_model/conversion.rb#32
+    def param_delimiter=(value); end
+
+    # source://activemodel/7.1.3/lib/active_model/conversion.rb#32
+    def param_delimiter?; end
+
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/dirty.rb#50
     def partial_inserts; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/dirty.rb#18
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/dirty.rb#50
     def partial_inserts=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/dirty.rb#18
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/dirty.rb#50
     def partial_inserts?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/dirty.rb#17
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/dirty.rb#49
     def partial_updates; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/dirty.rb#17
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/dirty.rb#49
     def partial_updates=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/dirty.rb#17
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/dirty.rb#49
     def partial_updates?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#156
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#163
     def pluralize_table_names; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#156
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#163
     def pluralize_table_names=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#156
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#163
     def pluralize_table_names?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#151
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#158
     def primary_key_prefix_type; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#151
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#158
     def primary_key_prefix_type=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#151
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#158
     def primary_key_prefix_type?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/timestamp.rb#47
+    # source://activerecord/7.1.3/lib/active_record/timestamp.rb#47
     def record_timestamps; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/timestamp.rb#47
+    # source://activerecord/7.1.3/lib/active_record/timestamp.rb#47
     def record_timestamps=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/timestamp.rb#47
+    # source://activerecord/7.1.3/lib/active_record/timestamp.rb#47
     def record_timestamps?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#154
+    # source://activerecord/7.1.3/lib/active_record/core.rb#95
+    def run_commit_callbacks_on_first_saved_instances_in_transaction; end
+
+    # source://activerecord/7.1.3/lib/active_record/core.rb#95
+    def run_commit_callbacks_on_first_saved_instances_in_transaction=(value); end
+
+    # source://activerecord/7.1.3/lib/active_record/core.rb#95
+    def run_commit_callbacks_on_first_saved_instances_in_transaction?; end
+
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#161
     def schema_migrations_table_name; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#154
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#161
     def schema_migrations_table_name=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#154
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#161
     def schema_migrations_table_name?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#80
+    # source://activerecord/7.1.3/lib/active_record/core.rb#103
     def shard_selector; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#80
+    # source://activerecord/7.1.3/lib/active_record/core.rb#103
     def shard_selector=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#80
+    # source://activerecord/7.1.3/lib/active_record/core.rb#103
     def shard_selector?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/signed_id.rb#13
+    # source://activerecord/7.1.3/lib/active_record/signed_id.rb#13
     def signed_id_verifier_secret; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/signed_id.rb#13
+    # source://activerecord/7.1.3/lib/active_record/signed_id.rb#13
     def signed_id_verifier_secret=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/signed_id.rb#13
+    # source://activerecord/7.1.3/lib/active_record/signed_id.rb#13
     def signed_id_verifier_secret?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#71
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#67
     def skip_time_zone_conversion_for_attributes; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#71
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#67
     def skip_time_zone_conversion_for_attributes=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#71
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#67
     def skip_time_zone_conversion_for_attributes?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/inheritance.rb#42
+    # source://activerecord/7.1.3/lib/active_record/inheritance.rb#43
     def store_full_class_name; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/inheritance.rb#42
+    # source://activerecord/7.1.3/lib/active_record/inheritance.rb#43
     def store_full_class_name=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/inheritance.rb#42
+    # source://activerecord/7.1.3/lib/active_record/inheritance.rb#43
     def store_full_class_name?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/inheritance.rb#46
+    # source://activerecord/7.1.3/lib/active_record/inheritance.rb#47
     def store_full_sti_class; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/inheritance.rb#46
+    # source://activerecord/7.1.3/lib/active_record/inheritance.rb#47
     def store_full_sti_class=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/inheritance.rb#46
+    # source://activerecord/7.1.3/lib/active_record/inheritance.rb#47
     def store_full_sti_class?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#70
+    # source://activerecord/7.1.3/lib/active_record/core.rb#91
     def strict_loading_by_default; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#70
+    # source://activerecord/7.1.3/lib/active_record/core.rb#91
     def strict_loading_by_default=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#70
+    # source://activerecord/7.1.3/lib/active_record/core.rb#91
     def strict_loading_by_default?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/core.rb#238
+    # source://activerecord/7.1.3/lib/active_record/core.rb#226
     def strict_loading_violation!(owner:, reflection:); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#152
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#159
     def table_name_prefix; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#152
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#159
     def table_name_prefix=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#152
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#159
     def table_name_prefix?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#153
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#160
     def table_name_suffix; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#153
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#160
     def table_name_suffix=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#153
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#160
     def table_name_suffix?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#70
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#66
     def time_zone_aware_attributes; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#70
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#66
     def time_zone_aware_attributes=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#70
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#66
     def time_zone_aware_attributes?; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#72
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#68
     def time_zone_aware_types; end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#72
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#68
     def time_zone_aware_types=(value); end
 
-    # source://activerecord/7.0.4.2/lib/active_record/attribute_methods/time_zone_conversion.rb#72
+    # source://activerecord/7.1.3/lib/active_record/attribute_methods/time_zone_conversion.rb#68
     def time_zone_aware_types?; end
+
+    # source://activerecord/7.1.3/lib/active_record/token_for.rb#10
+    def token_definitions; end
+
+    # source://activerecord/7.1.3/lib/active_record/token_for.rb#10
+    def token_definitions=(value); end
 
     private
 
-    # source://activerecord/7.0.4.2/lib/active_record/model_schema.rb#160
+    # source://activerecord/7.1.3/lib/active_record/model_schema.rb#167
     def _inheritance_column=(value); end
   end
 end

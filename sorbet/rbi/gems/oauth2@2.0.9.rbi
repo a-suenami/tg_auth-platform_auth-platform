@@ -754,16 +754,16 @@ class OAuth2::Strategy::Assertion < ::OAuth2::Strategy::Base
   #   get_token(claim_set, {:algorithm => 'HS256', :key => 'secret_key'})
   #   get_token(claim_set, {:algorithm => 'RS256', :key => OpenSSL::PKCS12.new(File.read('my_key.p12'), 'not_secret')})
   #
-  # @option algorithm
-  # @option key
   # @option request_opts
-  # @param claims [Hash] the hash representation of the claims that should be encoded as a JWT (JSON Web Token)
-  # @param encoding_opts [Hash] a hash containing instructions on how the JWT should be encoded
+  # @option key
+  # @option algorithm
   # @param request_opts [Hash] options that will be used to assemble the request
   # @param response_opts [Hash] this will be merged with the token response to create the AccessToken object
   #   @see the access_token_opts argument to Client#get_token
   # @param algorithm [Hash] a customizable set of options
   # @param key [Hash] a customizable set of options
+  # @param claims [Hash] the hash representation of the claims that should be encoded as a JWT (JSON Web Token)
+  # @param encoding_opts [Hash] a hash containing instructions on how the JWT should be encoded
   #
   # source://oauth2//lib/oauth2/strategy/assertion.rb#79
   def get_token(claims, encoding_opts, request_opts = T.unsafe(nil), response_opts = T.unsafe(nil)); end
