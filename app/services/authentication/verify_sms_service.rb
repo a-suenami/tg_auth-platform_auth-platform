@@ -11,8 +11,8 @@ module Authentication
 
       if !Rails.env.production? && Settings.super_mode == true # SUPER_MODE では常に成功
         user.sms_verified = true
-        user.phone_number = '+810000000000'
-        user.save!
+        user.phone_number = "+81#{rand(7..9)}0#{rand(70000000..90000000)}"
+        user.save!(validate: false)
         return user
       end
 
