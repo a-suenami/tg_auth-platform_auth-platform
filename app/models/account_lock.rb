@@ -20,7 +20,7 @@ class AccountLock < ApplicationRecord
   sig { returns(T::Boolean) }
   def locked?
     return false if self.failed_attempts.nil?
-    return false if self.failed_attempts.present? && self.failed_attempts < Settings.account_lock.max_attempts
+    return false if self.failed_attempts < Settings.account_lock.max_attempts
 
     if self.lock_expired_at && T.must(self.lock_expired_at) < Time.zone.now
       self.unlock!

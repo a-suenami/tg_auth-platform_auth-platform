@@ -3,3 +3,9 @@
 # Please instead update this file by running `bin/tapioca todo`.
 
 # typed: false
+module Prism::DSL::Source; end
+module ::Turbo::DriveHelper; end
+module ::Turbo::FramesHelper; end
+module ::Turbo::IncludesHelper; end
+module ::Turbo::StreamsHelper; end
+module ::Turbo::Streams::ActionHelper; end
