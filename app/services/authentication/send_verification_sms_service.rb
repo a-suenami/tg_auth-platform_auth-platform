@@ -41,7 +41,7 @@ module Authentication
     sig { params(sms_verifier: Users::SmsVerifier, delivery_type: T.nilable(String)).returns(T::Boolean) }
     def send_verification_sms(sms_verifier, delivery_type)
       if !Rails.env.production? && Settings.super_mode == true # SUPER_MODE では送らない
-        sleep(rand(0.1..0.5))
+        sleep(rand(0.05..0.1))
         sms_verifier.delivery_type = delivery_type
         sms_verifier.sms_sender = 'super_mode'
         sms_verifier.sms_sid = 'SUPER_MODE'
