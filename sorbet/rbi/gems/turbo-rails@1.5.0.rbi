@@ -57,6 +57,7 @@ module Turbo::Broadcastable; end
 # source://turbo-rails//lib/turbo/broadcastable/test_helper.rb#3
 module Turbo::Broadcastable::TestHelper
   extend ::ActiveSupport::Concern
+  include ::ActionCable::TestHelper
 
   # Asserts that no `<turbo-stream>` elements were broadcast over Action Cable
   #

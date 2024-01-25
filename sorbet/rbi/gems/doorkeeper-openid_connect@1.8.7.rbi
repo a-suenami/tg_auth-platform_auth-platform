@@ -384,12 +384,6 @@ module Doorkeeper::OpenidConnect::AccessGrant
   end
 end
 
-module Doorkeeper::OpenidConnect::AuthorizationsExtension
-  private
-
-  def pre_auth_param_fields; end
-end
-
 # source://doorkeeper-openid_connect//lib/doorkeeper/openid_connect/claims/claim.rb#5
 module Doorkeeper::OpenidConnect::Claims; end
 
@@ -595,43 +589,10 @@ class Doorkeeper::OpenidConnect::Config::Builder
   def subject_types_supported(*args, &block); end
 end
 
-class Doorkeeper::OpenidConnect::DiscoveryController < ::Doorkeeper::ApplicationMetalController
-  def keys; end
-  def provider; end
-  def webfinger; end
-
-  private
-
-  def authorization_url_options; end
-  def code_challenge_methods_supported(doorkeeper); end
-  def discovery_url_default_options; end
-  def discovery_url_options; end
-  def grant_types_supported(doorkeeper); end
-  def introspection_url_options; end
-  def issuer; end
-  def jwks_url_options; end
-  def keys_response; end
-  def protocol; end
-  def provider_response; end
-  def response_modes_supported(doorkeeper); end
-  def revocation_url_options; end
-  def token_url_options; end
-  def userinfo_url_options; end
-  def webfinger_response; end
-  def webfinger_url_options; end
-
-  class << self
-    # source://actionpack/7.0.4.3/lib/action_controller/metal.rb#210
-    def middleware_stack; end
-  end
-end
-
-Doorkeeper::OpenidConnect::DiscoveryController::WEBFINGER_RELATION = T.let(T.unsafe(nil), String)
-
 # source://doorkeeper-openid_connect//lib/doorkeeper/openid_connect/engine.rb#5
 class Doorkeeper::OpenidConnect::Engine < ::Rails::Engine
   class << self
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks; end
   end
 end
@@ -740,22 +701,22 @@ class Doorkeeper::OpenidConnect::IdToken
   # source://doorkeeper-openid_connect//lib/doorkeeper/openid_connect/id_token.rb#10
   def initialize(access_token, nonce = T.unsafe(nil)); end
 
-  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks; end
 
-  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks?; end
 
-  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_validate_callbacks(&block); end
 
-  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _validate_callbacks; end
 
-  # source://activemodel/7.0.4.3/lib/active_model/validations.rb#52
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#71
   def _validators; end
 
-  # source://activemodel/7.0.4.3/lib/active_model/validations.rb#52
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#71
   def _validators?; end
 
   # source://doorkeeper-openid_connect//lib/doorkeeper/openid_connect/id_token.rb#29
@@ -767,15 +728,15 @@ class Doorkeeper::OpenidConnect::IdToken
   # source://doorkeeper-openid_connect//lib/doorkeeper/openid_connect/id_token.rb#17
   def claims; end
 
-  # source://activemodel/7.0.4.3/lib/active_model/naming.rb#244
-  def model_name(*_arg0, **_arg1, &_arg2); end
+  # source://activemodel/7.1.3/lib/active_model/naming.rb#255
+  def model_name(&block); end
 
   # Returns the value of attribute nonce.
   #
   # source://doorkeeper-openid_connect//lib/doorkeeper/openid_connect/id_token.rb#8
   def nonce; end
 
-  # source://activemodel/7.0.4.3/lib/active_model/validations.rb#48
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#67
   def validation_context; end
 
   private
@@ -798,32 +759,32 @@ class Doorkeeper::OpenidConnect::IdToken
   # source://doorkeeper-openid_connect//lib/doorkeeper/openid_connect/id_token.rb#51
   def subject; end
 
-  # source://activemodel/7.0.4.3/lib/active_model/validations.rb#48
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#67
   def validation_context=(_arg0); end
 
   class << self
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks=(value); end
 
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks?; end
 
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _validate_callbacks; end
 
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _validate_callbacks=(value); end
 
-    # source://activemodel/7.0.4.3/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators; end
 
-    # source://activemodel/7.0.4.3/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators=(value); end
 
-    # source://activemodel/7.0.4.3/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators?; end
   end
 end
@@ -854,7 +815,7 @@ class Doorkeeper::OpenidConnect::IdTokenToken < ::Doorkeeper::OpenidConnect::IdT
   def at_hash; end
 
   class << self
-    # source://activemodel/7.0.4.3/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators; end
   end
 end
@@ -1082,49 +1043,52 @@ class Doorkeeper::OpenidConnect::Request < ::ActiveRecord::Base
   include ::Doorkeeper::OpenidConnect::Request::GeneratedAttributeMethods
   include ::Doorkeeper::OpenidConnect::Request::GeneratedAssociationMethods
 
-  # source://activerecord/7.0.4.3/lib/active_record/autosave_association.rb#160
+  # source://activerecord/7.1.3/lib/active_record/autosave_association.rb#160
   def autosave_associated_records_for_access_grant(*args); end
 
   class << self
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activerecord/7.0.4.3/lib/active_record/reflection.rb#11
+    # source://activerecord/7.1.3/lib/active_record/reflection.rb#11
     def _reflections; end
 
-    # source://activemodel/7.0.4.3/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators; end
 
-    # source://activerecord/7.0.4.3/lib/active_record/enum.rb#116
+    # source://activerecord/7.1.3/lib/active_record/enum.rb#167
     def defined_enums; end
   end
 end
 
 # source://doorkeeper-openid_connect//lib/doorkeeper/openid_connect/orm/active_record/request.rb#0
 module Doorkeeper::OpenidConnect::Request::GeneratedAssociationMethods
-  # source://activerecord/7.0.4.3/lib/active_record/associations/builder/association.rb#103
+  # source://activerecord/7.1.3/lib/active_record/associations/builder/association.rb#103
   def access_grant; end
 
-  # source://activerecord/7.0.4.3/lib/active_record/associations/builder/association.rb#111
+  # source://activerecord/7.1.3/lib/active_record/associations/builder/association.rb#111
   def access_grant=(value); end
 
-  # source://activerecord/7.0.4.3/lib/active_record/associations/builder/belongs_to.rb#132
+  # source://activerecord/7.1.3/lib/active_record/associations/builder/belongs_to.rb#145
   def access_grant_changed?; end
 
-  # source://activerecord/7.0.4.3/lib/active_record/associations/builder/belongs_to.rb#136
+  # source://activerecord/7.1.3/lib/active_record/associations/builder/belongs_to.rb#149
   def access_grant_previously_changed?; end
 
-  # source://activerecord/7.0.4.3/lib/active_record/associations/builder/singular_association.rb#28
+  # source://activerecord/7.1.3/lib/active_record/associations/builder/singular_association.rb#32
   def build_access_grant(*args, &block); end
 
-  # source://activerecord/7.0.4.3/lib/active_record/associations/builder/singular_association.rb#32
+  # source://activerecord/7.1.3/lib/active_record/associations/builder/singular_association.rb#36
   def create_access_grant(*args, &block); end
 
-  # source://activerecord/7.0.4.3/lib/active_record/associations/builder/singular_association.rb#36
+  # source://activerecord/7.1.3/lib/active_record/associations/builder/singular_association.rb#40
   def create_access_grant!(*args, &block); end
 
-  # source://activerecord/7.0.4.3/lib/active_record/associations/builder/singular_association.rb#19
+  # source://activerecord/7.1.3/lib/active_record/associations/builder/singular_association.rb#19
   def reload_access_grant; end
+
+  # source://activerecord/7.1.3/lib/active_record/associations/builder/singular_association.rb#23
+  def reset_access_grant; end
 end
 
 # source://doorkeeper-openid_connect//lib/doorkeeper/openid_connect/orm/active_record/request.rb#0
@@ -1148,22 +1112,22 @@ class Doorkeeper::OpenidConnect::UserInfo
   # source://doorkeeper-openid_connect//lib/doorkeeper/openid_connect/user_info.rb#8
   def initialize(access_token); end
 
-  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks; end
 
-  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks?; end
 
-  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_validate_callbacks(&block); end
 
-  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _validate_callbacks; end
 
-  # source://activemodel/7.0.4.3/lib/active_model/validations.rb#52
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#71
   def _validators; end
 
-  # source://activemodel/7.0.4.3/lib/active_model/validations.rb#52
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#71
   def _validators?; end
 
   # source://doorkeeper-openid_connect//lib/doorkeeper/openid_connect/user_info.rb#18
@@ -1172,10 +1136,10 @@ class Doorkeeper::OpenidConnect::UserInfo
   # source://doorkeeper-openid_connect//lib/doorkeeper/openid_connect/user_info.rb#12
   def claims; end
 
-  # source://activemodel/7.0.4.3/lib/active_model/naming.rb#244
-  def model_name(*_arg0, **_arg1, &_arg2); end
+  # source://activemodel/7.1.3/lib/active_model/naming.rb#255
+  def model_name(&block); end
 
-  # source://activemodel/7.0.4.3/lib/active_model/validations.rb#48
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#67
   def validation_context; end
 
   private
@@ -1189,45 +1153,33 @@ class Doorkeeper::OpenidConnect::UserInfo
   # source://doorkeeper-openid_connect//lib/doorkeeper/openid_connect/user_info.rb#24
   def subject; end
 
-  # source://activemodel/7.0.4.3/lib/active_model/validations.rb#48
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#67
   def validation_context=(_arg0); end
 
   class << self
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks=(value); end
 
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks?; end
 
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _validate_callbacks; end
 
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _validate_callbacks=(value); end
 
-    # source://activemodel/7.0.4.3/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators; end
 
-    # source://activemodel/7.0.4.3/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators=(value); end
 
-    # source://activemodel/7.0.4.3/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators?; end
-  end
-end
-
-class Doorkeeper::OpenidConnect::UserinfoController < ::Doorkeeper::ApplicationMetalController
-  def show; end
-
-  class << self
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
-    def __callbacks; end
-
-    # source://actionpack/7.0.4.3/lib/action_controller/metal.rb#210
-    def middleware_stack; end
   end
 end
 

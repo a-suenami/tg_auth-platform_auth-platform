@@ -8,21 +8,43 @@ class Google::Cloud::RecaptchaEnterprise::V1::Event
   sig do
     params(
       expected_action: T.nilable(String),
+      express: T.nilable(T::Boolean),
+      firewall_policy_evaluation: T.nilable(T::Boolean),
       hashed_account_id: T.nilable(String),
+      headers: T.nilable(T.any(Google::Protobuf::RepeatedField[String], T::Array[String])),
+      ja3: T.nilable(String),
+      requested_uri: T.nilable(String),
       site_key: T.nilable(String),
       token: T.nilable(String),
       transaction_data: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::TransactionData),
       user_agent: T.nilable(String),
-      user_ip_address: T.nilable(String)
+      user_info: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::UserInfo),
+      user_ip_address: T.nilable(String),
+      waf_token_assessment: T.nilable(T::Boolean)
     ).void
   end
-  def initialize(expected_action: nil, hashed_account_id: nil, site_key: nil, token: nil, transaction_data: nil, user_agent: nil, user_ip_address: nil); end
+  def initialize(expected_action: nil, express: nil, firewall_policy_evaluation: nil, hashed_account_id: nil, headers: T.unsafe(nil), ja3: nil, requested_uri: nil, site_key: nil, token: nil, transaction_data: nil, user_agent: nil, user_info: nil, user_ip_address: nil, waf_token_assessment: nil); end
 
   sig { void }
   def clear_expected_action; end
 
   sig { void }
+  def clear_express; end
+
+  sig { void }
+  def clear_firewall_policy_evaluation; end
+
+  sig { void }
   def clear_hashed_account_id; end
+
+  sig { void }
+  def clear_headers; end
+
+  sig { void }
+  def clear_ja3; end
+
+  sig { void }
+  def clear_requested_uri; end
 
   sig { void }
   def clear_site_key; end
@@ -37,7 +59,13 @@ class Google::Cloud::RecaptchaEnterprise::V1::Event
   def clear_user_agent; end
 
   sig { void }
+  def clear_user_info; end
+
+  sig { void }
   def clear_user_ip_address; end
+
+  sig { void }
+  def clear_waf_token_assessment; end
 
   sig { returns(String) }
   def expected_action; end
@@ -45,11 +73,41 @@ class Google::Cloud::RecaptchaEnterprise::V1::Event
   sig { params(value: String).void }
   def expected_action=(value); end
 
+  sig { returns(T::Boolean) }
+  def express; end
+
+  sig { params(value: T::Boolean).void }
+  def express=(value); end
+
+  sig { returns(T::Boolean) }
+  def firewall_policy_evaluation; end
+
+  sig { params(value: T::Boolean).void }
+  def firewall_policy_evaluation=(value); end
+
   sig { returns(String) }
   def hashed_account_id; end
 
   sig { params(value: String).void }
   def hashed_account_id=(value); end
+
+  sig { returns(Google::Protobuf::RepeatedField[String]) }
+  def headers; end
+
+  sig { params(value: Google::Protobuf::RepeatedField[String]).void }
+  def headers=(value); end
+
+  sig { returns(String) }
+  def ja3; end
+
+  sig { params(value: String).void }
+  def ja3=(value); end
+
+  sig { returns(String) }
+  def requested_uri; end
+
+  sig { params(value: String).void }
+  def requested_uri=(value); end
 
   sig { returns(String) }
   def site_key; end
@@ -75,9 +133,21 @@ class Google::Cloud::RecaptchaEnterprise::V1::Event
   sig { params(value: String).void }
   def user_agent=(value); end
 
+  sig { returns(T.nilable(Google::Cloud::RecaptchaEnterprise::V1::UserInfo)) }
+  def user_info; end
+
+  sig { params(value: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::UserInfo)).void }
+  def user_info=(value); end
+
   sig { returns(String) }
   def user_ip_address; end
 
   sig { params(value: String).void }
   def user_ip_address=(value); end
+
+  sig { returns(T::Boolean) }
+  def waf_token_assessment; end
+
+  sig { params(value: T::Boolean).void }
+  def waf_token_assessment=(value); end
 end

@@ -10,14 +10,16 @@ class Google::Cloud::RecaptchaEnterprise::V1::Assessment
       account_defender_assessment: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::AccountDefenderAssessment),
       account_verification: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::AccountVerificationInfo),
       event: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::Event),
+      firewall_policy_assessment: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FirewallPolicyAssessment),
       fraud_prevention_assessment: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FraudPreventionAssessment),
+      fraud_signals: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FraudSignals),
       name: T.nilable(String),
       private_password_leak_verification: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::PrivatePasswordLeakVerification),
       risk_analysis: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::RiskAnalysis),
       token_properties: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::TokenProperties)
     ).void
   end
-  def initialize(account_defender_assessment: nil, account_verification: nil, event: nil, fraud_prevention_assessment: nil, name: nil, private_password_leak_verification: nil, risk_analysis: nil, token_properties: nil); end
+  def initialize(account_defender_assessment: nil, account_verification: nil, event: nil, firewall_policy_assessment: nil, fraud_prevention_assessment: nil, fraud_signals: nil, name: nil, private_password_leak_verification: nil, risk_analysis: nil, token_properties: nil); end
 
   sig { returns(T.nilable(Google::Cloud::RecaptchaEnterprise::V1::AccountDefenderAssessment)) }
   def account_defender_assessment; end
@@ -41,7 +43,13 @@ class Google::Cloud::RecaptchaEnterprise::V1::Assessment
   def clear_event; end
 
   sig { void }
+  def clear_firewall_policy_assessment; end
+
+  sig { void }
   def clear_fraud_prevention_assessment; end
+
+  sig { void }
+  def clear_fraud_signals; end
 
   sig { void }
   def clear_name; end
@@ -61,11 +69,23 @@ class Google::Cloud::RecaptchaEnterprise::V1::Assessment
   sig { params(value: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::Event)).void }
   def event=(value); end
 
+  sig { returns(T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FirewallPolicyAssessment)) }
+  def firewall_policy_assessment; end
+
+  sig { params(value: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FirewallPolicyAssessment)).void }
+  def firewall_policy_assessment=(value); end
+
   sig { returns(T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FraudPreventionAssessment)) }
   def fraud_prevention_assessment; end
 
   sig { params(value: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FraudPreventionAssessment)).void }
   def fraud_prevention_assessment=(value); end
+
+  sig { returns(T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FraudSignals)) }
+  def fraud_signals; end
+
+  sig { params(value: T.nilable(Google::Cloud::RecaptchaEnterprise::V1::FraudSignals)).void }
+  def fraud_signals=(value); end
 
   sig { returns(String) }
   def name; end

@@ -5,8 +5,17 @@
 # Please instead update this file by running `bin/tapioca dsl Google::Cloud::RecaptchaEnterprise::V1::RelatedAccountGroupMembership`.
 
 class Google::Cloud::RecaptchaEnterprise::V1::RelatedAccountGroupMembership
-  sig { params(hashed_account_id: T.nilable(String), name: T.nilable(String)).void }
-  def initialize(hashed_account_id: nil, name: nil); end
+  sig { params(account_id: T.nilable(String), hashed_account_id: T.nilable(String), name: T.nilable(String)).void }
+  def initialize(account_id: nil, hashed_account_id: nil, name: nil); end
+
+  sig { returns(String) }
+  def account_id; end
+
+  sig { params(value: String).void }
+  def account_id=(value); end
+
+  sig { void }
+  def clear_account_id; end
 
   sig { void }
   def clear_hashed_account_id; end

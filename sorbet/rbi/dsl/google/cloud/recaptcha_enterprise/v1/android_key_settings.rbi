@@ -8,10 +8,11 @@ class Google::Cloud::RecaptchaEnterprise::V1::AndroidKeySettings
   sig do
     params(
       allow_all_package_names: T.nilable(T::Boolean),
-      allowed_package_names: T.nilable(T.any(Google::Protobuf::RepeatedField[String], T::Array[String]))
+      allowed_package_names: T.nilable(T.any(Google::Protobuf::RepeatedField[String], T::Array[String])),
+      support_non_google_app_store_distribution: T.nilable(T::Boolean)
     ).void
   end
-  def initialize(allow_all_package_names: nil, allowed_package_names: T.unsafe(nil)); end
+  def initialize(allow_all_package_names: nil, allowed_package_names: T.unsafe(nil), support_non_google_app_store_distribution: nil); end
 
   sig { returns(T::Boolean) }
   def allow_all_package_names; end
@@ -30,4 +31,13 @@ class Google::Cloud::RecaptchaEnterprise::V1::AndroidKeySettings
 
   sig { void }
   def clear_allowed_package_names; end
+
+  sig { void }
+  def clear_support_non_google_app_store_distribution; end
+
+  sig { returns(T::Boolean) }
+  def support_non_google_app_store_distribution; end
+
+  sig { params(value: T::Boolean).void }
+  def support_non_google_app_store_distribution=(value); end
 end

@@ -140,14 +140,150 @@ RSpec::Rails::Assertions = Minitest::Assertions
 # @api public
 #
 # source://rspec-rails//lib/rspec/rails/example/channel_example_group.rb#8
-module RSpec::Rails::ChannelExampleGroup; end
+module RSpec::Rails::ChannelExampleGroup
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::RSpec::Rails::SetupAndTeardownAdapter
+  include ::RSpec::Rails::MinitestLifecycleAdapter
+  include ::RSpec::Rails::MinitestAssertionAdapter
+  include ::ActiveRecord::TestFixtures
+  include ::RSpec::Rails::FixtureSupport::Fixtures
+  include ::RSpec::Rails::FixtureSupport
+  include ::RSpec::Rails::RailsExampleGroup
+  include ::ActiveSupport::Testing::ConstantLookup
+  include ::ActionCable::Connection::TestCase::Behavior
+  include ::ActionCable::Channel::TestCase::Behavior
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::RSpec::Rails::SetupAndTeardownAdapter::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::MinitestAssertionAdapter::ClassMethods
+  mixes_in_class_methods ::ActiveRecord::TestFixtures::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::FixtureSupport::Fixtures::ClassMethods
+  mixes_in_class_methods ::ActiveSupport::Testing::ConstantLookup::ClassMethods
+  mixes_in_class_methods ::ActionCable::Connection::TestCase::Behavior::ClassMethods
+  mixes_in_class_methods ::ActionCable::Channel::TestCase::Behavior::ClassMethods
+  mixes_in_class_methods ::RSpec::Rails::ChannelExampleGroup::ClassMethods
+
+  # Checks that the connection attempt has been rejected.
+  #
+  # @api public
+  # @example
+  #   expect { connect }.to have_rejected_connection
+  #
+  # source://rspec-rails//lib/rspec/rails/example/channel_example_group.rb#58
+  def have_rejected_connection; end
+
+  # Checks that the channel has been subscribed to a stream for the given model
+  #
+  # @api public
+  # @example
+  #   expect(subscription).to have_stream_for(user)
+  #
+  # source://rspec-rails//lib/rspec/rails/example/channel_example_group.rb#86
+  def have_stream_for(object); end
+
+  # Checks that the channel has been subscribed to the given stream
+  #
+  # @api public
+  # @example
+  #   expect(subscription).to have_stream_from("chat_1")
+  #
+  # source://rspec-rails//lib/rspec/rails/example/channel_example_group.rb#76
+  def have_stream_from(stream); end
+
+  # Checks that the subscription is subscribed to at least one stream.
+  #
+  # @api public
+  # @example
+  #   expect(subscription).to have_streams
+  #
+  # source://rspec-rails//lib/rspec/rails/example/channel_example_group.rb#66
+  def have_streams; end
+
+  module GeneratedClassMethods
+    def _channel_class; end
+    def _channel_class=(value); end
+    def _channel_class?; end
+    def _connection_class; end
+    def _connection_class=(value); end
+    def _connection_class?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_paths; end
+    def fixture_paths=(value); end
+    def fixture_paths?; end
+    def fixture_sets; end
+    def fixture_sets=(value); end
+    def fixture_sets?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def lock_threads; end
+    def lock_threads=(value); end
+    def lock_threads?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+
+  module GeneratedInstanceMethods
+    def _channel_class; end
+    def _channel_class=(value); end
+    def _channel_class?; end
+    def _connection_class; end
+    def _connection_class=(value); end
+    def _connection_class?; end
+    def fixture_class_names; end
+    def fixture_class_names=(value); end
+    def fixture_class_names?; end
+    def fixture_paths; end
+    def fixture_paths?; end
+    def fixture_sets; end
+    def fixture_sets=(value); end
+    def fixture_sets?; end
+    def fixture_table_names; end
+    def fixture_table_names=(value); end
+    def fixture_table_names?; end
+    def lock_threads; end
+    def lock_threads=(value); end
+    def lock_threads?; end
+    def pre_loaded_fixtures; end
+    def pre_loaded_fixtures=(value); end
+    def pre_loaded_fixtures?; end
+    def use_instantiated_fixtures; end
+    def use_instantiated_fixtures=(value); end
+    def use_instantiated_fixtures?; end
+    def use_transactional_tests; end
+    def use_transactional_tests=(value); end
+    def use_transactional_tests?; end
+  end
+end
 
 # Class-level DSL for channel specs.
 #
 # @api public
 #
 # source://rspec-rails//lib/rspec/rails/example/channel_example_group.rb#10
-module RSpec::Rails::ChannelExampleGroup::ClassMethods; end
+module RSpec::Rails::ChannelExampleGroup::ClassMethods
+  # @api public
+  # @private
+  #
+  # source://rspec-rails//lib/rspec/rails/example/channel_example_group.rb#32
+  def channel_class; end
+
+  # @api public
+  # @private
+  #
+  # source://rspec-rails//lib/rspec/rails/example/channel_example_group.rb#43
+  def connection_class; end
+end
 
 # Fake class to document RSpec Rails configuration options. In practice,
 # these are dynamically added to the normal RSpec configuration object.
@@ -1114,6 +1250,45 @@ module RSpec::Rails::Matchers
   # source://rspec-rails//lib/rspec/rails/matchers/be_valid.rb#44
   def be_valid(*args); end
 
+  # Passes if a message has been sent to a stream/object inside a block.
+  # May chain `at_least`, `at_most` or `exactly` to specify a number of times.
+  # To specify channel from which message has been broadcasted to object use `from_channel`.
+  #
+  # @api public
+  # @example
+  #   expect {
+  #   ActionCable.server.broadcast "messages", text: 'Hi!'
+  #   }.to have_broadcasted_to("messages")
+  #
+  #   expect {
+  #   SomeChannel.broadcast_to(user)
+  #   }.to have_broadcasted_to(user).from_channel(SomeChannel)
+  #
+  #   # Using alias
+  #   expect {
+  #   ActionCable.server.broadcast "messages", text: 'Hi!'
+  #   }.to broadcast_to("messages")
+  #
+  #   expect {
+  #   ActionCable.server.broadcast "messages", text: 'Hi!'
+  #   ActionCable.server.broadcast "all", text: 'Hi!'
+  #   }.to have_broadcasted_to("messages").exactly(:once)
+  #
+  #   expect {
+  #   3.times { ActionCable.server.broadcast "messages", text: 'Hi!' }
+  #   }.to have_broadcasted_to("messages").at_least(2).times
+  #
+  #   expect {
+  #   ActionCable.server.broadcast "messages", text: 'Hi!'
+  #   }.to have_broadcasted_to("messages").at_most(:twice)
+  #
+  #   expect {
+  #   ActionCable.server.broadcast "messages", text: 'Hi!'
+  #   }.to have_broadcasted_to("messages").with(text: 'Hi!')
+  #
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable.rb#48
+  def broadcast_to(target = T.unsafe(nil)); end
+
   # Passes if an email has been enqueued inside block.
   # May chain with to specify expected arguments.
   # May chain at_least, at_most or exactly to specify a number of times.
@@ -1324,6 +1499,45 @@ module RSpec::Rails::Matchers
   #
   # source://rspec-rails//lib/rspec/rails/matchers/active_job.rb#450
   def have_been_performed; end
+
+  # Passes if a message has been sent to a stream/object inside a block.
+  # May chain `at_least`, `at_most` or `exactly` to specify a number of times.
+  # To specify channel from which message has been broadcasted to object use `from_channel`.
+  #
+  # @api public
+  # @example
+  #   expect {
+  #   ActionCable.server.broadcast "messages", text: 'Hi!'
+  #   }.to have_broadcasted_to("messages")
+  #
+  #   expect {
+  #   SomeChannel.broadcast_to(user)
+  #   }.to have_broadcasted_to(user).from_channel(SomeChannel)
+  #
+  #   # Using alias
+  #   expect {
+  #   ActionCable.server.broadcast "messages", text: 'Hi!'
+  #   }.to broadcast_to("messages")
+  #
+  #   expect {
+  #   ActionCable.server.broadcast "messages", text: 'Hi!'
+  #   ActionCable.server.broadcast "all", text: 'Hi!'
+  #   }.to have_broadcasted_to("messages").exactly(:once)
+  #
+  #   expect {
+  #   3.times { ActionCable.server.broadcast "messages", text: 'Hi!' }
+  #   }.to have_broadcasted_to("messages").at_least(2).times
+  #
+  #   expect {
+  #   ActionCable.server.broadcast "messages", text: 'Hi!'
+  #   }.to have_broadcasted_to("messages").at_most(:twice)
+  #
+  #   expect {
+  #   ActionCable.server.broadcast "messages", text: 'Hi!'
+  #   }.to have_broadcasted_to("messages").with(text: 'Hi!')
+  #
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable.rb#48
+  def have_broadcasted_to(target = T.unsafe(nil)); end
 
   # Passes if an email has been enqueued inside block.
   # May chain with to specify expected arguments.
@@ -1597,6 +1811,12 @@ module RSpec::Rails::Matchers
   # @private
   # @raise [StandardError]
   #
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable.rb#58
+  def check_action_cable_adapter; end
+
+  # @private
+  # @raise [StandardError]
+  #
   # source://rspec-rails//lib/rspec/rails/matchers/active_job.rb#458
   def check_active_job_adapter; end
 end
@@ -1605,8 +1825,90 @@ end
 #
 # @api private
 #
-# source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_streams.rb#4
+# source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#4
 module RSpec::Rails::Matchers::ActionCable; end
+
+# @private
+#
+# source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#7
+class RSpec::Rails::Matchers::ActionCable::HaveBroadcastedTo < ::RSpec::Matchers::BuiltIn::BaseMatcher
+  # @return [HaveBroadcastedTo] a new instance of HaveBroadcastedTo
+  #
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#8
+  def initialize(target, channel:); end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#28
+  def at_least(count); end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#33
+  def at_most(count); end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#23
+  def exactly(count); end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#54
+  def failure_message; end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#65
+  def failure_message_when_negated; end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#91
+  def from_channel(channel); end
+
+  # @raise [ArgumentError]
+  # @return [Boolean]
+  #
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#81
+  def matches?(proc); end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#69
+  def message_expectation_modifier; end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#42
+  def once; end
+
+  # @return [Boolean]
+  #
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#77
+  def supports_block_expectations?; end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#50
+  def thrice; end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#38
+  def times; end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#46
+  def twice; end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#16
+  def with(data = T.unsafe(nil), &block); end
+
+  private
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#143
+  def base_message; end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#110
+  def check(messages); end
+
+  # @raise [ArgumentError]
+  #
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#162
+  def check_channel_presence; end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#150
+  def data_description(data); end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#158
+  def pubsub_adapter; end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#132
+  def set_expected_number(relativity, count); end
+
+  # source://rspec-rails//lib/rspec/rails/matchers/action_cable/have_broadcasted_to.rb#98
+  def stream; end
+end
 
 # Provides the implementation for `have_stream`, `have_stream_for`, and `have_stream_from`.
 # Not intended to be instantiated directly.
