@@ -77,6 +77,6 @@
   },
   {
     "name": "SMS_DISABLE_RATE_LIMIT",
-    "value": "true"
+    "value": "false"
   }
 ]
