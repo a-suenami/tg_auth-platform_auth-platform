@@ -1,11 +1,11 @@
 create_table :user_profiles, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant, type: :citext, null: false
-  t.references  :user, type: :uuid, null: false
+  t.references :user, type: :uuid, null: false
   t.string  :first_name
   t.string  :last_name
   t.string  :first_name_kana
   t.string :last_name_kana
-  t.date  :birth_date
+  t.date :birth_date
   t.string :gender
 
   t.timestamps null: false
