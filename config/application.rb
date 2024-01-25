@@ -6,7 +6,7 @@ require_relative 'boot'
 require 'rails'
 # Pick the frameworks you want:
 require 'active_model/railtie'
-# require 'active_job/railtie'
+require 'active_job/railtie' # FIXME: tapioca gem で必要
 require 'active_record/railtie'
 # require "active_storage/engine"
 require 'action_controller/railtie'
@@ -14,7 +14,7 @@ require 'action_controller/railtie'
 # require "action_mailbox/engine"
 # require "action_text/engine"
 require 'action_view/railtie'
-# require "action_cable/engine"
+require 'action_cable/engine' # FIXME: turbo-rails 1.5 で `uninitialized constant ActionCable` が発生するので直るまでは require する
 # require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems

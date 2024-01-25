@@ -64,16 +64,17 @@ RSpec.configure do |config|
     RequestStore.clear!
   end
 
-  if Bullet.enable?
-    config.before do
-      Bullet.start_request
-    end
+  # Temporary disable bullet
+  # if Bullet.enable?
+  #   config.before do
+  #     Bullet.start_request
+  #   end
 
-    config.after do
-      Bullet.perform_out_of_channel_notifications if Bullet.notification?
-      Bullet.end_request
-    end
-  end
+  #   config.after do
+  #     Bullet.perform_out_of_channel_notifications if Bullet.notification?
+  #     Bullet.end_request
+  #   end
+  # end
 
   # cache store を option で切り替える
   config.around do |example|
