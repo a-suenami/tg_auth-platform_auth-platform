@@ -48,6 +48,10 @@
     "name": "SMS_LINK_API_TOKEN"
   },
   {
+    "name": "SUPER_MODE",
+    "valueFrom": "/id-platform/stg/ecs/main/super_mode"
+  },
+  {
     "valueFrom": "/id-platform/stg/ecs/main/twilio_account_sid",
     "name": "TWILIO_ACCOUNT_SID"
   },
