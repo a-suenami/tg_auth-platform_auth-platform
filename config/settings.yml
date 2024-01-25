@@ -36,3 +36,4 @@ sms:
 domains:
   admin: <%= ENV['ADMIN_DOMAIN'] %>
   ruler: <%= ENV['RULER_DOMAIN'] %>
+super_mode: <%= !!ActiveRecord::Type::Boolean.new.cast(ENV['SUPER_MODE']) %>

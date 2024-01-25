@@ -72,6 +72,12 @@ class SettingsConfigOptions < ::Config::Options
   def sms_link=(value); end
 
   sig { returns(T.untyped) }
+  def super_mode; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def super_mode=(value); end
+
+  sig { returns(T.untyped) }
   def twilio; end
 
   sig { params(value: T.untyped).returns(T.untyped) }

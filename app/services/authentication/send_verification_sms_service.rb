@@ -36,6 +36,14 @@ module Authentication
     end
 
     def send_verification_sms(sms_verifier, delivery_type)
+      if !Rails.env.production? && Settings.super_mode == true # SUPER_MODE では送らない
+        sleep(rand(0.1..0.5))
+        sms_verifier.delivery_type = delivery_type
+        sms_verifier.sms_sender = 'super_mode'
+        sms_verifier.sms_sid = 'SUPER_MODE'
+        return sms_verifier.save
+      end
+
       # 国内電話番号はSmsLink、それ以外はTwilioを使う。
       if PhonyRails.country_code_from_number(sms_verifier.phone_number) == '81'
         response = SmsLink::API.new.send_sms(sms_verifier:, delivery_type:)
