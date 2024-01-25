@@ -22,6 +22,11 @@ module Blastengine
 
     sig { params(send_to: String, subject: String, body: String, from_email: T.nilable(String), from_name: T.nilable(String)).returns(T.untyped) }
     def send_email(send_to:, subject:, body:, from_email:, from_name:)
+      if !Rails.env.production? && Settings.super_mode == true # SUPER_MODE では送らない
+        sleep(rand(0.1..0.5))
+        return
+      end
+
       from_email = 'idp@id-platform.net' if from_email.blank?
       from_name = 'ID Platform' if from_name.blank?
 
