@@ -27,6 +27,8 @@ namespace :ridgepole do # rubocop:disable Metrics/BlockLength
         Rake::Task['db:schema:dump'].invoke
         ENV['SCHEMA_FORMAT'] = 'sql'
         Rake::Task['db:schema:dump'].invoke
+
+        system('FORCE_TEST_DATABASE=true bin/tapioca dsl', exception: true)
       end
       puts 'done'
     end
