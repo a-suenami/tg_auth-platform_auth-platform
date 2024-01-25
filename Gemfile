@@ -12,26 +12,26 @@ ruby '3.2.2'
 # Core, DB
 # ------------------------------------------------------------------------------
 # Rails
-gem 'rails', '~> 7.0.4.2'
+gem 'rails', '~> 7.1', '>= 7.1.3'
 # Use Puma as the app server
-gem 'puma', '~> 6.1.0'
+gem 'puma', '~> 6.4', '>= 6.4.2'
 # Use postgresql as the database for Active Record
-gem 'pg', '~> 1.4.0'
+gem 'pg', '~> 1.5', '>= 1.5.4'
 # # Use Redis for in-memory database
-gem 'redis', '~> 5.0', '>= 5.0.6'
-gem 'redis-namespace', '~> 1.10.0'
+gem 'redis', '~> 5.0', '>= 5.0.8'
+gem 'redis-namespace', '~> 1.11'
 # # Mutex by Redis
 # gem 'redlock', '~> 2.0.1'
 # # Support for Cross-Origin Resource Sharing (CORS) for Rack compatible web applications
-gem 'rack-cors', '~> 2.0.0'
+gem 'rack-cors', '~> 2.0', '>= 2.0.1'
 # # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '~> 1.16.0', require: false
+gem 'bootsnap', '~> 1.17', '>= 1.17.1', require: false
 # Use ridgepole for schema management
-gem 'ridgepole', '~> 1.2.0'
+gem 'ridgepole', '~> 2.0', '>= 2.0.1'
 # Simple, efficient background processing for Ruby
-gem 'sidekiq', '~> 7.1.6'
+gem 'sidekiq', '~> 7.2', '>= 7.2.1'
 source 'https://gems.contribsys.com/' do
-  gem 'sidekiq-pro', '~> 7.1.6'
+  gem 'sidekiq-pro', '~> 7.2'
 end
 # adds support for queueing jobs in a recurring way to sidekiq
 gem 'sidekiq-scheduler', '~> 5.0', '>= 5.0.3'
@@ -45,7 +45,7 @@ gem 'request_store-sidekiq', '~> 0.1.0'
 # # AuthorizationP
 # gem 'pundit', '~> 2.3.0'
 # # Secure hash algorithm
-gem 'bcrypt', '~> 3.1.0'
+gem 'bcrypt', '~> 3.1', '>= 3.1.20'
 # # Preload using if condition
 # gem 'activerecord-belongs_to_if', '~> 0.1.0'
 # # A rich library for bulk inserting data using ActiveRecord
@@ -55,23 +55,23 @@ gem 'bcrypt', '~> 3.1.0'
 # # Removes invalid UTF8 characters from the URL and other env vars
 # gem 'utf8-cleaner', '~> 1.0'
 # OAuth 2 provider
-gem 'doorkeeper', '~> 5.6.6'
-gem 'doorkeeper-openid_connect', '~> 1.8.4'
-gem 'omniauth-auth0', '~> 3.0'
-gem 'omniauth-rails_csrf_protection', '~> 1.0'
-gem 'auth0', '~> 5.12'
-gem 'rack-attack', '~> 6.6.1'
+gem 'doorkeeper', '~> 5.6', '>= 5.6.8'
+gem 'doorkeeper-openid_connect', '~> 1.8', '>= 1.8.7'
+gem 'omniauth-auth0', '~> 3.1', '>= 3.1.1'
+gem 'omniauth-rails_csrf_protection', '~> 1.0', '>= 1.0.1'
+gem 'auth0', '~> 5.16'
+gem 'rack-attack', '~> 6.7'
 # ------------------------------------------------------------------------------
 # Front
 # ------------------------------------------------------------------------------
 # Use slim as template language
-gem 'slim-rails', '~> 3.6.1'
+gem 'slim-rails', '~> 3.6', '>= 3.6.3'
 # # JSON API serializer
-gem 'jb', '~> 0.8.0'
+gem 'jb', '~> 0.8.2'
 # gem 'jsonapi-serializer', git: 'https://github.com/twogate/fast_jsonapi', ref: '62c1cc8'
 # Pagination
 gem 'api-pagination', '~> 5.0.0'
-gem 'pagy', '~> 6.0.1'
+gem 'pagy', '~> 6.4', '>= 6.4.3'
 # # link_to helper
 # gem 'active_link_to', '~> 1.0.0'
 # # Nested form helper
@@ -79,9 +79,9 @@ gem 'pagy', '~> 6.0.1'
 # Use Vite as frontend tool
 gem 'vite_rails', '~> 3.0', '>= 3.0.17'
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
-gem 'turbo-rails', '~> 1.1.0'
+gem 'turbo-rails', '~> 1.5'
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
-gem 'stimulus-rails', '~> 1.0.0'
+gem 'stimulus-rails', '~> 1.3', '>= 1.3.3'
 # Template Engine
 gem 'liquid', '~> 5.4.0'
 
@@ -92,30 +92,30 @@ gem 'liquid', '~> 5.4.0'
 gem 'pry', '~> 0.14.2'
 gem 'pry-rails', '~> 0.3.9'
 # Manage multi-environment settings
-gem 'config', '~> 4.1.0'
+gem 'config', '~> 5.1'
 # # Provides a client interface for the Sentry error logger
-gem 'sentry-rails', '~> 5.8.0'
-gem 'sentry-ruby', '~> 5.8.0'
-gem 'sentry-sidekiq', '~> 5.8.0'
+gem 'sentry-rails', '~> 5.16', '>= 5.16.1'
+gem 'sentry-ruby', '~> 5.16', '>= 5.16.1'
+gem 'sentry-sidekiq', '~> 5.16', '>= 5.16.1'
 # Make managing seeds better
-gem 'seed-fu', '~> 2.3.0'
+gem 'seed-fu', '~> 2.3', '>= 2.3.9'
 # # Easily generater of fake data
 # gem 'ffaker', '~> 2.21.0'
 # # Json Web Token
 # gem 'jwt', '~> 2.7.0'
 # Use rails-i18n as a set of common locale data
-gem 'rails-i18n', '~> 7.0.0'
+gem 'rails-i18n', '~> 7.0', '>= 7.0.8'
 # # Framework for factories
-gem 'factory_bot_rails', '~> 6.2.0'
+gem 'factory_bot_rails', '~> 6.4', '>= 6.4.3'
 # # Enumerated attributes with I18n
-gem 'enumerize', '~> 2.5.0'
+gem 'enumerize', '~> 2.7'
 # # AWS client gems
 # gem 'aws-record', '~> 2.10.1'
 # gem 'aws-sdk-dynamodb', '~> 1.81.0'
-gem 'aws-sdk-rails', '~> 3.7.1'
+gem 'aws-sdk-rails', '~> 3.10'
 # gem 'aws-sdk-s3', '~> 1.119.1'
 # gem 'aws-sdk-sqs', '~> 1.53.0'
-gem 'aws-sdk-eventbridge', '~> 1.3'
+gem 'aws-sdk-eventbridge', '~> 1.56'
 # Encrypt yaml
 gem 'yaml_vault', '~> 1.3.2'
 # # For counter caches
@@ -123,18 +123,18 @@ gem 'yaml_vault', '~> 1.3.2'
 # # FCM push notification utility
 # gem 'fcmpush', '~> 1.4.0'
 # # HTTP client
-gem 'faraday', '~> 2.7.4'
+gem 'faraday', '~> 2.9'
 # gem 'faraday-http-cache', '~> 2.4.0'
 # # Convert bytesize to human readable string
 # gem 'bytesize', '~> 0.1.0'
 # # SameSite option
 # gem 'rails_same_site_cookie', git: 'https://github.com/twogate/rails_same_site_cookie.git', ref: '5a31856'
 # # Logger extension
-gem 'lograge', '~> 0.12.0'
+gem 'lograge', '~> 0.14.0'
 # # User-Agent parser
 # gem 'rack-user_agent', '~> 0.5.0'
 # # japanese prefecture
-gem 'jp_prefecture', '~> 1.1.0'
+gem 'jp_prefecture', '~> 1.1', '>= 1.1.1'
 # # SendGrid client
 # gem 'sendgrid-ruby', '~> 6.6.0'
 # # check reserved subdomain
@@ -148,11 +148,11 @@ gem 'jp_prefecture', '~> 1.1.0'
 # # As Firebase Authentication SDK
 # gem 'google-apis-identitytoolkit_v3', '~> 0.13.0'
 # country code collection
-gem 'countries', '~> 5.5.0'
+gem 'countries', '~> 5.7', '>= 5.7.1'
 # Phone number validator
-gem 'phonelib', '~> 0.8.2'
+gem 'phonelib', '~> 0.8.7'
 # SMS api client
-gem 'twilio-ruby', '~> 6.8.3'
+gem 'twilio-ruby', '~> 6.9', '>= 6.9.1'
 # normalizes, formats and splits international phone number
 gem 'phony_rails'
 
@@ -160,7 +160,7 @@ gem 'phony_rails'
 gem 'sorbet-runtime', '~> 0.5.11048'
 
 # reCAPTCHA Enterprise Client
-gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.15.0'
+gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.17.2'
 
 # ------------------------------------------------------------------------------
 # Development and Test Only
@@ -170,13 +170,13 @@ group :development, :test do
   # gem 'pry-byebug', '~> 3.9.0'
   # gem 'pry-stack_explorer', '~> 0.4.0'
   # Ruby code style checking
-  gem 'rubocop', '~> 1.46.0'
+  gem 'rubocop', '~> 1.60', '>= 1.60.2'
   # A RuboCop extension focused on enforcing Rails best practices and coding conventions
-  gem 'rubocop-rails', '~> 2.18'
+  gem 'rubocop-rails', '~> 2.23', '>= 2.23.1'
   # RuboCop extension for RSpec
-  gem 'rubocop-rspec', '~> 2.18.1'
+  gem 'rubocop-rspec', '~> 2.26', '>= 2.26.1'
   # Testing framework
-  gem 'rspec-rails', '~> 6.0.1'
+  gem 'rspec-rails', '~> 6.1'
   # Sorbet type checking for RSpec
   gem 'rspec-sorbet', '~> 1.9.2'
   # Speed up RSpec using Spring
@@ -184,18 +184,18 @@ group :development, :test do
   # # Simplify test code
   # gem 'shoulda-matchers', '~> 5.3.0'
   # # Simplify request test code
-  gem 'rspec-request_describer', '~> 0.3.0'
+  gem 'rspec-request_describer', '~> 0.4.0'
   # # RSpect matchers
   # gem 'rspec-json_expectations', '~> 2.2.0'
   # # Run RSpec parallel
   # gem 'parallel_split_test', '~> 0.10.0'
   # gem 'parallel_tests', '~> 4.2.0'
   # # Strategies for cleaning databases
-  gem 'database_cleaner', '~> 2.0.1'
+  gem 'database_cleaner', '~> 2.0', '>= 2.0.2'
   # Code coverage
   gem 'simplecov', '~> 0.22.0', require: false
   # Detect N + 1 queries
-  gem 'bullet', '~> 7.0.7'
+  gem 'bullet', '~> 7.1', '>= 7.1.6'
   # # Filesystem event
   # gem 'listen', '~> 3.8.0'
   # Patch-level verification for bundler
@@ -211,7 +211,7 @@ group :development, :test do
 
   # typing
   gem 'sorbet', '~> 0.5.11048'
-  gem 'rubocop-sorbet', '~> 0.7.4', require: false
+  gem 'rubocop-sorbet', '~> 0.7.6', require: false
   gem 'tapioca', git: 'https://github.com/twogate/tapioca', ref: 'd0a8227'
   gem 'spoom', '~> 1.2.4', require: false
 end
@@ -221,16 +221,16 @@ end
 # ------------------------------------------------------------------------------
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem 'web-console', '~> 4.2.0'
+  gem 'web-console', '~> 4.2', '>= 4.2.1'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring', '~> 4.1.1'
+  gem 'spring', '~> 4.1', '>= 4.1.3'
   gem 'spring-watcher-listen', '~> 2.1.0'
   # Run db:reset without stopping app
-  gem 'pgreset', '~> 0.3.0'
+  gem 'pgreset', '~> 0.4'
   # IDE tools for code completion, inline documentation, and static analysis
   gem 'solargraph', '~> 0.48.0'
   # Generate Entity-Relationship Diagrams
   gem 'rails-erd', '~> 1.7.2'
   # Ruby Language Server by Shopify
-  gem 'ruby-lsp', '~> 0.4.1'
+  gem 'ruby-lsp', '~> 0.13.4'
 end
