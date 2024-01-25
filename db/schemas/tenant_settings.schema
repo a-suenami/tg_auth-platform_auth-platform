@@ -10,4 +10,6 @@ create_table :tenant_settings, force: :cascade, id: :uuid, default: -> { 'gen_ra
   t.string :sender_email
 
   t.timestamps null: false
+
+  t.index ['tenant_id'], name: 'idx_tenant_settings_tenant_id_uniq', unique: true
 end

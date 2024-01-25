@@ -181,6 +181,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "sender_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "idx_tenant_settings_tenant_id_uniq", unique: true
     t.index ["tenant_id"], name: "index_tenant_settings_on_tenant_id"
   end
 
