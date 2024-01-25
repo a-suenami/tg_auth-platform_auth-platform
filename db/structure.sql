@@ -578,6 +578,13 @@ CREATE UNIQUE INDEX idx_rulers_uid_uniq ON public.rulers USING btree (uid);
 
 
 --
+-- Name: idx_tenant_settings_tenant_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_tenant_settings_tenant_id_uniq ON public.tenant_settings USING btree (tenant_id);
+
+
+--
 -- Name: idx_user_profiles_tenant_id_user_id_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
