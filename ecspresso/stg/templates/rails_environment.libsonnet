@@ -41,7 +41,7 @@
   },
   {
     "name": "RAILS_MAX_THREADS",
-    "value": "8"
+    "value": "6"
   },
   {
     "name": "RAILS_SERVE_STATIC_FILES",
@@ -49,7 +49,7 @@
   },
   {
     "name": "RAILS_WORKERS",
-    "value": "2"
+    "value": "4"
   },
   {
     "name": "RUBY_YJIT_ENABLE",
