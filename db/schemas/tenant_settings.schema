@@ -5,6 +5,7 @@ create_table :tenant_settings, force: :cascade, id: :uuid, default: -> { 'gen_ra
   t.string :google_cloud_project_id
   t.string :recaptcha_enterprise_checkbox_site_key
   t.string :recaptcha_enterprise_score_based_site_key
+  t.string :twilio_verify_service_sid
 
   t.string :sender_email
 

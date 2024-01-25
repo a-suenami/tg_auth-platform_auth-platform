@@ -11,16 +11,20 @@ module Twilio
     def initialize
       @client = Twilio::REST::Client.new Settings.twilio.api_key_sid, Settings.twilio.api_key_secret, Settings.twilio.account_sid
       @client.edge = 'tokyo'
+      @tenant = T.let(T.must(Tenant.current), Tenant)
     end
 
     # SMS配信API
-    sig { params(send_to: String, body: String).returns(T.untyped) }
-    def send_sms(send_to:, body:)
-      @client.messages
+    # https://www.twilio.com/docs/verify/api/verification
+    sig { params(to: String, custom_code: String).returns(T.untyped) }
+    def send_sms_with_twilio_verify(to:, custom_code:) # rubocop:disable Naming/MethodParameterName
+      @client.verify.v2
+        .services(T.must(@tenant.tenant_setting).twilio_verify_service_sid)
+        .verifications
         .create(
-          body:,
-          from: Settings.twilio.sender_number,
-          to: send_to,
+          to:,
+          custom_code:,
+          channel: 'sms',
         )
     end
   end

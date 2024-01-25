@@ -50,6 +50,7 @@ module RulerArea::Tenants
         :google_cloud_project_id,
         :recaptcha_enterprise_checkbox_site_key,
         :recaptcha_enterprise_score_based_site_key,
+        :twilio_verify_service_sid,
         :sender_email,
       )
     end

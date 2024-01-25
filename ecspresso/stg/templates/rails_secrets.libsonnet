@@ -62,9 +62,5 @@
   {
     "valueFrom": "/id-platform/stg/ecs/main/twilio_api_key_secret",
     "name": "TWILIO_API_KEY_SECRET"
-  },
-  {
-    "valueFrom": "/id-platform/stg/ecs/main/twilio_sender_number",
-    "name": "TWILIO_SENDER_NUMBER"
   }
 ]

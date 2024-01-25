@@ -55,7 +55,7 @@ module Authentication
         sms_verifier.sms_sender = 'smslink'
         sms_verifier.sms_sid = response['verification_code_id']
       else
-        response = Twilio::API.new.send_sms(send_to: T.must(sms_verifier.phone_number), body: "Your code is #{sms_verifier.code}.#{Tenant.current&.name}")
+        response = Twilio::API.new.send_sms_with_twilio_verify(to: T.must(sms_verifier.phone_number), custom_code: sms_verifier.code)
         sms_verifier.sms_sender = 'twilio'
         sms_verifier.sms_sid = response.sid
       end

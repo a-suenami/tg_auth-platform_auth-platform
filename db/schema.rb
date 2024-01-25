@@ -177,6 +177,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "google_cloud_project_id"
     t.string "recaptcha_enterprise_checkbox_site_key"
     t.string "recaptcha_enterprise_score_based_site_key"
+    t.string "twilio_verify_service_sid"
     t.string "sender_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
