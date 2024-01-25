@@ -12,6 +12,7 @@ RATELIMIT_PATHS = [
 # 開発環境でrake_attackをテストするにはtmp/caching-dev.txtを作成してキャッシュを有効化させる必要がある
 
 RATELIMIT_PATHS.each do |path|
+  return if !Rails.env.production? && Settings.super_mode == true # SUPER_MODE では無効化
   Rack::Attack.throttle("limit #{path}", limit: 6, period: 60) do |request|
     if request.post? && request.path == path
       request.ip
