@@ -32,6 +32,10 @@
       td
         = @tenant_setting.sender_email
     tr
+      th = TenantSetting.human_attribute_name(:twilio_verify_service_sid)
+      td
+        = @tenant_setting.twilio_verify_service_sid
+    tr
       th = TenantSetting.human_attribute_name(:created_at)
       td
         = @tenant_setting.created_at

@@ -35,7 +35,7 @@ deleted: true,)
       })
       allow(Twilio::API).to receive(:new).and_return(twilio_mock)
       twilio_respo = Struct.new(:sid).new('SMXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-      allow(twilio_mock).to receive(:send_sms).and_return(twilio_respo)
+      allow(twilio_mock).to receive(:send_sms_with_twilio_verify).and_return(twilio_respo)
     end
 
     context 'when no session' do
@@ -112,7 +112,7 @@ deleted: true,)
 
         it 'returns 200' do
           is_expected.to eq 200
-          expect(twilio_mock).to have_received(:send_sms)
+          expect(twilio_mock).to have_received(:send_sms_with_twilio_verify)
           expect(Users::SmsVerifier.find_by(user: current_user).phone_number).to eq '+13185555555'
           expect(Users::SmsVerifier.find_by(user: current_user).sms_sid).to eq 'SMXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
         end
@@ -129,7 +129,7 @@ deleted: true,)
         it 'returns 400' do
           is_expected.to eq 400
           expect(body_hash['error']['code']).to eq 'no_sms_supported_country'
-          expect(twilio_mock).not_to have_received(:send_sms)
+          expect(twilio_mock).not_to have_received(:send_sms_with_twilio_verify)
         end
       end
 
@@ -144,7 +144,7 @@ deleted: true,)
         it 'returns 400' do
           is_expected.to eq 400
           expect(body_hash['error']['code']).to eq 'no_sms_supported_country'
-          expect(twilio_mock).not_to have_received(:send_sms)
+          expect(twilio_mock).not_to have_received(:send_sms_with_twilio_verify)
         end
       end
 
@@ -160,7 +160,7 @@ deleted: true,)
         it 'returns 400' do
           is_expected.to eq 400
           expect(body_hash['error']['code']).to eq 'no_sms_supported_country'
-          expect(twilio_mock).not_to have_received(:send_sms)
+          expect(twilio_mock).not_to have_received(:send_sms_with_twilio_verify)
         end
       end
 
@@ -174,7 +174,7 @@ deleted: true,)
 
         it 'returns 200' do
           is_expected.to eq 200
-          expect(twilio_mock).to have_received(:send_sms)
+          expect(twilio_mock).to have_received(:send_sms_with_twilio_verify)
         end
       end
 

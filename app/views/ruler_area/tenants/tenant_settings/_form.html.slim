@@ -16,4 +16,8 @@ h3 メール設定
 .uk-margin
   = f.label :sender_email
   = f.text_field :sender_email, class: "uk-input"
+h3 SMS設定
+.uk-margin
+  = f.label :twilio_verify_service_sid
+  = f.text_field :twilio_verify_service_sid, class: "uk-input"
 = f.submit class: "uk-button uk-button-default"
