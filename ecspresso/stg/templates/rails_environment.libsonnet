@@ -41,7 +41,7 @@
   },
   {
     "name": "RAILS_MAX_THREADS",
-    "value": "4"
+    "value": "8"
   },
   {
     "name": "RAILS_SERVE_STATIC_FILES",
