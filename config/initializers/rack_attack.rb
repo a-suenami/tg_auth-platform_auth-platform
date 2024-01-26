@@ -1,5 +1,5 @@
 # 開発環境でrake_attackをテストするにはtmp/caching-dev.txtを作成してキャッシュを有効化させる必要がある
-if Rails.env.production? || Settings.super_mode != true # SUPER_MODE では無効化
+if Settings.super_mode != true # SUPER_MODE では無効化
   RATELIMIT_PATHS = [
     '/api/v1/authentication/sessions',
     '/api/v1/authentication/registrations/send_verification_email',
