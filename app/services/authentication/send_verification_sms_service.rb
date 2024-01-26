@@ -72,7 +72,7 @@ module Authentication
       # 同一電話番号 10件/24hours
       raise Exceptions::Authentication::SmsSendLimit if Users::SmsVerifier.where('created_at > ?', 24.hours.ago).where(phone_number:).count >= 10
       # 同一IP      100件/1hours
-      raise Exceptions::Authentication::SmsSendLimit if Users::SmsVerifier.where('created_at > ?', 1.hour.ago).where(ip_address:).count >= 100
+      # raise Exceptions::Authentication::SmsSendLimit if Users::SmsVerifier.where('created_at > ?', 1.hour.ago).where(ip_address:).count >= 100
       # 同一ユーザ   10件/24hours
       raise Exceptions::Authentication::SmsSendLimit if Users::SmsVerifier.where('created_at > ?', 24.hours.ago).where(user:).count >= 10
     end
