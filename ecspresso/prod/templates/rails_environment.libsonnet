@@ -13,7 +13,7 @@
   },
   {
     "name": "SMS_DISABLE_RATE_LIMIT",
-    "value": "true"
+    "value": "false"
   },
   {
     "name": "RAILS_MAX_THREADS",
