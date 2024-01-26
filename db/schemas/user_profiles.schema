@@ -1,14 +1,16 @@
 create_table :user_profiles, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant, type: :citext, null: false
-  t.references  :user, type: :uuid, null: false
+  t.references :user, type: :uuid, null: false
   t.string  :first_name
   t.string  :last_name
   t.string  :first_name_kana
   t.string :last_name_kana
-  t.date  :birth_date
+  t.date :birth_date
   t.string :gender
 
   t.timestamps null: false
+
+  t.index [:tenant_id, :user_id], name: :idx_user_profiles_tenant_id_user_id_uniq, using: :btree, unique: true
 end
 
 add_foreign_key :user_profiles, :tenants, name: :fk_user_profiles_tenants

@@ -172,10 +172,11 @@ class TenantSetting
         load: T.untyped,
         error_on_ignore: T.untyped,
         order: Symbol,
+        use_ranges: T.untyped,
         block: T.nilable(T.proc.params(object: PrivateRelation).void)
       ).returns(T.nilable(::ActiveRecord::Batches::BatchEnumerator))
     end
-    def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, &block); end
+    def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, use_ranges: nil, &block); end
 
     sig { params(record: T.untyped).returns(T::Boolean) }
     def include?(record); end
@@ -379,6 +380,9 @@ class TenantSetting
     def none(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+    def null_relation?(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def offset(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
@@ -401,6 +405,9 @@ class TenantSetting
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def references(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+    def regroup(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def reorder(*args, &blk); end
@@ -456,13 +463,17 @@ class TenantSetting
         google_cloud_project_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         recaptcha_enterprise_checkbox_site_key: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         recaptcha_enterprise_score_based_site_key: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        twilio_verify_service_sid: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         sender_email: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, google_cloud_service_account: nil, google_cloud_project_id: nil, recaptcha_enterprise_checkbox_site_key: nil, recaptcha_enterprise_score_based_site_key: nil, sender_email: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, google_cloud_service_account: nil, google_cloud_project_id: nil, recaptcha_enterprise_checkbox_site_key: nil, recaptcha_enterprise_score_based_site_key: nil, twilio_verify_service_sid: nil, sender_email: nil, created_at: nil, updated_at: nil, **nested); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+    def with(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def without(*args, &blk); end
@@ -644,6 +655,51 @@ class TenantSetting
     def id_previously_was; end
 
     sig { returns(T.untyped) }
+    def id_value; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def id_value=(value); end
+
+    sig { returns(T::Boolean) }
+    def id_value?; end
+
+    sig { returns(T.untyped) }
+    def id_value_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def id_value_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def id_value_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def id_value_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def id_value_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def id_value_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def id_value_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def id_value_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def id_value_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def id_value_previously_was; end
+
+    sig { returns(T.untyped) }
+    def id_value_was; end
+
+    sig { void }
+    def id_value_will_change!; end
+
+    sig { returns(T.untyped) }
     def id_was; end
 
     sig { void }
@@ -752,6 +808,9 @@ class TenantSetting
     def restore_id!; end
 
     sig { void }
+    def restore_id_value!; end
+
+    sig { void }
     def restore_recaptcha_enterprise_checkbox_site_key!; end
 
     sig { void }
@@ -762,6 +821,9 @@ class TenantSetting
 
     sig { void }
     def restore_tenant_id!; end
+
+    sig { void }
+    def restore_twilio_verify_service_sid!; end
 
     sig { void }
     def restore_updated_at!; end
@@ -790,6 +852,12 @@ class TenantSetting
     sig { returns(T::Boolean) }
     def saved_change_to_id?; end
 
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_id_value; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_id_value?; end
+
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_recaptcha_enterprise_checkbox_site_key; end
 
@@ -813,6 +881,12 @@ class TenantSetting
 
     sig { returns(T::Boolean) }
     def saved_change_to_tenant_id?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_twilio_verify_service_sid; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_twilio_verify_service_sid?; end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_updated_at; end
@@ -910,6 +984,51 @@ class TenantSetting
     sig { void }
     def tenant_id_will_change!; end
 
+    sig { returns(T.nilable(::String)) }
+    def twilio_verify_service_sid; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def twilio_verify_service_sid=(value); end
+
+    sig { returns(T::Boolean) }
+    def twilio_verify_service_sid?; end
+
+    sig { returns(T.nilable(::String)) }
+    def twilio_verify_service_sid_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def twilio_verify_service_sid_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def twilio_verify_service_sid_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def twilio_verify_service_sid_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def twilio_verify_service_sid_change_to_be_saved; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def twilio_verify_service_sid_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def twilio_verify_service_sid_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def twilio_verify_service_sid_previous_change; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def twilio_verify_service_sid_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def twilio_verify_service_sid_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def twilio_verify_service_sid_was; end
+
+    sig { void }
+    def twilio_verify_service_sid_will_change!; end
+
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def updated_at; end
 
@@ -968,6 +1087,9 @@ class TenantSetting
     def will_save_change_to_id?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_id_value?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_recaptcha_enterprise_checkbox_site_key?; end
 
     sig { returns(T::Boolean) }
@@ -978,6 +1100,9 @@ class TenantSetting
 
     sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_twilio_verify_service_sid?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_updated_at?; end
@@ -1054,6 +1179,9 @@ class TenantSetting
     def none(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+    def null_relation?(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def offset(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
@@ -1076,6 +1204,9 @@ class TenantSetting
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def references(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+    def regroup(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def reorder(*args, &blk); end
@@ -1113,13 +1244,17 @@ class TenantSetting
         google_cloud_project_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         recaptcha_enterprise_checkbox_site_key: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         recaptcha_enterprise_score_based_site_key: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        twilio_verify_service_sid: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         sender_email: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, google_cloud_service_account: nil, google_cloud_project_id: nil, recaptcha_enterprise_checkbox_site_key: nil, recaptcha_enterprise_score_based_site_key: nil, sender_email: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, google_cloud_service_account: nil, google_cloud_project_id: nil, recaptcha_enterprise_checkbox_site_key: nil, recaptcha_enterprise_score_based_site_key: nil, twilio_verify_service_sid: nil, sender_email: nil, created_at: nil, updated_at: nil, **nested); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+    def with(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def without(*args, &blk); end

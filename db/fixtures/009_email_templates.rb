@@ -2,7 +2,7 @@ EmailTemplate.seed do |s|
   s.id = 'cd857392-b3ef-4776-944f-ec52cddac057'
   s.tenant_id = 'sample'
   s.name = '新規登録完了メールテンプレート'
-  s.template_type = 'registration'
+  s.template_type = 'registered'
   s.subject = '新規登録完了メール！'
   s.body = <<~TEXT
     <p>この度は、サンプルアプリケーションへのご登録ありがとうございます。</p>
@@ -59,4 +59,3 @@ EmailTemplate.seed do |s|
     <p>{{ unlock_url }}</p>
   TEXT
 end
-

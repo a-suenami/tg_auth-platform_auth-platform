@@ -245,6 +245,7 @@ CREATE TABLE public.tenant_settings (
     google_cloud_project_id character varying,
     recaptcha_enterprise_checkbox_site_key character varying,
     recaptcha_enterprise_score_based_site_key character varying,
+    twilio_verify_service_sid character varying,
     sender_email character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -535,6 +536,83 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: idx_account_locks_tenant_id_email_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_account_locks_tenant_id_email_uniq ON public.account_locks USING btree (tenant_id, email);
+
+
+--
+-- Name: idx_account_locks_tenant_id_unlock_token_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_account_locks_tenant_id_unlock_token_uniq ON public.account_locks USING btree (tenant_id, unlock_token);
+
+
+--
+-- Name: idx_admins_tenant_id_uid_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_admins_tenant_id_uid_uniq ON public.admins USING btree (tenant_id, uid);
+
+
+--
+-- Name: idx_contact_addresses_tenant_id_user_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_contact_addresses_tenant_id_user_id_uniq ON public.contact_addresses USING btree (tenant_id, user_id);
+
+
+--
+-- Name: idx_linked_applications_tenant_user_oauth_application_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_linked_applications_tenant_user_oauth_application_uniq ON public.users__linked_applications USING btree (tenant_id, user_id, oauth_application_id);
+
+
+--
+-- Name: idx_rulers_uid_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_rulers_uid_uniq ON public.rulers USING btree (uid);
+
+
+--
+-- Name: idx_tenant_settings_tenant_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_tenant_settings_tenant_id_uniq ON public.tenant_settings USING btree (tenant_id);
+
+
+--
+-- Name: idx_user_profiles_tenant_id_user_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_user_profiles_tenant_id_user_id_uniq ON public.user_profiles USING btree (tenant_id, user_id);
+
+
+--
+-- Name: idx_users_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_users_created_at ON public.users__sms_verifiers USING btree (created_at);
+
+
+--
+-- Name: idx_users_ip_address; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_users_ip_address ON public.users__sms_verifiers USING btree (ip_address);
+
+
+--
+-- Name: idx_users_phone_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_users_phone_number ON public.users__sms_verifiers USING btree (phone_number);
+
+
+--
 -- Name: index_account_locks_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -797,7 +875,7 @@ CREATE UNIQUE INDEX index_users_on_tenant_id_email ON public.users USING btree (
 -- Name: index_users_on_tenant_id_phone_number; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_tenant_id_phone_number ON public.users USING btree (tenant_id, phone_number);
+CREATE UNIQUE INDEX index_users_on_tenant_id_phone_number ON public.users USING btree (tenant_id, phone_number, deleted) WHERE (deleted = false);
 
 
 --

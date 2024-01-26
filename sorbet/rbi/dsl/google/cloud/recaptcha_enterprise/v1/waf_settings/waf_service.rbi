@@ -18,4 +18,5 @@ module Google::Cloud::RecaptchaEnterprise::V1::WafSettings::WafService
 end
 
 Google::Cloud::RecaptchaEnterprise::V1::WafSettings::WafService::CA = 1
+Google::Cloud::RecaptchaEnterprise::V1::WafSettings::WafService::FASTLY = 3
 Google::Cloud::RecaptchaEnterprise::V1::WafSettings::WafService::WAF_SERVICE_UNSPECIFIED = 0

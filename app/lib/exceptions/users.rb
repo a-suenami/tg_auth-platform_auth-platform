@@ -12,7 +12,7 @@ module Exceptions
 
       sig { returns(String) }
       def message
-        I18n.t 'exceptions.user.invalid_email'
+        I18n.t 'exceptions.users.invalid_email'
       end
     end
 
@@ -24,7 +24,7 @@ module Exceptions
 
       sig { returns(String) }
       def message
-        I18n.t 'exceptions.user.invalid_code'
+        I18n.t 'exceptions.users.invalid_code'
       end
     end
 
@@ -36,7 +36,7 @@ module Exceptions
 
       sig { returns(String) }
       def message
-        I18n.t 'exceptions.user.expired_email_verification_code'
+        I18n.t 'exceptions.users.expired_email_verification_code'
       end
     end
 
@@ -48,7 +48,7 @@ module Exceptions
 
       sig { returns(String) }
       def message
-        I18n.t 'exceptions.user.email_verification_code_attempts_is_over'
+        I18n.t 'exceptions.users.email_verification_code_attempts_is_over'
       end
     end
   end

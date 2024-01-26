@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 0) do
+ActiveRecord::Schema[7.1].define(version: 0) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pgcrypto"
@@ -26,6 +26,8 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.datetime "last_failed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["tenant_id", "email"], name: "idx_account_locks_tenant_id_email_uniq", unique: true
+    t.index ["tenant_id", "unlock_token"], name: "idx_account_locks_tenant_id_unlock_token_uniq", unique: true
     t.index ["tenant_id"], name: "index_account_locks_on_tenant_id"
     t.index ["user_id"], name: "index_account_locks_on_user_id"
   end
@@ -37,6 +39,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["tenant_id", "uid"], name: "idx_admins_tenant_id_uid_uniq", unique: true
     t.index ["tenant_id"], name: "index_admins_on_tenant_id"
   end
 
@@ -52,6 +55,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "country_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["tenant_id", "user_id"], name: "idx_contact_addresses_tenant_id_user_id_uniq", unique: true
     t.index ["tenant_id"], name: "index_contact_addresses_on_tenant_id"
     t.index ["user_id"], name: "index_contact_addresses_on_user_id"
   end
@@ -164,6 +168,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["uid"], name: "idx_rulers_uid_uniq", unique: true
   end
 
   create_table "tenant_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -172,9 +177,11 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "google_cloud_project_id"
     t.string "recaptcha_enterprise_checkbox_site_key"
     t.string "recaptcha_enterprise_score_based_site_key"
+    t.string "twilio_verify_service_sid"
     t.string "sender_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "idx_tenant_settings_tenant_id_uniq", unique: true
     t.index ["tenant_id"], name: "index_tenant_settings_on_tenant_id"
   end
 
@@ -197,6 +204,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "gender"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["tenant_id", "user_id"], name: "idx_user_profiles_tenant_id_user_id_uniq", unique: true
     t.index ["tenant_id"], name: "index_user_profiles_on_tenant_id"
     t.index ["user_id"], name: "index_user_profiles_on_user_id"
   end
@@ -218,7 +226,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id", "email", "deleted"], name: "index_users_on_tenant_id_email", unique: true, where: "(deleted = false)"
-    t.index ["tenant_id", "phone_number"], name: "index_users_on_tenant_id_phone_number", unique: true
+    t.index ["tenant_id", "phone_number", "deleted"], name: "index_users_on_tenant_id_phone_number", unique: true, where: "(deleted = false)"
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
   end
 
@@ -246,6 +254,7 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["oauth_application_id"], name: "index_users__linked_applications_on_oauth_application_id"
+    t.index ["tenant_id", "user_id", "oauth_application_id"], name: "idx_linked_applications_tenant_user_oauth_application_uniq", unique: true
     t.index ["tenant_id"], name: "index_users__linked_applications_on_tenant_id"
     t.index ["user_id"], name: "index_users__linked_applications_on_user_id"
   end
@@ -277,6 +286,9 @@ ActiveRecord::Schema[7.0].define(version: 0) do
     t.string "delivery_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "idx_users_created_at"
+    t.index ["ip_address"], name: "idx_users_ip_address"
+    t.index ["phone_number"], name: "idx_users_phone_number"
     t.index ["tenant_id"], name: "index_users__sms_verifiers_on_tenant_id"
     t.index ["user_id"], name: "index_users__sms_verifiers_on_user_id"
   end

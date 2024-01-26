@@ -15,11 +15,11 @@ create_table :users, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid(
   t.datetime :lock_expired_at
 
   # Recaptcha の評価スコア
-  t.float "captcha_score"
+  t.float 'captcha_score'
 
   t.timestamps null: false
   t.index [:tenant_id, :email, :deleted], name: :index_users_on_tenant_id_email, using: :btree, unique: true, where: '("deleted" = false)'
-  t.index [:tenant_id, :phone_number], name: :index_users_on_tenant_id_phone_number, using: :btree, unique: true
+  t.index [:tenant_id, :phone_number, :deleted], name: :index_users_on_tenant_id_phone_number, using: :btree, unique: true, where: '("deleted" = false)'
 end
 
 add_foreign_key :users, :tenants, name: :fk_users_tenants

@@ -8,6 +8,9 @@ create_table :account_locks, force: :cascade, id: :uuid, default: -> { 'gen_rand
   t.datetime :last_failed_at
 
   t.timestamps null: false
+
+  t.index [:tenant_id, :email], name: :idx_account_locks_tenant_id_email_uniq, using: :btree, unique: true
+  t.index [:tenant_id, :unlock_token], name: :idx_account_locks_tenant_id_unlock_token_uniq, using: :btree, unique: true
 end
 
 add_foreign_key :account_locks, :tenants, name: :fk_account_locks_tenants

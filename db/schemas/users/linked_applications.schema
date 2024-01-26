@@ -2,10 +2,12 @@ create_table :users__linked_applications, force: :cascade, id: :uuid, default: -
   t.references :tenant, type: :citext, null: false
   t.references :user, type: :uuid, null: false
   t.references :oauth_application, type: :uuid, null: false
-  t.string  :scopes, null: false
-  t.datetime  :last_linked_at, null: false
+  t.string :scopes, null: false
+  t.datetime :last_linked_at, null: false
 
   t.timestamps null: false
+
+  t.index [:tenant_id, :user_id, :oauth_application_id], name: :idx_linked_applications_tenant_user_oauth_application_uniq, using: :btree, unique: true
 end
 
 add_foreign_key :users__linked_applications, :tenants, name: :fk_users__linked_applications_tenants

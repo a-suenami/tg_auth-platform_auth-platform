@@ -10,7 +10,7 @@ module Authentication
       end
 
       ActiveRecord::Base.transaction do
-        user = User.find_by(email:, email_verified: true)
+        user = User.active.find_by(email:, email_verified: true)
         password_reset = Users::PasswordReset.find_by(user:, code: password_reset_code, expired_at: Time.zone.now..)
         if user.blank? || password_reset.blank?
           # アカウントの存在を隠すため、ユーザが存在しない場合もPasswordResetCodeInvalidエラー

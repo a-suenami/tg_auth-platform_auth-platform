@@ -3,8 +3,8 @@
 module PublishEvents
   class PublishService < ::BaseService
     def execute(user:, action_code:)
-      return false if Settings&.aws&.region.blank?
-      return false if Settings&.aws&.event_bus_name.blank?
+      return false if Settings.aws&.region.blank?
+      return false if Settings.aws&.event_bus_name.blank?
 
       enable_applications = OauthApplication.where(tenant_id: user.tenant_id, enable_push_event: true)
       return false if enable_applications.blank?

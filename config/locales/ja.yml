@@ -7,10 +7,10 @@ ja:
       error_occurred: エラーが発生しました
       parameter_missing: パラメーターが不足しています
       try_agin_in_a_while: 意図しないエラーが発生しました。しばらくしてからもう一度お試しください
-      invalid_auth_token: トークンが不正です
+      invalid_auth_token: トークンが間違っています
       auth_token_expired: トークンの有効期限が切れています
       cannot_destroy: 削除できませんでした
-      invalid_url: の形式が不正です
+      invalid_url: の形式が間違っています
       uniqueness: は登録済みです
       is_destroyed: 削除されました
       blank: を選択してください

@@ -5,7 +5,12 @@ module API::V1::Internal
 
     def update
       Users::UpdateService.new(user_params).execute(user: @current_user)
-      @current_user.set_enabled_on_completion
+      if @current_user.enabled == false
+        @current_user.set_enabled_on_completion
+        if @current_user.enabled == true
+          Authentication::SendRegisteredEmailService.new.execute!(user: @current_user)
+        end
+      end
 
       render :show
     end

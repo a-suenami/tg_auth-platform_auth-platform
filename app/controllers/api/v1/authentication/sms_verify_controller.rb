@@ -12,7 +12,7 @@ module API::V1::Authentication
         local_phone_number: params[:phone_number],
         phone_country_code: params[:phone_country_code],
         user_id: @current_user.id,
-        ip_address: request.ip,
+        ip_address: request.remote_ip,
         delivery_type: params[:delivery_type],
       )
       render :send_verification_sms
@@ -25,8 +25,6 @@ module API::V1::Authentication
       raise Exceptions::Authentication::SmsVerificationDisabled unless Tenant.current.sms_verification_required
 
       @user = Authentication::VerifySmsService.new.execute!(verification_code: params[:sms_verification_code], user_id: @current_user.id)
-      # あとから電話番号検証するケースを考慮して一応enabledを更新
-      @user.set_enabled_on_completion
 
       render :verify_sms
     end

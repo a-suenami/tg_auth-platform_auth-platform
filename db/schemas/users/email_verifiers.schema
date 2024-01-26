@@ -1,12 +1,12 @@
 create_table :users__email_verifiers, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant, type: :citext, null: false
   t.references :user, type: :uuid, null: false
-  t.string  :code, null: false
-  t.datetime  :expired_at, null: false
-  t.integer  :remaining_attempts, default: 0
+  t.string :code, null: false
+  t.datetime :expired_at, null: false
+  t.integer :remaining_attempts, default: 0
   t.string :verifier_type, null: false, default: 'registration'
   t.string :email
-  t.datetime  :used_at
+  t.datetime :used_at
 
   t.timestamps null: false
 end

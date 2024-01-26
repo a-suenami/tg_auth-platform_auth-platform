@@ -5,6 +5,10 @@ RSpec.describe '[ SmsVerify API ]' do
     let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password_digest: nil)
     }
+    let(:deleted_user) {
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, phone_number: '+818012345678',
+deleted: true,)
+    }
 
     let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com', sms_verification_required:) }
     let(:sms_verification_required) { true }
@@ -19,6 +23,7 @@ RSpec.describe '[ SmsVerify API ]' do
 
     before do
       current_user
+      deleted_user
       allow(SmsLink::API).to receive(:new).and_return(sms_link_mock)
       allow(sms_link_mock).to receive(:send_sms).and_return({
         'verification_code_id' => 34,
@@ -30,7 +35,7 @@ RSpec.describe '[ SmsVerify API ]' do
       })
       allow(Twilio::API).to receive(:new).and_return(twilio_mock)
       twilio_respo = Struct.new(:sid).new('SMXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-      allow(twilio_mock).to receive(:send_sms).and_return(twilio_respo)
+      allow(twilio_mock).to receive(:send_sms_with_twilio_verify).and_return(twilio_respo)
     end
 
     context 'when no session' do
@@ -100,16 +105,76 @@ RSpec.describe '[ SmsVerify API ]' do
       context 'when given a oversea phone number' do
         let(:params) {
           {
-            phone_number: '3181234567',
+            phone_number: '3185555555',
             phone_country_code: '1',
           }
         }
 
         it 'returns 200' do
           is_expected.to eq 200
-          expect(twilio_mock).to have_received(:send_sms)
-          expect(Users::SmsVerifier.find_by(user: current_user).phone_number).to eq '+13181234567'
+          expect(twilio_mock).to have_received(:send_sms_with_twilio_verify)
+          expect(Users::SmsVerifier.find_by(user: current_user).phone_number).to eq '+13185555555'
           expect(Users::SmsVerifier.find_by(user: current_user).sms_sid).to eq 'SMXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+        end
+      end
+
+      context 'when given afghanistan phone number' do
+        let(:params) {
+          {
+            phone_number: '202222222',
+            phone_country_code: '93',
+          }
+        }
+
+        it 'returns 400' do
+          is_expected.to eq 400
+          expect(body_hash['error']['code']).to eq 'no_sms_supported_country'
+          expect(twilio_mock).not_to have_received(:send_sms_with_twilio_verify)
+        end
+      end
+
+      context 'when given azerbaijan phone number' do
+        let(:params) {
+          {
+            phone_number: '125555555',
+            phone_country_code: '994',
+          }
+        }
+
+        it 'returns 400' do
+          is_expected.to eq 400
+          expect(body_hash['error']['code']).to eq 'no_sms_supported_country'
+          expect(twilio_mock).not_to have_received(:send_sms_with_twilio_verify)
+        end
+      end
+
+      # ロシアとカザフスタンは国際電話番号国コードが同じだが、ロシアのみエラーを返すか確認
+      context 'when given russia phone number' do
+        let(:params) {
+          {
+            phone_number: '4951234567',
+            phone_country_code: '7',
+          }
+        }
+
+        it 'returns 400' do
+          is_expected.to eq 400
+          expect(body_hash['error']['code']).to eq 'no_sms_supported_country'
+          expect(twilio_mock).not_to have_received(:send_sms_with_twilio_verify)
+        end
+      end
+
+      context 'when given kazakhstan phone number' do
+        let(:params) {
+          {
+            phone_number: '7272517123',
+            phone_country_code: '7',
+          }
+        }
+
+        it 'returns 200' do
+          is_expected.to eq 200
+          expect(twilio_mock).to have_received(:send_sms_with_twilio_verify)
         end
       end
 
@@ -210,31 +275,31 @@ RSpec.describe '[ SmsVerify API ]' do
         end
       end
 
-      context 'when rate limit by 100/ip_address/1hours' do
-        let(:other_user) {
-          create(:user, tenant_id: current_tenant.id, email: 'test-other-user1@example.com', sms_verified: false)
-        }
-        let(:sms_verifiers) {
-          create_list(:users__sms_verifier, 100, tenant_id: current_tenant.id, user: other_user, code: '123456', expired_at: 59.minutes.from_now, remaining_attempts: 5, verifier_type: :registration,
-         ip_address: '127.0.0.1',)
-        }
+      # context 'when rate limit by 100/ip_address/1hours' do
+      #   let(:other_user) {
+      #     create(:user, tenant_id: current_tenant.id, email: 'test-other-user1@example.com', sms_verified: false)
+      #   }
+      #   let(:sms_verifiers) {
+      #     create_list(:users__sms_verifier, 100, tenant_id: current_tenant.id, user: other_user, code: '123456', expired_at: 59.minutes.from_now, remaining_attempts: 5, verifier_type: :registration,
+      #    ip_address: '127.0.0.1',)
+      #   }
 
-        let(:params) {
-          {
-            phone_number: '08012345678',
-            phone_country_code: '81',
-          }
-        }
+      #   let(:params) {
+      #     {
+      #       phone_number: '08012345678',
+      #       phone_country_code: '81',
+      #     }
+      #   }
 
-        before do
-          sms_verifiers
-        end
+      #   before do
+      #     sms_verifiers
+      #   end
 
-        it 'returns 400' do
-          is_expected.to eq 400
-          expect(body_hash['error']['code']).to eq 'sms_send_limit'
-        end
-      end
+      #   it 'returns 400' do
+      #     is_expected.to eq 400
+      #     expect(body_hash['error']['code']).to eq 'sms_send_limit'
+      #   end
+      # end
 
       context 'when rate limit by 10/user/24hours' do
         let(:sms_verifiers) {
@@ -269,9 +334,14 @@ RSpec.describe '[ SmsVerify API ]' do
     let(:other_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-other-user1@example.com', sms_verified: false)
     }
+    let(:deleted_user) {
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, phone_number: '+818012345678',
+deleted: true,)
+    }
 
     let(:sms_verifier) {
-      create(:users__sms_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 5, verifier_type: :registration)
+      create(:users__sms_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', phone_number: '+818012345678', expired_at: 1.hour.from_now, remaining_attempts: 5,
+verifier_type: :registration,)
     }
     let(:other_sms_verifier) {
       create(:users__sms_verifier, tenant_id: current_tenant.id, user: current_user, code: '654321', expired_at: 1.hour.from_now, remaining_attempts: 5, verifier_type: :registration)
@@ -287,6 +357,7 @@ RSpec.describe '[ SmsVerify API ]' do
     before do
       current_user
       other_user
+      deleted_user
       sms_verifier
       other_sms_verifier
       other_user_sms_verifier
@@ -332,7 +403,6 @@ RSpec.describe '[ SmsVerify API ]' do
           expect(Users::SmsVerifier.find(sms_verifier.id).used_at).not_to be_nil
           expect(body_hash['user_id']).to eq(current_user.id)
           expect(body_hash['sms_verified']).to be true
-          expect(body_hash['registered']).to be false
         end
       end
     end

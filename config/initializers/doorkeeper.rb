@@ -13,7 +13,7 @@ Doorkeeper.configure do
 
     cookie_session[:auth_url] = request.fullpath
 
-    resource_owner = User.find_by(id: cookie_session[:current_user_id])
+    resource_owner = User.active.find_by(id: cookie_session[:current_user_id])
 
 
     if resource_owner.nil?

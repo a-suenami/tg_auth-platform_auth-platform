@@ -1,4 +1,4 @@
-# typed: strong
+# typed: true
 
 # DO NOT EDIT MANUALLY
 # This file was pulled from a central RBI files repository.
@@ -52,7 +52,7 @@ module ActionView::Helpers::UrlHelper
   include ActionView::Helpers::TagHelper
   mixes_in_class_methods ActionView::Helpers::UrlHelper::ClassMethods
 
-  sig { params(name: String, options: T.untyped, html_options: T.untyped, block: T.untyped).returns(ActiveSupport::SafeBuffer) }
+  sig { params(name: T.nilable(String), options: T.untyped, html_options: T.untyped, block: T.untyped).returns(ActiveSupport::SafeBuffer) }
   def link_to(name = nil, options = nil, html_options = nil, &block); end
 
   sig { params(condition: T.untyped, name: String, options: T.untyped, html_options: T.untyped, block: T.untyped).returns(T.untyped) }

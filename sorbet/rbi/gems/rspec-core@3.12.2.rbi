@@ -2597,7 +2597,7 @@ module RSpec::Core::Configuration::Readers
   def fixed_color; end
 
   # source://rspec-core//lib/rspec/core/configuration.rb#63
-  def fixture_path; end
+  def fixture_paths; end
 
   # source://rspec-core//lib/rspec/core/configuration.rb#63
   def global_fixtures; end
@@ -5727,6 +5727,8 @@ end
 class RSpec::Core::Formatters::HtmlPrinter
   include ::ERB::Escape
   include ::ERB::Util
+  include ::ActiveSupport::CoreExt::ERBUtil
+  include ::ActiveSupport::CoreExt::ERBUtilPrivate
 
   # @return [HtmlPrinter] a new instance of HtmlPrinter
   #
@@ -6281,6 +6283,9 @@ module RSpec::Core::HashImitatable
   def deep_merge!(*args, &block); end
 
   # source://rspec-core//lib/rspec/core/metadata.rb#367
+  def deep_merge?(*args, &block); end
+
+  # source://rspec-core//lib/rspec/core/metadata.rb#367
   def deep_stringify_keys(*args, &block); end
 
   # source://rspec-core//lib/rspec/core/metadata.rb#367
@@ -6465,9 +6470,6 @@ module RSpec::Core::HashImitatable
 
   # source://rspec-core//lib/rspec/core/metadata.rb#367
   def keys(*args, &block); end
-
-  # source://rspec-core//lib/rspec/core/metadata.rb#367
-  def ko_deep_merge!(*args, &block); end
 
   # source://rspec-core//lib/rspec/core/metadata.rb#367
   def lazy(*args, &block); end

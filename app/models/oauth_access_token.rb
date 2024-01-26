@@ -10,7 +10,7 @@ class OauthAccessToken < ApplicationRecord
   sig { returns(T::Boolean) }
   def update_linked_application
     return false if self.resource_owner_id.blank?
-    return false if User.find(self.resource_owner_id).blank?
+    return false if User.active.find(self.resource_owner_id).blank?
     return false if OauthApplication.find(self.application_id).blank?
 
     linked_application = Users::LinkedApplication.find_or_initialize_by(tenant_id: self.tenant_id, user_id: self.resource_owner_id, oauth_application_id: self.application_id)

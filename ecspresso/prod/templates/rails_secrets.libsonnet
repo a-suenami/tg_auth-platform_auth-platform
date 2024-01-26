@@ -50,9 +50,5 @@
   {
     "name": "TWILIO_API_KEY_SID",
     "valueFrom": "/id-platform/prod/ecs/main/twilio_api_key_sid"
-  },
-  {
-    "name": "TWILIO_SENDER_NUMBER",
-    "valueFrom": "/id-platform/prod/ecs/main/twilio_sender_number"
   }
 ]

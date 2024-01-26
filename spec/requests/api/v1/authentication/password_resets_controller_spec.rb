@@ -5,6 +5,9 @@ RSpec.describe '[ Password Resets API ]' do
     let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
     }
+    let(:deleted_user) {
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true)
+    }
 
     let(:email_template) {
       create(:email_template,
@@ -27,6 +30,7 @@ RSpec.describe '[ Password Resets API ]' do
 
     before do
       current_user
+      deleted_user
       email_template
       login_spa_application
       allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
@@ -77,6 +81,9 @@ RSpec.describe '[ Password Resets API ]' do
     let(:current_user) {
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true)
     }
+    let(:deleted_user) {
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true)
+    }
     let(:users_password_resets) {
       create(:users__password_resets, tenant_id: current_tenant.id, user_id: current_user.id, code: 'this_is_code', expired_at: 1.hour.from_now)
     }
@@ -96,6 +103,7 @@ RSpec.describe '[ Password Resets API ]' do
 
     before do
       current_user
+      deleted_user
       users_password_resets
       old_users_password_resets
       account_lock
