@@ -14,7 +14,6 @@ if Settings.super_mode != true # SUPER_MODE では無効化
   RATELIMIT_PATHS.each do |path|
     Rack::Attack.throttle("limit #{path}", limit: 6, period: 60) do |request|
       if request.post? && request.path == path
-        Rails.logger.info "Rack::Attack.throttle: #{path} #{request.get_header('action_dispatch.remote_ip')}"
         request.get_header('action_dispatch.remote_ip')
       end
     end
