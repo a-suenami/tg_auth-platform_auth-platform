@@ -25,8 +25,9 @@ module Authentication
         end
 
         # パスワード変更時アカウントロックがある場合解除
-        if user.account_lock.present?
-          user.account_lock.unlock!
+        account_lock = AccountLock.find_by(email: user.email)
+        if account_lock.present?
+          account_lock.unlock!
         end
 
         user
