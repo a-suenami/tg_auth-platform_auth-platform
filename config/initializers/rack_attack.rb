@@ -1,20 +1,20 @@
-RATELIMIT_PATHS = [
-  '/api/v1/authentication/sessions',
-  '/api/v1/authentication/registrations/send_verification_email',
-  '/api/v1/authentication/registrations/verify_email',
-  '/api/v1/authentication/sms_verify/send_verification_sms',
-  '/api/v1/authentication/sms_verify/verify_sms',
-  '/api/v1/authentication/password_resets',
-  '/api/v1/internal/email_change',
-  '/oauth/token',
-].freeze
-
 # 開発環境でrake_attackをテストするにはtmp/caching-dev.txtを作成してキャッシュを有効化させる必要がある
 if Rails.env.production? || Settings.super_mode != true # SUPER_MODE では無効化
+  RATELIMIT_PATHS = [
+    '/api/v1/authentication/sessions',
+    '/api/v1/authentication/registrations/send_verification_email',
+    '/api/v1/authentication/registrations/verify_email',
+    '/api/v1/authentication/sms_verify/send_verification_sms',
+    '/api/v1/authentication/sms_verify/verify_sms',
+    '/api/v1/authentication/password_resets',
+    '/api/v1/internal/email_change',
+    '/oauth/token',
+  ].freeze
+
   RATELIMIT_PATHS.each do |path|
     Rack::Attack.throttle("limit #{path}", limit: 6, period: 60) do |request|
       if request.post? && request.path == path
-        request.ip
+        request.get_header('action_dispatch.remote_ip')
       end
     end
   end
