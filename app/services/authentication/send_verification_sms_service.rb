@@ -25,7 +25,7 @@ module Authentication
       # 電話番号重複チェック
       raise Exceptions::Authentication::PhoneNumberDuplicated if User.active.find_by(phone_number:).present?
 
-      sms_rate_limit(phone_number:, user:, ip_address:)
+      sms_rate_limit(phone_number:, user:, _ip_address: ip_address)
 
       ActiveRecord::Base.transaction do
         sms_verifier = Users::SmsVerifier.new(user:, phone_number:, verifier_type: :registration, ip_address:)
@@ -62,8 +62,8 @@ module Authentication
       sms_verifier.save
     end
 
-    sig { params(phone_number: String, user: T.untyped, ip_address: String).returns(T.nilable(T::Boolean)) }
-    def sms_rate_limit(phone_number:, user:, ip_address:)
+    sig { params(phone_number: String, user: T.untyped, _ip_address: String).returns(T.nilable(T::Boolean)) }
+    def sms_rate_limit(phone_number:, user:, _ip_address:)
       # 開発環境,staging環境でratelimitが実装されていると検証が大変になるので無効化できるように
       return if Settings.sms.disable_rate_limit
 
