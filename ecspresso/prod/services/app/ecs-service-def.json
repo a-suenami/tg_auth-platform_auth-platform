@@ -1,8 +1,8 @@
 {
   "deploymentConfiguration": {
     "deploymentCircuitBreaker": {
-      "enable": true,
-      "rollback": true
+      "enable": false,
+      "rollback": false
     }
   },
   "deploymentController": {
