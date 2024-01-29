@@ -50,6 +50,9 @@ class User < ApplicationRecord
   validates :email, uniqueness: { scope: :tenant_id, conditions: -> { where(deleted: false) } }
   validates :phone_number, phony_plausible: true
 
+  # uniq indexの邪魔になるので空文字が入らないようにする
+  before_save :convert_empty_phone_number_to_nil
+
   scope :active, -> { where(deleted: false) }
 
   sig { params(password: String).returns(T::Boolean) }
@@ -70,5 +73,12 @@ class User < ApplicationRecord
 
     self.enabled = true
     self.save!
+  end
+
+  private
+
+  sig { returns(NilClass) }
+  def convert_empty_phone_number_to_nil
+    self.phone_number = nil if self.phone_number.blank?
   end
 end

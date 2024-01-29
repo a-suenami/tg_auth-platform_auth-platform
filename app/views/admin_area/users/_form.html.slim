@@ -28,11 +28,5 @@
   = f.label :deleted, class: 'uk-form-label'
   .uk-form-controls
     = f.check_box :deleted, :as => :boolean, class: "uk-checkbox"
-.uk-margin
-  = f.label :lock_expired_at, class: 'uk-form-label'
-  .uk-form-controls
-    = f.datetime_select :lock_expired_at
-
-
 
 = f.submit class: "uk-button uk-button-default"
