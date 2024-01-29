@@ -37,7 +37,6 @@ module AdminArea
         :sms_verified,
         :email_verified,
         :deleted,
-        :lock_expired_at,
         :suppress_sms_verification,
       )
     end
