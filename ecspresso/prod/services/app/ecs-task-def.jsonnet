@@ -2,8 +2,8 @@ local app_environment = import '../../templates/rails_environment.libsonnet';
 local app_secrets = import '../../templates/rails_secrets.libsonnet';
 local app_image_tag = std.extVar('APP_IMAGE_TAG');
 
-local cpu = 512;
-local memory = 1700;
+local cpu = 1024;
+local memory = 3200;
 local memory_reservation = 256;
 
 {

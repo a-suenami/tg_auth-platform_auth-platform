@@ -17,7 +17,7 @@
   },
   {
     "name": "RAILS_MAX_THREADS",
-    "value": "4"
+    "value": "6"
   },
   {
     "name": "AWS_EVENT_BUS_NAME",
@@ -61,7 +61,7 @@
   },
   {
     "name": "RAILS_WORKERS",
-    "value": "2"
+    "value": "4"
   },
   {
     "name": "ADMIN_DOMAIN",
