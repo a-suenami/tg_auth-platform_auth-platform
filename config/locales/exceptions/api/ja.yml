@@ -1,6 +1,6 @@
 ja:
   exceptions:
     api:
-      server_error: 外部APIがエラーしました
+      server_error: 現在大変混み合っております。時間をおいて再度お試しください。
       invalid_request_error: 不正なリクエストです
       request_limit_error: アクセス制限に達しました。
