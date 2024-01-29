@@ -1,0 +1,6 @@
+.uk-margin-top.uk-container
+  h2 ユーザプロフィール新規作成
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with model: @user_profile, url: admin_area_user_user_profile_path, method: :post, class: 'uk-form-horizontal' do |f|
+      = render 'form', f: f

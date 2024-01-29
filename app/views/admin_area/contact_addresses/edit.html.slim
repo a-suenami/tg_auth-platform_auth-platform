@@ -1,0 +1,6 @@
+.uk-margin-top.uk-container
+  h2 連絡先住所編集
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with model: @contact_address, url: admin_area_user_contact_address_path, method: :put, class: 'uk-form-horizontal' do |f|
+      = render 'form', f: f

@@ -33,6 +33,9 @@
       dt.uk-text-bold = User.human_attribute_name(:sms_verified)
       dd = @user.sms_verified
     .uk-margin
+      dt.uk-text-bold = User.human_attribute_name(:suppress_sms_verification)
+      dd = @user.suppress_sms_verification
+    .uk-margin
       dt.uk-text-bold = User.human_attribute_name(:email_verified)
       dd = @user.email_verified
     .uk-margin
@@ -41,8 +44,16 @@
     .uk-margin
       dt.uk-text-bold = User.human_attribute_name(:lock_expired_at)
       dd = @user.lock_expired_at
+    .uk-margin
+      dt.uk-text-bold アカウント作成日
+      dd = @user.created_at.strftime("%Y年%m月%d日")
 
     hr.uk-divider-icon
+    .uk-flex.uk-flex-right
+      - if @user.user_profile.present?
+        = link_to "プロフィール編集", edit_admin_area_user_user_profile_path(@user), class: "uk-button uk-button-primary"
+      - else
+        = link_to "プロフィール新規作成", new_admin_area_user_user_profile_path(@user), class: "uk-button uk-button-primary"
     h2.uk-card-title プロフィール情報
     .uk-margin
       dt.uk-text-bold = UserProfile.human_attribute_name(:first_name)
@@ -64,6 +75,11 @@
       dd = @user&.user_profile&.gender
 
     hr.uk-divider-icon
+    .uk-flex.uk-flex-right
+      - if @user.contact_address.present?
+        = link_to "連絡先住所編集", edit_admin_area_user_contact_address_path(@user), class: "uk-button uk-button-primary"
+      - else
+        = link_to "連絡先住所新規作成", new_admin_area_user_contact_address_path(@user), class: "uk-button uk-button-primary"
     h2.uk-card-title 連絡先住所
     .uk-margin
       dt.uk-text-bold = ContactAddress.human_attribute_name(:zip_code)
@@ -86,7 +102,3 @@
     .uk-margin
       dt.uk-text-bold = ContactAddress.human_attribute_name(:country_code)
       dd = @user&.contact_address&.country_code
-
-    .uk-margin
-      dt.uk-text-bold アカウント作成日
-      dd = @user.created_at.strftime("%Y年%m月%d日")
