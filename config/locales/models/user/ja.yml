@@ -9,6 +9,7 @@ ja:
         enabled: プロフィール登録済み
         phone_number: 電話番号
         sms_verified: 電話番号確認済み
+        suppress_sms_verification: SMS送信禁止ユーザ
         email_verified: メールアドレス確認済み
         deleted: 削除ずみユーザ
         lock_expired_at: アカウントロック自動期限

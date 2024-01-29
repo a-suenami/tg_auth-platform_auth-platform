@@ -217,6 +217,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "phone_number"
     t.boolean "sms_verified", default: false
     t.boolean "email_verified", default: false
+    t.boolean "suppress_sms_verification", default: false
     t.boolean "deleted", default: false
     t.string "password_reset_code"
     t.integer "failed_attempts", default: 0, null: false
