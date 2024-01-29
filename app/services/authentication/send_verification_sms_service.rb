@@ -5,7 +5,7 @@ module Authentication
     extend T::Sig
 
     # SMS送信対象外の国コードリスト
-    EXCLUDED_COUNTRY_CODE = T.let(%w[AF AZ BI BZ ET ID IQ LB LK LY MG PK PS RU SY TD TJ TN UZ ZM].freeze, T::Array[String])
+    EXCLUDED_COUNTRY_CODE = T.let(%w[AF AZ BI BZ ET IQ LB LK LY MG PK PS RU SY TD TJ TN UZ ZM].freeze, T::Array[String])
 
     sig { params(local_phone_number: String, phone_country_code: String, user_id: String, ip_address: String, delivery_type: T.nilable(String)).returns(User) }
     def execute!(local_phone_number:, phone_country_code:, user_id:, ip_address:, delivery_type:)
