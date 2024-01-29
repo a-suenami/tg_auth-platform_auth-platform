@@ -42,9 +42,6 @@
       dt.uk-text-bold = User.human_attribute_name(:deleted)
       dd = @user.deleted
     .uk-margin
-      dt.uk-text-bold = User.human_attribute_name(:lock_expired_at)
-      dd = @user.lock_expired_at
-    .uk-margin
       dt.uk-text-bold アカウント作成日
       dd = @user.created_at.strftime("%Y年%m月%d日")
 
@@ -56,17 +53,17 @@
         = link_to "プロフィール新規作成", new_admin_area_user_user_profile_path(@user), class: "uk-button uk-button-primary"
     h2.uk-card-title プロフィール情報
     .uk-margin
-      dt.uk-text-bold = UserProfile.human_attribute_name(:first_name)
-      dd = @user&.user_profile&.first_name
-    .uk-margin
       dt.uk-text-bold = UserProfile.human_attribute_name(:last_name)
       dd = @user&.user_profile&.last_name
     .uk-margin
-      dt.uk-text-bold = UserProfile.human_attribute_name(:first_name_kana)
-      dd = @user&.user_profile&.first_name_kana
+      dt.uk-text-bold = UserProfile.human_attribute_name(:first_name)
+      dd = @user&.user_profile&.first_name
     .uk-margin
       dt.uk-text-bold = UserProfile.human_attribute_name(:last_name_kana)
       dd = @user&.user_profile&.last_name_kana
+    .uk-margin
+      dt.uk-text-bold = UserProfile.human_attribute_name(:first_name_kana)
+      dd = @user&.user_profile&.first_name_kana
     .uk-margin
       dt.uk-text-bold = UserProfile.human_attribute_name(:birth_date)
       dd = @user&.user_profile&.birth_date

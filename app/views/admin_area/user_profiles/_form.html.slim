@@ -2,28 +2,28 @@
 .uk-margin
 h2 プロフィール情報
 .uk-margin
-  = f.label :first_name, class: 'uk-form-label'
-  .uk-form-controls
-    = f.text_field :first_name, class: "uk-input"
-.uk-margin
   = f.label :last_name, class: 'uk-form-label'
   .uk-form-controls
     = f.text_field :last_name, class: "uk-input"
 .uk-margin
-  = f.label :first_name_kana, class: 'uk-form-label'
+  = f.label :first_name, class: 'uk-form-label'
   .uk-form-controls
-    = f.text_field :first_name_kana, class: "uk-input"
+    = f.text_field :first_name, class: "uk-input"
 .uk-margin
   = f.label :last_name_kana, class: 'uk-form-label'
   .uk-form-controls
     = f.text_field :last_name_kana, class: "uk-input"
 .uk-margin
+  = f.label :first_name_kana, class: 'uk-form-label'
+  .uk-form-controls
+    = f.text_field :first_name_kana, class: "uk-input"
+.uk-margin
   = f.label :birth_date, class: 'uk-form-label'
   .uk-form-controls
-    = f.date_select :birth_date, start_year: Date.current.year - 100, class: "uk-input"
+    = f.datetime_field :birth_date, class: "uk-input"
 .uk-margin
   = f.label :gender, class: 'uk-form-label'
   .uk-form-controls
-    = f.select :gender, UserProfile.gender.options, { include_blank: '選択してください' }
+    = f.select :gender, UserProfile.gender.options, { include_blank: '選択してください' }, class: "uk-select"
 
 = f.submit class: "uk-button uk-button-default"
