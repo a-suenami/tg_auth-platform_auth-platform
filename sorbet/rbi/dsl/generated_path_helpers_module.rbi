@@ -30,7 +30,13 @@ module GeneratedPathHelpersModule
   def admin_area_ruler_area_tenant_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_contact_address_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_user_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_user_profile_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def admin_area_users_path(*args); end
@@ -72,7 +78,13 @@ module GeneratedPathHelpersModule
   def api_v1_private_userinfo_index_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_user_contact_address_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_user_user_profile_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_email_template_path(*args); end
@@ -94,6 +106,12 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_user_contact_address_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_user_user_profile_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_email_template_path(*args); end
