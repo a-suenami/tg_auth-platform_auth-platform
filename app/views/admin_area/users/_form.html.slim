@@ -31,8 +31,7 @@
 .uk-margin
   = f.label :lock_expired_at, class: 'uk-form-label'
   .uk-form-controls
-    = f.datetime_select :lock_expired_at
-
+    = f.datetime_select :lock_expired_at, { include_blank: true }
 
 
 = f.submit class: "uk-button uk-button-default"
