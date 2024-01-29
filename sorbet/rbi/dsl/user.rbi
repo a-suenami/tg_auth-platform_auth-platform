@@ -608,6 +608,7 @@ class User
         phone_number: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         sms_verified: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         email_verified: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        suppress_sms_verification: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         deleted: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         password_reset_code: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         failed_attempts: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -619,7 +620,7 @@ class User
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, email: nil, password_digest: nil, enabled: nil, phone_number: nil, sms_verified: nil, email_verified: nil, deleted: nil, password_reset_code: nil, failed_attempts: nil, unlock_token: nil, lock_expired_at: nil, captcha_score: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, email: nil, password_digest: nil, enabled: nil, phone_number: nil, sms_verified: nil, email_verified: nil, suppress_sms_verification: nil, deleted: nil, password_reset_code: nil, failed_attempts: nil, unlock_token: nil, lock_expired_at: nil, captcha_score: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -1267,6 +1268,9 @@ class User
     def restore_sms_verified!; end
 
     sig { void }
+    def restore_suppress_sms_verification!; end
+
+    sig { void }
     def restore_tenant_id!; end
 
     sig { void }
@@ -1359,6 +1363,12 @@ class User
     sig { returns(T::Boolean) }
     def saved_change_to_sms_verified?; end
 
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def saved_change_to_suppress_sms_verification; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_suppress_sms_verification?; end
+
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
 
@@ -1421,6 +1431,51 @@ class User
 
     sig { void }
     def sms_verified_will_change!; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def suppress_sms_verification; end
+
+    sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+    def suppress_sms_verification=(value); end
+
+    sig { returns(T::Boolean) }
+    def suppress_sms_verification?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def suppress_sms_verification_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def suppress_sms_verification_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def suppress_sms_verification_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def suppress_sms_verification_change; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def suppress_sms_verification_change_to_be_saved; end
+
+    sig { params(from: T.nilable(T::Boolean), to: T.nilable(T::Boolean)).returns(T::Boolean) }
+    def suppress_sms_verification_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def suppress_sms_verification_in_database; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def suppress_sms_verification_previous_change; end
+
+    sig { params(from: T.nilable(T::Boolean), to: T.nilable(T::Boolean)).returns(T::Boolean) }
+    def suppress_sms_verification_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def suppress_sms_verification_previously_was; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def suppress_sms_verification_was; end
+
+    sig { void }
+    def suppress_sms_verification_will_change!; end
 
     sig { returns(::String) }
     def tenant_id; end
@@ -1600,6 +1655,9 @@ class User
     def will_save_change_to_sms_verified?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_suppress_sms_verification?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end
 
     sig { returns(T::Boolean) }
@@ -1750,6 +1808,7 @@ class User
         phone_number: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         sms_verified: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         email_verified: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        suppress_sms_verification: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         deleted: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         password_reset_code: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         failed_attempts: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -1761,7 +1820,7 @@ class User
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, email: nil, password_digest: nil, enabled: nil, phone_number: nil, sms_verified: nil, email_verified: nil, deleted: nil, password_reset_code: nil, failed_attempts: nil, unlock_token: nil, lock_expired_at: nil, captcha_score: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, email: nil, password_digest: nil, enabled: nil, phone_number: nil, sms_verified: nil, email_verified: nil, suppress_sms_verification: nil, deleted: nil, password_reset_code: nil, failed_attempts: nil, unlock_token: nil, lock_expired_at: nil, captcha_score: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

@@ -6,6 +6,7 @@ create_table :users, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid(
   t.string :phone_number
   t.boolean :sms_verified, default: false
   t.boolean :email_verified, default: false
+  t.boolean :suppress_sms_verification, default: false
   t.boolean :deleted, default: false
   t.string  :password_reset_code
 

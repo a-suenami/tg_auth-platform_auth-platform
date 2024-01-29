@@ -298,6 +298,7 @@ CREATE TABLE public.users (
     phone_number character varying,
     sms_verified boolean DEFAULT false,
     email_verified boolean DEFAULT false,
+    suppress_sms_verification boolean DEFAULT false,
     deleted boolean DEFAULT false,
     password_reset_code character varying,
     failed_attempts integer DEFAULT 0 NOT NULL,

@@ -38,23 +38,7 @@ module AdminArea
         :email_verified,
         :deleted,
         :lock_expired_at,
-        user_profile_attributes: [
-          :first_name,
-          :last_name,
-          :first_name_kana,
-          :last_name_kana,
-          :birth_date,
-          :gender,
-        ],
-        contact_address_attributes: [
-          :zip_code,
-          :prefecture_code,
-          :city,
-          :street,
-          :building,
-          :phone_number,
-          :country_code,
-        ],
+        :suppress_sms_verification,
       )
     end
   end
