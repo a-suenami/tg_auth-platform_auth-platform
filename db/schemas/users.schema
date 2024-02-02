@@ -10,11 +10,6 @@ create_table :users, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid(
   t.boolean :deleted, default: false
   t.string  :password_reset_code
 
-  # アカウントロック
-  t.integer  :failed_attempts, null: false, default: 0
-  t.string   :unlock_token
-  t.datetime :lock_expired_at
-
   # Recaptcha の評価スコア
   t.float 'captcha_score'
 

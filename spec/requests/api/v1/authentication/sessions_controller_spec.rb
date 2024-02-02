@@ -75,7 +75,6 @@ RSpec.describe '[ Sessions API ]' do
       let(:account_lock) {
         create(:account_lock,
           tenant_id: current_tenant.id,
-          user_id: current_user.id,
           email: 'test-user1@example.com',
           failed_attempts: 10,
           unlock_token: SecureRandom.hex(32),
@@ -104,7 +103,6 @@ RSpec.describe '[ Sessions API ]' do
       let(:account_lock) {
         create(:account_lock,
           tenant_id: current_tenant.id,
-          user_id: current_user.id,
           email: 'test-user1@example.com',
           failed_attempts: 10,
           unlock_token: SecureRandom.hex(32),
@@ -134,7 +132,6 @@ RSpec.describe '[ Sessions API ]' do
       let(:account_lock) {
         create(:account_lock,
           tenant_id: current_tenant.id,
-          user_id: current_user.id,
           email: 'test-user1@example.com',
           failed_attempts: 5,
           unlock_token: nil,
