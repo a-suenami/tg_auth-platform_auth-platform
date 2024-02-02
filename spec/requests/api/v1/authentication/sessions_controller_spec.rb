@@ -9,10 +9,33 @@ RSpec.describe '[ Sessions API ]' do
       create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true)
     }
 
+    let(:email_template) {
+      create(:email_template,
+        tenant_id: current_tenant.id,
+        name: 'メールテンプレート名',
+        template_type: 'account_lock',
+        subject: 'アカウントロック メール',
+        body: <<~TEXT,
+          <p>アカウントロックを解除するには以下のリンクをクリックしてください</p>
+          <p>{{ unlock_url }}</p>
+        TEXT
+      )
+    }
+
+    let(:blastengine_mock) {
+      instance_double(Blastengine::API)
+    }
+
     before do
+      email_template
+      allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
+      allow(blastengine_mock).to receive(:send_email).and_return({
+        delivery_id: 1,
+      })
       current_user
       deleted_user
     end
+
 
     context 'when email invaild' do
       let(:params) {
@@ -68,6 +91,66 @@ RSpec.describe '[ Sessions API ]' do
       it 'returns 200' do
         is_expected.to eq 200
         expect(body_hash['id']).to eq(current_user.id)
+      end
+    end
+
+    context 'when failed_attempts exceeds 10' do
+      let(:account_lock) {
+        create(:account_lock,
+          tenant_id: current_tenant.id,
+          email: 'test-user1@example.com',
+          failed_attempts: 9,
+          unlock_token: nil,
+          lock_expired_at: nil,
+          last_failed_at: Time.zone.now,)
+      }
+      let(:params) {
+        {
+          email: 'test-user1@example.com',
+          password: 'hogehoge',
+        }
+      }
+
+      before do
+        account_lock
+      end
+
+      it 'returns 401' do
+        is_expected.to eq 401
+        expect(body_hash['error']['code']).to eq 'invalid_request'
+        expect(AccountLock.find_by(email: 'test-user1@example.com').failed_attempts).to be 10
+        expect(AccountLock.find_by(email: 'test-user1@example.com').locked?).to be true
+        expect(blastengine_mock).to have_received(:send_email)
+      end
+    end
+
+    context 'when failed_attempts exceeds 10 and active user not presented' do
+      let(:account_lock) {
+        create(:account_lock,
+          tenant_id: current_tenant.id,
+          email: 'unknown_user@example.com',
+          failed_attempts: 9,
+          unlock_token: nil,
+          lock_expired_at: nil,
+          last_failed_at: Time.zone.now,)
+      }
+      let(:params) {
+        {
+          email: 'unknown_user@example.com',
+          password: 'hogehoge',
+        }
+      }
+
+      before do
+        account_lock
+      end
+
+      it 'returns 401' do
+        is_expected.to eq 401
+        expect(body_hash['error']['code']).to eq 'invalid_request'
+        expect(AccountLock.find_by(email: 'unknown_user@example.com').failed_attempts).to be 10
+        expect(AccountLock.find_by(email: 'unknown_user@example.com').locked?).to be true
+        expect(blastengine_mock).not_to have_received(:send_email)
       end
     end
 
