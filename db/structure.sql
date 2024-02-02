@@ -48,7 +48,6 @@ SET default_table_access_method = heap;
 CREATE TABLE public.account_locks (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
-    user_id uuid,
     email character varying NOT NULL,
     failed_attempts integer DEFAULT 0 NOT NULL,
     unlock_token character varying,
@@ -301,9 +300,6 @@ CREATE TABLE public.users (
     suppress_sms_verification boolean DEFAULT false,
     deleted boolean DEFAULT false,
     password_reset_code character varying,
-    failed_attempts integer DEFAULT 0 NOT NULL,
-    unlock_token character varying,
-    lock_expired_at timestamp(6) without time zone,
     captcha_score double precision,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -618,13 +614,6 @@ CREATE INDEX idx_users_phone_number ON public.users__sms_verifiers USING btree (
 --
 
 CREATE INDEX index_account_locks_on_tenant_id ON public.account_locks USING btree (tenant_id);
-
-
---
--- Name: index_account_locks_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_account_locks_on_user_id ON public.account_locks USING btree (user_id);
 
 
 --
