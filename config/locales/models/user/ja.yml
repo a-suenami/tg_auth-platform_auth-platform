@@ -14,3 +14,10 @@ ja:
         deleted: 削除ずみユーザ
         created_at: 作成日時
         updated_at: 更新日時
+        password: パスワード
+    errors:
+      models:
+        user:
+          attributes:
+            password:
+              invalid: "が要件を満たしていません。英数字大文字小文字をそれぞれ1文字以上含む8文字以上の文字列を設定してください。"
