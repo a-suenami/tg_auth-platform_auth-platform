@@ -7,13 +7,12 @@ RSpec.describe AccountLocks::UnlockByTokenService do
 
   let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com') }
   let(:token) { nil }
-  let!(:user_1) {
+  let(:user_1) {
     create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
   }
   let(:account_lock) {
     create(:account_lock,
       tenant_id: current_tenant.id,
-      user_id: user_1.id,
       email: 'test-user1@example.com',
       failed_attempts: 10,
       unlock_token: '6ed86380c82fb18bed33bb9806eb4d912c84e16b45f8367510e39429d1dbda4c',
@@ -22,6 +21,7 @@ RSpec.describe AccountLocks::UnlockByTokenService do
   }
 
   before do
+    user_1
     account_lock
     RequestStore.store[:current_tenant_domain] = "#{current_tenant.id}.localhost.com" || '-'
   end
@@ -49,7 +49,6 @@ RSpec.describe AccountLocks::UnlockByTokenService do
     let(:account_lock) {
       al = create(:account_lock,
         tenant_id: current_tenant.id,
-        user_id: user_1.id,
         email: 'test-user1@example.com',
         failed_attempts: 10,
         unlock_token: 'fdb5fb62b785c2e649b5865e8cf5f670959762e4b8f14821755c2d683efc69b1',

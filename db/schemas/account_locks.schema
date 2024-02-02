@@ -1,6 +1,5 @@
 create_table :account_locks, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant, type: :citext, null: false
-  t.references :user, type: :uuid
   t.string :email, null: false
   t.integer :failed_attempts, null: false, default: 0
   t.string   :unlock_token

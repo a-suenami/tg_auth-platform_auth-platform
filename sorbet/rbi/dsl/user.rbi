@@ -266,15 +266,6 @@ class User
     sig { params(value: T::Enumerable[::OauthAccessToken]).void }
     def access_tokens=(value); end
 
-    sig { returns(T.nilable(::AccountLock)) }
-    def account_lock; end
-
-    sig { params(value: T.nilable(::AccountLock)).void }
-    def account_lock=(value); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::AccountLock) }
-    def build_account_lock(*args, &blk); end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::ContactAddress) }
     def build_contact_address(*args, &blk); end
 
@@ -292,12 +283,6 @@ class User
 
     sig { params(attributes: T.untyped).returns(T.untyped) }
     def contact_address_attributes=(attributes); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::AccountLock) }
-    def create_account_lock(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::AccountLock) }
-    def create_account_lock!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::ContactAddress) }
     def create_contact_address(*args, &blk); end
@@ -372,9 +357,6 @@ class User
 
     sig { params(value: T::Enumerable[::OauthApplication]).void }
     def oauth_applications=(value); end
-
-    sig { returns(T.nilable(::AccountLock)) }
-    def reload_account_lock; end
 
     sig { returns(T.nilable(::ContactAddress)) }
     def reload_contact_address; end
@@ -611,16 +593,13 @@ class User
         suppress_sms_verification: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         deleted: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         password_reset_code: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        failed_attempts: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        unlock_token: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        lock_expired_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         captcha_score: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, email: nil, password_digest: nil, enabled: nil, phone_number: nil, sms_verified: nil, email_verified: nil, suppress_sms_verification: nil, deleted: nil, password_reset_code: nil, failed_attempts: nil, unlock_token: nil, lock_expired_at: nil, captcha_score: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, email: nil, password_digest: nil, enabled: nil, phone_number: nil, sms_verified: nil, email_verified: nil, suppress_sms_verification: nil, deleted: nil, password_reset_code: nil, captcha_score: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -900,51 +879,6 @@ class User
     sig { void }
     def enabled_will_change!; end
 
-    sig { returns(::Integer) }
-    def failed_attempts; end
-
-    sig { params(value: ::Integer).returns(::Integer) }
-    def failed_attempts=(value); end
-
-    sig { returns(T::Boolean) }
-    def failed_attempts?; end
-
-    sig { returns(T.nilable(::Integer)) }
-    def failed_attempts_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def failed_attempts_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def failed_attempts_came_from_user?; end
-
-    sig { returns(T.nilable([::Integer, ::Integer])) }
-    def failed_attempts_change; end
-
-    sig { returns(T.nilable([::Integer, ::Integer])) }
-    def failed_attempts_change_to_be_saved; end
-
-    sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
-    def failed_attempts_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::Integer)) }
-    def failed_attempts_in_database; end
-
-    sig { returns(T.nilable([::Integer, ::Integer])) }
-    def failed_attempts_previous_change; end
-
-    sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
-    def failed_attempts_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::Integer)) }
-    def failed_attempts_previously_was; end
-
-    sig { returns(T.nilable(::Integer)) }
-    def failed_attempts_was; end
-
-    sig { void }
-    def failed_attempts_will_change!; end
-
     sig { returns(T.untyped) }
     def id; end
 
@@ -1034,61 +968,6 @@ class User
 
     sig { void }
     def id_will_change!; end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def lock_expired_at; end
-
-    sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def lock_expired_at=(value); end
-
-    sig { returns(T::Boolean) }
-    def lock_expired_at?; end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def lock_expired_at_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def lock_expired_at_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def lock_expired_at_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def lock_expired_at_change; end
-
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def lock_expired_at_change_to_be_saved; end
-
-    sig do
-      params(
-        from: T.nilable(::ActiveSupport::TimeWithZone),
-        to: T.nilable(::ActiveSupport::TimeWithZone)
-      ).returns(T::Boolean)
-    end
-    def lock_expired_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def lock_expired_at_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def lock_expired_at_previous_change; end
-
-    sig do
-      params(
-        from: T.nilable(::ActiveSupport::TimeWithZone),
-        to: T.nilable(::ActiveSupport::TimeWithZone)
-      ).returns(T::Boolean)
-    end
-    def lock_expired_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def lock_expired_at_previously_was; end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def lock_expired_at_was; end
-
-    sig { void }
-    def lock_expired_at_will_change!; end
 
     sig { returns(T.nilable(::String)) }
     def password_digest; end
@@ -1244,16 +1123,10 @@ class User
     def restore_enabled!; end
 
     sig { void }
-    def restore_failed_attempts!; end
-
-    sig { void }
     def restore_id!; end
 
     sig { void }
     def restore_id_value!; end
-
-    sig { void }
-    def restore_lock_expired_at!; end
 
     sig { void }
     def restore_password_digest!; end
@@ -1272,9 +1145,6 @@ class User
 
     sig { void }
     def restore_tenant_id!; end
-
-    sig { void }
-    def restore_unlock_token!; end
 
     sig { void }
     def restore_updated_at!; end
@@ -1315,12 +1185,6 @@ class User
     sig { returns(T::Boolean) }
     def saved_change_to_enabled?; end
 
-    sig { returns(T.nilable([::Integer, ::Integer])) }
-    def saved_change_to_failed_attempts; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_failed_attempts?; end
-
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_id; end
 
@@ -1332,12 +1196,6 @@ class User
 
     sig { returns(T::Boolean) }
     def saved_change_to_id_value?; end
-
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def saved_change_to_lock_expired_at; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_lock_expired_at?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_password_digest; end
@@ -1374,12 +1232,6 @@ class User
 
     sig { returns(T::Boolean) }
     def saved_change_to_tenant_id?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_unlock_token; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_unlock_token?; end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_updated_at; end
@@ -1522,51 +1374,6 @@ class User
     sig { void }
     def tenant_id_will_change!; end
 
-    sig { returns(T.nilable(::String)) }
-    def unlock_token; end
-
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def unlock_token=(value); end
-
-    sig { returns(T::Boolean) }
-    def unlock_token?; end
-
-    sig { returns(T.nilable(::String)) }
-    def unlock_token_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def unlock_token_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def unlock_token_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def unlock_token_change; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def unlock_token_change_to_be_saved; end
-
-    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
-    def unlock_token_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def unlock_token_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def unlock_token_previous_change; end
-
-    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
-    def unlock_token_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def unlock_token_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def unlock_token_was; end
-
-    sig { void }
-    def unlock_token_will_change!; end
-
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def updated_at; end
 
@@ -1631,16 +1438,10 @@ class User
     def will_save_change_to_enabled?; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_failed_attempts?; end
-
-    sig { returns(T::Boolean) }
     def will_save_change_to_id?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_id_value?; end
-
-    sig { returns(T::Boolean) }
-    def will_save_change_to_lock_expired_at?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_password_digest?; end
@@ -1659,9 +1460,6 @@ class User
 
     sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end
-
-    sig { returns(T::Boolean) }
-    def will_save_change_to_unlock_token?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_updated_at?; end
@@ -1811,16 +1609,13 @@ class User
         suppress_sms_verification: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         deleted: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         password_reset_code: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        failed_attempts: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        unlock_token: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        lock_expired_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         captcha_score: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, email: nil, password_digest: nil, enabled: nil, phone_number: nil, sms_verified: nil, email_verified: nil, suppress_sms_verification: nil, deleted: nil, password_reset_code: nil, failed_attempts: nil, unlock_token: nil, lock_expired_at: nil, captcha_score: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, email: nil, password_digest: nil, enabled: nil, phone_number: nil, sms_verified: nil, email_verified: nil, suppress_sms_verification: nil, deleted: nil, password_reset_code: nil, captcha_score: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

@@ -44,7 +44,6 @@ class User < ApplicationRecord
   has_many :oauth_applications,
     through: :linked_applications,
     inverse_of: :users
-  has_one :account_lock, dependent: :delete
 
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :email, uniqueness: { scope: :tenant_id, conditions: -> { where(deleted: false) } }

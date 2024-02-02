@@ -18,7 +18,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
 
   create_table "account_locks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
-    t.uuid "user_id"
     t.string "email", null: false
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
@@ -29,7 +28,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id", "email"], name: "idx_account_locks_tenant_id_email_uniq", unique: true
     t.index ["tenant_id", "unlock_token"], name: "idx_account_locks_tenant_id_unlock_token_uniq", unique: true
     t.index ["tenant_id"], name: "index_account_locks_on_tenant_id"
-    t.index ["user_id"], name: "index_account_locks_on_user_id"
   end
 
   create_table "admins", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -220,9 +218,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.boolean "suppress_sms_verification", default: false
     t.boolean "deleted", default: false
     t.string "password_reset_code"
-    t.integer "failed_attempts", default: 0, null: false
-    t.string "unlock_token"
-    t.datetime "lock_expired_at"
     t.float "captcha_score"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
