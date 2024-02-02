@@ -7,7 +7,7 @@ RSpec.describe AccountLocks::UnlockByTokenService do
 
   let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com') }
   let(:token) { nil }
-  let!(:user_1) {
+  let(:user_1) {
     create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
   }
   let(:account_lock) {
@@ -21,6 +21,7 @@ RSpec.describe AccountLocks::UnlockByTokenService do
   }
 
   before do
+    user_1
     account_lock
     RequestStore.store[:current_tenant_domain] = "#{current_tenant.id}.localhost.com" || '-'
   end
