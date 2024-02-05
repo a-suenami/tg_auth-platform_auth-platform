@@ -6,7 +6,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.2.2'
+ruby '3.3.0'
 
 # ------------------------------------------------------------------------------
 # Core, DB
@@ -160,7 +160,7 @@ gem 'phony_rails'
 gem 'sorbet-runtime', '~> 0.5.11048'
 
 # reCAPTCHA Enterprise Client
-gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.17.2'
+gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.17.3'
 
 # ------------------------------------------------------------------------------
 # Development and Test Only

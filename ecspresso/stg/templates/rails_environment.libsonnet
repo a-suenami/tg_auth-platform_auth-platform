@@ -52,10 +52,6 @@
     "value": "4"
   },
   {
-    "name": "RUBY_YJIT_ENABLE",
-    "value": "1"
-  },
-  {
     "name": "RULER_AUTH0_CLIENT_ID",
     "value": "T0dSCl1BC38VSdiq8UY6KWcDRPxy9Dd8"
   },
