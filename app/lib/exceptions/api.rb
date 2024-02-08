@@ -60,5 +60,17 @@ module Exceptions
         I18n.t 'exceptions.api.twilio_rate_limit_error'
       end
     end
+
+    class TwilioBlockedByFraudGuardError < BaseError
+      sig { returns(Symbol) }
+      def code
+        :twilio_blocked_by_fraud_guard_error
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.api.twilio_blocked_by_fraud_guard_error'
+      end
+    end
   end
 end

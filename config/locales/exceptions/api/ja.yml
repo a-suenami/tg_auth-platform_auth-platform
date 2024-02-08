@@ -5,3 +5,4 @@ ja:
       invalid_request_error: 不正なリクエストです
       request_limit_error: アクセス制限に達しました。
       twilio_rate_limit_error: We are currently experiencing a high volume of traffic. Please try again later.
+      twilio_blocked_by_fraud_guard_error: An unexpected error has occurred. Please contact us if the problem persists.

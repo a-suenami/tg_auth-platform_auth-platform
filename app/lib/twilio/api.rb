@@ -27,8 +27,10 @@ module Twilio
           channel: 'sms',
         )
     rescue Twilio::REST::RestError => e
-      if e.status_code.to_s =~ /429/
+      if e.status_code.to_s == '429'
         raise Exceptions::API::TwilioRatelimitError
+      elsif e.code.to_s == '60410' # Verification delivery attempt blocked
+        raise Exceptions::API::TwilioBlockedByFraudGuardError
       else
         raise e
       end
