@@ -4,10 +4,12 @@ variables:
   POSTGRES_VERSION: 'postgres:15-alpine'
 
 cache: &cache
+  key:
+    ${CI_JOB_IMAGE}
   paths:
     - vendor/bundle
-    #- public/vite
-    #- tmp/cache/vite
+    # - public/vite
+    # - tmp/cache/vite
 
 stages:
   - prepare
@@ -22,7 +24,6 @@ bundle-package:
   stage: prepare
   cache:
     <<: *cache
-    key: ${RUBY_VERSION}
   script:
     - bundle install --jobs=`nproc` --deployment
     - bundle clean
@@ -49,7 +50,6 @@ rubocop:
   stage: test
   cache:
     <<: *cache
-    key: ${RUBY_VERSION}
     policy: pull
   variables:
     RAILS_ENV: test
@@ -68,7 +68,6 @@ rspec:
   stage: test
   cache:
     <<: *cache
-    key: ${RUBY_VERSION}
     policy: pull
   variables:
     RAILS_ENV: test
@@ -111,8 +110,8 @@ sorbet:
   stage: test
   cache:
     <<: *cache
-    # RAILS_ENV=development で bundle するので cache key 分ける
-    key: ${RUBY_VERSION}-development
+    key: ${CI_JOB_IMAGE}-test
+    policy: pull-push
   services:
     - ${POSTGRES_VERSION}
   variables:
@@ -123,13 +122,15 @@ sorbet:
     POSTGRES_PASSWORD: postgres
     RAILS_ENV: development
   before_script:
+    - mv vendor/bundle /usr/local/ || true
     - RAILS_ENV=development /bin/sh docker/scripts/bundle_install.sh
     - bundle exec rake db:create db:schema:load
   script:
-    - bundle exec tapioca gems --verify --environment=development
-    - bundle exec tapioca dsl --verify --environment=development
-    - bundle exec tapioca check-shims
+    - bundle exec tapioca gems -w `nproc` --verify --environment=development
+    - bundle exec tapioca dsl -w `nproc` --verify --environment=development
     - bundle exec srb tc
+    - bundle exec tapioca check-shims -w `nproc`
+    - mv /usr/local/bundle vendor/
   except:
     - /^deploy-.*$/
     - schedules
@@ -139,7 +140,6 @@ assets:precompile:
   stage: test
   cache:
     <<: *cache
-    key: ${RUBY_VERSION}
   variables:
     RAILS_ENV: production
     SECRET_KEY_BASE: 784a47d74a21582374648c380d4d2445514133912f2a075d47d1bba5391487c12e78e5e746e838bf227a7855388003748bd20abf5fd151710d15dab58736d35e
@@ -162,7 +162,6 @@ build:app:staging:
   cache:
     paths:
       - vendor/bundle
-    key: ${RUBY_VERSION}
     policy: pull
   services:
     - docker:dind
@@ -190,7 +189,6 @@ build:app:production:
   cache:
     paths:
       - vendor/bundle
-    key: ${RUBY_VERSION}
     policy: pull
   services:
     - docker:dind
