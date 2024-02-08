@@ -48,5 +48,17 @@ module Exceptions
         I18n.t 'exceptions.api.request_limit_error'
       end
     end
+
+    class TwilioRatelimitError < BaseError
+      sig { returns(Symbol) }
+      def code
+        :twilio_rate_limit_error
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.api.twilio_rate_limit_error'
+      end
+    end
   end
 end

@@ -26,6 +26,12 @@ module Twilio
           custom_code:,
           channel: 'sms',
         )
+    rescue Twilio::REST::RestError => e
+      if e.status_code.to_s =~ /429/
+        raise Exceptions::API::TwilioRatelimitError
+      else
+        raise e
+      end
     end
   end
 end
