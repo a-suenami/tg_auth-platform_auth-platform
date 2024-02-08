@@ -160,8 +160,7 @@ build:app:staging:
   image: containers.l.twogate.net/docker/docker-awscli:master
   stage: build
   cache:
-    paths:
-      - vendor/bundle
+    <<: *cache
     policy: pull
   services:
     - docker:dind
@@ -187,8 +186,7 @@ build:app:production:
   image: containers.l.twogate.net/docker/docker-awscli:master
   stage: build
   cache:
-    paths:
-      - vendor/bundle
+    <<: *cache
     policy: pull
   services:
     - docker:dind
