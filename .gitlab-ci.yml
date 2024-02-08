@@ -4,9 +4,9 @@ variables:
   POSTGRES_VERSION: 'postgres:15-alpine'
 
 cache: &cache
-  - key:
-      files:
-        - Gemfile.lock
+  key:
+    files:
+      - Gemfile.lock
   paths:
     - vendor/bundle
     # - public/vite
