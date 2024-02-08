@@ -126,10 +126,10 @@ sorbet:
     - RAILS_ENV=development /bin/sh docker/scripts/bundle_install.sh
     - bundle exec rake db:create db:schema:load
   script:
-    - bundle exec tapioca gems --verify --environment=development
-    - bundle exec tapioca dsl --verify --environment=development
-    - bundle exec tapioca check-shims
+    - bundle exec tapioca gems -w `nproc` --verify --environment=development
+    - bundle exec tapioca dsl -w `nproc` --verify --environment=development
     - bundle exec srb tc
+    - bundle exec tapioca check-shims -w `nproc`
     - mv /usr/local/bundle vendor/
   except:
     - /^deploy-.*$/
