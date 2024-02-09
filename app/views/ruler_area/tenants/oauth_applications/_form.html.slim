@@ -24,6 +24,11 @@
   p.uk-article-meta プロフィール更新時EventBridgeによる変更通知を発行するかどうかのフラグ。オンの場合このOAuthApplication向けにeventが発行される。
   = f.check_box :enable_push_event, :as => :boolean, class: "uk-checkbox"
 .uk-margin
+  = f.label :require_two_factor_auth_by_sms
+  p.uk-article-meta ログイン時email/passとは別にSMSでの2fa認証を要求するかどうかのフラグ
+  = f.check_box :require_two_factor_auth_by_sms, :as => :boolean, class: "uk-checkbox"
+
+.uk-margin
   = f.label :confidential
   = f.check_box :confidential, :as => :boolean, class: "uk-checkbox"
 = f.submit class: "uk-button uk-button-default"

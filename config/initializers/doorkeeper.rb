@@ -32,7 +32,21 @@ Doorkeeper.configure do
 
         redirect_to client.login_url_with_flag, allow_other_host: true
       else
-        resource_owner
+        # SMS二要素認証
+        # TODO: 後でリファクタする
+        oauth_application = OauthApplication.find_by(uid: params[:client_id])
+        if oauth_application.require_two_factor_auth_by_sms
+          if cookie_session[:sms_two_factor_auth_verified].present? # rubocop:disable Metrics/BlockNesting
+            resource_owner
+          else
+            client = Tenant.current.login_spa_application
+            raise ActiveRecord::RecordNotFound if client.blank? # rubocop:disable Metrics/BlockNesting
+
+            redirect_to client.login_url_with_flag, allow_other_host: true
+          end
+        else
+          resource_owner
+        end
       end
     end
   end
@@ -260,7 +274,7 @@ Doorkeeper.configure do
   # https://doorkeeper.gitbook.io/guides/ruby-on-rails/scopes
   #
   default_scopes  :public
-  optional_scopes :uid, :email, :name, :profile, :phone_number, :contact, :delivery_address, :openid, :admin_users
+  optional_scopes :uid, :email, :name, :profile, :phone_number, :contact, :delivery_address, :openid, :sms2fa, :admin_users
 
   # Allows to restrict only certain scopes for grant_type.
   # By default, all the scopes will be available for all the grant types.

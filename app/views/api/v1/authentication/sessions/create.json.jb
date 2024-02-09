@@ -5,5 +5,6 @@ json[:email] = user.email
 json[:enabled] = user.enabled
 json[:email_verified] = user.email_verified
 json[:sms_verified] = user.sms_verified
+json[:require_sms_two_factor_authentication] = require_sms_two_factor_authentication
 
 json
