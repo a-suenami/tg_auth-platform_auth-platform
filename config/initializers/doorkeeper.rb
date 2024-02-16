@@ -15,40 +15,35 @@ Doorkeeper.configure do
 
     resource_owner = User.active.find_by(id: cookie_session[:current_user_id])
 
+    oauth_application = OauthApplication.find_by(uid: params[:client_id])
+    raise ActiveRecord::RecordNotFound if oauth_application.blank?
 
+    require_two_factor_auth_by_sms = oauth_application.require_two_factor_auth_by_sms
+    client = Tenant.current.login_spa_application
+    raise ActiveRecord::RecordNotFound if client.blank?
+
+    # CASE1: 未ログイン時
     if resource_owner.nil?
-      client = Tenant.current.login_spa_application
-      raise ActiveRecord::RecordNotFound if client.blank?
-
+      # sign_upが指定されている場合は新規登録URLへ遷移
       if params[:on_no_session].present? && params[:on_no_session] == 'sign_up' && client.sign_up_url.present?
-        redirect_to client.sign_up_url_with_flag, allow_other_host: true
+        next redirect_to client.sign_up_url_with_flag(require_two_factor_auth_by_sms:), allow_other_host: true
       else
-        redirect_to client.login_url_with_flag, allow_other_host: true
-      end
-    else
-      if resource_owner&.enabled == false
-        client = Tenant.current.login_spa_application
-        raise ActiveRecord::RecordNotFound if client.blank?
-
-        redirect_to client.login_url_with_flag, allow_other_host: true
-      else
-        # SMS二要素認証
-        # TODO: 後でリファクタする
-        oauth_application = OauthApplication.find_by(uid: params[:client_id])
-        if oauth_application.require_two_factor_auth_by_sms
-          if cookie_session[:sms_two_factor_auth_verified].present? # rubocop:disable Metrics/BlockNesting
-            resource_owner
-          else
-            client = Tenant.current.login_spa_application
-            raise ActiveRecord::RecordNotFound if client.blank? # rubocop:disable Metrics/BlockNesting
-
-            redirect_to client.login_url_with_flag, allow_other_host: true
-          end
-        else
-          resource_owner
-        end
+        next redirect_to client.login_url_with_flag(require_two_factor_auth_by_sms:), allow_other_host: true
       end
     end
+
+    # CASE2: プロフィール未登録時
+    if resource_owner&.enabled == false
+      next redirect_to client.login_url_with_flag(require_two_factor_auth_by_sms:), allow_other_host: true
+    end
+
+    # CASE3: SMS二要素認証が必須で未認証時
+    if require_two_factor_auth_by_sms && cookie_session[:sms_two_factor_auth_verified].blank?
+      next redirect_to client.login_url_with_flag(require_two_factor_auth_by_sms:), allow_other_host: true
+    end
+
+    # ログイン済み
+    resource_owner
   end
 
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb

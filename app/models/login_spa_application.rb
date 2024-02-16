@@ -8,24 +8,25 @@ class LoginSpaApplication < ApplicationRecord
   validates :sign_up_url, format: /\A#{URI::DEFAULT_PARSER.make_regexp(%w[http https])}\z/, allow_blank: true
   validates :redirect_url_on_password_reset, format: /\A#{URI::DEFAULT_PARSER.make_regexp(%w[http https])}\z/
 
-  sig { returns(String) }
-  def login_url_with_flag
-    attach_oauth_flow_flag(login_url)
+  sig { params(require_two_factor_auth_by_sms: T::Boolean).returns(String) }
+  def login_url_with_flag(require_two_factor_auth_by_sms: false)
+    attach_oauth_flow_flag(login_url, require_two_factor_auth_by_sms:)
   end
 
-  sig { returns(String) }
-  def sign_up_url_with_flag
-    attach_oauth_flow_flag(sign_up_url)
+  sig { params(require_two_factor_auth_by_sms: T::Boolean).returns(String) }
+  def sign_up_url_with_flag(require_two_factor_auth_by_sms: false)
+    attach_oauth_flow_flag(sign_up_url, require_two_factor_auth_by_sms:)
   end
 
   private
 
-  sig { params(url: T.nilable(String)).returns(String) }
-  def attach_oauth_flow_flag(url)
+  sig { params(url: T.nilable(String), require_two_factor_auth_by_sms: T::Boolean).returns(String) }
+  def attach_oauth_flow_flag(url, require_two_factor_auth_by_sms: false)
     return '' if url.blank?
 
     uri = URI.parse(url)
     query = URI.decode_www_form(uri.query || '') << ['in_oauth_flow', 'true']
+    query << ['require_two_factor_auth_by_sms', 'true'] if require_two_factor_auth_by_sms
     uri.query = URI.encode_www_form(query)
     uri.to_s
   end
