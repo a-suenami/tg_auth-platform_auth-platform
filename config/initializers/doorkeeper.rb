@@ -18,7 +18,7 @@ Doorkeeper.configure do
     oauth_application = OauthApplication.find_by(uid: params[:client_id])
     raise ActiveRecord::RecordNotFound if oauth_application.blank?
 
-    require_two_factor_auth_by_sms = oauth_application.require_two_factor_auth_by_sms
+    require_sms_mfa = oauth_application.require_sms_mfa
     client = Tenant.current.login_spa_application
     raise ActiveRecord::RecordNotFound if client.blank?
 
@@ -26,20 +26,20 @@ Doorkeeper.configure do
     if resource_owner.nil?
       # sign_upが指定されている場合は新規登録URLへ遷移
       if params[:on_no_session].present? && params[:on_no_session] == 'sign_up' && client.sign_up_url.present?
-        next redirect_to client.sign_up_url_with_flag(require_two_factor_auth_by_sms:), allow_other_host: true
+        next redirect_to client.sign_up_url_with_flag(require_sms_mfa:), allow_other_host: true
       else
-        next redirect_to client.login_url_with_flag(require_two_factor_auth_by_sms:), allow_other_host: true
+        next redirect_to client.login_url_with_flag(require_sms_mfa:), allow_other_host: true
       end
     end
 
     # CASE2: プロフィール未登録時
     if resource_owner&.enabled == false
-      next redirect_to client.login_url_with_flag(require_two_factor_auth_by_sms:), allow_other_host: true
+      next redirect_to client.login_url_with_flag(require_sms_mfa:), allow_other_host: true
     end
 
     # CASE3: SMS二要素認証が必須で未認証時
-    if require_two_factor_auth_by_sms && cookie_session[:sms_two_factor_auth_verified].blank?
-      next redirect_to client.login_url_with_flag(require_two_factor_auth_by_sms:), allow_other_host: true
+    if require_sms_mfa && cookie_session[:sms_mfa_verified].blank?
+      next redirect_to client.login_url_with_flag(require_sms_mfa:), allow_other_host: true
     end
 
     # ログイン済み
@@ -269,7 +269,7 @@ Doorkeeper.configure do
   # https://doorkeeper.gitbook.io/guides/ruby-on-rails/scopes
   #
   default_scopes  :public
-  optional_scopes :uid, :email, :name, :profile, :phone_number, :contact, :delivery_address, :openid, :sms2fa, :admin_users
+  optional_scopes :uid, :email, :name, :profile, :phone_number, :contact, :delivery_address, :openid, :sms_mfa, :admin_users
 
   # Allows to restrict only certain scopes for grant_type.
   # By default, all the scopes will be available for all the grant types.

@@ -20,16 +20,19 @@ Rails.application.routes.draw do
             post :verify_sms
           end
         end
-        resources :sms_two_factor_authenticate, only: [] do
-          collection do
-            post :send_authentication_sms
-            post :authenticate_sms
-          end
-        end
         resource :passwords, only: [:create, :update]
         resources :password_resets, only: [:create] do
           collection do
             post :request, to: 'password_resets#reset_requests'
+          end
+        end
+
+        namespace :mfa do
+          resource :sms, only: [] do
+            collection do
+              post :send, to: 'sms#send_sms'
+              post :authenticate
+            end
           end
         end
       end

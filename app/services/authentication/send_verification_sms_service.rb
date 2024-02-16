@@ -7,28 +7,17 @@ module Authentication
     # SMS送信対象外の国コードリスト
     EXCLUDED_COUNTRY_CODE = T.let(%w[AF AZ BI BZ ET IQ LB LK LY MG PK PS RU SY TD TJ TN UZ ZM].freeze, T::Array[String])
 
-    sig { params(local_phone_number: String, phone_country_code: String, user_id: String, ip_address: String, delivery_type: T.nilable(String)).returns(User) }
-    def execute!(local_phone_number:, phone_country_code:, user_id:, ip_address:, delivery_type:)
-      raise Exceptions::Authentication::PhoneNumberInvaild unless PhonyRails.plausible_number?(local_phone_number, country_number: phone_country_code)
-
-      phone_number = PhonyRails.normalize_number(local_phone_number, country_number: phone_country_code)
-
-      # Phonelibの方が市外局番以降まで厳密にチェックしてくれるので、2重でチェック
-      # TODO: 国コードではなく国名コードを受け付けるようにすればPhonyRailsは不要
-      raise Exceptions::Authentication::PhoneNumberStrictlyInvaild unless Phonelib.valid?(phone_number)
-
+    sig { params(phone_number: String, user_id: String, ip_address: String, delivery_type: T.nilable(String), verifier_type: Symbol).returns(User) }
+    def execute!(phone_number:, user_id:, ip_address:, delivery_type:, verifier_type: :registration)
       # SMS送信対象外の国コードチェック
       raise Exceptions::Authentication::NoSmsSupportedCountry if excluded_country_code?(phone_number)
 
       user = User.active.find user_id
 
-      # 電話番号重複チェック
-      raise Exceptions::Authentication::PhoneNumberDuplicated if User.active.find_by(phone_number:).present?
-
       sms_rate_limit(phone_number:, user:, _ip_address: ip_address)
 
       ActiveRecord::Base.transaction do
-        sms_verifier = Users::SmsVerifier.new(user:, phone_number:, verifier_type: :registration, ip_address:)
+        sms_verifier = Users::SmsVerifier.new(user:, phone_number:, verifier_type:, ip_address:)
         sms_verifier.set_code
         sms_verifier.save!
 

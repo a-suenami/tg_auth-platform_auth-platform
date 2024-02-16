@@ -67,7 +67,7 @@ Doorkeeper::OpenidConnect.configure do
       resource_owner&.tenant_id
     end
 
-    claim :sms_authenticated, response: :id_token, scope: :sms2fa do |_resource_owner|
+    claim :sms_mfa, response: :id_token, scope: :sms_mfa do |_resource_owner|
       true
     end
 

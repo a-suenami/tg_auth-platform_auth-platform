@@ -4,10 +4,10 @@ module Authentication
   class VerifySmsService < BaseService
     extend T::Sig
 
-    sig { params(verification_code: String, user_id: String).returns(User) }
-    def execute!(verification_code:, user_id:)
+    sig { params(verification_code: String, user_id: String, verifier_type: Symbol).returns(User) }
+    def execute!(verification_code:, user_id:, verifier_type: :registration)
       user = User.active.find user_id
-      sms_verifier = Users::SmsVerifier.find_by(user:, code: verification_code, verifier_type: :registration, used_at: nil)
+      sms_verifier = Users::SmsVerifier.find_by(user:, code: verification_code, verifier_type:, used_at: nil)
 
       if !Rails.env.production? && Settings.super_mode == true # SUPER_MODE では常に成功
         user.sms_verified = true
@@ -17,7 +17,7 @@ module Authentication
       end
 
       if sms_verifier.blank?
-        user.sms_verifiers.enabled.where(verifier_type: :registration).find_each do |ev|
+        user.sms_verifiers.enabled.where(verifier_type:).find_each do |ev|
           ev.remaining_attempts -= 1
           ev.save!
         end
