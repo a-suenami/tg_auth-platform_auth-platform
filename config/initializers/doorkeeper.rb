@@ -38,7 +38,7 @@ Doorkeeper.configure do
     end
 
     # CASE3: SMS二要素認証が必須で未認証時
-    if require_sms_mfa && cookie_session[:sms_mfa_verified].blank?
+    if require_sms_mfa && cookie_session[:sms_mfa_verified].blank? && !resource_owner.suppress_sms_verification
       next redirect_to client.login_url_with_flag(require_sms_mfa:), allow_other_host: true
     end
 
