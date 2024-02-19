@@ -8,15 +8,7 @@ module API::V1::Authentication
       # 必須でない場合一旦このAPIは無効。攻撃の対象に利用されないように。
       raise Exceptions::Authentication::SmsVerificationDisabled unless Tenant.current.sms_verification_required
 
-      local_phone_number = params[:phone_number]
-      phone_country_code = params[:phone_country_code]
-
-      raise Exceptions::Authentication::PhoneNumberInvaild unless PhonyRails.plausible_number?(local_phone_number, country_number: phone_country_code)
-
-      phone_number = PhonyRails.normalize_number(local_phone_number, country_number: phone_country_code)
-      # Phonelibの方が市外局番以降まで厳密にチェックしてくれるので、2重でチェック
-      # TODO: 国コードではなく国名コードを受け付けるようにすればPhonyRailsは不要
-      raise Exceptions::Authentication::PhoneNumberStrictlyInvaild unless Phonelib.valid?(phone_number)
+      phone_number = international_phone_number(params[:phone_number], params[:phone_country_code])
       # 電話番号重複チェック
       raise Exceptions::Authentication::PhoneNumberDuplicated if User.active.find_by(phone_number:).present?
 
@@ -38,6 +30,19 @@ module API::V1::Authentication
       @user = Authentication::VerifySmsService.new.execute!(verification_code: params[:sms_verification_code], user_id: @current_user.id)
 
       render :verify_sms
+    end
+
+    private
+
+    def international_phone_number(local_phone_number, phone_country_code)
+      raise Exceptions::Authentication::PhoneNumberInvaild unless PhonyRails.plausible_number?(local_phone_number, country_number: phone_country_code)
+
+      phone_number = PhonyRails.normalize_number(local_phone_number, country_number: phone_country_code)
+      # Phonelibの方が市外局番以降まで厳密にチェックしてくれるので、2重でチェック
+      # TODO: 国コードではなく国名コードを受け付けるようにすればPhonyRailsは不要
+      raise Exceptions::Authentication::PhoneNumberStrictlyInvaild unless Phonelib.valid?(phone_number)
+
+      phone_number
     end
   end
 end

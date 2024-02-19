@@ -7,7 +7,6 @@ module API::V1::Authentication
       user = Authentication::SessionCreateService.new.execute!(email: params[:email], password: params[:password])
       cookie_session[:current_user_id] = user.id
 
-
       render :create, locals: { user: }
     end
   end
