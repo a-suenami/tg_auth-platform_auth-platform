@@ -6,7 +6,6 @@ module API::V1::Authentication::MFA
     def send_sms
       # マニュアル対応のユーザはもうSMS検証済みにしてしまう。
       if current_user.suppress_sms_verification
-        cookie_session[:sms_mfa_verified] = Time.zone.now
         @user = current_user
         return render :send
       end
