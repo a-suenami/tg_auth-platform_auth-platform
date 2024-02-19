@@ -20,7 +20,7 @@ module RulerArea::Tenants
     def create
       @oauth_application = OauthApplication.create(oauth_application_params)
       if @oauth_application.persisted?
-        redirect_to ruler_area_tenant_oauth_applications_path, notice: t('helpers.messages.created')
+        redirect_to ruler_area_tenant_oauth_application_path(@oauth_application.tenant_id, @oauth_application), notice: t('helpers.messages.created')
       else
         render :new, status: :unprocessable_entity
       end
@@ -30,7 +30,7 @@ module RulerArea::Tenants
     def update
       @oauth_application = OauthApplication.find(params[:id])
       if @oauth_application.update(oauth_application_params)
-        redirect_to ruler_area_tenant_oauth_applications_path, notice: t('helpers.messages.updated')
+        redirect_to ruler_area_tenant_oauth_application_path(@oauth_application.tenant_id, @oauth_application), notice: t('helpers.messages.updated')
       else
         render :edit, status: :unprocessable_entity
       end
@@ -45,7 +45,7 @@ module RulerArea::Tenants
     private
 
     def oauth_application_params
-      params.require(:oauth_application).permit(:name, :redirect_uri, :scopes, :confidential, :enable_client_credential_flow, :enable_push_event)
+      params.require(:oauth_application).permit(:name, :redirect_uri, :scopes, :confidential, :enable_client_credential_flow, :enable_push_event, :require_sms_mfa)
     end
   end
 end

@@ -26,6 +26,15 @@ Rails.application.routes.draw do
             post :request, to: 'password_resets#reset_requests'
           end
         end
+
+        namespace :mfa do
+          resource :sms, only: [] do
+            collection do
+              post :send, to: 'sms#send_sms'
+              post :authenticate
+            end
+          end
+        end
       end
     end
   end

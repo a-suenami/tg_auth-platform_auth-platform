@@ -34807,7 +34807,7 @@ class ActiveRecord::StatementTimeout < ::ActiveRecord::QueryAborted; end
 #     store :settings, accessors: [ :color, :homepage ], coder: JSON
 #     store :parent, accessors: [ :name ], coder: JSON, prefix: true
 #     store :spouse, accessors: [ :name ], coder: JSON, prefix: :partner
-#     store :settings, accessors: [ :two_factor_auth ], suffix: true
+#     store :settings, accessors: [ :mfa ], suffix: true
 #     store :settings, accessors: [ :login_retry ], suffix: :config
 #   end
 #
@@ -34815,7 +34815,7 @@ class ActiveRecord::StatementTimeout < ::ActiveRecord::QueryAborted; end
 #   u.color                          # Accessor stored attribute
 #   u.parent_name                    # Accessor stored attribute with prefix
 #   u.partner_name                   # Accessor stored attribute with custom prefix
-#   u.two_factor_auth_settings       # Accessor stored attribute with suffix
+#   u.mfa_settings       # Accessor stored attribute with suffix
 #   u.login_retry_config             # Accessor stored attribute with custom suffix
 #   u.settings[:country] = 'Denmark' # Any attribute, even if not specified with an accessor
 #
@@ -34838,7 +34838,7 @@ class ActiveRecord::StatementTimeout < ::ActiveRecord::QueryAborted; end
 #
 # The stored attribute names can be retrieved using {.stored_attributes}[rdoc-ref:rdoc-ref:ClassMethods#stored_attributes].
 #
-#   User.stored_attributes[:settings] # => [:color, :homepage, :two_factor_auth, :login_retry]
+#   User.stored_attributes[:settings] # => [:color, :homepage, :mfa, :login_retry]
 #
 # == Overwriting default accessors
 #

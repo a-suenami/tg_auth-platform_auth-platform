@@ -78,6 +78,9 @@ module GeneratedUrlHelpersModule
   def api_v1_private_userinfo_index_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def authenticate_api_v1_authentication_mfa_sms_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_contact_address_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -229,6 +232,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenants_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def send_api_v1_authentication_mfa_sms_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def send_verification_email_api_v1_authentication_registrations_url(*args); end

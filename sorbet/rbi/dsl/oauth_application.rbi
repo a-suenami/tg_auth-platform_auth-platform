@@ -535,10 +535,11 @@ class OauthApplication
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         enable_client_credential_flow: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         enable_push_event: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        require_sms_mfa: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, uid: nil, secret: nil, redirect_uri: nil, scopes: nil, confidential: nil, created_at: nil, updated_at: nil, enable_client_credential_flow: nil, enable_push_event: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, uid: nil, secret: nil, redirect_uri: nil, scopes: nil, confidential: nil, created_at: nil, updated_at: nil, enable_client_credential_flow: nil, enable_push_event: nil, require_sms_mfa: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -908,6 +909,51 @@ class OauthApplication
     sig { void }
     def redirect_uri_will_change!; end
 
+    sig { returns(T.nilable(T::Boolean)) }
+    def require_sms_mfa; end
+
+    sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+    def require_sms_mfa=(value); end
+
+    sig { returns(T::Boolean) }
+    def require_sms_mfa?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def require_sms_mfa_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def require_sms_mfa_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def require_sms_mfa_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def require_sms_mfa_change; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def require_sms_mfa_change_to_be_saved; end
+
+    sig { params(from: T.nilable(T::Boolean), to: T.nilable(T::Boolean)).returns(T::Boolean) }
+    def require_sms_mfa_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def require_sms_mfa_in_database; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def require_sms_mfa_previous_change; end
+
+    sig { params(from: T.nilable(T::Boolean), to: T.nilable(T::Boolean)).returns(T::Boolean) }
+    def require_sms_mfa_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def require_sms_mfa_previously_was; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def require_sms_mfa_was; end
+
+    sig { void }
+    def require_sms_mfa_will_change!; end
+
     sig { void }
     def restore_confidential!; end
 
@@ -931,6 +977,9 @@ class OauthApplication
 
     sig { void }
     def restore_redirect_uri!; end
+
+    sig { void }
+    def restore_require_sms_mfa!; end
 
     sig { void }
     def restore_scopes!; end
@@ -994,6 +1043,12 @@ class OauthApplication
 
     sig { returns(T::Boolean) }
     def saved_change_to_redirect_uri?; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def saved_change_to_require_sms_mfa; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_require_sms_mfa?; end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_scopes; end
@@ -1275,6 +1330,9 @@ class OauthApplication
     def will_save_change_to_redirect_uri?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_require_sms_mfa?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_scopes?; end
 
     sig { returns(T::Boolean) }
@@ -1432,10 +1490,11 @@ class OauthApplication
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         enable_client_credential_flow: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         enable_push_event: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        require_sms_mfa: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, uid: nil, secret: nil, redirect_uri: nil, scopes: nil, confidential: nil, created_at: nil, updated_at: nil, enable_client_credential_flow: nil, enable_push_event: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, uid: nil, secret: nil, redirect_uri: nil, scopes: nil, confidential: nil, created_at: nil, updated_at: nil, enable_client_credential_flow: nil, enable_push_event: nil, require_sms_mfa: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

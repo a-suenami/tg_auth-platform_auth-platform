@@ -1,0 +1,4 @@
+{
+  user_id: @user.id,
+  suppress_sms_verification: @user.suppress_sms_verification,
+}

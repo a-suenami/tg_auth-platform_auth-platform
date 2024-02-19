@@ -7,7 +7,7 @@ module Users
     CODE_ATTEMPTS_LIMIT = T.let(5, Integer)
 
     belongs_to :user
-    enumerize :verifier_type, in: [:registration], default: :registration
+    enumerize :verifier_type, in: [:registration, :mfa], default: :registration
     enumerize :delivery_type, in: [:sms, :voice, :sms_voice, :voide_sms]
 
     validates :phone_number, phony_plausible: true

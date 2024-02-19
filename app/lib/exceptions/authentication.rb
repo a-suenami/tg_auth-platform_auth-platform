@@ -195,5 +195,17 @@ module Exceptions
         I18n.t 'exceptions.authentication.sms_send_limit'
       end
     end
+
+    class UnregisteredVerifiedPhoneNumberError < BaseError
+      sig { returns(Symbol) }
+      def code
+        :unregistered_verified_phone_number
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.authentication.unregistered_verified_phone_number'
+      end
+    end
   end
 end

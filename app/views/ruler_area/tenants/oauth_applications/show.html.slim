@@ -51,3 +51,7 @@
       th = OauthApplication.human_attribute_name(:enable_push_event)
       td
         = @oauth_application.enable_push_event
+    tr
+      th = OauthApplication.human_attribute_name(:require_sms_mfa)
+      td
+        = @oauth_application.require_sms_mfa
