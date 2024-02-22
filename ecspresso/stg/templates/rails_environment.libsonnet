@@ -1,7 +1,7 @@
 [
   {
     "name": "ALLOW_ORIGINS",
-    "value": "['https://triple-ticket.netlify.app', 'https://web.account.stg.hikaruutada-tour-official.com', 'https://ticket.stg.hikaruutada-tour-official.com']"
+    "value": "['https://triple-ticket.netlify.app', 'https://web.account.stg.hikaruutada-tour-official.com', 'https://ticket.stg.hikaruutada-tour-official.com', 'https://autify.ticket.app-staging.t-riple.com']"
   },
   {
     "name": "ADMIN_AUTH0_CLIENT_ID",
