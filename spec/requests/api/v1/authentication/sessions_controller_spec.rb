@@ -3,11 +3,12 @@
 RSpec.describe '[ Sessions API ]' do
   describe 'POST /api/v1/authentication/sessions' do
     let(:current_user) {
-      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
+      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', suppress_sms_verification:)
     }
     let(:deleted_user) {
       create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true)
     }
+    let(:suppress_sms_verification) { false }
 
     let(:email_template) {
       create(:email_template,
@@ -91,6 +92,25 @@ RSpec.describe '[ Sessions API ]' do
       it 'returns 200' do
         is_expected.to eq 200
         expect(body_hash['id']).to eq(current_user.id)
+        expect(body_hash['suppress_sms_verification']).to be(false)
+      end
+    end
+
+    context 'when user.suppress_sms_verification is true' do
+      let(:suppress_sms_verification) { true }
+      let(:params) {
+        {
+          email: 'test-user1@example.com',
+          password: 'Password1234!',
+        }
+      }
+
+      let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com') }
+
+      it 'returns 200' do
+        is_expected.to eq 200
+        expect(body_hash['id']).to eq(current_user.id)
+        expect(body_hash['suppress_sms_verification']).to be(true)
       end
     end
 
