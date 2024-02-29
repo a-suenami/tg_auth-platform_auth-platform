@@ -7,10 +7,19 @@ module Blastengine
     sig { returns(T.untyped) }
     attr_accessor :client
 
+    RETRY_OPTIONS = T.let({
+      max: 3,
+      interval: 0.05,
+      interval_randomness: 0.5,
+      backoff_factor: 2,
+      exceptions: Faraday::Retry::Middleware::DEFAULT_EXCEPTIONS + [Faraday::ConnectionFailed],
+    }.freeze, T::Hash[T.untyped, T.untyped],)
+
     sig { void }
     def initialize
       @endpoint_url = T.let('https://app.engn.jp', String)
       @client = T.let(Faraday.new(@endpoint_url) do |f|
+        f.request :retry, RETRY_OPTIONS
         f.response :json
         f.headers = {
           Authorization: "Bearer #{access_token}",
