@@ -11,6 +11,14 @@ module SmsLink
       voice_sms: 40,
     }.freeze, T::Hash[Symbol, Integer],)
 
+    RETRY_OPTIONS = T.let({
+      max: 3,
+      interval: 0.05,
+      interval_randomness: 0.5,
+      backoff_factor: 2,
+      exceptions: Faraday::Retry::Middleware::DEFAULT_EXCEPTIONS + [Faraday::ConnectionFailed],
+    }.freeze, T::Hash[T.untyped, T.untyped],)
+
     sig { returns(T.untyped) }
     attr_accessor :client
 
@@ -18,6 +26,7 @@ module SmsLink
     def initialize
       @endpoint_url = T.let('https://ss.smslink.jp', String)
       @client = T.let(Faraday.new(@endpoint_url) do |f|
+        f.request :retry, RETRY_OPTIONS
         f.response :json
         f.headers = {
           Authorization: "Bearer #{Settings.sms_link.api_token}",

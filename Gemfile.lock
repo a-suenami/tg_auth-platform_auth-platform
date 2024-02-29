@@ -691,6 +691,7 @@ DEPENDENCIES
   enumerize (~> 2.7)
   factory_bot_rails (~> 6.4, >= 6.4.3)
   faraday (~> 2.9)
+  faraday-retry (~> 2.2.0)
   google-cloud-recaptcha_enterprise-v1 (~> 0.17.3)
   jb (~> 0.8.2)
   jp_prefecture (~> 1.1, >= 1.1.1)
