@@ -536,10 +536,11 @@ class OauthApplication
         enable_client_credential_flow: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         enable_push_event: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         require_sms_mfa: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        allowed_logout_urls: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, uid: nil, secret: nil, redirect_uri: nil, scopes: nil, confidential: nil, created_at: nil, updated_at: nil, enable_client_credential_flow: nil, enable_push_event: nil, require_sms_mfa: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, uid: nil, secret: nil, redirect_uri: nil, scopes: nil, confidential: nil, created_at: nil, updated_at: nil, enable_client_credential_flow: nil, enable_push_event: nil, require_sms_mfa: nil, allowed_logout_urls: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -549,6 +550,51 @@ class OauthApplication
   end
 
   module GeneratedAttributeMethods
+    sig { returns(T.nilable(::String)) }
+    def allowed_logout_urls; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def allowed_logout_urls=(value); end
+
+    sig { returns(T::Boolean) }
+    def allowed_logout_urls?; end
+
+    sig { returns(T.nilable(::String)) }
+    def allowed_logout_urls_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def allowed_logout_urls_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def allowed_logout_urls_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def allowed_logout_urls_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def allowed_logout_urls_change_to_be_saved; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def allowed_logout_urls_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def allowed_logout_urls_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def allowed_logout_urls_previous_change; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def allowed_logout_urls_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def allowed_logout_urls_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def allowed_logout_urls_was; end
+
+    sig { void }
+    def allowed_logout_urls_will_change!; end
+
     sig { returns(T::Boolean) }
     def confidential; end
 
@@ -955,6 +1001,9 @@ class OauthApplication
     def require_sms_mfa_will_change!; end
 
     sig { void }
+    def restore_allowed_logout_urls!; end
+
+    sig { void }
     def restore_confidential!; end
 
     sig { void }
@@ -995,6 +1044,12 @@ class OauthApplication
 
     sig { void }
     def restore_updated_at!; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_allowed_logout_urls; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_allowed_logout_urls?; end
 
     sig { returns(T.nilable([T::Boolean, T::Boolean])) }
     def saved_change_to_confidential; end
@@ -1306,6 +1361,9 @@ class OauthApplication
     def updated_at_will_change!; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_allowed_logout_urls?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_confidential?; end
 
     sig { returns(T::Boolean) }
@@ -1491,10 +1549,11 @@ class OauthApplication
         enable_client_credential_flow: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         enable_push_event: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         require_sms_mfa: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        allowed_logout_urls: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, uid: nil, secret: nil, redirect_uri: nil, scopes: nil, confidential: nil, created_at: nil, updated_at: nil, enable_client_credential_flow: nil, enable_push_event: nil, require_sms_mfa: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, uid: nil, secret: nil, redirect_uri: nil, scopes: nil, confidential: nil, created_at: nil, updated_at: nil, enable_client_credential_flow: nil, enable_push_event: nil, require_sms_mfa: nil, allowed_logout_urls: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

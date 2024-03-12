@@ -45,7 +45,7 @@ module RulerArea::Tenants
     private
 
     def oauth_application_params
-      params.require(:oauth_application).permit(:name, :redirect_uri, :scopes, :confidential, :enable_client_credential_flow, :enable_push_event, :require_sms_mfa)
+      params.require(:oauth_application).permit(:name, :redirect_uri, :scopes, :confidential, :enable_client_credential_flow, :enable_push_event, :require_sms_mfa, :allowed_logout_urls)
     end
   end
 end

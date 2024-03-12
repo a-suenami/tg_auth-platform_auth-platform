@@ -205,7 +205,8 @@ CREATE TABLE public.oauth_applications (
     updated_at timestamp(6) without time zone NOT NULL,
     enable_client_credential_flow boolean DEFAULT false,
     enable_push_event boolean DEFAULT false,
-    require_sms_mfa boolean DEFAULT false
+    require_sms_mfa boolean DEFAULT false,
+    allowed_logout_urls text
 );
 
 
