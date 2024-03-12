@@ -108,6 +108,9 @@ module GeneratedPathHelpersModule
   def health_check_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def logout_sessions_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }

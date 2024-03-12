@@ -108,6 +108,9 @@ module GeneratedUrlHelpersModule
   def health_check_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def logout_sessions_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }

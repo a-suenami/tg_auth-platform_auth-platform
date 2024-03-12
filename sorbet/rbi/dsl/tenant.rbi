@@ -235,6 +235,20 @@ class Tenant
     sig { params(value: T.nilable(::LoginSpaApplication)).void }
     def login_spa_application=(value); end
 
+    sig { returns(T::Array[T.untyped]) }
+    def oauth_application_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def oauth_application_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `Tenant` class because it declared `has_many :oauth_applications`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::OauthApplication::PrivateCollectionProxy) }
+    def oauth_applications; end
+
+    sig { params(value: T::Enumerable[::OauthApplication]).void }
+    def oauth_applications=(value); end
+
     sig { returns(T.nilable(::LoginSpaApplication)) }
     def reload_login_spa_application; end
 

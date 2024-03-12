@@ -32,6 +32,10 @@
       td
         = @oauth_application.scopes
     tr
+      th = OauthApplication.human_attribute_name(:allowed_logout_urls)
+      td
+        = @oauth_application.allowed_logout_urls
+    tr
       th = OauthApplication.human_attribute_name(:confidential)
       td
         = @oauth_application.confidential

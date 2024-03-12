@@ -10,5 +10,10 @@ Rails.application.routes.draw do
         get :unlock
       end
     end
+    resources :sessions, only: [] do
+      collection do
+        get :logout
+      end
+    end
   end
 end
