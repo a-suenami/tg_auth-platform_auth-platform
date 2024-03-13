@@ -21,15 +21,12 @@ module OauthArea
       # URLが不正な場合はfalseを返す
       return false unless uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
 
-      # 与えられたURLからドメインとパスを抽出
-      uri.query = nil
-      base_url = uri.to_s
-      base_url.chomp!('/') # 末尾のスラッシュを削除
-
       # 抽出したURLがホワイトリストに含まれるかチェック
       allowed_logout_urls.any? do |whitelist_url|
-        whitelist_url.chomp!('/') # 末尾のスラッシュを削除
-        base_url == whitelist_url
+        whitelist_uri = URI.parse(whitelist_url)
+        return false unless whitelist_uri.is_a?(URI::HTTP) || whitelist_uri.is_a?(URI::HTTPS)
+
+        uri.host == whitelist_uri.host
       end
     end
   end
