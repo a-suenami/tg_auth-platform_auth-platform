@@ -21,12 +21,20 @@ module OauthArea
       # URLが不正な場合はfalseを返す
       return false unless uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
 
+      # 与えられたURLからドメインとパスを抽出
+      port = uri.port
+      # デフォルトポート(HTTP: 80, HTTPS: 443)を除外する場合、ポートを表示しない
+      port_string = (uri.scheme == 'http' && port == 80) || (uri.scheme == 'https' && port == 443) ? '' : ":#{port}"
+      base_url = "#{uri.scheme}://#{uri.host}#{port_string}"
+
       # 抽出したURLがホワイトリストに含まれるかチェック
       allowed_logout_urls.any? do |whitelist_url|
         whitelist_uri = URI.parse(whitelist_url)
-        return false unless whitelist_uri.is_a?(URI::HTTP) || whitelist_uri.is_a?(URI::HTTPS)
+        whitelist_port = uri.port
+        whitelist_port_string = (whitelist_uri.scheme == 'http' && whitelist_port == 80) || (whitelist_uri.scheme == 'https' && whitelist_port == 443) ? '' : ":#{whitelist_port}"
+        whitelist_base_url = "#{whitelist_uri.scheme}://#{whitelist_uri.host}#{whitelist_port_string}"
 
-        uri.host == whitelist_uri.host
+        base_url == whitelist_base_url
       end
     end
   end
