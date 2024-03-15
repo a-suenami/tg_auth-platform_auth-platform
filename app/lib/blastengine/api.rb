@@ -38,7 +38,6 @@ module Blastengine
         to: send_to,
         subject:,
         text_part: ActionView::Base.full_sanitizer.sanitize(body, tags: []),
-        html_part: body,
       },)
     end
 
