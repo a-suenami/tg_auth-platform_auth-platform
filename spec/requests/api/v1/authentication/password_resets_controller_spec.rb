@@ -108,40 +108,9 @@ RSpec.describe '[ Password Resets API ]' do
       account_lock
     end
 
-    context 'when email invaild' do
-      let(:params) {
-        {
-          email: 'hogehoge',
-          password_reset_code: 'this_is_code',
-          password: 'Abc123456$%',
-        }
-      }
-
-      it 'returns 400' do
-        is_expected.to eq 400
-        expect(AccountLock.find_by(email: current_user.email)).to be_locked
-      end
-    end
-
-    context 'when given email not associated with a user' do
-      let(:params) {
-        {
-          email: 'test-email@example.com',
-          password_reset_code: 'this_is_code',
-          password: 'Abc123456$%',
-        }
-      }
-
-      it 'returns 400' do
-        is_expected.to eq 400
-        expect(AccountLock.find_by(email: current_user.email)).to be_locked
-      end
-    end
-
     context 'when code invaild' do
       let(:params) {
         {
-          email: 'test-user1@example.com',
           password_reset_code: 'hogehoge',
           password: 'Abc123456$%',
         }
@@ -156,7 +125,6 @@ RSpec.describe '[ Password Resets API ]' do
     context 'when params vaild' do
       let(:params) {
         {
-          email: 'test-user1@example.com',
           password_reset_code: 'this_is_code',
           password: 'Abc123456$%',
         }
@@ -173,7 +141,6 @@ RSpec.describe '[ Password Resets API ]' do
     context 'when params invaild' do
       let(:params) {
         {
-          email: 'test-user1@example.com',
           password_reset_code: 'this_is_code',
           password: 'abc',
         }

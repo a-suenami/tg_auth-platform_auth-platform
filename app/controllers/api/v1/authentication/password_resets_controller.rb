@@ -12,7 +12,7 @@ module API::V1::Authentication
     end
 
     def create
-      user = Authentication::PasswordResetService.new(password_params).execute!(password_reset_code: params[:password_reset_code], email: params[:email])
+      user = Authentication::PasswordResetService.new(password_params).execute!(password_reset_code: params[:password_reset_code])
       cookie_session[:current_user_id] = user.id
       head :no_content
     end

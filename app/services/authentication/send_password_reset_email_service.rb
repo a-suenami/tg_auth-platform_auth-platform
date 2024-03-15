@@ -32,7 +32,6 @@ module Authentication
       # query encode
       params = {
         password_reset_code: password_reset.code,
-        email: user.email,
       }.to_query
       password_reset_url = "#{base_url}?#{params}"
 

@@ -3,34 +3,29 @@
 module Authentication
   class PasswordResetService < BaseService
 
-    def execute!(email:, password_reset_code:)
-      # email validate
-      unless email =~ URI::MailTo::EMAIL_REGEXP
-        raise Exceptions::Authentication::InvalidEmail
-      end
-
+    def execute!(password_reset_code:)
       ActiveRecord::Base.transaction do
-        user = User.active.find_by(email:, email_verified: true)
-        password_reset = Users::PasswordReset.find_by(user:, code: password_reset_code, expired_at: Time.zone.now..)
-        if user.blank? || password_reset.blank?
-          # アカウントの存在を隠すため、ユーザが存在しない場合もPasswordResetCodeInvalidエラー
+        password_reset = Users::PasswordReset.find_by(code: password_reset_code, expired_at: Time.zone.now..)
+        if password_reset.blank?
           raise Exceptions::Authentication::PasswordResetCodeInvalid
         elsif password_reset.expired_at < Time.zone.now
           raise Exceptions::Authentication::PasswordResetCodeExpired
         elsif password_reset.used_at.present?
           raise Exceptions::Authentication::PasswordResetCodeUsed
         else
-          user.update!(params)
+          password_reset.user.update!(params)
           password_reset.update!(used_at: Time.zone.now)
         end
 
         # パスワード変更時アカウントロックがある場合解除
-        account_lock = AccountLock.find_by(email: user.email)
-        if account_lock.present?
-          account_lock.unlock!
+        if password_reset&.user&.email.present?
+          account_lock = AccountLock.find_by(email: password_reset.user.email)
+          if account_lock.present?
+            account_lock.unlock!
+          end
         end
 
-        user
+        password_reset.user
       end
     end
   end
