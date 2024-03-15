@@ -174,6 +174,8 @@ RSpec.describe '[ Sessions API ]' do
       end
     end
 
+
+
     context 'when the user is locked' do
       let(:account_lock) {
         create(:account_lock,
