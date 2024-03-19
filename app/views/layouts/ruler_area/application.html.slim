@@ -18,6 +18,8 @@ html lang='ja'
             .tg-sidebar-section
               ul.uk-nav.uk-nav-default
                 ul.uk-parent
+                  = link_to 'Ruler一覧', ruler_area_rulers_path
+                ul.uk-parent
                   = link_to 'テナント一覧', ruler_area_tenants_path
                   / ul.uk-nav-sub
                   /   li
@@ -36,6 +38,8 @@ html lang='ja'
                         = link_to 'テンプレート管理', ruler_area_tenant_email_templates_path(@tenant_id)
                       li
                         = link_to 'OAuth設定', ruler_area_tenant_oauth_applications_path(@tenant_id)
+                      li
+                        = link_to 'Admin一覧', ruler_area_tenant_admins_path(@tenant_id)
             .tg-sidebar-section.bottom
               ul.uk-nav.uk-nav-default
                 li アカウント
