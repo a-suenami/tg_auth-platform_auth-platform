@@ -29,6 +29,11 @@ module API::V1::Authentication
 
       @user = Authentication::VerifySmsService.new.execute!(verification_code: params[:sms_verification_code], user_id: @current_user.id)
 
+      # SMS検証が成功した場合はセッションに記録
+      if @user.sms_verified
+        cookie_session[:sms_mfa_verified] = Time.zone.now
+      end
+
       render :verify_sms
     end
 
