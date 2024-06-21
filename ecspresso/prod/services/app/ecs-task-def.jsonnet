@@ -15,13 +15,22 @@ local memory_reservation = 256;
       "essential": true,
       "image": "843188904699.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-prod:" + app_image_tag,
       "logConfiguration": {
-        "logDriver": "awslogs",
+        "logDriver": "awsfirelens",
         "options": {
-          "awslogs-group": "/ecs/id-platform-main-service-app/app",
-          "awslogs-region": "ap-northeast-1",
-          "awslogs-stream-prefix": "app"
+          "Name": "datadog",
+          "Host": "http-intake.logs.datadoghq.com",
+          "dd_service": "auth-platform-app",
+          "dd_source": "ruby",
+          "dd_tags": "env:production",
+          "TLS": "on",
+          "provider": "ecs"
         },
-        "secretOptions": []
+        "secretOptions": [
+          {
+            "name": "apikey",
+            "valueFrom": "/id-platform/prod/ecs/main/datadog_api_key"
+          }
+        ]
       },
       "memory": memory,
       "memoryReservation": memory_reservation,
@@ -54,13 +63,22 @@ local memory_reservation = 256;
         "app"
       ],
       "logConfiguration": {
-        "logDriver": "awslogs",
+        "logDriver": "awsfirelens",
         "options": {
-          "awslogs-group": "/ecs/id-platform-main-service-app/nginx",
-          "awslogs-region": "ap-northeast-1",
-          "awslogs-stream-prefix": "nginx"
+          "Name": "datadog",
+          "Host": "http-intake.logs.datadoghq.com",
+          "dd_service": "auth-platform-nginx",
+          "dd_source": "nginx",
+          "dd_tags": "env:production",
+          "TLS": "on",
+          "provider": "ecs"
         },
-        "secretOptions": []
+        "secretOptions": [
+          {
+            "name": "apikey",
+            "valueFrom": "/id-platform/prod/ecs/main/datadog_api_key"
+          }
+        ]
       },
       "memory": 256,
       "memoryReservation": 128,
@@ -74,6 +92,32 @@ local memory_reservation = 256;
         }
       ],
       "volumesFrom": []
+    },
+    // fluent bit
+    {
+      "essential": true,
+      "image": "amazon/aws-for-fluent-bit:2.28.4",
+      "name": "log_router",
+      "firelensConfiguration": {
+          "type": "fluentbit",
+          "options": {
+              "enable-ecs-log-metadata": "true",
+              "config-file-type": "file",
+              "config-file-value": "/fluent-bit/configs/parse-json.conf"
+          }
+      },
+      "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+              "awslogs-group": "/ecs/firelens",
+              "awslogs-region": "ap-northeast-1",
+              "awslogs-stream-prefix": "app"
+          }
+      },
+      "environment": null,
+      "secrets": null,
+      "memoryReservation": 50,
+      "cpu": 64,
     }
   ],
   "executionRoleArn": "arn:aws:iam::843188904699:role/id-platform-main-ecs-task-execution-prod",
