@@ -18,23 +18,27 @@ module OauthArea
       allowed_logout_urls = oauth_application.allowed_logout_urls.split(/\R/)
 
       uri = URI.parse(url)
-      # URLが不正な場合はfalseを返す
-      return false unless uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
 
-      # 与えられたURLからドメインとパスを抽出
-      port = uri.port
-      # デフォルトポート(HTTP: 80, HTTPS: 443)を除外する場合、ポートを表示しない
-      port_string = (uri.scheme == 'http' && port == 80) || (uri.scheme == 'https' && port == 443) ? '' : ":#{port}"
-      base_url = "#{uri.scheme}://#{uri.host}#{port_string}"
+      base_url = case uri
+      when URI::HTTP, URI::HTTPS
+        # 与えられたURLからドメインとパスを抽出
+        port = uri.port
+        # デフォルトポート(HTTP: 80, HTTPS: 443)を除外する場合、ポートを表示しない
+        port_string = (uri.scheme == 'http' && port == 80) || (uri.scheme == 'https' && port == 443) ? '' : ":#{port}"
+        _base_url = "#{uri.scheme}://#{uri.host}#{port_string}"
+
+        _base_url
+      when URI::Generic
+        # custom_url_scheme はそのまま通す
+        url
+      else
+        # 原則こないが URL もし不正な場合は false を返す
+        return false
+      end
 
       # 抽出したURLがホワイトリストに含まれるかチェック
       allowed_logout_urls.any? do |whitelist_url|
-        whitelist_uri = URI.parse(whitelist_url)
-        whitelist_port = uri.port
-        whitelist_port_string = (whitelist_uri.scheme == 'http' && whitelist_port == 80) || (whitelist_uri.scheme == 'https' && whitelist_port == 443) ? '' : ":#{whitelist_port}"
-        whitelist_base_url = "#{whitelist_uri.scheme}://#{whitelist_uri.host}#{whitelist_port_string}"
-
-        base_url == whitelist_base_url
+        base_url.match?(/^#{Regexp.escape(whitelist_url)}/)
       end
     end
   end
