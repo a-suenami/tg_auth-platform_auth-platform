@@ -6,17 +6,16 @@ module PublishEvents
       return false if Settings.aws&.region.blank?
       return false if Settings.aws&.event_bus_name.blank?
 
+      # 変更通知Event発行設定がどのOAuthApplicationでも設定されてないならイベント発行しない
       enable_applications = OauthApplication.where(tenant_id: user.tenant_id, enable_push_event: true)
       return false if enable_applications.blank?
 
-      enable_applications.each do |application|
-        put_events(user:, action_code:, application:)
-      end
+      put_events(user:, action_code:)
     end
 
     private
 
-    def put_events(user:, action_code:, application:)
+    def put_events(user:, action_code:)
       aws_event_bridge_client.put_events({
         entries: [
           {
@@ -25,10 +24,9 @@ module PublishEvents
             detail: {
               tenant_id: user.tenant_id,
               user_id: user.id,
-              oauth_application_id: application.id,
               action_code:,
               submitted_at: Time.zone.now.to_s,
-              user: user_json(user:), # TODO: applicationのscopeによって含める項目を増減させる
+              user: user_json(user:),
             }.to_json,
             event_bus_name: Settings.aws.event_bus_name,
           },
