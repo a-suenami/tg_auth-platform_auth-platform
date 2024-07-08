@@ -8,6 +8,7 @@ ruler:
     auth0_domain:
     auth0_client_id:
     auth0_client_secret:
+    username_password_connection_name:
 redis:
   url: <%= ENV['REDIS_URL'] %>
 google_cloud_platform:

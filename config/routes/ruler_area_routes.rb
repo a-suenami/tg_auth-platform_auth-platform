@@ -8,10 +8,13 @@ Rails.application.routes.draw do
     get '/auth/failure' => 'auth0#failure'
     get '/auth/logout' => 'auth0#logout'
 
+    resources :rulers, only: [:index, :new, :create]
+
     resources :tenants, only: [:index, :new, :create, :edit, :update] do
       get :admin_area, on: :member
       scope module: 'tenants' do
         get :root, to: 'application#root'
+        resources :admins, only: [:index, :new, :create]
         resources :login_spa_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :tenant_settings, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :email_templates, only: [:index, :show, :new, :create, :edit, :update, :destroy]

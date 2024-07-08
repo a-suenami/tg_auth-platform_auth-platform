@@ -8,6 +8,8 @@ Rails.application.routes.draw do
     get '/auth/failure' => 'auth0#failure'
     get '/auth/logout' => 'auth0#logout'
 
+    resources :admins, only: [:index, :new, :create]
+
     resources :users, only: %i[index show edit update]
     resources :users, only: [] do
       resource :user_profile, only: [:new, :create, :edit, :update]

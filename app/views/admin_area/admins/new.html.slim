@@ -1,0 +1,13 @@
+.uk-margin-top.uk-container
+  h2 Admin新規作成
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with model: @admin, url: admin_area_admins_path, method: :post do |f|
+      = render 'admin_area/shared/form_error', target: f.object
+      .uk-margin
+        = f.label :name
+        = f.text_field :name, class: "uk-input"
+      .uk-margin
+        = f.label :email
+        = f.text_field :email, class: "uk-input"
+      = f.submit class: "uk-button uk-button-default"

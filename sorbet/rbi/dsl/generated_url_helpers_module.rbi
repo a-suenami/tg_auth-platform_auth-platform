@@ -9,6 +9,9 @@ module GeneratedUrlHelpersModule
   include ::ActionDispatch::Routing::PolymorphicRoutes
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_admins_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_auth_auth0_callback_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -114,10 +117,19 @@ module GeneratedUrlHelpersModule
   def native_oauth_authorization_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_admin_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_contact_address_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_user_profile_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_ruler_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_admin_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_email_template_url(*args); end
@@ -202,6 +214,12 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_root_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_rulers_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_admins_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_email_template_url(*args); end
