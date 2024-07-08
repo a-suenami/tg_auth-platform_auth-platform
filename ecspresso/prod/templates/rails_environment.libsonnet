@@ -32,6 +32,10 @@
     "value": "av4KLS4RcBFYJVEKojZMPNdhsTA470FQ"
   },
   {
+    "name": "ADMIN_AUTH0_CONNECTION_NAME",
+    "value": "Username-Password-Authentication"
+  },
+  {
     "name": "DYNAMODB_APP_CONSTANT_TABLE_NAME",
     "value": "id-platform-app-constant-prod"
   },
@@ -54,6 +58,10 @@
   {
     "name": "RULER_AUTH0_CLIENT_ID",
     "value": "BRLhSc39qbeOmJDFkkpVYblMc4kC0Sky"
+  },
+  {
+    "name": "RULER_AUTH0_CONNECTION_NAME",
+    "value": "Username-Password-Authentication"
   },
   {
     "name": "RAILS_SERVE_STATIC_FILES",

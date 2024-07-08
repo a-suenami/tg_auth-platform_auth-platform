@@ -12,6 +12,10 @@
     "value": "id-platform-stg.jp.auth0.com"
   },
   {
+    "name": "ADMIN_AUTH0_CONNECTION_NAME",
+    "value": "Username-Password-Authentication"
+  },
+  {
     "name": "ADMIN_DOMAIN",
     "value": "admin.app-staging.id-platform.net"
   },
@@ -58,6 +62,10 @@
   {
     "name": "RULER_AUTH0_DOMAIN",
     "value": "id-platform-stg.jp.auth0.com"
+  },
+  {
+    "name": "RULER_AUTH0_CONNECTION_NAME",
+    "value": "Username-Password-Authentication"
   },
   {
     "name": "RULER_DOMAIN",

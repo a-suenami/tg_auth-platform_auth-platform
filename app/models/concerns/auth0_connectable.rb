@@ -7,9 +7,9 @@ module Auth0Connectable
   def auth0_client
     @auth0_client ||= T.let(nil, T.nilable(Auth0Client))
     @auth0_client ||= Auth0Client.new(
-      client_id: Settings.ruler.auth0.auth0_client_id,
-      client_secret: Settings.ruler.auth0.auth0_client_secret,
-      domain: Settings.ruler.auth0.auth0_domain,
+      client_id: auth0_client_id,
+      client_secret: auth0_client_secret,
+      domain: auth0_domain,
       api_version: 2,
       timeout: 10,
     )
@@ -23,7 +23,7 @@ module Auth0Connectable
     end
 
     auth0_client.create_user(
-      Settings.ruler.auth0.username_password_connection_name,
+      auth0_connection_name,
       {
         email: self.email,
         password:,
@@ -36,5 +36,23 @@ module Auth0Connectable
   def random_password
     symbols = ['!', '@', '#', '$', '%', '^', '&', '*']
     SecureRandom.alphanumeric(10) + ['a'..'z'].sample(1).join + ['0'..'9'].sample(1).join + ['A'..'Z'].sample(1).join + symbols.sample(1).join
+  end
+
+  private
+
+  def auth0_client_id
+    raise NotImplementedError 'auth0_client_id method must be implemented in the class'
+  end
+
+  def auth0_client_secret
+    raise NotImplementedError 'auth0_client_secret method must be implemented in the class'
+  end
+
+  def auth0_domain
+    raise NotImplementedError 'auth0_domain method must be implemented in the class'
+  end
+
+  def auth0_connection_name
+    raise NotImplementedError 'auth0_connection_name method must be implemented in the class'
   end
 end
