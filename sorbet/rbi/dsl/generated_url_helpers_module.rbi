@@ -120,6 +120,12 @@ module GeneratedUrlHelpersModule
   def new_admin_area_user_user_profile_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_ruler_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_admin_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_email_template_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -202,6 +208,12 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_root_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_rulers_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_admins_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_email_template_url(*args); end
