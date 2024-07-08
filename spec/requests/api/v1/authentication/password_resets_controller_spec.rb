@@ -6,7 +6,8 @@ RSpec.describe '[ Password Resets API ]' do
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
     }
     let(:deleted_user) {
-      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true)
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true,
+deleted_at: Time.zone.now,)
     }
 
     let(:email_template) {
@@ -82,7 +83,8 @@ RSpec.describe '[ Password Resets API ]' do
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true)
     }
     let(:deleted_user) {
-      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true)
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true,
+deleted_at: Time.zone.now,)
     }
     let(:users_password_resets) {
       create(:users__password_resets, tenant_id: current_tenant.id, user_id: current_user.id, code: 'this_is_code', expired_at: 1.hour.from_now)

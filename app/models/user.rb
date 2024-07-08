@@ -46,13 +46,13 @@ class User < ApplicationRecord
     inverse_of: :users
 
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :email, uniqueness: { scope: :tenant_id, conditions: -> { where(deleted: false) } }
+  validates :email, uniqueness: { scope: :tenant_id, conditions: -> { where(deleted_at: nil) } }
   validates :phone_number, phony_plausible: true
 
   # uniq indexの邪魔になるので空文字が入らないようにする
   before_save :convert_empty_phone_number_to_nil
 
-  scope :active, -> { where(deleted: false) }
+  scope :active, -> { where(deleted: false, deleted_at: nil) }
 
   sig { params(password: String).returns(T::Boolean) }
   def authenticate!(password)
@@ -72,6 +72,11 @@ class User < ApplicationRecord
 
     self.enabled = true
     self.save!
+  end
+
+  sig { returns(T::Boolean) }
+  def deleted
+    self.deleted_at.present?
   end
 
   private

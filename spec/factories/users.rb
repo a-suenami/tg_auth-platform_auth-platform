@@ -9,6 +9,7 @@ FactoryBot.define do
     enabled { true }
     phone_number { "+8190#{format('%08<number>d', number: rand(0..99_999_999))}" }
     deleted { false }
+    deleted_at { nil }
 
     trait :skip_validate do
       to_create { |instance| instance.save(validate: false) }

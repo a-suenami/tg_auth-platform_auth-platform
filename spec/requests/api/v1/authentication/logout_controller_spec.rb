@@ -6,7 +6,8 @@ RSpec.describe '[ Logout API ]' do
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
     }
     let(:deleted_user) {
-      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true)
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true,
+deleted_at: Time.zone.now,)
     }
 
     before do

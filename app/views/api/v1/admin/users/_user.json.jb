@@ -7,6 +7,7 @@ json[:uid] = user.id if @doorkeeper_token.acceptable?(:uid)
 json[:email] = user.email if @doorkeeper_token.acceptable?(:email)
 json[:phone_number] = user.phone_number if @doorkeeper_token.acceptable?(:phone_number)
 json[:deleted] = user.deleted
+json[:deleted_at] = user.deleted_at
 if @doorkeeper_token.acceptable?(:name)
   profile_json[:first_name] = user.user_profile&.first_name
   profile_json[:last_name] = user.user_profile&.last_name

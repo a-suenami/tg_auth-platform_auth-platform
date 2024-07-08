@@ -301,6 +301,7 @@ CREATE TABLE public.users (
     email_verified boolean DEFAULT false,
     suppress_sms_verification boolean DEFAULT false,
     deleted boolean DEFAULT false,
+    deleted_at timestamp(6) without time zone DEFAULT NULL::timestamp without time zone,
     password_reset_code character varying,
     captcha_score double precision,
     created_at timestamp(6) without time zone NOT NULL,
@@ -860,14 +861,14 @@ CREATE INDEX index_users_on_tenant_id ON public.users USING btree (tenant_id);
 -- Name: index_users_on_tenant_id_email; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_tenant_id_email ON public.users USING btree (tenant_id, email, deleted) WHERE (deleted = false);
+CREATE UNIQUE INDEX index_users_on_tenant_id_email ON public.users USING btree (tenant_id, email, deleted_at) WHERE (deleted_at IS NULL);
 
 
 --
 -- Name: index_users_on_tenant_id_phone_number; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_tenant_id_phone_number ON public.users USING btree (tenant_id, phone_number, deleted) WHERE (deleted = false);
+CREATE UNIQUE INDEX index_users_on_tenant_id_phone_number ON public.users USING btree (tenant_id, phone_number, deleted_at) WHERE (deleted_at IS NULL);
 
 
 --

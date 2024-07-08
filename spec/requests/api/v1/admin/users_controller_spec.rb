@@ -289,6 +289,7 @@ RSpec.describe '[ Admin Users API ]' do
             'uid' => user.id,
             'email' => user.email,
             'deleted' => false,
+            'deleted_at' => nil,
             'delivery_addresses' => [
               {
                 'is_default' => delivery_address.is_default,

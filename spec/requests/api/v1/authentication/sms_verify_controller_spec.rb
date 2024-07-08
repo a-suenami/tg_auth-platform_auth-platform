@@ -7,7 +7,7 @@ RSpec.describe '[ SmsVerify API ]' do
     }
     let(:deleted_user) {
       create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, phone_number: '+818012345678',
-deleted: true,)
+deleted: true, deleted_at: Time.zone.now,)
     }
 
     let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com', sms_verification_required:) }
@@ -336,7 +336,7 @@ deleted: true,)
     }
     let(:deleted_user) {
       create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, phone_number: '+818012345678',
-deleted: true,)
+deleted: true, deleted_at: Time.zone.now,)
     }
 
     let(:sms_verifier) {

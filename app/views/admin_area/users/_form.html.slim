@@ -25,8 +25,8 @@
   .uk-form-controls
     = f.check_box :email_verified, :as => :boolean, class: "uk-checkbox"
 .uk-margin
-  = f.label :deleted, class: 'uk-form-label'
+  = f.label :deleted_at, class: 'uk-form-label'
   .uk-form-controls
-    = f.check_box :deleted, :as => :boolean, class: "uk-checkbox"
+    = f.datetime_field :deleted_at, :as => :boolean, class: "uk-input"
 
 = f.submit class: "uk-button uk-button-default"

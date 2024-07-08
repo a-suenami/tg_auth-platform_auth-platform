@@ -25,7 +25,8 @@ RSpec.describe '[ Registrations API ]' do
 recaptcha_enterprise_score_based_site_key: 'score_based_site_key',)
     }
     let(:deleted_user) {
-      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true)
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true,
+deleted_at: Time.zone.now,)
     }
 
     before do
@@ -139,7 +140,8 @@ recaptcha_enterprise_score_based_site_key: 'score_based_site_key',)
       create(:user, tenant_id: current_tenant.id, email: 'test-other-user1@example.com', email_verified: false)
     }
     let(:deleted_user) {
-      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true)
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true,
+deleted_at: Time.zone.now,)
     }
 
     let(:email_verifier) {
