@@ -14,6 +14,7 @@
           th = Admin.human_attribute_name(:email)
           th = Admin.human_attribute_name(:name)
           th = Admin.human_attribute_name(:uid)
+          th 削除
         - @admins.each do |admin|
           tr
             td
@@ -24,5 +25,7 @@
               = admin.name
             td
               = admin.uid
+            td
+              = link_to '削除', ruler_area_tenant_admin_path(@tenant_id, admin), data: { turbo_method: :delete }, class: 'uk-button uk-button-small uk-button-danger'
 
     == pagy_nav(@pagy)

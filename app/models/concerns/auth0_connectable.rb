@@ -15,27 +15,49 @@ module Auth0Connectable
     )
   end
 
-  def create_auth0_user(password = nil)
+  def create_auth0_user!(password = nil)
     return if Rails.env.test?
 
     if password.blank?
       password = random_password
     end
 
-    auth0_client.create_user(
-      auth0_connection_name,
-      {
-        email: self.email,
-        password:,
-        email_verified: false,
-        user_id: self.id,
-      },
-    )
+    # すでにauth0側にアカウントが存在する場合
+    auth0_user_id = get_auth0_user_id_by_email(self.email)
+    if auth0_user_id.present?
+      self.uid = auth0_user_id
+    else
+      auth0_response = auth0_client.create_user(
+        auth0_connection_name,
+        {
+          email: self.email,
+          password:,
+          email_verified: false,
+        },
+      )
+      self.uid = auth0_response['user_id']
+    end
+    self.save!
   end
 
   def random_password
     symbols = ['!', '@', '#', '$', '%', '^', '&', '*']
     SecureRandom.alphanumeric(10) + ['a'..'z'].sample(1).join + ['0'..'9'].sample(1).join + ['A'..'Z'].sample(1).join + symbols.sample(1).join
+  end
+
+  def get_auth0_user_id_by_email(email)
+    query = "email:\"#{email}\" AND identities.connection:\"#{auth0_connection_name}\""
+    options = {
+      fields: 'user_id',
+      include_fields: true,
+      q: query,
+      search_engine: 'v3',
+    }
+
+    users = auth0_client.users(options)
+    return nil if users.blank?
+
+    users[0]['user_id']
   end
 
   private

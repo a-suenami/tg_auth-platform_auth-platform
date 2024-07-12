@@ -14,6 +14,7 @@
           th = Ruler.human_attribute_name(:email)
           th = Ruler.human_attribute_name(:name)
           th = Ruler.human_attribute_name(:uid)
+          th 削除
         - @rulers.each do |ruler|
           tr
             td
@@ -24,5 +25,6 @@
               = ruler.name
             td
               = ruler.uid
-
+            td
+              = link_to '削除', ruler_area_ruler_path(ruler), data: { turbo_method: :delete }, class: 'uk-button uk-button-small uk-button-danger'
     == pagy_nav(@pagy)

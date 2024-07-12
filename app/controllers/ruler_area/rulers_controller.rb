@@ -17,6 +17,15 @@ module RulerArea
       end
     end
 
+    def destroy
+      @ruler = Ruler.find(params[:id])
+      if ::Rulers::DestroyService.new.execute(ruler: @ruler)
+        redirect_to ruler_area_rulers_path, notice: t('helpers.messages.deleted')
+      else
+        redirect_to ruler_area_rulers_path, status: :see_other
+      end
+    end
+
     private
 
     def ruler_params

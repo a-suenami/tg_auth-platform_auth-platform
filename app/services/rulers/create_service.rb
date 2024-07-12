@@ -8,8 +8,7 @@ module Rulers
       ruler = ActiveRecord::Base.transaction do
         ruler = Ruler.new(email:, name:)
         ruler.save!
-        ruler.create_auth0_user
-        ruler.uid = "auth0|#{ruler.id}"
+        ruler.create_auth0_user!
         ruler.save!
         ruler
       end
