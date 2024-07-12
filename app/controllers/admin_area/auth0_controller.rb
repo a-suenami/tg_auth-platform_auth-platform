@@ -35,7 +35,7 @@ module AdminArea
 
     def logout_url
       request_params = {
-        returnTo: admin_area_login_path,
+        returnTo: admin_area_root_url,
         client_id: Settings.admin.auth0.auth0_client_id,
       }
 
