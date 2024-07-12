@@ -8,8 +8,7 @@ module Admins
       admin = ActiveRecord::Base.transaction do
         admin = Admin.new(email:, name:)
         admin.save!
-        admin.create_auth0_user
-        admin.uid = "auth0|#{admin.id}"
+        admin.create_auth0_user!
         admin.save!
         admin
       end

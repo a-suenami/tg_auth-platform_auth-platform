@@ -17,6 +17,15 @@ module RulerArea::Tenants
       end
     end
 
+    def destroy
+      @admin = Admin.find(params[:id])
+      if ::Admins::DestroyService.new.execute(admin: @admin)
+        redirect_to ruler_area_tenant_admins_path, notice: t('helpers.messages.deleted')
+      else
+        redirect_to ruler_area_tenant_admins_path, status: :see_other
+      end
+    end
+
     private
 
     def admin_params

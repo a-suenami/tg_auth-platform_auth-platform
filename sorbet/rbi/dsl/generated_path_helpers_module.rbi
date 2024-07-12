@@ -9,9 +9,6 @@ module GeneratedPathHelpersModule
   include ::ActionDispatch::Routing::PolymorphicRoutes
 
   sig { params(args: T.untyped).returns(String) }
-  def admin_area_admins_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def admin_area_auth_auth0_callback_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -117,9 +114,6 @@ module GeneratedPathHelpersModule
   def native_oauth_authorization_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def new_admin_area_admin_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_contact_address_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -216,7 +210,13 @@ module GeneratedPathHelpersModule
   def ruler_area_root_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def ruler_area_ruler_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_rulers_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_admin_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_admins_path(*args); end
