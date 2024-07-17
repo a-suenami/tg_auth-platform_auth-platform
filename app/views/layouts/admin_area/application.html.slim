@@ -27,7 +27,7 @@ html lang='ja'
               ul.uk-nav.uk-nav-default
                 li アカウント
                 li = @current_admin&.email
-                li = link_to 'ログアウト', admin_area_logout_path
+                li = link_to 'ログアウト', admin_area_logout_path, data: { turbo: false }
 
     .l-page-contents
       = render 'layouts/admin_area/flash'

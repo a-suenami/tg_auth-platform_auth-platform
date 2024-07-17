@@ -35,7 +35,7 @@ module RulerArea
 
     def logout_url
       request_params = {
-        returnTo: ruler_area_root_url,
+        returnTo: ruler_area_login_url,
         client_id: Settings.ruler.auth0.auth0_client_id,
       }
 
