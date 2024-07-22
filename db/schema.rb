@@ -224,8 +224,8 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.float "captcha_score"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tenant_id", "email", "deleted_at"], name: "index_users_on_tenant_id_email", unique: true, where: "(deleted_at IS NULL)"
-    t.index ["tenant_id", "phone_number", "deleted_at"], name: "index_users_on_tenant_id_phone_number", unique: true, where: "(deleted_at IS NULL)"
+    t.index ["tenant_id", "email", "deleted"], name: "index_users_on_tenant_id_email", unique: true, where: "(deleted = false)"
+    t.index ["tenant_id", "phone_number", "deleted"], name: "index_users_on_tenant_id_phone_number", unique: true, where: "(deleted = false)"
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
   end
 
