@@ -6,7 +6,8 @@ RSpec.describe '[ Sessions API ]' do
       create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', suppress_sms_verification:)
     }
     let(:deleted_user) {
-      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true)
+      create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true,
+deleted_at: Time.zone.now,)
     }
     let(:suppress_sms_verification) { false }
 
@@ -263,7 +264,7 @@ RSpec.describe '[ Sessions API ]' do
 
     context 'when user has deleted' do
       let(:current_user) {
-        create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', deleted: true)
+        create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', deleted: true, deleted_at: Time.zone.now)
       }
 
       let(:params) {

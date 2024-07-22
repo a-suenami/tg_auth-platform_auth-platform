@@ -39,8 +39,8 @@
       dt.uk-text-bold = User.human_attribute_name(:email_verified)
       dd = @user.email_verified
     .uk-margin
-      dt.uk-text-bold = User.human_attribute_name(:deleted)
-      dd = @user.deleted
+      dt.uk-text-bold = User.human_attribute_name(:deleted_at)
+      dd = @user.deleted_at
     .uk-margin
       dt.uk-text-bold アカウント作成日
       dd = @user.created_at.strftime("%Y年%m月%d日")

@@ -8,14 +8,15 @@ create_table :users, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid(
   t.boolean :email_verified, default: false
   t.boolean :suppress_sms_verification, default: false
   t.boolean :deleted, default: false
-  t.string  :password_reset_code
+  t.datetime :deleted_at, default: nil
+  t.string :password_reset_code
 
   # Recaptcha の評価スコア
   t.float 'captcha_score'
 
   t.timestamps null: false
-  t.index [:tenant_id, :email, :deleted], name: :index_users_on_tenant_id_email, using: :btree, unique: true, where: '("deleted" = false)'
-  t.index [:tenant_id, :phone_number, :deleted], name: :index_users_on_tenant_id_phone_number, using: :btree, unique: true, where: '("deleted" = false)'
+  t.index [:tenant_id, :email, :deleted_at], name: :index_users_on_tenant_id_email, using: :btree, unique: true, where: '(deleted_at IS NULL)'
+  t.index [:tenant_id, :phone_number, :deleted_at], name: :index_users_on_tenant_id_phone_number, using: :btree, unique: true, where: '(deleted_at IS NULL)'
 end
 
 add_foreign_key :users, :tenants, name: :fk_users_tenants

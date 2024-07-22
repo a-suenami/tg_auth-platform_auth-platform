@@ -36,7 +36,7 @@ module AdminArea
         :phone_number,
         :sms_verified,
         :email_verified,
-        :deleted,
+        :deleted_at,
         :suppress_sms_verification,
       )
     end

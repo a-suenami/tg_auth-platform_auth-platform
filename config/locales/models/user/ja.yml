@@ -12,6 +12,7 @@ ja:
         suppress_sms_verification: SMS送信禁止ユーザ
         email_verified: メールアドレス確認済み
         deleted: 削除ずみユーザ
+        deleted_at: 削除時刻
         created_at: 作成日時
         updated_at: 更新日時
         password: パスワード
