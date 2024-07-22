@@ -41,6 +41,7 @@ module PublishEvents
         uid: user.id,
         email: user.email,
         phone_number: user.phone_number,
+        deleted_at: user.deleted_at,
         profile: {
           first_name: user.user_profile&.first_name,
           last_name: user.user_profile&.last_name,
