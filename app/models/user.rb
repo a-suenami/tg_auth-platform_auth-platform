@@ -46,7 +46,7 @@ class User < ApplicationRecord
     inverse_of: :users
 
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :email, uniqueness: { scope: :tenant_id, conditions: -> { where(deleted: false) } }
+  validates :email, uniqueness: { scope: :tenant_id, conditions: -> { where(deleted_at: nil) } }
   validates :phone_number, phony_plausible: true
 
   # uniq indexの邪魔になるので空文字が入らないようにする
