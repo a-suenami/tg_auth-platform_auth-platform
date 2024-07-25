@@ -378,9 +378,17 @@ CREATE TABLE public.users__sms_verifiers (
     sms_sid character varying,
     ip_address character varying,
     delivery_type character varying,
+    ignore_in_rate_limit boolean DEFAULT false,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: COLUMN users__sms_verifiers.ignore_in_rate_limit; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.users__sms_verifiers.ignore_in_rate_limit IS 'SMS送信のレートリミットのカウントから除外する';
 
 
 --

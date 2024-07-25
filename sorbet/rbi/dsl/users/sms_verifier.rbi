@@ -420,6 +420,9 @@ class Users::SmsVerifier
     def preload(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+    def rate_limit_targets(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def readonly(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
@@ -489,12 +492,13 @@ class Users::SmsVerifier
         sms_sid: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         ip_address: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         delivery_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        ignore_in_rate_limit: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, code: nil, expired_at: nil, remaining_attempts: nil, verifier_type: nil, phone_number: nil, used_at: nil, sms_sender: nil, sms_sid: nil, ip_address: nil, delivery_type: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, code: nil, expired_at: nil, remaining_attempts: nil, verifier_type: nil, phone_number: nil, used_at: nil, sms_sender: nil, sms_sid: nil, ip_address: nil, delivery_type: nil, ignore_in_rate_limit: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -774,6 +778,51 @@ class Users::SmsVerifier
     sig { void }
     def id_will_change!; end
 
+    sig { returns(T.nilable(T::Boolean)) }
+    def ignore_in_rate_limit; end
+
+    sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+    def ignore_in_rate_limit=(value); end
+
+    sig { returns(T::Boolean) }
+    def ignore_in_rate_limit?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def ignore_in_rate_limit_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def ignore_in_rate_limit_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def ignore_in_rate_limit_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def ignore_in_rate_limit_change; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def ignore_in_rate_limit_change_to_be_saved; end
+
+    sig { params(from: T.nilable(T::Boolean), to: T.nilable(T::Boolean)).returns(T::Boolean) }
+    def ignore_in_rate_limit_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def ignore_in_rate_limit_in_database; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def ignore_in_rate_limit_previous_change; end
+
+    sig { params(from: T.nilable(T::Boolean), to: T.nilable(T::Boolean)).returns(T::Boolean) }
+    def ignore_in_rate_limit_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def ignore_in_rate_limit_previously_was; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def ignore_in_rate_limit_was; end
+
+    sig { void }
+    def ignore_in_rate_limit_will_change!; end
+
     sig { returns(T.nilable(::String)) }
     def ip_address; end
 
@@ -928,6 +977,9 @@ class Users::SmsVerifier
     def restore_id_value!; end
 
     sig { void }
+    def restore_ignore_in_rate_limit!; end
+
+    sig { void }
     def restore_ip_address!; end
 
     sig { void }
@@ -992,6 +1044,12 @@ class Users::SmsVerifier
 
     sig { returns(T::Boolean) }
     def saved_change_to_id_value?; end
+
+    sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
+    def saved_change_to_ignore_in_rate_limit; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_ignore_in_rate_limit?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_ip_address; end
@@ -1397,6 +1455,9 @@ class Users::SmsVerifier
     def will_save_change_to_id_value?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_ignore_in_rate_limit?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_ip_address?; end
 
     sig { returns(T::Boolean) }
@@ -1522,6 +1583,9 @@ class Users::SmsVerifier
     def preload(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+    def rate_limit_targets(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def readonly(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
@@ -1573,12 +1637,13 @@ class Users::SmsVerifier
         sms_sid: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         ip_address: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         delivery_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        ignore_in_rate_limit: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, code: nil, expired_at: nil, remaining_attempts: nil, verifier_type: nil, phone_number: nil, used_at: nil, sms_sender: nil, sms_sid: nil, ip_address: nil, delivery_type: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, code: nil, expired_at: nil, remaining_attempts: nil, verifier_type: nil, phone_number: nil, used_at: nil, sms_sender: nil, sms_sid: nil, ip_address: nil, delivery_type: nil, ignore_in_rate_limit: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

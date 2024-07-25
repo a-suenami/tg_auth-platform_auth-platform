@@ -283,6 +283,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "sms_sid"
     t.string "ip_address"
     t.string "delivery_type"
+    t.boolean "ignore_in_rate_limit", default: false, comment: "SMS送信のレートリミットのカウントから除外する"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "idx_users_created_at"
