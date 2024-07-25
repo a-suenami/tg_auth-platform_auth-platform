@@ -4,6 +4,7 @@ ja:
       invalid_email: メールアドレスの形式が間違っています
       invalid_code: コードが間違っています
       expired_email_verification_code: コードの有効期限が切れています
+      expired_sms_verification_code: コードの有効期限が切れています
       email_verification_code_attempts_is_over: コードの試行回数が上限に達しました
       password_reset_code_invalid: パスワードリセットコードが間違っています
       password_reset_code_used: コードはすでに使用されています
@@ -11,6 +12,7 @@ ja:
       password_already_set: パスワードはすでに設定済みです。サイトTOPより、ご登録メールアドレスとパスワードでログインしてください。パスワードを忘れた方は「パスワードを忘れた方はこちら」より再設定してください。
       phone_number_already_set: 電話番号はすでに設定済みです
       sms_verification_code_attempts_is_over: コードの試行回数が上限に達しました
+      sms_verification_code_used: 指定されたコードはすでに使用済みです
       sms_verification_disabled: SMS確認機能が無効です
       phone_number_duplicated: その電話番号はすでに使用されています
       phone_number_invaild: 電話番号の形式が間違っています

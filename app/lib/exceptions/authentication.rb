@@ -124,6 +124,31 @@ module Exceptions
       end
     end
 
+
+    class SmsVerificationCodeUsed < BaseError
+      sig { returns(Symbol) }
+      def code
+        :sms_verification_code_used
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.authentication.sms_verification_code_used'
+      end
+    end
+
+    class ExpiredSmsVerificationCode < BaseError
+      sig { returns(Symbol) }
+      def code
+        :expired_sms_verification_code
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.authentication.expired_sms_verification_code'
+      end
+    end
+
     class SmsVerificationDisabled < BaseError
       sig { returns(Symbol) }
       def code
