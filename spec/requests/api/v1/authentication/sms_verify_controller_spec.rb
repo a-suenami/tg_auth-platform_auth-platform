@@ -416,6 +416,8 @@ verifier_type: :registration,)
 
       it 'returns 400' do
         is_expected.to eq 400
+        expect(body_hash['error']['code']).to eq 'invalid_code'
+        expect(body_hash['error']['message']).to eq 'コードが間違っています'
         expect(Users::SmsVerifier.find(sms_verifier.id).remaining_attempts).to be 4
         expect(Users::SmsVerifier.find(other_sms_verifier.id).remaining_attempts).to be 4
         expect(Users::SmsVerifier.find(other_user_sms_verifier.id).remaining_attempts).to be 5
@@ -434,6 +436,8 @@ verifier_type: :registration,)
 
       it 'returns 400' do
         is_expected.to eq 400
+        expect(body_hash['error']['code']).to eq 'expired_sms_verification_code'
+        expect(body_hash['error']['message']).to eq 'コードの有効期限が切れています'
       end
     end
 
@@ -449,6 +453,8 @@ verifier_type: :registration,)
 
       it 'returns 400' do
         is_expected.to eq 400
+        expect(body_hash['error']['code']).to eq 'sms_verification_code_attempts_is_over'
+        expect(body_hash['error']['message']).to eq 'コードの試行回数が上限に達しました'
       end
     end
 
@@ -465,6 +471,34 @@ verifier_type: :registration,)
 
       it 'returns 400' do
         is_expected.to eq 400
+        expect(body_hash['error']['code']).to eq 'sms_verification_code_used'
+        expect(body_hash['error']['message']).to eq '指定されたコードはすでに使用済みです'
+      end
+    end
+
+    # codeは低確率で被る可能性がある。新しいものが選択されることを確認
+    context 'when old code is duplicated' do
+      let(:sms_verifier) {
+        create(:users__sms_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 5, used_at: nil,
+verifier_type: :registration,)
+      }
+      let(:params) {
+        {
+          sms_verification_code: '123456',
+        }
+      }
+
+      let(:old_sms_verifier) {
+        create(:users__sms_verifier, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 1.hour.from_now, remaining_attempts: 5, used_at: 1.hour.ago,
+verifier_type: :registration, created_at: 1.hour.ago,)
+      }
+
+      before do
+        old_sms_verifier
+      end
+
+      it 'returns 200' do
+        is_expected.to eq 200
       end
     end
   end
