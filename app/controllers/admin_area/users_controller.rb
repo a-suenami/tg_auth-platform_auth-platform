@@ -1,5 +1,6 @@
 module AdminArea
   class UsersController < ApplicationController
+    before_action :set_user, only: %i[show edit update reset_sms_ratelimit]
     def index
       @users = User.all
       @users = @users.where(id: params[:id]) if params[:id].present?
@@ -9,17 +10,14 @@ module AdminArea
     end
 
     def show
-      @user = User.find(params[:id])
     end
 
     def edit
-      @user = User.find(params[:id])
       @user.build_user_profile unless @user.user_profile
       @user.build_contact_address unless @user.contact_address
     end
 
     def update
-      @user = User.find(params[:id])
       if @user.update(user_params)
         redirect_to admin_area_user_path(@user), notice: t('helpers.messages.updated')
       else
@@ -27,7 +25,16 @@ module AdminArea
       end
     end
 
+    def reset_sms_ratelimit
+      @user.sms_verifiers.where('created_at > ?', 24.hours.ago).update_all(ignore_in_rate_limit: true)
+      redirect_to admin_area_user_path(@user), notice: 'SMS送信制限をリセットしました。' # rubocop:disable Rails/I18nLocaleTexts
+    end
+
     private
+
+    def set_user
+      @user = User.find(params[:id])
+    end
 
     def user_params
       params.require(:user).permit(

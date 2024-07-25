@@ -2,7 +2,10 @@
 .uk-margin-top.uk-container
   .uk-card.uk-card-default.uk-card-body
     .uk-flex.uk-flex-right
-      = link_to "編集", edit_admin_area_user_path(@user), class: "uk-button uk-button-primary"
+      // SMS送信制限解除
+      = form_with url: reset_sms_ratelimit_admin_area_user_path(@user), method: :put, local: true do |f|
+        = f.submit 'SMS送信制限解除', class: 'uk-button uk-button-secondary'
+      = link_to "編集", edit_admin_area_user_path(@user), class: "uk-button uk-button-primary uk-margin-left"
     h3.uk-card-title ユーザ詳細
 
 

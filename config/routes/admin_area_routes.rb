@@ -10,6 +10,9 @@ Rails.application.routes.draw do
 
     resources :users, only: %i[index show edit update]
     resources :users, only: [] do
+      member do
+        put :reset_sms_ratelimit
+      end
       resource :user_profile, only: [:new, :create, :edit, :update]
       resource :contact_address, only: [:new, :create, :edit, :update]
     end

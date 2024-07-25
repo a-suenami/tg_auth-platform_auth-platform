@@ -21,9 +21,17 @@ deleted: true, deleted_at: Time.zone.now,)
       instance_double(Twilio::API)
     }
 
+    # SMS送信制限をリセットする場合は24時間以内のSmsVerifierのignore_rate_limitをtrueにする
+    # カウントからちゃんと除外されるかの確認
+    let(:ignore_sms_verifiers) {
+      create_list(:users__sms_verifier, 10, tenant_id: current_tenant.id, user: current_user, code: '123456', expired_at: 2.hours.from_now, remaining_attempts: 5, verifier_type: :mfa,
+        phone_number: '+818012345678', ignore_in_rate_limit: true, created_at: 1.hour.ago,)
+    }
+
     before do
       current_user
       deleted_user
+      ignore_sms_verifiers
       allow(SmsLink::API).to receive(:new).and_return(sms_link_mock)
       allow(sms_link_mock).to receive(:send_sms).and_return({
         'verification_code_id' => 34,
@@ -99,8 +107,8 @@ deleted: true, deleted_at: Time.zone.now,)
         it 'returns 200' do
           is_expected.to eq 200
           expect(sms_link_mock).to have_received(:send_sms)
-          expect(Users::SmsVerifier.find_by(user: current_user).phone_number).to eq '+818012345678'
-          expect(Users::SmsVerifier.find_by(user: current_user).sms_sid).to eq '34'
+          expect(Users::SmsVerifier.where(user: current_user).order(created_at: :desc).first.phone_number).to eq '+818012345678'
+          expect(Users::SmsVerifier.where(user: current_user).order(created_at: :desc).first.sms_sid).to eq '34'
         end
       end
 
@@ -118,8 +126,8 @@ deleted: true, deleted_at: Time.zone.now,)
         it 'returns 200' do
           is_expected.to eq 200
           expect(twilio_mock).to have_received(:send_sms_with_twilio_verify)
-          expect(Users::SmsVerifier.find_by(user: current_user).phone_number).to eq '+13185555555'
-          expect(Users::SmsVerifier.find_by(user: current_user).sms_sid).to eq 'SMXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+          expect(Users::SmsVerifier.where(user: current_user).order(created_at: :desc).first.phone_number).to eq '+13185555555'
+          expect(Users::SmsVerifier.where(user: current_user).order(created_at: :desc).first.sms_sid).to eq 'SMXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
         end
       end
 

@@ -14,6 +14,9 @@ module Users
 
     scope :enabled, -> { where('expired_at > ?', Time.zone.now).where(used_at: nil).where.not(remaining_attempts: 0) }
 
+    # レートリミットのカウント対象
+    scope :rate_limit_targets, -> { where(ignore_in_rate_limit: false) }
+
     sig { returns(T::Boolean) }
     def set_code
       self.code = format('%06d', SecureRandom.random_number(10**6))

@@ -11,6 +11,7 @@ create_table :users__sms_verifiers, force: :cascade, id: :uuid, default: -> { 'g
   t.string :sms_sid
   t.string :ip_address
   t.string :delivery_type
+  t.boolean :ignore_in_rate_limit, default: false, comment: 'SMS送信のレートリミットのカウントから除外する'
 
   t.timestamps null: false
 

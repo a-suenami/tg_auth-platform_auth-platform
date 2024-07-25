@@ -192,6 +192,9 @@ module GeneratedUrlHelpersModule
   def request_api_v1_internal_email_change_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def reset_sms_ratelimit_admin_area_user_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_auth_auth0_callback_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
