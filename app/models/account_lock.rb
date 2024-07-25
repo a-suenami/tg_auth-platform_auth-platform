@@ -7,7 +7,12 @@ class AccountLock < ApplicationRecord
 
   sig { params(email: String).returns(T.nilable(AccountLock)) }
   def self.check_lock!(email:)
-    account_lock = AccountLock.find_or_initialize_by(email:)
+    account_lock ||= begin
+      AccountLock.find_or_create_by!(email:)
+    rescue ActiveRecord::RecordNotUnique
+      retry
+    end
+
     if account_lock.locked?
       raise Exceptions::Auth::AccountLocked
     else

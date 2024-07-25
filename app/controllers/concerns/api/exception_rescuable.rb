@@ -17,7 +17,7 @@ module API::ExceptionRescuable
     rescue_from ActionController::ParameterMissing, with: :handle_parameter_missing
     rescue_from Pagy::OverflowError,                with: :pagy_overflow
 
-    rescue_from ActiveRecord::RecordNotUnique, with: :handle_record_invalid
+    rescue_from ActiveRecord::RecordNotUnique, with: :handle_record_not_unique
     # rescue_from ActionView::MissingTemplate, with: :handle_missing_template
 
     rescue_from Exceptions::Auth::AuthError,             with: :handle_auth_error
@@ -37,6 +37,17 @@ module API::ExceptionRescuable
       code: :validation_error,
       message: I18n.t('errors.messages.error_occurred'),
       params:,
+    )
+  end
+
+  def handle_record_not_unique(exception = nil)
+    # unique エラーが起きすぎているため追跡のためSentryに送信する
+    Sentry.set_user(id: current_user&.id) if try(:current_user)
+    Sentry.capture_exception(exception)
+
+    invalid_request_error(
+      code: :record_not_unique_error,
+      message: I18n.t('errors.messages.error_occurred'),
     )
   end
 
