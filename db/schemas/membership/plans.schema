@@ -1,0 +1,12 @@
+create_table :membership_plans, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'メンバーシップの販売プラン' do |t|
+  t.references :tenant, type: :citext, null: false
+  t.integer :amount, null: false, comment: '金額'
+  t.string :interval, comment: '更新間隔: month, yearなど'
+  t.string :kind, comment: '購入種別: subscription or one_time'
+  t.string :payment_provider, comment: '決済プロバイダ: stripe, komojuなど'
+  t.string :payment_method, comment: '決済方法: credit_card, konbiniなど'
+
+  t.timestamps null: false
+end
+
+add_foreign_key :membership_plans, :tenants, name: :fk_membership_plans_tenants

@@ -1,0 +1,13 @@
+create_table :membership_check_out_items, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: '購入するプランとチェックアウトの中間テーブル' do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :user, type: :uuid, null: false
+  t.references :check_out, type: :uuid, null: false
+  t.references :plan, type: :uuid, null: false
+
+  t.timestamps null: false
+end
+
+add_foreign_key :membership_check_out_items, :tenants, name: :fk_membership_check_out_items_tenants
+add_foreign_key :membership_check_out_items, :users, name: :fk_membership_check_out_items_users
+add_foreign_key :membership_check_out_items, :membership_check_outs, name: :fk_membership_check_out_items_check_outs, column: :check_out_id
+add_foreign_key :membership_check_out_items, :membership_plans, name: :fk_membership_check_out_items_plans, column: :plan_id
