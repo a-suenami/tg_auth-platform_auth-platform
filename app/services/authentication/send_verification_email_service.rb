@@ -9,6 +9,9 @@ module Authentication
         raise Exceptions::Authentication::InvalidEmail
       end
 
+      # lower caseに変換
+      email = email.downcase
+
       ActiveRecord::Base.transaction do
         user = User.active.find_or_create_by(email:)
         user.captcha_score = captcha_score
