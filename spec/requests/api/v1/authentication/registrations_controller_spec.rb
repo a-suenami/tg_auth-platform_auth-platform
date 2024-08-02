@@ -100,6 +100,50 @@ deleted_at: Time.zone.now,)
           expect(blastengine_mock).to have_received(:send_email)
         end
       end
+
+      context 'email is capitalized' do
+        let(:params) {
+          {
+            email: 'TEST-USER1@EXAMPLE.COM',
+            captcha_token:,
+            captcha_type:,
+          }
+        }
+
+        it 'returns 200' do
+          is_expected.to eq 200
+          expect(blastengine_mock).to have_received(:send_email)
+          # 大文字で登録されないことを確認
+          expect(User.find_by(email: 'TEST-USER1@EXAMPLE.COM')).to be_nil
+          expect(User.find_by(email: 'test-user1@example.com')).to be_present
+        end
+      end
+
+      context 'when user already exists and enabled is true and email is capitalized' do
+        let(:current_user) {
+          create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true)
+        }
+
+        let(:params) {
+          {
+            email: 'TEST-USER1@EXAMPLE.COM',
+            captcha_token:,
+            captcha_type:,
+          }
+        }
+
+        before do
+          current_user
+        end
+
+        it 'returns 200' do
+          is_expected.to eq 200
+          expect(blastengine_mock).to have_received(:send_email)
+          # 大文字で登録されないことを確認
+          expect(User.find_by(email: 'TEST-USER1@EXAMPLE.COM')).to be_nil
+          expect(User.find_by(email: 'test-user1@example.com')).to be_present
+        end
+      end
     end
 
     context 'when email invaild' do
