@@ -9,6 +9,9 @@ module Users
         raise Exceptions::Users::InvalidEmail
       end
 
+      # lower caseに変換
+      email = email.downcase
+
       ActiveRecord::Base.transaction do
         email_verifier = Users::EmailVerifier.new(user:, email:, verifier_type: :email_change)
         email_verifier.set_code
