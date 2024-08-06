@@ -80,6 +80,46 @@ RSpec.describe '[ email change API ]' do
         is_expected.to eq 400
       end
     end
+
+    context 'email is capitalized' do
+      let(:params) {
+        {
+          email: 'CHANGE-EMAIL@EXAMPLE.COM',
+        }
+      }
+
+      it 'returns 204' do
+        is_expected.to eq 204
+        expect(blastengine_mock).to have_received(:send_email)
+        # 大文字で登録されないことを確認
+        expect(Users::EmailVerifier.find_by(email: 'CHANGE-EMAIL@EXAMPLE.COM')).to be_nil
+        expect(Users::EmailVerifier.find_by(email: 'change-email@example.com')).to be_present
+      end
+    end
+
+    context 'when duplicate email with other user and email is capitalized' do
+      let(:current_user) {
+        create(:user, tenant_id: current_tenant.id, email: 'change-email@example.com', password: 'Password1234!', email_verified: true, enabled: true)
+      }
+
+      let(:params) {
+        {
+          email: 'CHANGE-EMAIL@EXAMPLE.COM',
+        }
+      }
+
+      before do
+        current_user
+      end
+
+      it 'returns 204' do
+        is_expected.to eq 204
+        expect(blastengine_mock).to have_received(:send_email)
+        # 大文字で登録されないことを確認
+        expect(Users::EmailVerifier.find_by(email: 'CHANGE-EMAIL@EXAMPLE.COM')).to be_nil
+        expect(Users::EmailVerifier.find_by(email: 'change-email@example.com')).to be_present
+      end
+    end
   end
 
   describe 'POST /api/v1/internal/email_change' do
