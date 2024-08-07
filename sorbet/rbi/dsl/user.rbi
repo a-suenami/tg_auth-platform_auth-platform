@@ -395,6 +395,34 @@ class User
     sig { params(value: T::Enumerable[::Users::SmsVerifier]).void }
     def sms_verifiers=(value); end
 
+    sig { returns(T::Array[T.untyped]) }
+    def stripe_payment_method_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def stripe_payment_method_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :stripe_payment_methods`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::StripeRecord::PaymentMethod::PrivateCollectionProxy) }
+    def stripe_payment_methods; end
+
+    sig { params(value: T::Enumerable[::StripeRecord::PaymentMethod]).void }
+    def stripe_payment_methods=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def stripe_setup_intent_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def stripe_setup_intent_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :stripe_setup_intents`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::StripeRecord::SetupIntent::PrivateCollectionProxy) }
+    def stripe_setup_intents; end
+
+    sig { params(value: T::Enumerable[::StripeRecord::SetupIntent]).void }
+    def stripe_setup_intents=(value); end
+
     sig { returns(T.nilable(::Tenant)) }
     def tenant; end
 
@@ -611,10 +639,13 @@ class User
         captcha_score: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        payment_provider: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        payment_customer_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        default_payment_method: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, email: nil, password_digest: nil, enabled: nil, phone_number: nil, sms_verified: nil, email_verified: nil, suppress_sms_verification: nil, deleted: nil, deleted_at: nil, password_reset_code: nil, captcha_score: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, email: nil, password_digest: nil, enabled: nil, phone_number: nil, sms_verified: nil, email_verified: nil, suppress_sms_verification: nil, deleted: nil, deleted_at: nil, password_reset_code: nil, captcha_score: nil, created_at: nil, updated_at: nil, payment_provider: nil, payment_customer_id: nil, default_payment_method: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -713,6 +744,51 @@ class User
 
     sig { void }
     def created_at_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def default_payment_method; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def default_payment_method=(value); end
+
+    sig { returns(T::Boolean) }
+    def default_payment_method?; end
+
+    sig { returns(T.nilable(::String)) }
+    def default_payment_method_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def default_payment_method_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def default_payment_method_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def default_payment_method_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def default_payment_method_change_to_be_saved; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def default_payment_method_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def default_payment_method_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def default_payment_method_previous_change; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def default_payment_method_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def default_payment_method_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def default_payment_method_was; end
+
+    sig { void }
+    def default_payment_method_will_change!; end
 
     sig { returns(T.nilable(T::Boolean)) }
     def deleted; end
@@ -1130,6 +1206,96 @@ class User
     def password_reset_code_will_change!; end
 
     sig { returns(T.nilable(::String)) }
+    def payment_customer_id; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def payment_customer_id=(value); end
+
+    sig { returns(T::Boolean) }
+    def payment_customer_id?; end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_customer_id_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def payment_customer_id_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def payment_customer_id_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def payment_customer_id_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def payment_customer_id_change_to_be_saved; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def payment_customer_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_customer_id_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def payment_customer_id_previous_change; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def payment_customer_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_customer_id_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_customer_id_was; end
+
+    sig { void }
+    def payment_customer_id_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_provider; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def payment_provider=(value); end
+
+    sig { returns(T::Boolean) }
+    def payment_provider?; end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_provider_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def payment_provider_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def payment_provider_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def payment_provider_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def payment_provider_change_to_be_saved; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def payment_provider_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_provider_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def payment_provider_previous_change; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def payment_provider_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_provider_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_provider_was; end
+
+    sig { void }
+    def payment_provider_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
     def phone_number; end
 
     sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
@@ -1181,6 +1347,9 @@ class User
     def restore_created_at!; end
 
     sig { void }
+    def restore_default_payment_method!; end
+
+    sig { void }
     def restore_deleted!; end
 
     sig { void }
@@ -1208,6 +1377,12 @@ class User
     def restore_password_reset_code!; end
 
     sig { void }
+    def restore_payment_customer_id!; end
+
+    sig { void }
+    def restore_payment_provider!; end
+
+    sig { void }
     def restore_phone_number!; end
 
     sig { void }
@@ -1233,6 +1408,12 @@ class User
 
     sig { returns(T::Boolean) }
     def saved_change_to_created_at?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_default_payment_method; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_default_payment_method?; end
 
     sig { returns(T.nilable([T.nilable(T::Boolean), T.nilable(T::Boolean)])) }
     def saved_change_to_deleted; end
@@ -1287,6 +1468,18 @@ class User
 
     sig { returns(T::Boolean) }
     def saved_change_to_password_reset_code?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_payment_customer_id; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_payment_customer_id?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_payment_provider; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_payment_provider?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_phone_number; end
@@ -1505,6 +1698,9 @@ class User
     def will_save_change_to_created_at?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_default_payment_method?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_deleted?; end
 
     sig { returns(T::Boolean) }
@@ -1530,6 +1726,12 @@ class User
 
     sig { returns(T::Boolean) }
     def will_save_change_to_password_reset_code?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_payment_customer_id?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_payment_provider?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_phone_number?; end
@@ -1695,10 +1897,13 @@ class User
         captcha_score: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        payment_provider: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        payment_customer_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        default_payment_method: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, email: nil, password_digest: nil, enabled: nil, phone_number: nil, sms_verified: nil, email_verified: nil, suppress_sms_verification: nil, deleted: nil, deleted_at: nil, password_reset_code: nil, captcha_score: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, email: nil, password_digest: nil, enabled: nil, phone_number: nil, sms_verified: nil, email_verified: nil, suppress_sms_verification: nil, deleted: nil, deleted_at: nil, password_reset_code: nil, captcha_score: nil, created_at: nil, updated_at: nil, payment_provider: nil, payment_customer_id: nil, default_payment_method: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

@@ -46,3 +46,5 @@ cspell.yml
 
 env.fly
 dev.env
+
+/config/credentials/development.key

@@ -63,6 +63,9 @@ module GeneratedPathHelpersModule
   def api_v1_internal_email_change_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def api_v1_internal_me_card_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def api_v1_internal_me_delivery_address_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -289,6 +292,7 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def shopify_area_webhooks_eventbridge_shopify_path(*args); end
+  def setup_intent_api_v1_internal_me_card_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def turbo_recede_historical_location_path(*args); end

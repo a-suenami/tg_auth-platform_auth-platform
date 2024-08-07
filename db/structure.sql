@@ -928,9 +928,17 @@ CREATE TABLE public.tenants (
     name character varying,
     domain character varying,
     sms_verification_required boolean DEFAULT false,
+    card_payment_gateway character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: COLUMN tenants.card_payment_gateway; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenants.card_payment_gateway IS 'カード決済で使用するペイメントゲートウェイ';
 
 
 --
@@ -970,6 +978,9 @@ CREATE TABLE public.users (
     deleted_at timestamp(6) without time zone DEFAULT NULL::timestamp without time zone,
     password_reset_code character varying,
     captcha_score double precision,
+    payment_provider character varying,
+    payment_customer_id character varying,
+    default_payment_method character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );

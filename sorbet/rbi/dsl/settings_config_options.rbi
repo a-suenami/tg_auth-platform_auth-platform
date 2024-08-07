@@ -48,6 +48,12 @@ class SettingsConfigOptions < ::Config::Options
   def doorkeeper=(value); end
 
   sig { returns(T.untyped) }
+  def encryptor; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def encryptor=(value); end
+
+  sig { returns(T.untyped) }
   def redis; end
 
   sig { params(value: T.untyped).returns(T.untyped) }
@@ -70,6 +76,12 @@ class SettingsConfigOptions < ::Config::Options
 
   sig { params(value: T.untyped).returns(T.untyped) }
   def sms_link=(value); end
+
+  sig { returns(T.untyped) }
+  def stripe; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def stripe=(value); end
 
   sig { returns(T.untyped) }
   def super_mode; end

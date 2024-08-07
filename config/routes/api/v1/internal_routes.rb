@@ -11,6 +11,11 @@ Rails.application.routes.draw do
         namespace :me do
           resource :profile, only: [:show, :update]
           resources :delivery_addresses, only: [:show, :index, :create, :update, :destroy]
+          resource :card, only: [:show, :update, :destroy] do
+            member do
+              post :setup_intent, action: :create_setup_intent
+            end
+          end
         end
 
         resource :email_change, only: [:create] do

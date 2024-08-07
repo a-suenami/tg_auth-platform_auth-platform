@@ -25,35 +25,24 @@ class Tenant::StripeAccount < ApplicationRecord
   before_validation :set_charge_type
 
   validates :tenant_id, uniqueness: true
-  validates :charge_type, :gacha_check_out_fee_rate, :gacha_shipment_fee_rate,
+  validates :charge_type, :fee_rate,
     presence: true, if: -> { T.cast(self, Tenant::StripeAccount).stripe_account&.connect_account? }
-  validates :gacha_check_out_fee_rate, :gacha_shipment_fee_rate, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }, allow_nil: true
+  validates :fee_rate, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }, allow_nil: true
 
   sig { returns(T.nilable(BigDecimal)) }
-  def gacha_check_out_fee_rate_percentage
-    gacha_check_out_fee_rate&.*(100)
+  def fee_rate_percentage
+    fee_rate&.*(100)
   end
 
   sig { params(percentage: T.nilable(T.any(BigDecimal, String))).returns(T.nilable(BigDecimal)) }
-  def gacha_check_out_fee_rate_percentage=(percentage)
+  def fee_rate_percentage=(percentage)
     percentage = percentage.to_d if percentage.is_a?(String)
-    self.gacha_check_out_fee_rate = percentage&./(100)
+    self.fee_rate = percentage&./(100)
   end
 
-  sig { returns(T.nilable(BigDecimal)) }
-  def gacha_shipment_fee_rate_percentage
-    gacha_shipment_fee_rate&.*(100)
-  end
-
-  sig { params(percentage: T.nilable(T.any(BigDecimal, String))).returns(T.nilable(BigDecimal)) }
-  def gacha_shipment_fee_rate_percentage=(percentage)
-    percentage = percentage.to_d if percentage.is_a?(String)
-    self.gacha_shipment_fee_rate = percentage&./(100)
-  end
-
-  sig { returns(T.nilable(String)) }
   # ダイレクト支払いの場合は stripe_account として Connect 側のアカウントの ID を送信する必要があるので、その必要がある場合だけ String を返す
   # それ以外の場合は nil を返すので { stripe_account: nil } として request を飛ばせばよい
+  sig { returns(T.nilable(String)) }
   def stripe_account_id_if_needed
     return nil unless self.stripe_account&.connect_account?
 
@@ -95,8 +84,8 @@ class Tenant::StripeAccount < ApplicationRecord
     self.charge_type = nil unless stripe_account&.connect_account?
   end
 
-  sig { void }
   # self.stripe_account 以降の association にアクセスする際には query の発行数を抑えるために事前に load_associations を呼ぶこと
+  sig { void }
   def load_associations
     return if self.association(:stripe_account).loaded?
 

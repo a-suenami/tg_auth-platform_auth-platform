@@ -113,6 +113,12 @@ class StripeRecord
 
       sig { override.returns(T::Class[StripeClass]) }
       def self.stripe_class = Stripe::Customer
+
+      def self.update(customer_id, params = nil, opts = {}, stripe_account_id:, api_key:)
+        self.handle_exception do
+          T.unsafe(self.stripe_class).update(customer_id, params, self.opts(api_key:, stripe_account: stripe_account_id).merge(opts))
+        end
+      end
     end
 
     module SetupIntent

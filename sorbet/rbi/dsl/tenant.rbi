@@ -464,10 +464,11 @@ class Tenant
         sms_verification_required: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        card_payment_gateway: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, name: nil, domain: nil, sms_verification_required: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, name: nil, domain: nil, sms_verification_required: nil, created_at: nil, updated_at: nil, card_payment_gateway: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -477,6 +478,51 @@ class Tenant
   end
 
   module GeneratedAttributeMethods
+    sig { returns(T.untyped) }
+    def card_payment_gateway; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def card_payment_gateway=(value); end
+
+    sig { returns(T::Boolean) }
+    def card_payment_gateway?; end
+
+    sig { returns(T.untyped) }
+    def card_payment_gateway_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def card_payment_gateway_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def card_payment_gateway_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def card_payment_gateway_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def card_payment_gateway_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def card_payment_gateway_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def card_payment_gateway_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def card_payment_gateway_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def card_payment_gateway_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def card_payment_gateway_previously_was; end
+
+    sig { returns(T.untyped) }
+    def card_payment_gateway_was; end
+
+    sig { void }
+    def card_payment_gateway_will_change!; end
+
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def created_at; end
 
@@ -703,6 +749,9 @@ class Tenant
     def name_will_change!; end
 
     sig { void }
+    def restore_card_payment_gateway!; end
+
+    sig { void }
     def restore_created_at!; end
 
     sig { void }
@@ -722,6 +771,12 @@ class Tenant
 
     sig { void }
     def restore_updated_at!; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_card_payment_gateway; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_card_payment_gateway?; end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_created_at; end
@@ -854,6 +909,9 @@ class Tenant
 
     sig { void }
     def updated_at_will_change!; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_card_payment_gateway?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_created_at?; end
@@ -1013,10 +1071,11 @@ class Tenant
         sms_verification_required: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        card_payment_gateway: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, name: nil, domain: nil, sms_verification_required: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, name: nil, domain: nil, sms_verification_required: nil, created_at: nil, updated_at: nil, card_payment_gateway: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

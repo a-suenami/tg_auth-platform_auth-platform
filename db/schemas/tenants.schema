@@ -3,6 +3,7 @@ create_table :tenants, force: :cascade, id: :citext do |t|
 
   t.string :domain
   t.boolean :sms_verification_required, default: false
+  t.string :card_payment_gateway, comment: 'カード決済で使用するペイメントゲートウェイ'
 
   t.timestamps null: false
 end

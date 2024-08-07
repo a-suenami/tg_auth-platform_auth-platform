@@ -16,7 +16,7 @@ class StripeRecord
 
     has_many :refunds, dependent: :restrict_with_exception
 
-    scope :active, -> {
+    scope :active, lambda {
       where(
         status: [
           StatusEnum::Processing.serialize,
@@ -26,7 +26,7 @@ class StripeRecord
         ],
       ).where('created_at >= ?', ACTIVE_DURATION.ago)
     }
-    scope :inactive, -> {
+    scope :inactive, lambda {
       where(
         status: [
           StatusEnum::Processing.serialize,
@@ -129,6 +129,7 @@ class StripeRecord
         result
       end
 
+      # 通常の決済（Connect の利用なし）
       sig {
         params(
           tenant_stripe_account: Tenant::StripeAccount,
@@ -140,7 +141,6 @@ class StripeRecord
           metadata: T::Hash[T.untyped, T.untyped],
         ).returns(Mangrove::Result[StripeRecord::PaymentIntent, Stripe::StripeError])
       }
-      # 通常の決済（Connect の利用なし）
       def api_create_payment_intent(tenant_stripe_account:, payment_method:, amount:, currency:, user:, request_three_d_secure:, metadata: {})
         tenant = T.must(tenant_stripe_account.tenant)
         api_key = tenant_stripe_account.api_key
@@ -178,6 +178,7 @@ class StripeRecord
         Mangrove::Result.ok(stripe_payment_intent)
       end
 
+      # Connect を利用した決済
       sig {
         params(
           tenant_stripe_account: Tenant::StripeAccount, # Connect されている側のアカウント
@@ -191,7 +192,6 @@ class StripeRecord
           metadata: T::Hash[T.untyped, T.untyped],
         ).returns(Mangrove::Result[StripeRecord::PaymentIntent, Stripe::StripeError])
       }
-      # Connect を利用した決済
       def api_create_connect_payment_intent(tenant_stripe_account:, charge_type:, fee_rate:, payment_method:, amount:, currency:, user:, request_three_d_secure:, metadata: {})
         tenant = T.must(tenant_stripe_account.tenant)
         stripe_account = T.must(tenant_stripe_account.stripe_account)

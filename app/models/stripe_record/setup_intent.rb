@@ -103,8 +103,8 @@ class StripeRecord
       end
     end
 
-    sig { returns(CreateCardPaymentMethodResult) }
     # カード登録に成功していたら自身から PaymentMethod を作成する
+    sig { returns(CreateCardPaymentMethodResult) }
     def create_card_payment_method
       user = T.must(self.user)
       api_key_account = T.must(self.api_key_account)
@@ -177,9 +177,17 @@ class StripeRecord
             stripe_account_id: self.stripe_account_id_if_needed,
             api_key:,
           )
-          return CreateCardPaymentMethodResult::StripeError.new(attached_result.err_inner) if attached_result.is_a?(Mangrove::Result::Err)
+          raise CreateCardPaymentMethodResult::StripeError, attached_result.err_inner if attached_result.is_a?(Mangrove::Result::Err)
 
           remote_payment_method = attached_result.ok_inner
+
+          # 8. subscription決済のために customer の default_payment_method を更新する
+          StripeRecord::Client::Customer.update(
+            remote_customer_id,
+            { invoice_settings: { default_payment_method: remote_payment_method.id } },
+            stripe_account_id: self.stripe_account_id_if_needed,
+            api_key:,
+          )
         end
       rescue Stripe::StripeError => e
         return CreateCardPaymentMethodResult::StripeError.new(e)

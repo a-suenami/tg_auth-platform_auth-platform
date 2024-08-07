@@ -499,6 +499,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "name"
     t.string "domain"
     t.boolean "sms_verification_required", default: false
+    t.string "card_payment_gateway", comment: "カード決済で使用するペイメントゲートウェイ"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -532,6 +533,9 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "deleted_at"
     t.string "password_reset_code"
     t.float "captcha_score"
+    t.string "payment_provider"
+    t.string "payment_customer_id"
+    t.string "default_payment_method"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id", "email"], name: "index_users_on_tenant_id_email", unique: true, where: "(deleted_at IS NULL)"

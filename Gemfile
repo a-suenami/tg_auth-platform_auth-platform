@@ -164,7 +164,7 @@ gem 'sorbet-runtime', '~> 0.5.11525'
 # reCAPTCHA Enterprise Client
 gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.17.3'
 # Stripe Client
-gem 'stripe', '~> 10.14.0'
+gem 'stripe', '~> 12.4.0'
 # Mangrove provides type utility to use with Sorbet
 gem 'mangrove', '~> 0.29.0'
 

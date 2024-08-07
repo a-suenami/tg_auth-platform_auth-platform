@@ -21,7 +21,7 @@ class StripeRecord
     validate :validate_controlling_platform
     validates :remote_id, :display_name, :payments_statement_descriptor,
       presence: true
-    validates :api_key, presence: true, if: -> {
+    validates :api_key, presence: true, if: lambda {
       T.bind(self, Account)
       controlling_platform.blank?
     }
@@ -42,8 +42,8 @@ class StripeRecord
       controlling_platform.present?
     end
 
-    sig { returns(String) }
     # 管理画面用の表示名
+    sig { returns(String) }
     def ruler_full_display_name
       if self.connect_account?
         controlling_platform = T.must(self.controlling_platform)
@@ -53,9 +53,9 @@ class StripeRecord
       end
     end
 
-    sig { params(charge_type: Tenant::StripeAccount::ChargeTypeEnum).returns(T.nilable(String)) }
     # ダイレクト支払いの場合は stripe_account として Connect 側のアカウントの ID を送信する必要があるので、その必要がある場合だけ String を返す
     # それ以外の場合は nil を返すので { stripe_account: nil } として request を飛ばせばよい
+    sig { params(charge_type: Tenant::StripeAccount::ChargeTypeEnum).returns(T.nilable(String)) }
     def stripe_account_id_if_needed(charge_type:)
       # 自身が Connected アカウントでない場合（通常の決済もしくはプラットフォームアカウントの場合）は request 時の stripe_account は不要なので nil を返す
       return nil unless self.connect_account?
