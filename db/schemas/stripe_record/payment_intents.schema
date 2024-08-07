@@ -1,0 +1,48 @@
+# ==============================================================================
+# db/schemas/stripe_record/payment_intents.schema
+# ==============================================================================
+create_table :stripe_record_payment_intents, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_payment_intents__tenants }
+
+  t.string :remote_id, null: false, index: { unique: true, name: 'idx_stripe_record_payment_intent_remote_id_uniq' }, comment: 'Stripe の payment intent ID'
+
+  t.references :user,          type: :uuid, null: false, index: true, foreign_key: { name: :fk_stripe_record_payment_intents__users }
+  t.references :latest_charge, type: :uuid, null: true,  index: true, foreign_key: {
+    to_table: :stripe_record_charges, column: :latest_charge_id, name: :fk_stripe_record_payment_intents_latest_charge_id,
+  }
+
+  t.string  :currency
+  t.integer :amount
+  t.string  :status
+  t.string  :customer_id
+  t.string  :client_secret
+  t.string  :confirmation_method
+  t.string  :capture_method
+  t.string  :payment_method_id
+  t.jsonb   :payment_method_configuration_details
+  t.jsonb   :payment_method_options
+  t.string  :cancellation_reason
+  t.string  :description
+  t.jsonb   :metadata
+  t.jsonb   :next_action
+  # Connect
+  t.string  :on_behalf_of_id
+  t.integer :application_fee_amount
+  t.jsonb   :transfer_data
+  t.string  :transfer_group
+  # Timestamps
+  t.timestamps
+  t.integer :created
+  t.datetime :canceled_at
+
+  # 以下は Slash Gift 側での管理用
+  t.references :api_key_account, type: :uuid, null: false, index: true, foreign_key: {
+    to_table: :stripe_record_accounts, column: :api_key_account_id, name: :fk_stripe_record_payment_intents_api_key_account_id,
+  }, comment: 'API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。'
+  t.references :connect_account, type: :uuid, null: true, index: true, foreign_key: {
+    to_table: :stripe_record_accounts, column: :connect_account_id, name: :fk_stripe_record_payment_intents_connect_account_id,
+  }, comment: 'Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。'
+  t.string :charge_type, comment: 'Connect のときだけ使用する。どの支払いタイプなのかを表す'
+end
+
+add_index :stripe_record_payment_intents, [:tenant_id, :remote_id], unique: true, name: 'index_stripe_record_payment_intents_on_tenant_and_remote_id'

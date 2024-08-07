@@ -450,6 +450,428 @@ CREATE TABLE public.shopify_record__multipass_stores (
 
 
 --
+-- Name: stripe_record_accounts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record_accounts (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    remote_id character varying NOT NULL,
+    api_key_id uuid,
+    controlling_platform_id uuid,
+    type character varying,
+    business_profile_name character varying,
+    payments_statement_descriptor character varying,
+    payments_statement_descriptor_kana character varying,
+    payments_statement_descriptor_kanji character varying,
+    display_name character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN stripe_record_accounts.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_accounts.remote_id IS 'Stripe のアカウント ID';
+
+
+--
+-- Name: COLUMN stripe_record_accounts.display_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_accounts.display_name IS 'API キーがどのアカウントのものかを識別するための名前';
+
+
+--
+-- Name: stripe_record_api_keys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record_api_keys (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    remote_id character varying NOT NULL,
+    display_name character varying NOT NULL,
+    publishable_key character varying NOT NULL,
+    secret_key_encrypted character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN stripe_record_api_keys.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_api_keys.remote_id IS 'Stripe の API キー ID';
+
+
+--
+-- Name: COLUMN stripe_record_api_keys.display_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_api_keys.display_name IS 'API キーがどのアカウントのものかを識別するための名前';
+
+
+--
+-- Name: stripe_record_charges; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record_charges (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying NOT NULL,
+    user_id uuid NOT NULL,
+    amount integer,
+    amount_captured integer,
+    amount_refunded integer,
+    application_id character varying,
+    application_fee_id character varying,
+    application_fee_amount integer,
+    balance_transaction_id character varying,
+    billing_details jsonb,
+    calculated_statement_descriptor character varying,
+    captured boolean,
+    currency character varying,
+    customer_id character varying,
+    description character varying,
+    destination character varying,
+    dispute jsonb,
+    disputed boolean,
+    failure_balance_transaction_id character varying,
+    failure_code character varying,
+    failure_message character varying,
+    fraud_details jsonb,
+    invoice_id character varying,
+    livemode boolean,
+    metadata jsonb,
+    on_behalf_of_id character varying,
+    "order" character varying,
+    outcome jsonb,
+    paid boolean,
+    payment_intent_id character varying,
+    payment_method character varying,
+    payment_method_details jsonb,
+    radar_options jsonb,
+    receipt_email character varying,
+    receipt_number character varying,
+    receipt_url character varying,
+    refunded boolean,
+    review_id character varying,
+    shipping jsonb,
+    source character varying,
+    source_transfer_id character varying,
+    statement_descriptor character varying,
+    statement_descriptor_suffix character varying,
+    status character varying,
+    transfer_id character varying,
+    transfer_data jsonb,
+    transfer_group character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    created integer,
+    api_key_account_id uuid NOT NULL,
+    connect_account_id uuid,
+    charge_type character varying
+);
+
+
+--
+-- Name: COLUMN stripe_record_charges.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_charges.remote_id IS 'Stripe の charge ID';
+
+
+--
+-- Name: COLUMN stripe_record_charges.api_key_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_charges.api_key_account_id IS 'API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。';
+
+
+--
+-- Name: COLUMN stripe_record_charges.connect_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_charges.connect_account_id IS 'Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。';
+
+
+--
+-- Name: COLUMN stripe_record_charges.charge_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_charges.charge_type IS 'Connect のときだけ使用する。どの支払いタイプなのかを表す';
+
+
+--
+-- Name: stripe_record_payment_intents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record_payment_intents (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying NOT NULL,
+    user_id uuid NOT NULL,
+    latest_charge_id uuid,
+    currency character varying,
+    amount integer,
+    status character varying,
+    customer_id character varying,
+    client_secret character varying,
+    confirmation_method character varying,
+    capture_method character varying,
+    payment_method_id character varying,
+    payment_method_configuration_details jsonb,
+    payment_method_options jsonb,
+    cancellation_reason character varying,
+    description character varying,
+    metadata jsonb,
+    next_action jsonb,
+    on_behalf_of_id character varying,
+    application_fee_amount integer,
+    transfer_data jsonb,
+    transfer_group character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    created integer,
+    canceled_at timestamp(6) without time zone,
+    api_key_account_id uuid NOT NULL,
+    connect_account_id uuid,
+    charge_type character varying
+);
+
+
+--
+-- Name: COLUMN stripe_record_payment_intents.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_payment_intents.remote_id IS 'Stripe の payment intent ID';
+
+
+--
+-- Name: COLUMN stripe_record_payment_intents.api_key_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_payment_intents.api_key_account_id IS 'API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。';
+
+
+--
+-- Name: COLUMN stripe_record_payment_intents.connect_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_payment_intents.connect_account_id IS 'Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。';
+
+
+--
+-- Name: COLUMN stripe_record_payment_intents.charge_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_payment_intents.charge_type IS 'Connect のときだけ使用する。どの支払いタイプなのかを表す';
+
+
+--
+-- Name: stripe_record_payment_methods; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record_payment_methods (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying NOT NULL,
+    user_id uuid NOT NULL,
+    setup_intent_id uuid,
+    type character varying NOT NULL,
+    billing_details jsonb DEFAULT '{}'::jsonb,
+    card jsonb DEFAULT '{}'::jsonb,
+    customer_id character varying NOT NULL,
+    detached_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    api_key_account_id uuid NOT NULL,
+    connect_account_id uuid,
+    charge_type character varying
+);
+
+
+--
+-- Name: COLUMN stripe_record_payment_methods.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_payment_methods.remote_id IS 'Stripe の payment method ID';
+
+
+--
+-- Name: COLUMN stripe_record_payment_methods.type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_payment_methods.type IS 'payment method の種類。card など';
+
+
+--
+-- Name: COLUMN stripe_record_payment_methods.billing_details; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_payment_methods.billing_details IS '請求先情報';
+
+
+--
+-- Name: COLUMN stripe_record_payment_methods.card; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_payment_methods.card IS 'card の詳細情報';
+
+
+--
+-- Name: COLUMN stripe_record_payment_methods.customer_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_payment_methods.customer_id IS 'この PaymentMethod の持ち主の customer ID';
+
+
+--
+-- Name: COLUMN stripe_record_payment_methods.detached_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_payment_methods.detached_at IS 'detach された日時';
+
+
+--
+-- Name: COLUMN stripe_record_payment_methods.api_key_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_payment_methods.api_key_account_id IS 'API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。';
+
+
+--
+-- Name: COLUMN stripe_record_payment_methods.connect_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_payment_methods.connect_account_id IS 'Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。';
+
+
+--
+-- Name: COLUMN stripe_record_payment_methods.charge_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_payment_methods.charge_type IS 'Connect のときだけ使用する。どの支払いタイプなのかを表す';
+
+
+--
+-- Name: stripe_record_refunds; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record_refunds (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying NOT NULL,
+    user_id uuid NOT NULL,
+    payment_intent_id uuid NOT NULL,
+    amount integer,
+    balance_transaction_id character varying,
+    currency character varying,
+    destination_details jsonb,
+    metadata jsonb,
+    reason character varying,
+    receipt_number character varying,
+    source_transfer_reversal_id character varying,
+    status character varying,
+    transfer_reversal_id character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    created integer,
+    api_key_account_id uuid NOT NULL,
+    connect_account_id uuid,
+    charge_type character varying
+);
+
+
+--
+-- Name: COLUMN stripe_record_refunds.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_refunds.remote_id IS 'Stripe の refund ID';
+
+
+--
+-- Name: COLUMN stripe_record_refunds.api_key_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_refunds.api_key_account_id IS 'API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。';
+
+
+--
+-- Name: COLUMN stripe_record_refunds.connect_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_refunds.connect_account_id IS 'Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。';
+
+
+--
+-- Name: COLUMN stripe_record_refunds.charge_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_refunds.charge_type IS 'Connect のときだけ使用する。どの支払いタイプなのかを表す';
+
+
+--
+-- Name: stripe_record_setup_intents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record_setup_intents (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying NOT NULL,
+    user_id uuid NOT NULL,
+    client_secret character varying NOT NULL,
+    customer_id character varying,
+    on_behalf_of_id character varying,
+    payment_method_id character varying,
+    status character varying,
+    usage character varying,
+    activated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    api_key_account_id uuid NOT NULL,
+    connect_account_id uuid,
+    charge_type character varying
+);
+
+
+--
+-- Name: COLUMN stripe_record_setup_intents.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_setup_intents.remote_id IS 'Stripe の setup intent ID';
+
+
+--
+-- Name: COLUMN stripe_record_setup_intents.activated_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_setup_intents.activated_at IS 'このカードが有効になった日時。NULL だがカードの登録自体には成功している場合、この SetupIntent で登録されたカードは定期的に削除する。';
+
+
+--
+-- Name: COLUMN stripe_record_setup_intents.api_key_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_setup_intents.api_key_account_id IS 'API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。';
+
+
+--
+-- Name: COLUMN stripe_record_setup_intents.connect_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_setup_intents.connect_account_id IS 'Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。';
+
+
+--
+-- Name: COLUMN stripe_record_setup_intents.charge_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_setup_intents.charge_type IS 'Connect のときだけ使用する。どの支払いタイプなのかを表す';
+
+
+--
 -- Name: tenant_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -466,6 +888,35 @@ CREATE TABLE public.tenant_settings (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: tenant_stripe_accounts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_stripe_accounts (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    stripe_account_id uuid NOT NULL,
+    charge_type character varying,
+    fee_rate numeric(6,5),
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN tenant_stripe_accounts.charge_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_stripe_accounts.charge_type IS 'Connect の場合にどの支払いタイプを利用するか';
+
+
+--
+-- Name: COLUMN tenant_stripe_accounts.fee_rate; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_stripe_accounts.fee_rate IS '手数料率（100% ~ 0.001%）。stripe_account.controlling_platform がいる場合のみ（Connect）利用する。';
 
 
 --
@@ -759,11 +1210,75 @@ ALTER TABLE ONLY public.shopify_record__multipass_stores
 
 
 --
+-- Name: stripe_record_accounts stripe_record_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_accounts
+    ADD CONSTRAINT stripe_record_accounts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record_api_keys stripe_record_api_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_api_keys
+    ADD CONSTRAINT stripe_record_api_keys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record_charges stripe_record_charges_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_charges
+    ADD CONSTRAINT stripe_record_charges_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record_payment_intents stripe_record_payment_intents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_payment_intents
+    ADD CONSTRAINT stripe_record_payment_intents_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record_payment_methods stripe_record_payment_methods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_payment_methods
+    ADD CONSTRAINT stripe_record_payment_methods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record_refunds stripe_record_refunds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_refunds
+    ADD CONSTRAINT stripe_record_refunds_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record_setup_intents stripe_record_setup_intents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_setup_intents
+    ADD CONSTRAINT stripe_record_setup_intents_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: tenant_settings tenant_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.tenant_settings
     ADD CONSTRAINT tenant_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tenant_stripe_accounts tenant_stripe_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_stripe_accounts
+    ADD CONSTRAINT tenant_stripe_accounts_pkey PRIMARY KEY (id);
 
 
 --
@@ -876,6 +1391,48 @@ CREATE UNIQUE INDEX idx_rulers_uid_uniq ON public.rulers USING btree (uid);
 --
 
 CREATE UNIQUE INDEX idx_shopify_record__customers_store_name_email_uniq ON public.shopify_record__customers USING btree (store_name, email);
+
+
+--
+-- Name: idx_stripe_record_api_keys_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record_api_keys_remote_id_uniq ON public.stripe_record_api_keys USING btree (remote_id);
+
+
+--
+-- Name: idx_stripe_record_charge_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record_charge_remote_id_uniq ON public.stripe_record_charges USING btree (remote_id);
+
+
+--
+-- Name: idx_stripe_record_payment_intent_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record_payment_intent_remote_id_uniq ON public.stripe_record_payment_intents USING btree (remote_id);
+
+
+--
+-- Name: idx_stripe_record_payment_methods_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record_payment_methods_remote_id_uniq ON public.stripe_record_payment_methods USING btree (remote_id);
+
+
+--
+-- Name: idx_stripe_record_refund_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record_refund_remote_id_uniq ON public.stripe_record_refunds USING btree (remote_id);
+
+
+--
+-- Name: idx_stripe_record_setup_intents_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record_setup_intents_remote_id_uniq ON public.stripe_record_setup_intents USING btree (remote_id);
 
 
 --
@@ -1187,10 +1744,220 @@ CREATE INDEX index_shopify_record__multipass_stores_on_tenant_id ON public.shopi
 
 
 --
+-- Name: index_stripe_account_per_tenant_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_stripe_account_per_tenant_unique ON public.tenant_stripe_accounts USING btree (tenant_id, stripe_account_id);
+
+
+--
+-- Name: index_stripe_record_accounts_on_api_key_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_accounts_on_api_key_id ON public.stripe_record_accounts USING btree (api_key_id);
+
+
+--
+-- Name: index_stripe_record_accounts_on_controlling_platform_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_accounts_on_controlling_platform_id ON public.stripe_record_accounts USING btree (controlling_platform_id);
+
+
+--
+-- Name: index_stripe_record_accounts_remote_id_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_stripe_record_accounts_remote_id_unique ON public.stripe_record_accounts USING btree (remote_id, controlling_platform_id) NULLS NOT DISTINCT;
+
+
+--
+-- Name: index_stripe_record_charges_on_api_key_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_charges_on_api_key_account_id ON public.stripe_record_charges USING btree (api_key_account_id);
+
+
+--
+-- Name: index_stripe_record_charges_on_connect_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_charges_on_connect_account_id ON public.stripe_record_charges USING btree (connect_account_id);
+
+
+--
+-- Name: index_stripe_record_charges_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_charges_on_tenant_id ON public.stripe_record_charges USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record_charges_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_charges_on_user_id ON public.stripe_record_charges USING btree (user_id);
+
+
+--
+-- Name: index_stripe_record_payment_intents_on_api_key_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_payment_intents_on_api_key_account_id ON public.stripe_record_payment_intents USING btree (api_key_account_id);
+
+
+--
+-- Name: index_stripe_record_payment_intents_on_connect_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_payment_intents_on_connect_account_id ON public.stripe_record_payment_intents USING btree (connect_account_id);
+
+
+--
+-- Name: index_stripe_record_payment_intents_on_latest_charge_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_payment_intents_on_latest_charge_id ON public.stripe_record_payment_intents USING btree (latest_charge_id);
+
+
+--
+-- Name: index_stripe_record_payment_intents_on_tenant_and_remote_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_stripe_record_payment_intents_on_tenant_and_remote_id ON public.stripe_record_payment_intents USING btree (tenant_id, remote_id);
+
+
+--
+-- Name: index_stripe_record_payment_intents_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_payment_intents_on_tenant_id ON public.stripe_record_payment_intents USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record_payment_intents_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_payment_intents_on_user_id ON public.stripe_record_payment_intents USING btree (user_id);
+
+
+--
+-- Name: index_stripe_record_payment_methods_on_api_key_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_payment_methods_on_api_key_account_id ON public.stripe_record_payment_methods USING btree (api_key_account_id);
+
+
+--
+-- Name: index_stripe_record_payment_methods_on_connect_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_payment_methods_on_connect_account_id ON public.stripe_record_payment_methods USING btree (connect_account_id);
+
+
+--
+-- Name: index_stripe_record_payment_methods_on_setup_intent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_payment_methods_on_setup_intent_id ON public.stripe_record_payment_methods USING btree (setup_intent_id);
+
+
+--
+-- Name: index_stripe_record_payment_methods_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_payment_methods_on_tenant_id ON public.stripe_record_payment_methods USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record_payment_methods_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_payment_methods_on_user_id ON public.stripe_record_payment_methods USING btree (user_id);
+
+
+--
+-- Name: index_stripe_record_refunds_on_api_key_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_refunds_on_api_key_account_id ON public.stripe_record_refunds USING btree (api_key_account_id);
+
+
+--
+-- Name: index_stripe_record_refunds_on_connect_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_refunds_on_connect_account_id ON public.stripe_record_refunds USING btree (connect_account_id);
+
+
+--
+-- Name: index_stripe_record_refunds_on_payment_intent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_refunds_on_payment_intent_id ON public.stripe_record_refunds USING btree (payment_intent_id);
+
+
+--
+-- Name: index_stripe_record_refunds_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_refunds_on_tenant_id ON public.stripe_record_refunds USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record_refunds_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_refunds_on_user_id ON public.stripe_record_refunds USING btree (user_id);
+
+
+--
+-- Name: index_stripe_record_setup_intents_on_api_key_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_setup_intents_on_api_key_account_id ON public.stripe_record_setup_intents USING btree (api_key_account_id);
+
+
+--
+-- Name: index_stripe_record_setup_intents_on_connect_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_setup_intents_on_connect_account_id ON public.stripe_record_setup_intents USING btree (connect_account_id);
+
+
+--
+-- Name: index_stripe_record_setup_intents_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_setup_intents_on_tenant_id ON public.stripe_record_setup_intents USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record_setup_intents_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_setup_intents_on_user_id ON public.stripe_record_setup_intents USING btree (user_id);
+
+
+--
 -- Name: index_tenant_settings_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_tenant_settings_on_tenant_id ON public.tenant_settings USING btree (tenant_id);
+
+
+--
+-- Name: index_tenant_stripe_accounts_on_stripe_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tenant_stripe_accounts_on_stripe_account_id ON public.tenant_stripe_accounts USING btree (stripe_account_id);
+
+
+--
+-- Name: index_tenant_stripe_accounts_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_tenant_stripe_accounts_on_tenant_id ON public.tenant_stripe_accounts USING btree (tenant_id);
 
 
 --
@@ -1513,6 +2280,222 @@ ALTER TABLE ONLY public.oauth_access_grants
 
 ALTER TABLE ONLY public.oauth_access_tokens
     ADD CONSTRAINT fk_rails_ee63f25419 FOREIGN KEY (resource_owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: stripe_record_accounts fk_stripe_record_accounts_api_key_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_accounts
+    ADD CONSTRAINT fk_stripe_record_accounts_api_key_id FOREIGN KEY (api_key_id) REFERENCES public.stripe_record_api_keys(id);
+
+
+--
+-- Name: stripe_record_accounts fk_stripe_record_accounts_controlling_platform_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_accounts
+    ADD CONSTRAINT fk_stripe_record_accounts_controlling_platform_id FOREIGN KEY (controlling_platform_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: stripe_record_charges fk_stripe_record_charges__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_charges
+    ADD CONSTRAINT fk_stripe_record_charges__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record_charges fk_stripe_record_charges__users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_charges
+    ADD CONSTRAINT fk_stripe_record_charges__users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: stripe_record_charges fk_stripe_record_charges_api_key_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_charges
+    ADD CONSTRAINT fk_stripe_record_charges_api_key_account_id FOREIGN KEY (api_key_account_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: stripe_record_charges fk_stripe_record_charges_connect_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_charges
+    ADD CONSTRAINT fk_stripe_record_charges_connect_account_id FOREIGN KEY (connect_account_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: stripe_record_payment_intents fk_stripe_record_payment_intents__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_payment_intents
+    ADD CONSTRAINT fk_stripe_record_payment_intents__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record_refunds fk_stripe_record_payment_intents__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_refunds
+    ADD CONSTRAINT fk_stripe_record_payment_intents__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record_payment_intents fk_stripe_record_payment_intents__users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_payment_intents
+    ADD CONSTRAINT fk_stripe_record_payment_intents__users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: stripe_record_payment_intents fk_stripe_record_payment_intents_api_key_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_payment_intents
+    ADD CONSTRAINT fk_stripe_record_payment_intents_api_key_account_id FOREIGN KEY (api_key_account_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: stripe_record_payment_intents fk_stripe_record_payment_intents_connect_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_payment_intents
+    ADD CONSTRAINT fk_stripe_record_payment_intents_connect_account_id FOREIGN KEY (connect_account_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: stripe_record_payment_intents fk_stripe_record_payment_intents_latest_charge_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_payment_intents
+    ADD CONSTRAINT fk_stripe_record_payment_intents_latest_charge_id FOREIGN KEY (latest_charge_id) REFERENCES public.stripe_record_charges(id);
+
+
+--
+-- Name: stripe_record_payment_methods fk_stripe_record_payment_methods__setup_intents; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_payment_methods
+    ADD CONSTRAINT fk_stripe_record_payment_methods__setup_intents FOREIGN KEY (setup_intent_id) REFERENCES public.stripe_record_setup_intents(id);
+
+
+--
+-- Name: stripe_record_payment_methods fk_stripe_record_payment_methods__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_payment_methods
+    ADD CONSTRAINT fk_stripe_record_payment_methods__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record_payment_methods fk_stripe_record_payment_methods__users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_payment_methods
+    ADD CONSTRAINT fk_stripe_record_payment_methods__users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: stripe_record_payment_methods fk_stripe_record_payment_methods_api_key_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_payment_methods
+    ADD CONSTRAINT fk_stripe_record_payment_methods_api_key_account_id FOREIGN KEY (api_key_account_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: stripe_record_payment_methods fk_stripe_record_payment_methods_connect_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_payment_methods
+    ADD CONSTRAINT fk_stripe_record_payment_methods_connect_account_id FOREIGN KEY (connect_account_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: stripe_record_refunds fk_stripe_record_refunds__users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_refunds
+    ADD CONSTRAINT fk_stripe_record_refunds__users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: stripe_record_refunds fk_stripe_record_refunds_api_key_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_refunds
+    ADD CONSTRAINT fk_stripe_record_refunds_api_key_account_id FOREIGN KEY (api_key_account_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: stripe_record_refunds fk_stripe_record_refunds_connect_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_refunds
+    ADD CONSTRAINT fk_stripe_record_refunds_connect_account_id FOREIGN KEY (connect_account_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: stripe_record_refunds fk_stripe_record_refunds_payment_intent_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_refunds
+    ADD CONSTRAINT fk_stripe_record_refunds_payment_intent_id FOREIGN KEY (payment_intent_id) REFERENCES public.stripe_record_payment_intents(id);
+
+
+--
+-- Name: stripe_record_setup_intents fk_stripe_record_setup_intents__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_setup_intents
+    ADD CONSTRAINT fk_stripe_record_setup_intents__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record_setup_intents fk_stripe_record_setup_intents__users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_setup_intents
+    ADD CONSTRAINT fk_stripe_record_setup_intents__users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: stripe_record_setup_intents fk_stripe_record_setup_intents_api_key_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_setup_intents
+    ADD CONSTRAINT fk_stripe_record_setup_intents_api_key_account_id FOREIGN KEY (api_key_account_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: stripe_record_setup_intents fk_stripe_record_setup_intents_connect_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_setup_intents
+    ADD CONSTRAINT fk_stripe_record_setup_intents_connect_account_id FOREIGN KEY (connect_account_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: tenant_stripe_accounts fk_tenant_stripe_accounts__stripe_accounts; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_stripe_accounts
+    ADD CONSTRAINT fk_tenant_stripe_accounts__stripe_accounts FOREIGN KEY (stripe_account_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: tenant_stripe_accounts fk_tenant_stripe_accounts__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_stripe_accounts
+    ADD CONSTRAINT fk_tenant_stripe_accounts__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --

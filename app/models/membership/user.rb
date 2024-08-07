@@ -1,7 +1,7 @@
 # typed: strict
 
 class Membership
-  class Users < ApplicationRecord
+  class User < ApplicationRecord
     extend T::Sig
 
     belongs_to :user

@@ -265,6 +265,209 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_shopify_record__multipass_stores_on_tenant_id"
   end
 
+  create_table "stripe_record_accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "remote_id", null: false, comment: "Stripe のアカウント ID"
+    t.uuid "api_key_id"
+    t.uuid "controlling_platform_id"
+    t.string "type"
+    t.string "business_profile_name"
+    t.string "payments_statement_descriptor"
+    t.string "payments_statement_descriptor_kana"
+    t.string "payments_statement_descriptor_kanji"
+    t.string "display_name", null: false, comment: "API キーがどのアカウントのものかを識別するための名前"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["api_key_id"], name: "index_stripe_record_accounts_on_api_key_id"
+    t.index ["controlling_platform_id"], name: "index_stripe_record_accounts_on_controlling_platform_id"
+    t.index ["remote_id", "controlling_platform_id"], name: "index_stripe_record_accounts_remote_id_unique", unique: true, nulls_not_distinct: true
+  end
+
+  create_table "stripe_record_api_keys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "remote_id", null: false, comment: "Stripe の API キー ID"
+    t.string "display_name", null: false, comment: "API キーがどのアカウントのものかを識別するための名前"
+    t.string "publishable_key", null: false
+    t.string "secret_key_encrypted", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["remote_id"], name: "idx_stripe_record_api_keys_remote_id_uniq", unique: true
+  end
+
+  create_table "stripe_record_charges", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "remote_id", null: false, comment: "Stripe の charge ID"
+    t.uuid "user_id", null: false
+    t.integer "amount"
+    t.integer "amount_captured"
+    t.integer "amount_refunded"
+    t.string "application_id"
+    t.string "application_fee_id"
+    t.integer "application_fee_amount"
+    t.string "balance_transaction_id"
+    t.jsonb "billing_details"
+    t.string "calculated_statement_descriptor"
+    t.boolean "captured"
+    t.string "currency"
+    t.string "customer_id"
+    t.string "description"
+    t.string "destination"
+    t.jsonb "dispute"
+    t.boolean "disputed"
+    t.string "failure_balance_transaction_id"
+    t.string "failure_code"
+    t.string "failure_message"
+    t.jsonb "fraud_details"
+    t.string "invoice_id"
+    t.boolean "livemode"
+    t.jsonb "metadata"
+    t.string "on_behalf_of_id"
+    t.string "order"
+    t.jsonb "outcome"
+    t.boolean "paid"
+    t.string "payment_intent_id"
+    t.string "payment_method"
+    t.jsonb "payment_method_details"
+    t.jsonb "radar_options"
+    t.string "receipt_email"
+    t.string "receipt_number"
+    t.string "receipt_url"
+    t.boolean "refunded"
+    t.string "review_id"
+    t.jsonb "shipping"
+    t.string "source"
+    t.string "source_transfer_id"
+    t.string "statement_descriptor"
+    t.string "statement_descriptor_suffix"
+    t.string "status"
+    t.string "transfer_id"
+    t.jsonb "transfer_data"
+    t.string "transfer_group"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "created"
+    t.uuid "api_key_account_id", null: false, comment: "API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。"
+    t.uuid "connect_account_id", comment: "Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。"
+    t.string "charge_type", comment: "Connect のときだけ使用する。どの支払いタイプなのかを表す"
+    t.index ["api_key_account_id"], name: "index_stripe_record_charges_on_api_key_account_id"
+    t.index ["connect_account_id"], name: "index_stripe_record_charges_on_connect_account_id"
+    t.index ["remote_id"], name: "idx_stripe_record_charge_remote_id_uniq", unique: true
+    t.index ["tenant_id"], name: "index_stripe_record_charges_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_charges_on_user_id"
+  end
+
+  create_table "stripe_record_payment_intents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "remote_id", null: false, comment: "Stripe の payment intent ID"
+    t.uuid "user_id", null: false
+    t.uuid "latest_charge_id"
+    t.string "currency"
+    t.integer "amount"
+    t.string "status"
+    t.string "customer_id"
+    t.string "client_secret"
+    t.string "confirmation_method"
+    t.string "capture_method"
+    t.string "payment_method_id"
+    t.jsonb "payment_method_configuration_details"
+    t.jsonb "payment_method_options"
+    t.string "cancellation_reason"
+    t.string "description"
+    t.jsonb "metadata"
+    t.jsonb "next_action"
+    t.string "on_behalf_of_id"
+    t.integer "application_fee_amount"
+    t.jsonb "transfer_data"
+    t.string "transfer_group"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "created"
+    t.datetime "canceled_at"
+    t.uuid "api_key_account_id", null: false, comment: "API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。"
+    t.uuid "connect_account_id", comment: "Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。"
+    t.string "charge_type", comment: "Connect のときだけ使用する。どの支払いタイプなのかを表す"
+    t.index ["api_key_account_id"], name: "index_stripe_record_payment_intents_on_api_key_account_id"
+    t.index ["connect_account_id"], name: "index_stripe_record_payment_intents_on_connect_account_id"
+    t.index ["latest_charge_id"], name: "index_stripe_record_payment_intents_on_latest_charge_id"
+    t.index ["remote_id"], name: "idx_stripe_record_payment_intent_remote_id_uniq", unique: true
+    t.index ["tenant_id", "remote_id"], name: "index_stripe_record_payment_intents_on_tenant_and_remote_id", unique: true
+    t.index ["tenant_id"], name: "index_stripe_record_payment_intents_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_payment_intents_on_user_id"
+  end
+
+  create_table "stripe_record_payment_methods", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "remote_id", null: false, comment: "Stripe の payment method ID"
+    t.uuid "user_id", null: false
+    t.uuid "setup_intent_id"
+    t.string "type", null: false, comment: "payment method の種類。card など"
+    t.jsonb "billing_details", default: {}, comment: "請求先情報"
+    t.jsonb "card", default: {}, comment: "card の詳細情報"
+    t.string "customer_id", null: false, comment: "この PaymentMethod の持ち主の customer ID"
+    t.datetime "detached_at", comment: "detach された日時"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "api_key_account_id", null: false, comment: "API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。"
+    t.uuid "connect_account_id", comment: "Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。"
+    t.string "charge_type", comment: "Connect のときだけ使用する。どの支払いタイプなのかを表す"
+    t.index ["api_key_account_id"], name: "index_stripe_record_payment_methods_on_api_key_account_id"
+    t.index ["connect_account_id"], name: "index_stripe_record_payment_methods_on_connect_account_id"
+    t.index ["remote_id"], name: "idx_stripe_record_payment_methods_remote_id_uniq", unique: true
+    t.index ["setup_intent_id"], name: "index_stripe_record_payment_methods_on_setup_intent_id"
+    t.index ["tenant_id"], name: "index_stripe_record_payment_methods_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_payment_methods_on_user_id"
+  end
+
+  create_table "stripe_record_refunds", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "remote_id", null: false, comment: "Stripe の refund ID"
+    t.uuid "user_id", null: false
+    t.uuid "payment_intent_id", null: false
+    t.integer "amount"
+    t.string "balance_transaction_id"
+    t.string "currency"
+    t.jsonb "destination_details"
+    t.jsonb "metadata"
+    t.string "reason"
+    t.string "receipt_number"
+    t.string "source_transfer_reversal_id"
+    t.string "status"
+    t.string "transfer_reversal_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "created"
+    t.uuid "api_key_account_id", null: false, comment: "API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。"
+    t.uuid "connect_account_id", comment: "Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。"
+    t.string "charge_type", comment: "Connect のときだけ使用する。どの支払いタイプなのかを表す"
+    t.index ["api_key_account_id"], name: "index_stripe_record_refunds_on_api_key_account_id"
+    t.index ["connect_account_id"], name: "index_stripe_record_refunds_on_connect_account_id"
+    t.index ["payment_intent_id"], name: "index_stripe_record_refunds_on_payment_intent_id"
+    t.index ["remote_id"], name: "idx_stripe_record_refund_remote_id_uniq", unique: true
+    t.index ["tenant_id"], name: "index_stripe_record_refunds_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_refunds_on_user_id"
+  end
+
+  create_table "stripe_record_setup_intents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "remote_id", null: false, comment: "Stripe の setup intent ID"
+    t.uuid "user_id", null: false
+    t.string "client_secret", null: false
+    t.string "customer_id"
+    t.string "on_behalf_of_id"
+    t.string "payment_method_id"
+    t.string "status"
+    t.string "usage"
+    t.datetime "activated_at", comment: "このカードが有効になった日時。NULL だがカードの登録自体には成功している場合、この SetupIntent で登録されたカードは定期的に削除する。"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "api_key_account_id", null: false, comment: "API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。"
+    t.uuid "connect_account_id", comment: "Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。"
+    t.string "charge_type", comment: "Connect のときだけ使用する。どの支払いタイプなのかを表す"
+    t.index ["api_key_account_id"], name: "index_stripe_record_setup_intents_on_api_key_account_id"
+    t.index ["connect_account_id"], name: "index_stripe_record_setup_intents_on_connect_account_id"
+    t.index ["remote_id"], name: "idx_stripe_record_setup_intents_remote_id_uniq", unique: true
+    t.index ["tenant_id"], name: "index_stripe_record_setup_intents_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_setup_intents_on_user_id"
+  end
+
   create_table "tenant_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "google_cloud_service_account"
@@ -278,6 +481,18 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "updated_at", null: false
     t.index ["tenant_id"], name: "idx_tenant_settings_tenant_id_uniq", unique: true
     t.index ["tenant_id"], name: "index_tenant_settings_on_tenant_id"
+  end
+
+  create_table "tenant_stripe_accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "stripe_account_id", null: false
+    t.string "charge_type", comment: "Connect の場合にどの支払いタイプを利用するか"
+    t.decimal "fee_rate", precision: 6, scale: 5, comment: "手数料率（100% ~ 0.001%）。stripe_account.controlling_platform がいる場合のみ（Connect）利用する。"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["stripe_account_id"], name: "index_tenant_stripe_accounts_on_stripe_account_id"
+    t.index ["tenant_id", "stripe_account_id"], name: "index_stripe_account_per_tenant_unique", unique: true
+    t.index ["tenant_id"], name: "index_tenant_stripe_accounts_on_tenant_id", unique: true
   end
 
   create_table "tenants", id: :citext, force: :cascade do |t|
@@ -416,6 +631,33 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
   add_foreign_key "oauth_applications", "tenants", name: "fk_oauth_applications_tenants"
   add_foreign_key "oauth_openid_requests", "oauth_access_grants", column: "access_grant_id", name: "fk_oauth_openid_requests_oauth_access_grants"
+  add_foreign_key "stripe_record_accounts", "stripe_record_accounts", column: "controlling_platform_id", name: "fk_stripe_record_accounts_controlling_platform_id"
+  add_foreign_key "stripe_record_accounts", "stripe_record_api_keys", column: "api_key_id", name: "fk_stripe_record_accounts_api_key_id"
+  add_foreign_key "stripe_record_charges", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_charges_api_key_account_id"
+  add_foreign_key "stripe_record_charges", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_charges_connect_account_id"
+  add_foreign_key "stripe_record_charges", "tenants", name: "fk_stripe_record_charges__tenants"
+  add_foreign_key "stripe_record_charges", "users", name: "fk_stripe_record_charges__users"
+  add_foreign_key "stripe_record_payment_intents", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_payment_intents_api_key_account_id"
+  add_foreign_key "stripe_record_payment_intents", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_payment_intents_connect_account_id"
+  add_foreign_key "stripe_record_payment_intents", "stripe_record_charges", column: "latest_charge_id", name: "fk_stripe_record_payment_intents_latest_charge_id"
+  add_foreign_key "stripe_record_payment_intents", "tenants", name: "fk_stripe_record_payment_intents__tenants"
+  add_foreign_key "stripe_record_payment_intents", "users", name: "fk_stripe_record_payment_intents__users"
+  add_foreign_key "stripe_record_payment_methods", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_payment_methods_api_key_account_id"
+  add_foreign_key "stripe_record_payment_methods", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_payment_methods_connect_account_id"
+  add_foreign_key "stripe_record_payment_methods", "stripe_record_setup_intents", column: "setup_intent_id", name: "fk_stripe_record_payment_methods__setup_intents"
+  add_foreign_key "stripe_record_payment_methods", "tenants", name: "fk_stripe_record_payment_methods__tenants"
+  add_foreign_key "stripe_record_payment_methods", "users", name: "fk_stripe_record_payment_methods__users"
+  add_foreign_key "stripe_record_refunds", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_refunds_api_key_account_id"
+  add_foreign_key "stripe_record_refunds", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_refunds_connect_account_id"
+  add_foreign_key "stripe_record_refunds", "stripe_record_payment_intents", column: "payment_intent_id", name: "fk_stripe_record_refunds_payment_intent_id"
+  add_foreign_key "stripe_record_refunds", "tenants", name: "fk_stripe_record_payment_intents__tenants"
+  add_foreign_key "stripe_record_refunds", "users", name: "fk_stripe_record_refunds__users"
+  add_foreign_key "stripe_record_setup_intents", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_setup_intents_api_key_account_id"
+  add_foreign_key "stripe_record_setup_intents", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_setup_intents_connect_account_id"
+  add_foreign_key "stripe_record_setup_intents", "tenants", name: "fk_stripe_record_setup_intents__tenants"
+  add_foreign_key "stripe_record_setup_intents", "users", name: "fk_stripe_record_setup_intents__users"
+  add_foreign_key "tenant_stripe_accounts", "stripe_record_accounts", column: "stripe_account_id", name: "fk_tenant_stripe_accounts__stripe_accounts"
+  add_foreign_key "tenant_stripe_accounts", "tenants", name: "fk_tenant_stripe_accounts__tenants"
   add_foreign_key "user_profiles", "tenants", name: "fk_user_profiles_tenants"
   add_foreign_key "user_profiles", "users", name: "fk_user_profiles_users"
   add_foreign_key "users", "tenants", name: "fk_users_tenants"

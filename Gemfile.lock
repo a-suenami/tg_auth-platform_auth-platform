@@ -333,6 +333,8 @@ GEM
       net-imap
       net-pop
       net-smtp
+    mangrove (0.29.0)
+      sorbet-runtime (>= 0.5.0)
     marcel (1.0.2)
     method_source (1.0.0)
     mime-types (3.5.2)
@@ -656,6 +658,7 @@ GEM
     stimulus-rails (1.3.3)
       railties (>= 6.0.0)
     stringio (3.1.0)
+    stripe (10.14.0)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
     temple (0.10.3)
@@ -736,6 +739,7 @@ DEPENDENCIES
   jp_prefecture (~> 1.1, >= 1.1.1)
   liquid (~> 5.4.0)
   lograge (~> 0.14.0)
+  mangrove (~> 0.29.0)
   omniauth-auth0 (~> 3.1, >= 3.1.1)
   omniauth-rails_csrf_protection (~> 1.0, >= 1.0.1)
   pagy (~> 6.4, >= 6.4.3)
@@ -783,6 +787,7 @@ DEPENDENCIES
   spring-commands-rspec (~> 1.0.4)
   spring-watcher-listen (~> 2.1.0)
   stimulus-rails (~> 1.3, >= 1.3.3)
+  stripe (~> 10.14.0)
   tapioca!
   turbo-rails (~> 1.5)
   twilio-ruby (~> 6.9, >= 6.9.1)

@@ -1,0 +1,68 @@
+# ==============================================================================
+# db/schemas/stripe_record/charges.schema
+# ==============================================================================
+create_table :stripe_record_charges, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_charges__tenants }
+
+  t.string :remote_id, null: false, index: { unique: true, name: 'idx_stripe_record_charge_remote_id_uniq' }, comment: 'Stripe の charge ID'
+
+  t.references :user, type: :uuid, null: false, index: true, foreign_key: { name: :fk_stripe_record_charges__users }
+
+  t.integer  :amount
+  t.integer  :amount_captured
+  t.integer  :amount_refunded
+  t.string   :application_id
+  t.string   :application_fee_id
+  t.integer  :application_fee_amount
+  t.string   :balance_transaction_id
+  t.jsonb    :billing_details
+  t.string   :calculated_statement_descriptor
+  t.boolean  :captured
+  t.string   :currency
+  t.string   :customer_id
+  t.string   :description
+  t.string   :destination
+  t.jsonb    :dispute
+  t.boolean  :disputed
+  t.string   :failure_balance_transaction_id
+  t.string   :failure_code
+  t.string   :failure_message
+  t.jsonb    :fraud_details
+  t.string   :invoice_id
+  t.boolean  :livemode
+  t.jsonb    :metadata
+  t.string   :on_behalf_of_id
+  t.string   :order
+  t.jsonb    :outcome
+  t.boolean  :paid
+  t.string   :payment_intent_id
+  t.string   :payment_method
+  t.jsonb    :payment_method_details
+  t.jsonb    :radar_options
+  t.string   :receipt_email
+  t.string   :receipt_number
+  t.string   :receipt_url
+  t.boolean  :refunded
+  t.string   :review_id
+  t.jsonb    :shipping
+  t.string   :source
+  t.string   :source_transfer_id
+  t.string   :statement_descriptor
+  t.string   :statement_descriptor_suffix
+  t.string   :status
+  t.string   :transfer_id
+  t.jsonb    :transfer_data
+  t.string   :transfer_group
+  # Timestamps
+  t.timestamps
+  t.integer :created
+
+  # 以下は Slash Gift 側での管理用
+  t.references :api_key_account, type: :uuid, null: false, index: true, foreign_key: {
+    to_table: :stripe_record_accounts, column: :api_key_account_id, name: :fk_stripe_record_charges_api_key_account_id,
+  }, comment: 'API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。'
+  t.references :connect_account, type: :uuid, null: true, index: true, foreign_key: {
+    to_table: :stripe_record_accounts, column: :connect_account_id, name: :fk_stripe_record_charges_connect_account_id,
+  }, comment: 'Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。'
+  t.string :charge_type, comment: 'Connect のときだけ使用する。どの支払いタイプなのかを表す'
+end

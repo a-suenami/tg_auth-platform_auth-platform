@@ -52,6 +52,7 @@ module RailsApp
     # Loading files
     # --------------------------------------------------------------------------
     config.paths.add 'lib', eager_load: true
+    Rails.autoloaders.main.ignore(Rails.root.join('lib/monkey_patches/**/*.rb'))
 
     # --------------------------------------------------------------------------
     # i18n
