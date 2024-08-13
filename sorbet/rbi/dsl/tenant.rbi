@@ -217,6 +217,9 @@ class Tenant
     sig { params(args: T.untyped, blk: T.untyped).returns(::TenantSetting) }
     def build_tenant_setting(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::StripeAccount) }
+    def build_tenant_stripe_account(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
     def create_login_spa_application(*args, &blk); end
 
@@ -228,6 +231,12 @@ class Tenant
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::TenantSetting) }
     def create_tenant_setting!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::StripeAccount) }
+    def create_tenant_stripe_account(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::StripeAccount) }
+    def create_tenant_stripe_account!(*args, &blk); end
 
     sig { returns(T.nilable(::LoginSpaApplication)) }
     def login_spa_application; end
@@ -268,12 +277,20 @@ class Tenant
 
     sig { params(value: T::Enumerable[::ShopifyRecord::MultipassStore]).void }
     def shopify_record_multipass_stores=(value); end
+    sig { returns(T.nilable(::Tenant::StripeAccount)) }
+    def reload_tenant_stripe_account; end
 
     sig { returns(T.nilable(::TenantSetting)) }
     def tenant_setting; end
 
     sig { params(value: T.nilable(::TenantSetting)).void }
     def tenant_setting=(value); end
+
+    sig { returns(T.nilable(::Tenant::StripeAccount)) }
+    def tenant_stripe_account; end
+
+    sig { params(value: T.nilable(::Tenant::StripeAccount)).void }
+    def tenant_stripe_account=(value); end
   end
 
   module GeneratedAssociationRelationMethods

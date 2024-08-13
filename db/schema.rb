@@ -147,6 +147,20 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_membership_plans_on_tenant_id"
   end
 
+  create_table "membership_subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "chargeable_id"
+    t.string "chargeable_type"
+    t.datetime "started_at", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "trial_end_at"
+    t.datetime "created_at"
+    t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_e1e867fd22"
+    t.index ["tenant_id"], name: "index_membership_subscriptions_on_tenant_id"
+    t.index ["user_id"], name: "index_membership_subscriptions_on_user_id"
+  end
+
   create_table "membership_users", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップとUserの中間テーブル", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
@@ -416,6 +430,34 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["user_id"], name: "index_stripe_record_payment_methods_on_user_id"
   end
 
+  create_table "stripe_record_prices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "product_id", null: false
+    t.string "remote_id"
+    t.string "name"
+    t.integer "amount"
+    t.string "interval"
+    t.integer "interval_count"
+    t.integer "trial_period_days"
+    t.boolean "deleted", default: false, null: false
+    t.integer "position", default: 1000
+    t.boolean "displayed", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_stripe_record_prices_on_product_id"
+    t.index ["tenant_id"], name: "index_stripe_record_prices_on_tenant_id"
+  end
+
+  create_table "stripe_record_products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "remote_id"
+    t.string "name"
+    t.boolean "deleted", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_stripe_record_products_on_tenant_id"
+  end
+
   create_table "stripe_record_refunds", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "remote_id", null: false, comment: "Stripe の refund ID"
@@ -466,6 +508,26 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["remote_id"], name: "idx_stripe_record_setup_intents_remote_id_uniq", unique: true
     t.index ["tenant_id"], name: "index_stripe_record_setup_intents_on_tenant_id"
     t.index ["user_id"], name: "index_stripe_record_setup_intents_on_user_id"
+  end
+
+  create_table "stripe_record_subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "product_id", null: false
+    t.uuid "price_id", null: false
+    t.integer "amount", default: 0
+    t.integer "tax", default: 0
+    t.string "currency", default: "JPY"
+    t.boolean "refunded", default: false
+    t.string "refund_reason"
+    t.string "remote_id"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["price_id"], name: "index_stripe_record_subscriptions_on_price_id"
+    t.index ["product_id"], name: "index_stripe_record_subscriptions_on_product_id"
+    t.index ["tenant_id"], name: "index_stripe_record_subscriptions_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_subscriptions_on_user_id"
   end
 
   create_table "tenant_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -625,6 +687,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "membership_plan_items", "memberships", name: "fk_membership_plan_items_memberships"
   add_foreign_key "membership_plan_items", "tenants", name: "fk_membership_plan_items_tenants"
   add_foreign_key "membership_plans", "tenants", name: "fk_membership_plans_tenants"
+  add_foreign_key "membership_subscriptions", "tenants", name: "fk_membership_subscriptions_tenants"
   add_foreign_key "membership_users", "tenants", name: "fk_membership_users_tenants"
   add_foreign_key "memberships", "tenants", name: "fk_memberships_tenants"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id", name: "fk_oauth_access_grants_oauth_applications"
@@ -651,6 +714,8 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "stripe_record_payment_methods", "stripe_record_setup_intents", column: "setup_intent_id", name: "fk_stripe_record_payment_methods__setup_intents"
   add_foreign_key "stripe_record_payment_methods", "tenants", name: "fk_stripe_record_payment_methods__tenants"
   add_foreign_key "stripe_record_payment_methods", "users", name: "fk_stripe_record_payment_methods__users"
+  add_foreign_key "stripe_record_prices", "tenants", name: "fk_stripe_record_prices__tenants"
+  add_foreign_key "stripe_record_products", "tenants", name: "fk_stripe_record_products__tenants"
   add_foreign_key "stripe_record_refunds", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_refunds_api_key_account_id"
   add_foreign_key "stripe_record_refunds", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_refunds_connect_account_id"
   add_foreign_key "stripe_record_refunds", "stripe_record_payment_intents", column: "payment_intent_id", name: "fk_stripe_record_refunds_payment_intent_id"
@@ -660,6 +725,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "stripe_record_setup_intents", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_setup_intents_connect_account_id"
   add_foreign_key "stripe_record_setup_intents", "tenants", name: "fk_stripe_record_setup_intents__tenants"
   add_foreign_key "stripe_record_setup_intents", "users", name: "fk_stripe_record_setup_intents__users"
+  add_foreign_key "stripe_record_subscriptions", "tenants", name: "fk_stripe_record_subscriptions__tenants"
   add_foreign_key "tenant_stripe_accounts", "stripe_record_accounts", column: "stripe_account_id", name: "fk_tenant_stripe_accounts__stripe_accounts"
   add_foreign_key "tenant_stripe_accounts", "tenants", name: "fk_tenant_stripe_accounts__tenants"
   add_foreign_key "user_profiles", "tenants", name: "fk_user_profiles_tenants"

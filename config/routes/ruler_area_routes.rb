@@ -20,6 +20,12 @@ Rails.application.routes.draw do
         resources :shopify_multipass_stores, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :email_templates, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :oauth_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        namespace :stripe_records do
+          resources :products, only: [:index, :show, :destroy] do
+            post :preview, on: :collection
+            put :sync, on: :collection
+          end
+        end
       end
     end
   end

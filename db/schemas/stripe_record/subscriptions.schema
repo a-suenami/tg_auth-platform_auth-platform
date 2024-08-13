@@ -1,0 +1,20 @@
+# ==============================================================================
+# db/schemas/stripe_record/subscriptions.schema
+# ==============================================================================
+create_table :stripe_record_subscriptions, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_subscriptions__tenants }
+  t.references :user,               type: :uuid,   null: false
+  t.references :product, type: :uuid,   null: false
+  t.references :price,    type: :uuid,   null: false
+
+  t.integer  :amount,             default: 0
+  t.integer  :tax,                default: 0
+  t.string   :currency,           default: 'JPY'
+  t.boolean  :refunded,           default: false
+  t.string   :refund_reason
+
+  t.string :remote_id
+  t.string :status
+
+  t.timestamps null: false
+end

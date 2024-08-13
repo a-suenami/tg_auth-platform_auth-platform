@@ -1,0 +1,13 @@
+create_table :membership_subscriptions, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :user,       type: :uuid,   null: false
+  t.references :chargeable, type: :uuid,                polymorphic: true
+
+  t.datetime :started_at,   null: false
+  t.datetime :expires_at,   null: false
+  t.datetime :trial_end_at
+
+  t.datetime :created_at
+end
+
+add_foreign_key :membership_subscriptions, :tenants, name: :fk_membership_subscriptions_tenants

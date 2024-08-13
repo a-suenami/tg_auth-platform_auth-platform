@@ -216,5 +216,40 @@ class StripeRecord
       sig { override.returns(T::Class[StripeClass]) }
       def self.stripe_class = Stripe::Refund
     end
+
+    module Product
+      extend T::Sig
+      extend T::Generic
+      include Client
+
+      StripeClass = type_template { { fixed: Stripe::Product } }
+
+      sig { override.returns(T::Class[StripeClass]) }
+      def self.stripe_class = Stripe::Product
+    end
+
+    module Price
+      extend T::Sig
+      extend T::Generic
+      include Client
+
+      StripeClass = type_template { { fixed: Stripe::Price } }
+
+      sig { override.returns(T::Class[StripeClass]) }
+      def self.stripe_class = Stripe::Price
+
+      sig {
+        params(
+          opts: T::Hash[Symbol, T.untyped],
+          stripe_account_id: T.nilable(String),
+          api_key: StripeRecord::APIKey,
+        ).returns(Mangrove::Result[StripeClass, Stripe::StripeError])
+      }
+      def self.list(opts = {}, stripe_account_id:, api_key:)
+        self.handle_exception do
+          T.unsafe(self.stripe_class).list(opts, self.opts(api_key:, stripe_account: stripe_account_id))
+        end
+      end
+    end
   end
 end

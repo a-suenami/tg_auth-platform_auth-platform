@@ -1,0 +1,19 @@
+# ==============================================================================
+# db/schemas/stripe_record/prices.schema
+# ==============================================================================
+create_table :stripe_record_prices, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_prices__tenants }
+  t.references :product, type: :uuid,   null: false
+
+  t.string  :remote_id
+  t.string  :name
+  t.integer :amount
+  t.string  :interval
+  t.integer :interval_count
+  t.integer :trial_period_days
+  t.boolean :deleted,             null: false, default: false
+  t.integer :position, default: 1000
+  t.boolean :displayed,           null: false, default: true
+
+  t.timestamps null: false
+end
