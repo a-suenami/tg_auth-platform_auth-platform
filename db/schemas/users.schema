@@ -15,8 +15,8 @@ create_table :users, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid(
   t.float 'captcha_score'
 
   t.timestamps null: false
-  t.index [:tenant_id, :email, :deleted_at], name: :index_users_on_tenant_id_email, using: :btree, unique: true, where: '(deleted_at IS NULL)'
-  t.index [:tenant_id, :phone_number, :deleted_at], name: :index_users_on_tenant_id_phone_number, using: :btree, unique: true, where: '(deleted_at IS NULL)'
+  t.index [:tenant_id, :email], name: :index_users_on_tenant_id_email, using: :btree, unique: true, where: '(deleted_at IS NULL)'
+  t.index [:tenant_id, :phone_number], name: :index_users_on_tenant_id_phone_number, using: :btree, unique: true, where: '(deleted_at IS NULL)'
 end
 
 add_foreign_key :users, :tenants, name: :fk_users_tenants
