@@ -7,6 +7,8 @@ class OauthAccessToken < ApplicationRecord
 
   after_create :update_linked_application
 
+  belongs_to :resource_owner, class_name: 'User', optional: true
+
   sig { returns(T::Boolean) }
   def update_linked_application
     return false if self.resource_owner_id.blank?

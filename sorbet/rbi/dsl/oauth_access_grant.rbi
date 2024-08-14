@@ -268,6 +268,9 @@ class OauthAccessGrant
     sig { params(args: T.untyped, blk: T.untyped).returns(::Doorkeeper::OpenidConnect::Request) }
     def build_openid_request(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+    def build_resource_owner(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::OauthApplication) }
     def create_application(*args, &blk); end
 
@@ -280,6 +283,12 @@ class OauthAccessGrant
     sig { params(args: T.untyped, blk: T.untyped).returns(::Doorkeeper::OpenidConnect::Request) }
     def create_openid_request!(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+    def create_resource_owner(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+    def create_resource_owner!(*args, &blk); end
+
     sig { returns(T.nilable(::Doorkeeper::OpenidConnect::Request)) }
     def openid_request; end
 
@@ -291,6 +300,15 @@ class OauthAccessGrant
 
     sig { returns(T.nilable(::Doorkeeper::OpenidConnect::Request)) }
     def reload_openid_request; end
+
+    sig { returns(T.nilable(::User)) }
+    def reload_resource_owner; end
+
+    sig { returns(T.nilable(::User)) }
+    def resource_owner; end
+
+    sig { params(value: T.nilable(::User)).void }
+    def resource_owner=(value); end
   end
 
   module GeneratedAssociationRelationMethods

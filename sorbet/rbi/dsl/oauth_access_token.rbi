@@ -265,14 +265,32 @@ class OauthAccessToken
     sig { params(args: T.untyped, blk: T.untyped).returns(::OauthApplication) }
     def build_application(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+    def build_resource_owner(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::OauthApplication) }
     def create_application(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::OauthApplication) }
     def create_application!(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+    def create_resource_owner(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+    def create_resource_owner!(*args, &blk); end
+
     sig { returns(T.nilable(::OauthApplication)) }
     def reload_application; end
+
+    sig { returns(T.nilable(::User)) }
+    def reload_resource_owner; end
+
+    sig { returns(T.nilable(::User)) }
+    def resource_owner; end
+
+    sig { params(value: T.nilable(::User)).void }
+    def resource_owner=(value); end
   end
 
   module GeneratedAssociationRelationMethods
