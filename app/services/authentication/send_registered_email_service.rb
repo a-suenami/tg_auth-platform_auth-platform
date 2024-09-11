@@ -1,5 +1,6 @@
 # typed: true
 
+# 新規登録メールはBlastのレートリミットを圧迫するので一旦廃止
 module Authentication
   class SendRegisteredEmailService < BaseService
     def execute!(user:)
