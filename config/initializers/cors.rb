@@ -9,6 +9,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     %r{^(ionic|capacitor)://localhost$},
     %r{^https://.+\.auth\.app-staging\.id-platform\.net$},
     %r{^https://.+\.auth\.app\.id-platform\.net$},
+    %r{^https://.+\.stg\.id-platform\.net$},
   ].map(&:freeze).freeze
 
   allow do
