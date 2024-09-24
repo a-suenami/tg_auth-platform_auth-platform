@@ -24,6 +24,10 @@
     "value": "custom-event-bus"
   },
   {
+    "name": "AWS_REGION",
+    "value": "ap-northeast-1"
+  },
+  {
     "name": "RULER_AUTH0_DOMAIN",
     "value": "id-platform-prod.jp.auth0.com"
   },
