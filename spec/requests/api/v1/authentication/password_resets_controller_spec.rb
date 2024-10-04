@@ -52,6 +52,19 @@ deleted_at: Time.zone.now,)
       end
     end
 
+    # 大文字を含むメールアドレスでログインできることを確認する
+    context 'when email has upper case' do
+      let(:params) {
+        {
+          email: 'Test-User1@Example.com',
+        }
+      }
+
+      it 'returns 204' do
+        is_expected.to eq 204
+      end
+    end
+
     context 'when user not found' do
       let(:params) {
         {
