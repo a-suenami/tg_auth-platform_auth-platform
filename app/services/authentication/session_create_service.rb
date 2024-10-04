@@ -7,7 +7,7 @@ module Authentication
         raise Exceptions::Auth::AuthError
       end
 
-      account_lock = AccountLock.check_lock!(email:)
+      account_lock = AccountLock.check_lock!(email: email.downcase)
 
       user = find_active_user(email:)
 

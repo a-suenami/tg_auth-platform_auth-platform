@@ -190,8 +190,6 @@ deleted_at: Time.zone.now,)
       end
     end
 
-
-
     context 'when the user is locked' do
       let(:account_lock) {
         create(:account_lock,
@@ -206,6 +204,34 @@ deleted_at: Time.zone.now,)
       let(:params) {
         {
           email: 'test-user1@example.com',
+          password: 'Password1234!',
+        }
+      }
+
+      before do
+        account_lock
+      end
+
+      it 'returns 400' do
+        is_expected.to eq 400
+        expect(body_hash['error']['code']).to eq 'account_locked'
+      end
+    end
+
+    context 'when the user is locked and email has upper case' do
+      let(:account_lock) {
+        create(:account_lock,
+          tenant_id: current_tenant.id,
+          email: 'test-user1@example.com',
+          failed_attempts: 10,
+          unlock_token: SecureRandom.hex(32),
+          lock_expired_at: 1.minute.from_now,
+          last_failed_at: Time.zone.now,)
+      }
+
+      let(:params) {
+        {
+          email: 'Test-User1@Example.com',
           password: 'Password1234!',
         }
       }
