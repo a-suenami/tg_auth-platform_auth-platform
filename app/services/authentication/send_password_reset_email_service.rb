@@ -10,7 +10,8 @@ module Authentication
       end
 
       ActiveRecord::Base.transaction do
-        user = User.active.find_by(email:, email_verified: true)
+        user = find_active_user(email:)
+
         if user.blank?
           # アカウントの存在を隠すため、エラーせずそのまま返す
           next true
@@ -42,6 +43,13 @@ module Authentication
         from_email: Tenant.current&.tenant_setting&.sender_email,
         from_name: Tenant.current&.name,
       )
+    end
+
+    def find_active_user(email:)
+      # emailそのまま + email.downcaseでユーザを検索する
+      user = User.active.find_by(email:, email_verified: true)
+      user = User.active.find_by(email: email.downcase, email_verified: true) if user.nil?
+      user
     end
   end
 end
