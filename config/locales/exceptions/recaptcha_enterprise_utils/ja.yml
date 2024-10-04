@@ -1,0 +1,5 @@
+ja:
+  exceptions:
+    recaptcha_enterprise_utils:
+      invalid_captcha_token: reCAPTCHAの検証に失敗しました。ご不便をおかけして申し訳ございませんが、再度送信してください。
+      captcha_score_too_low: ロボットの疑いがあるため、リクエストを受け付けることができませんでした。
