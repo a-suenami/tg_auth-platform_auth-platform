@@ -40,7 +40,7 @@ class RecaptchaEnterpriseUtils
 
       sig { override.returns(String) }
       def message
-        'The captcha token is invalid.'
+        I18n.t('exceptions.recaptcha_enterprise_utils.invalid_captcha_token')
       end
 
       sig { override.returns(Symbol) }
@@ -54,7 +54,7 @@ class RecaptchaEnterpriseUtils
 
       sig { override.returns(String) }
       def message
-        'The captcha score is too low.'
+        I18n.t('exceptions.recaptcha_enterprise_utils.captcha_score_too_low')
       end
 
       sig { override.returns(Symbol) }
