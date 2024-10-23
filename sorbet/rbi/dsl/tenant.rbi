@@ -214,6 +214,9 @@ class Tenant
     sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
     def build_login_spa_application(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::ShopifyRecord::MultipassSetting) }
+    def build_shopify_record_multipass_setting(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::TenantSetting) }
     def build_tenant_setting(*args, &blk); end
 
@@ -222,6 +225,12 @@ class Tenant
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
     def create_login_spa_application!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::ShopifyRecord::MultipassSetting) }
+    def create_shopify_record_multipass_setting(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::ShopifyRecord::MultipassSetting) }
+    def create_shopify_record_multipass_setting!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::TenantSetting) }
     def create_tenant_setting(*args, &blk); end
@@ -252,8 +261,17 @@ class Tenant
     sig { returns(T.nilable(::LoginSpaApplication)) }
     def reload_login_spa_application; end
 
+    sig { returns(T.nilable(::ShopifyRecord::MultipassSetting)) }
+    def reload_shopify_record_multipass_setting; end
+
     sig { returns(T.nilable(::TenantSetting)) }
     def reload_tenant_setting; end
+
+    sig { returns(T.nilable(::ShopifyRecord::MultipassSetting)) }
+    def shopify_record_multipass_setting; end
+
+    sig { params(value: T.nilable(::ShopifyRecord::MultipassSetting)).void }
+    def shopify_record_multipass_setting=(value); end
 
     sig { returns(T.nilable(::TenantSetting)) }
     def tenant_setting; end

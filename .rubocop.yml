@@ -190,6 +190,7 @@ RSpec/AnyInstance:
 RSpec/NestedGroups:
   Exclude:
     - 'spec/requests/**/*'
+    - 'spec/app/lib/**/*'
 RSpec/BeEq: # new in 2.9.0
   Enabled: true
 RSpec/BeNil: # new in 2.9.0

@@ -1,0 +1,23 @@
+= render 'ruler_area/shared/form_error', target: f.object
+.uk-margin
+  = f.label :store_url
+  = f.text_field :store_url, class: "uk-input"
+.uk-margin
+  = f.label :store_name
+  = f.text_field :store_name, class: "uk-input"
+.uk-margin
+  = f.label :api_key
+  = f.text_field :api_key, class: "uk-input"
+.uk-margin
+  = f.label :oauth_client_id
+  = f.text_field :oauth_client_id, class: "uk-input"
+.uk-margin
+  = f.label :scopes
+  = f.text_field :scopes, class: "uk-input"
+.uk-margin
+  = f.label :multipass_secret
+  = f.text_field :multipass_secret, class: "uk-input"
+.uk-margin
+  = f.label :webhook_token
+  = f.text_field :webhook_token, class: "uk-input"
+= f.submit class: "uk-button uk-button-default"

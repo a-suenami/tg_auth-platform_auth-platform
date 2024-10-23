@@ -102,6 +102,9 @@ module GeneratedPathHelpersModule
   def edit_ruler_area_tenant_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_shopify_multipass_setting_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_tenant_setting_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -136,6 +139,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_shopify_multipass_setting_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_tenant_setting_path(*args); end
@@ -249,6 +255,12 @@ module GeneratedPathHelpersModule
   def ruler_area_tenant_root_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_shopify_multipass_setting_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_shopify_multipass_settings_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_tenant_setting_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -265,6 +277,15 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def send_verification_sms_api_v1_authentication_sms_verify_index_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def shopify_area_multipass_auth_callback_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def shopify_area_multipass_auth_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def shopify_area_multipass_auth_register_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def turbo_recede_historical_location_path(*args); end
