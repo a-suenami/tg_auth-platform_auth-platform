@@ -3,3 +3,5 @@ ja:
     shopify:
       token_invalid_error: 'トークンが無効です'
       webhook_event_invalid_error: 'shopify webhookで例外が発生しました'
+      tenant_is_not_found: 'テナントが見つかりませんでした'
+      shopify_record_multipass_setting_not_exist: 'shopify multipassの設定が未作成です'

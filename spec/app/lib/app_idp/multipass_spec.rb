@@ -72,7 +72,7 @@ RSpec.describe AppIdp::Multipass do
         it 'returns a multipass URL' do
           expect(multipass_generator).to be_a(String)
           # AppShopify::Customer#update_emailが呼ばれること
-          expect(app_shopify_customer).to have_received(:update_email).with(current_user_shopify_record__customer.remote_id, current_email)
+          expect(app_shopify_customer).to have_received(:update_email).with("gid://shopify/Customer/#{current_user_shopify_record__customer.remote_id}", current_email)
         end
       end
     end
