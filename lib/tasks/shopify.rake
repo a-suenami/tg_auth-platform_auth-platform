@@ -1,0 +1,151 @@
+# typed: false
+# frozen_string_literal: true
+
+# rubocop:disable Metrics/BlockLength
+# require 'shopify_api'
+
+namespace :shopify do
+  def initialize_shopify_session
+    shop_name = ENV.fetch('STORE_NAME', nil)
+    api_token = ENV.fetch('SHOPIFY_API_TOKEN', nil)
+
+    ShopifyAPI::Context.setup(
+      api_key: ENV.fetch('SHOPIFY_API_KEY', nil),
+      api_secret_key: ENV.fetch('SHOPIFY_API_SECRET_KEY', nil),
+      scope: 'write_webhooks', # Updated scope
+      is_embedded: false, # Set to false if not embedded
+      api_version: ENV.fetch('SHOPIFY_API_VERSION', '2024-10'),
+      is_private: true,
+    )
+
+    session = ShopifyAPI::Auth::Session.new(
+      shop: "#{shop_name}.myshopify.com",
+      access_token: api_token,
+    )
+    ShopifyAPI::Context.activate_session(session)
+
+    client = ShopifyAPI::Clients::Graphql::Admin.new(session:)
+
+    [session, client]
+  end
+
+  task register_webhook_customers_create: :environment do
+    arn = ENV.fetch('EVENT_BRIDGE_ARN', nil)
+    _, client = initialize_shopify_session
+
+    query = <<~GRAPHQL
+      mutation ($arn: ARN) {
+        eventBridgeWebhookSubscriptionCreate(
+          topic: CUSTOMERS_CREATE
+          webhookSubscription: {
+            arn: $arn
+            format: JSON
+          }
+        ) {
+          webhookSubscription {
+            id
+          }
+          userErrors {
+            message
+          }
+        }
+      }
+    GRAPHQL
+
+    result = client.query(query:, variables: { arn: })
+
+    # Add this debug output
+    puts 'Full Shopify response:'
+    puts JSON.pretty_generate(result.body)
+
+    # Updated error handling
+    unless result.code == 200
+      raise StandardError, "API request failed with status #{result.code}: #{result.body}"
+    end
+
+    user_errors = result.body['data']['eventBridgeWebhookSubscriptionCreate']['userErrors']
+    raise StandardError, user_errors.to_s if user_errors.any?
+
+    p result.body['data']['eventBridgeWebhookSubscriptionCreate']['webhookSubscription']
+  end
+
+  task register_webhook_customers_update: :environment do
+    arn = ENV.fetch('EVENT_BRIDGE_ARN', nil)
+    _, client = initialize_shopify_session
+
+    query = <<~GRAPHQL
+      mutation ($arn: ARN) {
+        eventBridgeWebhookSubscriptionCreate(
+          topic: CUSTOMERS_UPDATE
+          webhookSubscription: {
+            arn: $arn
+            format: JSON
+          }
+        ) {
+          webhookSubscription {
+            id
+          }
+          userErrors {
+            message
+          }
+        }
+      }
+    GRAPHQL
+
+    result = client.query(query:, variables: { arn: })
+
+    # Add this debug output
+    puts 'Full Shopify response:'
+    puts JSON.pretty_generate(result.body)
+
+    # Updated error handling
+    unless result.code == 200
+      raise StandardError, "API request failed with status #{result.code}: #{result.body}"
+    end
+
+    user_errors = result.body['data']['eventBridgeWebhookSubscriptionCreate']['userErrors']
+    raise StandardError, user_errors.to_s if user_errors.any?
+
+    p result.body['data']['eventBridgeWebhookSubscriptionCreate']['webhookSubscription']
+  end
+
+  task show_webhook: :environment do
+    _, client = initialize_shopify_session
+
+    query = <<~GRAPHQL
+      {
+        webhookSubscriptions(first: 10) {
+          edges {
+            node {
+              id,
+              topic,
+              endpoint {
+                __typename
+                ... on WebhookHttpEndpoint {
+                  callbackUrl
+                }
+                ... on WebhookEventBridgeEndpoint {
+                  arn
+                }
+                ... on WebhookPubSubEndpoint {
+                  pubSubProject
+                  pubSubTopic
+                }
+              }
+            }
+          }
+        }
+      }
+    GRAPHQL
+
+    result = client.query(query:)
+
+    # Updated error handling
+    unless result.code == 200
+      raise StandardError, "API request failed with status #{result.code}: #{result.body}"
+    end
+
+    p(result.body['data']['webhookSubscriptions']['edges'].pluck('node'))
+  end
+end
+# rubocop:enable Metrics/BlockLength
