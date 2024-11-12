@@ -6,7 +6,7 @@ module ShopifyArea
       raise ActiveRecord::RecordNotFound if Tenant.current.shopify_record_multipass_setting.blank?
 
       code_verifier, authorization_endpoint_url = AppShopifyMultipass::CreateAuthorizationEndpointUrlService.new.execute(
-        shopify_record_multipass_setting: Tenant.current.shopify_record_multipass_setting, oauth_authorization_path:, redirect_uri: shopify_area_multipass_auth_callback_url,
+        shopify_record_multipass_setting: Tenant.current.shopify_record_multipass_setting, oauth_authorization_path:, redirect_uri: shopify_area_multipass_auth_callback_url, sign_up: false,
       )
 
       session[:shopify_multipass_code_verifier] = code_verifier
@@ -18,10 +18,16 @@ module ShopifyArea
     def register
       # 戻り先を記録
       session[:return_to] = params[:return_to] if params[:return_to]
+      raise ActiveRecord::RecordNotFound if Tenant.current.shopify_record_multipass_setting.blank?
 
-      # 新規登録画面へ
-      # TODO: fix
-      redirect_to oauth_register_url, allow_other_host: true
+      code_verifier, authorization_endpoint_url = AppShopifyMultipass::CreateAuthorizationEndpointUrlService.new.execute(
+        shopify_record_multipass_setting: Tenant.current.shopify_record_multipass_setting, oauth_authorization_path:, redirect_uri: shopify_area_multipass_auth_callback_url, sign_up: true,
+      )
+
+      session[:shopify_multipass_code_verifier] = code_verifier
+
+      # ログイン画面へ
+      redirect_to authorization_endpoint_url, allow_other_host: true
     end
 
     # TODO: fix
