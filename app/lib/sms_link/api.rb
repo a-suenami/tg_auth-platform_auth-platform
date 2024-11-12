@@ -38,6 +38,9 @@ module SmsLink
     # SMS配信API
     sig { params(sms_verifier: Users::SmsVerifier, delivery_type: T.nilable(String)).returns(T::Hash[T.untyped, T.untyped]) }
     def send_sms(sms_verifier:, delivery_type: 'sms')
+      # 開発環境ではSMS送信を行わない
+      return { verification_code_id: 'dummy_id' } unless Rails.env.production?
+
       delivery_type = :sms if delivery_type.nil?
       delivery_type_code = DELIVERY_TYPE_CODE[delivery_type.to_sym]
 

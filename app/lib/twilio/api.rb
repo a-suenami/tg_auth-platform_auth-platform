@@ -18,6 +18,10 @@ module Twilio
     # https://www.twilio.com/docs/verify/api/verification
     sig { params(to: String, custom_code: String).returns(T.untyped) }
     def send_sms_with_twilio_verify(to:, custom_code:) # rubocop:disable Naming/MethodParameterName
+      unless Rails.env.production?
+        return Struct.new(:sid).new('dummy_sid')
+      end
+
       @client.verify.v2
         .services(T.must(@tenant.tenant_setting).twilio_verify_service_sid)
         .verifications
