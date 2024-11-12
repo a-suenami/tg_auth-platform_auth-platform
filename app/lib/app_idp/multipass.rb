@@ -87,8 +87,9 @@ module AppIdp
 
     # メールアドレスの更新
     def update_email(remote_id, current_email, new_email = nil)
+      customer_id = "gid://shopify/Customer/#{remote_id}"
       client = AppShopify::Customer.new
-      client.update_email(remote_id, new_email) if current_email && current_email != new_email
+      client.update_email(customer_id, new_email) if current_email && current_email != new_email
     end
 
     def convert_multipass_customer_data(data, user)
