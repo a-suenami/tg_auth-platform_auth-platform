@@ -48,7 +48,7 @@ module AppIdp
         other_shopify_customer = find_other_customer(user.email)
 
         if other_shopify_customer.present?
-          dummy_email = generate_dummy_email(user.id)
+          dummy_email = generate_dummy_email(other_shopify_customer.user.id)
           update_and_disable_email(other_shopify_customer, dummy_email)
         end
       end
@@ -77,7 +77,7 @@ module AppIdp
 
     # ダミーのメールアドレスを生成
     def generate_dummy_email(id)
-      "disabled+#{id}_#{[*'A'..'Z', *0..9].sample(4).join}@disabled.extend-twogate-idp.com"
+      "disabled+#{id}@disabled.extend-twogate-idp.com"
     end
 
     # 他のアカウントのメールアドレスをダミーアドレスに変更する
