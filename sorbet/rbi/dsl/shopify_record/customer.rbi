@@ -477,14 +477,14 @@ class ShopifyRecord::Customer
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         email: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        last_login_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        deleted_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        remote_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        tags: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, email: nil, last_login_at: nil, created_at: nil, updated_at: nil, deleted_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, email: nil, created_at: nil, updated_at: nil, remote_id: nil, tags: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -538,61 +538,6 @@ class ShopifyRecord::Customer
 
     sig { void }
     def created_at_will_change!; end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def deleted_at; end
-
-    sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def deleted_at=(value); end
-
-    sig { returns(T::Boolean) }
-    def deleted_at?; end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def deleted_at_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def deleted_at_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def deleted_at_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def deleted_at_change; end
-
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def deleted_at_change_to_be_saved; end
-
-    sig do
-      params(
-        from: T.nilable(::ActiveSupport::TimeWithZone),
-        to: T.nilable(::ActiveSupport::TimeWithZone)
-      ).returns(T::Boolean)
-    end
-    def deleted_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def deleted_at_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def deleted_at_previous_change; end
-
-    sig do
-      params(
-        from: T.nilable(::ActiveSupport::TimeWithZone),
-        to: T.nilable(::ActiveSupport::TimeWithZone)
-      ).returns(T::Boolean)
-    end
-    def deleted_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def deleted_at_previously_was; end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def deleted_at_was; end
-
-    sig { void }
-    def deleted_at_will_change!; end
 
     sig { returns(::String) }
     def email; end
@@ -729,66 +674,53 @@ class ShopifyRecord::Customer
     sig { void }
     def id_will_change!; end
 
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def last_login_at; end
+    sig { returns(::String) }
+    def remote_id; end
 
-    sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def last_login_at=(value); end
+    sig { params(value: ::String).returns(::String) }
+    def remote_id=(value); end
 
     sig { returns(T::Boolean) }
-    def last_login_at?; end
+    def remote_id?; end
 
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def last_login_at_before_last_save; end
+    sig { returns(T.nilable(::String)) }
+    def remote_id_before_last_save; end
 
     sig { returns(T.untyped) }
-    def last_login_at_before_type_cast; end
+    def remote_id_before_type_cast; end
 
     sig { returns(T::Boolean) }
-    def last_login_at_came_from_user?; end
+    def remote_id_came_from_user?; end
 
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def last_login_at_change; end
+    sig { returns(T.nilable([::String, ::String])) }
+    def remote_id_change; end
 
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def last_login_at_change_to_be_saved; end
+    sig { returns(T.nilable([::String, ::String])) }
+    def remote_id_change_to_be_saved; end
 
-    sig do
-      params(
-        from: T.nilable(::ActiveSupport::TimeWithZone),
-        to: T.nilable(::ActiveSupport::TimeWithZone)
-      ).returns(T::Boolean)
-    end
-    def last_login_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def remote_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def last_login_at_in_database; end
+    sig { returns(T.nilable(::String)) }
+    def remote_id_in_database; end
 
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def last_login_at_previous_change; end
+    sig { returns(T.nilable([::String, ::String])) }
+    def remote_id_previous_change; end
 
-    sig do
-      params(
-        from: T.nilable(::ActiveSupport::TimeWithZone),
-        to: T.nilable(::ActiveSupport::TimeWithZone)
-      ).returns(T::Boolean)
-    end
-    def last_login_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def remote_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def last_login_at_previously_was; end
+    sig { returns(T.nilable(::String)) }
+    def remote_id_previously_was; end
 
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def last_login_at_was; end
+    sig { returns(T.nilable(::String)) }
+    def remote_id_was; end
 
     sig { void }
-    def last_login_at_will_change!; end
+    def remote_id_will_change!; end
 
     sig { void }
     def restore_created_at!; end
-
-    sig { void }
-    def restore_deleted_at!; end
 
     sig { void }
     def restore_email!; end
@@ -800,7 +732,10 @@ class ShopifyRecord::Customer
     def restore_id_value!; end
 
     sig { void }
-    def restore_last_login_at!; end
+    def restore_remote_id!; end
+
+    sig { void }
+    def restore_tags!; end
 
     sig { void }
     def restore_tenant_id!; end
@@ -816,12 +751,6 @@ class ShopifyRecord::Customer
 
     sig { returns(T::Boolean) }
     def saved_change_to_created_at?; end
-
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def saved_change_to_deleted_at; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_deleted_at?; end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_email; end
@@ -841,11 +770,17 @@ class ShopifyRecord::Customer
     sig { returns(T::Boolean) }
     def saved_change_to_id_value?; end
 
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def saved_change_to_last_login_at; end
+    sig { returns(T.nilable([::String, ::String])) }
+    def saved_change_to_remote_id; end
 
     sig { returns(T::Boolean) }
-    def saved_change_to_last_login_at?; end
+    def saved_change_to_remote_id?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_tags; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_tags?; end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
@@ -864,6 +799,51 @@ class ShopifyRecord::Customer
 
     sig { returns(T::Boolean) }
     def saved_change_to_user_id?; end
+
+    sig { returns(T.nilable(::String)) }
+    def tags; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def tags=(value); end
+
+    sig { returns(T::Boolean) }
+    def tags?; end
+
+    sig { returns(T.nilable(::String)) }
+    def tags_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def tags_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def tags_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def tags_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def tags_change_to_be_saved; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def tags_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def tags_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def tags_previous_change; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def tags_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def tags_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def tags_was; end
+
+    sig { void }
+    def tags_will_change!; end
 
     sig { returns(::String) }
     def tenant_id; end
@@ -1004,9 +984,6 @@ class ShopifyRecord::Customer
     def will_save_change_to_created_at?; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_deleted_at?; end
-
-    sig { returns(T::Boolean) }
     def will_save_change_to_email?; end
 
     sig { returns(T::Boolean) }
@@ -1016,7 +993,10 @@ class ShopifyRecord::Customer
     def will_save_change_to_id_value?; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_last_login_at?; end
+    def will_save_change_to_remote_id?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_tags?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end
@@ -1162,14 +1142,14 @@ class ShopifyRecord::Customer
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         email: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        last_login_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        deleted_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        remote_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        tags: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, email: nil, last_login_at: nil, created_at: nil, updated_at: nil, deleted_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, email: nil, created_at: nil, updated_at: nil, remote_id: nil, tags: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

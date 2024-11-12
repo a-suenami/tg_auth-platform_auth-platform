@@ -288,6 +288,9 @@ module GeneratedPathHelpersModule
   def shopify_area_multipass_auth_register_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def shopify_area_webhooks_eventbridge_shopify_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def turbo_recede_historical_location_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
