@@ -5,7 +5,7 @@ Doorkeeper::Application.seed do |s|
   s.secret = 'leV04prfWVBOgfmALi2wtls8ACecpw09TUGXyrAAEIs'
   s.tenant_id = 'sample'
   s.name = 'Sample Application'
-  s.redirect_uri = 'http://localhost:4200/oauth/callback'
+  s.redirect_uri = "http://localhost:4200/oauth/callback\nhttp://sample.localhost.com:3000/shopify/multipass/auth/callback"
   s.scopes = 'public admin_users uid email name profile contact delivery_address openid phone_number'
   s.enable_client_credential_flow = true
   s.confidential = false

@@ -1,0 +1,37 @@
+.uk-margin-top.uk-container
+  h2 Shopify Multipass設定  一覧
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    - if @multipass_settings.empty?
+      p.uk-text-lead
+        | No Shopify Multipass設定 found.
+      = link_to "新規登録", new_ruler_area_tenant_shopify_multipass_setting_path(@tenant_id), class: "uk-button uk-button-primary"
+
+    - else
+      table.uk-table.uk-table-divider
+        tr
+          th = TenantSetting.human_attribute_name(:store_url)
+          th = TenantSetting.human_attribute_name(:store_name)
+          th = TenantSetting.human_attribute_name(:api_key)
+          th = TenantSetting.human_attribute_name(:oauth_client_id)
+          th = TenantSetting.human_attribute_name(:scopes)
+          th = "操作"
+
+        - @multipass_settings.each do |multipass_setting|
+          tr
+            td
+              = multipass_setting.store_url
+            td
+              = multipass_setting.store_name
+            td
+              = multipass_setting.api_key
+            td
+              = multipass_setting.oauth_client_id
+            td
+              = multipass_setting.scopes
+            td
+              = link_to "詳細", ruler_area_tenant_shopify_multipass_setting_path(@tenant_id, multipass_setting), class: "uk-button uk-button-secondary"
+              .uk-margin
+                = link_to "編集", edit_ruler_area_tenant_shopify_multipass_setting_path(@tenant_id, multipass_setting), class: "uk-button uk-button-primary"
+
+      == pagy_nav(@pagy)

@@ -10,6 +10,7 @@ class Tenant < ApplicationRecord
   has_many :oauth_applications, dependent: :destroy
   has_one :login_spa_application, dependent: :destroy
   has_one :tenant_setting, dependent: :destroy
+  has_one :shopify_record_multipass_setting, class_name: 'ShopifyRecord::MultipassSetting', dependent: :destroy
 
   class << self
     extend T::Sig

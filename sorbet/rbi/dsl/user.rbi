@@ -269,6 +269,9 @@ class User
     sig { params(args: T.untyped, blk: T.untyped).returns(::ContactAddress) }
     def build_contact_address(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::ShopifyRecord::Customer) }
+    def build_shopify_customer(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
 
@@ -289,6 +292,12 @@ class User
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::ContactAddress) }
     def create_contact_address!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::ShopifyRecord::Customer) }
+    def create_shopify_customer(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::ShopifyRecord::Customer) }
+    def create_shopify_customer!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant(*args, &blk); end
@@ -361,11 +370,20 @@ class User
     sig { returns(T.nilable(::ContactAddress)) }
     def reload_contact_address; end
 
+    sig { returns(T.nilable(::ShopifyRecord::Customer)) }
+    def reload_shopify_customer; end
+
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
 
     sig { returns(T.nilable(::UserProfile)) }
     def reload_user_profile; end
+
+    sig { returns(T.nilable(::ShopifyRecord::Customer)) }
+    def shopify_customer; end
+
+    sig { params(value: T.nilable(::ShopifyRecord::Customer)).void }
+    def shopify_customer=(value); end
 
     sig { returns(T::Array[T.untyped]) }
     def sms_verifier_ids; end

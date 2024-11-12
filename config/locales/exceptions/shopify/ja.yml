@@ -1,0 +1,5 @@
+ja:
+  exceptions:
+    shopify:
+      token_invalid_error: 'トークンが無効です'
+      webhook_event_invalid_error: 'shopify webhookで例外が発生しました'

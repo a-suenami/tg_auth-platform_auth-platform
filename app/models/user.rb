@@ -45,6 +45,8 @@ class User < ApplicationRecord
     through: :linked_applications,
     inverse_of: :users
 
+  has_one :shopify_customer, class_name: 'ShopifyRecord::Customer', dependent: :delete
+
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :email, uniqueness: { scope: :tenant_id, conditions: -> { where(deleted_at: nil) } }
   validates :phone_number, phony_plausible: true
