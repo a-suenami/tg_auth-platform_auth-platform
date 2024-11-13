@@ -53,7 +53,7 @@
   },
   {
     "name": "ALLOW_ORIGINS",
-    "value": "['https://web.account.hikaruutada-tour-official.com', 'https://ticket.hikaruutada-tour-official.com', 'https://web.pass.id-platform.net', 'https://ticketpass.jp']"
+    "value": "['https://web.account.hikaruutada-tour-official.com', 'https://ticket.hikaruutada-tour-official.com', 'https://web.pass.id-platform.net', 'https://ticketpass.jp', 'https://web.extend.id-platform.net']"
   },
   {
     "name": "USE_ECS_CREDENTIALS",
