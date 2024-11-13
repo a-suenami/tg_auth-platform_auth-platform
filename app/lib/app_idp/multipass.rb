@@ -45,11 +45,10 @@ module AppIdp
     # 新規ユーザーの処理
     def handle_new_user(user)
       ActiveRecord::Base.transaction do
-        other_shopify_customer = find_other_customer(user.email)
+        email_duplicated_shopify_customer = ShopifyRecord::Customer.find_by(email: user.email)
 
-        if other_shopify_customer.present?
-          dummy_email = generate_dummy_email(other_shopify_customer.user.id)
-          update_and_disable_email(other_shopify_customer, dummy_email)
+        if email_duplicated_shopify_customer.present?
+          mask_shopify_customer_email(email_duplicated_shopify_customer)
         end
       end
     end
@@ -58,11 +57,10 @@ module AppIdp
     def handle_existing_user(user, shopify_customer)
       ActiveRecord::Base.transaction do
         if shopify_customer.email != user.email
-          other_shopify_customer = find_other_customer(user.email)
-
-          if other_shopify_customer.present?
-            dummy_email = generate_dummy_email(user.id)
-            update_and_disable_email(other_shopify_customer, dummy_email)
+          # 変更後のemailアドレスが過去にShopifyに連携されていた可能性を一応考慮
+          email_duplicated_shopify_customer = ShopifyRecord::Customer.find_by(email: user.email)
+          if email_duplicated_shopify_customer.present?
+            mask_shopify_customer_email(email_duplicated_shopify_customer)
           end
 
           update_email(shopify_customer.remote_id, shopify_customer.email, user.email)
@@ -70,18 +68,13 @@ module AppIdp
       end
     end
 
-    # 他の有効なカスタマーを見つける
-    def find_other_customer(email)
-      ShopifyRecord::Customer.find_by(email:)
-    end
-
     # ダミーのメールアドレスを生成
-    def generate_dummy_email(id)
-      "disabled+#{id}@disabled.extend-twogate-idp.com"
+    def generate_dummy_email(user_id)
+      "disabled+#{user_id}@disabled.extend-twogate-idp.com"
     end
 
-    # 他のアカウントのメールアドレスをダミーアドレスに変更する
-    def update_and_disable_email(shopify_customer, dummy_email)
+    def mask_shopify_customer_email(shopify_customer)
+      dummy_email = generate_dummy_email(shopify_customer.user.id)
       update_email(shopify_customer.remote_id, shopify_customer.email, dummy_email)
     end
 
