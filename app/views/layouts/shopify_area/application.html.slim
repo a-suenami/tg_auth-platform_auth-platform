@@ -1,0 +1,10 @@
+doctype html
+html lang='ja'
+  head
+    meta charset='utf-8'
+    meta name='viewport' content='width=device-width,initial-scale=1.0,user-scalable=no'
+    meta http-equiv='content-language' content='ja'
+    title = Tenant.current.name
+    = csrf_meta_tags
+  body
+    = yield

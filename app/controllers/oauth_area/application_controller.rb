@@ -16,8 +16,7 @@ module OauthArea
     end
 
     def handle_500(exception = nil)
-      # Raven.user_context(user_id: current_user&.id) if try(:current_user)
-      # Raven.capture_exception(exception)
+      Sentry.capture_exception(exception)
       logger.error("Rendering 500 with exception: #{exception.message}") if exception
       logger.error(exception.backtrace.join("\n")) if exception
 
