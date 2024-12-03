@@ -62,5 +62,9 @@
   {
     "valueFrom": "/id-platform/stg/ecs/main/twilio_api_key_secret",
     "name": "TWILIO_API_KEY_SECRET"
-  }
+  },
+  {
+    "name": "BUNDLE_ENTERPRISE__CONTRIBSYS__COM",
+    "valueFrom": "/id-platform/stg/ecs/main/sidekiq_license"
+  },
 ]

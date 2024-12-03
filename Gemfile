@@ -29,10 +29,10 @@ gem 'bootsnap', '~> 1.17', '>= 1.17.1', require: false
 # Use ridgepole for schema management
 gem 'ridgepole', '~> 2.0', '>= 2.0.1'
 # Simple, efficient background processing for Ruby
-gem 'sidekiq', '~> 7.2', '>= 7.2.1'
+gem 'sidekiq', '~> 7.2.4'
 source 'https://enterprise.contribsys.com/' do
-  gem 'sidekiq-ent', '~> 7.2'
-  gem 'sidekiq-pro', '~> 7.2'
+  gem 'sidekiq-pro', '~> 7.2.1'
+  gem 'sidekiq-ent', '~> 7.2.4'
 end
 # adds support for queueing jobs in a recurring way to sidekiq
 gem 'sidekiq-scheduler', '~> 5.0', '>= 5.0.3'

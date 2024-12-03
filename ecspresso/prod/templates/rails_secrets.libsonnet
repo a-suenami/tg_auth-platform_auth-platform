@@ -50,5 +50,9 @@
   {
     "name": "TWILIO_API_KEY_SID",
     "valueFrom": "/id-platform/prod/ecs/main/twilio_api_key_sid"
-  }
+  },
+  {
+    "name": "BUNDLE_ENTERPRISE__CONTRIBSYS__COM",
+    "valueFrom": "/id-platform/prod/ecs/main/sidekiq_license"
+  },
 ]

@@ -15,6 +15,7 @@ ruler:
 blastengine:
   user_id: <%= ENV['BLASTENGINE_USER_ID'] %>
   api_key: <%= ENV['BLASTENGINE_API_KEY'] %>
+  rate_limit: <%= ENV['BLASTENGINE_RATE_LIMIT'] %>
 account_lock:
   max_attempts: <%= ENV['ACCOUNT_LOCK_MAX_ATTEMPTS'] || 10 %>
   lockout_period_min: <%= ENV['LOCKOUT_PERIOD_MIN'] || 30 %>
