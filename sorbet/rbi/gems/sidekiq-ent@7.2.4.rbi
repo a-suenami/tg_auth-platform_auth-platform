@@ -9,80 +9,80 @@
 # source://sidekiq-ent//lib/sidekiq-ent/version.rb#1
 module Sidekiq
   class << self
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#134
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#134
     def configure_client; end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#122
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#122
     def configure_embed(&block); end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#96
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#96
     def configure_server(&block); end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#88
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#88
     def default_configuration; end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#84
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#84
     def default_job_options; end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#80
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#80
     def default_job_options=(hash); end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#56
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#56
     def dump_json(object); end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#64
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#64
     def ent?; end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#101
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#101
     def freeze!; end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#52
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#52
     def load_json(string); end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#92
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#92
     def logger; end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#60
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#60
     def pro?; end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#72
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#72
     def redis(&block); end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#68
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#68
     def redis_pool; end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#48
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#48
     def server?; end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#76
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#76
     def strict_args!(mode = T.unsafe(nil)); end
 
-    # source://sidekiq/7.2.1/lib/sidekiq/transaction_aware_client.rb#33
+    # source://sidekiq/7.2.4/lib/sidekiq/transaction_aware_client.rb#40
     def transactional_push!; end
 
     # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/sharding.rb#8
     def via(pool); end
 
-    # source://sidekiq/7.2.1/lib/sidekiq.rb#44
+    # source://sidekiq/7.2.4/lib/sidekiq.rb#44
     def ❨╯°□°❩╯︵┻━┻; end
   end
 end
 
 # source://sidekiq-ent//lib/sidekiq-ent.rb#59
 module Sidekiq::Component
-  # source://sidekiq/7.2.1/lib/sidekiq/component.rb#7
+  # source://sidekiq/7.2.4/lib/sidekiq/component.rb#7
   def config; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/component.rb#51
+  # source://sidekiq/7.2.4/lib/sidekiq/component.rb#51
   def fire_event(event, options = T.unsafe(nil)); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/component.rb#47
+  # source://sidekiq/7.2.4/lib/sidekiq/component.rb#47
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/component.rb#35
+  # source://sidekiq/7.2.4/lib/sidekiq/component.rb#35
   def hostname; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/component.rb#43
+  # source://sidekiq/7.2.4/lib/sidekiq/component.rb#43
   def identity; end
 
   # @return [Boolean]
@@ -90,31 +90,31 @@ module Sidekiq::Component
   # source://sidekiq-ent//lib/sidekiq-ent.rb#60
   def leader?; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/component.rb#23
+  # source://sidekiq/7.2.4/lib/sidekiq/component.rb#23
   def logger; end
 
   # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/metrics.rb#37
   def metrics(&block); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/component.rb#39
+  # source://sidekiq/7.2.4/lib/sidekiq/component.rb#39
   def process_nonce; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/component.rb#27
+  # source://sidekiq/7.2.4/lib/sidekiq/component.rb#27
   def redis(&block); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/component.rb#16
+  # source://sidekiq/7.2.4/lib/sidekiq/component.rb#16
   def safe_thread(name, &block); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/component.rb#31
+  # source://sidekiq/7.2.4/lib/sidekiq/component.rb#31
   def tid; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/component.rb#9
+  # source://sidekiq/7.2.4/lib/sidekiq/component.rb#9
   def watchdog(last_words); end
 end
 
 # source://sidekiq-ent//lib/sidekiq-ent/periodic.rb#5
 class Sidekiq::Config
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#47
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#47
   def initialize(options = T.unsafe(nil)); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -123,40 +123,40 @@ class Sidekiq::Config
   # source://forwardable/1.3.3/forwardable.rb#231
   def []=(*args, **_arg1, &block); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#212
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#212
   def average_scheduled_poll_interval=(interval); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#111
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#111
   def capsule(name); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#56
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#56
   def capsules; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#94
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#94
   def client_middleware; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#68
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#68
   def concurrency; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#64
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#64
   def concurrency=(val); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#203
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#203
   def death_handlers; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#106
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#106
   def default_capsule(&block); end
 
   # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/metrics.rb#6
   def dogstatsd=(thing); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#223
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#223
   def error_handlers; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def fetch(*args, **_arg1, &block); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#267
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#267
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -177,13 +177,13 @@ class Sidekiq::Config
   # source://forwardable/1.3.3/forwardable.rb#231
   def key?(*args, **_arg1, &block); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#241
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#241
   def logger; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#252
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#252
   def logger=(logger); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#186
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#186
   def lookup(name, default_class = T.unsafe(nil)); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -192,10 +192,10 @@ class Sidekiq::Config
   # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/metrics.rb#16
   def metrics(&block); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#136
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#136
   def new_redis_pool(size, name = T.unsafe(nil)); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#235
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#235
   def on(event, &block); end
 
   # A Loop generates jobs on some schedule, e.g. process new orders every 15 minutes.
@@ -212,25 +212,25 @@ class Sidekiq::Config
   # source://sidekiq-ent//lib/sidekiq-ent/periodic.rb#18
   def periodic; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#90
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#90
   def queues; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#86
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#86
   def queues=(val); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#158
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#158
   def redis; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#122
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#122
   def redis=(hash); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#142
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#142
   def redis_info; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#126
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#126
   def redis_pool; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#181
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#181
   def register(name, instance); end
 
   # source://sidekiq-pro/7.2.1/lib/sidekiq-pro.rb#61
@@ -242,7 +242,7 @@ class Sidekiq::Config
   # source://sidekiq-ent//lib/sidekiq-ent/metrics.rb#7
   def retain_history(interval = T.unsafe(nil), &block); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#100
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#100
   def server_middleware; end
 
   # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/metrics.rb#6
@@ -251,18 +251,18 @@ class Sidekiq::Config
   # source://sidekiq-pro/7.2.1/lib/sidekiq-pro.rb#35
   def super_fetch!(options = T.unsafe(nil), &block); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#58
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#58
   def to_json(*_arg0); end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#72
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#72
   def total_concurrency; end
 
   private
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#130
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#130
   def local_redis_pool; end
 
-  # source://sidekiq/7.2.1/lib/sidekiq/config.rb#261
+  # source://sidekiq/7.2.4/lib/sidekiq/config.rb#261
   def parameter_size(handler); end
 end
 
