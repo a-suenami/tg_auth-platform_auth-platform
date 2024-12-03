@@ -24,16 +24,10 @@ deleted_at: Time.zone.now,)
       )
     }
 
-    let(:blastengine_mock) {
-      instance_double(Blastengine::API)
-    }
-
     before do
       email_template
-      allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
-      allow(blastengine_mock).to receive(:send_email).and_return({
-        delivery_id: 1,
-      })
+      # User::SendEmailWorker のモックをセットアップ
+      allow(User::SendEmailWorker).to receive(:perform_async)
       current_user
       deleted_user
     end
@@ -156,7 +150,11 @@ deleted_at: Time.zone.now,)
         expect(body_hash['error']['code']).to eq 'invalid_request'
         expect(AccountLock.find_by(email: 'test-user1@example.com').failed_attempts).to be 10
         expect(AccountLock.find_by(email: 'test-user1@example.com').locked?).to be true
-        expect(blastengine_mock).to have_received(:send_email)
+        expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          'account_lock',
+          { 'unlock_url' => a_string_including("https://#{current_tenant.domain}/account_locks/unlock?") },
+          'test-user1@example.com',
+        )
       end
     end
 
@@ -186,7 +184,7 @@ deleted_at: Time.zone.now,)
         expect(body_hash['error']['code']).to eq 'invalid_request'
         expect(AccountLock.find_by(email: 'unknown_user@example.com').failed_attempts).to be 10
         expect(AccountLock.find_by(email: 'unknown_user@example.com').locked?).to be true
-        expect(blastengine_mock).not_to have_received(:send_email)
+        expect(User::SendEmailWorker).not_to have_received(:perform_async)
       end
     end
 

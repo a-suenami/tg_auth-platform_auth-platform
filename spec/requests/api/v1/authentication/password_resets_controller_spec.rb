@@ -3,13 +3,12 @@
 RSpec.describe '[ Password Resets API ]' do
   describe 'POST /api/v1/authentication/password_resets/request' do
     let(:current_user) {
-      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
+      create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true)
     }
     let(:deleted_user) {
       create(:user, :skip_validate, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!', email_verified: true, enabled: true, deleted: true,
-deleted_at: Time.zone.now,)
+      deleted_at: Time.zone.now,)
     }
-
     let(:email_template) {
       create(:email_template,
         tenant_id: current_tenant.id,
@@ -25,22 +24,18 @@ deleted_at: Time.zone.now,)
     let(:login_spa_application) {
       create(:login_spa_application, tenant_id: current_tenant.id)
     }
-    let(:blastengine_mock) {
-      instance_double(Blastengine::API)
-    }
 
     before do
       current_user
       deleted_user
       email_template
       login_spa_application
-      allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
-      allow(blastengine_mock).to receive(:send_email).and_return({
-        delivery_id: 1,
-      })
+
+      # User::SendEmailWorker のモックをセットアップ
+      allow(User::SendEmailWorker).to receive(:perform_async)
     end
 
-    context 'when email invaild' do
+    context 'when email invalid' do
       let(:params) {
         {
           email: 'hogehoge',
@@ -62,6 +57,11 @@ deleted_at: Time.zone.now,)
 
       it 'returns 204' do
         is_expected.to eq 204
+        expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          'password_reset',
+          { 'password_reset_url' => a_string_including('https://example.com/password_reset/edit?password_reset_code=') },
+          'test-user1@example.com',
+        )
       end
     end
 
@@ -72,13 +72,13 @@ deleted_at: Time.zone.now,)
         }
       }
 
-      # ユーザの存在確認をされないために200を返す
       it 'returns 204' do
         is_expected.to eq 204
+        expect(User::SendEmailWorker).not_to have_received(:perform_async)
       end
     end
 
-    context 'when params vaild' do
+    context 'when params valid' do
       let(:params) {
         {
           email: 'test-user1@example.com',
@@ -87,6 +87,11 @@ deleted_at: Time.zone.now,)
 
       it 'returns 204' do
         is_expected.to eq 204
+        expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          'password_reset',
+          { 'password_reset_url' => a_string_including('https://example.com/password_reset/edit?password_reset_code=') },
+          'test-user1@example.com',
+        )
       end
     end
   end

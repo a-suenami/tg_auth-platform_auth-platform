@@ -26,16 +26,8 @@ module Authentication
     end
 
     def send_verification_email(user, email_verifier)
-      email_template = EmailTemplate.find_by!(template_type: 'email_address_verification')
-      liquid_template = Liquid::Template.parse(email_template.body)
-
-      Blastengine::API.new.send_email(
-        send_to: user.email,
-        subject: email_template.subject,
-        body: liquid_template.render('email_verification_code' => email_verifier.code),
-        from_email: Tenant.current&.tenant_setting&.sender_email,
-        from_name: Tenant.current&.name,
-      )
+      template_params = { email_verification_code: email_verifier.code }.transform_keys(&:to_s)
+      User::SendEmailWorker.perform_async('email_address_verification', template_params, user.email)
     end
   end
 end
