@@ -2,5 +2,5 @@
   h2 Shopify Multipass設定 新規作成
 
   .uk-margin-top.uk-card.uk-card-default.uk-card-body
-    = form_with model: @multipass_setting, url: ruler_area_tenant_shopify_multipass_settings_path(@tenant_id), method: :post do |f|
+    = form_with model: @multipass_store, url: ruler_area_tenant_shopify_multipass_stores_path(@tenant_id), method: :post do |f|
       = render 'form', f: f

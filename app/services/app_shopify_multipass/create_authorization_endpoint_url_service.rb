@@ -3,16 +3,16 @@
 module AppShopifyMultipass
   class CreateAuthorizationEndpointUrlService < BaseService
 
-    def execute(shopify_record_multipass_setting:, oauth_authorization_path:, redirect_uri:, sign_up: false)
+    def execute(shopify_record_multipass_store:, oauth_authorization_path:, redirect_uri:, sign_up: false)
       code_verifier = generate_code_verifier
       code_challenge = generate_code_challenge(code_verifier)
       query_hash = {
         response_type: 'code',
-        client_id: shopify_record_multipass_setting.oauth_client_id,
+        client_id: shopify_record_multipass_store.oauth_client_id,
         code_challenge:,
         code_challenge_method: 'S256',
         redirect_uri:,
-        scope: shopify_record_multipass_setting.scopes,
+        scope: shopify_record_multipass_store.scopes,
       }
 
       # 新規登録フローの場合はフラグを追加

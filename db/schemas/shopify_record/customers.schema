@@ -1,6 +1,7 @@
 create_table :shopify_record__customers, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }  do |t|
   t.references :tenant, type: :citext, null: false
-
+  t.references :multipass_store, type: :uuid
+  t.citext :store_name
   t.references :user, type: :uuid, null: false
   t.string :remote_id, null: false
   t.citext :email, null: false
@@ -8,5 +9,5 @@ create_table :shopify_record__customers, force: :cascade, id: :uuid, default: ->
 
   t.timestamps null: false
 
-  t.index [:tenant_id, :email], name: 'idx_shopify_record__customers_tenant_id_email_uniq', unique: true
+  t.index [:store_name, :email], name: 'idx_shopify_record__customers_store_name_email_uniq', unique: true
 end

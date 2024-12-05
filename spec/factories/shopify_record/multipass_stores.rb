@@ -1,7 +1,7 @@
 # typed: false
 
 FactoryBot.define do
-  factory :shopify_record__multipass_setting, class: 'ShopifyRecord::MultipassSetting' do
+  factory :shopify_record__multipass_store, class: 'ShopifyRecord::MultipassStore' do
     tenant_id { create(:tenant).id }
     store_url { 'https://example.shopify.com' }
     store_name { 'store_name' }

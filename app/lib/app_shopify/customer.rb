@@ -4,16 +4,13 @@ module AppShopify
   class Customer
     extend T::Sig
 
-    sig { void }
-    def initialize
+    sig { params(shopify_record_multipass_store: ShopifyRecord::MultipassStore).void }
+    def initialize(shopify_record_multipass_store:)
       current_tenant = T.let(Tenant.current, T.nilable(Tenant))
       raise Exceptions::Shopify::TenantIsNotFound if current_tenant.nil?
 
-      shopify_record_multipass_setting = current_tenant.shopify_record_multipass_setting
-      raise Exceptions::Shopify::ShopifyRecordMultipassSettingNotExist if shopify_record_multipass_setting.nil?
-
-      store_name = shopify_record_multipass_setting.store_name
-      api_token = shopify_record_multipass_setting.api_key
+      store_name = shopify_record_multipass_store.store_name
+      api_token = shopify_record_multipass_store.api_key
       shopify_session = ShopifyAPI::Auth::Session.new(shop: "#{store_name}.myshopify.com", access_token: api_token)
       @client = ShopifyAPI::Clients::Graphql::Admin.new(session: shopify_session)
     end

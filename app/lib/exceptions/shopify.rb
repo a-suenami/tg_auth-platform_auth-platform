@@ -49,15 +49,15 @@ module Exceptions
       end
     end
 
-    class ShopifyRecordMultipassSettingNotExist < BaseError
+    class ShopifyRecordMultipassStoreNotExist < BaseError
       sig { returns(Symbol) }
       def code
-        :shopify_record_multipass_setting_not_exist
+        :shopify_record_multipass_store_not_exist
       end
 
       sig { returns(String) }
       def message
-        I18n.t 'exceptions.shopify.shopify_record_multipass_setting_not_exist'
+        I18n.t 'exceptions.shopify.shopify_record_multipass_store_not_exist'
       end
     end
   end

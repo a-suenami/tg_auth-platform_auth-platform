@@ -272,14 +272,32 @@ class ShopifyRecord::Customer
   end
 
   module GeneratedAssociationMethods
+    sig { params(args: T.untyped, blk: T.untyped).returns(::ShopifyRecord::MultipassStore) }
+    def build_multipass_store(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::ShopifyRecord::MultipassStore) }
+    def create_multipass_store(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::ShopifyRecord::MultipassStore) }
+    def create_multipass_store!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user!(*args, &blk); end
+
+    sig { returns(T.nilable(::ShopifyRecord::MultipassStore)) }
+    def multipass_store; end
+
+    sig { params(value: T.nilable(::ShopifyRecord::MultipassStore)).void }
+    def multipass_store=(value); end
+
+    sig { returns(T.nilable(::ShopifyRecord::MultipassStore)) }
+    def reload_multipass_store; end
 
     sig { returns(T.nilable(::User)) }
     def reload_user; end
@@ -475,6 +493,8 @@ class ShopifyRecord::Customer
         string_query: String,
         id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        multipass_store_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        store_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         remote_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         email: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -484,7 +504,7 @@ class ShopifyRecord::Customer
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, remote_id: nil, email: nil, tags: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, multipass_store_id: nil, store_name: nil, user_id: nil, remote_id: nil, email: nil, tags: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -674,6 +694,51 @@ class ShopifyRecord::Customer
     sig { void }
     def id_will_change!; end
 
+    sig { returns(T.untyped) }
+    def multipass_store_id; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def multipass_store_id=(value); end
+
+    sig { returns(T::Boolean) }
+    def multipass_store_id?; end
+
+    sig { returns(T.untyped) }
+    def multipass_store_id_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def multipass_store_id_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def multipass_store_id_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def multipass_store_id_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def multipass_store_id_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def multipass_store_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def multipass_store_id_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def multipass_store_id_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def multipass_store_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def multipass_store_id_previously_was; end
+
+    sig { returns(T.untyped) }
+    def multipass_store_id_was; end
+
+    sig { void }
+    def multipass_store_id_will_change!; end
+
     sig { returns(::String) }
     def remote_id; end
 
@@ -732,7 +797,13 @@ class ShopifyRecord::Customer
     def restore_id_value!; end
 
     sig { void }
+    def restore_multipass_store_id!; end
+
+    sig { void }
     def restore_remote_id!; end
+
+    sig { void }
+    def restore_store_name!; end
 
     sig { void }
     def restore_tags!; end
@@ -770,11 +841,23 @@ class ShopifyRecord::Customer
     sig { returns(T::Boolean) }
     def saved_change_to_id_value?; end
 
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_multipass_store_id; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_multipass_store_id?; end
+
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_remote_id; end
 
     sig { returns(T::Boolean) }
     def saved_change_to_remote_id?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_store_name; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_store_name?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_tags; end
@@ -799,6 +882,51 @@ class ShopifyRecord::Customer
 
     sig { returns(T::Boolean) }
     def saved_change_to_user_id?; end
+
+    sig { returns(T.nilable(::String)) }
+    def store_name; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def store_name=(value); end
+
+    sig { returns(T::Boolean) }
+    def store_name?; end
+
+    sig { returns(T.nilable(::String)) }
+    def store_name_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def store_name_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def store_name_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def store_name_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def store_name_change_to_be_saved; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def store_name_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def store_name_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def store_name_previous_change; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def store_name_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def store_name_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def store_name_was; end
+
+    sig { void }
+    def store_name_will_change!; end
 
     sig { returns(T.nilable(::String)) }
     def tags; end
@@ -993,7 +1121,13 @@ class ShopifyRecord::Customer
     def will_save_change_to_id_value?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_multipass_store_id?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_remote_id?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_store_name?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_tags?; end
@@ -1140,6 +1274,8 @@ class ShopifyRecord::Customer
         string_query: String,
         id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        multipass_store_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        store_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         remote_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         email: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -1149,7 +1285,7 @@ class ShopifyRecord::Customer
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, remote_id: nil, email: nil, tags: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, multipass_store_id: nil, store_name: nil, user_id: nil, remote_id: nil, email: nil, tags: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

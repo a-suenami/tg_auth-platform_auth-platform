@@ -99,7 +99,7 @@ module GeneratedUrlHelpersModule
   def edit_ruler_area_tenant_oauth_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def edit_ruler_area_tenant_shopify_multipass_setting_url(*args); end
+  def edit_ruler_area_tenant_shopify_multipass_store_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_tenant_setting_url(*args); end
@@ -138,7 +138,7 @@ module GeneratedUrlHelpersModule
   def new_ruler_area_tenant_oauth_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def new_ruler_area_tenant_shopify_multipass_setting_url(*args); end
+  def new_ruler_area_tenant_shopify_multipass_store_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_tenant_setting_url(*args); end
@@ -252,10 +252,10 @@ module GeneratedUrlHelpersModule
   def ruler_area_tenant_root_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_shopify_multipass_setting_url(*args); end
+  def ruler_area_tenant_shopify_multipass_store_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_shopify_multipass_settings_url(*args); end
+  def ruler_area_tenant_shopify_multipass_stores_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_tenant_setting_url(*args); end

@@ -242,6 +242,8 @@ CREATE TABLE public.rulers (
 CREATE TABLE public.shopify_record__customers (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
+    multipass_store_id uuid,
+    store_name public.citext,
     user_id uuid NOT NULL,
     remote_id character varying NOT NULL,
     email public.citext NOT NULL,
@@ -252,14 +254,14 @@ CREATE TABLE public.shopify_record__customers (
 
 
 --
--- Name: shopify_record__multipass_settings; Type: TABLE; Schema: public; Owner: -
+-- Name: shopify_record__multipass_stores; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.shopify_record__multipass_settings (
+CREATE TABLE public.shopify_record__multipass_stores (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     store_url character varying,
-    store_name character varying,
+    store_name public.citext,
     api_key character varying,
     oauth_client_id character varying,
     scopes character varying,
@@ -523,11 +525,11 @@ ALTER TABLE ONLY public.shopify_record__customers
 
 
 --
--- Name: shopify_record__multipass_settings shopify_record__multipass_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: shopify_record__multipass_stores shopify_record__multipass_stores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.shopify_record__multipass_settings
-    ADD CONSTRAINT shopify_record__multipass_settings_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.shopify_record__multipass_stores
+    ADD CONSTRAINT shopify_record__multipass_stores_pkey PRIMARY KEY (id);
 
 
 --
@@ -637,17 +639,10 @@ CREATE UNIQUE INDEX idx_rulers_uid_uniq ON public.rulers USING btree (uid);
 
 
 --
--- Name: idx_shopify_record__customers_tenant_id_email_uniq; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_shopify_record__customers_store_name_email_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_shopify_record__customers_tenant_id_email_uniq ON public.shopify_record__customers USING btree (tenant_id, email);
-
-
---
--- Name: idx_shopify_record__multipass_settings_tenant_id_uniq; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_shopify_record__multipass_settings_tenant_id_uniq ON public.shopify_record__multipass_settings USING btree (tenant_id);
+CREATE UNIQUE INDEX idx_shopify_record__customers_store_name_email_uniq ON public.shopify_record__customers USING btree (store_name, email);
 
 
 --
@@ -840,6 +835,13 @@ CREATE INDEX index_oauth_openid_requests_on_access_grant_id ON public.oauth_open
 
 
 --
+-- Name: index_shopify_record__customers_on_multipass_store_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_shopify_record__customers_on_multipass_store_id ON public.shopify_record__customers USING btree (multipass_store_id);
+
+
+--
 -- Name: index_shopify_record__customers_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -854,10 +856,10 @@ CREATE INDEX index_shopify_record__customers_on_user_id ON public.shopify_record
 
 
 --
--- Name: index_shopify_record__multipass_settings_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_shopify_record__multipass_stores_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_shopify_record__multipass_settings_on_tenant_id ON public.shopify_record__multipass_settings USING btree (tenant_id);
+CREATE INDEX index_shopify_record__multipass_stores_on_tenant_id ON public.shopify_record__multipass_stores USING btree (tenant_id);
 
 
 --

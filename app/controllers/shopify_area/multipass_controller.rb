@@ -1,28 +1,22 @@
 module ShopifyArea
   class MultipassController < ApplicationController
-    def auth
-      session[:return_to] = params[:return_to] if params[:return_to]
-      raise ActiveRecord::RecordNotFound if Tenant.current.shopify_record_multipass_setting.blank?
+    before_action :store_params, only: %i[auth register]
 
+    def auth
       authorization_endpoint_url = build_authorization_endpoint_url(sign_up: false)
 
       redirect_to authorization_endpoint_url, allow_other_host: true
     end
 
     def register
-      session[:return_to] = params[:return_to] if params[:return_to]
-      raise ActiveRecord::RecordNotFound if Tenant.current.shopify_record_multipass_setting.blank?
-
       authorization_endpoint_url = build_authorization_endpoint_url(sign_up: true)
 
       redirect_to authorization_endpoint_url, allow_other_host: true
     end
 
     def callback
-      raise ActiveRecord::RecordNotFound if Tenant.current.shopify_record_multipass_setting.blank?
-
       # codeを検証
-      oauth_access_grant = Authentication::OauthAccessGrants::VerifyService.new.execute!(token: params[:code], oauth_client_id: Tenant.current.shopify_record_multipass_setting.oauth_client_id,
+      oauth_access_grant = Authentication::OauthAccessGrants::VerifyService.new.execute!(token: params[:code], oauth_client_id: current_multipass_store.oauth_client_id,
 code_verifier: session[:shopify_multipass_code_verifier],)
 
       # code無効の場合はエラー表示
@@ -37,9 +31,20 @@ code_verifier: session[:shopify_multipass_code_verifier],)
 
     private
 
+    def store_params
+      session[:return_to] = params[:return_to] if params[:return_to]
+      session[:store_name] = params[:store_name] if params[:store_name]
+    end
+
+    def current_multipass_store
+      raise ActiveRecord::RecordNotFound if session[:store_name].blank?
+
+      @current_multipass_store ||= Tenant.current.shopify_record_multipass_stores.find_by!(store_name: session[:store_name])
+    end
+
     def build_authorization_endpoint_url(sign_up: false)
       code_verifier, authorization_endpoint_url = AppShopifyMultipass::CreateAuthorizationEndpointUrlService.new.execute(
-        shopify_record_multipass_setting: Tenant.current.shopify_record_multipass_setting, oauth_authorization_path:, redirect_uri: shopify_area_multipass_auth_callback_url, sign_up:,
+        shopify_record_multipass_store: current_multipass_store, oauth_authorization_path:, redirect_uri: shopify_area_multipass_auth_callback_url, sign_up:,
       )
 
       session[:shopify_multipass_code_verifier] = code_verifier
@@ -48,7 +53,7 @@ code_verifier: session[:shopify_multipass_code_verifier],)
     end
 
     def generate_multipass(return_to, user)
-      AppIdp::Multipass.new.generate(Tenant.current.shopify_record_multipass_setting, user, return_to, request.remote_ip)
+      AppIdp::Multipass.new.generate(current_multipass_store, user, return_to, request.remote_ip)
     end
 
     def login_spa_application
