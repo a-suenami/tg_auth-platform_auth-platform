@@ -1,7 +1,7 @@
 # typed: strict
 
 module ShopifyRecord
-  class MultipassSetting < ApplicationRecord
+  class MultipassStore < ApplicationRecord
     extend T::Sig
     include Multitenancy
   end

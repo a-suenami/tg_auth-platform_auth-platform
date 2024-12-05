@@ -10,9 +10,6 @@ module AppShopify::Webhooks
       if @event[:'detail-type'] != 'shopifyWebhook'
         raise Exceptions::Shopify::WebhookEventInvaildError, "rejected for invalid detail-type #{@event[:'detail-type']}"
       end
-      if @event.dig(:detail, :metadata, :'X-Shopify-Shop-Domain') != "#{@tenant.shopify_record_multipass_setting.store_name}.myshopify.com"
-        raise Exceptions::Shopify::WebhookEventInvaildError, "rejected for invalid shop domain #{@event.dig(:detail, :metadata, :'X-Shopify-Shop-Domain')}"
-      end
       if @event.dig(:detail, :payload).nil?
         raise Exceptions::Shopify::WebhookEventInvaildError
       end
@@ -44,7 +41,7 @@ module AppShopify::Webhooks
       # 対応するUserが存在しない場合はスキップ
       return if user.nil?
 
-      shopify_customer = user.shopify_customer
+      shopify_customer = user.shopify_customers.find_by(multipass_store: @multipass_store)
 
       if shopify_customer.present?
         shopify_customer.update(
@@ -54,7 +51,9 @@ module AppShopify::Webhooks
           tags: @event.dig(:detail, :payload, :tags),
         )
       else
-        user.create_shopify_customer(
+        user.shopify_customers.create(
+          multipass_store: @multipass_store,
+          store_name: @multipass_store.store_name,
           remote_id: @event.dig(:detail, :payload, :id),
           email: @event.dig(:detail, :payload, :email),
           updated_at: @event.dig(:detail, :payload, :updated_at),

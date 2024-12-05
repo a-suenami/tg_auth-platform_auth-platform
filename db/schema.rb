@@ -173,21 +173,24 @@ ActiveRecord::Schema[7.1].define(version: 0) do
 
   create_table "shopify_record__customers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
+    t.uuid "multipass_store_id"
+    t.citext "store_name"
     t.uuid "user_id", null: false
     t.string "remote_id", null: false
     t.citext "email", null: false
     t.string "tags"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tenant_id", "email"], name: "idx_shopify_record__customers_tenant_id_email_uniq", unique: true
+    t.index ["multipass_store_id"], name: "index_shopify_record__customers_on_multipass_store_id"
+    t.index ["store_name", "email"], name: "idx_shopify_record__customers_store_name_email_uniq", unique: true
     t.index ["tenant_id"], name: "index_shopify_record__customers_on_tenant_id"
     t.index ["user_id"], name: "index_shopify_record__customers_on_user_id"
   end
 
-  create_table "shopify_record__multipass_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "shopify_record__multipass_stores", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "store_url"
-    t.string "store_name"
+    t.citext "store_name"
     t.string "api_key"
     t.string "oauth_client_id"
     t.string "scopes"
@@ -195,8 +198,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "webhook_token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tenant_id"], name: "idx_shopify_record__multipass_settings_tenant_id_uniq", unique: true
-    t.index ["tenant_id"], name: "index_shopify_record__multipass_settings_on_tenant_id"
+    t.index ["tenant_id"], name: "index_shopify_record__multipass_stores_on_tenant_id"
   end
 
   create_table "tenant_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

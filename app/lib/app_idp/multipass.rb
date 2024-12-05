@@ -3,9 +3,9 @@
 # rubocop:disable Naming/VariableNumber
 module AppIdp
   class Multipass
-    def generate(multipass_setting, user, return_to, remote_ip)
+    def generate(multipass_store, user, return_to, remote_ip)
       # return_toの取得
-      return_to = validate_return_to(return_to, multipass_setting)
+      return_to = validate_return_to(return_to, multipass_store)
 
       # 追加データ
       data = {}
@@ -13,57 +13,57 @@ module AppIdp
       data['remote_ip'] = remote_ip
 
       # メールアドレス変更処理
-      check_and_update_email(user)
+      check_and_update_email(user, multipass_store)
 
       # Multipassに渡すデータ生成
       customer_data = convert_multipass_customer_data(data, user)
 
-      generate_multipass_url(customer_data, multipass_setting)
+      generate_multipass_url(customer_data, multipass_store)
     end
 
     private
 
     # return_toのホストチェック
-    def validate_return_to(return_to, multipass_setting)
+    def validate_return_to(return_to, multipass_store)
       uri = URI.parse(return_to || '')
 
-      if !uri.host || uri.host == URI.parse(multipass_setting.store_url).host
+      if !uri.host || uri.host == URI.parse(multipass_store.store_url).host
         return_to
       end
     end
 
-    def check_and_update_email(user)
-      shopify_customer = user.shopify_customer
+    def check_and_update_email(user, multipass_store)
+      shopify_customer = user.shopify_customers.find_by(multipass_store:)
 
       if shopify_customer.nil?
-        handle_new_user(user)
+        handle_new_user(user, multipass_store)
       else
-        handle_existing_user(user, shopify_customer)
+        handle_existing_user(user, shopify_customer, multipass_store)
       end
     end
 
     # 新規ユーザーの処理
-    def handle_new_user(user)
+    def handle_new_user(user, multipass_store)
       ActiveRecord::Base.transaction do
-        email_duplicated_shopify_customer = ShopifyRecord::Customer.find_by(email: user.email)
+        email_duplicated_shopify_customer = ShopifyRecord::Customer.find_by(multipass_store:, email: user.email)
 
         if email_duplicated_shopify_customer.present?
-          mask_shopify_customer_email(email_duplicated_shopify_customer)
+          mask_shopify_customer_email(email_duplicated_shopify_customer, multipass_store)
         end
       end
     end
 
     # 既存ユーザーの処理
-    def handle_existing_user(user, shopify_customer)
+    def handle_existing_user(user, shopify_customer, multipass_store)
       ActiveRecord::Base.transaction do
         if shopify_customer.email != user.email
           # 変更後のemailアドレスが過去にShopifyに連携されていた可能性を一応考慮
-          email_duplicated_shopify_customer = ShopifyRecord::Customer.find_by(email: user.email)
+          email_duplicated_shopify_customer = ShopifyRecord::Customer.find_by(multipass_store:, email: user.email)
           if email_duplicated_shopify_customer.present?
-            mask_shopify_customer_email(email_duplicated_shopify_customer)
+            mask_shopify_customer_email(email_duplicated_shopify_customer, multipass_store)
           end
 
-          update_email(shopify_customer.remote_id, shopify_customer.email, user.email)
+          update_email(shopify_customer.remote_id, shopify_customer.email, multipass_store, user.email)
         end
       end
     end
@@ -73,15 +73,15 @@ module AppIdp
       "disabled+#{user_id}@disabled.extend-twogate-idp.com"
     end
 
-    def mask_shopify_customer_email(shopify_customer)
+    def mask_shopify_customer_email(shopify_customer, multipass_store)
       dummy_email = generate_dummy_email(shopify_customer.user.id)
-      update_email(shopify_customer.remote_id, shopify_customer.email, dummy_email)
+      update_email(shopify_customer.remote_id, shopify_customer.email, multipass_store, dummy_email)
     end
 
     # メールアドレスの更新
-    def update_email(remote_id, current_email, new_email = nil)
+    def update_email(remote_id, current_email, multipass_store, new_email = nil)
       customer_id = "gid://shopify/Customer/#{remote_id}"
-      client = AppShopify::Customer.new
+      client = AppShopify::Customer.new(shopify_record_multipass_store: multipass_store)
       client.update_email(customer_id, new_email) if current_email && current_email != new_email
     end
 
@@ -122,10 +122,10 @@ module AppIdp
     end
 
 
-    def generate_multipass_url(customer_data, multipass_setting)
-      token = ShopifyMultipass.new(multipass_setting.multipass_secret).generate_token(customer_data)
+    def generate_multipass_url(customer_data, multipass_store)
+      token = ShopifyMultipass.new(multipass_store.multipass_secret).generate_token(customer_data)
 
-      "#{multipass_setting.store_url}/account/login/multipass/#{token}"
+      "#{multipass_store.store_url}/account/login/multipass/#{token}"
     end
   end
 end

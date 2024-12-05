@@ -1,0 +1,13 @@
+create_table :shopify_record__multipass_stores, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }  do |t|
+  t.references :tenant, type: :citext, null: false
+
+  t.string :store_url
+  t.citext :store_name
+  t.string :api_key
+  t.string :oauth_client_id
+  t.string :scopes
+  t.string :multipass_secret
+  t.string :webhook_token
+
+  t.timestamps null: false
+end

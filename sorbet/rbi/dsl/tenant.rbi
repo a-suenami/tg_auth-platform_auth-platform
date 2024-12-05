@@ -214,9 +214,6 @@ class Tenant
     sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
     def build_login_spa_application(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::ShopifyRecord::MultipassSetting) }
-    def build_shopify_record_multipass_setting(*args, &blk); end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::TenantSetting) }
     def build_tenant_setting(*args, &blk); end
 
@@ -225,12 +222,6 @@ class Tenant
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
     def create_login_spa_application!(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::ShopifyRecord::MultipassSetting) }
-    def create_shopify_record_multipass_setting(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::ShopifyRecord::MultipassSetting) }
-    def create_shopify_record_multipass_setting!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::TenantSetting) }
     def create_tenant_setting(*args, &blk); end
@@ -261,17 +252,22 @@ class Tenant
     sig { returns(T.nilable(::LoginSpaApplication)) }
     def reload_login_spa_application; end
 
-    sig { returns(T.nilable(::ShopifyRecord::MultipassSetting)) }
-    def reload_shopify_record_multipass_setting; end
-
     sig { returns(T.nilable(::TenantSetting)) }
     def reload_tenant_setting; end
 
-    sig { returns(T.nilable(::ShopifyRecord::MultipassSetting)) }
-    def shopify_record_multipass_setting; end
+    sig { returns(T::Array[T.untyped]) }
+    def shopify_record_multipass_store_ids; end
 
-    sig { params(value: T.nilable(::ShopifyRecord::MultipassSetting)).void }
-    def shopify_record_multipass_setting=(value); end
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def shopify_record_multipass_store_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `Tenant` class because it declared `has_many :shopify_record_multipass_stores`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::ShopifyRecord::MultipassStore::PrivateCollectionProxy) }
+    def shopify_record_multipass_stores; end
+
+    sig { params(value: T::Enumerable[::ShopifyRecord::MultipassStore]).void }
+    def shopify_record_multipass_stores=(value); end
 
     sig { returns(T.nilable(::TenantSetting)) }
     def tenant_setting; end

@@ -2,48 +2,48 @@
   h2 Shopify Multipass 設定 詳細
 
   .uk-flex.uk-flex-right
-    = link_to "編集", edit_ruler_area_tenant_shopify_multipass_setting_path(@tenant_id, @multipass_setting), class: "uk-button uk-button-primary"
+    = link_to "編集", edit_ruler_area_tenant_shopify_multipass_store_path(@tenant_id, @multipass_store), class: "uk-button uk-button-primary"
     .uk-margin-left
-    = link_to "削除", ruler_area_tenant_shopify_multipass_setting_path(@tenant_id, @multipass_setting), data: { turbo_method: :delete, turbo_confirm: "一度削除したデータを戻せません。本当に削除しますか？" }, class: 'uk-button uk-button-danger'
+    = link_to "削除", ruler_area_tenant_shopify_multipass_store_path(@tenant_id, @multipass_store), data: { turbo_method: :delete, turbo_confirm: "一度削除したデータを戻せません。本当に削除しますか？" }, class: 'uk-button uk-button-danger'
 
   table.uk-table
     tr
       th = TenantSetting.human_attribute_name(:id)
       td
-        = @multipass_setting.id
+        = @multipass_store.id
     tr
       th = TenantSetting.human_attribute_name(:store_url)
       td
-        = @multipass_setting.store_url
+        = @multipass_store.store_url
     tr
       th = TenantSetting.human_attribute_name(:store_name)
       td
-        = @multipass_setting.store_name
+        = @multipass_store.store_name
     tr
       th = TenantSetting.human_attribute_name(:api_key)
       td
-        = @multipass_setting.api_key
+        = @multipass_store.api_key
     tr
       th = TenantSetting.human_attribute_name(:oauth_client_id)
       td
-        = @multipass_setting.oauth_client_id
+        = @multipass_store.oauth_client_id
     tr
       th = TenantSetting.human_attribute_name(:scopes)
       td
-        = @multipass_setting.scopes
+        = @multipass_store.scopes
     tr
       th = TenantSetting.human_attribute_name(:multipass_secret)
       td
-        = @multipass_setting.multipass_secret
+        = @multipass_store.multipass_secret
     tr
       th = TenantSetting.human_attribute_name(:webhook_token)
       td
-        = @multipass_setting.webhook_token
+        = @multipass_store.webhook_token
     tr
       th = TenantSetting.human_attribute_name(:created_at)
       td
-        = @multipass_setting.created_at
+        = @multipass_store.created_at
     tr
       th = TenantSetting.human_attribute_name(:updated_at)
       td
-        = @multipass_setting.updated_at
+        = @multipass_store.updated_at

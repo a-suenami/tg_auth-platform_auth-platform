@@ -102,7 +102,7 @@ module GeneratedPathHelpersModule
   def edit_ruler_area_tenant_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def edit_ruler_area_tenant_shopify_multipass_setting_path(*args); end
+  def edit_ruler_area_tenant_shopify_multipass_store_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_tenant_setting_path(*args); end
@@ -141,7 +141,7 @@ module GeneratedPathHelpersModule
   def new_ruler_area_tenant_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def new_ruler_area_tenant_shopify_multipass_setting_path(*args); end
+  def new_ruler_area_tenant_shopify_multipass_store_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_tenant_setting_path(*args); end
@@ -255,10 +255,10 @@ module GeneratedPathHelpersModule
   def ruler_area_tenant_root_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_shopify_multipass_setting_path(*args); end
+  def ruler_area_tenant_shopify_multipass_store_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_shopify_multipass_settings_path(*args); end
+  def ruler_area_tenant_shopify_multipass_stores_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_tenant_setting_path(*args); end
