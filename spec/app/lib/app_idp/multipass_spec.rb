@@ -48,7 +48,7 @@ store_name: multipass_store.store_name,)
           expect(multipass_generator).to be_a(String)
           # AppShopify::Customer#update_emailが呼ばれること
           expect(app_shopify_customer).to have_received(:update_email).with("gid://shopify/Customer/#{other_user_shopify_record__customer.remote_id}",
-"disabled+#{other_user.id}@disabled.extend-twogate-idp.com",)
+"disabled+#{other_user.id}@disabled.twogate-idp.com",)
         end
       end
     end

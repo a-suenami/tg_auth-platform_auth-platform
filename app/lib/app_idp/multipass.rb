@@ -70,7 +70,7 @@ module AppIdp
 
     # ダミーのメールアドレスを生成
     def generate_dummy_email(user_id)
-      "disabled+#{user_id}@disabled.extend-twogate-idp.com"
+      "disabled+#{user_id}@disabled.twogate-idp.com"
     end
 
     def mask_shopify_customer_email(shopify_customer, multipass_store)
