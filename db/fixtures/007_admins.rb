@@ -3,7 +3,7 @@ Admin.seed do |s|
   s.name = 'Tenant Admin'
   s.tenant_id = 'sample'
   s.email = 'test-admin@example.com'
-  s.uid = 'auth0|6440c74cdacb437dc2139682'
+  s.uid = 'auth0|6756b91ab16b2779ba0c3da4'
 end
 
 Admin.seed do |s|
@@ -11,5 +11,5 @@ Admin.seed do |s|
   s.name = 'Tenant Admin'
   s.tenant_id = 'sample'
   s.email = 'user@example.com'
-  s.uid = 'auth0|65a78decd339da0835b7f8cc'
+  s.uid = 'auth0|6756b934b16b2779ba0c3dc1'
 end
