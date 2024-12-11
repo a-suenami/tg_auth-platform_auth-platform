@@ -38,9 +38,11 @@ module AppShopify
 
       raise Exceptions::Shopify::AdminApiError.new(error_message: body.dig('errors', 0, 'message'), status: response.code) unless body['errors'].nil?
 
-      # emailが重複した時こっちにエラーが出る
+      # emailが重複した場合、対象のcustomerが存在しなかった場合、こっちにエラーが出る
       if body.dig('data', 'customerUpdate', 'userErrors').present?
-        raise Exceptions::Shopify::AdminApiError.new(error_message: body.dig('data', 'customerUpdate', 'userErrors', 0, 'message'), status: response.code)
+        # ともに通常運用でエラーは起きず、shopify側の管理画面を一方的に操作し場合に起こるエラー。
+        # 対象のcustomerが見つからない場合はemail更新の必要がないので、エラーのキャプチャのみ行う
+        Sentry.capture_exception(Exceptions::Shopify::AdminApiError.new(error_message: body.dig('data', 'customerUpdate', 'userErrors', 0, 'message'), status: response.code))
       end
 
       body
