@@ -47,5 +47,37 @@ module AppShopify
 
       body
     end
+
+    # ShopifyCustomerの退会処理
+    # 個人情報の削除をShopifyが遅延して削除を行う
+    sig { params(remote_id: String).returns(T.untyped) }
+    def request_data_erasure(remote_id)
+      query = <<-GRAPHQL
+        mutation customerRequestDataErasure($customerId: ID!) {
+          customerRequestDataErasure(customerId: $customerId) {
+            customerId
+            userErrors {
+              field
+              message
+            }
+          }
+        }
+      GRAPHQL
+
+      customer_id = "gid://shopify/Customer/#{remote_id}"
+
+      response = @client.query(query:, variables: { customerId: customer_id })
+      body = T.cast(response.body, T::Hash[String, T.untyped])
+
+      raise Exceptions::Shopify::AdminApiError.new(error_message: body.dig('errors', 0, 'message'), status: response.code) unless body['errors'].nil?
+
+      # 対象のcustomerが存在しなかった場合、こっちにエラーが出る
+      if body.dig('data', 'customerRequestDataErasure', 'userErrors').present?
+        # 対象のcustomerが見つからない場合はemail更新の必要がないので、エラーのキャプチャのみ行う
+        Sentry.capture_exception(Exceptions::Shopify::AdminApiError.new(error_message: body.dig('data', 'customerRequestDataErasure', 'userErrors', 0, 'message'), status: response.code))
+      end
+
+      body
+    end
   end
 end
