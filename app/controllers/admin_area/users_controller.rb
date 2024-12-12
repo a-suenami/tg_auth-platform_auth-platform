@@ -1,10 +1,16 @@
+# typed: true
+
 module AdminArea
   class UsersController < ApplicationController
     before_action :set_user, only: %i[show edit update reset_sms_ratelimit]
     def index
       @users = User.all
       @users = @users.where(id: params[:id]) if params[:id].present?
-      @users = @users.where('email ILIKE :param', param: "%#{ActiveRecord::Base.sanitize_sql_like(params[:email] || '')}%") if params[:email].present?
+      if params[:email].present?
+        users_table = User.arel_table
+        email_condition = users_table[:email].matches("%#{ActiveRecord::Base.sanitize_sql_like(params[:email])}%")
+        @users = @users.where(email_condition)
+      end
       @users = @users.where(phone_number: params[:phone_number]) if params[:phone_number].present?
       @pagy, @users = pagy @users
     end

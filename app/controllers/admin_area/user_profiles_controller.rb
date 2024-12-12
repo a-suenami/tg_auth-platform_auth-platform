@@ -1,3 +1,5 @@
+# typed: true
+
 module AdminArea
   class UserProfilesController < AdminArea::ApplicationController
     def new
