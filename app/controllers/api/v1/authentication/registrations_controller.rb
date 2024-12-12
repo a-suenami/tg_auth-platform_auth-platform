@@ -1,9 +1,11 @@
+# typed: true
+
 module API::V1::Authentication
   class RegistrationsController < ApplicationController
     # send email address verification email
     def send_verification_email
       # google_cloud_service_accountが設定されている場合のみ、reCAPTCHAのスコアを取得する
-      captcha_score = if Tenant.current.tenant_setting&.google_cloud_service_account.present?
+      captcha_score = if T.must(Tenant.current).tenant_setting&.google_cloud_service_account.present?
         captcha_token = T.cast(params[:captcha_token], String)
         captcha_integration = RecaptchaEnterpriseUtils::Integration.deserialize(params[:captcha_type] || 'checkbox')
 

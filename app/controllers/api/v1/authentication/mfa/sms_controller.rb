@@ -1,3 +1,5 @@
+# typed: true
+
 module API::V1::Authentication::MFA
   class SmsController < API::V1::Authentication::ApplicationController
     include CookieAuthable
@@ -12,7 +14,7 @@ module API::V1::Authentication::MFA
 
       raise Exceptions::Authentication::UnregisteredVerifiedPhoneNumberError unless current_user.sms_verified && current_user.phone_number.present?
       # 必須でない場合一旦このAPIは無効。攻撃の対象に利用されないように。
-      raise Exceptions::Authentication::SmsVerificationDisabled unless Tenant.current.sms_verification_required
+      raise Exceptions::Authentication::SmsVerificationDisabled unless T.must(Tenant.current).sms_verification_required
 
       @user = Authentication::SendVerificationSmsService.new.execute!(
         phone_number: current_user.phone_number,
@@ -25,10 +27,11 @@ module API::V1::Authentication::MFA
     end
 
     # authenticate sms endpoint
+    sig { void }
     def authenticate
       raise Exceptions::Authentication::UnregisteredVerifiedPhoneNumberError unless current_user.sms_verified && current_user.phone_number.present?
       # 必須でない場合一旦このAPIは無効。攻撃の対象に利用されないように。
-      raise Exceptions::Authentication::SmsVerificationDisabled unless Tenant.current.sms_verification_required
+      raise Exceptions::Authentication::SmsVerificationDisabled unless T.must(Tenant.current).sms_verification_required
 
       if Authentication::VerifySmsService.new.execute!(verification_code: params[:code], user_id: current_user.id, verifier_type: :mfa)
         cookie_session[:sms_mfa_verified] = Time.zone.now

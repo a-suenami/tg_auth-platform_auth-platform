@@ -1,3 +1,5 @@
+# typed: true
+
 module API::V1::Authentication
   class PasswordsController < ApplicationController
     include CookieAuthable
