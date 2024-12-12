@@ -1,3 +1,5 @@
+# typed: true
+
 module API::V1::Internal
   class EmailChangesController < ApplicationController
     # send email address verification email

@@ -1,3 +1,5 @@
+# typed: true
+
 module API::V1::Internal
   class Me::DeliveryAddressesController < ApplicationController
     before_action :set_delivery_address, only: [:show, :update, :destroy]
