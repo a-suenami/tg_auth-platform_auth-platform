@@ -1,3 +1,4 @@
+# typed: true
 # frozen_string_literal: true
 
 module API::V1::Admin
@@ -6,13 +7,13 @@ module API::V1::Admin
 
     def index
       @doorkeeper_token = doorkeeper_token
-      users = current_application.users.includes(:user_profile, :contact_address, :delivery_addresses).order(:created_at)
+      users = T.must(current_application).users.includes(:user_profile, :contact_address, :delivery_addresses).order(:created_at)
 
       if params[:start_at].present? && params[:end_at].present?
         @start_at = Time.zone.parse(params[:start_at])
         @end_at = Time.zone.parse(params[:end_at])
         users = users.merge(
-          users.where(updated_at: @start_at..@end_at)
+          users.where('updated_at >= ?', @start_at).where('updated_at <= ?', @end_at)
             .or(users.where(user_profile: { updated_at: @start_at..@end_at }))
             .or(users.where(contact_address: { updated_at: @start_at..@end_at })),
         )
