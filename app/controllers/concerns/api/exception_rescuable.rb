@@ -1,11 +1,18 @@
+# typed: true
+
 # ==============================================================================
 # app - controllers - concerns - api - exception rescuable
 # ==============================================================================
 module API::ExceptionRescuable
+  extend T::Sig
+  extend T::Helpers
   extend ActiveSupport::Concern
 
+  include API::JSONErrorResponse
+  requires_ancestor { ActionController::API }
+
   included do
-    include API::JSONErrorResponse
+    T.bind(self, ActiveSupport::Rescuable::ClassMethods)
 
     rescue_from Exception, with: :handle_internal_server_error unless Rails.env.development? || Rails.env.test?
 
@@ -26,6 +33,8 @@ module API::ExceptionRescuable
   end
 
   def handle_record_not_found
+    raise ActiveRecord::RecordNotFound unless Rails.env.development? || Rails.env.test?
+
     resource_not_found(message: I18n.t('errors.messages.not_found'))
   end
 
@@ -42,10 +51,16 @@ module API::ExceptionRescuable
 
   def handle_record_not_unique(exception = nil)
     # unique エラーが起きすぎているため追跡のためSentryに送信する
-    Sentry.set_user(id: current_user&.id) if try(:current_user)
+    # 本番では Sentry に流した上で 500 を返す
+    user = begin
+      try(:current_user)
+    rescue
+      nil
+    end
+    Sentry.set_user(id: user.id) if user
     Sentry.capture_exception(exception)
 
-    invalid_request_error(
+    self.invalid_request_error(
       code: :record_not_unique_error,
       message: I18n.t('errors.messages.error_occurred'),
     )
@@ -106,7 +121,12 @@ module API::ExceptionRescuable
   end
 
   def handle_internal_server_error(exception = nil)
-    Sentry.set_user(id: current_user&.id) if try(:current_user)
+    user = begin
+      try(:current_user)
+    rescue
+      nil
+    end
+    Sentry.set_user(id: user.id) if user
     Sentry.capture_exception(exception)
     logger.error("Rendering 500 with exception: #{exception.message}") if exception
     logger.error(exception.backtrace.join('\n')) if exception

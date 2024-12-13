@@ -1,8 +1,17 @@
+# typed: strict
+
 # ==============================================================================
 # app - controllers - concerns - api - json error response
 # ==============================================================================
 module API::JSONErrorResponse
-  def generate_json(message:, type: caller_locations.first.label.to_sym, code: nil, params: nil)
+  extend T::Sig
+  extend T::Helpers
+
+  requires_ancestor { ActionController::API }
+  requires_ancestor { Kernel }
+
+  sig { params(message: String, type: T.nilable(Symbol), code: T.nilable(Symbol), params: T.nilable(T::Hash[Symbol, T.untyped])).returns(T::Hash[Symbol, T.untyped]) }
+  def generate_json(message:, type: caller_locations.first&.label&.to_sym, code: nil, params: nil)
     error = {}
     error[:type] = type
     error[:code] = code unless code.nil?
@@ -13,6 +22,7 @@ module API::JSONErrorResponse
   end
 
   # HTTP 400
+  sig { params(code: Symbol, message: String, params: T.nilable(T::Hash[Symbol, T.untyped]), object: T::Hash[Symbol, T.untyped]).void }
   def invalid_request_error(code:, message:, params: nil, object: {})
     error = generate_json(code:, message:, params:)
 
@@ -20,6 +30,7 @@ module API::JSONErrorResponse
   end
 
   # HTTP 401
+  sig { params(code: Symbol, message: String).void }
   def authentication_error(code:, message:)
     error = generate_json(code:, message:)
 
@@ -27,6 +38,7 @@ module API::JSONErrorResponse
   end
 
   # HTTP 403
+  sig { params(message: String).void }
   def forbidden(message:)
     error = generate_json(message:)
 
@@ -34,6 +46,7 @@ module API::JSONErrorResponse
   end
 
   # HTTP 404
+  sig { params(message: String).void }
   def resource_not_found(message:)
     error = generate_json(message:)
 
@@ -41,6 +54,7 @@ module API::JSONErrorResponse
   end
 
   # HTTP 500
+  sig { params(message: String, code: T.nilable(Symbol)).void }
   def internal_server_error(message:, code: nil)
     error = generate_json(code:, message:)
 

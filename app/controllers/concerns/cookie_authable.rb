@@ -10,7 +10,6 @@ module CookieAuthable
     end
   end
 
-  sig { returns(User) }
   def session_authenticate
     raise Exceptions::Auth::AuthError if cookie_session[:current_user_id].blank?
 
