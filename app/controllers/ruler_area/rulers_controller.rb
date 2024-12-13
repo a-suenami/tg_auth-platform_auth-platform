@@ -1,3 +1,5 @@
+# typed: true
+
 module RulerArea
   class RulersController < ApplicationController
     def index

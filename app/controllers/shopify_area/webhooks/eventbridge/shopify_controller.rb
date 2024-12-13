@@ -1,3 +1,5 @@
+# typed: true
+
 module ShopifyArea::Webhooks::Eventbridge
   class ShopifyController < ShopifyArea::Webhooks::ApplicationController
     def update

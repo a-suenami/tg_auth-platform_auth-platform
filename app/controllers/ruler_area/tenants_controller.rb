@@ -1,3 +1,5 @@
+# typed: true
+
 module RulerArea
   class TenantsController < ApplicationController
     def index
@@ -37,9 +39,9 @@ module RulerArea
 
     def admin_area
       @tenant = Tenant.find(params[:id])
-      Admin.find_or_create_by(tenant_id: @tenant.id, uid: current_ruler.uid) do |admin|
-        admin.email = current_ruler.email
-        admin.name = current_ruler.name
+      Admin.find_or_create_by(tenant_id: @tenant.id, uid: T.must(current_ruler).uid) do |admin|
+        admin.email = T.must(current_ruler).email
+        admin.name = T.must(current_ruler).name
       end
 
       scheme = Rails.env.development? ? 'http://' : 'https://'
