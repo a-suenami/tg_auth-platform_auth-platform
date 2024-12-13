@@ -1,3 +1,5 @@
+# typed: true
+
 module OauthArea
   class AuthorizationsController < ApplicationController
     def relaunch
