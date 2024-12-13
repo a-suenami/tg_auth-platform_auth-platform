@@ -2,8 +2,6 @@
 
 module Authentication
   class SendVerificationSmsService < BaseService
-    extend T::Sig
-
     # SMS送信対象外の国コードリスト
     EXCLUDED_COUNTRY_CODE = T.let(%w[AF AZ BI BZ ET IQ LB LK LY MG PK PS RU SY TD TJ TN UZ ZM].freeze, T::Array[String])
 

@@ -1,7 +1,8 @@
-# typed: false
+# typed: strict
 
 module Users
   class DestroyService < BaseService
+    sig { params(user: User).void }
     def execute(user:)
       user.update!(deleted: true, deleted_at: Time.zone.now)
 

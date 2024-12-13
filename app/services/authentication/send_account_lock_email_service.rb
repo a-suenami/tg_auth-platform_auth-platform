@@ -1,7 +1,9 @@
-# typed: true
+# typed: strict
 
 module Authentication
   class SendAccountLockEmailService < BaseService
+
+    sig { params(email: String).returns(User) }
     def execute!(email:)
       # email validate
       unless email =~ URI::MailTo::EMAIL_REGEXP
@@ -20,6 +22,7 @@ module Authentication
       end
     end
 
+    sig { params(account_lock: AccountLock).void }
     def send_account_lock_email(account_lock)
       # query encode
       params = {

@@ -1,8 +1,14 @@
-# typed: true
+# typed: strict
 
 module Authentication
   class SendPasswordResetEmailService < BaseService
 
+    sig do
+      params(
+        email: String,
+        base_url: String,
+      ).returns(T.nilable(User))
+    end
     def execute!(email:, base_url:)
       # email validate
       unless email =~ URI::MailTo::EMAIL_REGEXP
@@ -26,6 +32,7 @@ module Authentication
       end
     end
 
+    sig { params(user: User, password_reset: Users::PasswordReset, base_url: String).void }
     def send_verification_email(user, password_reset, base_url)
       # query encode
       params = {
@@ -38,6 +45,7 @@ module Authentication
       User::SendEmailWorker.perform_async(T.must(Tenant.current_id), 'password_reset', template_params, user.email)
     end
 
+    sig { params(email: String).returns(T.nilable(User)) }
     def find_active_user(email:)
       # emailそのまま + email.downcaseでユーザを検索する
       user = User.active.find_by(email:, email_verified: true)

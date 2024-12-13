@@ -1,8 +1,9 @@
-# typed: false
+# typed: strict
 
 module AccountLocks
   class UnlockByTokenService < BaseService
 
+    sig { params(token: T.nilable(String)).returns(T::Boolean) }
     def execute(token:)
       if token.present?
         account_lock = AccountLock.find_by(unlock_token: token)

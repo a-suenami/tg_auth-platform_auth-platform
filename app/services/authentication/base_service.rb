@@ -1,9 +1,12 @@
-# typed: false
+# typed: strict
 
 module Authentication
   class BaseService < ::BaseService
-    DEFAULT_PARAMS = {}.freeze
+    extend T::Sig
 
+    DEFAULT_PARAMS = T.let({}.freeze, T::Hash[T.untyped, T.untyped])
+
+    sig { params(params: T::Hash[T.untyped, T.untyped]).void }
     def initialize(params = DEFAULT_PARAMS)
       @params = params
     end
