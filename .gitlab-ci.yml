@@ -178,6 +178,7 @@ build:app:staging:
     - docker push 287511440462.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-stg:$CI_COMMIT_SHA
   tags:
     - docker
+    - x86_64-linux
   only:
     - deploy-staging
   except:
@@ -191,6 +192,7 @@ build:app:production:
     policy: pull
   services:
     - docker:dind
+    - x86_64-linux
   variables:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
