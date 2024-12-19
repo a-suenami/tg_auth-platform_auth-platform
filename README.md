@@ -190,7 +190,7 @@ Arrange by column name in alphabetical order. (However, columns with strong rela
 # Shopfiy Multipass時のみ
 デプロイ時にwebhook購読タスクを実行
 ```sh
-bundle exec rake shopify:register_webhook_customers_create EVENT_BRIDGE_ARN=arn:aws:events:ap-northeast-1::event-source/aws.partner/xxxxxx STORE_NAME="sample" SHOPIFY_API_TOKEN="xxxxx" SHOPIFY_API_KEY="xxxx" SHOPIFY_API_SECRET_KEY="xxx" SHOPIFY_API_VERSION="2024-10"
+bundle exec rake shopify:register_webhook_customers_create EVENT_BRIDGE_ARN=arn:aws:events:ap-northeast-1::event-source/aws.partner/shopify.com/xxxxxx/xxxxxx  STORE_NAME="sample" SHOPIFY_API_TOKEN="xxxxx" SHOPIFY_API_KEY="xxxx" SHOPIFY_API_SECRET_KEY="xxx" SHOPIFY_API_VERSION="2024-10"
 
-bundle exec rake shopify:register_webhook_customers_update EVENT_BRIDGE_ARN=arn:aws:events:ap-northeast-1::event-source/aws.partner/xxxxxx STORE_NAME="sample" SHOPIFY_API_TOKEN="xxxxx" SHOPIFY_API_KEY="xxxx" SHOPIFY_API_SECRET_KEY="xxx" SHOPIFY_API_VERSION="2024-10"
+bundle exec rake shopify:register_webhook_customers_update EVENT_BRIDGE_ARN=arn:aws:events:ap-northeast-1::event-source/aws.partner/shopify.com/xxxxxx/xxxxxx  STORE_NAME="sample" SHOPIFY_API_TOKEN="xxxxx" SHOPIFY_API_KEY="xxxx" SHOPIFY_API_SECRET_KEY="xxx" SHOPIFY_API_VERSION="2024-10"
 ```
