@@ -53,7 +53,7 @@
   },
   {
     "name": "ALLOW_ORIGINS",
-    "value": "['https://web.account.hikaruutada-tour-official.com', 'https://ticket.hikaruutada-tour-official.com', 'https://web.pass.id-platform.net', 'https://ticketpass.jp', 'https://web.extend.id-platform.net', 'https://web.account.famikura-store-pass.com']"
+    "value": "['https://web.account.hikaruutada-tour-official.com', 'https://ticket.hikaruutada-tour-official.com', 'https://web.pass.id-platform.net', 'https://ticketpass.jp', 'https://web.extend.id-platform.net', 'https://web.account.famikura-store-pass.com', 'https://famikura-store-pass.com']"
   },
   {
     "name": "USE_ECS_CREDENTIALS",
