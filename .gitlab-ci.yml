@@ -182,7 +182,7 @@ build:app:staging:
     BUNDLE_GIT__L__TWOGATE__NET: $BUNDLE_GIT__L__TWOGATE__NET
   script:
     - aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 287511440462.dkr.ecr.ap-northeast-1.amazonaws.com
-    - docker build . -f docker/Dockerfile -t rails_app:latest --build-arg BUNDLE_GIT__L__TWOGATE__NET --build-arg BUNDLE_GEMS__CONTRIBSYS__COM
+    - docker build . -f docker/Dockerfile -t rails_app:latest --build-arg BUNDLE_GIT__L__TWOGATE__NET --build-arg BUNDLE_ENTERPRISE__CONTRIBSYS__COM
     - docker tag rails_app:latest 287511440462.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-stg:latest
     - docker tag rails_app:latest 287511440462.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-stg:$CI_COMMIT_SHA
     - docker push 287511440462.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-stg:latest
@@ -208,7 +208,7 @@ build:app:production:
     BUNDLE_GIT__L__TWOGATE__NET: $BUNDLE_GIT__L__TWOGATE__NET
   script:
     - aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 843188904699.dkr.ecr.ap-northeast-1.amazonaws.com
-    - docker build . -f docker/Dockerfile -t rails_app:latest --build-arg BUNDLE_GIT__L__TWOGATE__NET --build-arg BUNDLE_GEMS__CONTRIBSYS__COM
+    - docker build . -f docker/Dockerfile -t rails_app:latest --build-arg BUNDLE_GIT__L__TWOGATE__NET --build-arg BUNDLE_ENTERPRISE__CONTRIBSYS__COM
     - docker tag rails_app:latest 843188904699.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-prod:latest
     - docker tag rails_app:latest 843188904699.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-prod:$CI_COMMIT_SHA
     - docker push 843188904699.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-prod:latest
