@@ -23,6 +23,8 @@ code_verifier: session[:shopify_multipass_code_verifier],)
       # 悪意あるリクエスト以外はありえないケース
       return render :error if oauth_access_grant.nil?
 
+      Users::LinkedApplications::UpdateService.new.execute(tenant_id: current_multipass_store.tenant_id, resource_owner_id: oauth_access_grant.resource_owner_id,
+oauth_application_id: oauth_access_grant.application_id, scopes: nil,)
       return_to = session[:return_to]
       session[:return_to] = nil
 
