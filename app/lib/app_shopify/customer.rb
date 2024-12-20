@@ -15,6 +15,65 @@ module AppShopify
       @client = ShopifyAPI::Clients::Graphql::Admin.new(session: shopify_session)
     end
 
+
+    sig { params(remote_id: String).returns(T.untyped) }
+    def fetch_customer(remote_id)
+      query = <<~GRAPHQL
+        {
+          customer(id: "gid://shopify/Customer/#{remote_id}") {
+            id
+            firstName
+            lastName
+            email
+            phone
+            emailMarketingConsent {
+              consentUpdatedAt
+              marketingOptInLevel
+              marketingState
+            }
+          }
+        }
+      GRAPHQL
+
+      response = @client.query(query:)
+      body = T.cast(response.body, T::Hash[String, T.untyped])
+
+      raise Exceptions::Shopify::AdminApiError.new(error_message: body.dig('errors', 0, 'message'), status: response.code) unless body['errors'].nil?
+
+      body
+    end
+
+    sig { params(remote_id: String).returns(T.untyped) }
+    def unsubscribe_email_marketing(remote_id)
+      query = <<~GRAPHQL
+        mutation customerEmailMarketingConsentUpdate($input: CustomerEmailMarketingConsentUpdateInput!) {
+          customerEmailMarketingConsentUpdate(input: $input) {
+            customer {
+              id
+              emailMarketingConsent {
+                consentUpdatedAt
+                marketingOptInLevel
+                marketingState
+              }
+            }
+            userErrors {
+              field
+              message
+            }
+          }
+        }
+      GRAPHQL
+
+      customer_id = "gid://shopify/Customer/#{remote_id}"
+
+      response = @client.query(query:, variables: { input: { customerId: customer_id, emailMarketingConsent: { marketingState: 'UNSUBSCRIBED' } } })
+      body = T.cast(response.body, T::Hash[String, T.untyped])
+
+      raise Exceptions::Shopify::AdminApiError.new(error_message: body.dig('errors', 0, 'message'), status: response.code) unless body['errors'].nil?
+
+      body
+    end
+
     sig { params(id: String, email: String).returns(T.untyped) }
     def update_email(id, email)
       query = <<-GRAPHQL
