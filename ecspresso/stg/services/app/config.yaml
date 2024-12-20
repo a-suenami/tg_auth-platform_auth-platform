@@ -1,6 +1,6 @@
 region: ap-northeast-1
 cluster: id-platform-app-stg
-service: id-platform-main-service-app-stg
+service: id-platform-main-service-app-stg-v2
 service_definition: ecs-service-def.json
 task_definition: ecs-task-def.jsonnet
 timeout: 10m0s

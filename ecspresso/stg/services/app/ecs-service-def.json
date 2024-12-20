@@ -27,7 +27,7 @@
     {
       "containerName": "nginx",
       "containerPort": 80,
-      "targetGroupArn": "arn:aws:elasticloadbalancing:ap-northeast-1:287511440462:targetgroup/id-platform-ecs-default-stg/8c2fe563353ec5c5"
+      "targetGroupArn": "arn:aws:elasticloadbalancing:ap-northeast-1:287511440462:targetgroup/id-platform-ecs-default-stg-v2/4f9edf1af96166e9"
     }
   ],
   "networkConfiguration": {
