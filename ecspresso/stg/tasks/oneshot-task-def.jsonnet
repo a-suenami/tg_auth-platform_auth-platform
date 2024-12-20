@@ -7,6 +7,8 @@ local memory = 512;
 local memory_reservation = 256;
 
 {
+  "cpu": "1024",
+  "memory": "2048",
   "containerDefinitions": [
     {
       "command": [],
@@ -72,8 +74,13 @@ local memory_reservation = 256;
   "family": "id-platform-main-oneshot-stg",
   "placementConstraints": [],
   "requiresCompatibilities": [
-    "EC2"
+    "FARGATE"
   ],
+  "networkMode": "awsvpc",
+  "runtimePlatform": {
+    "cpuArchitecture": "ARM64",
+    "operatingSystemFamily": "LINUX"
+  },
   "tags": [
     {
       "key": "env",

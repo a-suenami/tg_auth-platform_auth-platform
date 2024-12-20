@@ -19,6 +19,8 @@ services:
       - postgres_tmpfs
       - redis
       - dynamodb
+    env_file:
+      - secrets.env
     environment:
       LANG: 'C.UTF-8'
       POSTGRES_HOST: postgres

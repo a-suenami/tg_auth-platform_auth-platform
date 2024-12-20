@@ -763,7 +763,7 @@ class Sidekiq::BatchSet
   def size; end
 end
 
-# source://sidekiq-pro//lib/sidekiq/pro/push.rb#90
+# source://sidekiq-pro//lib/sidekiq/pro/push.rb#93
 class Sidekiq::Client
   include ::Sidekiq::BatchClient
 
@@ -812,7 +812,7 @@ class Sidekiq::Client
     # source://sidekiq/7.2.1/lib/sidekiq/client.rb#177
     def push_bulk(*_arg0, **_arg1, &_arg2); end
 
-    # source://sidekiq-pro//lib/sidekiq/pro/push.rb#91
+    # source://sidekiq-pro//lib/sidekiq/pro/push.rb#94
     def reliable_push!; end
 
     # source://sidekiq/7.2.1/lib/sidekiq/client.rb#163
@@ -836,6 +836,9 @@ module Sidekiq::Component
 
   # source://sidekiq/7.2.1/lib/sidekiq/component.rb#43
   def identity; end
+
+  # source://sidekiq-ent/7.2.4/lib/sidekiq-ent.rb#60
+  def leader?; end
 
   # source://sidekiq/7.2.1/lib/sidekiq/component.rb#23
   def logger; end
@@ -918,6 +921,9 @@ class Sidekiq::Config
   # source://forwardable/1.3.3/forwardable.rb#231
   def has_key?(*args, **_arg1, &block); end
 
+  # source://sidekiq-ent/7.2.4/lib/sidekiq-ent/liveness.rb#63
+  def health_check(iface = T.unsafe(nil), &block); end
+
   # source://forwardable/1.3.3/forwardable.rb#231
   def key?(*args, **_arg1, &block); end
 
@@ -941,6 +947,9 @@ class Sidekiq::Config
 
   # source://sidekiq/7.2.1/lib/sidekiq/config.rb#235
   def on(event, &block); end
+
+  # source://sidekiq-ent/7.2.4/lib/sidekiq-ent/periodic.rb#18
+  def periodic; end
 
   # source://sidekiq/7.2.1/lib/sidekiq/config.rb#90
   def queues; end
@@ -968,6 +977,9 @@ class Sidekiq::Config
 
   # source://sidekiq-pro//lib/sidekiq-pro.rb#56
   def reliable_scheduler!; end
+
+  # source://sidekiq-ent/7.2.4/lib/sidekiq-ent/metrics.rb#7
+  def retain_history(interval = T.unsafe(nil), &block); end
 
   # source://sidekiq/7.2.1/lib/sidekiq/config.rb#100
   def server_middleware; end
@@ -1036,12 +1048,6 @@ module Sidekiq::Job
     def included(base); end
   end
 end
-
-# source://sidekiq-pro//lib/sidekiq-pro.rb#14
-Sidekiq::LICENSE = T.let(T.unsafe(nil), String)
-
-# source://sidekiq-pro//lib/sidekiq-pro.rb#13
-Sidekiq::NAME = T.let(T.unsafe(nil), String)
 
 # source://sidekiq-pro//lib/sidekiq/pro/version.rb#2
 module Sidekiq::Pro
@@ -1368,7 +1374,7 @@ module Sidekiq::ReliableClient
   # source://sidekiq-pro//lib/sidekiq/pro/push.rb#40
   def raw_push(payloads); end
 
-  # source://sidekiq-pro//lib/sidekiq/pro/push.rb#78
+  # source://sidekiq-pro//lib/sidekiq/pro/push.rb#81
   def save_locally(pool, payloads, ex); end
 end
 
