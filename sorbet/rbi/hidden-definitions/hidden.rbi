@@ -4536,7 +4536,7 @@ class Binding
 
   def console(); end
 
-  def irb(); end
+  # def irb(); end
 end
 
 class Blastengine::API
@@ -28725,7 +28725,7 @@ module RubyVM::YJIT
 
   def self.reset_stats!(); end
 
-  def self.runtime_stats(); end
+  # def self.runtime_stats(); end
 
   def self.simulate_oom!(); end
 

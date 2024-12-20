@@ -1,8 +1,8 @@
 # ==============================================================================
 # docker - local.Dockerfile
 # ==============================================================================
-# ruby:3.3.0-slim
-FROM ruby@sha256:bbfce7fbb794e43b183411301b0c9386c1ba9640acead631651789572a5d3820
+# ruby:3.3.6-slim
+FROM ruby:3.3.6-slim
 ENV LANG C.UTF-8
 
 ENV APP_HOME /rails_app

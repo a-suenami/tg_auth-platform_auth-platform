@@ -1,6 +1,6 @@
 variables:
-  RUBY_VERSION: 'ruby-3.3.0-slim'
-  RUBY_IMAGE: containers.l.twogate.net/docker/ruby-slim-for-rails:ruby3.3-jemalloc-node18
+  RUBY_VERSION: 'ruby-3.3.6-slim'
+  RUBY_IMAGE: containers.l.twogate.net/docker/ruby-slim-for-rails:ruby3.3.6
   POSTGRES_VERSION: 'postgres:15-alpine'
 
 cache: &cache
@@ -20,7 +20,14 @@ stages:
   - pre-deploy
   - deploy
 
+# arm64 環境で動かす
+.arm64_tags: &arm64_tags
+  tags:
+   - arm64
+   - linux
+
 bundle-package:
+  <<: *arm64_tags
   image: ${RUBY_IMAGE}
   stage: prepare
   cache:
@@ -47,6 +54,7 @@ semgrep-sast:
     - if: '$CI_COMMIT_BRANCH == "master"'
 
 rubocop:
+  <<: *arm64_tags
   image: ${RUBY_IMAGE}
   stage: test
   cache:
@@ -64,6 +72,7 @@ rubocop:
     - schedules
 
 rspec:
+  <<: *arm64_tags
   # parallel: 5
   image: ${RUBY_IMAGE}
   stage: test
@@ -107,6 +116,7 @@ rspec:
     - schedules
 
 sorbet:
+  <<: *arm64_tags
   image: ${RUBY_IMAGE}
   stage: test
   cache:
@@ -116,7 +126,6 @@ sorbet:
   services:
     - ${POSTGRES_VERSION}
   variables:
-    RAILS_ENV: test
     POSTGRES_HOST: postgres
     POSTGRES_TEST_HOST: postgres
     POSTGRES_USER: postgres
@@ -137,6 +146,7 @@ sorbet:
     - schedules
 
 assets:precompile:
+  <<: *arm64_tags
   image: ${RUBY_IMAGE}
   stage: test
   cache:
@@ -158,6 +168,7 @@ assets:precompile:
     - schedules
 
 build:app:staging:
+  <<: *arm64_tags
   image: containers.l.twogate.net/docker/docker-awscli:master
   stage: build
   cache:
@@ -176,15 +187,13 @@ build:app:staging:
     - docker tag rails_app:latest 287511440462.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-stg:$CI_COMMIT_SHA
     - docker push 287511440462.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-stg:latest
     - docker push 287511440462.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-stg:$CI_COMMIT_SHA
-  tags:
-    - docker
-    - x86_64-linux
   only:
     - deploy-staging
   except:
     - schedules
 
 build:app:production:
+  <<: *arm64_tags
   image: containers.l.twogate.net/docker/docker-awscli:master
   stage: build
   cache:
@@ -204,8 +213,6 @@ build:app:production:
     - docker tag rails_app:latest 843188904699.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-prod:$CI_COMMIT_SHA
     - docker push 843188904699.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-prod:latest
     - docker push 843188904699.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-app-prod:$CI_COMMIT_SHA
-  tags:
-    - docker
   only:
     - deploy-production
   except:

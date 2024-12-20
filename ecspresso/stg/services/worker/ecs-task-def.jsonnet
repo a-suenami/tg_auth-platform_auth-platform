@@ -7,6 +7,8 @@ local memory = 1800;
 local memory_reservation = 512;
 
 {
+  "cpu": "1024",
+  "memory": "2048",
   "containerDefinitions": [
     {
       "command":  [
@@ -84,6 +86,10 @@ local memory_reservation = 512;
   "requiresCompatibilities": [
     "EC2"
   ],
+  "runtimePlatform": {
+    "cpuArchitecture": "ARM64",
+    "operatingSystemFamily": "LINUX"
+  },
   "tags": [
     {
       "key": "env",

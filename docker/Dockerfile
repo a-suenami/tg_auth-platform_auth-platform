@@ -1,12 +1,12 @@
 # ==============================================================================
 # docker - Dockerfile
 # ==============================================================================
-# ruby:3.3.0-slim
-FROM ruby@sha256:bbfce7fbb794e43b183411301b0c9386c1ba9640acead631651789572a5d3820
+# ruby:3.3.6-slim
+FROM ruby:3.3.6-slim
 ENV LANG C.UTF-8
 
 ARG BUNDLE_GIT__L__TWOGATE__NET
-ARG BUNDLE_GEMS__CONTRIBSYS__COM
+ARG BUNDLE_ENTERPRISE__CONTRIBSYS__COM
 
 ENV RAILS_ENV production
 

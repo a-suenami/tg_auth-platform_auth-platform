@@ -6,7 +6,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.3.0'
+ruby '3.3.6'
 
 # ------------------------------------------------------------------------------
 # Core, DB
@@ -30,7 +30,8 @@ gem 'bootsnap', '~> 1.17', '>= 1.17.1', require: false
 gem 'ridgepole', '~> 2.0', '>= 2.0.1'
 # Simple, efficient background processing for Ruby
 gem 'sidekiq', '~> 7.2', '>= 7.2.1'
-source 'https://gems.contribsys.com/' do
+source 'https://enterprise.contribsys.com/' do
+  gem 'sidekiq-ent', '~> 7.2'
   gem 'sidekiq-pro', '~> 7.2'
 end
 # adds support for queueing jobs in a recurring way to sidekiq
@@ -158,7 +159,7 @@ gem 'twilio-ruby', '~> 6.9', '>= 6.9.1'
 gem 'phony_rails'
 
 # typing
-gem 'sorbet-runtime', '~> 0.5.11048'
+gem 'sorbet-runtime', '~> 0.5.11525'
 
 # reCAPTCHA Enterprise Client
 gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.17.3'
@@ -214,7 +215,7 @@ group :development, :test do
   # gem 'knapsack_pro', '~> 3.7.0'
 
   # typing
-  gem 'sorbet', '~> 0.5.11048'
+  gem 'sorbet', '~> 0.5.11525'
   gem 'rubocop-sorbet', '~> 0.7.6', require: false
   gem 'tapioca', git: 'https://github.com/twogate/tapioca', ref: 'd0a8227'
   gem 'spoom', '~> 1.2.4', require: false
