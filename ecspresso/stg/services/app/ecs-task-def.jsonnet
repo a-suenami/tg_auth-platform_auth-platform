@@ -62,9 +62,6 @@ local memory = 2048 - 256 - 50;
       ],
       "essential": true,
       "image": "287511440462.dkr.ecr.ap-northeast-1.amazonaws.com/id-platform-main-nginx-stg:latest",
-      "links": [
-        "app"
-      ],
       "logConfiguration": {
         "logDriver": "awsfirelens",
         "options": {
