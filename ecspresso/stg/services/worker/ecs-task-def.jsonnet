@@ -7,8 +7,6 @@ local memory = 1800;
 local memory_reservation = 512;
 
 {
-  "cpu": "1024",
-  "memory": "2048",
   "containerDefinitions": [
     {
       "command":  [
