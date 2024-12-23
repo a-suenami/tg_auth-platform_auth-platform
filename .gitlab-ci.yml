@@ -201,7 +201,6 @@ build:app:production:
     policy: pull
   services:
     - docker:dind
-    - x86_64-linux
   variables:
     DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
