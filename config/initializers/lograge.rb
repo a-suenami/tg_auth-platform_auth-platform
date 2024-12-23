@@ -87,7 +87,7 @@ Rails.application.configure do
   }
 
   config.lograge.ignore_actions = [
-    'Rails::HealthController#show',
+    'ApplicationController#health_check',
   ]
 end
 # rubocop:enable Metrics/BlockLength

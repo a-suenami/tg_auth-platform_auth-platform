@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require 'active_support/core_ext/integer/time'
+require './lib/json_log_formatter'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -67,17 +68,14 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = Logger::Formatter.new
-
+  config.log_formatter = JSONLogFormatter.new
+  # Log to STDOUT by default
+  config.logger = ActiveSupport::Logger.new($stdout)
+                                       .tap  { |logger| logger.formatter = config.log_formatter }
+                                       .then { |logger| logger }
   # Use a different logger for distributed setups.
   # require "syslog/logger"
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
-
-  if ENV['RAILS_LOG_TO_STDOUT'].present?
-    logger           = ActiveSupport::Logger.new($stdout)
-    logger.formatter = config.log_formatter
-    config.logger    = ActiveSupport::TaggedLogging.new(logger)
-  end
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
