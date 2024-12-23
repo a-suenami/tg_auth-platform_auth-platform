@@ -9,6 +9,10 @@
   },
   {
     "name": "ADMIN_AUTH0_DOMAIN",
+    "value": "login.app-staging.id-platform.net"
+  },
+  {
+    "name": "ADMIN_AUTH0_ORIGINAL_DOMAIN",
     "value": "id-platform-stg.jp.auth0.com"
   },
   {
@@ -61,6 +65,10 @@
   },
   {
     "name": "RULER_AUTH0_DOMAIN",
+    "value": "login.app-staging.id-platform.net"
+  },
+  {
+    "name": "RULER_AUTH0_ORIGINAL_DOMAIN",
     "value": "id-platform-stg.jp.auth0.com"
   },
   {
