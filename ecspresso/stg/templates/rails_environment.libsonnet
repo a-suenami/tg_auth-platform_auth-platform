@@ -45,7 +45,7 @@
   },
   {
     "name": "RAILS_MAX_THREADS",
-    "value": "6"
+    "value": "8"
   },
   {
     "name": "RAILS_SERVE_STATIC_FILES",
@@ -53,7 +53,7 @@
   },
   {
     "name": "RAILS_WORKERS",
-    "value": "4"
+    "value": "2"
   },
   {
     "name": "RULER_AUTH0_CLIENT_ID",
