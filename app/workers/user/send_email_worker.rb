@@ -13,7 +13,7 @@ class User
       throttle = T.let(Sidekiq::Limiter.window('blastengine', Settings.blastengine.rate_limit, :second, wait_timeout: 6.hours.to_i), Sidekiq::Limiter::Window)
 
       throttle.within_limit do
-        email_template = EmailTemplate.find_by!(template_type:)
+        email_template = EmailTemplate.find_by!(template_type:, tenant_id:)
         liquid_template = Liquid::Template.parse(email_template.body)
 
         # Liquid標準でキーが文字列なため、変換
