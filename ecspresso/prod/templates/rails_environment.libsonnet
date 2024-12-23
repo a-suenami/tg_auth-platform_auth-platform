@@ -29,6 +29,10 @@
   },
   {
     "name": "RULER_AUTH0_DOMAIN",
+    "value": "auth.id-platform.net"
+  },
+  {
+    "name": "RULER_AUTH0_ORIGINAL_DOMAIN",
     "value": "id-platform-prod.jp.auth0.com"
   },
   {
@@ -45,7 +49,7 @@
   },
   {
     "name": "ADMIN_AUTH0_DOMAIN",
-    "value": "id-platform-prod.jp.auth0.com"
+    "value": "auth.id-platform.net"
   },
   {
     "name": "CLOUDFRONT_HOST",
@@ -78,6 +82,10 @@
   {
     "name": "ADMIN_DOMAIN",
     "value": "admin.app.id-platform.net"
+  },
+  {
+    "name": "ADMIN_AUTH0_ORIGINAL_DOMAIN",
+    "value": "id-platform-prod.jp.auth0.com"
   },
   {
     "name": "RULER_DOMAIN",

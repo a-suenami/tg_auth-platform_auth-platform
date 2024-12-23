@@ -19,7 +19,7 @@ class Admin < ApplicationRecord
 
   sig { returns(String) }
   def auth0_domain
-    Settings.admin.auth0.auth0_domain
+    Settings.admin.auth0.auth0_original_domain
   end
 
   sig { returns(String) }
