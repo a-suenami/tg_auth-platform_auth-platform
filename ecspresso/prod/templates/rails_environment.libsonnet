@@ -90,5 +90,9 @@
   {
     "name": "RULER_DOMAIN",
     "value": "origin.app.id-platform.net"
-  }
+  },
+  {
+    "name": "BLASTENGINE_RATE_LIMIT",
+    "value": "8"
+  },
 ]

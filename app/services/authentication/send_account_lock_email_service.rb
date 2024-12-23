@@ -21,22 +21,15 @@ module Authentication
     end
 
     def send_account_lock_email(account_lock)
-      email_template = EmailTemplate.find_by!(template_type: 'account_lock')
-      liquid_template = Liquid::Template.parse(email_template.body)
-
       # query encode
       params = {
         unlock_token: account_lock.unlock_token,
       }.to_query
       unlock_url = "https://#{T.must(Tenant.current).domain}/account_locks/unlock?#{params}"
 
-      Blastengine::API.new.send_email(
-        send_to: account_lock.email,
-        subject: email_template.subject,
-        body: liquid_template.render('unlock_url' => unlock_url),
-        from_email: Tenant.current&.tenant_setting&.sender_email,
-        from_name: Tenant.current&.name,
-      )
+      template_params = { unlock_url: }.transform_keys(&:to_s)
+
+      User::SendEmailWorker.perform_async('account_lock', template_params, account_lock.email)
     end
   end
 end

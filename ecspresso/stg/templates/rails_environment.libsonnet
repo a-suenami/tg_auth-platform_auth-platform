@@ -90,5 +90,9 @@
   {
     "name": "SMS_DISABLE_RATE_LIMIT",
     "value": "false"
-  }
+  },
+  {
+    "name": "BLASTENGINE_RATE_LIMIT",
+    "value": "8"
+  },
 ]

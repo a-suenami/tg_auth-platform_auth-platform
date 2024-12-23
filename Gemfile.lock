@@ -588,7 +588,7 @@ GEM
       securerandom
       sorbet-runtime
       zeitwerk (~> 2.5)
-    sidekiq (7.2.1)
+    sidekiq (7.2.4)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)
@@ -768,9 +768,9 @@ DEPENDENCIES
   sentry-ruby (~> 5.16, >= 5.16.1)
   sentry-sidekiq (~> 5.16, >= 5.16.1)
   shopify_api (~> 14.6.0)
-  sidekiq (~> 7.2, >= 7.2.1)
-  sidekiq-ent (~> 7.2)!
-  sidekiq-pro (~> 7.2)!
+  sidekiq (~> 7.2.4)
+  sidekiq-ent (~> 7.2.4)!
+  sidekiq-pro (~> 7.2.1)!
   sidekiq-scheduler (~> 5.0, >= 5.0.3)
   simplecov (~> 0.22.0)
   slim-rails (~> 3.6, >= 3.6.3)

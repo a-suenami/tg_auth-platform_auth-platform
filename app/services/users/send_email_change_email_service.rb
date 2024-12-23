@@ -24,16 +24,8 @@ module Users
     end
 
     def send_verification_email(email_verifier)
-      email_template = EmailTemplate.find_by!(template_type: 'email_address_change')
-      liquid_template = Liquid::Template.parse(email_template.body)
-
-      Blastengine::API.new.send_email(
-        send_to: email_verifier.email,
-        subject: email_template.subject,
-        body: liquid_template.render('email_verification_code' => email_verifier.code),
-        from_email: Tenant.current&.tenant_setting&.sender_email,
-        from_name: Tenant.current&.name,
-      )
+      template_params = { email_verification_code: email_verifier.code }.transform_keys(&:to_s)
+      User::SendEmailWorker.perform_async('email_address_change', template_params, email_verifier.email)
     end
   end
 end

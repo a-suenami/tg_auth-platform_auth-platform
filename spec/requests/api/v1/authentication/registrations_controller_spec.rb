@@ -17,9 +17,6 @@ RSpec.describe '[ Registrations API ]' do
         TEXT
       )
     }
-    let(:blastengine_mock) {
-      instance_double(Blastengine::API)
-    }
     let(:tenant_setting) {
       create(:tenant_setting, tenant_id: current_tenant.id, google_cloud_service_account: {}, google_cloud_project_id: 'project_id', recaptcha_enterprise_checkbox_site_key: 'checkbox_site_key',
 recaptcha_enterprise_score_based_site_key: 'score_based_site_key',)
@@ -33,10 +30,8 @@ deleted_at: Time.zone.now,)
       email_template
       tenant_setting
       deleted_user
-      allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
-      allow(blastengine_mock).to receive(:send_email).and_return({
-        delivery_id: 1,
-      })
+      # User::SendEmailWorker のモックをセットアップ
+      allow(User::SendEmailWorker).to receive(:perform_async)
     end
 
     context 'when params vaild' do
@@ -51,7 +46,11 @@ deleted_at: Time.zone.now,)
       context 'when first time registration' do
         it 'returns 200' do
           is_expected.to eq 200
-          expect(blastengine_mock).to have_received(:send_email)
+          expect(User::SendEmailWorker).to have_received(:perform_async).with(
+            'email_address_verification',
+            { 'email_verification_code' => an_instance_of(String) },
+            'test-user1@example.com',
+          )
         end
       end
 
@@ -66,7 +65,11 @@ deleted_at: Time.zone.now,)
 
         it 'returns 200' do
           is_expected.to eq 200
-          expect(blastengine_mock).to have_received(:send_email)
+          expect(User::SendEmailWorker).to have_received(:perform_async).with(
+            'email_address_verification',
+            { 'email_verification_code' => an_instance_of(String) },
+            'test-user1@example.com',
+          )
         end
       end
 
@@ -81,7 +84,11 @@ deleted_at: Time.zone.now,)
 
         it 'returns 200' do
           is_expected.to eq 200
-          expect(blastengine_mock).to have_received(:send_email)
+          expect(User::SendEmailWorker).to have_received(:perform_async).with(
+            'email_address_verification',
+            { 'email_verification_code' => an_instance_of(String) },
+            'test-user1@example.com',
+          )
         end
       end
 
@@ -97,7 +104,11 @@ deleted_at: Time.zone.now,)
 
         it 'returns 200' do
           is_expected.to eq 200
-          expect(blastengine_mock).to have_received(:send_email)
+          expect(User::SendEmailWorker).to have_received(:perform_async).with(
+            'email_address_verification',
+            { 'email_verification_code' => an_instance_of(String) },
+            'test-user1@example.com',
+          )
         end
       end
 
@@ -112,7 +123,11 @@ deleted_at: Time.zone.now,)
 
         it 'returns 200' do
           is_expected.to eq 200
-          expect(blastengine_mock).to have_received(:send_email)
+          expect(User::SendEmailWorker).to have_received(:perform_async).with(
+            'email_address_verification',
+            { 'email_verification_code' => an_instance_of(String) },
+            'test-user1@example.com',
+          )
           # 大文字で登録されないことを確認
           expect(User.find_by(email: 'TEST-USER1@EXAMPLE.COM')).to be_nil
           expect(User.find_by(email: 'test-user1@example.com')).to be_present
@@ -138,7 +153,11 @@ deleted_at: Time.zone.now,)
 
         it 'returns 200' do
           is_expected.to eq 200
-          expect(blastengine_mock).to have_received(:send_email)
+          expect(User::SendEmailWorker).to have_received(:perform_async).with(
+            'email_address_verification',
+            { 'email_verification_code' => an_instance_of(String) },
+            'test-user1@example.com',
+          )
           # 大文字で登録されないことを確認
           expect(User.find_by(email: 'TEST-USER1@EXAMPLE.COM')).to be_nil
           expect(User.find_by(email: 'test-user1@example.com')).to be_present

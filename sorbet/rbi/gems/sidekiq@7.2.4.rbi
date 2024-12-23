@@ -86,10 +86,10 @@ module Sidekiq
     # source://sidekiq//lib/sidekiq.rb#76
     def strict_args!(mode = T.unsafe(nil)); end
 
-    # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#33
+    # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#40
     def transactional_push!; end
 
-    # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/sharding.rb#8
+    # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/sharding.rb#8
     def via(pool); end
 
     # source://sidekiq//lib/sidekiq.rb#44
@@ -198,7 +198,7 @@ class Sidekiq::Client
   # source://sidekiq//lib/sidekiq/client.rb#248
   def atomic_push(conn, payloads); end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/batch/client.rb#35
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/batch/client.rb#35
   def raw_push(payloads); end
 
   class << self
@@ -237,7 +237,7 @@ class Sidekiq::Client
     # source://sidekiq//lib/sidekiq/client.rb#177
     def push_bulk(*_arg0, **_arg1, &_arg2); end
 
-    # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/push.rb#91
+    # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/push.rb#94
     def reliable_push!; end
 
     # Allows sharding of jobs across any number of Redis instances.  All jobs
@@ -282,10 +282,13 @@ module Sidekiq::Component
   # source://sidekiq//lib/sidekiq/component.rb#43
   def identity; end
 
+  # source://sidekiq-ent/7.2.4/lib/sidekiq-ent.rb#60
+  def leader?; end
+
   # source://sidekiq//lib/sidekiq/component.rb#23
   def logger; end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/metrics.rb#37
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/metrics.rb#37
   def metrics(&block); end
 
   # source://sidekiq//lib/sidekiq/component.rb#39
@@ -371,7 +374,7 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#106
   def default_capsule(&block); end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/metrics.rb#6
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/metrics.rb#6
   def dogstatsd=(thing); end
 
   # Register a proc to handle any error which occurs within the Sidekiq process.
@@ -396,6 +399,9 @@ class Sidekiq::Config
   # source://forwardable/1.3.3/forwardable.rb#231
   def has_key?(*args, **_arg1, &block); end
 
+  # source://sidekiq-ent/7.2.4/lib/sidekiq-ent/liveness.rb#63
+  def health_check(iface = T.unsafe(nil), &block); end
+
   # source://forwardable/1.3.3/forwardable.rb#231
   def key?(*args, **_arg1, &block); end
 
@@ -413,7 +419,7 @@ class Sidekiq::Config
   # source://forwardable/1.3.3/forwardable.rb#231
   def merge!(*args, **_arg1, &block); end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/metrics.rb#16
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/metrics.rb#16
   def metrics(&block); end
 
   # source://sidekiq//lib/sidekiq/config.rb#136
@@ -432,6 +438,9 @@ class Sidekiq::Config
   #
   # source://sidekiq//lib/sidekiq/config.rb#235
   def on(event, &block); end
+
+  # source://sidekiq-ent/7.2.4/lib/sidekiq-ent/periodic.rb#18
+  def periodic; end
 
   # source://sidekiq//lib/sidekiq/config.rb#90
   def queues; end
@@ -471,21 +480,24 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#181
   def register(name, instance); end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq-pro.rb#61
+  # source://sidekiq-pro/7.2.1/lib/sidekiq-pro.rb#61
   def reliable!; end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq-pro.rb#56
+  # source://sidekiq-pro/7.2.1/lib/sidekiq-pro.rb#56
   def reliable_scheduler!; end
+
+  # source://sidekiq-ent/7.2.4/lib/sidekiq-ent/metrics.rb#7
+  def retain_history(interval = T.unsafe(nil), &block); end
 
   # @yield [@server_chain]
   #
   # source://sidekiq//lib/sidekiq/config.rb#100
   def server_middleware; end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/metrics.rb#6
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/metrics.rb#6
   def statsd=(thing); end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq-pro.rb#35
+  # source://sidekiq-pro/7.2.1/lib/sidekiq-pro.rb#35
   def super_fetch!(options = T.unsafe(nil), &block); end
 
   # source://sidekiq//lib/sidekiq/config.rb#58
@@ -591,13 +603,13 @@ module Sidekiq::Job
   mixes_in_class_methods ::Sidekiq::Job::Options::ClassMethods
   mixes_in_class_methods ::Sidekiq::Job::ClassMethods
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/job.rb#7
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/job.rb#7
   def batch; end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/job.rb#5
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/job.rb#5
   def bid; end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/job.rb#5
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/job.rb#5
   def bid=(_arg0); end
 
   # Returns the value of attribute jid.
@@ -615,7 +627,7 @@ module Sidekiq::Job
   # source://sidekiq//lib/sidekiq/job.rb#165
   def logger; end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/job.rb#12
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/job.rb#12
   def valid_within_batch?; end
 
   class << self
@@ -1631,10 +1643,10 @@ class Sidekiq::Queue
   # source://sidekiq//lib/sidekiq/api.rb#311
   def clear; end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/api.rb#69
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/api.rb#69
   def delete_by_class(klass); end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/api.rb#52
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/api.rb#52
   def delete_job(jid); end
 
   # source://sidekiq//lib/sidekiq/api.rb#275
@@ -1665,12 +1677,12 @@ class Sidekiq::Queue
   # source://sidekiq//lib/sidekiq/api.rb#238
   def name; end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/api.rb#114
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/api.rb#114
   def pause!; end
 
   # @return [Boolean] if the queue is currently paused
   #
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/api.rb#130
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/api.rb#130
   def paused?; end
 
   # The current size of the queue within Redis.
@@ -1681,7 +1693,7 @@ class Sidekiq::Queue
   # source://sidekiq//lib/sidekiq/api.rb#250
   def size; end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/api.rb#100
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/api.rb#100
   def unpause!; end
 
   # delete all jobs within this queue
@@ -1721,6 +1733,9 @@ class Sidekiq::Rails::Reloader
 
   # source://sidekiq//lib/sidekiq/rails.rb#20
   def inspect; end
+
+  # source://sidekiq//lib/sidekiq/rails.rb#24
+  def to_hash; end
 end
 
 # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#8
@@ -1761,154 +1776,154 @@ end
 # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#15
 module Sidekiq::RedisClientAdapter::CompatMethods
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def bitfield(*args); end
+  def bitfield(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def bitfield_ro(*args); end
+  def bitfield_ro(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def del(*args); end
+  def del(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#20
   def evalsha(sha, keys, argv); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def exists(*args); end
+  def exists(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def expire(*args); end
+  def expire(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def flushdb(*args); end
+  def flushdb(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def get(*args); end
+  def get(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hdel(*args); end
+  def hdel(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hget(*args); end
+  def hget(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hgetall(*args); end
+  def hgetall(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hincrby(*args); end
+  def hincrby(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hlen(*args); end
+  def hlen(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hmget(*args); end
+  def hmget(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hset(*args); end
+  def hset(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hsetnx(*args); end
+  def hsetnx(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def incr(*args); end
+  def incr(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def incrby(*args); end
+  def incrby(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#16
   def info; end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def lindex(*args); end
+  def lindex(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def llen(*args); end
+  def llen(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def lmove(*args); end
+  def lmove(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def lpop(*args); end
+  def lpop(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def lpush(*args); end
+  def lpush(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def lrange(*args); end
+  def lrange(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def lrem(*args); end
+  def lrem(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def mget(*args); end
+  def mget(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def mset(*args); end
+  def mset(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def ping(*args); end
+  def ping(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def pttl(*args); end
+  def pttl(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def publish(*args); end
+  def publish(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def rpop(*args); end
+  def rpop(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def rpush(*args); end
+  def rpush(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def sadd(*args); end
+  def sadd(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def scard(*args); end
+  def scard(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def script(*args); end
+  def script(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def set(*args); end
+  def set(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def sismember(*args); end
+  def sismember(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def smembers(*args); end
+  def smembers(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def srem(*args); end
+  def srem(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def ttl(*args); end
+  def ttl(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def type(*args); end
+  def type(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def unlink(*args); end
+  def unlink(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zadd(*args); end
+  def zadd(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zcard(*args); end
+  def zcard(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zincrby(*args); end
+  def zincrby(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zrange(*args); end
+  def zrange(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zrem(*args); end
+  def zrem(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zremrangebyrank(*args); end
+  def zremrangebyrank(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zremrangebyscore(*args); end
+  def zremrangebyscore(*args, **kwargs); end
 
   private
 
@@ -2012,7 +2027,7 @@ module Sidekiq::ServerMiddleware
   # source://sidekiq//lib/sidekiq/middleware/modules.rb#10
   def logger; end
 
-  # source://sidekiq-pro/7.2.0/lib/sidekiq/pro/metrics.rb#31
+  # source://sidekiq-pro/7.2.1/lib/sidekiq/pro/metrics.rb#31
   def metrics(&block); end
 
   # source://sidekiq//lib/sidekiq/middleware/modules.rb#14
@@ -2248,14 +2263,19 @@ class Sidekiq::TransactionAwareClient
   # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#8
   def initialize(pool: T.unsafe(nil), config: T.unsafe(nil)); end
 
+  # @return [Boolean]
+  #
   # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#12
+  def batching?; end
+
+  # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#16
   def push(item); end
 
   # We don't provide transactionality for push_bulk because we don't want
   # to hold potentially hundreds of thousands of job records in memory due to
   # a long running enqueue process.
   #
-  # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#24
+  # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#31
   def push_bulk(items); end
 end
 
@@ -2264,53 +2284,53 @@ Sidekiq::VERSION = T.let(T.unsafe(nil), String)
 
 # Sidekiq::Work represents a job which is currently executing.
 #
-# source://sidekiq//lib/sidekiq/api.rb#1142
+# source://sidekiq//lib/sidekiq/api.rb#1156
 class Sidekiq::Work
   # @return [Work] a new instance of Work
   #
-  # source://sidekiq//lib/sidekiq/api.rb#1146
+  # source://sidekiq//lib/sidekiq/api.rb#1160
   def initialize(pid, tid, hsh); end
 
   # deprecated
   #
-  # source://sidekiq//lib/sidekiq/api.rb#1170
+  # source://sidekiq//lib/sidekiq/api.rb#1184
   def [](key); end
 
-  # source://sidekiq//lib/sidekiq/api.rb#1161
+  # source://sidekiq//lib/sidekiq/api.rb#1175
   def job; end
 
-  # source://sidekiq//lib/sidekiq/api.rb#1184
+  # source://sidekiq//lib/sidekiq/api.rb#1198
   def method_missing(*all); end
 
-  # source://sidekiq//lib/sidekiq/api.rb#1165
+  # source://sidekiq//lib/sidekiq/api.rb#1179
   def payload; end
 
   # Returns the value of attribute process_id.
   #
-  # source://sidekiq//lib/sidekiq/api.rb#1143
+  # source://sidekiq//lib/sidekiq/api.rb#1157
   def process_id; end
 
-  # source://sidekiq//lib/sidekiq/api.rb#1153
+  # source://sidekiq//lib/sidekiq/api.rb#1167
   def queue; end
 
   # @api private
   #
-  # source://sidekiq//lib/sidekiq/api.rb#1180
+  # source://sidekiq//lib/sidekiq/api.rb#1194
   def raw(name); end
 
-  # source://sidekiq//lib/sidekiq/api.rb#1157
+  # source://sidekiq//lib/sidekiq/api.rb#1171
   def run_at; end
 
   # Returns the value of attribute thread_id.
   #
-  # source://sidekiq//lib/sidekiq/api.rb#1144
+  # source://sidekiq//lib/sidekiq/api.rb#1158
   def thread_id; end
 
   private
 
   # @return [Boolean]
   #
-  # source://sidekiq//lib/sidekiq/api.rb#1188
+  # source://sidekiq//lib/sidekiq/api.rb#1202
   def respond_to_missing?(name); end
 end
 
@@ -2340,6 +2360,15 @@ class Sidekiq::WorkSet
   # source://sidekiq//lib/sidekiq/api.rb#1096
   def each(&block); end
 
+  # Find the work which represents a job with the given JID.
+  # *This is a slow O(n) operation*.  Do not use for app logic.
+  #
+  # @param jid [String] the job identifier
+  # @return [Sidekiq::Work] the work or nil
+  #
+  # source://sidekiq//lib/sidekiq/api.rb#1146
+  def find_work_by_jid(jid); end
+
   # Note that #size is only as accurate as Sidekiq's heartbeat,
   # which happens every 5 seconds.  It is NOT real-time.
   #
@@ -2367,5 +2396,5 @@ Sidekiq::Worker = Sidekiq::Job
 # Is "worker" a process, a type of job, a thread? Undefined!
 # WorkSet better describes the data.
 #
-# source://sidekiq//lib/sidekiq/api.rb#1196
+# source://sidekiq//lib/sidekiq/api.rb#1210
 Sidekiq::Workers = Sidekiq::WorkSet

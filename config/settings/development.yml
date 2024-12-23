@@ -3,3 +3,5 @@ sms:
 domains:
   admin: idp.localhost:3000
   ruler: localhost:3000
+blastengine:
+  rate_limit: 8

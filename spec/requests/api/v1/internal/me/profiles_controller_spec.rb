@@ -63,17 +63,10 @@ RSpec.describe '[ Profiles API ]' do
         TEXT
       )
     }
-    let(:blastengine_mock) {
-      instance_double(Blastengine::API)
-    }
 
     before do
       current_user
       email_template
-      allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
-      allow(blastengine_mock).to receive(:send_email).and_return({
-        delivery_id: 1,
-      })
     end
 
     context 'when no session' do
@@ -309,8 +302,6 @@ RSpec.describe '[ Profiles API ]' do
           it 'should be set enabled to true' do
             is_expected.to eq 200
             expect(body_hash['enabled']).to be true
-            # 新規登録メールはBlastのレートリミットを圧迫するので一旦廃止
-            # expect(blastengine_mock).to have_received(:send_email)
           end
         end
 
@@ -320,8 +311,6 @@ RSpec.describe '[ Profiles API ]' do
           it 'should be set enabled to true' do
             is_expected.to eq 200
             expect(body_hash['enabled']).to be false
-            # 新規登録メールはBlastのレートリミットを圧迫するので一旦廃止
-            # expect(blastengine_mock).not_to have_received(:send_email)
           end
         end
 
@@ -334,8 +323,6 @@ RSpec.describe '[ Profiles API ]' do
           it 'should be set enabled to true' do
             is_expected.to eq 200
             expect(body_hash['enabled']).to be true
-            # 新規登録メールはBlastのレートリミットを圧迫するので一旦廃止
-            # expect(blastengine_mock).to have_received(:send_email)
           end
         end
       end

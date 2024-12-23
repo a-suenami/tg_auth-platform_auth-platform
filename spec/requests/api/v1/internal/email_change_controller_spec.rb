@@ -18,19 +18,14 @@ RSpec.describe '[ email change API ]' do
         TEXT
       )
     }
-    let(:blastengine_mock) {
-      instance_double(Blastengine::API)
-    }
 
     include_context 'current user session is present'
 
     before do
       current_user
       email_template
-      allow(Blastengine::API).to receive(:new).and_return(blastengine_mock)
-      allow(blastengine_mock).to receive(:send_email).and_return({
-        delivery_id: 1,
-      })
+      # User::SendEmailWorker のモックをセットアップ
+      allow(User::SendEmailWorker).to receive(:perform_async)
     end
 
     context 'when email vaild' do
@@ -42,7 +37,11 @@ RSpec.describe '[ email change API ]' do
 
       it 'returns 204' do
         is_expected.to eq 204
-        expect(blastengine_mock).to have_received(:send_email)
+        expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          'email_address_change',
+          { 'email_verification_code' => an_instance_of(String) },
+          'change-email@example.com',
+        )
         expect(Users::EmailVerifier.find_by(user_id: current_user.id, verifier_type: :email_change, email: 'change-email@example.com').email).to eq('change-email@example.com')
       end
     end
@@ -64,7 +63,11 @@ RSpec.describe '[ email change API ]' do
       # 重複していても存在確認に利用されないように、エラーは返さないしメールも送る
       it 'returns 204' do
         is_expected.to eq 204
-        expect(blastengine_mock).to have_received(:send_email)
+        expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          'email_address_change',
+          { 'email_verification_code' => an_instance_of(String) },
+          'change-email@example.com',
+        )
         expect(Users::EmailVerifier.find_by(user_id: current_user.id, verifier_type: :email_change, email: 'change-email@example.com').email).to eq('change-email@example.com')
       end
     end
@@ -90,7 +93,11 @@ RSpec.describe '[ email change API ]' do
 
       it 'returns 204' do
         is_expected.to eq 204
-        expect(blastengine_mock).to have_received(:send_email)
+        expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          'email_address_change',
+          { 'email_verification_code' => an_instance_of(String) },
+          'change-email@example.com',
+        )
         # 大文字で登録されないことを確認
         expect(Users::EmailVerifier.find_by(email: 'CHANGE-EMAIL@EXAMPLE.COM')).to be_nil
         expect(Users::EmailVerifier.find_by(email: 'change-email@example.com')).to be_present
@@ -114,7 +121,11 @@ RSpec.describe '[ email change API ]' do
 
       it 'returns 204' do
         is_expected.to eq 204
-        expect(blastengine_mock).to have_received(:send_email)
+        expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          'email_address_change',
+          { 'email_verification_code' => an_instance_of(String) },
+          'change-email@example.com',
+        )
         # 大文字で登録されないことを確認
         expect(Users::EmailVerifier.find_by(email: 'CHANGE-EMAIL@EXAMPLE.COM')).to be_nil
         expect(Users::EmailVerifier.find_by(email: 'change-email@example.com')).to be_present

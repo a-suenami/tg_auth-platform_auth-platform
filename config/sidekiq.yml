@@ -8,8 +8,11 @@ staging:
   :concurrency: <%= (ENV['RAILS_MAX_THREADS'] || 5).to_i - 1 %>
 production:
   :concurrency: <%= (ENV['RAILS_MAX_THREADS'] || 5).to_i - 1 %>
-:queues:
-  - default
+:queues: # queues are named by priority
+  - [realtime_priority, 8]
+  - [high_priority, 4]
+  - [default, 2]
+  - [low_priority, 1]
 :scheduler:
   :schedule:
     expire_email_verifiers:
