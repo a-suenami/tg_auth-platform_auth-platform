@@ -27,7 +27,7 @@ module Authentication
 
     def send_verification_email(user, email_verifier)
       template_params = { email_verification_code: email_verifier.code }.transform_keys(&:to_s)
-      User::SendEmailWorker.perform_async('email_address_verification', template_params, user.email)
+      User::SendEmailWorker.perform_async(Tenant.current.id, 'email_address_verification', template_params, user.email)
     end
   end
 end

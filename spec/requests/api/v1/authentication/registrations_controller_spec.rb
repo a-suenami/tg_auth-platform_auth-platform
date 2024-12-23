@@ -17,6 +17,19 @@ RSpec.describe '[ Registrations API ]' do
         TEXT
       )
     }
+    let(:other_tenant) { create(:tenant, id: 'other') }
+    let(:other_tenant_email_template) {
+      create(:email_template,
+        tenant_id: other_tenant.id,
+        name: 'メールテンプレート名',
+        template_type: 'email_address_verification',
+        subject: 'email確認のお願い',
+        body: <<~TEXT,
+          <p>認証コードは以下です</p>
+          <p>{{ email_verification_code }}</p>
+        TEXT
+      )
+    }
     let(:tenant_setting) {
       create(:tenant_setting, tenant_id: current_tenant.id, google_cloud_service_account: {}, google_cloud_project_id: 'project_id', recaptcha_enterprise_checkbox_site_key: 'checkbox_site_key',
 recaptcha_enterprise_score_based_site_key: 'score_based_site_key',)
@@ -27,6 +40,7 @@ deleted_at: Time.zone.now,)
     }
 
     before do
+      other_tenant_email_template
       email_template
       tenant_setting
       deleted_user
@@ -47,6 +61,7 @@ deleted_at: Time.zone.now,)
         it 'returns 200' do
           is_expected.to eq 200
           expect(User::SendEmailWorker).to have_received(:perform_async).with(
+            current_tenant.id,
             'email_address_verification',
             { 'email_verification_code' => an_instance_of(String) },
             'test-user1@example.com',
@@ -66,6 +81,7 @@ deleted_at: Time.zone.now,)
         it 'returns 200' do
           is_expected.to eq 200
           expect(User::SendEmailWorker).to have_received(:perform_async).with(
+            current_tenant.id,
             'email_address_verification',
             { 'email_verification_code' => an_instance_of(String) },
             'test-user1@example.com',
@@ -85,6 +101,7 @@ deleted_at: Time.zone.now,)
         it 'returns 200' do
           is_expected.to eq 200
           expect(User::SendEmailWorker).to have_received(:perform_async).with(
+            current_tenant.id,
             'email_address_verification',
             { 'email_verification_code' => an_instance_of(String) },
             'test-user1@example.com',
@@ -105,6 +122,7 @@ deleted_at: Time.zone.now,)
         it 'returns 200' do
           is_expected.to eq 200
           expect(User::SendEmailWorker).to have_received(:perform_async).with(
+            current_tenant.id,
             'email_address_verification',
             { 'email_verification_code' => an_instance_of(String) },
             'test-user1@example.com',
@@ -124,6 +142,7 @@ deleted_at: Time.zone.now,)
         it 'returns 200' do
           is_expected.to eq 200
           expect(User::SendEmailWorker).to have_received(:perform_async).with(
+            current_tenant.id,
             'email_address_verification',
             { 'email_verification_code' => an_instance_of(String) },
             'test-user1@example.com',
@@ -154,6 +173,7 @@ deleted_at: Time.zone.now,)
         it 'returns 200' do
           is_expected.to eq 200
           expect(User::SendEmailWorker).to have_received(:perform_async).with(
+            current_tenant.id,
             'email_address_verification',
             { 'email_verification_code' => an_instance_of(String) },
             'test-user1@example.com',
