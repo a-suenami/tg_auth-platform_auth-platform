@@ -1,4 +1,16 @@
 {
+  "capacityProviderStrategy": [
+    {
+      "base": 1,
+      "capacityProvider": "FARGATE",
+      "weight": 100
+    },
+    {
+      "base": 0,
+      "capacityProvider": "FARGATE_SPOT",
+      "weight": 100
+    }
+  ],
   "deploymentConfiguration": {
     "deploymentCircuitBreaker": {
       "enable": false,
@@ -11,20 +23,30 @@
   "enableECSManagedTags": true,
   "enableExecuteCommand": true,
   "healthCheckGracePeriodSeconds": 0,
-  "launchType": "EC2",
   "loadBalancers": [
     {
       "containerName": "nginx",
       "containerPort": 80,
-      "targetGroupArn": "arn:aws:elasticloadbalancing:ap-northeast-1:843188904699:targetgroup/id-platform-ecs-default-prod/b73f56d595255721"
+      "targetGroupArn": "arn:aws:elasticloadbalancing:ap-northeast-1:843188904699:targetgroup/id-platform-ecs-default-prod-v2/d82d5897ae22c206"
     }
   ],
-  "placementConstraints": [
-    {
-      "type": "distinctInstance"
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "assignPublicIp": "DISABLED",
+      "securityGroups": [
+        "sg-07ac57ad423c9b626"
+      ],
+      "subnets": [
+        "subnet-0d185ebd1e11de7d4",
+        "subnet-09ef301929a4f5769",
+        "subnet-0ae11493f131bd44d"
+      ]
     }
-  ],
+  },
+  "placementConstraints": [],
   "placementStrategy": [],
+  "platformFamily": "Linux",
+  "platformVersion": "LATEST",
   "schedulingStrategy": "REPLICA",
   "serviceRegistries": [],
   "tags": []

@@ -10,7 +10,6 @@ local memory = 2048 - 256 - 50;
   "memory": "2048",
   "containerDefinitions": [
     {
-      "command": [],
       "entryPoint": [],
       "environment": app_environment,
       "essential": true,
@@ -49,7 +48,6 @@ local memory = 2048 - 256 - 50;
       ],
       "cpu": 256,
       "memoryReservation": 256,
-      "entryPoint": [],
       "environment": [
         {
           "name": "RULER_ALLOW_IPS",
