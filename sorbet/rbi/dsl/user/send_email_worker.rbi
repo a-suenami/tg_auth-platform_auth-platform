@@ -6,27 +6,36 @@
 
 class User::SendEmailWorker
   class << self
-    sig { params(template_type: ::String, params: T::Hash[T.untyped, T.untyped], send_to: ::String).returns(String) }
-    def perform_async(template_type, params, send_to); end
+    sig do
+      params(
+        tenant_id: ::String,
+        template_type: ::String,
+        params: T::Hash[T.untyped, T.untyped],
+        send_to: ::String
+      ).returns(String)
+    end
+    def perform_async(tenant_id, template_type, params, send_to); end
 
     sig do
       params(
         interval: T.any(DateTime, Time),
+        tenant_id: ::String,
         template_type: ::String,
         params: T::Hash[T.untyped, T.untyped],
         send_to: ::String
       ).returns(String)
     end
-    def perform_at(interval, template_type, params, send_to); end
+    def perform_at(interval, tenant_id, template_type, params, send_to); end
 
     sig do
       params(
         interval: Numeric,
+        tenant_id: ::String,
         template_type: ::String,
         params: T::Hash[T.untyped, T.untyped],
         send_to: ::String
       ).returns(String)
     end
-    def perform_in(interval, template_type, params, send_to); end
+    def perform_in(interval, tenant_id, template_type, params, send_to); end
   end
 end
