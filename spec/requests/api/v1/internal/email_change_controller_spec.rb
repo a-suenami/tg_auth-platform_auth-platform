@@ -18,11 +18,25 @@ RSpec.describe '[ email change API ]' do
         TEXT
       )
     }
+    let(:other_tenant) { create(:tenant, id: 'other') }
+    let(:other_tenant_email_template) {
+      create(:email_template,
+        tenant_id: other_tenant.id,
+        name: 'メールテンプレート名',
+        template_type: 'email_address_change',
+        subject: 'email確認のお願い',
+        body: <<~TEXT,
+          <p>認証コードは以下です</p>
+          <p>{{ email_verification_code }}</p>
+        TEXT
+      )
+    }
 
     include_context 'current user session is present'
 
     before do
       current_user
+      other_tenant_email_template
       email_template
       # User::SendEmailWorker のモックをセットアップ
       allow(User::SendEmailWorker).to receive(:perform_async)
@@ -38,6 +52,7 @@ RSpec.describe '[ email change API ]' do
       it 'returns 204' do
         is_expected.to eq 204
         expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          current_tenant.id,
           'email_address_change',
           { 'email_verification_code' => an_instance_of(String) },
           'change-email@example.com',
@@ -64,6 +79,7 @@ RSpec.describe '[ email change API ]' do
       it 'returns 204' do
         is_expected.to eq 204
         expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          current_tenant.id,
           'email_address_change',
           { 'email_verification_code' => an_instance_of(String) },
           'change-email@example.com',
@@ -94,6 +110,7 @@ RSpec.describe '[ email change API ]' do
       it 'returns 204' do
         is_expected.to eq 204
         expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          current_tenant.id,
           'email_address_change',
           { 'email_verification_code' => an_instance_of(String) },
           'change-email@example.com',
@@ -122,6 +139,7 @@ RSpec.describe '[ email change API ]' do
       it 'returns 204' do
         is_expected.to eq 204
         expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          current_tenant.id,
           'email_address_change',
           { 'email_verification_code' => an_instance_of(String) },
           'change-email@example.com',

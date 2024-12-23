@@ -7,8 +7,9 @@ class User
     include Sidekiq::Job
     sidekiq_options queue: :low_priority, retry: 10, unique_for: 10.minutes, unique_until: :success
 
-    sig { params(template_type: String, params: Hash, send_to: String).void }
-    def perform(template_type, params, send_to)
+    sig { params(tenant_id: String, template_type: String, params: Hash, send_to: String).void }
+    def perform(tenant_id, template_type, params, send_to)
+      Tenant.current_domain = Tenant.find(tenant_id).domain
       throttle = T.let(Sidekiq::Limiter.window('blastengine', Settings.blastengine.rate_limit, :second, wait_timeout: 6.hours.to_i), Sidekiq::Limiter::Window)
 
       throttle.within_limit do

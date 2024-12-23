@@ -23,8 +23,22 @@ deleted_at: Time.zone.now,)
         TEXT
       )
     }
+    let(:other_tenant) { create(:tenant, id: 'other') }
+    let(:other_tenant_email_template) {
+      create(:email_template,
+        tenant_id: other_tenant.id,
+        name: 'メールテンプレート名',
+        template_type: 'account_lock',
+        subject: 'アカウントロック メール',
+        body: <<~TEXT,
+          <p>アカウントロックを解除するには以下のリンクをクリックしてください</p>
+          <p>{{ unlock_url }}</p>
+        TEXT
+      )
+    }
 
     before do
+      other_tenant_email_template
       email_template
       # User::SendEmailWorker のモックをセットアップ
       allow(User::SendEmailWorker).to receive(:perform_async)
@@ -151,6 +165,7 @@ deleted_at: Time.zone.now,)
         expect(AccountLock.find_by(email: 'test-user1@example.com').failed_attempts).to be 10
         expect(AccountLock.find_by(email: 'test-user1@example.com').locked?).to be true
         expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          current_tenant.id,
           'account_lock',
           { 'unlock_url' => a_string_including("https://#{current_tenant.domain}/account_locks/unlock?") },
           'test-user1@example.com',

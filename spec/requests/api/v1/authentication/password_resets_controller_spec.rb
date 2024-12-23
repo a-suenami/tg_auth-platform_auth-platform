@@ -21,6 +21,19 @@ RSpec.describe '[ Password Resets API ]' do
         TEXT
       )
     }
+    let(:other_tenant) { create(:tenant, id: 'other') }
+    let(:other_tenant_email_template) {
+      create(:email_template,
+        tenant_id: other_tenant.id,
+        name: 'メールテンプレート名',
+        template_type: 'password_reset',
+        subject: 'password reset メール',
+        body: <<~TEXT,
+          <p>以下のURLを開いてパスワードを設定してください</p>
+          <p>{{ password_reset_url }}</p>
+        TEXT
+      )
+    }
     let(:login_spa_application) {
       create(:login_spa_application, tenant_id: current_tenant.id)
     }
@@ -28,6 +41,7 @@ RSpec.describe '[ Password Resets API ]' do
     before do
       current_user
       deleted_user
+      other_tenant_email_template
       email_template
       login_spa_application
 
@@ -58,6 +72,7 @@ RSpec.describe '[ Password Resets API ]' do
       it 'returns 204' do
         is_expected.to eq 204
         expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          current_tenant.id,
           'password_reset',
           { 'password_reset_url' => a_string_including('https://example.com/password_reset/edit?password_reset_code=') },
           'test-user1@example.com',
@@ -88,6 +103,7 @@ RSpec.describe '[ Password Resets API ]' do
       it 'returns 204' do
         is_expected.to eq 204
         expect(User::SendEmailWorker).to have_received(:perform_async).with(
+          current_tenant.id,
           'password_reset',
           { 'password_reset_url' => a_string_including('https://example.com/password_reset/edit?password_reset_code=') },
           'test-user1@example.com',
