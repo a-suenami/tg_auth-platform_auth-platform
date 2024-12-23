@@ -35,7 +35,7 @@ module Authentication
 
       template_params = { password_reset_url: }.transform_keys(&:to_s)
 
-      User::SendEmailWorker.perform_async(Tenant.current.id, 'password_reset', template_params, user.email)
+      User::SendEmailWorker.perform_async(T.must(Tenant.current_id), 'password_reset', template_params, user.email)
     end
 
     def find_active_user(email:)

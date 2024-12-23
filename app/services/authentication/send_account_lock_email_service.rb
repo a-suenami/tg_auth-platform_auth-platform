@@ -29,7 +29,7 @@ module Authentication
 
       template_params = { unlock_url: }.transform_keys(&:to_s)
 
-      User::SendEmailWorker.perform_async(Tenant.current.id, 'account_lock', template_params, account_lock.email)
+      User::SendEmailWorker.perform_async(T.must(Tenant.current_id), 'account_lock', template_params, account_lock.email)
     end
   end
 end
