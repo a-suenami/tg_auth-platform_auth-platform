@@ -2,9 +2,10 @@
 
 module AppShopify::Customers
   class BaseService
-    def initialize(tenant, multipass_store)
-      @tenant = tenant
-      @multipass_store = multipass_store
+    DEFAULT_PARAMS = {}.freeze
+
+    def initialize(params = DEFAULT_PARAMS)
+      @params = params
     end
   end
 end
