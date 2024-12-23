@@ -3,7 +3,7 @@
 # ==============================================================================
 # rubocop:disable Metrics/BlockLength
 Rails.application.configure do
-  next unless Rails.env.production?
+  next unless Rails.env.production? || Rails.env.staging?
 
   config.lograge.enabled = true
   config.lograge.formatter = Lograge::Formatters::Json.new
