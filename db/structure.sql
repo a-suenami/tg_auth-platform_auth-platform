@@ -284,6 +284,7 @@ CREATE TABLE public.tenant_settings (
     recaptcha_enterprise_checkbox_site_key character varying,
     recaptcha_enterprise_score_based_site_key character varying,
     twilio_verify_service_sid character varying,
+    profile_field_rules jsonb DEFAULT '{}'::jsonb,
     sender_email character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
