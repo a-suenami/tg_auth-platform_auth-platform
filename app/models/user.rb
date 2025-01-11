@@ -62,21 +62,6 @@ class User < ApplicationRecord
   end
 
   sig { returns(T::Boolean) }
-  def set_enabled_on_completion
-    return true if self.enabled
-
-    # 1. パスワードが登録済
-    return false if self.password_digest.blank?
-    # 2. プロフィールが登録済
-    return false if self.user_profile.blank?
-    # 3. 電話番号確認済(必須の場合)
-    return false if self.tenant&.sms_verification_required && (self.sms_verified == false)
-
-    self.enabled = true
-    self.save!
-  end
-
-  sig { returns(T::Boolean) }
   def deleted
     self.deleted_at.present?
   end

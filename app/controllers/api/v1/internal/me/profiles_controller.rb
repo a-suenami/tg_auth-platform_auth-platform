@@ -4,10 +4,21 @@ module API::V1::Internal
     def show; end
 
     def update
-      Users::UpdateService.new(user_params).execute(user: @current_user)
-      @current_user.set_enabled_on_completion
-
-      render :show
+      form = UserForm.build(id: @current_user.id, params:)
+      if form.valid?
+        form.perform!
+        # reloadしないとenabledの更新が反映されない
+        @current_user.reload
+        render :show
+      else
+        # TODO: error handling
+        errors = {
+          type: 'validation_error',
+          code: 'invalid_params',
+          message: form.errors.full_messages.join(', '),
+        }
+        render json: { errors: }, status: :bad_request
+      end
     end
 
 

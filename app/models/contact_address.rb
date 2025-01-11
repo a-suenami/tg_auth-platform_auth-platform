@@ -5,8 +5,6 @@ class ContactAddress < ApplicationRecord
   include Multitenancy
   include AddressUtilisable
 
-  validates :phone_number, phone: { allow_blank: true }
-
   belongs_to :user, inverse_of: :contact_address
 
   sig { returns(T.nilable(String)) }
