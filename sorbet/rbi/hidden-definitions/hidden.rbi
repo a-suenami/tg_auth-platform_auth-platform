@@ -15,6 +15,14 @@ end
 module API::V1::Authentication::LogoutController::HelperMethods
 end
 
+module API::V1::Authentication::MFA::SmsController::HelperMethods
+  include ::ActionController::API::HelperMethods
+  def current_user(*args, **arg, &block); end
+end
+
+module API::V1::Authentication::MFA::SmsController::HelperMethods
+end
+
 module API::V1::Authentication::PasswordsController::HelperMethods
   include ::ActionController::API::HelperMethods
   def current_user(*args, **arg, &block); end
@@ -48,15 +56,13 @@ module API::V1::Private::ApplicationController::HelperMethods
 end
 
 class AccountLock
-  def autosave_associated_records_for_user(*args); end
+  include ::AccountLock::GeneratedAssociationMethods
 end
 
 module AccountLock::GeneratedAssociationMethods
-  def reset_user(); end
+end
 
-  def user_changed?(); end
-
-  def user_previously_changed?(); end
+module AccountLock::GeneratedAssociationMethods
 end
 
 module AccountLock::GeneratedAttributeMethods
@@ -3706,7 +3712,113 @@ module Admin::GeneratedAssociationMethods
 end
 
 module Admin::GeneratedAttributeMethods
+  def clear_created_at_change(); end
+
+  def clear_email_change(); end
+
+  def clear_id_change(); end
+
+  def clear_id_value_change(); end
+
+  def clear_name_change(); end
+
+  def clear_tenant_id_change(); end
+
+  def clear_uid_change(); end
+
+  def clear_updated_at_change(); end
+
+  def created_at_for_database(); end
+
+  def email_for_database(); end
+
+  def id_value_for_database(); end
+
+  def name_for_database(); end
+
+  def tenant_id_for_database(); end
+
+  def uid_for_database(); end
+
+  def updated_at_for_database(); end
+end
+
+module Admin::GeneratedAttributeMethods
   extend ::Mutex_m
+end
+
+class Admin
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class AppShopify::Customer
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ApplicationForm
+  def __callbacks(); end
+
+  def __callbacks?(); end
+
+  def _run_validate_callbacks(&block); end
+
+  def _validate_callbacks(); end
+
+  def _validators(); end
+
+  def _validators?(); end
+
+  def attribute_aliases(); end
+
+  def attribute_aliases?(); end
+
+  def attribute_method_patterns(); end
+
+  def attribute_method_patterns?(); end
+
+  def model_name(&block); end
+
+  def param_delimiter=(param_delimiter); end
+
+  def validation_context(); end
+end
+
+class ApplicationForm
+  def self.__callbacks(); end
+
+  def self.__callbacks=(value); end
+
+  def self.__callbacks?(); end
+
+  def self._validate_callbacks(); end
+
+  def self._validate_callbacks=(value); end
+
+  def self._validators(); end
+
+  def self._validators=(value); end
+
+  def self._validators?(); end
+
+  def self.attribute_aliases(); end
+
+  def self.attribute_aliases=(value); end
+
+  def self.attribute_aliases?(); end
+
+  def self.attribute_method_patterns(); end
+
+  def self.attribute_method_patterns=(value); end
+
+  def self.attribute_method_patterns?(); end
+
+  def self.param_delimiter(); end
+
+  def self.param_delimiter=(value); end
+
+  def self.param_delimiter?(); end
 end
 
 class ApplicationRecord
@@ -3737,12 +3849,7 @@ class ArgumentError
 end
 
 class Array
-  include ::JSON::Ext::Generator::GeneratorMethods::Array
   def deconstruct(); end
-
-  def shelljoin(); end
-
-  def to_csv(**options); end
 
   def to_h(); end
 end
@@ -3757,6 +3864,21 @@ class AttributeException
 end
 
 class AttributeException
+end
+
+class Authentication::SendVerificationSmsService
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class Authentication::VerifyEmailService
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class Authentication::VerifySmsService
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
 end
 
 module Aws::Record
@@ -4509,6 +4631,10 @@ end
 
 BasicObject::BasicObject = BasicObject
 
+class BasicSocket
+  def read_nonblock(len, str=T.unsafe(nil), exception: T.unsafe(nil)); end
+end
+
 module Benchmark
   def self.ms(&block); end
 end
@@ -4535,8 +4661,6 @@ class Binding
   def clone(); end
 
   def console(); end
-
-  # def irb(); end
 end
 
 class Blastengine::API
@@ -4946,77 +5070,6 @@ class Bundler::GemHelper
   include ::Rake::FileUtilsExt
   include ::FileUtils
   include ::FileUtils::StreamUtils_
-  def allowed_push_host(); end
-
-  def already_tagged?(); end
-
-  def base(); end
-
-  def build_checksum(built_gem_path=T.unsafe(nil)); end
-
-  def build_gem(); end
-
-  def built_gem_path(); end
-
-  def clean?(); end
-
-  def committed?(); end
-
-  def current_branch(); end
-
-  def default_remote(); end
-
-  def gem_command(); end
-
-  def gem_key(); end
-
-  def gem_push?(); end
-
-  def gem_push_host(); end
-
-  def gemspec(); end
-
-  def git_push(remote=T.unsafe(nil)); end
-
-  def guard_clean(); end
-
-  def initialize(base=T.unsafe(nil), name=T.unsafe(nil)); end
-
-  def install(); end
-
-  def install_gem(built_gem_path=T.unsafe(nil), local=T.unsafe(nil)); end
-
-  def name(); end
-
-  def rubygem_push(path); end
-
-  def sh(cmd, &block); end
-
-  def sh_with_input(cmd); end
-
-  def sh_with_status(cmd, &block); end
-
-  def spec_path(); end
-
-  def tag_prefix=(tag_prefix); end
-
-  def tag_version(); end
-
-  def version(); end
-
-  def version_tag(); end
-end
-
-class Bundler::GemHelper
-  def self.gemspec(&block); end
-
-  def self.install_tasks(opts=T.unsafe(nil)); end
-
-  def self.instance(); end
-
-  def self.instance=(instance); end
-
-  def self.tag_prefix=(prefix); end
 end
 
 class Bundler::GemHelpers::PlatformMatch
@@ -7453,7 +7506,11 @@ end
 module CGI::Escape
   def escapeURIComponent(arg); end
 
+  def escape_uri_component(arg); end
+
   def unescapeURIComponent(*arg); end
+
+  def unescape_uri_component(*arg); end
 end
 
 module CGI::HtmlExtension
@@ -7508,7 +7565,11 @@ end
 module CGI::Util
   def escapeURIComponent(arg); end
 
+  def escape_uri_component(arg); end
+
   def unescapeURIComponent(*arg); end
+
+  def unescape_uri_component(*arg); end
 end
 
 module Choice
@@ -7698,8 +7759,6 @@ class ContactAddress
   include ::JpPrefecture
   def autosave_associated_records_for_user(*args); end
 
-  def domestic_address?(*args, **arg, &blk); end
-
   def prefecture(); end
 end
 
@@ -7709,6 +7768,58 @@ module ContactAddress::GeneratedAssociationMethods
   def user_changed?(); end
 
   def user_previously_changed?(); end
+end
+
+module ContactAddress::GeneratedAttributeMethods
+  def building_for_database(); end
+
+  def city_for_database(); end
+
+  def clear_building_change(); end
+
+  def clear_city_change(); end
+
+  def clear_country_code_change(); end
+
+  def clear_created_at_change(); end
+
+  def clear_id_change(); end
+
+  def clear_id_value_change(); end
+
+  def clear_phone_number_change(); end
+
+  def clear_prefecture_code_change(); end
+
+  def clear_street_change(); end
+
+  def clear_tenant_id_change(); end
+
+  def clear_updated_at_change(); end
+
+  def clear_user_id_change(); end
+
+  def clear_zip_code_change(); end
+
+  def country_code_for_database(); end
+
+  def created_at_for_database(); end
+
+  def id_value_for_database(); end
+
+  def phone_number_for_database(); end
+
+  def prefecture_code_for_database(); end
+
+  def street_for_database(); end
+
+  def tenant_id_for_database(); end
+
+  def updated_at_for_database(); end
+
+  def user_id_for_database(); end
+
+  def zip_code_for_database(); end
 end
 
 module ContactAddress::GeneratedAttributeMethods
@@ -7757,8 +7868,6 @@ class DeliveryAddress
   include ::JpPrefecture
   def autosave_associated_records_for_user(*args); end
 
-  def domestic_address?(*args, **arg, &blk); end
-
   def prefecture(); end
 end
 
@@ -7768,6 +7877,62 @@ module DeliveryAddress::GeneratedAssociationMethods
   def user_changed?(); end
 
   def user_previously_changed?(); end
+end
+
+module DeliveryAddress::GeneratedAttributeMethods
+  def building_for_database(); end
+
+  def city_for_database(); end
+
+  def clear_building_change(); end
+
+  def clear_city_change(); end
+
+  def clear_country_code_change(); end
+
+  def clear_created_at_change(); end
+
+  def clear_id_change(); end
+
+  def clear_id_value_change(); end
+
+  def clear_is_default_change(); end
+
+  def clear_phone_number_change(); end
+
+  def clear_prefecture_code_change(); end
+
+  def clear_street_change(); end
+
+  def clear_tenant_id_change(); end
+
+  def clear_updated_at_change(); end
+
+  def clear_user_id_change(); end
+
+  def clear_zip_code_change(); end
+
+  def country_code_for_database(); end
+
+  def created_at_for_database(); end
+
+  def id_value_for_database(); end
+
+  def is_default_for_database(); end
+
+  def phone_number_for_database(); end
+
+  def prefecture_code_for_database(); end
+
+  def street_for_database(); end
+
+  def tenant_id_for_database(); end
+
+  def updated_at_for_database(); end
+
+  def user_id_for_database(); end
+
+  def zip_code_for_database(); end
 end
 
 module DeliveryAddress::GeneratedAttributeMethods
@@ -7936,6 +8101,8 @@ module Digest
 end
 
 class Dir
+  def chdir(); end
+
   def children(); end
 
   def each_child(); end
@@ -7945,12 +8112,636 @@ module Dir::Tmpname
   UNUSABLE_CHARS = ::T.let(nil, ::T.untyped)
 end
 
+class Dir
+  def self.fchdir(arg); end
+
+  def self.for_fd(arg); end
+end
+
 module Doorkeeper::AccessGrant::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
 module Doorkeeper::AccessToken::GeneratedAttributeMethods
   extend ::Mutex_m
+end
+
+module Doorkeeper::Application::GeneratedAttributeMethods
+  def allowed_logout_urls(); end
+
+  def allowed_logout_urls=(value); end
+
+  def allowed_logout_urls?(); end
+
+  def allowed_logout_urls_before_last_save(); end
+
+  def allowed_logout_urls_before_type_cast(); end
+
+  def allowed_logout_urls_came_from_user?(); end
+
+  def allowed_logout_urls_change(); end
+
+  def allowed_logout_urls_change_to_be_saved(); end
+
+  def allowed_logout_urls_changed?(**options); end
+
+  def allowed_logout_urls_for_database(); end
+
+  def allowed_logout_urls_in_database(); end
+
+  def allowed_logout_urls_previous_change(); end
+
+  def allowed_logout_urls_previously_changed?(**options); end
+
+  def allowed_logout_urls_previously_was(); end
+
+  def allowed_logout_urls_was(); end
+
+  def allowed_logout_urls_will_change!(); end
+
+  def clear_allowed_logout_urls_change(); end
+
+  def clear_confidential_change(); end
+
+  def clear_created_at_change(); end
+
+  def clear_enable_client_credential_flow_change(); end
+
+  def clear_enable_push_event_change(); end
+
+  def clear_id_change(); end
+
+  def clear_id_value_change(); end
+
+  def clear_name_change(); end
+
+  def clear_redirect_uri_change(); end
+
+  def clear_require_sms_mfa_change(); end
+
+  def clear_scopes_change(); end
+
+  def clear_secret_change(); end
+
+  def clear_tenant_id_change(); end
+
+  def clear_uid_change(); end
+
+  def clear_updated_at_change(); end
+
+  def confidential(); end
+
+  def confidential=(value); end
+
+  def confidential?(); end
+
+  def confidential_before_last_save(); end
+
+  def confidential_before_type_cast(); end
+
+  def confidential_came_from_user?(); end
+
+  def confidential_change(); end
+
+  def confidential_change_to_be_saved(); end
+
+  def confidential_changed?(**options); end
+
+  def confidential_for_database(); end
+
+  def confidential_in_database(); end
+
+  def confidential_previous_change(); end
+
+  def confidential_previously_changed?(**options); end
+
+  def confidential_previously_was(); end
+
+  def confidential_was(); end
+
+  def confidential_will_change!(); end
+
+  def created_at(); end
+
+  def created_at=(value); end
+
+  def created_at?(); end
+
+  def created_at_before_last_save(); end
+
+  def created_at_before_type_cast(); end
+
+  def created_at_came_from_user?(); end
+
+  def created_at_change(); end
+
+  def created_at_change_to_be_saved(); end
+
+  def created_at_changed?(**options); end
+
+  def created_at_for_database(); end
+
+  def created_at_in_database(); end
+
+  def created_at_previous_change(); end
+
+  def created_at_previously_changed?(**options); end
+
+  def created_at_previously_was(); end
+
+  def created_at_was(); end
+
+  def created_at_will_change!(); end
+
+  def enable_client_credential_flow(); end
+
+  def enable_client_credential_flow=(value); end
+
+  def enable_client_credential_flow?(); end
+
+  def enable_client_credential_flow_before_last_save(); end
+
+  def enable_client_credential_flow_before_type_cast(); end
+
+  def enable_client_credential_flow_came_from_user?(); end
+
+  def enable_client_credential_flow_change(); end
+
+  def enable_client_credential_flow_change_to_be_saved(); end
+
+  def enable_client_credential_flow_changed?(**options); end
+
+  def enable_client_credential_flow_for_database(); end
+
+  def enable_client_credential_flow_in_database(); end
+
+  def enable_client_credential_flow_previous_change(); end
+
+  def enable_client_credential_flow_previously_changed?(**options); end
+
+  def enable_client_credential_flow_previously_was(); end
+
+  def enable_client_credential_flow_was(); end
+
+  def enable_client_credential_flow_will_change!(); end
+
+  def enable_push_event(); end
+
+  def enable_push_event=(value); end
+
+  def enable_push_event?(); end
+
+  def enable_push_event_before_last_save(); end
+
+  def enable_push_event_before_type_cast(); end
+
+  def enable_push_event_came_from_user?(); end
+
+  def enable_push_event_change(); end
+
+  def enable_push_event_change_to_be_saved(); end
+
+  def enable_push_event_changed?(**options); end
+
+  def enable_push_event_for_database(); end
+
+  def enable_push_event_in_database(); end
+
+  def enable_push_event_previous_change(); end
+
+  def enable_push_event_previously_changed?(**options); end
+
+  def enable_push_event_previously_was(); end
+
+  def enable_push_event_was(); end
+
+  def enable_push_event_will_change!(); end
+
+  def id_before_last_save(); end
+
+  def id_came_from_user?(); end
+
+  def id_change(); end
+
+  def id_change_to_be_saved(); end
+
+  def id_changed?(**options); end
+
+  def id_previous_change(); end
+
+  def id_previously_changed?(**options); end
+
+  def id_previously_was(); end
+
+  def id_value(*args, **arg); end
+
+  def id_value=(value); end
+
+  def id_value?(); end
+
+  def id_value_before_last_save(); end
+
+  def id_value_before_type_cast(); end
+
+  def id_value_came_from_user?(); end
+
+  def id_value_change(); end
+
+  def id_value_change_to_be_saved(); end
+
+  def id_value_changed?(**options); end
+
+  def id_value_for_database(); end
+
+  def id_value_in_database(); end
+
+  def id_value_previous_change(); end
+
+  def id_value_previously_changed?(**options); end
+
+  def id_value_previously_was(); end
+
+  def id_value_was(); end
+
+  def id_value_will_change!(); end
+
+  def id_will_change!(); end
+
+  def name(); end
+
+  def name=(value); end
+
+  def name?(); end
+
+  def name_before_last_save(); end
+
+  def name_before_type_cast(); end
+
+  def name_came_from_user?(); end
+
+  def name_change(); end
+
+  def name_change_to_be_saved(); end
+
+  def name_changed?(**options); end
+
+  def name_for_database(); end
+
+  def name_in_database(); end
+
+  def name_previous_change(); end
+
+  def name_previously_changed?(**options); end
+
+  def name_previously_was(); end
+
+  def name_was(); end
+
+  def name_will_change!(); end
+
+  def redirect_uri(); end
+
+  def redirect_uri=(value); end
+
+  def redirect_uri?(); end
+
+  def redirect_uri_before_last_save(); end
+
+  def redirect_uri_before_type_cast(); end
+
+  def redirect_uri_came_from_user?(); end
+
+  def redirect_uri_change(); end
+
+  def redirect_uri_change_to_be_saved(); end
+
+  def redirect_uri_changed?(**options); end
+
+  def redirect_uri_for_database(); end
+
+  def redirect_uri_in_database(); end
+
+  def redirect_uri_previous_change(); end
+
+  def redirect_uri_previously_changed?(**options); end
+
+  def redirect_uri_previously_was(); end
+
+  def redirect_uri_was(); end
+
+  def redirect_uri_will_change!(); end
+
+  def require_sms_mfa(); end
+
+  def require_sms_mfa=(value); end
+
+  def require_sms_mfa?(); end
+
+  def require_sms_mfa_before_last_save(); end
+
+  def require_sms_mfa_before_type_cast(); end
+
+  def require_sms_mfa_came_from_user?(); end
+
+  def require_sms_mfa_change(); end
+
+  def require_sms_mfa_change_to_be_saved(); end
+
+  def require_sms_mfa_changed?(**options); end
+
+  def require_sms_mfa_for_database(); end
+
+  def require_sms_mfa_in_database(); end
+
+  def require_sms_mfa_previous_change(); end
+
+  def require_sms_mfa_previously_changed?(**options); end
+
+  def require_sms_mfa_previously_was(); end
+
+  def require_sms_mfa_was(); end
+
+  def require_sms_mfa_will_change!(); end
+
+  def restore_allowed_logout_urls!(); end
+
+  def restore_confidential!(); end
+
+  def restore_created_at!(); end
+
+  def restore_enable_client_credential_flow!(); end
+
+  def restore_enable_push_event!(); end
+
+  def restore_id!(); end
+
+  def restore_id_value!(); end
+
+  def restore_name!(); end
+
+  def restore_redirect_uri!(); end
+
+  def restore_require_sms_mfa!(); end
+
+  def restore_scopes!(); end
+
+  def restore_secret!(); end
+
+  def restore_tenant_id!(); end
+
+  def restore_uid!(); end
+
+  def restore_updated_at!(); end
+
+  def saved_change_to_allowed_logout_urls(); end
+
+  def saved_change_to_allowed_logout_urls?(**options); end
+
+  def saved_change_to_confidential(); end
+
+  def saved_change_to_confidential?(**options); end
+
+  def saved_change_to_created_at(); end
+
+  def saved_change_to_created_at?(**options); end
+
+  def saved_change_to_enable_client_credential_flow(); end
+
+  def saved_change_to_enable_client_credential_flow?(**options); end
+
+  def saved_change_to_enable_push_event(); end
+
+  def saved_change_to_enable_push_event?(**options); end
+
+  def saved_change_to_id(); end
+
+  def saved_change_to_id?(**options); end
+
+  def saved_change_to_id_value(); end
+
+  def saved_change_to_id_value?(**options); end
+
+  def saved_change_to_name(); end
+
+  def saved_change_to_name?(**options); end
+
+  def saved_change_to_redirect_uri(); end
+
+  def saved_change_to_redirect_uri?(**options); end
+
+  def saved_change_to_require_sms_mfa(); end
+
+  def saved_change_to_require_sms_mfa?(**options); end
+
+  def saved_change_to_scopes(); end
+
+  def saved_change_to_scopes?(**options); end
+
+  def saved_change_to_secret(); end
+
+  def saved_change_to_secret?(**options); end
+
+  def saved_change_to_tenant_id(); end
+
+  def saved_change_to_tenant_id?(**options); end
+
+  def saved_change_to_uid(); end
+
+  def saved_change_to_uid?(**options); end
+
+  def saved_change_to_updated_at(); end
+
+  def saved_change_to_updated_at?(**options); end
+
+  def scopes(); end
+
+  def scopes=(value); end
+
+  def scopes?(); end
+
+  def scopes_before_last_save(); end
+
+  def scopes_before_type_cast(); end
+
+  def scopes_came_from_user?(); end
+
+  def scopes_change(); end
+
+  def scopes_change_to_be_saved(); end
+
+  def scopes_changed?(**options); end
+
+  def scopes_for_database(); end
+
+  def scopes_in_database(); end
+
+  def scopes_previous_change(); end
+
+  def scopes_previously_changed?(**options); end
+
+  def scopes_previously_was(); end
+
+  def scopes_was(); end
+
+  def scopes_will_change!(); end
+
+  def secret(); end
+
+  def secret=(value); end
+
+  def secret?(); end
+
+  def secret_before_last_save(); end
+
+  def secret_before_type_cast(); end
+
+  def secret_came_from_user?(); end
+
+  def secret_change(); end
+
+  def secret_change_to_be_saved(); end
+
+  def secret_changed?(**options); end
+
+  def secret_for_database(); end
+
+  def secret_in_database(); end
+
+  def secret_previous_change(); end
+
+  def secret_previously_changed?(**options); end
+
+  def secret_previously_was(); end
+
+  def secret_was(); end
+
+  def secret_will_change!(); end
+
+  def tenant_id(); end
+
+  def tenant_id=(value); end
+
+  def tenant_id?(); end
+
+  def tenant_id_before_last_save(); end
+
+  def tenant_id_before_type_cast(); end
+
+  def tenant_id_came_from_user?(); end
+
+  def tenant_id_change(); end
+
+  def tenant_id_change_to_be_saved(); end
+
+  def tenant_id_changed?(**options); end
+
+  def tenant_id_for_database(); end
+
+  def tenant_id_in_database(); end
+
+  def tenant_id_previous_change(); end
+
+  def tenant_id_previously_changed?(**options); end
+
+  def tenant_id_previously_was(); end
+
+  def tenant_id_was(); end
+
+  def tenant_id_will_change!(); end
+
+  def uid(); end
+
+  def uid=(value); end
+
+  def uid?(); end
+
+  def uid_before_last_save(); end
+
+  def uid_before_type_cast(); end
+
+  def uid_came_from_user?(); end
+
+  def uid_change(); end
+
+  def uid_change_to_be_saved(); end
+
+  def uid_changed?(**options); end
+
+  def uid_for_database(); end
+
+  def uid_in_database(); end
+
+  def uid_previous_change(); end
+
+  def uid_previously_changed?(**options); end
+
+  def uid_previously_was(); end
+
+  def uid_was(); end
+
+  def uid_will_change!(); end
+
+  def updated_at(); end
+
+  def updated_at=(value); end
+
+  def updated_at?(); end
+
+  def updated_at_before_last_save(); end
+
+  def updated_at_before_type_cast(); end
+
+  def updated_at_came_from_user?(); end
+
+  def updated_at_change(); end
+
+  def updated_at_change_to_be_saved(); end
+
+  def updated_at_changed?(**options); end
+
+  def updated_at_for_database(); end
+
+  def updated_at_in_database(); end
+
+  def updated_at_previous_change(); end
+
+  def updated_at_previously_changed?(**options); end
+
+  def updated_at_previously_was(); end
+
+  def updated_at_was(); end
+
+  def updated_at_will_change!(); end
+
+  def will_save_change_to_allowed_logout_urls?(**options); end
+
+  def will_save_change_to_confidential?(**options); end
+
+  def will_save_change_to_created_at?(**options); end
+
+  def will_save_change_to_enable_client_credential_flow?(**options); end
+
+  def will_save_change_to_enable_push_event?(**options); end
+
+  def will_save_change_to_id?(**options); end
+
+  def will_save_change_to_id_value?(**options); end
+
+  def will_save_change_to_name?(**options); end
+
+  def will_save_change_to_redirect_uri?(**options); end
+
+  def will_save_change_to_require_sms_mfa?(**options); end
+
+  def will_save_change_to_scopes?(**options); end
+
+  def will_save_change_to_secret?(**options); end
+
+  def will_save_change_to_tenant_id?(**options); end
+
+  def will_save_change_to_uid?(**options); end
+
+  def will_save_change_to_updated_at?(**options); end
 end
 
 module Doorkeeper::Application::GeneratedAttributeMethods
@@ -9237,6 +10028,7 @@ class Dry::Logic::Builder::Context
   include ::Dry::Logic
   include ::Dry::Core::Constants
   include ::Singleton
+  include ::Singleton::SingletonInstanceMethods
   def call(&context); end
 
   def predicate(name, &context); end
@@ -12468,6 +13260,601 @@ module ERB::Util
   include ::ERB::Escape
 end
 
+module Einhorn
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+module Einhorn::AbstractState
+  def default_state(); end
+
+  def dumpable_state(); end
+
+  def method_missing(name, *args); end
+
+  def state(); end
+
+  def state=(v); end
+end
+
+module Einhorn::AbstractState
+end
+
+class Einhorn::Client
+  def close(); end
+
+  def initialize(socket); end
+
+  def receive_message(); end
+
+  def send_command(command_hash); end
+end
+
+module Einhorn::Client::Transport
+end
+
+Einhorn::Client::Transport::ParseError = Psych::SyntaxError
+
+module Einhorn::Client::Transport
+  def self.deserialize_message(line); end
+
+  def self.receive_message(socket); end
+
+  def self.send_message(socket, message); end
+
+  def self.serialize_message(message); end
+end
+
+class Einhorn::Client
+  def self.for_fd(fileno); end
+
+  def self.for_path(path_to_socket); end
+end
+
+module Einhorn::Command
+  MAX_SPINUP_INTERVAL = ::T.let(nil, ::T.untyped)
+end
+
+module Einhorn::Command::Interface
+end
+
+module Einhorn::Command::Interface
+  def self.command(name, description=T.unsafe(nil), &code); end
+
+  def self.command_descriptions(); end
+
+  def self.command_server(); end
+
+  def self.command_server=(server); end
+
+  def self.default_lockfile_path(cmd_name=T.unsafe(nil)); end
+
+  def self.default_pidfile(cmd_name=T.unsafe(nil)); end
+
+  def self.default_socket_path(cmd_name=T.unsafe(nil)); end
+
+  def self.destroy_old_command_socket(path); end
+
+  def self.generate_message(conn, request); end
+
+  def self.init(); end
+
+  def self.install_handlers(); end
+
+  def self.lockfile(); end
+
+  def self.normalize_signals(args); end
+
+  def self.open_command_socket(); end
+
+  def self.persistent_init(); end
+
+  def self.pidfile(); end
+
+  def self.process_command(conn, command); end
+
+  def self.remove_handlers(); end
+
+  def self.send_message(conn, message, request_id=T.unsafe(nil), last=T.unsafe(nil)); end
+
+  def self.send_tagged_message(tag, message, last=T.unsafe(nil)); end
+
+  def self.socket_path(); end
+
+  def self.trap_async(signal, &blk); end
+
+  def self.uninit(); end
+
+  def self.unrecognized_command(conn, request); end
+
+  def self.validate_args(args); end
+
+  def self.validate_signals(args); end
+
+  def self.with_file_lock(&blk); end
+
+  def self.write_pidfile(); end
+end
+
+module Einhorn::Command
+  def self.cleanup(pid); end
+
+  def self.cull(); end
+
+  def self.decrement(); end
+
+  def self.dumpable_state(); end
+
+  def self.full_upgrade(options=T.unsafe(nil)); end
+
+  def self.full_upgrade_fleet(); end
+
+  def self.full_upgrade_smooth(); end
+
+  def self.increment(); end
+
+  def self.kill_expired_signaled_workers(); end
+
+  def self.louder(log=T.unsafe(nil)); end
+
+  def self.next_index(); end
+
+  def self.prepare_child_environment(index); end
+
+  def self.prepare_child_process(); end
+
+  def self.quieter(log=T.unsafe(nil)); end
+
+  def self.reap(); end
+
+  def self.register_ack(pid); end
+
+  def self.register_manual_ack(pid); end
+
+  def self.register_ping(pid, request_id); end
+
+  def self.register_timer_ack(time, pid); end
+
+  def self.reload(); end
+
+  def self.reload_for_upgrade(); end
+
+  def self.replenish(); end
+
+  def self.replenish_gradually(max_unacked=T.unsafe(nil)); end
+
+  def self.replenish_immediately(); end
+
+  def self.reseed_random(); end
+
+  def self.set_workers(new); end
+
+  def self.setup_parent_watch(expected_ppid); end
+
+  def self.signal_all(signal, children=T.unsafe(nil), record=T.unsafe(nil)); end
+
+  def self.spinup(cmd=T.unsafe(nil)); end
+
+  def self.stop_respawning(); end
+
+  def self.trigger_spinup?(max_unacked); end
+
+  def self.upgrade_workers(); end
+end
+
+module Einhorn::Compat
+end
+
+module Einhorn::Compat
+  def self.accept_nonblock(server); end
+
+  def self.cloexec!(fd, enable); end
+
+  def self.cloexec?(fd); end
+
+  def self.exec(script, args, opts=T.unsafe(nil)); end
+
+  def self.pipe(); end
+
+  def self.processor_count(); end
+
+  def self.unixserver_new(path); end
+end
+
+module Einhorn::Event
+end
+
+class Einhorn::Event::ACKTimer
+  include ::Einhorn::Event::Persistent
+  def initialize(time, pid, start=T.unsafe(nil)); end
+
+  def to_state(); end
+end
+
+class Einhorn::Event::ACKTimer
+  def self.from_state(state); end
+end
+
+class Einhorn::Event::AbstractTextDescriptor
+  def client_id(); end
+
+  def close(); end
+
+  def consume_record(record); end
+
+  def deregister!(); end
+
+  def initialize(sock); end
+
+  def log_debug(msg); end
+
+  def log_error(msg); end
+
+  def log_info(msg); end
+
+  def notify_readable(); end
+
+  def notify_writeable(); end
+
+  def parse_record(); end
+
+  def process_read_buffer(); end
+
+  def read(&blk); end
+
+  def read_buffer(); end
+
+  def read_buffer=(read_buffer); end
+
+  def register!(); end
+
+  def to_io(); end
+
+  def write(data); end
+
+  def write_buffer(); end
+
+  def write_buffer=(write_buffer); end
+
+  def write_pending?(); end
+end
+
+class Einhorn::Event::AbstractTextDescriptor
+  def self.open(sock); end
+end
+
+class Einhorn::Event::CommandServer
+  include ::Einhorn::Event::Persistent
+  def close(); end
+
+  def deregister!(); end
+
+  def initialize(server); end
+
+  def notify_readable(); end
+
+  def register!(); end
+
+  def to_io(); end
+
+  def to_state(); end
+end
+
+class Einhorn::Event::CommandServer
+  def self.from_state(state); end
+
+  def self.open(server); end
+end
+
+class Einhorn::Event::Connection
+  include ::Einhorn::Event::Persistent
+  def consume_record(command); end
+
+  def initialize(*args); end
+
+  def subscribe(tag, request_id); end
+
+  def subscription(tag); end
+
+  def to_state(); end
+
+  def unsubscribe(tag); end
+end
+
+class Einhorn::Event::Connection
+  def self.from_state(state); end
+end
+
+class Einhorn::Event::LoopBreaker
+end
+
+class Einhorn::Event::LoopBreaker
+end
+
+module Einhorn::Event::Persistent
+end
+
+module Einhorn::Event::Persistent
+  def self.from_state(state); end
+
+  def self.included(other); end
+
+  def self.persistent?(descriptor); end
+end
+
+class Einhorn::Event::Timer
+  def deregister!(); end
+
+  def expires_at(); end
+
+  def initialize(time, start=T.unsafe(nil), &blk); end
+
+  def register!(); end
+
+  def ring!(); end
+
+  def time(); end
+end
+
+class Einhorn::Event::Timer
+  def self.open(*args, &blk); end
+end
+
+module Einhorn::Event
+  def self.break_loop(); end
+
+  def self.close_all(); end
+
+  def self.close_all_for_worker(); end
+
+  def self.connections(); end
+
+  def self.default_timeout(); end
+
+  def self.default_timeout=(val); end
+
+  def self.deregister_connection(fd); end
+
+  def self.deregister_readable(reader); end
+
+  def self.deregister_timer(timer); end
+
+  def self.deregister_writeable(writer); end
+
+  def self.init(); end
+
+  def self.loop_once(); end
+
+  def self.persistent_descriptors(); end
+
+  def self.readable_fds(); end
+
+  def self.register_connection(connection, fd); end
+
+  def self.register_readable(reader); end
+
+  def self.register_signal_action(&blk); end
+
+  def self.register_timer(timer); end
+
+  def self.register_writeable(writer); end
+
+  def self.restore_persistent_descriptors(persistent_descriptors); end
+
+  def self.run_selectables(); end
+
+  def self.run_signal_actions(); end
+
+  def self.run_timers(); end
+
+  def self.timeout(); end
+
+  def self.writeable_fds(); end
+end
+
+Einhorn::Prctl = Einhorn::PrctlLinux
+
+class Einhorn::PrctlAbstract
+end
+
+class Einhorn::PrctlAbstract
+  def self.get_pdeathsig(); end
+
+  def self.set_pdeathsig(signal); end
+end
+
+class Einhorn::PrctlLinux
+end
+
+class Einhorn::PrctlLinux::IntStruct
+  def [](*args); end
+
+  def []=(*args); end
+
+  def i(); end
+
+  def i=(val); end
+
+  def initialize(addr, func=T.unsafe(nil)); end
+
+  def to_i(); end
+
+  def to_ptr(); end
+end
+
+class Einhorn::PrctlLinux::IntStruct
+  def self.alignment(); end
+
+  def self.malloc(func=T.unsafe(nil), &block); end
+
+  def self.members(); end
+
+  def self.offsetof(name); end
+
+  def self.size(); end
+
+  def self.types(); end
+end
+
+class Einhorn::PrctlLinux
+end
+
+module Einhorn::PrctlRaw
+  GET_PDEATHSIG = ::T.let(nil, ::T.untyped)
+  SET_PDEATHSIG = ::T.let(nil, ::T.untyped)
+end
+
+module Einhorn::PrctlRaw
+  extend ::Fiddle::Importer
+  extend ::Fiddle
+  extend ::Fiddle::CParser
+  def self.prctl(*args, &block); end
+end
+
+class Einhorn::PrctlUnimplemented
+end
+
+class Einhorn::PrctlUnimplemented
+end
+
+module Einhorn::SafeYAML
+end
+
+module Einhorn::SafeYAML
+  def self.load(payload); end
+end
+
+module Einhorn::State
+end
+
+module Einhorn::State
+  extend ::Einhorn::AbstractState
+end
+
+module Einhorn::TransientState
+end
+
+module Einhorn::TransientState
+  extend ::Einhorn::AbstractState
+end
+
+module Einhorn::Worker
+end
+
+class Einhorn::Worker::WorkerError
+end
+
+class Einhorn::Worker::WorkerError
+end
+
+module Einhorn::Worker
+  def self.ack(*args); end
+
+  def self.ack!(discovery=T.unsafe(nil), arg=T.unsafe(nil)); end
+
+  def self.einhorn_child_index(); end
+
+  def self.einhorn_fd(n); end
+
+  def self.einhorn_fd_count(); end
+
+  def self.ensure_worker!(); end
+
+  def self.graceful_shutdown(&blk); end
+
+  def self.is_worker?(); end
+
+  def self.ping!(request_id, discovery=T.unsafe(nil), arg=T.unsafe(nil)); end
+
+  def self.socket(number=T.unsafe(nil)); end
+
+  def self.socket!(number=T.unsafe(nil)); end
+end
+
+module Einhorn::WorkerPool
+end
+
+module Einhorn::WorkerPool
+  def self.ack_count(); end
+
+  def self.ack_target(); end
+
+  def self.acked_modern_workers(); end
+
+  def self.acked_modern_workers_with_state(); end
+
+  def self.acked_unsignaled_modern_workers(); end
+
+  def self.missing_worker_count(); end
+
+  def self.modern_workers(); end
+
+  def self.modern_workers_with_state(); end
+
+  def self.old_workers(); end
+
+  def self.unacked_unsignaled_modern_workers(); end
+
+  def self.unacked_unsignaled_modern_workers_with_state(); end
+
+  def self.unsignaled_count(); end
+
+  def self.unsignaled_modern_workers_with_priority(); end
+
+  def self.unsignaled_modern_workers_with_state(); end
+
+  def self.unsignaled_workers(); end
+
+  def self.workers(); end
+
+  def self.workers_with_state(); end
+end
+
+module Einhorn
+  def self.bind(addr, port, flags); end
+
+  def self.can_safely_reload?(); end
+
+  def self.dump_environment_info(); end
+
+  def self.initialize_reload_environment(); end
+
+  def self.is_script(file); end
+
+  def self.log_debug(msg, tag=T.unsafe(nil)); end
+
+  def self.log_error(msg, tag=T.unsafe(nil)); end
+
+  def self.log_info(msg, tag=T.unsafe(nil)); end
+
+  def self.master_ps_name(); end
+
+  def self.preload(); end
+
+  def self.print_state(); end
+
+  def self.renice_self(); end
+
+  def self.restore_state(state); end
+
+  def self.run(); end
+
+  def self.send_tagged_message(tag, message, last=T.unsafe(nil)); end
+
+  def self.set_argv(cmd, set_ps_name); end
+
+  def self.set_master_ps_name(); end
+
+  def self.socketify_env!(); end
+
+  def self.update_state(store, store_name, old_state); end
+
+  def self.upgrade_commandline(einhorn_flags=T.unsafe(nil)); end
+
+  def self.which(cmd); end
+
+  def self.worker_ps_name(); end
+end
+
 class EmailTemplate
   include ::EmailTemplate::GeneratedAssociationMethods
   include ::Enumerize::ActiveRecordSupport::InstanceMethods
@@ -12480,14 +13867,47 @@ module EmailTemplate::GeneratedAssociationMethods
 end
 
 module EmailTemplate::GeneratedAttributeMethods
+  def body_for_database(); end
+
+  def clear_body_change(); end
+
+  def clear_created_at_change(); end
+
+  def clear_id_change(); end
+
+  def clear_id_value_change(); end
+
+  def clear_name_change(); end
+
+  def clear_subject_change(); end
+
+  def clear_template_type_change(); end
+
+  def clear_tenant_id_change(); end
+
+  def clear_updated_at_change(); end
+
+  def created_at_for_database(); end
+
+  def id_value_for_database(); end
+
+  def name_for_database(); end
+
+  def subject_for_database(); end
+
+  def template_type_for_database(); end
+
+  def tenant_id_for_database(); end
+
+  def updated_at_for_database(); end
+end
+
+module EmailTemplate::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
 class Encoding
   def _dump(*arg); end
-  CESU_8 = ::T.let(nil, ::T.untyped)
-  CP720 = ::T.let(nil, ::T.untyped)
-  IBM720 = ::T.let(nil, ::T.untyped)
 end
 
 class Encoding::Converter
@@ -12504,8 +13924,6 @@ module Enumerable
 end
 
 class Enumerator
-  def +(arg); end
-
   def each_with_index(); end
 end
 
@@ -12563,90 +13981,35 @@ end
 module Enumerize::Hooks
 end
 
-class Errno::EAUTH
-  Errno = ::T.let(nil, ::T.untyped)
-end
+Errno::EAUTH = Errno::NOERROR
 
-class Errno::EAUTH
-end
+Errno::EBADARCH = Errno::NOERROR
 
-class Errno::EBADARCH
-  Errno = ::T.let(nil, ::T.untyped)
-end
+Errno::EBADEXEC = Errno::NOERROR
 
-class Errno::EBADARCH
-end
+Errno::EBADMACHO = Errno::NOERROR
 
-class Errno::EBADEXEC
-  Errno = ::T.let(nil, ::T.untyped)
-end
-
-class Errno::EBADEXEC
-end
-
-class Errno::EBADMACHO
-  Errno = ::T.let(nil, ::T.untyped)
-end
-
-class Errno::EBADMACHO
-end
-
-class Errno::EBADRPC
-  Errno = ::T.let(nil, ::T.untyped)
-end
-
-class Errno::EBADRPC
-end
+Errno::EBADRPC = Errno::NOERROR
 
 Errno::ECAPMODE = Errno::NOERROR
 
-Errno::EDEADLOCK = Errno::NOERROR
+Errno::EDEADLOCK = Errno::EDEADLK
 
-class Errno::EDEVERR
-  Errno = ::T.let(nil, ::T.untyped)
-end
-
-class Errno::EDEVERR
-end
+Errno::EDEVERR = Errno::NOERROR
 
 Errno::EDOOFUS = Errno::NOERROR
 
-class Errno::EFTYPE
-  Errno = ::T.let(nil, ::T.untyped)
-end
-
-class Errno::EFTYPE
-end
+Errno::EFTYPE = Errno::NOERROR
 
 Errno::EIPSEC = Errno::NOERROR
 
-class Errno::ELAST
-  Errno = ::T.let(nil, ::T.untyped)
-end
+Errno::ELAST = Errno::NOERROR
 
-class Errno::ELAST
-end
+Errno::ENEEDAUTH = Errno::NOERROR
 
-class Errno::ENEEDAUTH
-  Errno = ::T.let(nil, ::T.untyped)
-end
+Errno::ENOATTR = Errno::NOERROR
 
-class Errno::ENEEDAUTH
-end
-
-class Errno::ENOATTR
-  Errno = ::T.let(nil, ::T.untyped)
-end
-
-class Errno::ENOATTR
-end
-
-class Errno::ENOPOLICY
-  Errno = ::T.let(nil, ::T.untyped)
-end
-
-class Errno::ENOPOLICY
-end
+Errno::ENOPOLICY = Errno::NOERROR
 
 Errno::ENOTCAPABLE = Errno::NOERROR
 
@@ -12657,56 +14020,21 @@ end
 class Errno::ENOTSUP
 end
 
-class Errno::EPROCLIM
-  Errno = ::T.let(nil, ::T.untyped)
-end
+Errno::EPROCLIM = Errno::NOERROR
 
-class Errno::EPROCLIM
-end
+Errno::EPROCUNAVAIL = Errno::NOERROR
 
-class Errno::EPROCUNAVAIL
-  Errno = ::T.let(nil, ::T.untyped)
-end
+Errno::EPROGMISMATCH = Errno::NOERROR
 
-class Errno::EPROCUNAVAIL
-end
+Errno::EPROGUNAVAIL = Errno::NOERROR
 
-class Errno::EPROGMISMATCH
-  Errno = ::T.let(nil, ::T.untyped)
-end
+Errno::EPWROFF = Errno::NOERROR
 
-class Errno::EPROGMISMATCH
-end
+Errno::EQFULL = Errno::NOERROR
 
-class Errno::EPROGUNAVAIL
-  Errno = ::T.let(nil, ::T.untyped)
-end
+Errno::ERPCMISMATCH = Errno::NOERROR
 
-class Errno::EPROGUNAVAIL
-end
-
-class Errno::EPWROFF
-  Errno = ::T.let(nil, ::T.untyped)
-end
-
-class Errno::EPWROFF
-end
-
-Errno::EQFULL = Errno::ELAST
-
-class Errno::ERPCMISMATCH
-  Errno = ::T.let(nil, ::T.untyped)
-end
-
-class Errno::ERPCMISMATCH
-end
-
-class Errno::ESHLIBVERS
-  Errno = ::T.let(nil, ::T.untyped)
-end
-
-class Errno::ESHLIBVERS
-end
+Errno::ESHLIBVERS = Errno::NOERROR
 
 module ErrorHighlight::CoreExt
   def detailed_message(highlight: T.unsafe(nil), error_highlight: T.unsafe(nil), **arg); end
@@ -12717,19 +14045,11 @@ module Etc
 end
 
 class Etc::Group
-  def gid(); end
-
   def gid=(_); end
-
-  def mem(); end
 
   def mem=(_); end
 
-  def name(); end
-
   def name=(_); end
-
-  def passwd(); end
 
   def passwd=(_); end
 end
@@ -12746,15 +14066,7 @@ class Etc::Group
 end
 
 class Etc::Passwd
-  def change(); end
-
-  def change=(_); end
-
   def dir=(_); end
-
-  def expire(); end
-
-  def expire=(_); end
 
   def gecos(); end
 
@@ -12767,10 +14079,6 @@ class Etc::Passwd
   def passwd=(_); end
 
   def shell=(_); end
-
-  def uclass(); end
-
-  def uclass=(_); end
 
   def uid=(_); end
 end
@@ -12866,8 +14174,10 @@ class ExpireEmailVerifiersWorker
   def self.sidekiq_retry_in_block=(val); end
 end
 
-class FalseClass
-  include ::JSON::Ext::Generator::GeneratorMethods::FalseClass
+module Fcntl
+  F_GETPIPE_SZ = ::T.let(nil, ::T.untyped)
+  F_SETPIPE_SZ = ::T.let(nil, ::T.untyped)
+  VERSION = ::T.let(nil, ::T.untyped)
 end
 
 class Fiber
@@ -12883,6 +14193,8 @@ class Fiber
 
   def initialize(*arg); end
 
+  def kill(); end
+
   def storage(); end
 
   def storage=(storage); end
@@ -12891,10 +14203,6 @@ class Fiber
 end
 
 class Fiber
-  def self.[](arg); end
-
-  def self.[]=(arg, arg1); end
-
   def self.blocking(); end
 
   def self.blocking?(); end
@@ -12908,6 +14216,292 @@ class Fiber
   def self.scheduler(); end
 
   def self.set_scheduler(arg); end
+end
+
+module Fiddle
+  ALIGN_BOOL = ::T.let(nil, ::T.untyped)
+  ALIGN_INT16_T = ::T.let(nil, ::T.untyped)
+  ALIGN_INT32_T = ::T.let(nil, ::T.untyped)
+  ALIGN_INT64_T = ::T.let(nil, ::T.untyped)
+  ALIGN_INT8_T = ::T.let(nil, ::T.untyped)
+  NULL = ::T.let(nil, ::T.untyped)
+  Qfalse = ::T.let(nil, ::T.untyped)
+  Qnil = ::T.let(nil, ::T.untyped)
+  Qtrue = ::T.let(nil, ::T.untyped)
+  Qundef = ::T.let(nil, ::T.untyped)
+  RTLD_GLOBAL = ::T.let(nil, ::T.untyped)
+  RTLD_LAZY = ::T.let(nil, ::T.untyped)
+  RTLD_NOW = ::T.let(nil, ::T.untyped)
+  VERSION = ::T.let(nil, ::T.untyped)
+  WINDOWS = ::T.let(nil, ::T.untyped)
+end
+
+class Fiddle::CStruct
+  include ::Enumerable
+  def each(&blk); end
+
+  def each_pair(); end
+
+  def replace(another); end
+
+  def to_h(); end
+end
+
+class Fiddle::CStruct
+  def self.entity_class(); end
+
+  def self.offsetof(name, members, types); end
+end
+
+module Fiddle::CStructBuilder
+end
+
+module Fiddle::CStructBuilder
+  def self.create(klass, types, members); end
+end
+
+class Fiddle::CStructEntity
+  include ::Fiddle::PackInfo
+  include ::Fiddle::ValueUtil
+  def [](*args); end
+
+  def []=(*args); end
+
+  def assign_names(members); end
+
+  def initialize(addr, types, func=T.unsafe(nil)); end
+
+  def set_ctypes(types); end
+
+  def to_s(); end
+end
+
+class Fiddle::CStructEntity
+  def self.alignment(types); end
+
+  def self.malloc(types, func=T.unsafe(nil), size=T.unsafe(nil), &block); end
+
+  def self.size(types); end
+end
+
+class Fiddle::CUnion
+end
+
+class Fiddle::CUnion
+  def self.entity_class(); end
+
+  def self.offsetof(name, members, types); end
+end
+
+class Fiddle::CUnionEntity
+end
+
+class Fiddle::CUnionEntity
+end
+
+class Fiddle::ClearedReferenceError
+end
+
+class Fiddle::ClearedReferenceError
+end
+
+class Fiddle::Closure
+  def free(); end
+
+  def freed?(); end
+end
+
+class Fiddle::Closure
+  def self.create(*args); end
+end
+
+class Fiddle::CompositeHandler
+  def [](symbol); end
+
+  def handlers(); end
+
+  def initialize(handlers); end
+
+  def sym(symbol); end
+end
+
+class Fiddle::CompositeHandler
+end
+
+class Fiddle::Error
+end
+
+class Fiddle::Error
+end
+
+class Fiddle::Function
+  def need_gvl?(); end
+
+  def to_proc(); end
+end
+
+class Fiddle::Handle
+  def file_name(); end
+
+  def sym_defined?(arg); end
+
+  def to_ptr(); end
+end
+
+class Fiddle::Handle
+  def self.sym_defined?(arg); end
+end
+
+module Fiddle::Importer
+  include ::Fiddle
+  include ::Fiddle::CParser
+end
+
+module Fiddle::Importer
+  extend ::Fiddle::Importer
+  extend ::Fiddle
+  extend ::Fiddle::CParser
+end
+
+class Fiddle::MemoryView
+  def [](*arg); end
+
+  def byte_size(); end
+
+  def format(); end
+
+  def initialize(arg); end
+
+  def item_size(); end
+
+  def ndim(); end
+
+  def obj(); end
+
+  def readonly?(); end
+
+  def release(); end
+
+  def shape(); end
+
+  def strides(); end
+
+  def sub_offsets(); end
+end
+
+class Fiddle::MemoryView
+  def self.export(arg); end
+end
+
+module Fiddle::PackInfo
+  ALIGN_MAP = ::T.let(nil, ::T.untyped)
+  PACK_MAP = ::T.let(nil, ::T.untyped)
+  SIZE_MAP = ::T.let(nil, ::T.untyped)
+end
+
+module Fiddle::PackInfo
+  def self.align(addr, align); end
+end
+
+class Fiddle::Packer
+  include ::Fiddle::PackInfo
+  def initialize(types); end
+
+  def pack(ary); end
+
+  def size(); end
+
+  def unpack(ary); end
+end
+
+class Fiddle::Packer
+  def self.[](*types); end
+end
+
+class Fiddle::Pinned
+  def clear(); end
+
+  def cleared?(); end
+
+  def initialize(arg); end
+
+  def ref(); end
+end
+
+class Fiddle::Pinned
+end
+
+class Fiddle::Pointer
+  def call_free(); end
+
+  def freed?(); end
+end
+
+class Fiddle::Pointer
+  def self.read(arg, arg1); end
+
+  def self.write(arg, arg1); end
+end
+
+class Fiddle::StructArray
+  include ::Fiddle::ValueUtil
+  def []=(index, value); end
+
+  def initialize(ptr, type, initial_values); end
+
+  def to_ptr(); end
+end
+
+class Fiddle::StructArray
+end
+
+module Fiddle::Types
+  BOOL = ::T.let(nil, ::T.untyped)
+  CHAR = ::T.let(nil, ::T.untyped)
+  CONST_STRING = ::T.let(nil, ::T.untyped)
+  DOUBLE = ::T.let(nil, ::T.untyped)
+  FLOAT = ::T.let(nil, ::T.untyped)
+  INT = ::T.let(nil, ::T.untyped)
+  INT16_T = ::T.let(nil, ::T.untyped)
+  INT32_T = ::T.let(nil, ::T.untyped)
+  INT64_T = ::T.let(nil, ::T.untyped)
+  INT8_T = ::T.let(nil, ::T.untyped)
+  INTPTR_T = ::T.let(nil, ::T.untyped)
+  LONG = ::T.let(nil, ::T.untyped)
+  LONG_LONG = ::T.let(nil, ::T.untyped)
+  PTRDIFF_T = ::T.let(nil, ::T.untyped)
+  SHORT = ::T.let(nil, ::T.untyped)
+  SIZE_T = ::T.let(nil, ::T.untyped)
+  SSIZE_T = ::T.let(nil, ::T.untyped)
+  UCHAR = ::T.let(nil, ::T.untyped)
+  UINT = ::T.let(nil, ::T.untyped)
+  UINT16_T = ::T.let(nil, ::T.untyped)
+  UINT32_T = ::T.let(nil, ::T.untyped)
+  UINT64_T = ::T.let(nil, ::T.untyped)
+  UINT8_T = ::T.let(nil, ::T.untyped)
+  UINTPTR_T = ::T.let(nil, ::T.untyped)
+  ULONG = ::T.let(nil, ::T.untyped)
+  ULONG_LONG = ::T.let(nil, ::T.untyped)
+  USHORT = ::T.let(nil, ::T.untyped)
+  VARIADIC = ::T.let(nil, ::T.untyped)
+  VOID = ::T.let(nil, ::T.untyped)
+  VOIDP = ::T.let(nil, ::T.untyped)
+end
+
+module Fiddle::Types
+end
+
+module Fiddle::ValueUtil
+  def signed_value(val, ty); end
+
+  def unsigned_value(val, ty); end
+
+  def wrap_arg(arg, ty, funcs=T.unsafe(nil), &block); end
+
+  def wrap_args(args, tys, funcs, &block); end
+end
+
+module Fiddle::ValueUtil
 end
 
 class File
@@ -12960,8 +14554,8 @@ module FileUtils
   def self.ln_sr(src, dest, target_directory: T.unsafe(nil), force: T.unsafe(nil), noop: T.unsafe(nil), verbose: T.unsafe(nil)); end
 end
 
-class Float
-  include ::JSON::Ext::Generator::GeneratorMethods::Float
+module Find
+  VERSION = ::T.let(nil, ::T.untyped)
 end
 
 module Forwardable
@@ -12986,10 +14580,6 @@ end
 
 module GC
   def self.latest_compact_info(); end
-
-  def self.using_rvargc?(); end
-
-  def self.verify_transient_heap_internal_consistency(); end
 end
 
 module GRPC
@@ -13413,11 +15003,45 @@ module Gem
   HAVE_OPENSSL = ::T.let(nil, ::T.untyped)
   RbConfigPriorities = ::T.let(nil, ::T.untyped)
   RubyGemsVersion = ::T.let(nil, ::T.untyped)
-  UNTAINT = ::T.let(nil, ::T.untyped)
+end
+
+module Gem::BUNDLED_GEMS
+  SINCE_FAST_PATH = ::T.let(nil, ::T.untyped)
+end
+
+module Gem::BUNDLED_GEMS
+  def self.build_message(gem); end
+
+  def self.find_gem(path); end
+
+  def self.replace_require(specs); end
+
+  def self.uplevel(); end
+
+  def self.warning?(name, specs: T.unsafe(nil)); end
 end
 
 class Gem::BasicSpecification
+  def base_dir_priority(gem_path); end
+
+  def default_gem_priority(); end
+
+  def full_name_with_location(); end
+
+  def ignored?(); end
+
   def plugins(); end
+end
+
+module Gem::CIDetector
+  ENV_DESCRIPTORS = ::T.let(nil, ::T.untyped)
+  ENV_INDICATORS = ::T.let(nil, ::T.untyped)
+end
+
+module Gem::CIDetector
+  def self.ci?(); end
+
+  def self.ci_strings(); end
 end
 
 class Gem::ConfigFile
@@ -13436,6 +15060,8 @@ class Gem::ConfigFile
 end
 
 class Gem::ConfigFile
+  def self.deep_transform_config_keys!(config); end
+
   def self.dump_with_rubygems_yaml(content); end
 
   def self.load_with_rubygems_config_hash(yaml); end
@@ -13444,8 +15070,6 @@ end
 class Gem::Dependency
   include ::Bundler::ForcePlatform
   def force_ruby_platform(); end
-
-  def prioritizes_bundler?(); end
 end
 
 class Gem::DependencyList
@@ -13569,7 +15193,1436 @@ module Gem::InstallerUninstallerUtils
 end
 
 class Gem::Licenses
+  DEPRECATED_EXCEPTION_IDENTIFIERS = ::T.let(nil, ::T.untyped)
+  DEPRECATED_EXCEPTION_REGEXP = ::T.let(nil, ::T.untyped)
+  DEPRECATED_LICENSE_IDENTIFIERS = ::T.let(nil, ::T.untyped)
+  DEPRECATED_LICENSE_REGEXP = ::T.let(nil, ::T.untyped)
   LICENSE_REF = ::T.let(nil, ::T.untyped)
+  VALID_REGEXP = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Licenses
+  def self.deprecated_exception_id?(license); end
+
+  def self.deprecated_license_id?(license); end
+end
+
+module Gem::Molinillo::SpecificationProvider
+  def allow_missing?(dependency); end
+
+  def dependencies_equal?(dependencies, other_dependencies); end
+
+  def dependencies_for(specification); end
+
+  def name_for(dependency); end
+
+  def name_for_explicit_dependency_source(); end
+
+  def name_for_locking_dependency_source(); end
+
+  def requirement_satisfied_by?(requirement, activated, spec); end
+
+  def search_for(dependency); end
+
+  def sort_dependencies(dependencies, activated, conflicts); end
+end
+
+module Gem::Molinillo::SpecificationProvider
+end
+
+module Gem::Molinillo::UI
+  def after_resolution(); end
+
+  def before_resolution(); end
+
+  def debug(depth=T.unsafe(nil)); end
+
+  def debug?(); end
+
+  def indicate_progress(); end
+
+  def output(); end
+
+  def progress_rate(); end
+end
+
+module Gem::Molinillo::UI
+end
+
+module Gem::Net
+end
+
+class Gem::Net::BufferedIO
+  def <<(*strs); end
+
+  def close(); end
+
+  def closed?(); end
+
+  def continue_timeout(); end
+
+  def continue_timeout=(continue_timeout); end
+
+  def debug_output(); end
+
+  def debug_output=(debug_output); end
+
+  def eof?(); end
+
+  def initialize(io, read_timeout: T.unsafe(nil), write_timeout: T.unsafe(nil), continue_timeout: T.unsafe(nil), debug_output: T.unsafe(nil)); end
+
+  def io(); end
+
+  def read(len, dest=T.unsafe(nil), ignore_eof=T.unsafe(nil)); end
+
+  def read_all(dest=T.unsafe(nil)); end
+
+  def read_timeout(); end
+
+  def read_timeout=(read_timeout); end
+
+  def readline(); end
+
+  def readuntil(terminator, ignore_eof=T.unsafe(nil)); end
+
+  def write(*strs); end
+
+  def write_timeout(); end
+
+  def write_timeout=(write_timeout); end
+
+  def writeline(str); end
+  BUFSIZE = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::BufferedIO
+end
+
+class Gem::Net::HTTP
+  def active?(); end
+
+  def address(); end
+
+  def ca_file(); end
+
+  def ca_file=(ca_file); end
+
+  def ca_path(); end
+
+  def ca_path=(ca_path); end
+
+  def cert(); end
+
+  def cert=(cert); end
+
+  def cert_store(); end
+
+  def cert_store=(cert_store); end
+
+  def ciphers(); end
+
+  def ciphers=(ciphers); end
+
+  def close_on_empty_response(); end
+
+  def close_on_empty_response=(close_on_empty_response); end
+
+  def continue_timeout(); end
+
+  def continue_timeout=(sec); end
+
+  def copy(path, initheader=T.unsafe(nil)); end
+
+  def delete(path, initheader=T.unsafe(nil)); end
+
+  def extra_chain_cert(); end
+
+  def extra_chain_cert=(extra_chain_cert); end
+
+  def finish(); end
+
+  def get(path, initheader=T.unsafe(nil), dest=T.unsafe(nil), &block); end
+
+  def get2(path, initheader=T.unsafe(nil), &block); end
+
+  def head(path, initheader=T.unsafe(nil)); end
+
+  def head2(path, initheader=T.unsafe(nil), &block); end
+
+  def ignore_eof(); end
+
+  def ignore_eof=(ignore_eof); end
+
+  def initialize(address, port=T.unsafe(nil)); end
+
+  def ipaddr(); end
+
+  def ipaddr=(addr); end
+
+  def keep_alive_timeout(); end
+
+  def keep_alive_timeout=(keep_alive_timeout); end
+
+  def key(); end
+
+  def key=(key); end
+
+  def local_host(); end
+
+  def local_host=(local_host); end
+
+  def local_port(); end
+
+  def local_port=(local_port); end
+
+  def lock(path, body, initheader=T.unsafe(nil)); end
+
+  def max_retries(); end
+
+  def max_retries=(retries); end
+
+  def max_version(); end
+
+  def max_version=(max_version); end
+
+  def min_version(); end
+
+  def min_version=(min_version); end
+
+  def mkcol(path, body=T.unsafe(nil), initheader=T.unsafe(nil)); end
+
+  def move(path, initheader=T.unsafe(nil)); end
+
+  def open_timeout(); end
+
+  def open_timeout=(open_timeout); end
+
+  def options(path, initheader=T.unsafe(nil)); end
+
+  def patch(path, data, initheader=T.unsafe(nil), dest=T.unsafe(nil), &block); end
+
+  def peer_cert(); end
+
+  def port(); end
+
+  def post(path, data, initheader=T.unsafe(nil), dest=T.unsafe(nil), &block); end
+
+  def post2(path, data, initheader=T.unsafe(nil), &block); end
+
+  def propfind(path, body=T.unsafe(nil), initheader=T.unsafe(nil)); end
+
+  def proppatch(path, body, initheader=T.unsafe(nil)); end
+
+  def proxy?(); end
+
+  def proxy_address(); end
+
+  def proxy_address=(proxy_address); end
+
+  def proxy_from_env=(proxy_from_env); end
+
+  def proxy_from_env?(); end
+
+  def proxy_pass(); end
+
+  def proxy_pass=(proxy_pass); end
+
+  def proxy_port(); end
+
+  def proxy_port=(proxy_port); end
+
+  def proxy_uri(); end
+
+  def proxy_user(); end
+
+  def proxy_user=(proxy_user); end
+
+  def proxyaddr(); end
+
+  def proxyport(); end
+
+  def put(path, data, initheader=T.unsafe(nil)); end
+
+  def put2(path, data, initheader=T.unsafe(nil), &block); end
+
+  def read_timeout(); end
+
+  def read_timeout=(sec); end
+
+  def request(req, body=T.unsafe(nil), &block); end
+
+  def request_get(path, initheader=T.unsafe(nil), &block); end
+
+  def request_head(path, initheader=T.unsafe(nil), &block); end
+
+  def request_post(path, data, initheader=T.unsafe(nil), &block); end
+
+  def request_put(path, data, initheader=T.unsafe(nil), &block); end
+
+  def response_body_encoding(); end
+
+  def response_body_encoding=(value); end
+
+  def send_request(name, path, data=T.unsafe(nil), header=T.unsafe(nil)); end
+
+  def set_debug_output(output); end
+
+  def ssl_timeout(); end
+
+  def ssl_timeout=(ssl_timeout); end
+
+  def ssl_version(); end
+
+  def ssl_version=(ssl_version); end
+
+  def start(); end
+
+  def started?(); end
+
+  def trace(path, initheader=T.unsafe(nil)); end
+
+  def unlock(path, body, initheader=T.unsafe(nil)); end
+
+  def use_ssl=(flag); end
+
+  def use_ssl?(); end
+
+  def verify_callback(); end
+
+  def verify_callback=(verify_callback); end
+
+  def verify_depth(); end
+
+  def verify_depth=(verify_depth); end
+
+  def verify_hostname(); end
+
+  def verify_hostname=(verify_hostname); end
+
+  def verify_mode(); end
+
+  def verify_mode=(verify_mode); end
+
+  def write_timeout(); end
+
+  def write_timeout=(sec); end
+  HAVE_ZLIB = ::T.let(nil, ::T.untyped)
+  HTTPVersion = ::T.let(nil, ::T.untyped)
+  IDEMPOTENT_METHODS_ = ::T.let(nil, ::T.untyped)
+  SSL_ATTRIBUTES = ::T.let(nil, ::T.untyped)
+  SSL_IVNAMES = ::T.let(nil, ::T.untyped)
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Copy
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Copy
+end
+
+class Gem::Net::HTTP::Delete
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Delete
+end
+
+class Gem::Net::HTTP::Get
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Get
+end
+
+class Gem::Net::HTTP::Head
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Head
+end
+
+class Gem::Net::HTTP::Lock
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Lock
+end
+
+class Gem::Net::HTTP::Mkcol
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Mkcol
+end
+
+class Gem::Net::HTTP::Move
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Move
+end
+
+class Gem::Net::HTTP::Options
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Options
+end
+
+class Gem::Net::HTTP::Patch
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Patch
+end
+
+class Gem::Net::HTTP::Post
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Post
+end
+
+class Gem::Net::HTTP::Propfind
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Propfind
+end
+
+class Gem::Net::HTTP::Proppatch
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Proppatch
+end
+
+module Gem::Net::HTTP::ProxyDelta
+end
+
+module Gem::Net::HTTP::ProxyDelta
+end
+
+class Gem::Net::HTTP::Put
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Put
+end
+
+class Gem::Net::HTTP::Trace
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Trace
+end
+
+class Gem::Net::HTTP::Unlock
+  METHOD = ::T.let(nil, ::T.untyped)
+  REQUEST_HAS_BODY = ::T.let(nil, ::T.untyped)
+  RESPONSE_HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTP::Unlock
+end
+
+class Gem::Net::HTTP
+  def self.Proxy(p_addr=T.unsafe(nil), p_port=T.unsafe(nil), p_user=T.unsafe(nil), p_pass=T.unsafe(nil)); end
+
+  def self.default_port(); end
+
+  def self.get(uri_or_host, path_or_headers=T.unsafe(nil), port=T.unsafe(nil)); end
+
+  def self.get_print(uri_or_host, path_or_headers=T.unsafe(nil), port=T.unsafe(nil)); end
+
+  def self.get_response(uri_or_host, path_or_headers=T.unsafe(nil), port=T.unsafe(nil), &block); end
+
+  def self.http_default_port(); end
+
+  def self.https_default_port(); end
+
+  def self.is_version_1_1?(); end
+
+  def self.is_version_1_2?(); end
+
+  def self.new(address, port=T.unsafe(nil), p_addr=T.unsafe(nil), p_port=T.unsafe(nil), p_user=T.unsafe(nil), p_pass=T.unsafe(nil), p_no_proxy=T.unsafe(nil)); end
+
+  def self.newobj(*arg, **arg1); end
+
+  def self.post(url, data, header=T.unsafe(nil)); end
+
+  def self.post_form(url, params); end
+
+  def self.proxy_address(); end
+
+  def self.proxy_class?(); end
+
+  def self.proxy_pass(); end
+
+  def self.proxy_port(); end
+
+  def self.proxy_user(); end
+
+  def self.socket_type(); end
+
+  def self.start(address, *arg, &block); end
+
+  def self.version_1_1?(); end
+
+  def self.version_1_2(); end
+
+  def self.version_1_2?(); end
+end
+
+class Gem::Net::HTTPAccepted
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPAccepted
+end
+
+class Gem::Net::HTTPAlreadyReported
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPAlreadyReported
+end
+
+class Gem::Net::HTTPBadGateway
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPBadGateway
+end
+
+class Gem::Net::HTTPBadRequest
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPBadRequest
+end
+
+class Gem::Net::HTTPBadResponse
+end
+
+class Gem::Net::HTTPBadResponse
+end
+
+class Gem::Net::HTTPClientError
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+Gem::Net::HTTPClientError::EXCEPTION_TYPE = Gem::Net::HTTPClientException
+
+class Gem::Net::HTTPClientError
+end
+
+Gem::Net::HTTPClientErrorCode = Gem::Net::HTTPClientError
+
+class Gem::Net::HTTPClientException
+  include ::Gem::Net::HTTPExceptions
+end
+
+class Gem::Net::HTTPClientException
+end
+
+class Gem::Net::HTTPConflict
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPConflict
+end
+
+class Gem::Net::HTTPContinue
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPContinue
+end
+
+class Gem::Net::HTTPCreated
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPCreated
+end
+
+class Gem::Net::HTTPEarlyHints
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPEarlyHints
+end
+
+class Gem::Net::HTTPError
+  include ::Gem::Net::HTTPExceptions
+end
+
+class Gem::Net::HTTPError
+end
+
+module Gem::Net::HTTPExceptions
+  def data(); end
+
+  def initialize(msg, res); end
+
+  def response(); end
+end
+
+module Gem::Net::HTTPExceptions
+end
+
+class Gem::Net::HTTPExpectationFailed
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPExpectationFailed
+end
+
+class Gem::Net::HTTPFailedDependency
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPFailedDependency
+end
+
+class Gem::Net::HTTPFatalError
+  include ::Gem::Net::HTTPExceptions
+end
+
+class Gem::Net::HTTPFatalError
+end
+
+Gem::Net::HTTPFatalErrorCode = Gem::Net::HTTPClientError
+
+class Gem::Net::HTTPForbidden
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPForbidden
+end
+
+class Gem::Net::HTTPFound
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPFound
+end
+
+Gem::Net::HTTPGatewayTimeOut = Gem::Net::HTTPGatewayTimeout
+
+class Gem::Net::HTTPGatewayTimeout
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPGatewayTimeout
+end
+
+class Gem::Net::HTTPGenericRequest
+  include ::Gem::Net::HTTPHeader
+  def body(); end
+
+  def body=(str); end
+
+  def body_exist?(); end
+
+  def body_stream(); end
+
+  def body_stream=(input); end
+
+  def decode_content(); end
+
+  def exec(sock, ver, path); end
+
+  def initialize(m, reqbody, resbody, uri_or_path, initheader=T.unsafe(nil)); end
+
+  def method(); end
+
+  def path(); end
+
+  def request_body_permitted?(); end
+
+  def response_body_permitted?(); end
+
+  def set_body_internal(str); end
+
+  def update_uri(addr, port, ssl); end
+
+  def uri(); end
+end
+
+class Gem::Net::HTTPGenericRequest::Chunker
+  def finish(); end
+
+  def initialize(sock); end
+
+  def write(buf); end
+end
+
+class Gem::Net::HTTPGenericRequest::Chunker
+end
+
+class Gem::Net::HTTPGenericRequest
+end
+
+class Gem::Net::HTTPGone
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPGone
+end
+
+module Gem::Net::HTTPHeader
+  def [](key); end
+
+  def []=(key, val); end
+
+  def add_field(key, val); end
+
+  def basic_auth(account, password); end
+
+  def canonical_each(); end
+
+  def chunked?(); end
+
+  def connection_close?(); end
+
+  def connection_keep_alive?(); end
+
+  def content_length(); end
+
+  def content_length=(len); end
+
+  def content_range(); end
+
+  def content_type(); end
+
+  def content_type=(type, params=T.unsafe(nil)); end
+
+  def delete(key); end
+
+  def each(&blk); end
+
+  def each_capitalized(); end
+
+  def each_capitalized_name(); end
+
+  def each_header(); end
+
+  def each_key(&block); end
+
+  def each_name(&block); end
+
+  def each_value(); end
+
+  def fetch(key, *args, &block); end
+
+  def form_data=(params, sep=T.unsafe(nil)); end
+
+  def get_fields(key); end
+
+  def initialize_http_header(initheader); end
+
+  def key?(key); end
+
+  def length(); end
+
+  def main_type(); end
+
+  def proxy_basic_auth(account, password); end
+
+  def range(); end
+
+  def range=(r, e=T.unsafe(nil)); end
+
+  def range_length(); end
+
+  def set_content_type(type, params=T.unsafe(nil)); end
+
+  def set_form(params, enctype=T.unsafe(nil), formopt=T.unsafe(nil)); end
+
+  def set_form_data(params, sep=T.unsafe(nil)); end
+
+  def set_range(r, e=T.unsafe(nil)); end
+
+  def size(); end
+
+  def sub_type(); end
+
+  def to_hash(); end
+
+  def type_params(); end
+  MAX_FIELD_LENGTH = ::T.let(nil, ::T.untyped)
+  MAX_KEY_LENGTH = ::T.let(nil, ::T.untyped)
+end
+
+module Gem::Net::HTTPHeader
+end
+
+class Gem::Net::HTTPHeaderSyntaxError
+end
+
+class Gem::Net::HTTPHeaderSyntaxError
+end
+
+class Gem::Net::HTTPIMUsed
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPIMUsed
+end
+
+class Gem::Net::HTTPInformation
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+Gem::Net::HTTPInformation::EXCEPTION_TYPE = Gem::Net::HTTPError
+
+class Gem::Net::HTTPInformation
+end
+
+Gem::Net::HTTPInformationCode = Gem::Net::HTTPInformation
+
+class Gem::Net::HTTPInsufficientStorage
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPInsufficientStorage
+end
+
+class Gem::Net::HTTPInternalServerError
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPInternalServerError
+end
+
+class Gem::Net::HTTPLengthRequired
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPLengthRequired
+end
+
+class Gem::Net::HTTPLocked
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPLocked
+end
+
+class Gem::Net::HTTPLoopDetected
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPLoopDetected
+end
+
+class Gem::Net::HTTPMethodNotAllowed
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPMethodNotAllowed
+end
+
+class Gem::Net::HTTPMisdirectedRequest
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPMisdirectedRequest
+end
+
+class Gem::Net::HTTPMovedPermanently
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPMovedPermanently
+end
+
+Gem::Net::HTTPMovedTemporarily = Gem::Net::HTTPFound
+
+class Gem::Net::HTTPMultiStatus
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPMultiStatus
+end
+
+Gem::Net::HTTPMultipleChoice = Gem::Net::HTTPMultipleChoices
+
+class Gem::Net::HTTPMultipleChoices
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPMultipleChoices
+end
+
+class Gem::Net::HTTPNetworkAuthenticationRequired
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPNetworkAuthenticationRequired
+end
+
+class Gem::Net::HTTPNoContent
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPNoContent
+end
+
+class Gem::Net::HTTPNonAuthoritativeInformation
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPNonAuthoritativeInformation
+end
+
+class Gem::Net::HTTPNotAcceptable
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPNotAcceptable
+end
+
+class Gem::Net::HTTPNotExtended
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPNotExtended
+end
+
+class Gem::Net::HTTPNotFound
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPNotFound
+end
+
+class Gem::Net::HTTPNotImplemented
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPNotImplemented
+end
+
+class Gem::Net::HTTPNotModified
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPNotModified
+end
+
+class Gem::Net::HTTPOK
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPOK
+end
+
+class Gem::Net::HTTPPartialContent
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPPartialContent
+end
+
+class Gem::Net::HTTPPayloadTooLarge
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPPayloadTooLarge
+end
+
+class Gem::Net::HTTPPaymentRequired
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPPaymentRequired
+end
+
+class Gem::Net::HTTPPermanentRedirect
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPPermanentRedirect
+end
+
+class Gem::Net::HTTPPreconditionFailed
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPPreconditionFailed
+end
+
+class Gem::Net::HTTPPreconditionRequired
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPPreconditionRequired
+end
+
+class Gem::Net::HTTPProcessing
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPProcessing
+end
+
+class Gem::Net::HTTPProxyAuthenticationRequired
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPProxyAuthenticationRequired
+end
+
+class Gem::Net::HTTPRangeNotSatisfiable
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPRangeNotSatisfiable
+end
+
+class Gem::Net::HTTPRedirection
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+Gem::Net::HTTPRedirection::EXCEPTION_TYPE = Gem::Net::HTTPRetriableError
+
+class Gem::Net::HTTPRedirection
+end
+
+Gem::Net::HTTPRedirectionCode = Gem::Net::HTTPRedirection
+
+class Gem::Net::HTTPRequest
+  def initialize(path, initheader=T.unsafe(nil)); end
+end
+
+class Gem::Net::HTTPRequest
+end
+
+Gem::Net::HTTPRequestEntityTooLarge = Gem::Net::HTTPPayloadTooLarge
+
+class Gem::Net::HTTPRequestHeaderFieldsTooLarge
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPRequestHeaderFieldsTooLarge
+end
+
+Gem::Net::HTTPRequestTimeOut = Gem::Net::HTTPRequestTimeout
+
+class Gem::Net::HTTPRequestTimeout
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPRequestTimeout
+end
+
+Gem::Net::HTTPRequestURITooLarge = Gem::Net::HTTPURITooLong
+
+Gem::Net::HTTPRequestURITooLong = Gem::Net::HTTPURITooLong
+
+Gem::Net::HTTPRequestedRangeNotSatisfiable = Gem::Net::HTTPRangeNotSatisfiable
+
+class Gem::Net::HTTPResetContent
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPResetContent
+end
+
+Gem::Net::HTTPResponceReceiver = Gem::Net::HTTPResponse
+
+class Gem::Net::HTTPResponse
+  include ::Gem::Net::HTTPHeader
+  def body(); end
+
+  def body=(value); end
+
+  def body_encoding(); end
+
+  def body_encoding=(value); end
+
+  def code(); end
+
+  def code_type(); end
+
+  def decode_content(); end
+
+  def decode_content=(decode_content); end
+
+  def entity(); end
+
+  def error!(); end
+
+  def error_type(); end
+
+  def header(); end
+
+  def http_version(); end
+
+  def ignore_eof(); end
+
+  def ignore_eof=(ignore_eof); end
+
+  def initialize(httpv, code, msg); end
+
+  def message(); end
+
+  def msg(); end
+
+  def read_body(dest=T.unsafe(nil), &block); end
+
+  def read_header(); end
+
+  def reading_body(sock, reqmethodallowbody); end
+
+  def response(); end
+
+  def uri(); end
+
+  def uri=(uri); end
+
+  def value(); end
+  CODE_CLASS_TO_OBJ = ::T.let(nil, ::T.untyped)
+  CODE_TO_OBJ = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPResponse::Inflater
+  def bytes_inflated(); end
+
+  def finish(); end
+
+  def inflate_adapter(dest); end
+
+  def initialize(socket); end
+
+  def read(clen, dest, ignore_eof=T.unsafe(nil)); end
+
+  def read_all(dest); end
+end
+
+class Gem::Net::HTTPResponse::Inflater
+end
+
+class Gem::Net::HTTPResponse
+  def self.body_permitted?(); end
+
+  def self.exception_type(); end
+
+  def self.read_new(sock); end
+end
+
+Gem::Net::HTTPResponseReceiver = Gem::Net::HTTPResponse
+
+Gem::Net::HTTPRetriableCode = Gem::Net::HTTPRedirection
+
+class Gem::Net::HTTPRetriableError
+  include ::Gem::Net::HTTPExceptions
+end
+
+class Gem::Net::HTTPRetriableError
+end
+
+class Gem::Net::HTTPSeeOther
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPSeeOther
+end
+
+class Gem::Net::HTTPServerError
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+Gem::Net::HTTPServerError::EXCEPTION_TYPE = Gem::Net::HTTPFatalError
+
+class Gem::Net::HTTPServerError
+end
+
+Gem::Net::HTTPServerErrorCode = Gem::Net::HTTPServerError
+
+Gem::Net::HTTPServerException = Gem::Net::HTTPClientException
+
+class Gem::Net::HTTPServiceUnavailable
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPServiceUnavailable
+end
+
+Gem::Net::HTTPSession = Gem::Net::HTTP
+
+class Gem::Net::HTTPSuccess
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+Gem::Net::HTTPSuccess::EXCEPTION_TYPE = Gem::Net::HTTPError
+
+class Gem::Net::HTTPSuccess
+end
+
+Gem::Net::HTTPSuccessCode = Gem::Net::HTTPSuccess
+
+class Gem::Net::HTTPSwitchProtocol
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPSwitchProtocol
+end
+
+class Gem::Net::HTTPTemporaryRedirect
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPTemporaryRedirect
+end
+
+class Gem::Net::HTTPTooManyRequests
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPTooManyRequests
+end
+
+class Gem::Net::HTTPURITooLong
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPURITooLong
+end
+
+class Gem::Net::HTTPUnauthorized
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPUnauthorized
+end
+
+class Gem::Net::HTTPUnavailableForLegalReasons
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPUnavailableForLegalReasons
+end
+
+class Gem::Net::HTTPUnknownResponse
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+Gem::Net::HTTPUnknownResponse::EXCEPTION_TYPE = Gem::Net::HTTPError
+
+class Gem::Net::HTTPUnknownResponse
+end
+
+class Gem::Net::HTTPUnprocessableEntity
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPUnprocessableEntity
+end
+
+class Gem::Net::HTTPUnsupportedMediaType
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPUnsupportedMediaType
+end
+
+class Gem::Net::HTTPUpgradeRequired
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPUpgradeRequired
+end
+
+class Gem::Net::HTTPUseProxy
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPUseProxy
+end
+
+class Gem::Net::HTTPVariantAlsoNegotiates
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPVariantAlsoNegotiates
+end
+
+class Gem::Net::HTTPVersionNotSupported
+  HAS_BODY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::HTTPVersionNotSupported
+end
+
+class Gem::Net::InternetMessageIO
+  def each_list_item(); end
+
+  def each_message_chunk(); end
+
+  def initialize(*arg, **arg1); end
+
+  def write_message(src); end
+
+  def write_message_0(src); end
+
+  def write_message_by_block(&block); end
+end
+
+class Gem::Net::InternetMessageIO
+end
+
+module Gem::Net::NetPrivate
+end
+
+Gem::Net::NetPrivate::HTTPRequest = Gem::Net::HTTPRequest
+
+Gem::Net::NetPrivate::Socket = Gem::Net::InternetMessageIO
+
+module Gem::Net::NetPrivate
+end
+
+class Gem::Net::OpenTimeout
+end
+
+class Gem::Net::OpenTimeout
+end
+
+class Gem::Net::ProtoAuthError
+end
+
+class Gem::Net::ProtoAuthError
+end
+
+class Gem::Net::ProtoCommandError
+end
+
+class Gem::Net::ProtoCommandError
+end
+
+class Gem::Net::ProtoFatalError
+end
+
+class Gem::Net::ProtoFatalError
+end
+
+class Gem::Net::ProtoRetriableError
+end
+
+class Gem::Net::ProtoRetriableError
+end
+
+class Gem::Net::ProtoServerError
+end
+
+class Gem::Net::ProtoServerError
+end
+
+class Gem::Net::ProtoSyntaxError
+end
+
+class Gem::Net::ProtoSyntaxError
+end
+
+class Gem::Net::ProtoUnknownError
+end
+
+class Gem::Net::ProtoUnknownError
+end
+
+Gem::Net::ProtocRetryError = Gem::Net::ProtoRetriableError
+
+class Gem::Net::Protocol
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Net::Protocol
+  def self.protocol_param(name, val); end
+end
+
+class Gem::Net::ProtocolError
+end
+
+class Gem::Net::ProtocolError
+end
+
+class Gem::Net::ReadAdapter
+  def <<(str); end
+
+  def initialize(block); end
+end
+
+class Gem::Net::ReadAdapter
+end
+
+class Gem::Net::ReadTimeout
+  def initialize(io=T.unsafe(nil)); end
+
+  def io(); end
+end
+
+class Gem::Net::ReadTimeout
+end
+
+class Gem::Net::WriteAdapter
+  def <<(str); end
+
+  def initialize(writer); end
+
+  def print(str); end
+
+  def printf(*args); end
+
+  def puts(str=T.unsafe(nil)); end
+
+  def write(str); end
+end
+
+class Gem::Net::WriteAdapter
+end
+
+class Gem::Net::WriteTimeout
+  def initialize(io=T.unsafe(nil)); end
+
+  def io(); end
+end
+
+class Gem::Net::WriteTimeout
+end
+
+module Gem::Net
 end
 
 class Gem::PathSupport
@@ -13592,11 +16645,41 @@ class Gem::Platform
 end
 
 class Gem::Platform
+  def self._deprecated_match(platform); end
+
   def self.match_gem?(platform, gem_name); end
 
   def self.match_spec?(spec); end
 
   def self.sort_priority(platform); end
+end
+
+module Gem::Random
+end
+
+module Gem::Random::Formatter
+  def alphanumeric(n=T.unsafe(nil), chars: T.unsafe(nil)); end
+
+  def base64(n=T.unsafe(nil)); end
+
+  def hex(n=T.unsafe(nil)); end
+
+  def random_bytes(n=T.unsafe(nil)); end
+
+  def urlsafe_base64(n=T.unsafe(nil), padding=T.unsafe(nil)); end
+
+  def uuid(); end
+
+  def uuid_v4(); end
+
+  def uuid_v7(extra_timestamp_bits: T.unsafe(nil)); end
+  ALPHANUMERIC = ::T.let(nil, ::T.untyped)
+end
+
+module Gem::Random::Formatter
+end
+
+module Gem::Random
 end
 
 class Gem::Request
@@ -13615,6 +16698,1084 @@ end
 
 class Gem::Requirement
   def _sorted_requirements(); end
+end
+
+class Gem::Resolv
+  def each_address(name); end
+
+  def each_name(address); end
+
+  def getaddress(name); end
+
+  def getaddresses(name); end
+
+  def getname(address); end
+
+  def getnames(address); end
+
+  def initialize(resolvers=T.unsafe(nil), use_ipv6: T.unsafe(nil)); end
+  AddressRegex = ::T.let(nil, ::T.untyped)
+  DefaultResolver = ::T.let(nil, ::T.untyped)
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS
+  def close(); end
+
+  def each_address(name); end
+
+  def each_name(address); end
+
+  def each_resource(name, typeclass, &proc); end
+
+  def extract_resources(msg, name, typeclass); end
+
+  def fetch_resource(name, typeclass); end
+
+  def getaddress(name); end
+
+  def getaddresses(name); end
+
+  def getname(address); end
+
+  def getnames(address); end
+
+  def getresource(name, typeclass); end
+
+  def getresources(name, typeclass); end
+
+  def initialize(config_info=T.unsafe(nil)); end
+
+  def lazy_initialize(); end
+
+  def make_tcp_requester(host, port); end
+
+  def make_udp_requester(); end
+
+  def timeouts=(values); end
+  Port = ::T.let(nil, ::T.untyped)
+  RequestID = ::T.let(nil, ::T.untyped)
+  RequestIDMutex = ::T.let(nil, ::T.untyped)
+  UDPSize = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Config
+  def generate_candidates(name); end
+
+  def generate_timeouts(); end
+
+  def initialize(config_info=T.unsafe(nil)); end
+
+  def lazy_initialize(); end
+
+  def nameserver_port(); end
+
+  def resolv(name); end
+
+  def single?(); end
+
+  def timeouts=(values); end
+
+  def use_ipv6?(); end
+  InitialTimeout = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Config::NXDomain
+end
+
+class Gem::Resolv::DNS::Config::NXDomain
+end
+
+class Gem::Resolv::DNS::Config::OtherResolvError
+end
+
+class Gem::Resolv::DNS::Config::OtherResolvError
+end
+
+class Gem::Resolv::DNS::Config
+  def self.default_config_hash(filename=T.unsafe(nil)); end
+
+  def self.parse_resolv_conf(filename); end
+end
+
+class Gem::Resolv::DNS::DecodeError
+end
+
+class Gem::Resolv::DNS::DecodeError
+end
+
+class Gem::Resolv::DNS::EncodeError
+end
+
+class Gem::Resolv::DNS::EncodeError
+end
+
+module Gem::Resolv::DNS::Label
+end
+
+class Gem::Resolv::DNS::Label::Str
+  def ==(other); end
+
+  def downcase(); end
+
+  def eql?(other); end
+
+  def initialize(string); end
+
+  def string(); end
+end
+
+class Gem::Resolv::DNS::Label::Str
+end
+
+module Gem::Resolv::DNS::Label
+  def self.split(arg); end
+end
+
+class Gem::Resolv::DNS::Message
+  def ==(other); end
+
+  def aa(); end
+
+  def aa=(aa); end
+
+  def add_additional(name, ttl, data); end
+
+  def add_answer(name, ttl, data); end
+
+  def add_authority(name, ttl, data); end
+
+  def add_question(name, typeclass); end
+
+  def additional(); end
+
+  def answer(); end
+
+  def authority(); end
+
+  def each_additional(); end
+
+  def each_answer(); end
+
+  def each_authority(); end
+
+  def each_question(); end
+
+  def each_resource(); end
+
+  def encode(); end
+
+  def id(); end
+
+  def id=(id); end
+
+  def initialize(id=T.unsafe(nil)); end
+
+  def opcode(); end
+
+  def opcode=(opcode); end
+
+  def qr(); end
+
+  def qr=(qr); end
+
+  def question(); end
+
+  def ra(); end
+
+  def ra=(ra); end
+
+  def rcode(); end
+
+  def rcode=(rcode); end
+
+  def rd(); end
+
+  def rd=(rd); end
+
+  def tc(); end
+
+  def tc=(tc); end
+end
+
+class Gem::Resolv::DNS::Message::MessageDecoder
+  def get_bytes(len=T.unsafe(nil)); end
+
+  def get_label(); end
+
+  def get_labels(); end
+
+  def get_length16(); end
+
+  def get_list(); end
+
+  def get_name(); end
+
+  def get_question(); end
+
+  def get_rr(); end
+
+  def get_string(); end
+
+  def get_string_list(); end
+
+  def get_unpack(template); end
+
+  def initialize(data); end
+end
+
+class Gem::Resolv::DNS::Message::MessageDecoder
+end
+
+class Gem::Resolv::DNS::Message::MessageEncoder
+  def put_bytes(d); end
+
+  def put_label(d); end
+
+  def put_labels(d, compress: T.unsafe(nil)); end
+
+  def put_length16(); end
+
+  def put_name(d, compress: T.unsafe(nil)); end
+
+  def put_pack(template, *d); end
+
+  def put_string(d); end
+
+  def put_string_list(ds); end
+end
+
+class Gem::Resolv::DNS::Message::MessageEncoder
+end
+
+class Gem::Resolv::DNS::Message
+  def self.decode(m); end
+end
+
+class Gem::Resolv::DNS::Name
+  def ==(other); end
+
+  def [](i); end
+
+  def absolute?(); end
+
+  def eql?(other); end
+
+  def initialize(labels, absolute=T.unsafe(nil)); end
+
+  def length(); end
+
+  def subdomain_of?(other); end
+
+  def to_a(); end
+end
+
+class Gem::Resolv::DNS::Name
+  def self.create(arg); end
+end
+
+module Gem::Resolv::DNS::OpCode
+  IQuery = ::T.let(nil, ::T.untyped)
+  Notify = ::T.let(nil, ::T.untyped)
+  Query = ::T.let(nil, ::T.untyped)
+  Status = ::T.let(nil, ::T.untyped)
+  Update = ::T.let(nil, ::T.untyped)
+end
+
+module Gem::Resolv::DNS::OpCode
+end
+
+class Gem::Resolv::DNS::Query
+  def encode_rdata(msg); end
+end
+
+class Gem::Resolv::DNS::Query
+  def self.decode_rdata(msg); end
+end
+
+module Gem::Resolv::DNS::RCode
+  BADALG = ::T.let(nil, ::T.untyped)
+  BADKEY = ::T.let(nil, ::T.untyped)
+  BADMODE = ::T.let(nil, ::T.untyped)
+  BADNAME = ::T.let(nil, ::T.untyped)
+  BADSIG = ::T.let(nil, ::T.untyped)
+  BADTIME = ::T.let(nil, ::T.untyped)
+  BADVERS = ::T.let(nil, ::T.untyped)
+  FormErr = ::T.let(nil, ::T.untyped)
+  NXDomain = ::T.let(nil, ::T.untyped)
+  NXRRSet = ::T.let(nil, ::T.untyped)
+  NoError = ::T.let(nil, ::T.untyped)
+  NotAuth = ::T.let(nil, ::T.untyped)
+  NotImp = ::T.let(nil, ::T.untyped)
+  NotZone = ::T.let(nil, ::T.untyped)
+  Refused = ::T.let(nil, ::T.untyped)
+  ServFail = ::T.let(nil, ::T.untyped)
+  YXDomain = ::T.let(nil, ::T.untyped)
+  YXRRSet = ::T.let(nil, ::T.untyped)
+end
+
+module Gem::Resolv::DNS::RCode
+end
+
+class Gem::Resolv::DNS::Requester
+  def close(); end
+
+  def request(sender, tout); end
+
+  def sender_for(addr, msg); end
+end
+
+class Gem::Resolv::DNS::Requester::ConnectedUDP
+  def initialize(host, port=T.unsafe(nil)); end
+
+  def lazy_initialize(); end
+
+  def recv_reply(readable_socks); end
+
+  def sender(msg, data, host=T.unsafe(nil), port=T.unsafe(nil)); end
+end
+
+class Gem::Resolv::DNS::Requester::ConnectedUDP::Sender
+  def data(); end
+
+  def send(); end
+end
+
+class Gem::Resolv::DNS::Requester::ConnectedUDP::Sender
+end
+
+class Gem::Resolv::DNS::Requester::ConnectedUDP
+end
+
+class Gem::Resolv::DNS::Requester::MDNSOneShot
+end
+
+class Gem::Resolv::DNS::Requester::MDNSOneShot
+end
+
+class Gem::Resolv::DNS::Requester::RequestError
+end
+
+class Gem::Resolv::DNS::Requester::RequestError
+end
+
+class Gem::Resolv::DNS::Requester::Sender
+  def initialize(msg, data, sock); end
+end
+
+class Gem::Resolv::DNS::Requester::Sender
+end
+
+class Gem::Resolv::DNS::Requester::TCP
+  def initialize(host, port=T.unsafe(nil)); end
+
+  def recv_reply(readable_socks); end
+
+  def sender(msg, data, host=T.unsafe(nil), port=T.unsafe(nil)); end
+end
+
+class Gem::Resolv::DNS::Requester::TCP::Sender
+  def data(); end
+
+  def send(); end
+end
+
+class Gem::Resolv::DNS::Requester::TCP::Sender
+end
+
+class Gem::Resolv::DNS::Requester::TCP
+end
+
+class Gem::Resolv::DNS::Requester::UnconnectedUDP
+  def initialize(*nameserver_port); end
+
+  def lazy_initialize(); end
+
+  def recv_reply(readable_socks); end
+
+  def sender(msg, data, host, port=T.unsafe(nil)); end
+end
+
+class Gem::Resolv::DNS::Requester::UnconnectedUDP::Sender
+  def data(); end
+
+  def initialize(msg, data, sock, host, port); end
+
+  def send(); end
+end
+
+class Gem::Resolv::DNS::Requester::UnconnectedUDP::Sender
+end
+
+class Gem::Resolv::DNS::Requester::UnconnectedUDP
+end
+
+class Gem::Resolv::DNS::Requester
+end
+
+class Gem::Resolv::DNS::Resource
+  def ==(other); end
+
+  def eql?(other); end
+
+  def ttl(); end
+  ClassHash = ::T.let(nil, ::T.untyped)
+  ClassInsensitiveTypes = ::T.let(nil, ::T.untyped)
+  ClassValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::ANY
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::ANY
+end
+
+class Gem::Resolv::DNS::Resource::CAA
+  def critical?(); end
+
+  def flags(); end
+
+  def initialize(flags, tag, value); end
+
+  def tag(); end
+
+  def value(); end
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::CAA
+end
+
+class Gem::Resolv::DNS::Resource::CNAME
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::CNAME
+end
+
+class Gem::Resolv::DNS::Resource::DomainName
+  def initialize(name); end
+
+  def name(); end
+end
+
+class Gem::Resolv::DNS::Resource::DomainName
+end
+
+class Gem::Resolv::DNS::Resource::Generic
+  def data(); end
+
+  def initialize(data); end
+end
+
+class Gem::Resolv::DNS::Resource::Generic
+  def self.create(type_value, class_value); end
+end
+
+class Gem::Resolv::DNS::Resource::HINFO
+  def cpu(); end
+
+  def initialize(cpu, os); end
+
+  def os(); end
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::HINFO
+end
+
+module Gem::Resolv::DNS::Resource::IN
+  ClassValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::A
+  def address(); end
+
+  def initialize(address); end
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::A
+end
+
+class Gem::Resolv::DNS::Resource::IN::AAAA
+  def address(); end
+
+  def initialize(address); end
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::AAAA
+end
+
+class Gem::Resolv::DNS::Resource::IN::ANY
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::ANY
+end
+
+class Gem::Resolv::DNS::Resource::IN::CAA
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::CAA
+end
+
+class Gem::Resolv::DNS::Resource::IN::CNAME
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::CNAME
+end
+
+class Gem::Resolv::DNS::Resource::IN::HINFO
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::HINFO
+end
+
+class Gem::Resolv::DNS::Resource::IN::HTTPS
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::HTTPS
+end
+
+class Gem::Resolv::DNS::Resource::IN::LOC
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::LOC
+end
+
+class Gem::Resolv::DNS::Resource::IN::MINFO
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::MINFO
+end
+
+class Gem::Resolv::DNS::Resource::IN::MX
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::MX
+end
+
+class Gem::Resolv::DNS::Resource::IN::NS
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::NS
+end
+
+class Gem::Resolv::DNS::Resource::IN::PTR
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::PTR
+end
+
+class Gem::Resolv::DNS::Resource::IN::SOA
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::SOA
+end
+
+class Gem::Resolv::DNS::Resource::IN::SRV
+  def initialize(priority, weight, port, target); end
+
+  def port(); end
+
+  def priority(); end
+
+  def target(); end
+
+  def weight(); end
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::SRV
+end
+
+class Gem::Resolv::DNS::Resource::IN::SVCB
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::SVCB
+end
+
+class Gem::Resolv::DNS::Resource::IN::ServiceBinding
+  def alias_mode?(); end
+
+  def encode_rdata(msg); end
+
+  def initialize(priority, target, params=T.unsafe(nil)); end
+
+  def params(); end
+
+  def priority(); end
+
+  def service_mode?(); end
+
+  def target(); end
+end
+
+class Gem::Resolv::DNS::Resource::IN::ServiceBinding
+  def self.decode_rdata(msg); end
+end
+
+class Gem::Resolv::DNS::Resource::IN::TXT
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::TXT
+end
+
+class Gem::Resolv::DNS::Resource::IN::WKS
+  def address(); end
+
+  def bitmap(); end
+
+  def initialize(address, protocol, bitmap); end
+
+  def protocol(); end
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::IN::WKS
+end
+
+module Gem::Resolv::DNS::Resource::IN
+end
+
+class Gem::Resolv::DNS::Resource::LOC
+  def altitude(); end
+
+  def hprecision(); end
+
+  def initialize(version, ssize, hprecision, vprecision, latitude, longitude, altitude); end
+
+  def latitude(); end
+
+  def longitude(); end
+
+  def ssize(); end
+
+  def version(); end
+
+  def vprecision(); end
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::LOC
+end
+
+class Gem::Resolv::DNS::Resource::MINFO
+  def emailbx(); end
+
+  def initialize(rmailbx, emailbx); end
+
+  def rmailbx(); end
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::MINFO
+end
+
+class Gem::Resolv::DNS::Resource::MX
+  def exchange(); end
+
+  def initialize(preference, exchange); end
+
+  def preference(); end
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::MX
+end
+
+class Gem::Resolv::DNS::Resource::NS
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::NS
+end
+
+class Gem::Resolv::DNS::Resource::PTR
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::PTR
+end
+
+class Gem::Resolv::DNS::Resource::SOA
+  def expire(); end
+
+  def initialize(mname, rname, serial, refresh, retry_, expire, minimum); end
+
+  def minimum(); end
+
+  def mname(); end
+
+  def refresh(); end
+
+  def retry(); end
+
+  def rname(); end
+
+  def serial(); end
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::SOA
+end
+
+class Gem::Resolv::DNS::Resource::TXT
+  def data(); end
+
+  def initialize(first_string, *rest_strings); end
+
+  def strings(); end
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::Resource::TXT
+end
+
+class Gem::Resolv::DNS::Resource
+  def self.get_class(type_value, class_value); end
+end
+
+class Gem::Resolv::DNS::SvcParam
+  ClassHash = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::SvcParam::ALPN
+  def encode(msg); end
+
+  def initialize(protocol_ids); end
+
+  def protocol_ids(); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::SvcParam::ALPN
+  def self.decode(msg); end
+end
+
+class Gem::Resolv::DNS::SvcParam::DoHPath
+  def encode(msg); end
+
+  def initialize(template); end
+
+  def template(); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::SvcParam::DoHPath
+  def self.decode(msg); end
+end
+
+class Gem::Resolv::DNS::SvcParam::Generic
+  def encode(msg); end
+
+  def initialize(value); end
+
+  def value(); end
+end
+
+class Gem::Resolv::DNS::SvcParam::Generic
+  def self.create(key_number); end
+
+  def self.decode(msg); end
+end
+
+class Gem::Resolv::DNS::SvcParam::IPv4Hint
+  def addresses(); end
+
+  def encode(msg); end
+
+  def initialize(addresses); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::SvcParam::IPv4Hint
+  def self.decode(msg); end
+end
+
+class Gem::Resolv::DNS::SvcParam::IPv6Hint
+  def addresses(); end
+
+  def encode(msg); end
+
+  def initialize(addresses); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::SvcParam::IPv6Hint
+  def self.decode(msg); end
+end
+
+class Gem::Resolv::DNS::SvcParam::Mandatory
+  def encode(msg); end
+
+  def initialize(keys); end
+
+  def keys(); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::SvcParam::Mandatory
+  def self.decode(msg); end
+end
+
+class Gem::Resolv::DNS::SvcParam::NoDefaultALPN
+  def encode(msg); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::SvcParam::NoDefaultALPN
+  def self.decode(msg); end
+end
+
+class Gem::Resolv::DNS::SvcParam::Port
+  def encode(msg); end
+
+  def initialize(port); end
+
+  def port(); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::DNS::SvcParam::Port
+  def self.decode(msg); end
+end
+
+class Gem::Resolv::DNS::SvcParam
+  def self.key_name(); end
+
+  def self.key_number(); end
+end
+
+class Gem::Resolv::DNS::SvcParams
+  include ::Enumerable
+  def [](key); end
+
+  def add(param); end
+
+  def count(); end
+
+  def delete(key); end
+
+  def each(&block); end
+
+  def empty?(); end
+
+  def encode(msg); end
+
+  def initialize(params=T.unsafe(nil)); end
+end
+
+class Gem::Resolv::DNS::SvcParams
+  def self.decode(msg); end
+end
+
+class Gem::Resolv::DNS
+  def self.allocate_request_id(host, port); end
+
+  def self.bind_random_port(udpsock, bind_host=T.unsafe(nil)); end
+
+  def self.free_request_id(host, port, id); end
+
+  def self.open(*args); end
+
+  def self.random(arg); end
+end
+
+class Gem::Resolv::Hosts
+  def each_address(name, &proc); end
+
+  def each_name(address, &proc); end
+
+  def getaddress(name); end
+
+  def getaddresses(name); end
+
+  def getname(address); end
+
+  def getnames(address); end
+
+  def initialize(filename=T.unsafe(nil)); end
+
+  def lazy_initialize(); end
+  DefaultFileName = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::Hosts
+end
+
+class Gem::Resolv::IPv4
+  def ==(other); end
+
+  def address(); end
+
+  def eql?(other); end
+
+  def initialize(address); end
+
+  def to_name(); end
+  Regex = ::T.let(nil, ::T.untyped)
+  Regex256 = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::IPv4
+  def self.create(arg); end
+end
+
+class Gem::Resolv::IPv6
+  def ==(other); end
+
+  def address(); end
+
+  def eql?(other); end
+
+  def initialize(address); end
+
+  def to_name(); end
+  Regex = ::T.let(nil, ::T.untyped)
+  Regex_6Hex4Dec = ::T.let(nil, ::T.untyped)
+  Regex_8Hex = ::T.let(nil, ::T.untyped)
+  Regex_8HexLinkLocal = ::T.let(nil, ::T.untyped)
+  Regex_CompressedHex = ::T.let(nil, ::T.untyped)
+  Regex_CompressedHex4Dec = ::T.let(nil, ::T.untyped)
+  Regex_CompressedHexLinkLocal = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::IPv6
+  def self.create(arg); end
+end
+
+module Gem::Resolv::LOC
+end
+
+class Gem::Resolv::LOC::Alt
+  def ==(other); end
+
+  def altitude(); end
+
+  def eql?(other); end
+
+  def initialize(altitude); end
+  Regex = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::LOC::Alt
+  def self.create(arg); end
+end
+
+class Gem::Resolv::LOC::Coord
+  def ==(other); end
+
+  def coordinates(); end
+
+  def eql?(other); end
+
+  def initialize(coordinates, orientation); end
+
+  def orientation(); end
+  Regex = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::LOC::Coord
+  def self.create(arg); end
+end
+
+class Gem::Resolv::LOC::Size
+  def ==(other); end
+
+  def eql?(other); end
+
+  def initialize(scalar); end
+
+  def scalar(); end
+  Regex = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::LOC::Size
+  def self.create(arg); end
+end
+
+module Gem::Resolv::LOC
+end
+
+class Gem::Resolv::MDNS
+  AddressV4 = ::T.let(nil, ::T.untyped)
+  AddressV6 = ::T.let(nil, ::T.untyped)
+  Addresses = ::T.let(nil, ::T.untyped)
+  Port = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Resolv::MDNS
+end
+
+class Gem::Resolv::ResolvError
+end
+
+class Gem::Resolv::ResolvError
+end
+
+class Gem::Resolv::ResolvTimeout
+end
+
+class Gem::Resolv::ResolvTimeout
+end
+
+class Gem::Resolv
+  def self.each_address(name, &block); end
+
+  def self.each_name(address, &proc); end
+
+  def self.getaddress(name); end
+
+  def self.getaddresses(name); end
+
+  def self.getname(address); end
+
+  def self.getnames(address); end
+end
+
+class Gem::Resolver
+  include ::Gem::Molinillo::UI
+  include ::Gem::Molinillo::SpecificationProvider
 end
 
 class Gem::Resolver::APISet::GemParser
@@ -13654,154 +17815,6 @@ end
 class Gem::Resolver::LocalSpecification
 end
 
-module Gem::Resolver::Molinillo::Delegates::ResolutionState
-  def unused_unwind_options(); end
-end
-
-module Gem::Resolver::Molinillo::Delegates::SpecificationProvider
-  def dependencies_equal?(dependencies, other_dependencies); end
-end
-
-class Gem::Resolver::Molinillo::DependencyGraph
-  include ::Gem::TSort
-end
-
-class Gem::Resolver::Molinillo::DependencyGraph::Edge
-  def self.keyword_init?(); end
-end
-
-class Gem::Resolver::Molinillo::DependencyGraph::Log
-  def add_edge_no_circular(graph, origin, destination, requirement); end
-
-  def add_vertex(graph, name, payload, root); end
-
-  def delete_edge(graph, origin_name, destination_name, requirement); end
-
-  def detach_vertex_named(graph, name); end
-
-  def each(&blk); end
-
-  def pop!(graph); end
-
-  def reverse_each(); end
-
-  def rewind_to(graph, tag); end
-
-  def set_payload(graph, name, payload); end
-
-  def tag(graph, tag); end
-end
-
-class Gem::Resolver::Molinillo::DependencyGraph::Log
-  extend ::Enumerable
-end
-
-class Gem::Resolver::Molinillo::DependencyGraph::Vertex
-  def _path_to?(other, visited=T.unsafe(nil)); end
-
-  def _recursive_predecessors(vertices=T.unsafe(nil)); end
-
-  def _recursive_successors(vertices=T.unsafe(nil)); end
-end
-
-class Gem::Resolver::Molinillo::ResolutionState
-  def unused_unwind_options(); end
-
-  def unused_unwind_options=(_); end
-end
-
-class Gem::Resolver::Molinillo::ResolutionState
-  def self.keyword_init?(); end
-end
-
-class Gem::Resolver::Molinillo::Resolver::Resolution::Conflict
-  def possibility_set(); end
-
-  def possibility_set=(_); end
-
-  def underlying_error(); end
-
-  def underlying_error=(_); end
-end
-
-class Gem::Resolver::Molinillo::Resolver::Resolution::Conflict
-  def self.keyword_init?(); end
-end
-
-class Gem::Resolver::Molinillo::Resolver::Resolution::PossibilitySet
-  def dependencies(); end
-
-  def dependencies=(_); end
-
-  def latest_version(); end
-
-  def possibilities(); end
-
-  def possibilities=(_); end
-end
-
-class Gem::Resolver::Molinillo::Resolver::Resolution::PossibilitySet
-  def self.[](*arg); end
-
-  def self.keyword_init?(); end
-
-  def self.members(); end
-end
-
-class Gem::Resolver::Molinillo::Resolver::Resolution::UnwindDetails
-  include ::Comparable
-  def all_requirements(); end
-
-  def conflicting_requirements(); end
-
-  def conflicting_requirements=(_); end
-
-  def requirement_tree(); end
-
-  def requirement_tree=(_); end
-
-  def requirement_trees(); end
-
-  def requirement_trees=(_); end
-
-  def requirements_unwound_to_instead(); end
-
-  def requirements_unwound_to_instead=(_); end
-
-  def reversed_requirement_tree_index(); end
-
-  def state_index(); end
-
-  def state_index=(_); end
-
-  def state_requirement(); end
-
-  def state_requirement=(_); end
-
-  def sub_dependencies_to_avoid(); end
-
-  def unwinding_to_primary_requirement?(); end
-end
-
-class Gem::Resolver::Molinillo::Resolver::Resolution::UnwindDetails
-  def self.[](*arg); end
-
-  def self.keyword_init?(); end
-
-  def self.members(); end
-end
-
-module Gem::Resolver::Molinillo::SpecificationProvider
-  def dependencies_equal?(dependencies, other_dependencies); end
-end
-
-class Gem::Resolver::Molinillo::VersionConflict
-  include ::Gem::Resolver::Molinillo::Delegates::SpecificationProvider
-  def message_with_trees(opts=T.unsafe(nil)); end
-
-  def specification_provider(); end
-end
-
 class Gem::Resolver::Specification
   def required_ruby_version(); end
 
@@ -13815,6 +17828,15 @@ class Gem::RuntimeRequirementNotMetError
 end
 
 class Gem::RuntimeRequirementNotMetError
+end
+
+module Gem::SecureRandom
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+module Gem::SecureRandom
+  extend ::Gem::Random::Formatter
+  def self.bytes(n); end
 end
 
 class Gem::SpecFetcher
@@ -13866,6 +17888,8 @@ class Gem::Specification
   def flatten_require_paths(); end
 
   def removed_method_calls(); end
+
+  def validate_for_resolution(); end
   LATEST_RUBY_WITHOUT_PATCH_VERSIONS = ::T.let(nil, ::T.untyped)
   REMOVED_METHODS = ::T.let(nil, ::T.untyped)
 end
@@ -13884,9 +17908,13 @@ class Gem::Specification
 
   def self.find_by_full_name(full_name); end
 
+  def self.gemspec_stubs_in(dir, pattern); end
+
   def self.latest_spec_for(name); end
 
   def self.remove_spec(spec); end
+
+  def self.specification_record(); end
 
   def self.stubs_for_pattern(pattern, match_platform=T.unsafe(nil)); end
 end
@@ -13907,6 +17935,8 @@ class Gem::SpecificationPolicy
 
   def validate_duplicate_dependencies(); end
 
+  def validate_for_resolution(); end
+
   def validate_metadata(); end
 
   def validate_optional(strict); end
@@ -13914,6 +17944,10 @@ class Gem::SpecificationPolicy
   def validate_permissions(); end
 
   def validate_required!(); end
+
+  def validate_required_metadata!(); end
+
+  def validate_required_ruby_version(); end
   HOMEPAGE_URI_PATTERN = ::T.let(nil, ::T.untyped)
   LAZY = ::T.let(nil, ::T.untyped)
   LAZY_PATTERN = ::T.let(nil, ::T.untyped)
@@ -13926,14 +17960,61 @@ end
 class Gem::SpecificationPolicy
 end
 
+class Gem::SpecificationRecord
+  include ::Enumerable
+  def add_spec(spec); end
+
+  def all(); end
+
+  def all=(specs); end
+
+  def all_names(); end
+
+  def each(&blk); end
+
+  def find_active_stub_by_path(path); end
+
+  def find_all_by_name(name, *requirements); end
+
+  def find_by_path(path); end
+
+  def find_inactive_by_path(path); end
+
+  def initialize(dirs); end
+
+  def latest_spec_for(name); end
+
+  def latest_specs(prerelease); end
+
+  def remove_spec(spec); end
+
+  def stubs(); end
+
+  def stubs_for(name); end
+
+  def stubs_for_pattern(pattern, match_platform=T.unsafe(nil)); end
+end
+
+class Gem::SpecificationRecord
+  def self.dirs_from(paths); end
+
+  def self.from_path(path); end
+end
+
 class Gem::StubSpecification
+  def ==(other); end
+
   def build_extensions(); end
+
+  def eql?(other); end
 
   def extensions(); end
 
   def initialize(filename, base_dir, gems_dir, default_gem); end
 
   def missing_extensions?(); end
+
+  def sort_obj(); end
 
   def spec(); end
 
@@ -13976,6 +18057,7 @@ module Gem::TSort
   def tsort_each_child(node); end
 
   def tsort_each_node(); end
+  VERSION = ::T.let(nil, ::T.untyped)
 end
 
 module Gem::TSort
@@ -13988,6 +18070,501 @@ module Gem::TSort
   def self.tsort(each_node, each_child); end
 
   def self.tsort_each(each_node, each_child); end
+end
+
+module Gem::Timeout
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::Timeout::Error
+end
+
+class Gem::Timeout::Error
+  def self.handle_timeout(message); end
+end
+
+class Gem::Timeout::ExitException
+  def exception(*arg); end
+end
+
+class Gem::Timeout::ExitException
+end
+
+module Gem::Timeout
+  def self.ensure_timeout_thread_created(); end
+
+  def self.timeout(sec, klass=T.unsafe(nil), message=T.unsafe(nil), &block); end
+end
+
+module Gem::URI
+  include ::Gem::URI::RFC2396_REGEXP
+  ABS_PATH = ::T.let(nil, ::T.untyped)
+  ABS_URI = ::T.let(nil, ::T.untyped)
+  ABS_URI_REF = ::T.let(nil, ::T.untyped)
+  DEFAULT_PARSER = ::T.let(nil, ::T.untyped)
+  ESCAPED = ::T.let(nil, ::T.untyped)
+  FRAGMENT = ::T.let(nil, ::T.untyped)
+  HOST = ::T.let(nil, ::T.untyped)
+  OPAQUE = ::T.let(nil, ::T.untyped)
+  PORT = ::T.let(nil, ::T.untyped)
+  QUERY = ::T.let(nil, ::T.untyped)
+  REGISTRY = ::T.let(nil, ::T.untyped)
+  REL_PATH = ::T.let(nil, ::T.untyped)
+  REL_URI = ::T.let(nil, ::T.untyped)
+  REL_URI_REF = ::T.let(nil, ::T.untyped)
+  RFC2396_PARSER = ::T.let(nil, ::T.untyped)
+  RFC3986_PARSER = ::T.let(nil, ::T.untyped)
+  SCHEME = ::T.let(nil, ::T.untyped)
+  TBLDECWWWCOMP_ = ::T.let(nil, ::T.untyped)
+  TBLENCURICOMP_ = ::T.let(nil, ::T.untyped)
+  TBLENCWWWCOMP_ = ::T.let(nil, ::T.untyped)
+  UNSAFE = ::T.let(nil, ::T.untyped)
+  URI_REF = ::T.let(nil, ::T.untyped)
+  USERINFO = ::T.let(nil, ::T.untyped)
+  VERSION = ::T.let(nil, ::T.untyped)
+  VERSION_CODE = ::T.let(nil, ::T.untyped)
+  WEB_ENCODINGS_ = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::URI::BadURIError
+end
+
+class Gem::URI::BadURIError
+end
+
+class Gem::URI::Error
+end
+
+class Gem::URI::Error
+end
+
+class Gem::URI::FTP
+  def set_typecode(v); end
+
+  def typecode(); end
+
+  def typecode=(typecode); end
+  COMPONENT = ::T.let(nil, ::T.untyped)
+  DEFAULT_PORT = ::T.let(nil, ::T.untyped)
+  TYPECODE = ::T.let(nil, ::T.untyped)
+  TYPECODE_PREFIX = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::URI::FTP
+  def self.new2(user, password, host, port, path, typecode=T.unsafe(nil), arg_check=T.unsafe(nil)); end
+end
+
+class Gem::URI::File
+  def check_password(user); end
+
+  def check_user(user); end
+
+  def check_userinfo(user); end
+
+  def set_userinfo(v); end
+  COMPONENT = ::T.let(nil, ::T.untyped)
+  DEFAULT_PORT = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::URI::File
+end
+
+class Gem::URI::Generic
+  include ::Gem::URI
+  include ::Gem::URI::RFC2396_REGEXP
+  def +(oth); end
+
+  def -(oth); end
+
+  def ==(oth); end
+
+  def absolute(); end
+
+  def absolute?(); end
+
+  def coerce(oth); end
+
+  def component(); end
+
+  def component_ary(); end
+
+  def decoded_password(); end
+
+  def decoded_user(); end
+
+  def default_port(); end
+
+  def eql?(oth); end
+
+  def find_proxy(env=T.unsafe(nil)); end
+
+  def fragment(); end
+
+  def fragment=(v); end
+
+  def hierarchical?(); end
+
+  def host(); end
+
+  def host=(v); end
+
+  def hostname(); end
+
+  def hostname=(v); end
+
+  def initialize(scheme, userinfo, host, port, registry, path, opaque, query, fragment, parser=T.unsafe(nil), arg_check=T.unsafe(nil)); end
+
+  def merge(oth); end
+
+  def merge!(oth); end
+
+  def normalize(); end
+
+  def normalize!(); end
+
+  def opaque(); end
+
+  def opaque=(v); end
+
+  def parser(); end
+
+  def password(); end
+
+  def password=(password); end
+
+  def path(); end
+
+  def path=(v); end
+
+  def port(); end
+
+  def port=(v); end
+
+  def query(); end
+
+  def query=(v); end
+
+  def registry(); end
+
+  def registry=(v); end
+
+  def relative?(); end
+
+  def route_from(oth); end
+
+  def route_to(oth); end
+
+  def scheme(); end
+
+  def scheme=(v); end
+
+  def select(*components); end
+
+  def set_host(v); end
+
+  def set_opaque(v); end
+
+  def set_password(v); end
+
+  def set_path(v); end
+
+  def set_port(v); end
+
+  def set_registry(v); end
+
+  def set_scheme(v); end
+
+  def set_user(v); end
+
+  def set_userinfo(user, password=T.unsafe(nil)); end
+
+  def to_str(); end
+
+  def user(); end
+
+  def user=(user); end
+
+  def userinfo(); end
+
+  def userinfo=(userinfo); end
+  COMPONENT = ::T.let(nil, ::T.untyped)
+  DEFAULT_PORT = ::T.let(nil, ::T.untyped)
+  USE_REGISTRY = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::URI::Generic
+  def self.build(args); end
+
+  def self.build2(args); end
+
+  def self.component(); end
+
+  def self.default_port(); end
+
+  def self.use_proxy?(hostname, addr, port, no_proxy); end
+
+  def self.use_registry(); end
+end
+
+class Gem::URI::HTTP
+  def authority(); end
+
+  def origin(); end
+
+  def request_uri(); end
+  COMPONENT = ::T.let(nil, ::T.untyped)
+  DEFAULT_PORT = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::URI::HTTP
+end
+
+class Gem::URI::HTTPS
+  DEFAULT_PORT = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::URI::HTTPS
+end
+
+class Gem::URI::InvalidComponentError
+end
+
+class Gem::URI::InvalidComponentError
+end
+
+class Gem::URI::InvalidURIError
+end
+
+class Gem::URI::InvalidURIError
+end
+
+class Gem::URI::LDAP
+  def attributes(); end
+
+  def attributes=(val); end
+
+  def dn(); end
+
+  def dn=(val); end
+
+  def extensions(); end
+
+  def extensions=(val); end
+
+  def filter(); end
+
+  def filter=(val); end
+
+  def initialize(*arg); end
+
+  def scope(); end
+
+  def scope=(val); end
+
+  def set_attributes(val); end
+
+  def set_dn(val); end
+
+  def set_extensions(val); end
+
+  def set_filter(val); end
+
+  def set_scope(val); end
+  COMPONENT = ::T.let(nil, ::T.untyped)
+  DEFAULT_PORT = ::T.let(nil, ::T.untyped)
+  SCOPE = ::T.let(nil, ::T.untyped)
+  SCOPE_BASE = ::T.let(nil, ::T.untyped)
+  SCOPE_ONE = ::T.let(nil, ::T.untyped)
+  SCOPE_SUB = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::URI::LDAP
+end
+
+class Gem::URI::LDAPS
+  DEFAULT_PORT = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::URI::LDAPS
+end
+
+class Gem::URI::MailTo
+  def headers(); end
+
+  def headers=(v); end
+
+  def initialize(*arg); end
+
+  def set_headers(v); end
+
+  def set_to(v); end
+
+  def to(); end
+
+  def to=(v); end
+
+  def to_mailtext(); end
+
+  def to_rfc822text(); end
+  COMPONENT = ::T.let(nil, ::T.untyped)
+  DEFAULT_PORT = ::T.let(nil, ::T.untyped)
+  EMAIL_REGEXP = ::T.let(nil, ::T.untyped)
+  HEADER_REGEXP = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::URI::MailTo
+end
+
+Gem::URI::Parser = Gem::URI::RFC2396_Parser
+
+Gem::URI::REGEXP = Gem::URI::RFC2396_REGEXP
+
+class Gem::URI::RFC2396_Parser
+  include ::Gem::URI::RFC2396_REGEXP
+  def escape(str, unsafe=T.unsafe(nil)); end
+
+  def extract(str, schemes=T.unsafe(nil)); end
+
+  def initialize(opts=T.unsafe(nil)); end
+
+  def join(*uris); end
+
+  def make_regexp(schemes=T.unsafe(nil)); end
+
+  def parse(uri); end
+
+  def pattern(); end
+
+  def regexp(); end
+
+  def split(uri); end
+
+  def unescape(str, escaped=T.unsafe(nil)); end
+end
+
+class Gem::URI::RFC2396_Parser
+end
+
+module Gem::URI::RFC2396_REGEXP
+end
+
+module Gem::URI::RFC2396_REGEXP::PATTERN
+  ABS_PATH = ::T.let(nil, ::T.untyped)
+  ABS_URI = ::T.let(nil, ::T.untyped)
+  ALNUM = ::T.let(nil, ::T.untyped)
+  ALPHA = ::T.let(nil, ::T.untyped)
+  DOMLABEL = ::T.let(nil, ::T.untyped)
+  ESCAPED = ::T.let(nil, ::T.untyped)
+  FRAGMENT = ::T.let(nil, ::T.untyped)
+  HEX = ::T.let(nil, ::T.untyped)
+  HIER_PART = ::T.let(nil, ::T.untyped)
+  HOST = ::T.let(nil, ::T.untyped)
+  HOSTNAME = ::T.let(nil, ::T.untyped)
+  HOSTPORT = ::T.let(nil, ::T.untyped)
+  IPV4ADDR = ::T.let(nil, ::T.untyped)
+  IPV6ADDR = ::T.let(nil, ::T.untyped)
+  IPV6REF = ::T.let(nil, ::T.untyped)
+  NET_PATH = ::T.let(nil, ::T.untyped)
+  OPAQUE_PART = ::T.let(nil, ::T.untyped)
+  PATH_SEGMENTS = ::T.let(nil, ::T.untyped)
+  PORT = ::T.let(nil, ::T.untyped)
+  QUERY = ::T.let(nil, ::T.untyped)
+  REG_NAME = ::T.let(nil, ::T.untyped)
+  REL_PATH = ::T.let(nil, ::T.untyped)
+  REL_SEGMENT = ::T.let(nil, ::T.untyped)
+  REL_URI = ::T.let(nil, ::T.untyped)
+  RESERVED = ::T.let(nil, ::T.untyped)
+  SCHEME = ::T.let(nil, ::T.untyped)
+  TOPLABEL = ::T.let(nil, ::T.untyped)
+  UNRESERVED = ::T.let(nil, ::T.untyped)
+  URIC = ::T.let(nil, ::T.untyped)
+  URIC_NO_SLASH = ::T.let(nil, ::T.untyped)
+  URI_REF = ::T.let(nil, ::T.untyped)
+  USERINFO = ::T.let(nil, ::T.untyped)
+  X_ABS_URI = ::T.let(nil, ::T.untyped)
+  X_REL_URI = ::T.let(nil, ::T.untyped)
+end
+
+module Gem::URI::RFC2396_REGEXP::PATTERN
+end
+
+module Gem::URI::RFC2396_REGEXP
+end
+
+class Gem::URI::RFC3986_Parser
+  def join(*uris); end
+
+  def parse(uri); end
+
+  def regexp(); end
+
+  def split(uri); end
+  FRAGMENT = ::T.let(nil, ::T.untyped)
+  HOST = ::T.let(nil, ::T.untyped)
+  RFC3986_URI = ::T.let(nil, ::T.untyped)
+  RFC3986_relative_ref = ::T.let(nil, ::T.untyped)
+  SCHEME = ::T.let(nil, ::T.untyped)
+  SEG = ::T.let(nil, ::T.untyped)
+  SEG_NC = ::T.let(nil, ::T.untyped)
+  USERINFO = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::URI::RFC3986_Parser
+end
+
+module Gem::URI::Util
+end
+
+module Gem::URI::Util
+  def self.make_components_hash(klass, array_hash); end
+end
+
+class Gem::URI::WS
+  def request_uri(); end
+  COMPONENT = ::T.let(nil, ::T.untyped)
+  DEFAULT_PORT = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::URI::WS
+end
+
+class Gem::URI::WSS
+  DEFAULT_PORT = ::T.let(nil, ::T.untyped)
+end
+
+class Gem::URI::WSS
+end
+
+module Gem::URI
+  def self.decode_uri_component(str, enc=T.unsafe(nil)); end
+
+  def self.decode_www_form(str, enc=T.unsafe(nil), separator: T.unsafe(nil), use__charset_: T.unsafe(nil), isindex: T.unsafe(nil)); end
+
+  def self.decode_www_form_component(str, enc=T.unsafe(nil)); end
+
+  def self.encode_uri_component(str, enc=T.unsafe(nil)); end
+
+  def self.encode_www_form(enum, enc=T.unsafe(nil)); end
+
+  def self.encode_www_form_component(str, enc=T.unsafe(nil)); end
+
+  def self.extract(str, schemes=T.unsafe(nil), &block); end
+
+  def self.for(scheme, *arguments, default: T.unsafe(nil)); end
+
+  def self.get_encoding(label); end
+
+  def self.join(*str); end
+
+  def self.parse(uri); end
+
+  def self.regexp(schemes=T.unsafe(nil)); end
+
+  def self.register_scheme(scheme, klass); end
+
+  def self.scheme_list(); end
+
+  def self.split(uri); end
 end
 
 class Gem::UninstallError
@@ -14026,6 +18603,10 @@ module Gem::Util
   def self._deprecated_silent_system(*command); end
 end
 
+class Gem::Version
+  def partition_segments(ver); end
+end
+
 Gem::Version::Requirement = Gem::Requirement
 
 class Gem::WebauthnVerificationError
@@ -14044,6 +18625,8 @@ module Gem
 
   def self.data_home(); end
 
+  def self.default_user_install(); end
+
   def self.disable_system_update_message(); end
 
   def self.disable_system_update_message=(disable_system_update_message); end
@@ -14052,9 +18635,21 @@ module Gem
 
   def self.discover_gems_on_require=(discover_gems_on_require); end
 
+  def self.dynamic_library_suffixes(); end
+
   def self.find_config_file(); end
 
+  def self.find_default_spec(path); end
+
+  def self.freebsd_platform?(); end
+
+  def self.load_safe_marshal(); end
+
   def self.open_file(path, flags, &block); end
+
+  def self.open_file_with_flock(path, &block); end
+
+  def self.open_file_with_lock(path, &block); end
 
   def self.plugin_suffix_pattern(); end
 
@@ -14619,6 +19214,8 @@ class Google::Auth::ServiceAccountJwtHeaderCredentials
 
   def initialize(options=T.unsafe(nil)); end
 
+  def needs_access_token?(); end
+
   def new_jwt_token(jwt_aud_uri=T.unsafe(nil), options=T.unsafe(nil)); end
 
   def project_id(); end
@@ -15167,9 +19764,6 @@ module Google::Cloud::RecaptchaEnterprise::V1
   VERSION = ::T.let(nil, ::T.untyped)
 end
 
-module Google::Cloud::RecaptchaEnterprise::V1::RecaptchaEnterpriseService
-end
-
 class Google::Cloud::RecaptchaEnterprise::V1::RecaptchaEnterpriseService::Client
   include ::Google::Cloud::RecaptchaEnterprise::V1::RecaptchaEnterpriseService::Paths
   def annotate_assessment(request, options=T.unsafe(nil)); end
@@ -15346,9 +19940,6 @@ end
 
 module Google::Cloud::RecaptchaEnterprise::V1::RecaptchaEnterpriseService::Paths
   extend ::Google::Cloud::RecaptchaEnterprise::V1::RecaptchaEnterpriseService::Paths
-end
-
-module Google::Cloud::RecaptchaEnterprise::V1::RecaptchaEnterpriseService
 end
 
 class Google::Cloud::ResourceExhaustedError
@@ -16452,8 +21043,15 @@ class GraphViz
   def self.strict_digraph(xGraphName, hOpts=T.unsafe(nil), &block); end
 end
 
+class HTTParty::Response::Headers
+  RUBYGEMS_ACTIVATION_MONITOR = ::T.let(nil, ::T.untyped)
+end
+
+class HTTParty::ResponseFragment
+  RUBYGEMS_ACTIVATION_MONITOR = ::T.let(nil, ::T.untyped)
+end
+
 class Hash
-  include ::JSON::Ext::Generator::GeneratorMethods::Hash
   include ::DeepMerge::DeepMergeHash
   def deconstruct_keys(arg); end
 
@@ -16677,6 +21275,14 @@ class IO
   def winsize=(winsize); end
 end
 
+class IO::Buffer
+  def private?(); end
+end
+
+class IO::Buffer
+  def self.string(arg); end
+end
+
 class IO::ConsoleMode
   VERSION = ::T.let(nil, ::T.untyped)
 end
@@ -16694,6 +21300,10 @@ end
 class IPAddr
   def ==(other); end
 
+  def begin_addr(); end
+
+  def end_addr(); end
+
   def initialize(addr=T.unsafe(nil), family=T.unsafe(nil)); end
 
   def netmask(); end
@@ -16705,10 +21315,8 @@ class IPAddr
 end
 
 class Integer
-  include ::JSON::Ext::Generator::GeneratorMethods::Integer
   def ceildiv(other); end
-
-  def to_bn(); end
+  GMP_VERSION = ::T.let(nil, ::T.untyped)
 end
 
 class Integer
@@ -16829,6 +21437,8 @@ class Logger
   def info!(); end
 
   def warn!(); end
+
+  def with_level(severity); end
   SEV_LABEL = ::T.let(nil, ::T.untyped)
 end
 
@@ -16845,6 +21455,10 @@ module Logger::Period
   SiD = ::T.let(nil, ::T.untyped)
 end
 
+module Logger::Severity
+  def self.coerce(severity); end
+end
+
 class LoginSpaApplication
   include ::LoginSpaApplication::GeneratedAssociationMethods
 end
@@ -16853,6 +21467,54 @@ module LoginSpaApplication::GeneratedAssociationMethods
 end
 
 module LoginSpaApplication::GeneratedAssociationMethods
+end
+
+module LoginSpaApplication::GeneratedAttributeMethods
+  def clear_confidential_change(); end
+
+  def clear_created_at_change(); end
+
+  def clear_id_change(); end
+
+  def clear_id_value_change(); end
+
+  def clear_login_url_change(); end
+
+  def clear_name_change(); end
+
+  def clear_redirect_url_on_password_reset_change(); end
+
+  def clear_scopes_change(); end
+
+  def clear_sign_up_url_change(); end
+
+  def clear_tenant_id_change(); end
+
+  def clear_uid_change(); end
+
+  def clear_updated_at_change(); end
+
+  def confidential_for_database(); end
+
+  def created_at_for_database(); end
+
+  def id_value_for_database(); end
+
+  def login_url_for_database(); end
+
+  def name_for_database(); end
+
+  def redirect_url_on_password_reset_for_database(); end
+
+  def scopes_for_database(); end
+
+  def sign_up_url_for_database(); end
+
+  def tenant_id_for_database(); end
+
+  def uid_for_database(); end
+
+  def updated_at_for_database(); end
 end
 
 module LoginSpaApplication::GeneratedAttributeMethods
@@ -17152,6 +21814,7 @@ end
 
 class Mail::Configuration
   include ::Singleton
+  include ::Singleton::SingletonInstanceMethods
   def delivery_method(method=T.unsafe(nil), settings=T.unsafe(nil)); end
 
   def lookup_delivery_method(method); end
@@ -19816,6 +24479,8 @@ class Module
 
   def feature(*a, &b); end
 
+  def set_temporary_name(arg); end
+
   def shared_context(name, *args, &block); end
 
   def shared_examples(name, *args, &block); end
@@ -21576,7 +26241,6 @@ end
 Net::SMTPSession = Net::SMTP
 
 class NilClass
-  include ::JSON::Ext::Generator::GeneratorMethods::NilClass
   def =~(arg); end
 end
 
@@ -21668,6 +26332,8 @@ class OauthAccessGrant
 
   def autosave_associated_records_for_openid_request(*args); end
 
+  def autosave_associated_records_for_resource_owner(*args); end
+
   def plaintext_token(); end
 end
 
@@ -21679,6 +26345,12 @@ module OauthAccessGrant::GeneratedAssociationMethods
   def reset_application(); end
 
   def reset_openid_request(); end
+
+  def reset_resource_owner(); end
+
+  def resource_owner_changed?(); end
+
+  def resource_owner_previously_changed?(); end
 end
 
 module OauthAccessGrant::GeneratedAttributeMethods
@@ -21689,6 +26361,8 @@ class OauthAccessToken
   include ::Doorkeeper::Models::PolymorphicResourceOwner::ForAccessToken
   def autosave_associated_records_for_application(*args); end
 
+  def autosave_associated_records_for_resource_owner(*args); end
+
   def use_refresh_token=(use_refresh_token); end
 end
 
@@ -21698,6 +26372,12 @@ module OauthAccessToken::GeneratedAssociationMethods
   def application_previously_changed?(); end
 
   def reset_application(); end
+
+  def reset_resource_owner(); end
+
+  def resource_owner_changed?(); end
+
+  def resource_owner_previously_changed?(); end
 end
 
 module OauthAccessToken::GeneratedAttributeMethods
@@ -21748,7 +26428,6 @@ module OauthApplication::GeneratedAttributeMethods
 end
 
 class Object
-  include ::JSON::Ext::Generator::GeneratorMethods::Object
   def to_ruby(); end
   ARGF = ::T.let(nil, ::T.untyped)
   ARGV = ::T.let(nil, ::T.untyped)
@@ -21773,6 +26452,10 @@ class Object
   STDOUT = ::T.let(nil, ::T.untyped)
   Settings = ::T.let(nil, ::T.untyped)
   TOPLEVEL_BINDING = ::T.let(nil, ::T.untyped)
+end
+
+class ObjectSpace::WeakMap
+  def delete(arg); end
 end
 
 module Observable
@@ -21808,50 +26491,8 @@ class OpenSSL::BN
   CONSTTIME = ::T.let(nil, ::T.untyped)
 end
 
-module OpenSSL::Buffering
-  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
-  def getbyte(); end
-end
-
-class OpenSSL::Buffering::Buffer
-  def <<(string); end
-
-  def concat(string); end
-
-  def initialize(); end
-  BINARY = ::T.let(nil, ::T.untyped)
-end
-
-class OpenSSL::Buffering::Buffer
-end
-
 class OpenSSL::Cipher
   def ccm_data_len=(ccm_data_len); end
-end
-
-class OpenSSL::HMAC
-  def ==(other); end
-
-  def base64digest(); end
-end
-
-class OpenSSL::HMAC
-  def self.base64digest(digest, key, data); end
-end
-
-module OpenSSL::Marshal
-  def _dump(_level); end
-end
-
-module OpenSSL::Marshal::ClassMethods
-  def _load(string); end
-end
-
-module OpenSSL::Marshal::ClassMethods
-end
-
-module OpenSSL::Marshal
-  def self.included(base); end
 end
 
 class OpenSSL::OCSP::Request
@@ -21860,26 +26501,7 @@ end
 
 OpenSSL::PKCS7::Signer = OpenSSL::PKCS7::SignerInfo
 
-class OpenSSL::PKey::DH
-  include ::OpenSSL::Marshal
-end
-
-class OpenSSL::PKey::DH
-  extend ::OpenSSL::Marshal::ClassMethods
-  def self.new(*args, &blk); end
-end
-
-class OpenSSL::PKey::DSA
-  include ::OpenSSL::Marshal
-end
-
-class OpenSSL::PKey::DSA
-  extend ::OpenSSL::Marshal::ClassMethods
-  def self.new(*args, &blk); end
-end
-
 class OpenSSL::PKey::EC
-  include ::OpenSSL::Marshal
   EXPLICIT_CURVE = ::T.let(nil, ::T.untyped)
 end
 
@@ -21887,10 +26509,6 @@ class OpenSSL::PKey::EC::Point
   def add(arg); end
 
   def to_octet_string(arg); end
-end
-
-class OpenSSL::PKey::EC
-  extend ::OpenSSL::Marshal::ClassMethods
 end
 
 class OpenSSL::PKey::PKey
@@ -21912,6 +26530,10 @@ class OpenSSL::PKey::PKey
 
   def public_to_pem(); end
 
+  def raw_private_key(); end
+
+  def raw_public_key(); end
+
   def sign_raw(*arg); end
 
   def to_text(); end
@@ -21921,19 +26543,14 @@ class OpenSSL::PKey::PKey
   def verify_recover(*arg); end
 end
 
-class OpenSSL::PKey::RSA
-  include ::OpenSSL::Marshal
-end
-
-class OpenSSL::PKey::RSA
-  extend ::OpenSSL::Marshal::ClassMethods
-  def self.new(*args, &blk); end
-end
-
 module OpenSSL::PKey
   def self.generate_key(*arg); end
 
   def self.generate_parameters(*arg); end
+
+  def self.new_raw_private_key(arg, arg1); end
+
+  def self.new_raw_public_key(arg, arg1); end
 end
 
 module OpenSSL::SSL
@@ -21956,136 +26573,16 @@ module OpenSSL::SSL
   OP_TLSEXT_PADDING = ::T.let(nil, ::T.untyped)
   SSL2_VERSION = ::T.let(nil, ::T.untyped)
   SSL3_VERSION = ::T.let(nil, ::T.untyped)
-  TLS1_1_VERSION = ::T.let(nil, ::T.untyped)
-  TLS1_2_VERSION = ::T.let(nil, ::T.untyped)
-  TLS1_3_VERSION = ::T.let(nil, ::T.untyped)
   TLS1_VERSION = ::T.let(nil, ::T.untyped)
 end
 
-module OpenSSL::Timestamp
-end
-
-class OpenSSL::Timestamp::Factory
-  def additional_certs(); end
-
-  def additional_certs=(additional_certs); end
-
-  def allowed_digests(); end
-
-  def allowed_digests=(allowed_digests); end
-
-  def create_timestamp(arg, arg1, arg2); end
-
-  def default_policy_id(); end
-
-  def default_policy_id=(default_policy_id); end
-
-  def gen_time(); end
-
-  def gen_time=(gen_time); end
-
-  def serial_number(); end
-
-  def serial_number=(serial_number); end
-end
-
-class OpenSSL::Timestamp::Factory
-end
-
-class OpenSSL::Timestamp::Request
-  def algorithm(); end
-
-  def algorithm=(algorithm); end
-
-  def cert_requested=(cert_requested); end
-
-  def cert_requested?(); end
-
-  def initialize(*arg); end
-
-  def message_imprint(); end
-
-  def message_imprint=(message_imprint); end
-
-  def nonce(); end
-
-  def nonce=(nonce); end
-
-  def policy_id(); end
-
-  def policy_id=(policy_id); end
-
-  def to_der(); end
-
-  def version(); end
-
-  def version=(version); end
-end
-
-class OpenSSL::Timestamp::Request
-end
-
 class OpenSSL::Timestamp::Response
-  def failure_info(); end
-
-  def initialize(arg); end
-
-  def status(); end
-
-  def status_text(); end
-
-  def to_der(); end
-
-  def token(); end
-
-  def token_info(); end
-
-  def tsa_certificate(); end
-
-  def verify(*arg); end
   GRANTED = ::T.let(nil, ::T.untyped)
   GRANTED_WITH_MODS = ::T.let(nil, ::T.untyped)
   REJECTION = ::T.let(nil, ::T.untyped)
   REVOCATION_NOTIFICATION = ::T.let(nil, ::T.untyped)
   REVOCATION_WARNING = ::T.let(nil, ::T.untyped)
   WAITING = ::T.let(nil, ::T.untyped)
-end
-
-class OpenSSL::Timestamp::Response
-end
-
-class OpenSSL::Timestamp::TimestampError
-end
-
-class OpenSSL::Timestamp::TimestampError
-end
-
-class OpenSSL::Timestamp::TokenInfo
-  def algorithm(); end
-
-  def gen_time(); end
-
-  def initialize(arg); end
-
-  def message_imprint(); end
-
-  def nonce(); end
-
-  def ordering(); end
-
-  def policy_id(); end
-
-  def serial_number(); end
-
-  def to_der(); end
-
-  def version(); end
-end
-
-class OpenSSL::Timestamp::TokenInfo
-end
-
-module OpenSSL::Timestamp
 end
 
 module OpenSSL::X509
@@ -22141,115 +26638,19 @@ module OpenSSL::X509
   V_FLAG_USE_CHECK_TIME = ::T.let(nil, ::T.untyped)
 end
 
-class OpenSSL::X509::Attribute
-  include ::OpenSSL::Marshal
-  def ==(other); end
-end
-
-class OpenSSL::X509::Attribute
-  extend ::OpenSSL::Marshal::ClassMethods
-end
-
-class OpenSSL::X509::CRL
-  include ::OpenSSL::Marshal
-  include ::OpenSSL::X509::Extension::AuthorityKeyIdentifier
-  include ::OpenSSL::X509::Extension::Helpers
-  def ==(other); end
-end
-
-class OpenSSL::X509::CRL
-  extend ::OpenSSL::Marshal::ClassMethods
-end
-
 class OpenSSL::X509::Certificate
-  include ::OpenSSL::Marshal
-  include ::OpenSSL::X509::Extension::SubjectKeyIdentifier
-  include ::OpenSSL::X509::Extension::AuthorityKeyIdentifier
-  include ::OpenSSL::X509::Extension::CRLDistributionPoints
-  include ::OpenSSL::X509::Extension::AuthorityInfoAccess
-  include ::OpenSSL::X509::Extension::Helpers
-end
-
-class OpenSSL::X509::Certificate
-  extend ::OpenSSL::Marshal::ClassMethods
   def self.load(arg); end
-
-  def self.load_file(path); end
 end
 
 class OpenSSL::X509::Extension
-  include ::OpenSSL::Marshal
-  def ==(other); end
-
   def value_der(); end
 end
 
-module OpenSSL::X509::Extension::AuthorityInfoAccess
-  include ::OpenSSL::X509::Extension::Helpers
-  def ca_issuer_uris(); end
-
-  def ocsp_uris(); end
-end
-
-module OpenSSL::X509::Extension::AuthorityInfoAccess
-end
-
-module OpenSSL::X509::Extension::AuthorityKeyIdentifier
-  include ::OpenSSL::X509::Extension::Helpers
-  def authority_key_identifier(); end
-end
-
-module OpenSSL::X509::Extension::AuthorityKeyIdentifier
-end
-
-module OpenSSL::X509::Extension::CRLDistributionPoints
-  include ::OpenSSL::X509::Extension::Helpers
-  def crl_uris(); end
-end
-
-module OpenSSL::X509::Extension::CRLDistributionPoints
-end
-
-module OpenSSL::X509::Extension::Helpers
-  def find_extension(oid); end
-end
-
-module OpenSSL::X509::Extension::Helpers
-end
-
-module OpenSSL::X509::Extension::SubjectKeyIdentifier
-  include ::OpenSSL::X509::Extension::Helpers
-  def subject_key_identifier(); end
-end
-
-module OpenSSL::X509::Extension::SubjectKeyIdentifier
-end
-
-class OpenSSL::X509::Extension
-  extend ::OpenSSL::Marshal::ClassMethods
-end
-
 class OpenSSL::X509::Name
-  include ::OpenSSL::Marshal
   def to_utf8(); end
 end
 
-class OpenSSL::X509::Name
-  extend ::OpenSSL::Marshal::ClassMethods
-end
-
-class OpenSSL::X509::Request
-  include ::OpenSSL::Marshal
-  def ==(other); end
-end
-
-class OpenSSL::X509::Request
-  extend ::OpenSSL::Marshal::ClassMethods
-end
-
 class OpenSSL::X509::Revoked
-  def ==(other); end
-
   def to_der(); end
 end
 
@@ -22268,35 +26669,15 @@ class OpenStruct
 
   def define_singleton_method!(*arg); end
 
-  def delete_field!(name, &block); end
-
-  def dig!(name, *names); end
-
   def display!(*arg); end
 
   def dup!(); end
-
-  def each_pair!(); end
-
-  def encode_with(coder); end
-
-  def encode_with!(coder); end
 
   def enum_for!(*arg); end
 
   def extend!(mod, *args); end
 
-  def freeze!(); end
-
   def gem!(dep, *reqs); end
-
-  def hash!(); end
-
-  def init_with(coder); end
-
-  def init_with!(coder); end
-
-  def inspect!(); end
 
   def instance_eval!(*arg); end
 
@@ -22309,8 +26690,6 @@ class OpenStruct
   def instance_variables!(); end
 
   def itself!(); end
-
-  def marshal_dump!(); end
 
   def method!(arg); end
 
@@ -22344,12 +26723,7 @@ class OpenStruct
 
   def to_enum!(*arg); end
 
-  def to_h!(&block); end
-
-  def to_s!(); end
-
   def yield_self!(); end
-  VERSION = ::T.let(nil, ::T.untyped)
 end
 
 class OptionParser
@@ -22393,6 +26767,10 @@ end
 
 class OptionParser::Switch::RequiredArgument
   def pretty_head(); end
+end
+
+class PP
+  VERSION = ::T.let(nil, ::T.untyped)
 end
 
 class PP
@@ -23293,6 +27671,11 @@ end
 
 class Pathname
   def lutime(arg, arg1); end
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+class PrettyPrint
+  VERSION = ::T.let(nil, ::T.untyped)
 end
 
 module Prism
@@ -25811,6 +30194,10 @@ class Proc
   def clone(); end
 end
 
+module Process
+  CLOCK_TAI = ::T.let(nil, ::T.untyped)
+end
+
 class Process::Status
   def self.wait(*arg); end
 end
@@ -25824,6 +30211,10 @@ module Process
 end
 
 module Psych
+  LOADER_VERSION = ::T.let(nil, ::T.untyped)
+end
+
+module Psych
   def self.libyaml_version(); end
 
   def self.unsafe_load_file(filename, **kwargs); end
@@ -25831,6 +30222,7 @@ end
 
 class Puma::Server
   include ::Sentry::Puma::Server
+  UNPACK_TCP_STATE_FROM_TCP_INFO = ::T.let(nil, ::T.untyped)
 end
 
 class RBI::ASTVisitor
@@ -27987,19 +32379,6 @@ end
 module RailsI18n::Pluralization
 end
 
-class Random::Base
-  include ::Random::Formatter
-  def bytes(arg); end
-
-  def initialize(*arg); end
-
-  def seed(); end
-end
-
-class Random::Base
-  extend ::Random::Formatter
-end
-
 class Random
   def self.bytes(arg); end
 
@@ -28010,6 +32389,8 @@ class Range
   def %(arg); end
 
   def entries(); end
+
+  def reverse_each(); end
 
   def to_a(); end
 end
@@ -28047,12 +32428,20 @@ class RedisClient::Middlewares
   include ::Sentry::Redis::GlobalRedisInstrumentation
 end
 
+class Refinement
+  def target(); end
+end
+
 class Regexp
   def timeout(); end
 end
 
 class Regexp
   def self.linear_time?(*arg); end
+end
+
+class Resolv
+  VERSION = ::T.let(nil, ::T.untyped)
 end
 
 class Resolv::DNS
@@ -28063,6 +32452,8 @@ end
 
 class Resolv::DNS::Config
   def initialize(config_info=T.unsafe(nil)); end
+
+  def use_ipv6?(); end
 end
 
 class Resolv::DNS::Label::Str
@@ -28074,6 +32465,8 @@ class Resolv::DNS::Message
 end
 
 class Resolv::DNS::Message::MessageDecoder
+  def get_list(); end
+
   def initialize(data); end
 end
 
@@ -28105,8 +32498,185 @@ class Resolv::DNS::Resource
   ClassValue = ::T.let(nil, ::T.untyped)
 end
 
+class Resolv::DNS::Resource::IN::HTTPS
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Resolv::DNS::Resource::IN::HTTPS
+end
+
+class Resolv::DNS::Resource::IN::SVCB
+  ClassValue = ::T.let(nil, ::T.untyped)
+  TypeValue = ::T.let(nil, ::T.untyped)
+end
+
+class Resolv::DNS::Resource::IN::SVCB
+end
+
+class Resolv::DNS::Resource::IN::ServiceBinding
+  def alias_mode?(); end
+
+  def encode_rdata(msg); end
+
+  def initialize(priority, target, params=T.unsafe(nil)); end
+
+  def params(); end
+
+  def priority(); end
+
+  def service_mode?(); end
+
+  def target(); end
+end
+
+class Resolv::DNS::Resource::IN::ServiceBinding
+  def self.decode_rdata(msg); end
+end
+
 class Resolv::DNS::Resource::LOC
   def initialize(version, ssize, hprecision, vprecision, latitude, longitude, altitude); end
+end
+
+class Resolv::DNS::SvcParam
+  ClassHash = ::T.let(nil, ::T.untyped)
+end
+
+class Resolv::DNS::SvcParam::ALPN
+  def encode(msg); end
+
+  def initialize(protocol_ids); end
+
+  def protocol_ids(); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Resolv::DNS::SvcParam::ALPN
+  def self.decode(msg); end
+end
+
+class Resolv::DNS::SvcParam::DoHPath
+  def encode(msg); end
+
+  def initialize(template); end
+
+  def template(); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Resolv::DNS::SvcParam::DoHPath
+  def self.decode(msg); end
+end
+
+class Resolv::DNS::SvcParam::Generic
+  def encode(msg); end
+
+  def initialize(value); end
+
+  def value(); end
+end
+
+class Resolv::DNS::SvcParam::Generic
+  def self.create(key_number); end
+
+  def self.decode(msg); end
+end
+
+class Resolv::DNS::SvcParam::IPv4Hint
+  def addresses(); end
+
+  def encode(msg); end
+
+  def initialize(addresses); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Resolv::DNS::SvcParam::IPv4Hint
+  def self.decode(msg); end
+end
+
+class Resolv::DNS::SvcParam::IPv6Hint
+  def addresses(); end
+
+  def encode(msg); end
+
+  def initialize(addresses); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Resolv::DNS::SvcParam::IPv6Hint
+  def self.decode(msg); end
+end
+
+class Resolv::DNS::SvcParam::Mandatory
+  def encode(msg); end
+
+  def initialize(keys); end
+
+  def keys(); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Resolv::DNS::SvcParam::Mandatory
+  def self.decode(msg); end
+end
+
+class Resolv::DNS::SvcParam::NoDefaultALPN
+  def encode(msg); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Resolv::DNS::SvcParam::NoDefaultALPN
+  def self.decode(msg); end
+end
+
+class Resolv::DNS::SvcParam::Port
+  def encode(msg); end
+
+  def initialize(port); end
+
+  def port(); end
+  KeyName = ::T.let(nil, ::T.untyped)
+  KeyNumber = ::T.let(nil, ::T.untyped)
+end
+
+class Resolv::DNS::SvcParam::Port
+  def self.decode(msg); end
+end
+
+class Resolv::DNS::SvcParam
+  def self.key_name(); end
+
+  def self.key_number(); end
+end
+
+class Resolv::DNS::SvcParams
+  include ::Enumerable
+  def [](key); end
+
+  def add(param); end
+
+  def count(); end
+
+  def delete(key); end
+
+  def each(&block); end
+
+  def empty?(); end
+
+  def encode(msg); end
+
+  def initialize(params=T.unsafe(nil)); end
+end
+
+class Resolv::DNS::SvcParams
+  def self.decode(msg); end
 end
 
 class Resolv::DNS
@@ -28696,40 +33266,29 @@ class RubyVM::InstructionSequence
   def script_lines(); end
 end
 
-module RubyVM::MJIT
+class RubyVM::InstructionSequence
+  def self.compile_file_prism(*arg); end
+
+  def self.compile_prism(*arg); end
 end
 
-module RubyVM::MJIT
+module RubyVM::RJIT
+end
+
+module RubyVM::RJIT
+  def self.enable(); end
+
   def self.enabled?(); end
-
-  def self.pause(wait: T.unsafe(nil)); end
-
-  def self.resume(); end
 end
 
 module RubyVM::YJIT
-end
-
-module RubyVM::YJIT
-  def self.code_gc(); end
-
   def self.disasm(iseq); end
-
-  def self.dump_exit_locations(filename); end
-
-  def self.enabled?(); end
 
   def self.exit_locations(); end
 
   def self.insns_compiled(iseq); end
 
-  def self.reset_stats!(); end
-
-  # def self.runtime_stats(); end
-
   def self.simulate_oom!(); end
-
-  def self.stats_enabled?(); end
 
   def self.trace_exit_locations_enabled?(); end
 end
@@ -28751,7 +33310,40 @@ module Ruler::GeneratedAssociationMethods
 end
 
 module Ruler::GeneratedAttributeMethods
+  def clear_created_at_change(); end
+
+  def clear_email_change(); end
+
+  def clear_id_change(); end
+
+  def clear_id_value_change(); end
+
+  def clear_name_change(); end
+
+  def clear_uid_change(); end
+
+  def clear_updated_at_change(); end
+
+  def created_at_for_database(); end
+
+  def email_for_database(); end
+
+  def id_value_for_database(); end
+
+  def name_for_database(); end
+
+  def uid_for_database(); end
+
+  def updated_at_for_database(); end
+end
+
+module Ruler::GeneratedAttributeMethods
   extend ::Mutex_m
+end
+
+class Ruler
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
 end
 
 ScanError = StringScanner::Error
@@ -28874,6 +33466,235 @@ class Set
 
   def reset(); end
   InspectKey = ::T.let(nil, ::T.untyped)
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+module Shellwords
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+class ShopifyAPI::Auth::AssociatedUser
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Auth::AuthScopes
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Auth::JwtPayload
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Auth::Oauth::AccessTokenResponse
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Auth::Oauth::AuthQuery
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Auth::Oauth::SessionCookie
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+module ShopifyAPI::Auth::Oauth
+  extend ::T::Sig
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Auth::Session
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+module ShopifyAPI::Auth::TokenExchange
+  extend ::T::Sig
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+module ShopifyAPI::Auth
+  extend ::T::Sig
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Clients::Graphql::Client
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Clients::HttpClient
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Clients::HttpRequest
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Clients::HttpResponse
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Context
+  extend ::T::Sig
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Errors::HttpResponseError
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Inflector
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Logger
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Rest::Base
+  extend ::T::Sig
+  extend ::T::Helpers
+  extend ::T::Private::Abstract::Hooks
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+  def self.new(*args, **arg, &blk); end
+end
+
+class ShopifyAPI::Rest::BaseErrors
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+module ShopifyAPI::Utils::AttributesComparator
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+module ShopifyAPI::Utils::GraphqlProxy
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+module ShopifyAPI::Utils::HmacValidator
+  extend ::T::Sig
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+module ShopifyAPI::Utils::HttpUtils
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Utils::SessionUtils
+  extend ::T::Sig
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+module ShopifyAPI::Utils::VerifiableQuery
+  extend ::T::Sig
+  extend ::T::Helpers
+  extend ::T::Private::Abstract::Hooks
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+module ShopifyAPI::Webhooks::Handler
+  extend ::T::Sig
+  extend ::T::Helpers
+  extend ::T::Private::Abstract::Hooks
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Webhooks::RegisterResult
+  extend ::T::Sig
+end
+
+class ShopifyAPI::Webhooks::Registration
+  extend ::T::Sig
+  extend ::T::Helpers
+  extend ::T::Private::Abstract::Hooks
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+  def self.new(*args, **arg, &blk); end
+end
+
+class ShopifyAPI::Webhooks::Registry
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyAPI::Webhooks::Request
+  extend ::T::Sig
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+module ShopifyAPI::Webhooks::WebhookHandler
+  extend ::T::Sig
+  extend ::T::Helpers
+  extend ::T::Private::Abstract::Hooks
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class ShopifyRecord::Customer
+  def autosave_associated_records_for_multipass_store(*args); end
+
+  def autosave_associated_records_for_user(*args); end
+end
+
+module ShopifyRecord::Customer::GeneratedAssociationMethods
+  def multipass_store_changed?(); end
+
+  def multipass_store_previously_changed?(); end
+
+  def reset_multipass_store(); end
+
+  def reset_user(); end
+
+  def user_changed?(); end
+
+  def user_previously_changed?(); end
+end
+
+module ShopifyRecord::Customer::GeneratedAttributeMethods
+  extend ::Mutex_m
+end
+
+class ShopifyRecord::MultipassStore
+  include ::ShopifyRecord::MultipassStore::GeneratedAssociationMethods
+end
+
+module ShopifyRecord::MultipassStore::GeneratedAssociationMethods
+end
+
+module ShopifyRecord::MultipassStore::GeneratedAssociationMethods
+end
+
+module ShopifyRecord::MultipassStore::GeneratedAttributeMethods
+  extend ::Mutex_m
 end
 
 class Sidekiq::Client
@@ -29188,199 +34009,87 @@ class SmsLink::API
 end
 
 class Socket
-  AF_CCITT = ::T.let(nil, ::T.untyped)
-  AF_CHAOS = ::T.let(nil, ::T.untyped)
-  AF_CNT = ::T.let(nil, ::T.untyped)
-  AF_COIP = ::T.let(nil, ::T.untyped)
-  AF_DATAKIT = ::T.let(nil, ::T.untyped)
+  AF_ALG = ::T.let(nil, ::T.untyped)
+  AF_BLUETOOTH = ::T.let(nil, ::T.untyped)
+  AF_CAN = ::T.let(nil, ::T.untyped)
   AF_DECnet = ::T.let(nil, ::T.untyped)
-  AF_DLI = ::T.let(nil, ::T.untyped)
-  AF_E164 = ::T.let(nil, ::T.untyped)
-  AF_ECMA = ::T.let(nil, ::T.untyped)
-  AF_HYLINK = ::T.let(nil, ::T.untyped)
-  AF_IMPLINK = ::T.let(nil, ::T.untyped)
-  AF_ISO = ::T.let(nil, ::T.untyped)
-  AF_LAT = ::T.let(nil, ::T.untyped)
-  AF_LINK = ::T.let(nil, ::T.untyped)
-  AF_NATM = ::T.let(nil, ::T.untyped)
-  AF_NDRV = ::T.let(nil, ::T.untyped)
-  AF_NETBIOS = ::T.let(nil, ::T.untyped)
-  AF_NS = ::T.let(nil, ::T.untyped)
-  AF_OSI = ::T.let(nil, ::T.untyped)
-  AF_PPP = ::T.let(nil, ::T.untyped)
-  AF_PUP = ::T.let(nil, ::T.untyped)
-  AF_SIP = ::T.let(nil, ::T.untyped)
-  AF_SYSTEM = ::T.let(nil, ::T.untyped)
+  AF_IB = ::T.let(nil, ::T.untyped)
+  AF_KCM = ::T.let(nil, ::T.untyped)
+  AF_KEY = ::T.let(nil, ::T.untyped)
+  AF_LLC = ::T.let(nil, ::T.untyped)
+  AF_MPLS = ::T.let(nil, ::T.untyped)
+  AF_NETLINK = ::T.let(nil, ::T.untyped)
+  AF_PPPOX = ::T.let(nil, ::T.untyped)
+  AF_RDS = ::T.let(nil, ::T.untyped)
+  AF_TIPC = ::T.let(nil, ::T.untyped)
   AF_VSOCK = ::T.let(nil, ::T.untyped)
-  AI_DEFAULT = ::T.let(nil, ::T.untyped)
-  AI_MASK = ::T.let(nil, ::T.untyped)
-  AI_V4MAPPED_CFG = ::T.let(nil, ::T.untyped)
-  EAI_BADHINTS = ::T.let(nil, ::T.untyped)
-  EAI_MAX = ::T.let(nil, ::T.untyped)
-  EAI_PROTOCOL = ::T.let(nil, ::T.untyped)
-  IFF_ALTPHYS = ::T.let(nil, ::T.untyped)
-  IFF_LINK0 = ::T.let(nil, ::T.untyped)
-  IFF_LINK1 = ::T.let(nil, ::T.untyped)
-  IFF_LINK2 = ::T.let(nil, ::T.untyped)
-  IFF_OACTIVE = ::T.let(nil, ::T.untyped)
-  IFF_SIMPLEX = ::T.let(nil, ::T.untyped)
-  IPPROTO_EON = ::T.let(nil, ::T.untyped)
-  IPPROTO_GGP = ::T.let(nil, ::T.untyped)
-  IPPROTO_HELLO = ::T.let(nil, ::T.untyped)
-  IPPROTO_MAX = ::T.let(nil, ::T.untyped)
-  IPPROTO_ND = ::T.let(nil, ::T.untyped)
-  IPPROTO_XTP = ::T.let(nil, ::T.untyped)
+  AF_XDP = ::T.let(nil, ::T.untyped)
   IPV6_DONTFRAG = ::T.let(nil, ::T.untyped)
   IPV6_PATHMTU = ::T.let(nil, ::T.untyped)
   IPV6_RECVPATHMTU = ::T.let(nil, ::T.untyped)
-  IPV6_USE_MIN_MTU = ::T.let(nil, ::T.untyped)
-  IP_DONTFRAG = ::T.let(nil, ::T.untyped)
-  IP_PORTRANGE = ::T.let(nil, ::T.untyped)
-  IP_RECVDSTADDR = ::T.let(nil, ::T.untyped)
-  IP_RECVIF = ::T.let(nil, ::T.untyped)
-  LOCAL_PEERCRED = ::T.let(nil, ::T.untyped)
-  MSG_EOF = ::T.let(nil, ::T.untyped)
-  MSG_FLUSH = ::T.let(nil, ::T.untyped)
-  MSG_HAVEMORE = ::T.let(nil, ::T.untyped)
-  MSG_HOLD = ::T.let(nil, ::T.untyped)
-  MSG_RCVMORE = ::T.let(nil, ::T.untyped)
-  MSG_SEND = ::T.let(nil, ::T.untyped)
-  PF_CCITT = ::T.let(nil, ::T.untyped)
-  PF_CHAOS = ::T.let(nil, ::T.untyped)
-  PF_CNT = ::T.let(nil, ::T.untyped)
-  PF_COIP = ::T.let(nil, ::T.untyped)
-  PF_DATAKIT = ::T.let(nil, ::T.untyped)
+  PF_ALG = ::T.let(nil, ::T.untyped)
+  PF_BLUETOOTH = ::T.let(nil, ::T.untyped)
+  PF_CAN = ::T.let(nil, ::T.untyped)
   PF_DECnet = ::T.let(nil, ::T.untyped)
-  PF_DLI = ::T.let(nil, ::T.untyped)
-  PF_ECMA = ::T.let(nil, ::T.untyped)
-  PF_HYLINK = ::T.let(nil, ::T.untyped)
-  PF_IMPLINK = ::T.let(nil, ::T.untyped)
-  PF_ISO = ::T.let(nil, ::T.untyped)
-  PF_LAT = ::T.let(nil, ::T.untyped)
-  PF_LINK = ::T.let(nil, ::T.untyped)
-  PF_NATM = ::T.let(nil, ::T.untyped)
-  PF_NDRV = ::T.let(nil, ::T.untyped)
-  PF_NETBIOS = ::T.let(nil, ::T.untyped)
-  PF_NS = ::T.let(nil, ::T.untyped)
-  PF_OSI = ::T.let(nil, ::T.untyped)
-  PF_PIP = ::T.let(nil, ::T.untyped)
-  PF_PPP = ::T.let(nil, ::T.untyped)
-  PF_PUP = ::T.let(nil, ::T.untyped)
-  PF_RTIP = ::T.let(nil, ::T.untyped)
-  PF_SIP = ::T.let(nil, ::T.untyped)
-  PF_SYSTEM = ::T.let(nil, ::T.untyped)
+  PF_IB = ::T.let(nil, ::T.untyped)
+  PF_KCM = ::T.let(nil, ::T.untyped)
+  PF_LLC = ::T.let(nil, ::T.untyped)
+  PF_MPLS = ::T.let(nil, ::T.untyped)
+  PF_NETLINK = ::T.let(nil, ::T.untyped)
+  PF_PPPOX = ::T.let(nil, ::T.untyped)
+  PF_RDS = ::T.let(nil, ::T.untyped)
+  PF_TIPC = ::T.let(nil, ::T.untyped)
   PF_VSOCK = ::T.let(nil, ::T.untyped)
-  PF_XTP = ::T.let(nil, ::T.untyped)
-  SCM_CREDS = ::T.let(nil, ::T.untyped)
-  SO_DONTTRUNC = ::T.let(nil, ::T.untyped)
-  SO_NKE = ::T.let(nil, ::T.untyped)
-  SO_NOSIGPIPE = ::T.let(nil, ::T.untyped)
-  SO_NREAD = ::T.let(nil, ::T.untyped)
-  SO_USELOOPBACK = ::T.let(nil, ::T.untyped)
-  SO_WANTMORE = ::T.let(nil, ::T.untyped)
-  SO_WANTOOBFLAG = ::T.let(nil, ::T.untyped)
-  TCP_CONNECTION_INFO = ::T.let(nil, ::T.untyped)
-  TCP_KEEPALIVE = ::T.let(nil, ::T.untyped)
-  TCP_NOOPT = ::T.let(nil, ::T.untyped)
-  TCP_NOPUSH = ::T.let(nil, ::T.untyped)
+  PF_XDP = ::T.let(nil, ::T.untyped)
+  SOCK_CLOEXEC = ::T.let(nil, ::T.untyped)
+  SOCK_NONBLOCK = ::T.let(nil, ::T.untyped)
+  SO_BPF_EXTENSIONS = ::T.let(nil, ::T.untyped)
+  SO_INCOMING_CPU = ::T.let(nil, ::T.untyped)
+  SO_INCOMING_NAPI_ID = ::T.let(nil, ::T.untyped)
 end
 
 module Socket::Constants
-  AF_CCITT = ::T.let(nil, ::T.untyped)
-  AF_CHAOS = ::T.let(nil, ::T.untyped)
-  AF_CNT = ::T.let(nil, ::T.untyped)
-  AF_COIP = ::T.let(nil, ::T.untyped)
-  AF_DATAKIT = ::T.let(nil, ::T.untyped)
+  AF_ALG = ::T.let(nil, ::T.untyped)
+  AF_BLUETOOTH = ::T.let(nil, ::T.untyped)
+  AF_CAN = ::T.let(nil, ::T.untyped)
   AF_DECnet = ::T.let(nil, ::T.untyped)
-  AF_DLI = ::T.let(nil, ::T.untyped)
-  AF_E164 = ::T.let(nil, ::T.untyped)
-  AF_ECMA = ::T.let(nil, ::T.untyped)
-  AF_HYLINK = ::T.let(nil, ::T.untyped)
-  AF_IMPLINK = ::T.let(nil, ::T.untyped)
-  AF_ISO = ::T.let(nil, ::T.untyped)
-  AF_LAT = ::T.let(nil, ::T.untyped)
-  AF_LINK = ::T.let(nil, ::T.untyped)
-  AF_NATM = ::T.let(nil, ::T.untyped)
-  AF_NDRV = ::T.let(nil, ::T.untyped)
-  AF_NETBIOS = ::T.let(nil, ::T.untyped)
-  AF_NS = ::T.let(nil, ::T.untyped)
-  AF_OSI = ::T.let(nil, ::T.untyped)
-  AF_PPP = ::T.let(nil, ::T.untyped)
-  AF_PUP = ::T.let(nil, ::T.untyped)
-  AF_SIP = ::T.let(nil, ::T.untyped)
-  AF_SYSTEM = ::T.let(nil, ::T.untyped)
+  AF_IB = ::T.let(nil, ::T.untyped)
+  AF_KCM = ::T.let(nil, ::T.untyped)
+  AF_KEY = ::T.let(nil, ::T.untyped)
+  AF_LLC = ::T.let(nil, ::T.untyped)
+  AF_MPLS = ::T.let(nil, ::T.untyped)
+  AF_NETLINK = ::T.let(nil, ::T.untyped)
+  AF_PPPOX = ::T.let(nil, ::T.untyped)
+  AF_RDS = ::T.let(nil, ::T.untyped)
+  AF_TIPC = ::T.let(nil, ::T.untyped)
   AF_VSOCK = ::T.let(nil, ::T.untyped)
-  AI_DEFAULT = ::T.let(nil, ::T.untyped)
-  AI_MASK = ::T.let(nil, ::T.untyped)
-  AI_V4MAPPED_CFG = ::T.let(nil, ::T.untyped)
-  EAI_BADHINTS = ::T.let(nil, ::T.untyped)
-  EAI_MAX = ::T.let(nil, ::T.untyped)
-  EAI_PROTOCOL = ::T.let(nil, ::T.untyped)
-  IFF_ALTPHYS = ::T.let(nil, ::T.untyped)
-  IFF_LINK0 = ::T.let(nil, ::T.untyped)
-  IFF_LINK1 = ::T.let(nil, ::T.untyped)
-  IFF_LINK2 = ::T.let(nil, ::T.untyped)
-  IFF_OACTIVE = ::T.let(nil, ::T.untyped)
-  IFF_SIMPLEX = ::T.let(nil, ::T.untyped)
-  IPPROTO_EON = ::T.let(nil, ::T.untyped)
-  IPPROTO_GGP = ::T.let(nil, ::T.untyped)
-  IPPROTO_HELLO = ::T.let(nil, ::T.untyped)
-  IPPROTO_MAX = ::T.let(nil, ::T.untyped)
-  IPPROTO_ND = ::T.let(nil, ::T.untyped)
-  IPPROTO_XTP = ::T.let(nil, ::T.untyped)
+  AF_XDP = ::T.let(nil, ::T.untyped)
   IPV6_DONTFRAG = ::T.let(nil, ::T.untyped)
   IPV6_PATHMTU = ::T.let(nil, ::T.untyped)
   IPV6_RECVPATHMTU = ::T.let(nil, ::T.untyped)
-  IPV6_USE_MIN_MTU = ::T.let(nil, ::T.untyped)
-  IP_DONTFRAG = ::T.let(nil, ::T.untyped)
-  IP_PORTRANGE = ::T.let(nil, ::T.untyped)
-  IP_RECVDSTADDR = ::T.let(nil, ::T.untyped)
-  IP_RECVIF = ::T.let(nil, ::T.untyped)
-  LOCAL_PEERCRED = ::T.let(nil, ::T.untyped)
-  MSG_EOF = ::T.let(nil, ::T.untyped)
-  MSG_FLUSH = ::T.let(nil, ::T.untyped)
-  MSG_HAVEMORE = ::T.let(nil, ::T.untyped)
-  MSG_HOLD = ::T.let(nil, ::T.untyped)
-  MSG_RCVMORE = ::T.let(nil, ::T.untyped)
-  MSG_SEND = ::T.let(nil, ::T.untyped)
-  PF_CCITT = ::T.let(nil, ::T.untyped)
-  PF_CHAOS = ::T.let(nil, ::T.untyped)
-  PF_CNT = ::T.let(nil, ::T.untyped)
-  PF_COIP = ::T.let(nil, ::T.untyped)
-  PF_DATAKIT = ::T.let(nil, ::T.untyped)
+  PF_ALG = ::T.let(nil, ::T.untyped)
+  PF_BLUETOOTH = ::T.let(nil, ::T.untyped)
+  PF_CAN = ::T.let(nil, ::T.untyped)
   PF_DECnet = ::T.let(nil, ::T.untyped)
-  PF_DLI = ::T.let(nil, ::T.untyped)
-  PF_ECMA = ::T.let(nil, ::T.untyped)
-  PF_HYLINK = ::T.let(nil, ::T.untyped)
-  PF_IMPLINK = ::T.let(nil, ::T.untyped)
-  PF_ISO = ::T.let(nil, ::T.untyped)
-  PF_LAT = ::T.let(nil, ::T.untyped)
-  PF_LINK = ::T.let(nil, ::T.untyped)
-  PF_NATM = ::T.let(nil, ::T.untyped)
-  PF_NDRV = ::T.let(nil, ::T.untyped)
-  PF_NETBIOS = ::T.let(nil, ::T.untyped)
-  PF_NS = ::T.let(nil, ::T.untyped)
-  PF_OSI = ::T.let(nil, ::T.untyped)
-  PF_PIP = ::T.let(nil, ::T.untyped)
-  PF_PPP = ::T.let(nil, ::T.untyped)
-  PF_PUP = ::T.let(nil, ::T.untyped)
-  PF_RTIP = ::T.let(nil, ::T.untyped)
-  PF_SIP = ::T.let(nil, ::T.untyped)
-  PF_SYSTEM = ::T.let(nil, ::T.untyped)
+  PF_IB = ::T.let(nil, ::T.untyped)
+  PF_KCM = ::T.let(nil, ::T.untyped)
+  PF_LLC = ::T.let(nil, ::T.untyped)
+  PF_MPLS = ::T.let(nil, ::T.untyped)
+  PF_NETLINK = ::T.let(nil, ::T.untyped)
+  PF_PPPOX = ::T.let(nil, ::T.untyped)
+  PF_RDS = ::T.let(nil, ::T.untyped)
+  PF_TIPC = ::T.let(nil, ::T.untyped)
   PF_VSOCK = ::T.let(nil, ::T.untyped)
-  PF_XTP = ::T.let(nil, ::T.untyped)
-  SCM_CREDS = ::T.let(nil, ::T.untyped)
-  SO_DONTTRUNC = ::T.let(nil, ::T.untyped)
-  SO_NKE = ::T.let(nil, ::T.untyped)
-  SO_NOSIGPIPE = ::T.let(nil, ::T.untyped)
-  SO_NREAD = ::T.let(nil, ::T.untyped)
-  SO_USELOOPBACK = ::T.let(nil, ::T.untyped)
-  SO_WANTMORE = ::T.let(nil, ::T.untyped)
-  SO_WANTOOBFLAG = ::T.let(nil, ::T.untyped)
-  TCP_CONNECTION_INFO = ::T.let(nil, ::T.untyped)
-  TCP_KEEPALIVE = ::T.let(nil, ::T.untyped)
-  TCP_NOOPT = ::T.let(nil, ::T.untyped)
-  TCP_NOPUSH = ::T.let(nil, ::T.untyped)
+  PF_XDP = ::T.let(nil, ::T.untyped)
+  SOCK_CLOEXEC = ::T.let(nil, ::T.untyped)
+  SOCK_NONBLOCK = ::T.let(nil, ::T.untyped)
+  SO_BPF_EXTENSIONS = ::T.let(nil, ::T.untyped)
+  SO_INCOMING_CPU = ::T.let(nil, ::T.untyped)
+  SO_INCOMING_NAPI_ID = ::T.let(nil, ::T.untyped)
+end
+
+class Socket::ResolutionError
+  def error_code(); end
 end
 
 class SplineTypeException
@@ -29745,19 +34454,14 @@ module Spoom
 end
 
 class String
-  include ::JSON::Ext::Generator::GeneratorMethods::String
   def convert_base(from, to); end
 
   def dedup(); end
-
-  def parse_csv(**options); end
-
-  def shellescape(); end
-
-  def shellsplit(); end
 end
 
 class String
+  def self.new(*arg); end
+
   def self.random(size); end
 end
 
@@ -29927,6 +34631,10 @@ module SyntaxSuggest
   def self.module_for_detailed_message(); end
 end
 
+module TSort
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
 module Tapioca
   extend ::T::Sig
   extend ::T::Private::Methods::SingletonMethodHooks
@@ -29934,13 +34642,31 @@ end
 
 class Tempfile
   def _close(); end
+
+  def finalizer_obj(); end
+
+  def mode(); end
+
+  def opts(); end
+
+  def unlinked(); end
   RUBYGEMS_ACTIVATION_MONITOR = ::T.let(nil, ::T.untyped)
+  VERSION = ::T.let(nil, ::T.untyped)
+end
+
+class Tempfile::Closer
+  def call(*args); end
+
+  def initialize(tmpfile); end
+end
+
+class Tempfile::Closer
 end
 
 class Tempfile::Remover
   def call(*args); end
 
-  def initialize(tmpfile); end
+  def initialize(path); end
 end
 
 class Tempfile::Remover
@@ -29949,13 +34675,49 @@ end
 class Tenant
   def autosave_associated_records_for_login_spa_application(*args); end
 
+  def autosave_associated_records_for_oauth_applications(*args); end
+
+  def autosave_associated_records_for_shopify_record_multipass_stores(*args); end
+
   def autosave_associated_records_for_tenant_setting(*args); end
+
+  def validate_associated_records_for_oauth_applications(*args); end
+
+  def validate_associated_records_for_shopify_record_multipass_stores(*args); end
 end
 
 module Tenant::GeneratedAssociationMethods
   def reset_login_spa_application(); end
 
   def reset_tenant_setting(); end
+end
+
+module Tenant::GeneratedAttributeMethods
+  def clear_created_at_change(); end
+
+  def clear_domain_change(); end
+
+  def clear_id_change(); end
+
+  def clear_id_value_change(); end
+
+  def clear_name_change(); end
+
+  def clear_sms_verification_required_change(); end
+
+  def clear_updated_at_change(); end
+
+  def created_at_for_database(); end
+
+  def domain_for_database(); end
+
+  def id_value_for_database(); end
+
+  def name_for_database(); end
+
+  def sms_verification_required_for_database(); end
+
+  def updated_at_for_database(); end
 end
 
 module Tenant::GeneratedAttributeMethods
@@ -29982,6 +34744,11 @@ module TenantSetting::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
+class TenantSetting
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+end
+
 class Thread::Backtrace
   def self.limit(); end
 end
@@ -30006,6 +34773,7 @@ class Time
   def plus_without_duration(arg); end
 
   def rfc3339(fraction_digits=T.unsafe(nil)); end
+  VERSION = ::T.let(nil, ::T.untyped)
 end
 
 class Time
@@ -30024,10 +34792,6 @@ class TracePoint
   def self.allow_reentry(); end
 
   def self.new(*events); end
-end
-
-class TrueClass
-  include ::JSON::Ext::Generator::GeneratorMethods::TrueClass
 end
 
 module Turbo::Broadcastable
@@ -30320,7 +35084,7 @@ class URI::HTTP
 end
 
 module URI
-  def self.open(name, *rest, &block); end
+  def self.open(name, *rest, **arg, &block); end
 end
 
 module UnicodeNormalize
@@ -30334,8 +35098,6 @@ class User
 
   def autosave_associated_records_for_access_tokens(*args); end
 
-  def autosave_associated_records_for_account_lock(*args); end
-
   def autosave_associated_records_for_contact_address(*args); end
 
   def autosave_associated_records_for_delivery_addresses(*args); end
@@ -30345,6 +35107,8 @@ class User
   def autosave_associated_records_for_linked_applications(*args); end
 
   def autosave_associated_records_for_oauth_applications(*args); end
+
+  def autosave_associated_records_for_shopify_customers(*args); end
 
   def autosave_associated_records_for_sms_verifiers(*args); end
 
@@ -30366,14 +35130,14 @@ class User
 
   def validate_associated_records_for_oauth_applications(*args); end
 
+  def validate_associated_records_for_shopify_customers(*args); end
+
   def validate_associated_records_for_sms_verifiers(*args); end
 
   def validate_associated_records_for_user_profile(*args); end
 end
 
 module User::GeneratedAssociationMethods
-  def reset_account_lock(); end
-
   def reset_contact_address(); end
 
   def reset_tenant(); end
@@ -30386,7 +35150,103 @@ module User::GeneratedAssociationMethods
 end
 
 module User::GeneratedAttributeMethods
+  def captcha_score_for_database(); end
+
+  def clear_captcha_score_change(); end
+
+  def clear_created_at_change(); end
+
+  def clear_deleted_at_change(); end
+
+  def clear_deleted_change(); end
+
+  def clear_email_change(); end
+
+  def clear_email_verified_change(); end
+
+  def clear_enabled_change(); end
+
+  def clear_id_change(); end
+
+  def clear_id_value_change(); end
+
+  def clear_password_digest_change(); end
+
+  def clear_password_reset_code_change(); end
+
+  def clear_phone_number_change(); end
+
+  def clear_sms_verified_change(); end
+
+  def clear_suppress_sms_verification_change(); end
+
+  def clear_tenant_id_change(); end
+
+  def clear_updated_at_change(); end
+
+  def created_at_for_database(); end
+
+  def deleted_at_for_database(); end
+
+  def deleted_for_database(); end
+
+  def email_for_database(); end
+
+  def email_verified_for_database(); end
+
+  def enabled_for_database(); end
+
+  def id_value_for_database(); end
+
+  def password_digest_for_database(); end
+
+  def password_reset_code_for_database(); end
+
+  def phone_number_for_database(); end
+
+  def sms_verified_for_database(); end
+
+  def suppress_sms_verification_for_database(); end
+
+  def tenant_id_for_database(); end
+
+  def updated_at_for_database(); end
+end
+
+module User::GeneratedAttributeMethods
   extend ::Mutex_m
+end
+
+class User::SendEmailWorker
+  def sidekiq_options_hash(); end
+
+  def sidekiq_options_hash=(sidekiq_options_hash); end
+
+  def sidekiq_retries_exhausted_block(); end
+
+  def sidekiq_retries_exhausted_block=(sidekiq_retries_exhausted_block); end
+
+  def sidekiq_retry_in_block(); end
+
+  def sidekiq_retry_in_block=(sidekiq_retry_in_block); end
+end
+
+class User::SendEmailWorker
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
+  def self.__synchronized_sidekiq_options_hash(); end
+
+  def self.sidekiq_options_hash(); end
+
+  def self.sidekiq_options_hash=(val); end
+
+  def self.sidekiq_retries_exhausted_block(); end
+
+  def self.sidekiq_retries_exhausted_block=(val); end
+
+  def self.sidekiq_retry_in_block(); end
+
+  def self.sidekiq_retry_in_block=(val); end
 end
 
 class User
@@ -30409,12 +35269,73 @@ module UserProfile::GeneratedAssociationMethods
 end
 
 module UserProfile::GeneratedAttributeMethods
+  def birth_date_for_database(); end
+
+  def clear_birth_date_change(); end
+
+  def clear_created_at_change(); end
+
+  def clear_first_name_change(); end
+
+  def clear_first_name_kana_change(); end
+
+  def clear_gender_change(); end
+
+  def clear_id_change(); end
+
+  def clear_id_value_change(); end
+
+  def clear_last_name_change(); end
+
+  def clear_last_name_kana_change(); end
+
+  def clear_tenant_id_change(); end
+
+  def clear_updated_at_change(); end
+
+  def clear_user_id_change(); end
+
+  def created_at_for_database(); end
+
+  def first_name_for_database(); end
+
+  def first_name_kana_for_database(); end
+
+  def gender_for_database(); end
+
+  def id_value_for_database(); end
+
+  def last_name_for_database(); end
+
+  def last_name_kana_for_database(); end
+
+  def tenant_id_for_database(); end
+
+  def updated_at_for_database(); end
+
+  def user_id_for_database(); end
+end
+
+module UserProfile::GeneratedAttributeMethods
   extend ::Mutex_m
 end
 
 class UserProfile
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
+end
+
+class UserProfileForm
+  include ::Enumerize::Base
+  include ::Enumerize::ActiveModelAttributesSupport::InstanceMethods
+end
+
+class UserProfileForm
+  extend ::Enumerize::Predicates
+  extend ::Enumerize::ActiveModelAttributesSupport
+  extend ::Enumerize::ActiveRecordSupport
+  extend ::Enumerize::Scope::ActiveRecord
+  extend ::Enumerize::ModuleAttributes
 end
 
 class Users::EmailVerifier
@@ -30461,7 +35382,48 @@ module Users::LinkedApplication::GeneratedAssociationMethods
 end
 
 module Users::LinkedApplication::GeneratedAttributeMethods
+  def clear_created_at_change(); end
+
+  def clear_id_change(); end
+
+  def clear_id_value_change(); end
+
+  def clear_last_linked_at_change(); end
+
+  def clear_oauth_application_id_change(); end
+
+  def clear_scopes_change(); end
+
+  def clear_tenant_id_change(); end
+
+  def clear_updated_at_change(); end
+
+  def clear_user_id_change(); end
+
+  def created_at_for_database(); end
+
+  def id_value_for_database(); end
+
+  def last_linked_at_for_database(); end
+
+  def oauth_application_id_for_database(); end
+
+  def scopes_for_database(); end
+
+  def tenant_id_for_database(); end
+
+  def updated_at_for_database(); end
+
+  def user_id_for_database(); end
+end
+
+module Users::LinkedApplication::GeneratedAttributeMethods
   extend ::Mutex_m
+end
+
+class Users::LinkedApplications::UpdateService
+  extend ::T::Private::Methods::MethodHooks
+  extend ::T::Private::Methods::SingletonMethodHooks
 end
 
 class Users::PasswordReset
@@ -30506,6 +35468,8 @@ class Users::SmsVerifier
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
   def self.enabled(*args, **arg); end
+
+  def self.rate_limit_targets(*args, **arg); end
 end
 
 module Warning

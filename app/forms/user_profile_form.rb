@@ -108,7 +108,6 @@ class UserProfileForm < ApplicationForm
       birth_date:,
       gender:,
     )
-    user_profile.save!
   end
 
 
