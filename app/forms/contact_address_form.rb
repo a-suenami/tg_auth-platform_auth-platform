@@ -86,8 +86,7 @@ class ContactAddressForm < ApplicationForm
   end
 
   def update_contact_address
-    contact_address = UserProfile.find(id)
-
+    contact_address = ContactAddress.find(id)
     update_field(contact_address, :zip_code, zip_code)
     update_field(contact_address, :prefecture_code, prefecture_code)
     update_field(contact_address, :city, city)
@@ -133,7 +132,7 @@ class ContactAddressForm < ApplicationForm
     return unless record.respond_to?(field) # フィールドが存在しない場合はスキップ
 
     current_value = record.public_send(field)
-    if current_value.blank? || editable?(:contact_addresss, field)
+    if current_value.blank? || editable?(:contact_address, field)
       record.public_send("#{field}=", new_value)
     end
   end

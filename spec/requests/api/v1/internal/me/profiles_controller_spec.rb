@@ -589,7 +589,7 @@ RSpec.describe '[ Profiles API ]' do
               gender: {
                 required: false,
                 hidden: false,
-                editable: false,
+                editable: true,
               },
             },
             contact_address: {
