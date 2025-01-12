@@ -1659,6 +1659,404 @@ RSpec.describe '[ Profiles API ]' do
           end
         end
       end
+
+      context 'when only first_name is required' do
+        let(:profile_field_rules) {
+          {
+            user_profiles: {
+              first_name: {
+                required: true,
+                hidden: false,
+                editable: true,
+              },
+              last_name: {
+                required: false,
+                hidden: false,
+                editable: true,
+              },
+              first_name_kana: {
+                required: false,
+                hidden: false,
+                editable: true,
+              },
+              last_name_kana: {
+                required: false,
+                hidden: false,
+                editable: true,
+              },
+              birth_date: {
+                required: false,
+                hidden: false,
+                editable: true,
+              },
+              gender: {
+                required: false,
+                hidden: false,
+                editable: true,
+              },
+            },
+            contact_address: {
+              zip_code: {
+                required: false,
+                hidden: false,
+                editable: true,
+              },
+              prefecture_code: {
+                required: false,
+                hidden: false,
+                editable: true,
+              },
+              city: {
+                required: false,
+                hidden: false,
+                editable: true,
+              },
+              street: {
+                required: false,
+                hidden: false,
+                editable: true,
+              },
+              building: {
+                required: false,
+                hidden: false,
+                editable: true,
+              },
+              phone_number: {
+                required: false,
+                hidden: false,
+                editable: true,
+              },
+              country_code: {
+                required: false,
+                hidden: false,
+                editable: true,
+              },
+            },
+          }.to_json
+        }
+
+        let(:tenant_setting) {
+          create(:tenant_setting, tenant_id: current_tenant.id, google_cloud_service_account: {}, google_cloud_project_id: 'project_id', recaptcha_enterprise_checkbox_site_key: 'checkbox_site_key',
+            recaptcha_enterprise_score_based_site_key: 'score_based_site_key', profile_field_rules:,)
+        }
+
+        before do
+          tenant_setting
+        end
+
+        context 'when given all required params' do
+          let(:params) {
+            {
+              user: {
+                user_profile_attributes: {
+                  first_name: '太郎ニ',
+                  last_name: nil,
+                  first_name_kana: nil,
+                  last_name_kana: nil,
+                  birth_date: nil,
+                  gender: nil,
+                },
+                contact_address_attributes: {
+                  zip_code: nil,
+                  prefecture_code: nil,
+                  city: nil,
+                  street: nil,
+                  building: nil,
+                  phone_number: nil,
+                  country_code: nil,
+                },
+              },
+
+            }
+          }
+
+          it 'returns 200' do
+            is_expected.to eq 200
+            expect(current_user.reload.user_profile).to be_present
+            expect(current_user.reload.contact_address).to be_nil
+            expect(body_hash['profile']['first_name']).to eq('太郎ニ')
+            expect(body_hash['profile']['last_name']).to be_nil
+            expect(body_hash['profile']['first_name_kana']).to be_nil
+            expect(body_hash['profile']['last_name_kana']).to be_nil
+            expect(body_hash['profile']['birth_date']).to be_nil
+            expect(body_hash['enabled']).to be true
+          end
+        end
+
+        context 'when some required items are not met' do
+          let(:params) {
+            {
+              user: {
+                user_profile_attributes: {
+                  first_name: nil,
+                  last_name: nil,
+                  first_name_kana: nil,
+                  last_name_kana: nil,
+                  birth_date: nil,
+                  gender: nil,
+                },
+                contact_address_attributes: {
+                  zip_code: nil,
+                  prefecture_code: nil,
+                  city: nil,
+                  street: nil,
+                  building: nil,
+                  phone_number: nil,
+                  country_code: nil,
+                },
+              },
+            }
+          }
+
+          it 'returns 400' do
+            is_expected.to eq 400
+            # params.messages のキーを取得
+            body_hash['error']['params']['messages'].keys.map(&:strip)
+
+            # エラーが期待される属性
+            expected_attributes = [
+              'user_profile.first_name',
+            ]
+
+            # ヘルパーメソッドを使用
+            expect_attributes_in_error_messages(body_hash, expected_attributes)
+
+            # user_profile, contact_addressが作成されていないことを確認
+            expect(current_user.reload.user_profile).to be_nil
+            expect(current_user.reload.contact_address).to be_nil
+            expect(current_user.reload.enabled).to be false
+          end
+        end
+      end
+
+      context 'when only 1 attribute required in user profiles' do
+        let(:profile_field_rules) {
+          updated_profile_field_rules(base_profile_field_rules, required_field)
+        }
+
+        let(:base_profile_field_rules) {
+          {
+            user_profiles: {
+              first_name: { required: false, hidden: false, editable: true },
+              last_name: { required: false, hidden: false, editable: true },
+              first_name_kana: { required: false, hidden: false, editable: true },
+              last_name_kana: { required: false, hidden: false, editable: true },
+              birth_date: { required: false, hidden: false, editable: true },
+              gender: { required: false, hidden: false, editable: true },
+            },
+            contact_address: {
+              zip_code: { required: false, hidden: false, editable: true },
+              prefecture_code: { required: false, hidden: false, editable: true },
+              city: { required: false, hidden: false, editable: true },
+              street: { required: false, hidden: false, editable: true },
+              building: { required: false, hidden: false, editable: true },
+              phone_number: { required: false, hidden: false, editable: true },
+              country_code: { required: false, hidden: false, editable: true },
+            },
+          }
+        }
+
+        let(:tenant_setting) {
+          create(:tenant_setting, tenant_id: current_tenant.id, profile_field_rules: profile_field_rules.to_json)
+        }
+
+        let(:params) {
+          {
+            user: {
+              user_profile_attributes: user_profile_params,
+              contact_address_attributes: contact_address_params,
+            },
+          }
+        }
+
+        let(:contact_address_params) do
+          {
+            zip_code: nil,
+            prefecture_code: nil,
+            city: nil,
+            street: nil,
+            building: nil,
+            phone_number: nil,
+            country_code: nil,
+          }
+        end
+
+        before do
+          tenant_setting
+        end
+
+        shared_examples 'user profile validation' do |field_name, value|
+          context "when #{field_name} is required" do
+            let(:required_field) { field_name } # テストごとに必須フィールドを切り替える
+
+            context 'when all required params are met' do
+              let(:user_profile_params) do
+                { field_name => value }.with_indifferent_access
+              end
+
+              it 'returns 200' do
+                is_expected.to eq 200
+                expect(current_user.reload.user_profile).to be_present
+                expect(current_user.reload.contact_address).to be_nil
+                expect(body_hash['profile'][field_name.to_s]).to eq(value)
+              end
+            end
+
+            context 'when required params are missing' do
+              let(:user_profile_params) do
+                { field_name => nil }.with_indifferent_access
+              end
+
+              it 'returns 400' do
+                is_expected.to eq 400
+
+                # エラーが期待される属性
+                expected_attributes = ["user_profile.#{field_name}"]
+
+                # ヘルパーメソッドでエラーメッセージを確認
+                expect_attributes_in_error_messages(body_hash, expected_attributes)
+
+                # user_profile, contact_addressが作成されていないことを確認
+                expect(current_user.reload.user_profile).to be_nil
+                expect(current_user.reload.contact_address).to be_nil
+              end
+            end
+          end
+        end
+
+        # user_profilesの全項目についてテストを実行
+        {
+          first_name: '太郎',
+          last_name: '山田',
+          first_name_kana: 'タロウ',
+          last_name_kana: 'ヤマダ',
+          birth_date: '2000-01-01',
+          gender: 'male',
+        }.each do |field, value|
+          include_examples 'user profile validation', field, value
+        end
+
+        # 必須フィールドを正しく上書きするヘルパーメソッド
+        def updated_profile_field_rules(rules, required_field)
+          # rulesをdeep_dupして直接上書きしないようにする
+          updated_rules = Marshal.load(Marshal.dump(rules))
+          updated_rules[:user_profiles].each do |field, options|
+            options[:required] = (field == required_field) # 対象項目だけをtrueに
+          end
+          updated_rules
+        end
+      end
+
+      context 'when only 1 attribute required in contact address' do
+        let(:profile_field_rules) {
+          updated_profile_field_rules(base_profile_field_rules, required_field)
+        }
+
+        let(:base_profile_field_rules) {
+          {
+            user_profiles: {
+              first_name: { required: false, hidden: false, editable: true },
+              last_name: { required: false, hidden: false, editable: true },
+              first_name_kana: { required: false, hidden: false, editable: true },
+              last_name_kana: { required: false, hidden: false, editable: true },
+              birth_date: { required: false, hidden: false, editable: true },
+              gender: { required: false, hidden: false, editable: true },
+            },
+            contact_address: {
+              zip_code: { required: false, hidden: false, editable: true },
+              prefecture_code: { required: false, hidden: false, editable: true },
+              city: { required: false, hidden: false, editable: true },
+              street: { required: false, hidden: false, editable: true },
+              building: { required: false, hidden: false, editable: true },
+              phone_number: { required: false, hidden: false, editable: true },
+              country_code: { required: false, hidden: false, editable: true },
+            },
+          }
+        }
+
+        let(:tenant_setting) {
+          create(:tenant_setting, tenant_id: current_tenant.id, profile_field_rules: profile_field_rules.to_json)
+        }
+
+        let(:params) {
+          {
+            user: {
+              user_profile_attributes: user_profile_params,
+              contact_address_attributes: contact_address_params,
+            },
+          }
+        }
+
+        let(:user_profile_params) { {} }
+
+        let(:contact_address_params) { {} }
+
+        before do
+          tenant_setting
+        end
+
+        shared_examples 'contact address validation' do |field_name, value|
+          context "when #{field_name} is required" do
+            let(:required_field) { field_name } # テストごとに必須フィールドを切り替える
+
+            context 'when all required params are met' do
+              let(:contact_address_params) do
+                { field_name => value }.with_indifferent_access
+              end
+
+              it 'returns 200' do
+                is_expected.to eq 200
+                expect(current_user.reload.user_profile).to be_nil
+                expect(current_user.reload.contact_address).to be_present
+                expect(body_hash['contact_address'][field_name.to_s]).to eq(value)
+              end
+            end
+
+            context 'when required params are missing' do
+              let(:contact_address_params) do
+                { field_name => nil }.with_indifferent_access
+              end
+
+              it 'returns 400' do
+                is_expected.to eq 400
+
+                # エラーが期待される属性
+                expected_attributes = ["contact_address.#{field_name}"]
+
+                # ヘルパーメソッドでエラーメッセージを確認
+                expect_attributes_in_error_messages(body_hash, expected_attributes)
+
+                # user_profile, contact_addressが作成されていないことを確認
+                expect(current_user.reload.user_profile).to be_nil
+                expect(current_user.reload.contact_address).to be_nil
+              end
+            end
+          end
+        end
+
+        # contact_addressの全項目についてテストを実行
+        {
+          zip_code: '123-4567',
+          prefecture_code: '13',
+          city: '東京都新宿区',
+          street: '新宿1-1-1',
+          building: '新宿ビル101',
+          phone_number: '090-1234-5678',
+          country_code: 'JP',
+        }.each do |field, value|
+          include_examples 'contact address validation', field, value
+        end
+
+        # 必須フィールドを正しく上書きするヘルパーメソッド
+        def updated_profile_field_rules(rules, required_field)
+          # rulesをdeep_dupして直接上書きしないようにする
+          updated_rules = Marshal.load(Marshal.dump(rules))
+          updated_rules[:contact_address].each do |field, options|
+            options[:required] = (field == required_field) # 対象項目だけをtrueに
+          end
+          updated_rules
+        end
+      end
     end
   end
 end
