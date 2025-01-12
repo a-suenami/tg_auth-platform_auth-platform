@@ -52,6 +52,7 @@ module RulerArea::Tenants
         :recaptcha_enterprise_score_based_site_key,
         :twilio_verify_service_sid,
         :sender_email,
+        :profile_field_rules,
       )
     end
   end

@@ -20,4 +20,8 @@ h3 SMS設定
 .uk-margin
   = f.label :twilio_verify_service_sid
   = f.text_field :twilio_verify_service_sid, class: "uk-input"
+h3 その他
+.uk-margin
+  = f.label :profile_field_rules
+  = f.text_area :profile_field_rules, rows: 20, cols: 80
 = f.submit class: "uk-button uk-button-default"
