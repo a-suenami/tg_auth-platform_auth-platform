@@ -6,80 +6,14 @@
 
 class UserForm
   sig { returns(T.untyped) }
-  def birth_date; end
+  def contact_address_form; end
 
   sig { params(value: T.untyped).returns(T.untyped) }
-  def birth_date=(value); end
+  def contact_address_form=(value); end
 
   sig { returns(T.untyped) }
-  def building; end
+  def user_profile_form; end
 
   sig { params(value: T.untyped).returns(T.untyped) }
-  def building=(value); end
-
-  sig { returns(T.untyped) }
-  def city; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def city=(value); end
-
-  sig { returns(T.untyped) }
-  def country_code; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def country_code=(value); end
-
-  sig { returns(T.untyped) }
-  def first_name; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def first_name=(value); end
-
-  sig { returns(T.untyped) }
-  def first_name_kana; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def first_name_kana=(value); end
-
-  sig { returns(T.untyped) }
-  def id; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def id=(value); end
-
-  sig { returns(T.untyped) }
-  def last_name; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def last_name=(value); end
-
-  sig { returns(T.untyped) }
-  def last_name_kana; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def last_name_kana=(value); end
-
-  sig { returns(T.untyped) }
-  def phone_number; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def phone_number=(value); end
-
-  sig { returns(T.untyped) }
-  def prefecture_code; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def prefecture_code=(value); end
-
-  sig { returns(T.untyped) }
-  def street; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def street=(value); end
-
-  sig { returns(T.untyped) }
-  def zip_code; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def zip_code=(value); end
+  def user_profile_form=(value); end
 end

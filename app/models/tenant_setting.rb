@@ -14,6 +14,8 @@ class TenantSetting < ApplicationRecord
   # JSONフォーマットの検証
   sig { void }
   def validate_json_format
+    # nilの場合は検証しない
+    return if self.profile_field_rules.nil? || self.profile_field_rules.empty?
     # JSONとしてパースできるかを確認
     JSON.parse(self.profile_field_rules)
   rescue JSON::ParserError
