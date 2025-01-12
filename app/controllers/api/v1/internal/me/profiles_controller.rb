@@ -11,13 +11,13 @@ module API::V1::Internal
         @current_user.reload
         render :show
       else
-        # TODO: error handling
-        errors = {
-          type: 'validation_error',
-          code: 'invalid_params',
+        error_params = { messages: form.errors.as_json(full_messages: true), details: form.errors.details }
+
+        invalid_request_error(
+          code: :validation_error,
           message: form.errors.full_messages.join(', '),
-        }
-        render json: { errors: }, status: :bad_request
+          params: error_params,
+        )
       end
     end
 

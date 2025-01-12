@@ -44,7 +44,12 @@ class ContactAddressForm < ApplicationForm
       instance.country_code = contact_address&.country_code
     end
 
-    instance.attributes = permit_params(params)[:contact_address_attributes] if params.present?
+    if params.present?
+      permit_contact_address_params = permit_params(params)[:contact_address_attributes]
+      if permit_contact_address_params.present?
+        instance.attributes = permit_contact_address_params
+      end
+    end
 
     instance.current_profile_field_rules = profile_field_rules
     instance.user = User.find(user_id)
@@ -95,6 +100,9 @@ class ContactAddressForm < ApplicationForm
   end
 
   def create_contact_address
+    # 全ての属性が空の場合は何もしない
+    return if all_attributes_blank?
+
     user.create_contact_address(
       tenant_id:,
       user_id:,
@@ -127,6 +135,12 @@ class ContactAddressForm < ApplicationForm
     current_value = record.public_send(field)
     if current_value.blank? || editable?(:contact_addresss, field)
       record.public_send("#{field}=", new_value)
+    end
+  end
+
+  def all_attributes_blank?
+    %i[zip_code prefecture_code city street building phone_number country_code].all? do |attr|
+      send(attr).blank?
     end
   end
 

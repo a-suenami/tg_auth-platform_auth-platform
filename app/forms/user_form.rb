@@ -71,7 +71,7 @@ class UserForm < ApplicationForm
         editable: true,
       },
       country_code: {
-        required: false,
+        required: true, # デフォルトでJP
         hidden: false,
         editable: true,
       },
@@ -82,7 +82,8 @@ class UserForm < ApplicationForm
     user = User.find(id)
     tenant = user.tenant
     merged_rules = if tenant.tenant_setting&.profile_field_rules.present?
-      deep_merge(DEFAULT_PROFILE_FIELD_RULES, tenant.tenant_setting&.profile_field_rules)
+      persed_rules = safe_parse_json(tenant.tenant_setting&.profile_field_rules)
+      deep_merge(DEFAULT_PROFILE_FIELD_RULES, persed_rules)
     else
       DEFAULT_PROFILE_FIELD_RULES
     end
@@ -125,7 +126,14 @@ class UserForm < ApplicationForm
   end
 
   def valid?
-    user_profile_form.valid? && contact_address_form.valid?
+    # 両方のエラーを出すため、個別に呼び出し
+    user_profile_form_valid = user_profile_form.valid?
+    contact_address_form_valid = contact_address_form.valid?
+    user_form_valid = user_profile_form_valid && contact_address_form_valid
+    if user_form_valid == false
+      propagate_errors
+    end
+    user_form_valid
   end
 
   def check_and_enable_user
@@ -155,6 +163,14 @@ class UserForm < ApplicationForm
     end
   end
 
+  def self.safe_parse_json(json_string)
+    return {} if json_string.blank?
+
+    JSON.parse(json_string, symbolize_names: true)
+  rescue JSON::ParserError
+    DEFAULT_PROFILE_FIELD_RULES
+  end
+
   # 必須フィールドがすべて設定されているかチェック
   def check_required_fields_filled?
     # relaodしないと、さっきの更新が反映されない
@@ -171,12 +187,10 @@ class UserForm < ApplicationForm
   end
 
   def check_fields(record, field_rules)
-    return false if record.nil?
-
     field_rules.each do |field, attributes|
       next unless attributes['required']
 
-      value = record.public_send(field)
+      value = record&.public_send(field)
       return false if value.blank?
     end
 
@@ -184,14 +198,14 @@ class UserForm < ApplicationForm
   end
 
   def propagate_errors
-    user_profile_form.errors.each do |field, message|
-      errors.add("user_profile.#{field}", message)
+    user_profile_form.errors.each do |error|
+      errors.add("user_profile.#{error.attribute} ", error.full_message)
     end
 
-    contact_address_form.errors.each do |field, message|
-      errors.add("contact_address.#{field}", message)
+    contact_address_form.errors.each do |error|
+      errors.add("contact_address.#{error.attribute} ", error.full_message)
     end
   end
 
-  private_class_method :deep_merge
+  private_class_method :deep_merge, :safe_parse_json
 end

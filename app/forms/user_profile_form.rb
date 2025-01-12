@@ -17,11 +17,11 @@ class UserProfileForm < ApplicationForm
   validates :last_name_kana, presence: true, if: ->(obj) { obj.required?(:user_profiles, :last_name_kana) }
   validates :birth_date, presence: true, if: ->(obj) { obj.required?(:user_profiles, :birth_date) }
   validates :gender, presence: true, if: ->(obj) { obj.required?(:user_profiles, :gender) }
-  validates :first_name, format: { with: /\A[\p{Hiragana}\p{Katakana}\p{Han}ー々a-zA-Z]+\z/, message: I18n.t('activerecord.errors.models.user.attributes.first_name.format') }
-  validates :last_name, format: { with: /\A[\p{Hiragana}\p{Katakana}\p{Han}ー々a-zA-Z]+\z/, message: I18n.t('activerecord.errors.models.user.attributes.last_name.format') }
-  validates :first_name_kana, format: { with: /\A[\p{Katakana}ー]+\z/, message: I18n.t('activerecord.errors.models.user.attributes.first_name_kana.format') }
-  validates :last_name_kana, format: { with: /\A[\p{Katakana}ー]+\z/, message: I18n.t('activerecord.errors.models.user.attributes.last_name_kana.format') }
-  validates :birth_date, comparison: { less_than: Time.zone.today }
+  validates :first_name, format: { with: /\A[\p{Hiragana}\p{Katakana}\p{Han}ー々a-zA-Z]+\z/, message: I18n.t('activerecord.errors.models.user.attributes.first_name.format') }, allow_blank: true
+  validates :last_name, format: { with: /\A[\p{Hiragana}\p{Katakana}\p{Han}ー々a-zA-Z]+\z/, message: I18n.t('activerecord.errors.models.user.attributes.last_name.format') }, allow_blank: true
+  validates :first_name_kana, format: { with: /\A[\p{Katakana}ー]+\z/, message: I18n.t('activerecord.errors.models.user.attributes.first_name_kana.format') }, allow_blank: true
+  validates :last_name_kana, format: { with: /\A[\p{Katakana}ー]+\z/, message: I18n.t('activerecord.errors.models.user.attributes.last_name_kana.format') }, allow_blank: true
+  validates :birth_date, comparison: { less_than: Time.zone.today }, allow_blank: true
   enumerize :gender, in: [:male, :female, :other]
 
   attr_accessor :current_profile_field_rules, :user, :tenant_id
@@ -40,7 +40,12 @@ class UserProfileForm < ApplicationForm
       instance.gender = user_profile&.gender
     end
 
-    instance.attributes = permit_params(params)[:user_profile_attributes] if params.present?
+    if params.present?
+      permit_user_profile_params = permit_params(params)[:user_profile_attributes]
+      if permit_user_profile_params.present?
+        instance.attributes = permit_user_profile_params
+      end
+    end
     instance.birth_date = instance.birth_date&.to_date # バリデーションためにDate型に変換
 
     instance.current_profile_field_rules = profile_field_rules
@@ -90,6 +95,9 @@ class UserProfileForm < ApplicationForm
   end
 
   def create_user_profile
+    # 全ての属性が空の場合は何もしない
+    return if all_attributes_blank?
+
     user.create_user_profile(
       tenant_id:,
       user_id:,
@@ -118,6 +126,12 @@ class UserProfileForm < ApplicationForm
     current_value = record.public_send(field)
     if current_value.blank? || editable?(:user_profiles, field)
       record.public_send("#{field}=", new_value)
+    end
+  end
+
+  def all_attributes_blank?
+    %i[first_name last_name first_name_kana last_name_kana birth_date gender].all? do |attr|
+      send(attr).blank?
     end
   end
 

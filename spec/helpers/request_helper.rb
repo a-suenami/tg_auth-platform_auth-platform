@@ -12,7 +12,6 @@ module RequestHelpers
     JSON.parse(response.body) if response.body.present?
   end
 
-
   def self.included(base)
     base.instance_eval do
       let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com') }
@@ -43,5 +42,15 @@ module RequestHelpers
         end
       end
     end
+  end
+
+  def expect_attributes_in_error_messages(body_hash, expected_attributes)
+    # params.messages のキーを取得
+    actual_attributes = body_hash['error']['params']['messages'].keys.map(&:strip)
+
+    # 期待する属性がすべて含まれているか確認
+    missing_attributes = expected_attributes - actual_attributes
+
+    expect(missing_attributes).to be_empty, "The following attributes are missing in params messages: #{missing_attributes.join(', ')}"
   end
 end
