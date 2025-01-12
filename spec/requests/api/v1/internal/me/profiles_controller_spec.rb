@@ -905,7 +905,7 @@ RSpec.describe '[ Profiles API ]' do
             expect(body_hash['profile']['first_name_kana']).to eq('セッテイズミメイ')
             expect(body_hash['profile']['last_name_kana']).to eq('ヤマダツー')
             expect(body_hash['profile']['birth_date']).to eq('2000-01-01')
-            expect(body_hash['profile']['gender']).to eq('female')
+            expect(body_hash['profile']['gender']).to eq('male')
             expect(body_hash['contact_address']['prefecture_code']).to eq('13')
             expect(body_hash['contact_address']['prefecture']).to eq('東京都')
             expect(body_hash['contact_address']['zip_code']).to eq('155-0031')
