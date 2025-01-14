@@ -268,6 +268,49 @@ RSpec.describe '[ Profiles API ]' do
         end
       end
 
+      # country_codeがnilの場合(海外ユーザの場合)
+      context 'when country_code is nil' do
+        let(:params) {
+          {
+            user: {
+              user_profile_attributes: {
+                first_name: '太郎ニ',
+                last_name: '山田ニ',
+                first_name_kana: 'タロウツー',
+                last_name_kana: 'ヤマダツー',
+                birth_date: '2010-01-11',
+                gender: 'male',
+              },
+              contact_address_attributes: {
+                zip_code: nil,
+                prefecture_code: '99',
+                city: nil,
+                street: nil,
+                building: nil,
+                country_code: nil,
+              },
+            },
+          }
+        }
+
+        it 'returns 200' do
+          is_expected.to eq 200
+          expect(body_hash['profile']['first_name']).to eq('太郎ニ')
+          expect(body_hash['profile']['last_name']).to eq('山田ニ')
+          expect(body_hash['profile']['first_name_kana']).to eq('タロウツー')
+          expect(body_hash['profile']['last_name_kana']).to eq('ヤマダツー')
+          expect(body_hash['profile']['birth_date']).to eq('2010-01-11')
+          expect(body_hash['profile']['gender']).to eq('male')
+          expect(body_hash['contact_address']['prefecture_code']).to eq('99')
+          expect(body_hash['contact_address']['prefecture']).to eq('その他海外')
+          expect(body_hash['contact_address']['zip_code']).to be_nil
+          expect(body_hash['contact_address']['city']).to be_nil
+          expect(body_hash['contact_address']['street']).to be_nil
+          expect(body_hash['contact_address']['building']).to be_nil
+          expect(body_hash['contact_address']['country_code']).to be_nil
+        end
+      end
+
       context 'when password already set' do
         let(:user_enabled) { false }
         let(:password_digest) { 'password_digest' }
@@ -1660,175 +1703,6 @@ RSpec.describe '[ Profiles API ]' do
         end
       end
 
-      context 'when only first_name is required' do
-        let(:profile_field_rules) {
-          {
-            user_profiles: {
-              first_name: {
-                required: true,
-                hidden: false,
-                editable: true,
-              },
-              last_name: {
-                required: false,
-                hidden: false,
-                editable: true,
-              },
-              first_name_kana: {
-                required: false,
-                hidden: false,
-                editable: true,
-              },
-              last_name_kana: {
-                required: false,
-                hidden: false,
-                editable: true,
-              },
-              birth_date: {
-                required: false,
-                hidden: false,
-                editable: true,
-              },
-              gender: {
-                required: false,
-                hidden: false,
-                editable: true,
-              },
-            },
-            contact_address: {
-              zip_code: {
-                required: false,
-                hidden: false,
-                editable: true,
-              },
-              prefecture_code: {
-                required: false,
-                hidden: false,
-                editable: true,
-              },
-              city: {
-                required: false,
-                hidden: false,
-                editable: true,
-              },
-              street: {
-                required: false,
-                hidden: false,
-                editable: true,
-              },
-              building: {
-                required: false,
-                hidden: false,
-                editable: true,
-              },
-              phone_number: {
-                required: false,
-                hidden: false,
-                editable: true,
-              },
-              country_code: {
-                required: false,
-                hidden: false,
-                editable: true,
-              },
-            },
-          }.to_json
-        }
-
-        let(:tenant_setting) {
-          create(:tenant_setting, tenant_id: current_tenant.id, google_cloud_service_account: {}, google_cloud_project_id: 'project_id', recaptcha_enterprise_checkbox_site_key: 'checkbox_site_key',
-            recaptcha_enterprise_score_based_site_key: 'score_based_site_key', profile_field_rules:,)
-        }
-
-        before do
-          tenant_setting
-        end
-
-        context 'when given all required params' do
-          let(:params) {
-            {
-              user: {
-                user_profile_attributes: {
-                  first_name: '太郎ニ',
-                  last_name: nil,
-                  first_name_kana: nil,
-                  last_name_kana: nil,
-                  birth_date: nil,
-                  gender: nil,
-                },
-                contact_address_attributes: {
-                  zip_code: nil,
-                  prefecture_code: nil,
-                  city: nil,
-                  street: nil,
-                  building: nil,
-                  phone_number: nil,
-                  country_code: nil,
-                },
-              },
-
-            }
-          }
-
-          it 'returns 200' do
-            is_expected.to eq 200
-            expect(current_user.reload.user_profile).to be_present
-            expect(current_user.reload.contact_address).to be_nil
-            expect(body_hash['profile']['first_name']).to eq('太郎ニ')
-            expect(body_hash['profile']['last_name']).to be_nil
-            expect(body_hash['profile']['first_name_kana']).to be_nil
-            expect(body_hash['profile']['last_name_kana']).to be_nil
-            expect(body_hash['profile']['birth_date']).to be_nil
-            expect(body_hash['enabled']).to be true
-          end
-        end
-
-        context 'when some required items are not met' do
-          let(:params) {
-            {
-              user: {
-                user_profile_attributes: {
-                  first_name: nil,
-                  last_name: nil,
-                  first_name_kana: nil,
-                  last_name_kana: nil,
-                  birth_date: nil,
-                  gender: nil,
-                },
-                contact_address_attributes: {
-                  zip_code: nil,
-                  prefecture_code: nil,
-                  city: nil,
-                  street: nil,
-                  building: nil,
-                  phone_number: nil,
-                  country_code: nil,
-                },
-              },
-            }
-          }
-
-          it 'returns 400' do
-            is_expected.to eq 400
-            # params.messages のキーを取得
-            body_hash['error']['params']['messages'].keys.map(&:strip)
-
-            # エラーが期待される属性
-            expected_attributes = [
-              'user_profile.first_name',
-            ]
-
-            # ヘルパーメソッドを使用
-            expect_attributes_in_error_messages(body_hash, expected_attributes)
-
-            # user_profile, contact_addressが作成されていないことを確認
-            expect(current_user.reload.user_profile).to be_nil
-            expect(current_user.reload.contact_address).to be_nil
-            expect(current_user.reload.enabled).to be false
-          end
-        end
-      end
-
       context 'when only 1 attribute required in user profiles' do
         let(:profile_field_rules) {
           updated_profile_field_rules(base_profile_field_rules, required_field)
@@ -1899,6 +1773,7 @@ RSpec.describe '[ Profiles API ]' do
                 expect(current_user.reload.user_profile).to be_present
                 expect(current_user.reload.contact_address).to be_nil
                 expect(body_hash['profile'][field_name.to_s]).to eq(value)
+                expect(body_hash['enabled']).to be true
               end
             end
 
@@ -1919,6 +1794,80 @@ RSpec.describe '[ Profiles API ]' do
                 # user_profile, contact_addressが作成されていないことを確認
                 expect(current_user.reload.user_profile).to be_nil
                 expect(current_user.reload.contact_address).to be_nil
+                expect(current_user.reload.enabled).to be false
+              end
+            end
+
+            context 'when already set user profile and when all required params are met' do
+              let(:current_user_profile) {
+                create(:user_profile,
+                  tenant_id: current_tenant.id, user_id: current_user.id, first_name: '設定済み名', first_name_kana: 'セッテイズミメイ',
+                  last_name: '設定済み姓', last_name_kana: 'セッテイズミセイ', birth_date: '2000-01-01', gender: 'female',)
+              }
+              let(:user_profile_params) do
+                { field_name => value }.with_indifferent_access
+              end
+              let(:current_contact_address) {
+                create(:contact_address,
+                  tenant_id: current_tenant.id, user_id: current_user.id, zip_code: '530-0001', # 郵便番号を変更
+                  prefecture_code: '27', city: '大阪市北区', # 都道府県コードと市区町村を変更
+                  street: '梅田1丁目1-1', building: '梅田ビル101', # 通りと建物名を変更
+                  phone_number: '06-1234-5678', country_code: 'JP',) # 電話番号を変更
+              }
+              let(:user_enabled) { true }
+
+              before do
+                current_user_profile
+                current_contact_address
+              end
+
+
+              it 'returns 200' do
+                is_expected.to eq 200
+                expect(current_user.reload.user_profile).to be_present
+                expect(current_user.reload.contact_address).to be_present
+                expect(body_hash['profile'][field_name.to_s]).to eq(value)
+                expect(body_hash['enabled']).to be true
+              end
+            end
+
+            context 'when already set user profile and required params are missing' do
+              let(:current_user_profile) {
+                create(:user_profile,
+                  tenant_id: current_tenant.id, user_id: current_user.id, first_name: '設定済み名', first_name_kana: 'セッテイズミメイ',
+                  last_name: '設定済み姓', last_name_kana: 'セッテイズミセイ', birth_date: '2000-01-01', gender: 'female',)
+              }
+              let(:user_profile_params) do
+                { field_name => nil }.with_indifferent_access
+              end
+              let(:current_contact_address) {
+                create(:contact_address,
+                  tenant_id: current_tenant.id, user_id: current_user.id, zip_code: '530-0001', # 郵便番号を変更
+                  prefecture_code: '27', city: '大阪市北区', # 都道府県コードと市区町村を変更
+                  street: '梅田1丁目1-1', building: '梅田ビル101', # 通りと建物名を変更
+                  phone_number: '06-1234-5678', country_code: 'JP',) # 電話番号を変更
+              }
+              let(:user_enabled) { true }
+
+              before do
+                current_user_profile
+                current_contact_address
+              end
+
+
+              it 'returns 400' do
+                is_expected.to eq 400
+
+                # エラーが期待される属性
+                expected_attributes = ["user_profile.#{field_name}"]
+
+                # ヘルパーメソッドでエラーメッセージを確認
+                expect_attributes_in_error_messages(body_hash, expected_attributes)
+
+                # user_profile, contact_addressが作成されていないことを確認
+                expect(current_user.reload.user_profile).to be_present
+                expect(current_user.reload.contact_address).to be_present
+                expect(current_user.reload.enabled).to be true
               end
             end
           end
@@ -2029,6 +1978,79 @@ RSpec.describe '[ Profiles API ]' do
                 # user_profile, contact_addressが作成されていないことを確認
                 expect(current_user.reload.user_profile).to be_nil
                 expect(current_user.reload.contact_address).to be_nil
+              end
+            end
+
+            context 'when already set user profile and when all required params are met' do
+              let(:current_user_profile) {
+                create(:user_profile,
+                  tenant_id: current_tenant.id, user_id: current_user.id, first_name: '設定済み名', first_name_kana: 'セッテイズミメイ',
+                  last_name: '設定済み姓', last_name_kana: 'セッテイズミセイ', birth_date: '2000-01-01', gender: 'female',)
+              }
+              let(:contact_address_params) do
+                { field_name => value }.with_indifferent_access
+              end
+              let(:current_contact_address) {
+                create(:contact_address,
+                  tenant_id: current_tenant.id, user_id: current_user.id, zip_code: '530-0001', # 郵便番号を変更
+                  prefecture_code: '27', city: '大阪市北区', # 都道府県コードと市区町村を変更
+                  street: '梅田1丁目1-1', building: '梅田ビル101', # 通りと建物名を変更
+                  phone_number: '06-1234-5678', country_code: 'JP',) # 電話番号を変更
+              }
+              let(:user_enabled) { true }
+
+              before do
+                current_user_profile
+                current_contact_address
+              end
+
+
+              it 'returns 200' do
+                is_expected.to eq 200
+                expect(current_user.reload.user_profile).to be_present
+                expect(current_user.reload.contact_address).to be_present
+                expect(body_hash['contact_address'][field_name.to_s]).to eq(value)
+                expect(body_hash['enabled']).to be true
+              end
+            end
+
+            context 'when already set user profile and required params are missing' do
+              let(:current_user_profile) {
+                create(:user_profile,
+                  tenant_id: current_tenant.id, user_id: current_user.id, first_name: '設定済み名', first_name_kana: 'セッテイズミメイ',
+                  last_name: '設定済み姓', last_name_kana: 'セッテイズミセイ', birth_date: '2000-01-01', gender: 'female',)
+              }
+              let(:contact_address_params) do
+                { field_name => nil }.with_indifferent_access
+              end
+              let(:current_contact_address) {
+                create(:contact_address,
+                  tenant_id: current_tenant.id, user_id: current_user.id, zip_code: '530-0001', # 郵便番号を変更
+                  prefecture_code: '27', city: '大阪市北区', # 都道府県コードと市区町村を変更
+                  street: '梅田1丁目1-1', building: '梅田ビル101', # 通りと建物名を変更
+                  phone_number: '06-1234-5678', country_code: 'JP',) # 電話番号を変更
+              }
+              let(:user_enabled) { true }
+
+              before do
+                current_user_profile
+                current_contact_address
+              end
+
+
+              it 'returns 400' do
+                is_expected.to eq 400
+
+                # エラーが期待される属性
+                expected_attributes = ["contact_address.#{field_name}"]
+
+                # ヘルパーメソッドでエラーメッセージを確認
+                expect_attributes_in_error_messages(body_hash, expected_attributes)
+
+                # user_profile, contact_addressが作成されていないことを確認
+                expect(current_user.reload.user_profile).to be_present
+                expect(current_user.reload.contact_address).to be_present
+                expect(current_user.reload.enabled).to be true
               end
             end
           end

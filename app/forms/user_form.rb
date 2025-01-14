@@ -71,7 +71,7 @@ class UserForm < ApplicationForm
         editable: true,
       },
       country_code: {
-        required: true, # デフォルトでJP
+        required: false, # デフォルトでJP
         hidden: false,
         editable: true,
       },
