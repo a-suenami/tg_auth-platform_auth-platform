@@ -1,0 +1,17 @@
+ja:
+  activemodel:
+    models:
+      contact_address_form: 連絡先住所
+    attributes:
+      contact_address:
+        id: ID
+        zip_code: 郵便番号
+        prefecture_code: 都道府県番号
+        prefecture: 都道府県
+        city: 市区町村
+        street: 番地
+        building: 建物・部屋番号
+        phone_number: 電話番号
+        country_code: 国コード
+        created_at: 作成日時
+        updated_at: 更新日時
