@@ -199,11 +199,11 @@ class UserForm < ApplicationForm
 
   def propagate_errors
     user_profile_form.errors.each do |error|
-      errors.add("user_profile.#{error.attribute} ", error.full_message)
+      errors.add("user_profile.#{error.attribute}", error.message)
     end
 
     contact_address_form.errors.each do |error|
-      errors.add("contact_address.#{error.attribute} ", error.full_message)
+      errors.add("contact_address.#{error.attribute}", error.message)
     end
   end
 
