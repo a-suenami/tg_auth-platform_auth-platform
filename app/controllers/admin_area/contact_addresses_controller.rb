@@ -20,7 +20,7 @@ module AdminArea
 
     def create
       @user = User.find(params[:user_id])
-      @contact_address = Admins::ContactAddressForm.build(user_id: params[:user_id], id: @user.contact_address.id, params:)
+      @contact_address = Admins::ContactAddressForm.build(user_id: params[:user_id], params:)
       if @contact_address.valid?
         @contact_address.perform!
 

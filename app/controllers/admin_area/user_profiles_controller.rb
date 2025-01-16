@@ -20,7 +20,7 @@ module AdminArea
 
     def create
       @user = User.find(params[:user_id])
-      @user_profile = Admins::UserProfileForm.build(user_id: params[:user_id], id: @user.user_profile.id, params:)
+      @user_profile = Admins::UserProfileForm.build(user_id: params[:user_id], params:)
       if @user_profile.valid?
         @user_profile.perform!
 
