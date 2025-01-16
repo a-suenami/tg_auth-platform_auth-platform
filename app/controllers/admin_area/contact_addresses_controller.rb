@@ -6,7 +6,7 @@ module AdminArea
         redirect_to admin_area_user_path(@user), notice: t('helpers.messages.already_registered')
         return
       end
-      @contact_address = @user.build_contact_address
+      @contact_address = Admins::ContactAddressForm.build(user_id: params[:user_id], params: nil)
     end
 
     def edit
@@ -15,13 +15,15 @@ module AdminArea
         redirect_to admin_area_user_path(@user), notice: t('helpers.messages.not_registered')
         return
       end
-      @contact_address = @user.contact_address
+      @contact_address = Admins::ContactAddressForm.build(user_id: params[:user_id], id: @user.contact_address.id, params: nil)
     end
 
     def create
       @user = User.find(params[:user_id])
-      @contact_address = @user.build_contact_address(contact_address_params)
-      if @contact_address.save
+      @contact_address = Admins::ContactAddressForm.build(user_id: params[:user_id], id: @user.contact_address.id, params:)
+      if @contact_address.valid?
+        @contact_address.perform!
+
         redirect_to admin_area_user_path(@user), notice: t('helpers.messages.updated')
       else
         render :new, status: :unprocessable_entity
@@ -30,26 +32,14 @@ module AdminArea
 
     def update
       @user = User.find(params[:user_id])
-      @contact_address = @user.contact_address
-      if @contact_address.update(contact_address_params)
+      @contact_address = Admins::ContactAddressForm.build(user_id: params[:user_id], id: @user.contact_address.id, params:)
+      if  @contact_address.valid?
+        @contact_address.perform!
+
         redirect_to admin_area_user_path(@user), notice: t('helpers.messages.updated')
       else
         render :edit, status: :unprocessable_entity
       end
-    end
-
-    private
-
-    def contact_address_params
-      params.require(:contact_address).permit(
-        :zip_code,
-        :prefecture_code,
-        :city,
-        :street,
-        :building,
-        :phone_number,
-        :country_code,
-      )
     end
   end
 end
