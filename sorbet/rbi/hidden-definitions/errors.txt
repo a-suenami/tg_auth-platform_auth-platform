@@ -1774,6 +1774,10 @@
 # wrong constant name tenant_id_for_database
 # wrong constant name uid_for_database
 # wrong constant name updated_at_for_database
+# uninitialized constant Admins::UserProfileForm::CALLBACK_FILTER_TYPES
+# uninitialized constant Admins::UserProfileForm::CALL_COMPILABLE_REGEXP
+# uninitialized constant Admins::UserProfileForm::FORWARD_PARAMETERS
+# uninitialized constant Admins::UserProfileForm::NAME_COMPILABLE_REGEXP
 # uninitialized constant ApplicationForm::CALLBACK_FILTER_TYPES
 # uninitialized constant ApplicationForm::CALL_COMPILABLE_REGEXP
 # uninitialized constant ApplicationForm::FORWARD_PARAMETERS

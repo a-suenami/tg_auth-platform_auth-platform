@@ -3752,6 +3752,19 @@ class Admin
   extend ::T::Private::Methods::SingletonMethodHooks
 end
 
+class Admins::UserProfileForm
+  include ::Enumerize::Base
+  include ::Enumerize::ActiveModelAttributesSupport::InstanceMethods
+end
+
+class Admins::UserProfileForm
+  extend ::Enumerize::Predicates
+  extend ::Enumerize::ActiveModelAttributesSupport
+  extend ::Enumerize::ActiveRecordSupport
+  extend ::Enumerize::Scope::ActiveRecord
+  extend ::Enumerize::ModuleAttributes
+end
+
 class AppShopify::Customer
   extend ::T::Private::Methods::MethodHooks
   extend ::T::Private::Methods::SingletonMethodHooks
