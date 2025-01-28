@@ -13,7 +13,7 @@ module API::V1::Admin
         @start_at = Time.zone.parse(params[:start_at])
         @end_at = Time.zone.parse(params[:end_at])
         users = users.merge(
-          users.where('updated_at >= ?', @start_at).where('updated_at <= ?', @end_at)
+          users.where('users.updated_at >= ?', @start_at).where('users.updated_at <= ?', @end_at)
             .or(users.where(user_profile: { updated_at: @start_at..@end_at }))
             .or(users.where(contact_address: { updated_at: @start_at..@end_at })),
         )

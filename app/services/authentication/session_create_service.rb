@@ -12,7 +12,7 @@ module Authentication
 
       user = find_active_user(email:)
 
-      if user.authenticate!(password)
+      if user&.authenticate!(password)
         T.must(account_lock).reset_failed_attempts
         user
       else
@@ -21,7 +21,7 @@ module Authentication
       end
     end
 
-    sig { params(email: String).returns(User) }
+    sig { params(email: String).returns(T.nilable(User)) }
     def find_active_user(email:)
       # emailそのまま + email.downcaseでユーザを検索する
       user = User.active.find_by(email:)

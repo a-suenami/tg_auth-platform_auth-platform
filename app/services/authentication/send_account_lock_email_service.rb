@@ -3,7 +3,7 @@
 module Authentication
   class SendAccountLockEmailService < BaseService
 
-    sig { params(email: String).returns(User) }
+    sig { params(email: String).returns(T.nilable(User)) }
     def execute!(email:)
       # email validate
       unless email =~ URI::MailTo::EMAIL_REGEXP

@@ -6,7 +6,7 @@ module Authentication
 
     DEFAULT_PARAMS = T.let({}.freeze, T::Hash[T.untyped, T.untyped])
 
-    sig { params(params: T::Hash[T.untyped, T.untyped]).void }
+    sig { params(params: T.any(T::Hash[T.untyped, T.untyped], ActionController::Parameters)).void }
     def initialize(params = DEFAULT_PARAMS)
       @params = params
     end

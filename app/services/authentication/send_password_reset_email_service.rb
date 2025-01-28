@@ -7,7 +7,7 @@ module Authentication
       params(
         email: String,
         base_url: String,
-      ).returns(T.nilable(User))
+      ).returns(T.any(T.nilable(User), T::Boolean))
     end
     def execute!(email:, base_url:)
       # email validate
@@ -42,7 +42,7 @@ module Authentication
 
       template_params = { password_reset_url: }.transform_keys(&:to_s)
 
-      User::SendEmailWorker.perform_async(T.must(Tenant.current_id), 'password_reset', template_params, user.email)
+      User::SendEmailWorker.perform_async(T.must(Tenant.current_id), 'password_reset', template_params, T.must(user.email))
     end
 
     sig { params(email: String).returns(T.nilable(User)) }

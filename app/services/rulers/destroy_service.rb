@@ -2,7 +2,7 @@
 
 module Rulers
   class DestroyService < BaseService
-    sig { params(ruler: Ruler).void }
+    sig { params(ruler: Ruler).returns(T.any(T::Boolean, Ruler)) }
     def execute(ruler:)
       ruler.destroy
     end

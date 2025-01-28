@@ -34,7 +34,7 @@ module Authentication
     sig { params(user: User, email_verifier: Users::EmailVerifier).void }
     def send_verification_email(user, email_verifier)
       template_params = { email_verification_code: email_verifier.code }.transform_keys(&:to_s)
-      User::SendEmailWorker.perform_async(T.must(Tenant.current_id), 'email_address_verification', template_params, user.email)
+      User::SendEmailWorker.perform_async(T.must(Tenant.current_id), 'email_address_verification', template_params, T.must(user.email))
     end
   end
 end
