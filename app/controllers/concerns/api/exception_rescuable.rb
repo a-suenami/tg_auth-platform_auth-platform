@@ -33,8 +33,6 @@ module API::ExceptionRescuable
   end
 
   def handle_record_not_found
-    raise ActiveRecord::RecordNotFound unless Rails.env.development? || Rails.env.test?
-
     resource_not_found(message: I18n.t('errors.messages.not_found'))
   end
 
