@@ -1,3 +1,5 @@
+# typed: true
+
 # ./app/controllers/auth0_controller.rb
 
 module RulerArea
@@ -9,7 +11,7 @@ module RulerArea
     end
 
     def callback
-      ruler ||= Ruler.find_by!(uid: request.env['omniauth.auth'].uid)
+      ruler ||= Ruler.find_by(uid: request.env['omniauth.auth'].uid)
 
       if ruler.present?
         session[:current_ruler_id] = ruler.id

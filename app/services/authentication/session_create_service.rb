@@ -1,7 +1,8 @@
-# typed: true
+# typed: strict
 
 module Authentication
   class SessionCreateService < BaseService
+    sig { params(email: String, password: String).returns(User) }
     def execute!(email:, password:)
       unless email =~ URI::MailTo::EMAIL_REGEXP
         raise Exceptions::Auth::AuthError
@@ -20,6 +21,7 @@ module Authentication
       end
     end
 
+    sig { params(email: String).returns(T.nilable(User)) }
     def find_active_user(email:)
       # emailそのまま + email.downcaseでユーザを検索する
       user = User.active.find_by(email:)

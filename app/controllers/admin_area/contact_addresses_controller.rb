@@ -1,3 +1,5 @@
+# typed: true
+
 module AdminArea
   class ContactAddressesController < AdminArea::ApplicationController
     def new

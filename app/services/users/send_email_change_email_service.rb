@@ -1,8 +1,8 @@
-# typed: true
+# typed: strict
 
 module Users
   class SendEmailChangeEmailService < BaseService
-
+    sig { params(user: User, email: String).returns(User) }
     def execute!(user:, email:)
       # email validate
       unless email =~ URI::MailTo::EMAIL_REGEXP
@@ -23,9 +23,10 @@ module Users
       end
     end
 
+    sig { params(email_verifier: Users::EmailVerifier).void }
     def send_verification_email(email_verifier)
       template_params = { email_verification_code: email_verifier.code }.transform_keys(&:to_s)
-      User::SendEmailWorker.perform_async(T.must(Tenant.current_id), 'email_address_change', template_params, email_verifier.email)
+      User::SendEmailWorker.perform_async(T.must(Tenant.current_id), 'email_address_change', template_params, T.must(email_verifier.email))
     end
   end
 end

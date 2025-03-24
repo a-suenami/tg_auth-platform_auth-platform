@@ -1,11 +1,13 @@
-# typed: false
+# typed: strict
 
 module AppShopify::Webhooks
   class UpdateService < BaseService
+    sig { void }
     def sync_customer
       event_catcher
     end
 
+    sig { returns(T::Boolean) }
     def valid_event?
       if @event[:'detail-type'] != 'shopifyWebhook'
         raise Exceptions::Shopify::WebhookEventInvaildError, "rejected for invalid detail-type #{@event[:'detail-type']}"
@@ -27,6 +29,7 @@ module AppShopify::Webhooks
       true
     end
 
+    sig { void }
     def event_catcher
       return unless valid_event?
 
@@ -36,6 +39,7 @@ module AppShopify::Webhooks
       end
     end
 
+    sig { void }
     def upsert_customer
       user = User.find_by(id: @event.dig(:detail, :payload, :multipass_identifier))
       # 対応するUserが存在しない場合はスキップ

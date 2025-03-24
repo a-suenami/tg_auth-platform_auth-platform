@@ -1,7 +1,8 @@
-# typed: false
+# typed: strict
 
 module Users
   class UpdateService < BaseService
+    sig { params(user: User).void }
     def execute(user:)
       # first_name, birth_date, genderは一度登録したら変更不可
       params[:user_profile_attributes][:first_name] = user.user_profile&.first_name if user.user_profile&.first_name.present?

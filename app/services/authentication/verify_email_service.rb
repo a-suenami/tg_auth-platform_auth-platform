@@ -2,8 +2,6 @@
 
 module Authentication
   class VerifyEmailService < BaseService
-    extend T::Sig
-
     sig { params(email_verification_code: String, user_id: String).returns(User) }
     def execute!(email_verification_code:, user_id:)
       user = User.active.find user_id

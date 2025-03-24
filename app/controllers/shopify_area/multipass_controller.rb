@@ -1,3 +1,5 @@
+# typed: true
+
 module ShopifyArea
   class MultipassController < ApplicationController
     before_action :store_params, only: %i[auth register]
@@ -41,7 +43,7 @@ oauth_application_id: oauth_access_grant.application_id, scopes: nil,)
     def current_multipass_store
       raise ActiveRecord::RecordNotFound if session[:store_name].blank?
 
-      @current_multipass_store ||= Tenant.current.shopify_record_multipass_stores.find_by!(store_name: session[:store_name])
+      @current_multipass_store ||= T.must(Tenant.current).shopify_record_multipass_stores.find_by!(store_name: session[:store_name])
     end
 
     def build_authorization_endpoint_url(sign_up: false)
@@ -60,7 +62,7 @@ oauth_application_id: oauth_access_grant.application_id, scopes: nil,)
 
     def login_spa_application
       # login_spa_applicationない場合は強制エラー
-      @login_spa_application ||= Tenant.current.login_spa_application || raise(ActiveRecord::RecordNotFound)
+      @login_spa_application ||= T.must(Tenant.current).login_spa_application || raise(ActiveRecord::RecordNotFound)
     end
   end
 end

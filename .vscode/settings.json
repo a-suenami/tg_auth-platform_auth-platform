@@ -5,7 +5,10 @@
       "name": "Sorbet",
       "description": "Stable Sorbet Ruby IDE features",
       "cwd": "${workspaceFolder}",
-      "command": ["bash", "bin/run-srb-lsp.sh"]
+      "command": [
+        "bash",
+        "bin/run-srb-lsp.sh",
+      ]
     },
     {
       "id": "beta",
@@ -29,5 +32,11 @@
         "--enable-all-experimental-lsp-features"
       ]
     }
+  ],
+  "search.exclude": {
+    "**/sorbet": true,
+  },
+  "cSpell.words": [
+    "Evals"
   ]
 }

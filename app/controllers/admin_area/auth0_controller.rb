@@ -1,3 +1,5 @@
+# typed: true
+
 # ./app/controllers/auth0_controller.rb
 
 module AdminArea
@@ -9,7 +11,7 @@ module AdminArea
     end
 
     def callback
-      admin ||= Admin.find_by!(uid: request.env['omniauth.auth'].uid)
+      admin ||= Admin.find_by(uid: request.env['omniauth.auth'].uid)
 
       if admin.present?
         session[:current_admin_id] = admin.id

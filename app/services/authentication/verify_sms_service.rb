@@ -2,8 +2,6 @@
 
 module Authentication
   class VerifySmsService < BaseService
-    extend T::Sig
-
     sig { params(verification_code: String, user_id: String, verifier_type: Symbol).returns(User) }
     def execute!(verification_code:, user_id:, verifier_type: :registration)
       user = User.active.find user_id

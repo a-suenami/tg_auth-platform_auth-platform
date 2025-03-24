@@ -1,11 +1,13 @@
+# typed: true
+
 module OauthArea
   class SessionsController < ApplicationController
     def logout
       cookie_session.session_clear
 
       if params[:client_id] && params[:returnTo].present?
-        oauth_application = Tenant.current.oauth_applications.find_by(uid: params[:client_id])
-        if oauth_application&.allowed_logout_urls.present? && url_in_whitelist?(params[:returnTo], oauth_application)
+        oauth_application = T.must(Tenant.current).oauth_applications.find_by(uid: params[:client_id])
+        if oauth_application&.allowed_logout_urls.present? && url_in_whitelist?(params[:returnTo], T.must(oauth_application))
           return redirect_to params[:returnTo], allow_other_host: true
         end
       end
@@ -14,8 +16,11 @@ module OauthArea
 
     private
 
+    sig { params(url: String, oauth_application: OauthApplication).returns(T::Boolean) }
     def url_in_whitelist?(url, oauth_application)
-      allowed_logout_urls = oauth_application.allowed_logout_urls.split(/\R/)
+      return false if url.blank? || oauth_application.allowed_logout_urls.blank?
+
+      allowed_logout_urls = T.must(oauth_application.allowed_logout_urls).split(/\R/)
 
       uri = URI.parse(url)
 
@@ -31,9 +36,6 @@ module OauthArea
       when URI::Generic
         # custom_url_scheme はそのまま通す
         url
-      else
-        # 原則こないが URL もし不正な場合は false を返す
-        return false
       end
 
       # 抽出したURLがホワイトリストに含まれるかチェック

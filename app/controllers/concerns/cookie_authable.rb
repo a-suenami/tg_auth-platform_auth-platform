@@ -1,3 +1,5 @@
+# typed: false
+
 module CookieAuthable
   extend ActiveSupport::Concern
 

@@ -1,7 +1,8 @@
-# typed: false
+# typed: strict
 
 module PublishEvents
-  class PublishService < ::BaseService
+  class PublishService < BaseService
+    sig { params(user: User, action_code: T.any(Symbol, String)).void }
     def execute(user:, action_code:)
       return false if Settings.aws&.region.blank?
       return false if Settings.aws&.event_bus_name.blank?
@@ -15,6 +16,7 @@ module PublishEvents
 
     private
 
+    sig { params(user: User, action_code: T.any(Symbol, String)).void }
     def put_events(user:, action_code:)
       aws_event_bridge_client.put_events({
         entries: [
@@ -36,6 +38,7 @@ module PublishEvents
 
     # ぼっち演算子を使った書き方なら、視認性に問題ないと判断し無効にする
     # rubocop:disable Metrics/CyclomaticComplexity
+    sig { params(user: User).returns(T::Hash[Symbol, T.untyped]) }
     def user_json(user:)
       {
         uid: user.id,
@@ -78,15 +81,15 @@ module PublishEvents
     end
     # rubocop:enable Metrics/CyclomaticComplexity
 
-    # sig { returns(Aws::EventBridge::Client) }
+    sig { returns(Aws::EventBridge::Client) }
     def aws_event_bridge_client
-      @aws_event_bridge_client ||= ::Aws::EventBridge::Client.new(
-        region: Settings.aws.region,
-        credentials:,
-      )
+      @aws_event_bridge_client ||= T.let(::Aws::EventBridge::Client.new(
+                                           region: Settings.aws.region,
+                                           credentials:,
+                                         ), T.nilable(Aws::EventBridge::Client),)
     end
 
-    # sig { returns(T.any(Aws::Credentials, Aws::ECSCredentials)) }
+    sig { returns(T.any(Aws::Credentials, Aws::ECSCredentials)) }
     def credentials
       if Settings.aws.access_key_id
         ::Aws::Credentials.new(Settings.aws.access_key_id, Settings.aws.secret_access_key)

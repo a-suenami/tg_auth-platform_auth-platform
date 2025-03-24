@@ -1,8 +1,14 @@
-# typed: true
+# typed: strict
 
 module Authentication
   class SendVerificationEmailService < BaseService
 
+    sig do
+      params(
+        email: String,
+        captcha_score: T.nilable(Float),
+      ).returns(User)
+    end
     def execute!(email:, captcha_score: nil)
       # email validate
       unless email =~ URI::MailTo::EMAIL_REGEXP
@@ -25,9 +31,10 @@ module Authentication
       end
     end
 
+    sig { params(user: User, email_verifier: Users::EmailVerifier).void }
     def send_verification_email(user, email_verifier)
       template_params = { email_verification_code: email_verifier.code }.transform_keys(&:to_s)
-      User::SendEmailWorker.perform_async(T.must(Tenant.current_id), 'email_address_verification', template_params, user.email)
+      User::SendEmailWorker.perform_async(T.must(Tenant.current_id), 'email_address_verification', template_params, T.must(user.email))
     end
   end
 end

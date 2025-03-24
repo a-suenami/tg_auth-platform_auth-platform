@@ -1,8 +1,9 @@
-# typed: true
+# typed: strict
 
 module DeliveryAddresses
   class CreateService < BaseService
 
+    sig { params(user: User).returns(DeliveryAddress) }
     def execute(user:)
       ActiveRecord::Base.transaction do
         delivery_address = user.delivery_addresses.new(params)

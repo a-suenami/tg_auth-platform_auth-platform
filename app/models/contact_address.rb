@@ -9,7 +9,6 @@ class ContactAddress < ApplicationRecord
 
   sig { returns(T.nilable(String)) }
   def prefecture_code_jis
-    # T.bind(self, T.class_of(AddressUtilisable))
     format('%02d', self.prefecture_code) if self.prefecture_code.present?
   end
 end

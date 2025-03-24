@@ -1,3 +1,5 @@
+# typed: false
+
 module ExpirableCookieUseable
   extend ActiveSupport::Concern
 
