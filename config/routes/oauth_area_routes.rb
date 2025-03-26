@@ -15,5 +15,12 @@ Rails.application.routes.draw do
         get :logout
       end
     end
+
+    resources :federated_authentications, only: [] do
+      collection do
+        get 'oauth/redirect/:provider', to: 'federated_authentications#redirect', as: :oauth_redirect
+        get 'oauth/callback', to: 'federated_authentications#callback', as: :oauth_callback
+      end
+    end
   end
 end

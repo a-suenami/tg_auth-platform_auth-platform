@@ -1,0 +1,10 @@
+create_table 'oauth_providers', force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false
+  t.string :provider, null: false
+  t.string :client_id, null: false
+  t.string :client_secret, null: false
+  t.string :auth_url, null: false
+  t.string :token_url, null: false
+  t.string :user_info_url
+  t.string :scopes, default: '', null: false
+end

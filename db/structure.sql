@@ -222,6 +222,23 @@ CREATE TABLE public.oauth_openid_requests (
 
 
 --
+-- Name: oauth_providers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.oauth_providers (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    provider character varying NOT NULL,
+    client_id character varying NOT NULL,
+    client_secret character varying NOT NULL,
+    auth_url character varying NOT NULL,
+    token_url character varying NOT NULL,
+    user_info_url character varying,
+    scopes character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
 -- Name: rulers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -507,6 +524,14 @@ ALTER TABLE ONLY public.oauth_applications
 
 ALTER TABLE ONLY public.oauth_openid_requests
     ADD CONSTRAINT oauth_openid_requests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: oauth_providers oauth_providers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.oauth_providers
+    ADD CONSTRAINT oauth_providers_pkey PRIMARY KEY (id);
 
 
 --
@@ -833,6 +858,13 @@ CREATE UNIQUE INDEX index_oauth_applications_on_uid ON public.oauth_applications
 --
 
 CREATE INDEX index_oauth_openid_requests_on_access_grant_id ON public.oauth_openid_requests USING btree (access_grant_id);
+
+
+--
+-- Name: index_oauth_providers_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_oauth_providers_on_tenant_id ON public.oauth_providers USING btree (tenant_id);
 
 
 --
