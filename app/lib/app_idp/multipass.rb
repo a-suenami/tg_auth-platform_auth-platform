@@ -25,10 +25,12 @@ module AppIdp
 
     # return_toのホストチェック
     def validate_return_to(return_to, multipass_store)
-      uri = URI.parse(return_to || '')
+      uri = SafeUrlParser.parse(return_to)
 
-      if !uri.host || uri.host == URI.parse(multipass_store.store_url).host
+      if !uri.host
         return_to
+      elsif uri.host == URI.parse(multipass_store.store_url).host
+        uri.to_s
       end
     end
 

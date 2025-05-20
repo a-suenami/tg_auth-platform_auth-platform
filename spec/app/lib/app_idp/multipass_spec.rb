@@ -1,12 +1,19 @@
 # typed: false
 # frozen_string_literal: true
 
+require 'openssl'
+require 'json'
+
+# URL-safe Base64の正規表現
+# A-Z, a-z, 0-9, -, _, = を含む文字列で、=は末尾にのみ出現可能
+URLSAFE_BASE64_REGEX = /[A-Za-z0-9_-]+(?:={1,2})?/
+
 RSpec.describe AppIdp::Multipass do
   describe 'AppIdp::Multipass.generate' do
     subject(:multipass_generator) { described_class.new.generate(multipass_store, current_user, return_to, remote_ip) }
 
     let(:current_tenant) { create(:tenant, id: :sample, name: 'サンプル', domain: 'sample.localhost.com') }
-    let(:multipass_store) { create(:shopify_record__multipass_store, tenant_id: current_tenant.id) }
+    let(:multipass_store) { create(:shopify_record__multipass_store, tenant_id: current_tenant.id, store_url: 'https://example.com') }
     let(:current_user) { create(:user, tenant_id: current_tenant.id, email: current_email) }
     let(:current_email) { 'test@example.com' }
     let(:user_profile) { create(:user_profile, tenant_id: current_tenant.id, user: current_user) }
@@ -23,10 +30,131 @@ RSpec.describe AppIdp::Multipass do
       user_profile
     end
 
+    # トークンを復号化してJSONデータを取得するヘルパーメソッド
+    def decrypt_token(token)
+      # Base64デコード
+      decoded = Base64.urlsafe_decode64(token)
+
+      # 最小長さの検証（IV + 最小暗号文 + HMAC）
+      expect(decoded.bytesize).to be >= 48 # 16 (IV) + 16 (最小暗号文) + 32 (HMAC)
+
+      # IVと暗号文とHMACの分離
+      iv = decoded[0, 16]
+      ciphertext = decoded[16...-32]
+      hmac = decoded[-32, 32]
+
+      # HMACの検証
+      key_material = OpenSSL::Digest.new('sha256').digest(multipass_store.multipass_secret)
+      signature_key = key_material[16, 16]
+      expected_hmac = OpenSSL::HMAC.digest('sha256', signature_key, decoded[0...-32])
+      expect(hmac).to eq(expected_hmac)
+
+      # AES復号化
+      cipher = OpenSSL::Cipher.new('aes-128-cbc')
+      cipher.decrypt
+      cipher.key = key_material[0, 16] # encryption_key
+      cipher.iv = iv
+
+      # 復号化してJSONパース
+      decrypted = cipher.update(ciphertext) + cipher.final
+      JSON.parse(decrypted)
+    end
+
+    context 'return_toパラメータの検証' do
+      context '正常系' do
+        context 'アスキーコードのみのURLの場合' do
+          let(:return_to) { 'https://example.com/path/to/page?param=value' }
+
+          it 'Shopify MultipassのURLが正しく生成され、return_toが含まれること' do
+            expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+            token = multipass_generator.split('/').last
+            expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+            data = decrypt_token(token)
+            expect(data['return_to']).to eq(return_to)
+          end
+        end
+
+        context '全体が%エンコードされているURLの場合' do
+          let(:return_to) { 'https%3A%2F%2Fexample.com%2F%E3%81%93%E3%82%93%E3%81%AB%E3%81%A1%E3%81%AF' }
+
+          it 'Shopify MultipassのURLが正しく生成され、return_toが含まれること' do
+            expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+            token = multipass_generator.split('/').last
+            expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+            data = decrypt_token(token)
+            expect(data['return_to']).to eq(URI::DEFAULT_PARSER.escape('https://example.com/こんにちは'))
+          end
+        end
+
+        context 'パスが%エンコードされているURLの場合' do
+          let(:return_to) { 'https://example.com/%E3%81%93%E3%82%93%E3%81%AB%E3%81%A1%E3%81%AF' }
+
+          it 'Shopify MultipassのURLが正しく生成され、return_toが含まれること' do
+            expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+            token = multipass_generator.split('/').last
+            expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+            data = decrypt_token(token)
+            expect(data['return_to']).to eq(return_to)
+          end
+        end
+
+        context 'クエリが%エンコードされているURLの場合' do
+          let(:return_to) { 'https://example.com/path?q=%E3%81%93%E3%82%93%E3%81%AB%E3%81%A1%E3%81%AF' }
+
+          it 'Shopify MultipassのURLが正しく生成され、return_toが含まれること' do
+            expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+            token = multipass_generator.split('/').last
+            expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+            data = decrypt_token(token)
+            expect(data['return_to']).to eq(return_to)
+          end
+        end
+
+        context 'URLに日本語が含まれる場合' do
+          let(:return_to) { 'https://example.com/こんにちは' }
+
+          it 'Shopify MultipassのURLが生成され、return_toが含まれること' do
+            expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+            token = multipass_generator.split('/').last
+            expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+            data = decrypt_token(token)
+            expect(data['return_to']).to eq(URI::DEFAULT_PARSER.escape(return_to))
+          end
+        end
+
+        context 'URLのパスに日本語が含まれる場合' do
+          let(:return_to) { 'https://example.com/path/こんにちは' }
+
+          it 'Shopify MultipassのURLが生成され、return_toが含まれること' do
+            expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+            token = multipass_generator.split('/').last
+            expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+            data = decrypt_token(token)
+            expect(data['return_to']).to eq(URI::DEFAULT_PARSER.escape(return_to))
+          end
+        end
+
+        context 'URLのクエリに日本語が含まれる場合' do
+          let(:return_to) { 'https://example.com/path?q=こんにちは' }
+
+          it 'Shopify MultipassのURLが生成され、return_toが含まれること' do
+            expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+            token = multipass_generator.split('/').last
+            expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+            data = decrypt_token(token)
+            expect(data['return_to']).to eq(URI::DEFAULT_PARSER.escape(return_to))
+          end
+        end
+      end
+    end
+
     context 'When a new user logs in for the first time' do
       context 'When there is no other customer with the same email address' do
-        it 'returns a multipass URL' do
-          expect(multipass_generator).to be_a(String)
+        it 'Shopify MultipassのURLが正しく生成されること' do
+          expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+          token = multipass_generator.split('/').last
+          expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+          expect(token.length % 4).to eq(0)
           # AppShopify::Customerが呼ばれないこと
           expect(app_shopify_customer).not_to have_received(:update_email)
         end
@@ -44,8 +172,11 @@ store_name: multipass_store.store_name,)
           other_user_shopify_record__customer
         end
 
-        it 'returns a multipass URL' do
-          expect(multipass_generator).to be_a(String)
+        it 'Shopify MultipassのURLが正しく生成されること' do
+          expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+          token = multipass_generator.split('/').last
+          expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+          expect(token.length % 4).to eq(0)
           # AppShopify::Customer#update_emailが呼ばれること
           expect(app_shopify_customer).to have_received(:update_email).with("gid://shopify/Customer/#{other_user_shopify_record__customer.remote_id}",
 "disabled+#{other_user.id}@disabled.twogate-idp.com",)
@@ -63,8 +194,11 @@ store_name: multipass_store.store_name,)
       end
 
       context 'When the email address is not changed' do
-        it 'returns a multipass URL' do
-          expect(multipass_generator).to be_a(String)
+        it 'Shopify MultipassのURLが正しく生成されること' do
+          expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+          token = multipass_generator.split('/').last
+          expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+          expect(token.length % 4).to eq(0)
           # AppShopify::Customerが呼ばれないこと
           expect(app_shopify_customer).not_to have_received(:update_email)
         end
@@ -77,8 +211,11 @@ store_name: multipass_store.store_name,)
 store_name: multipass_store.store_name,)
         }
 
-        it 'returns a multipass URL' do
-          expect(multipass_generator).to be_a(String)
+        it 'Shopify MultipassのURLが正しく生成されること' do
+          expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+          token = multipass_generator.split('/').last
+          expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+          expect(token.length % 4).to eq(0)
           # AppShopify::Customer#update_emailが呼ばれること
           expect(app_shopify_customer).to have_received(:update_email).with("gid://shopify/Customer/#{current_user_shopify_record__customer.remote_id}", current_email)
         end
@@ -96,8 +233,11 @@ store_name: other_multipass_store.store_name,)
           other_multipass_store_customer
         end
 
-        it 'returns a multipass URL' do
-          expect(multipass_generator).to be_a(String)
+        it 'Shopify MultipassのURLが正しく生成されること' do
+          expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+          token = multipass_generator.split('/').last
+          expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+          expect(token.length % 4).to eq(0)
           # AppShopify::Customerが呼ばれないこと
           expect(app_shopify_customer).not_to have_received(:update_email)
         end
