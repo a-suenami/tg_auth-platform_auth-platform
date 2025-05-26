@@ -74,6 +74,8 @@ RSpec.describe AppIdp::Multipass do
           end
         end
 
+        # パラメータ受け取り時に一度デコードするので、このパターンになる日は元のreturn_toが2回エンコードされていることになる。
+        # 不正なreturn_toとして扱い、return_toはnilになる。
         context '全体が%エンコードされているURLの場合' do
           let(:return_to) { 'https%3A%2F%2Fexample.com%2F%E3%81%93%E3%82%93%E3%81%AB%E3%81%A1%E3%81%AF' }
 
@@ -82,7 +84,7 @@ RSpec.describe AppIdp::Multipass do
             token = multipass_generator.split('/').last
             expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
             data = decrypt_token(token)
-            expect(data['return_to']).to eq(URI::DEFAULT_PARSER.escape('https://example.com/こんにちは'))
+            expect(data['return_to']).to be_nil
           end
         end
 
@@ -143,6 +145,79 @@ RSpec.describe AppIdp::Multipass do
             expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
             data = decrypt_token(token)
             expect(data['return_to']).to eq(URI::DEFAULT_PARSER.escape(return_to))
+          end
+        end
+
+        context 'given relative path' do
+          let(:return_to) { '/path/to/page?param=value' }
+
+          it 'Shopify MultipassのURLが正しく生成され、return_toが含まれること' do
+            expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+            token = multipass_generator.split('/').last
+            expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+            data = decrypt_token(token)
+            expect(data['return_to']).to eq(URI::DEFAULT_PARSER.escape(return_to))
+          end
+        end
+
+        context 'given relative path with Japanese characters' do
+          let(:return_to) { '/path/こんにちは?hoge=日本&fuga=abc' }
+
+          it 'Shopify MultipassのURLが正しく生成され、return_toが含まれること' do
+            expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+            token = multipass_generator.split('/').last
+            expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+            data = decrypt_token(token)
+            expect(data['return_to']).to eq(URI::DEFAULT_PARSER.escape(return_to))
+          end
+        end
+
+        context 'given relative path with encoded Japanese characters' do
+          let(:return_to) { '/path/%E3%81%93%E3%82%93%E3%81%AB%E3%81%A1%E3%81%AF' }
+
+          it 'Shopify MultipassのURLが正しく生成され、return_toが含まれること' do
+            expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+            token = multipass_generator.split('/').last
+            expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+            data = decrypt_token(token)
+            expect(data['return_to']).to eq(return_to)
+          end
+        end
+
+        # /もエンコードされているパターン。パラメータ受け取り時に一度デコードするので、このパターンになる日は元のreturn_toが2回エンコードされていることになる。
+        context 'given encoded relative path' do
+          let(:return_to) { '%2Fpath%2F%25E3%2581%2593%25E3%2582%2593%25E3%2581%25AB%25E3%2581%25A1%25E3%2581%25AF' }
+
+          it 'Shopify MultipassのURLが正しく生成され、return_toが含まれること' do
+            expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+            token = multipass_generator.split('/').last
+            expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+            data = decrypt_token(token)
+            expect(data['return_to']).to be_nil
+          end
+        end
+
+        context 'given segment' do
+          let(:return_to) { 'https://example.com/path/to/page#section' }
+
+          it 'Shopify MultipassのURLが正しく生成され、return_toが含まれること' do
+            expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+            token = multipass_generator.split('/').last
+            expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+            data = decrypt_token(token)
+            expect(data['return_to']).to eq(return_to)
+          end
+        end
+
+        context 'given segment with ja' do
+          let(:return_to) { 'https://example.com/path/to/日本語#section' }
+
+          it 'Shopify MultipassのURLが正しく生成され、return_toが含まれること' do
+            expect(multipass_generator).to match(%r{\A#{multipass_store.store_url}/account/login/multipass/#{URLSAFE_BASE64_REGEX}\z})
+            token = multipass_generator.split('/').last
+            expect(token).to match(/\A#{URLSAFE_BASE64_REGEX}\z/)
+            data = decrypt_token(token)
+            expect(data['return_to']).to eq('https://example.com/path/to/%E6%97%A5%E6%9C%AC%E8%AA%9E#section') # URI::DEFAULT_PARSER.escapeはフラグメントをエスケープする不具合があるため、固定で設定
           end
         end
       end

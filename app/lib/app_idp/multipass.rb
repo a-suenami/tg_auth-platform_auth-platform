@@ -23,52 +23,44 @@ module AppIdp
 
     private
 
-    # Parses a URL string into a URI object, handling various encoding patterns
-    # @param url [String] The URL to parse
-    # @return [URI::Generic] A parsed URI object
-    # @raise [URI::InvalidURIError] If the URL is fundamentally invalid
     def safe_parse_url(url)
       return nil if url.blank?
 
-      # 1. https://が%エンコードされている場合はデコード
-      decoded_url = decode_encoded_scheme(url)
-      # 2. 非ASCII文字が含まれている場合は%エンコード
-      encoded_url = encode_non_ascii(decoded_url)
-      # 3. パースして返す
-      URI.parse(encoded_url)
-    end
-
-    # %エンコードされたhttps://をデコードする
-    # @param url [String] デコードするURL
-    # @return [String] デコードされたURL
-    def decode_encoded_scheme(url)
-      return url unless url.include?('%')
-
-      if url.match?(/https?%3A%2F%2F/)
-        URI::DEFAULT_PARSER.unescape(url)
-      else
-        url
+      # 1. 非ASCII文字が含まれている場合は%エンコード
+      encoded_url = encode_non_ascii(url)
+      # 2. パースして返す
+      begin
+        URI.parse(encoded_url)
+      rescue URI::InvalidURIError, URI::InvalidComponentError
+        # 3. パースに失敗した場合は、無効なURLとしてnilを返す
+        nil
       end
     end
 
     # 非ASCII文字をエンコードする
-    # @param url [String] エンコードするURL
-    # @return [String] エンコードされたURL
     def encode_non_ascii(url)
       return url if url.ascii_only?
 
-      URI::DEFAULT_PARSER.escape(url)
+      url.each_char.map { |char|
+        # ASCII（0x00〜0x7F）の範囲かどうかをチェック
+        char.ascii_only? ? char : CGI.escape(char)
+      }.join
     end
 
     # return_toのホストチェック
     def validate_return_to(return_to, multipass_store)
       uri = safe_parse_url(return_to)
 
-      if !uri.host
-        return_to
-      elsif uri.host == URI.parse(multipass_store.store_url).host
-        uri.to_s
-      end
+      # URLが無効な場合は、デフォルトのreturn_toを返す
+      return nil if uri.nil?
+
+      # ホストがない -> 相対パスとみなす、フォーマットが正しいか確認
+      return uri.to_s if uri.host.nil? && uri.to_s.match?(%r{\A/[a-zA-Z0-9._~!$&'()*+,;=:@/?#%-]*\z})
+      # ホストがある -> ホストがマルチパスストアのホストと一致するか確認
+      return uri.to_s if uri.host == URI.parse(multipass_store.store_url).host
+
+      # それ以外は無効なURLとしてnilを返す
+      nil
     end
 
     def check_and_update_email(user, multipass_store)
