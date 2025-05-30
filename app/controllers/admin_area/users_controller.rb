@@ -33,7 +33,7 @@ module AdminArea
 
     def reset_sms_ratelimit
       @user.sms_verifiers.where('created_at > ?', 24.hours.ago).update_all(ignore_in_rate_limit: true)
-      redirect_to admin_area_user_path(@user), notice: 'SMS送信制限をリセットしました。' # rubocop:disable Rails/I18nLocaleTexts
+      redirect_to admin_area_user_path(@user), notice: 'SMS送信制限をリセットしました。'
     end
 
     private

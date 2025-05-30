@@ -132,6 +132,9 @@ Rails/I18nLocaleAssignment: # new in 2.11
   Enabled: true
 Rails/I18nLocaleTexts: # new in 2.14
   Enabled: true
+  Exclude:
+    - 'app/controllers/ruler_area/**/*'
+    - 'app/controllers/admin_area/**/*'
 Rails/IgnoredColumnsAssignment: # new in 2.17
   Enabled: true
 Rails/MigrationClassName: # new in 2.14
@@ -489,6 +492,7 @@ Metrics/BlockLength:
     - spec/**/*.rb
     - config/environments/*.rb
     - config/routes/**/*.rb
+    - db/schemas/**/*.schema
 Metrics/AbcSize:
   Max: 100
 Metrics/CyclomaticComplexity:
@@ -500,7 +504,7 @@ Metrics/ParameterLists:
 Metrics/ModuleLength:
   Max: 200
 Metrics/ClassLength:
-  Max: 200
+  Max: 500
 
 
 # ------------------------------------------------------------------------------

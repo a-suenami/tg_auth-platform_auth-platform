@@ -26,7 +26,7 @@ module AdminArea
 
     sig { void }
     def root
-      flash[:alert] = 'this is an example message' # rubocop:disable Rails
+      flash[:alert] = 'this is an example message'
       flash[:notice] = 'you can also use notice level flash' # rubocop:disable Rails
     end
 

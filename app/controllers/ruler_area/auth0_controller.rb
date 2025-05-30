@@ -15,10 +15,10 @@ module RulerArea
 
       if ruler.present?
         session[:current_ruler_id] = ruler.id
-        redirect_to ruler_area_root_path, notice: 'ログインしました。' # rubocop:disable Rails/I18nLocaleTexts
+        redirect_to ruler_area_root_path, notice: 'ログインしました。'
       else
         logout
-        flash.now[:error] = 'ログインに失敗しました' # rubocop:disable Rails/I18nLocaleTexts
+        flash.now[:error] = 'ログインに失敗しました'
         flash.keep
       end
     end
