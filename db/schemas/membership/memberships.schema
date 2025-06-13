@@ -1,0 +1,12 @@
+create_table :memberships, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'メンバーシップ' do |t|
+  t.references :tenant, type: :citext, null: false
+  t.string :name, null: false, comment: 'メンバーシップ名（英数字のみ）'
+  t.string :display_name, null: false, comment: '表示名'
+  t.integer :position, default: 0, comment: '表示順序'
+  t.string :tier, comment: '段階的プランの場合の階層'
+
+  t.timestamps null: false
+  t.index [:tenant_id, :name], name: :idx_memberships_tenant_id_name_uniq, using: :btree, unique: true
+end
+
+add_foreign_key :memberships, :tenants, name: :fk_memberships_tenants

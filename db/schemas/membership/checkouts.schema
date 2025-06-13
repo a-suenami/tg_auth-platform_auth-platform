@@ -1,9 +1,0 @@
-create_table :membership_check_outs, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'メンバーシップの精算' do |t|
-  t.references :tenant, type: :citext, null: false
-  t.references :user, type: :uuid, null: false
-
-  t.timestamps null: false
-end
-
-add_foreign_key :membership_check_outs, :tenants, name: :fk_membership_check_outs_tenants
-add_foreign_key :membership_check_outs, :users, name: :fk_membership_check_outs_users
