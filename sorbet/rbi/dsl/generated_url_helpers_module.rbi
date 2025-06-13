@@ -183,6 +183,9 @@ module GeneratedUrlHelpersModule
   def oauth_userinfo_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def preview_ruler_area_tenant_stripe_records_products_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def rails_info_properties_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -261,6 +264,12 @@ module GeneratedUrlHelpersModule
   def ruler_area_tenant_shopify_multipass_stores_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_stripe_records_product_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_stripe_records_products_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_tenant_setting_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -282,6 +291,9 @@ module GeneratedUrlHelpersModule
   def send_verification_sms_api_v1_authentication_sms_verify_index_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def setup_intent_api_v1_internal_me_card_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def shopify_area_multipass_auth_callback_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -292,7 +304,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def shopify_area_webhooks_eventbridge_shopify_url(*args); end
-  def setup_intent_api_v1_internal_me_card_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def sync_ruler_area_tenant_stripe_records_products_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def turbo_recede_historical_location_url(*args); end

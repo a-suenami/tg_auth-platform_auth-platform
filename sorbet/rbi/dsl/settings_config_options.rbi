@@ -78,12 +78,6 @@ class SettingsConfigOptions < ::Config::Options
   def sms_link=(value); end
 
   sig { returns(T.untyped) }
-  def stripe; end
-
-  sig { params(value: T.untyped).returns(T.untyped) }
-  def stripe=(value); end
-
-  sig { returns(T.untyped) }
   def super_mode; end
 
   sig { params(value: T.untyped).returns(T.untyped) }

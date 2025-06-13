@@ -183,6 +183,9 @@ module GeneratedPathHelpersModule
   def oauth_userinfo_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def preview_ruler_area_tenant_stripe_records_products_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def rails_info_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -264,6 +267,12 @@ module GeneratedPathHelpersModule
   def ruler_area_tenant_shopify_multipass_stores_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_stripe_records_product_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_stripe_records_products_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_tenant_setting_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -282,6 +291,9 @@ module GeneratedPathHelpersModule
   def send_verification_sms_api_v1_authentication_sms_verify_index_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def setup_intent_api_v1_internal_me_card_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def shopify_area_multipass_auth_callback_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -292,7 +304,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def shopify_area_webhooks_eventbridge_shopify_path(*args); end
-  def setup_intent_api_v1_internal_me_card_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def sync_ruler_area_tenant_stripe_records_products_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def turbo_recede_historical_location_path(*args); end
