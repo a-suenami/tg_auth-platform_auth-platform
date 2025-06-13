@@ -1,0 +1,5 @@
+.uk-margin-top.uk-container
+  h2 メンバーシップ新規作成
+
+  = form_with model: @membership, url: ruler_area_tenant_memberships_path(@tenant_id), local: true do |f|
+    = render 'form', f: f

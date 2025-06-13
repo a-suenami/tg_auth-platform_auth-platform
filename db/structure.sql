@@ -175,6 +175,8 @@ CREATE TABLE public.memberships (
     tenant_id public.citext NOT NULL,
     name character varying,
     display_name character varying,
+    "position" integer,
+    tier integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -199,6 +201,20 @@ COMMENT ON COLUMN public.memberships.name IS 'メンバーシップ識別子';
 --
 
 COMMENT ON COLUMN public.memberships.display_name IS 'メンバーシップ名称';
+
+
+--
+-- Name: COLUMN memberships."position"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships."position" IS '表示順序';
+
+
+--
+-- Name: COLUMN memberships.tier; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships.tier IS '階級';
 
 
 --
@@ -268,74 +284,6 @@ COMMENT ON COLUMN public.memberships__activation_sources.activated_at IS '有効
 --
 
 COMMENT ON COLUMN public.memberships__activation_sources.expires_at IS '有効期限';
-
-
---
--- Name: memberships__analytics; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.memberships__analytics (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    membership_plan_id uuid NOT NULL,
-    date date NOT NULL,
-    active_subscribers integer DEFAULT 0,
-    new_subscribers integer DEFAULT 0,
-    cancelled_subscribers integer DEFAULT 0,
-    revenue integer DEFAULT 0,
-    churn_rate numeric(5,4) DEFAULT 0.0,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE memberships__analytics; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.memberships__analytics IS 'メンバーシップの分析データ';
-
-
---
--- Name: COLUMN memberships__analytics.date; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__analytics.date IS '集計日';
-
-
---
--- Name: COLUMN memberships__analytics.active_subscribers; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__analytics.active_subscribers IS 'アクティブ購読者数';
-
-
---
--- Name: COLUMN memberships__analytics.new_subscribers; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__analytics.new_subscribers IS '新規購読者数';
-
-
---
--- Name: COLUMN memberships__analytics.cancelled_subscribers; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__analytics.cancelled_subscribers IS '解約者数';
-
-
---
--- Name: COLUMN memberships__analytics.revenue; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__analytics.revenue IS '売上（円）';
-
-
---
--- Name: COLUMN memberships__analytics.churn_rate; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__analytics.churn_rate IS 'チャーン率';
 
 
 --
@@ -494,6 +442,52 @@ COMMENT ON COLUMN public.memberships__plans.enabled_at IS '有効化日時';
 --
 
 COMMENT ON COLUMN public.memberships__plans.disabled_at IS '無効化日時';
+
+
+--
+-- Name: memberships__user_achievements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships__user_achievements (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    membership_id uuid NOT NULL,
+    membership_plan_id uuid NOT NULL,
+    date date NOT NULL,
+    achievement_type character varying NOT NULL,
+    achievement_data jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE memberships__user_achievements; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.memberships__user_achievements IS 'ユーザーのメンバーシップアチーブメント';
+
+
+--
+-- Name: COLUMN memberships__user_achievements.date; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__user_achievements.date IS '達成日';
+
+
+--
+-- Name: COLUMN memberships__user_achievements.achievement_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__user_achievements.achievement_type IS 'アチーブメントタイプ';
+
+
+--
+-- Name: COLUMN memberships__user_achievements.achievement_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__user_achievements.achievement_data IS 'アチーブメント詳細データ';
 
 
 --
@@ -1459,14 +1453,6 @@ ALTER TABLE ONLY public.memberships__activation_sources
 
 
 --
--- Name: memberships__analytics memberships__analytics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__analytics
-    ADD CONSTRAINT memberships__analytics_pkey PRIMARY KEY (id);
-
-
---
 -- Name: memberships__groups memberships__groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1496,6 +1482,14 @@ ALTER TABLE ONLY public.memberships__plan_payment_methods
 
 ALTER TABLE ONLY public.memberships__plans
     ADD CONSTRAINT memberships__plans_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: memberships__user_achievements memberships__user_achievements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__user_achievements
+    ADD CONSTRAINT memberships__user_achievements_pkey PRIMARY KEY (id);
 
 
 --
@@ -1787,20 +1781,6 @@ CREATE INDEX idx_memberships__activation_sources_tenant_user ON public.membershi
 
 
 --
--- Name: idx_memberships__analytics_date; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_memberships__analytics_date ON public.memberships__analytics USING btree (date);
-
-
---
--- Name: idx_memberships__analytics_tenant_plan_date_uniq; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_memberships__analytics_tenant_plan_date_uniq ON public.memberships__analytics USING btree (tenant_id, membership_plan_id, date);
-
-
---
 -- Name: idx_memberships__groups_tenant_id_name_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1826,6 +1806,20 @@ CREATE UNIQUE INDEX idx_memberships__plan_payment_methods_plan_type_uniq ON publ
 --
 
 CREATE UNIQUE INDEX idx_memberships__plans_tenant_membership_billing ON public.memberships__plans USING btree (tenant_id, membership_id, billing_cycle);
+
+
+--
+-- Name: idx_memberships__user_achievements_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_memberships__user_achievements_date ON public.memberships__user_achievements USING btree (date);
+
+
+--
+-- Name: idx_memberships__user_achievements_tenant_user_membership_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_memberships__user_achievements_tenant_user_membership_date ON public.memberships__user_achievements USING btree (tenant_id, user_id, membership_id, date);
 
 
 --
@@ -2074,20 +2068,6 @@ CREATE INDEX index_memberships__activation_sources_on_user_id ON public.membersh
 
 
 --
--- Name: index_memberships__analytics_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__analytics_on_membership_plan_id ON public.memberships__analytics USING btree (membership_plan_id);
-
-
---
--- Name: index_memberships__analytics_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__analytics_on_tenant_id ON public.memberships__analytics USING btree (tenant_id);
-
-
---
 -- Name: index_memberships__groups_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2127,6 +2107,34 @@ CREATE INDEX index_memberships__plans_on_membership_id ON public.memberships__pl
 --
 
 CREATE INDEX index_memberships__plans_on_tenant_id ON public.memberships__plans USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__user_achievements_on_membership_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__user_achievements_on_membership_id ON public.memberships__user_achievements USING btree (membership_id);
+
+
+--
+-- Name: index_memberships__user_achievements_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__user_achievements_on_membership_plan_id ON public.memberships__user_achievements USING btree (membership_plan_id);
+
+
+--
+-- Name: index_memberships__user_achievements_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__user_achievements_on_tenant_id ON public.memberships__user_achievements USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__user_achievements_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__user_achievements_on_user_id ON public.memberships__user_achievements USING btree (user_id);
 
 
 --
@@ -2758,22 +2766,6 @@ ALTER TABLE ONLY public.memberships__activation_sources
 
 
 --
--- Name: memberships__analytics fk_memberships__analytics_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__analytics
-    ADD CONSTRAINT fk_memberships__analytics_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
-
-
---
--- Name: memberships__analytics fk_memberships__analytics_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__analytics
-    ADD CONSTRAINT fk_memberships__analytics_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
 -- Name: memberships__groups fk_memberships__groups_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2819,6 +2811,38 @@ ALTER TABLE ONLY public.memberships__plans
 
 ALTER TABLE ONLY public.memberships__plans
     ADD CONSTRAINT fk_memberships__plans_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: memberships__user_achievements fk_memberships__user_achievements_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__user_achievements
+    ADD CONSTRAINT fk_memberships__user_achievements_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
+
+
+--
+-- Name: memberships__user_achievements fk_memberships__user_achievements_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__user_achievements
+    ADD CONSTRAINT fk_memberships__user_achievements_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
+
+
+--
+-- Name: memberships__user_achievements fk_memberships__user_achievements_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__user_achievements
+    ADD CONSTRAINT fk_memberships__user_achievements_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: memberships__user_achievements fk_memberships__user_achievements_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__user_achievements
+    ADD CONSTRAINT fk_memberships__user_achievements_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --

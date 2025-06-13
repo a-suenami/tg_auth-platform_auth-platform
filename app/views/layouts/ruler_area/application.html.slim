@@ -31,6 +31,8 @@ html lang='ja'
                       li
                         = link_to 'テナント詳細設定', ruler_area_tenant_tenant_settings_path(@tenant_id)
                       li
+                        = link_to 'メンバーシップ管理', top_ruler_area_tenant_memberships_path(@tenant_id)
+                      li
                         = link_to 'SPA 設定', ruler_area_tenant_login_spa_applications_path(@tenant_id)
                       li
                         = link_to 'テンプレート管理', ruler_area_tenant_email_templates_path(@tenant_id)

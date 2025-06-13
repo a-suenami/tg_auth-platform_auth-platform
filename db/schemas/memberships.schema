@@ -2,6 +2,8 @@ create_table :memberships, force: :cascade, id: :uuid, default: -> { 'gen_random
   t.references :tenant, type: :citext, null: false
   t.string :name, comment: 'メンバーシップ識別子'
   t.string :display_name, comment: 'メンバーシップ名称'
+  t.integer :position, comment: '表示順序'
+  t.integer :tier, comment: '階級'
 
   t.timestamps null: false
 end

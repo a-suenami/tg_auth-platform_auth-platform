@@ -1,0 +1,34 @@
+.uk-margin-top.uk-container
+  h2 メンバーシップ一覧
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    - if @memberships.empty?
+      p.uk-text-lead
+        | No メンバーシップ found.
+      = link_to "新規登録", new_ruler_area_tenant_membership_path(@tenant_id), class: "uk-button uk-button-primary"
+
+    - else
+      table.uk-table.uk-table-divider
+        tr
+          th = Membership.human_attribute_name(:name)
+          th = Membership.human_attribute_name(:display_name)
+          th = Membership.human_attribute_name(:position)
+          th = Membership.human_attribute_name(:tier)
+          th = "操作"
+
+        - @memberships.each do |membership|
+          tr
+            td
+              = membership.name
+            td
+              = membership.display_name
+            td
+              = membership.position
+            td
+              = membership.tier
+            td
+              = link_to "詳細", ruler_area_tenant_membership_path(@tenant_id, membership), class: "uk-button uk-button-secondary"
+              .uk-margin
+                = link_to "編集", edit_ruler_area_tenant_membership_path(@tenant_id, membership), class: "uk-button uk-button-primary"
+
+      == pagy_nav(@pagy)

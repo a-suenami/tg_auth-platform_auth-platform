@@ -273,10 +273,10 @@ class Membership
 
     # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :membership_users`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Membership::User::PrivateCollectionProxy) }
+    sig { returns(::Memberships::User::PrivateCollectionProxy) }
     def membership_users; end
 
-    sig { params(value: T::Enumerable[::Membership::User]).void }
+    sig { params(value: T::Enumerable[::Memberships::User]).void }
     def membership_users=(value); end
 
     sig { returns(T::Array[T.untyped]) }
@@ -287,10 +287,10 @@ class Membership
 
     # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :plan_components`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Membership::PlanComponent::PrivateCollectionProxy) }
+    sig { returns(::Memberships::PlanComponent::PrivateCollectionProxy) }
     def plan_components; end
 
-    sig { params(value: T::Enumerable[::Membership::PlanComponent]).void }
+    sig { params(value: T::Enumerable[::Memberships::PlanComponent]).void }
     def plan_components=(value); end
 
     sig { returns(T::Array[T.untyped]) }
@@ -301,10 +301,10 @@ class Membership
 
     # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :plans`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Membership::Plan::PrivateCollectionProxy) }
+    sig { returns(::Memberships::Plan::PrivateCollectionProxy) }
     def plans; end
 
-    sig { params(value: T::Enumerable[::Membership::Plan]).void }
+    sig { params(value: T::Enumerable[::Memberships::Plan]).void }
     def plans=(value); end
 
     sig { returns(T.nilable(::Tenant)) }
@@ -317,6 +317,20 @@ class Membership
     def tenant=(value); end
 
     sig { returns(T::Array[T.untyped]) }
+    def user_achievement_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def user_achievement_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :user_achievements`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Memberships::UserAchievement::PrivateCollectionProxy) }
+    def user_achievements; end
+
+    sig { params(value: T::Enumerable[::Memberships::UserAchievement]).void }
+    def user_achievements=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
     def user_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
@@ -324,10 +338,10 @@ class Membership
 
     # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :users, through: :membership_users`.
     # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
-    sig { returns(::Membership::User::PrivateCollectionProxy) }
+    sig { returns(::User::PrivateCollectionProxy) }
     def users; end
 
-    sig { params(value: T::Enumerable[::Membership::User]).void }
+    sig { params(value: T::Enumerable[::User]).void }
     def users=(value); end
   end
 
@@ -519,10 +533,12 @@ class Membership
         display_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        position: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        tier: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, display_name: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, display_name: nil, created_at: nil, updated_at: nil, position: nil, tier: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -757,6 +773,51 @@ class Membership
     sig { void }
     def name_will_change!; end
 
+    sig { returns(T.nilable(::Integer)) }
+    def position; end
+
+    sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+    def position=(value); end
+
+    sig { returns(T::Boolean) }
+    def position?; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def position_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def position_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def position_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def position_change; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def position_change_to_be_saved; end
+
+    sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+    def position_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def position_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def position_previous_change; end
+
+    sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+    def position_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def position_previously_was; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def position_was; end
+
+    sig { void }
+    def position_will_change!; end
+
     sig { void }
     def restore_created_at!; end
 
@@ -773,7 +834,13 @@ class Membership
     def restore_name!; end
 
     sig { void }
+    def restore_position!; end
+
+    sig { void }
     def restore_tenant_id!; end
+
+    sig { void }
+    def restore_tier!; end
 
     sig { void }
     def restore_updated_at!; end
@@ -808,11 +875,23 @@ class Membership
     sig { returns(T::Boolean) }
     def saved_change_to_name?; end
 
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def saved_change_to_position; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_position?; end
+
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
 
     sig { returns(T::Boolean) }
     def saved_change_to_tenant_id?; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def saved_change_to_tier; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_tier?; end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_updated_at; end
@@ -864,6 +943,51 @@ class Membership
 
     sig { void }
     def tenant_id_will_change!; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def tier; end
+
+    sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+    def tier=(value); end
+
+    sig { returns(T::Boolean) }
+    def tier?; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def tier_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def tier_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def tier_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def tier_change; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def tier_change_to_be_saved; end
+
+    sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+    def tier_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def tier_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def tier_previous_change; end
+
+    sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+    def tier_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def tier_previously_was; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def tier_was; end
+
+    sig { void }
+    def tier_will_change!; end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def updated_at; end
@@ -926,7 +1050,13 @@ class Membership
     def will_save_change_to_name?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_position?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_tier?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_updated_at?; end
@@ -1068,10 +1198,12 @@ class Membership
         display_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        position: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        tier: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, display_name: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, display_name: nil, created_at: nil, updated_at: nil, position: nil, tier: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

@@ -120,6 +120,8 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.citext "tenant_id", null: false
     t.string "name", comment: "メンバーシップ識別子"
     t.string "display_name", comment: "メンバーシップ名称"
+    t.integer "position", comment: "表示順序"
+    t.integer "tier", comment: "階級"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id"], name: "index_memberships_on_tenant_id"
@@ -143,23 +145,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id", "user_id"], name: "idx_memberships__activation_sources_tenant_user"
     t.index ["tenant_id"], name: "index_memberships__activation_sources_on_tenant_id"
     t.index ["user_id"], name: "index_memberships__activation_sources_on_user_id"
-  end
-
-  create_table "memberships__analytics", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップの分析データ", force: :cascade do |t|
-    t.citext "tenant_id", null: false
-    t.uuid "membership_plan_id", null: false
-    t.date "date", null: false, comment: "集計日"
-    t.integer "active_subscribers", default: 0, comment: "アクティブ購読者数"
-    t.integer "new_subscribers", default: 0, comment: "新規購読者数"
-    t.integer "cancelled_subscribers", default: 0, comment: "解約者数"
-    t.integer "revenue", default: 0, comment: "売上（円）"
-    t.decimal "churn_rate", precision: 5, scale: 4, default: "0.0", comment: "チャーン率"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["date"], name: "idx_memberships__analytics_date"
-    t.index ["membership_plan_id"], name: "index_memberships__analytics_on_membership_plan_id"
-    t.index ["tenant_id", "membership_plan_id", "date"], name: "idx_memberships__analytics_tenant_plan_date_uniq", unique: true
-    t.index ["tenant_id"], name: "index_memberships__analytics_on_tenant_id"
   end
 
   create_table "memberships__groups", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップグループ（段階的プラン用）", force: :cascade do |t|
@@ -206,6 +191,24 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["membership_id"], name: "index_memberships__plans_on_membership_id"
     t.index ["tenant_id", "membership_id", "billing_cycle"], name: "idx_memberships__plans_tenant_membership_billing", unique: true
     t.index ["tenant_id"], name: "index_memberships__plans_on_tenant_id"
+  end
+
+  create_table "memberships__user_achievements", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップアチーブメント", force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "membership_id", null: false
+    t.uuid "membership_plan_id", null: false
+    t.date "date", null: false, comment: "達成日"
+    t.string "achievement_type", null: false, comment: "アチーブメントタイプ"
+    t.jsonb "achievement_data", default: {}, comment: "アチーブメント詳細データ"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date"], name: "idx_memberships__user_achievements_date"
+    t.index ["membership_id"], name: "index_memberships__user_achievements_on_membership_id"
+    t.index ["membership_plan_id"], name: "index_memberships__user_achievements_on_membership_plan_id"
+    t.index ["tenant_id", "user_id", "membership_id", "date"], name: "idx_memberships__user_achievements_tenant_user_membership_date"
+    t.index ["tenant_id"], name: "index_memberships__user_achievements_on_tenant_id"
+    t.index ["user_id"], name: "index_memberships__user_achievements_on_user_id"
   end
 
   create_table "memberships__user_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップ契約", force: :cascade do |t|
@@ -745,14 +748,16 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "memberships__activation_sources", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__activation_sources_plans"
   add_foreign_key "memberships__activation_sources", "tenants", name: "fk_memberships__activation_sources_tenants"
   add_foreign_key "memberships__activation_sources", "users", name: "fk_memberships__activation_sources_users"
-  add_foreign_key "memberships__analytics", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__analytics_plans"
-  add_foreign_key "memberships__analytics", "tenants", name: "fk_memberships__analytics_tenants"
   add_foreign_key "memberships__groups", "tenants", name: "fk_memberships__groups_tenants"
   add_foreign_key "memberships__plan_components", "memberships", name: "fk_memberships__plan_components_memberships"
   add_foreign_key "memberships__plan_components", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__plan_components_plans"
   add_foreign_key "memberships__plan_payment_methods", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__plan_payment_methods_plans"
   add_foreign_key "memberships__plans", "memberships", name: "fk_memberships__plans_memberships"
   add_foreign_key "memberships__plans", "tenants", name: "fk_memberships__plans_tenants"
+  add_foreign_key "memberships__user_achievements", "memberships", name: "fk_memberships__user_achievements_memberships"
+  add_foreign_key "memberships__user_achievements", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__user_achievements_plans"
+  add_foreign_key "memberships__user_achievements", "tenants", name: "fk_memberships__user_achievements_tenants"
+  add_foreign_key "memberships__user_achievements", "users", name: "fk_memberships__user_achievements_users"
   add_foreign_key "memberships__user_contracts", "memberships__plans", column: "current_membership_plan_id", name: "fk_memberships__user_contracts_current_plans"
   add_foreign_key "memberships__user_contracts", "memberships__plans", column: "next_membership_plan_id", name: "fk_memberships__user_contracts_next_plans"
   add_foreign_key "memberships__user_contracts", "tenants", name: "fk_memberships__user_contracts_tenants"

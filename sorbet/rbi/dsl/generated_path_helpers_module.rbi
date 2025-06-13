@@ -99,6 +99,9 @@ module GeneratedPathHelpersModule
   def edit_ruler_area_tenant_login_spa_application_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_membership_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_oauth_application_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -136,6 +139,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_login_spa_application_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_membership_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_oauth_application_path(*args); end
@@ -249,6 +255,12 @@ module GeneratedPathHelpersModule
   def ruler_area_tenant_login_spa_applications_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_membership_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_memberships_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_oauth_application_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -307,6 +319,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def sync_ruler_area_tenant_stripe_records_products_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def top_ruler_area_tenant_memberships_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def turbo_recede_historical_location_path(*args); end

@@ -17,6 +17,9 @@ Rails.application.routes.draw do
         resources :admins, only: [:index, :new, :create, :destroy]
         resources :login_spa_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :tenant_settings, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        resources :memberships, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+          get :top, on: :collection
+        end
         resources :shopify_multipass_stores, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :email_templates, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :oauth_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
