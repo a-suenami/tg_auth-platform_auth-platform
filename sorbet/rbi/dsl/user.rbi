@@ -269,6 +269,9 @@ class User
     sig { params(args: T.untyped, blk: T.untyped).returns(::ContactAddress) }
     def build_contact_address(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership::UserContract) }
+    def build_membership_user_contract(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
 
@@ -289,6 +292,12 @@ class User
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::ContactAddress) }
     def create_contact_address!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership::UserContract) }
+    def create_membership_user_contract(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership::UserContract) }
+    def create_membership_user_contract!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant(*args, &blk); end
@@ -345,6 +354,54 @@ class User
     def linked_applications=(value); end
 
     sig { returns(T::Array[T.untyped]) }
+    def membership_activation_source_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def membership_activation_source_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :membership_activation_sources`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Membership::ActivationSource::PrivateCollectionProxy) }
+    def membership_activation_sources; end
+
+    sig { params(value: T::Enumerable[::Membership::ActivationSource]).void }
+    def membership_activation_sources=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def membership_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def membership_ids=(ids); end
+
+    sig { returns(T.nilable(::Membership::UserContract)) }
+    def membership_user_contract; end
+
+    sig { params(value: T.nilable(::Membership::UserContract)).void }
+    def membership_user_contract=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def membership_user_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def membership_user_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :membership_users`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Membership::User::PrivateCollectionProxy) }
+    def membership_users; end
+
+    sig { params(value: T::Enumerable[::Membership::User]).void }
+    def membership_users=(value); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :memberships, through: :membership_users`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
+    sig { returns(::Membership::PrivateCollectionProxy) }
+    def memberships; end
+
+    sig { params(value: T::Enumerable[::Membership]).void }
+    def memberships=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
     def oauth_application_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
@@ -360,6 +417,9 @@ class User
 
     sig { returns(T.nilable(::ContactAddress)) }
     def reload_contact_address; end
+
+    sig { returns(T.nilable(::Membership::UserContract)) }
+    def reload_membership_user_contract; end
 
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end

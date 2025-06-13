@@ -13,6 +13,13 @@ class Tenant < ApplicationRecord
   has_many :shopify_record_multipass_stores, class_name: 'ShopifyRecord::MultipassStore', dependent: :destroy
   has_one :tenant_stripe_account, class_name: 'Tenant::StripeAccount'
 
+  # Membership
+  has_many :memberships, dependent: :destroy
+  has_many :membership_groups, class_name: 'Memberships::Group', dependent: :destroy
+  has_many :membership_plans, class_name: 'Memberships::Plan', dependent: :destroy
+  has_many :membership_user_contracts, class_name: 'Memberships::UserContract', dependent: :destroy
+  has_many :membership_activation_sources, class_name: 'Memberships::ActivationSource', dependent: :destroy
+  has_many :membership_user_achievements, class_name: 'Memberships::UserAchievement', dependent: :destroy
 
   class CardPaymentGatewayEnum < T::Enum
     enums do

@@ -50,6 +50,13 @@ class User < ApplicationRecord
   has_many :stripe_setup_intents, class_name: 'StripeRecord::SetupIntent'
   has_many :stripe_payment_methods, class_name: 'StripeRecord::PaymentMethod'
 
+  # Membership
+  has_many :membership_users, class_name: 'Memberships::User', dependent: :destroy
+  has_many :memberships, through: :membership_users
+  has_many :membership_user_contracts, class_name: 'Memberships::UserContract', dependent: :destroy
+  has_many :membership_activation_sources, class_name: 'Memberships::ActivationSource', dependent: :destroy
+  has_many :membership_user_achievements, class_name: 'Memberships::UserAchievement', dependent: :destroy
+
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :email, uniqueness: { scope: :tenant_id, conditions: -> { where(deleted_at: nil) } }
   validates :phone_number, phony_plausible: true
