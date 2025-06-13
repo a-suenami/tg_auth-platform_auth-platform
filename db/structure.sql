@@ -347,6 +347,7 @@ COMMENT ON TABLE public.memberships__plan_components IS 'メンバーシップ�
 
 CREATE TABLE public.memberships__plan_payment_methods (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
     membership_plan_id uuid NOT NULL,
     payment_type character varying NOT NULL,
     is_active boolean DEFAULT true,
@@ -384,6 +385,7 @@ CREATE TABLE public.memberships__plans (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     membership_id uuid NOT NULL,
+    name character varying NOT NULL,
     billing_cycle character varying NOT NULL,
     validity_period character varying NOT NULL,
     amount integer NOT NULL,
@@ -400,6 +402,13 @@ CREATE TABLE public.memberships__plans (
 --
 
 COMMENT ON TABLE public.memberships__plans IS 'メンバーシップの契約プラン';
+
+
+--
+-- Name: COLUMN memberships__plans.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.name IS 'プラン名';
 
 
 --
@@ -2096,6 +2105,13 @@ CREATE INDEX index_memberships__plan_payment_methods_on_membership_plan_id ON pu
 
 
 --
+-- Name: index_memberships__plan_payment_methods_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__plan_payment_methods_on_tenant_id ON public.memberships__plan_payment_methods USING btree (tenant_id);
+
+
+--
 -- Name: index_memberships__plans_on_membership_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2795,6 +2811,14 @@ ALTER TABLE ONLY public.memberships__plan_components
 
 ALTER TABLE ONLY public.memberships__plan_payment_methods
     ADD CONSTRAINT fk_memberships__plan_payment_methods_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
+
+
+--
+-- Name: memberships__plan_payment_methods fk_memberships__plan_payment_methods_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__plan_payment_methods
+    ADD CONSTRAINT fk_memberships__plan_payment_methods_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --

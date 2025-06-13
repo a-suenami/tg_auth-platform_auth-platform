@@ -1,0 +1,25 @@
+ja:
+  activerecord:
+    models:
+      memberships/plan: メンバーシッププラン
+    attributes:
+      memberships/plan:
+        id: ID
+        name: プラン名
+        billing_cycle: 請求サイクル
+        validity_period: 有効期間
+        amount: 金額
+        enabled_at: 有効開始日時
+        disabled_at: 無効開始日時
+        created_at: 作成日時
+        updated_at: 更新日時
+        payment_type: 決済方法
+    enums:
+      memberships/plan:
+        billing_cycle:
+          monthly: 月額
+          yearly: 年額
+          one-time: 一回払い
+        validity_period:
+          month: 月単位
+          year: 年単位

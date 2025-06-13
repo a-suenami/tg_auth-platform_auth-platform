@@ -1,0 +1,6 @@
+.uk-margin-top.uk-container
+  h2 メンバーシッププラン編集
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with model: @membership_plan, url: ruler_area_tenant_membership_plan_path(@tenant_id, @membership_plan), method: :put, local: true do |f|
+      = render 'form', f: f, membership_plan: @membership_plan

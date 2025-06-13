@@ -6,7 +6,8 @@ class Memberships::PlanPaymentMethod < ApplicationRecord
 
   self.table_name = 'memberships__plan_payment_methods'
 
-  belongs_to :membership_plan, class_name: 'Memberships::Plan'
+  belongs_to :tenant
+  belongs_to :membership_plan, class_name: 'Memberships::Plan', foreign_key: 'membership_plan_id', inverse_of: :plan_payment_methods
 
   validates :payment_type, presence: true, inclusion: { in: %w[credit_card convenience campaign_code external_linkage] }
   validates :payment_type, uniqueness: { scope: :membership_plan_id }

@@ -1,0 +1,39 @@
+.uk-margin-top.uk-container
+  h2 メンバーシッププラン一覧
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    - if @membership_plans.empty?
+      p.uk-text-lead
+        | No メンバーシッププラン found.
+      = link_to "新規登録", new_ruler_area_tenant_membership_plan_path(@tenant_id), class: "uk-button uk-button-primary"
+
+    - else
+      table.uk-table.uk-table-divider
+        tr
+          th = Memberships::Plan.human_attribute_name(:name)
+          th = Memberships::Plan.human_attribute_name(:billing_cycle)
+          th = Memberships::Plan.human_attribute_name(:validity_period)
+          th = Memberships::Plan.human_attribute_name(:amount)
+          th = "決済方法"
+          th = "操作"
+
+        - @membership_plans.each do |membership_plan|
+          tr
+            td
+              = membership_plan.name
+            td
+              = membership_plan.billing_cycle
+            td
+              = membership_plan.validity_period
+            td
+              = membership_plan.amount
+            td
+              - membership_plan.plan_payment_methods.each do |payment_method|
+                span.uk-badge.uk-margin-small-right
+                  = payment_method.payment_type
+            td
+              = link_to "詳細", ruler_area_tenant_membership_plan_path(@tenant_id, membership_plan), class: "uk-button uk-button-secondary"
+              .uk-margin
+                = link_to "編集", edit_ruler_area_tenant_membership_plan_path(@tenant_id, membership_plan), class: "uk-button uk-button-primary"
+
+      == pagy_nav(@pagy)

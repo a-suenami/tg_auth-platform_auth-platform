@@ -1,0 +1,33 @@
+.uk-margin-top.uk-container
+  h2 メンバーシッププラン詳細
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    .uk-grid.uk-grid-small
+      .uk-width-1-2
+        h3 基本情報
+        table.uk-table.uk-table-divider
+          tr
+            th = Memberships::Plan.human_attribute_name(:name)
+            td = @membership_plan.name
+          tr
+            th = Memberships::Plan.human_attribute_name(:billing_cycle)
+            td = @membership_plan.billing_cycle
+          tr
+            th = Memberships::Plan.human_attribute_name(:validity_period)
+            td = @membership_plan.validity_period
+          tr
+            th = Memberships::Plan.human_attribute_name(:amount)
+            td = @membership_plan.amount
+
+      .uk-width-1-2
+        h3 決済方法
+        - if @membership_plan.plan_payment_methods.any?
+          - @membership_plan.plan_payment_methods.each do |payment_method|
+            span.uk-badge.uk-margin-small-right
+              = payment_method.payment_type
+        - else
+          p.uk-text-meta 決済方法が設定されていません
+
+    .uk-margin-top
+      = link_to "編集", edit_ruler_area_tenant_membership_plan_path(@tenant_id, @membership_plan), class: "uk-button uk-button-primary"
+      = link_to "一覧に戻る", ruler_area_tenant_membership_plans_path(@tenant_id), class: "uk-button uk-button-secondary uk-margin-left"

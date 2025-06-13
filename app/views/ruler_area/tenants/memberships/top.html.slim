@@ -10,8 +10,7 @@
     .uk-card.uk-card-default.uk-card-body
       h3.uk-card-title メンバーシッププラン設定
       p.uk-text-meta メンバーシッププランの設定を行います
-      .uk-button.uk-button-secondary.uk-disabled
-        | 準備中
+      = link_to "プラン設定", ruler_area_tenant_membership_plans_path(@tenant_id), class: "uk-button uk-button-primary"
 
     .uk-card.uk-card-default.uk-card-body
       h3.uk-card-title メンバーシップグループ設定
