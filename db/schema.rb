@@ -147,13 +147,29 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["user_id"], name: "index_memberships__activation_sources_on_user_id"
   end
 
+  create_table "memberships__group_assignments", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップとグループの中間テーブル", force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "membership_id", null: false
+    t.uuid "membership_group_id", null: false
+    t.integer "position", default: 0, comment: "表示順序"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["membership_group_id"], name: "index_memberships__group_assignments_on_membership_group_id"
+    t.index ["membership_id", "membership_group_id"], name: "idx_memberships__group_assignments_uniq", unique: true
+    t.index ["membership_id", "position"], name: "idx_memberships__group_assignments_membership_position"
+    t.index ["membership_id"], name: "index_memberships__group_assignments_on_membership_id"
+    t.index ["tenant_id"], name: "index_memberships__group_assignments_on_tenant_id"
+  end
+
   create_table "memberships__groups", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップグループ（段階的プラン用）", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "name", null: false, comment: "グループ名（英数字のみ）"
     t.string "display_name", null: false, comment: "表示名"
+    t.integer "position", default: 0, comment: "表示順序（段階の順番）"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id", "name"], name: "idx_memberships__groups_tenant_id_name_uniq", unique: true
+    t.index ["tenant_id", "position"], name: "idx_memberships__groups_tenant_position"
     t.index ["tenant_id"], name: "index_memberships__groups_on_tenant_id"
   end
 
@@ -751,6 +767,9 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "memberships__activation_sources", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__activation_sources_plans"
   add_foreign_key "memberships__activation_sources", "tenants", name: "fk_memberships__activation_sources_tenants"
   add_foreign_key "memberships__activation_sources", "users", name: "fk_memberships__activation_sources_users"
+  add_foreign_key "memberships__group_assignments", "memberships", name: "fk_memberships__group_assignments_memberships"
+  add_foreign_key "memberships__group_assignments", "memberships__groups", column: "membership_group_id", name: "fk_memberships__group_assignments_groups"
+  add_foreign_key "memberships__group_assignments", "tenants", name: "fk_memberships__group_assignments_tenants"
   add_foreign_key "memberships__groups", "tenants", name: "fk_memberships__groups_tenants"
   add_foreign_key "memberships__plan_components", "memberships", name: "fk_memberships__plan_components_memberships"
   add_foreign_key "memberships__plan_components", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__plan_components_plans"

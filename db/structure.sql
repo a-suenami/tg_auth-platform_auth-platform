@@ -287,6 +287,35 @@ COMMENT ON COLUMN public.memberships__activation_sources.expires_at IS '有効�
 
 
 --
+-- Name: memberships__group_assignments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships__group_assignments (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    membership_id uuid NOT NULL,
+    membership_group_id uuid NOT NULL,
+    "position" integer DEFAULT 0,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE memberships__group_assignments; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.memberships__group_assignments IS 'メンバーシップとグループの中間テーブル';
+
+
+--
+-- Name: COLUMN memberships__group_assignments."position"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__group_assignments."position" IS '表示順序';
+
+
+--
 -- Name: memberships__groups; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -295,6 +324,7 @@ CREATE TABLE public.memberships__groups (
     tenant_id public.citext NOT NULL,
     name character varying NOT NULL,
     display_name character varying NOT NULL,
+    "position" integer DEFAULT 0,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -319,6 +349,13 @@ COMMENT ON COLUMN public.memberships__groups.name IS 'グループ名（英数�
 --
 
 COMMENT ON COLUMN public.memberships__groups.display_name IS '表示名';
+
+
+--
+-- Name: COLUMN memberships__groups."position"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__groups."position" IS '表示順序（段階の順番）';
 
 
 --
@@ -1462,6 +1499,14 @@ ALTER TABLE ONLY public.memberships__activation_sources
 
 
 --
+-- Name: memberships__group_assignments memberships__group_assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__group_assignments
+    ADD CONSTRAINT memberships__group_assignments_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: memberships__groups memberships__groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1790,10 +1835,31 @@ CREATE INDEX idx_memberships__activation_sources_tenant_user ON public.membershi
 
 
 --
+-- Name: idx_memberships__group_assignments_membership_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_memberships__group_assignments_membership_position ON public.memberships__group_assignments USING btree (membership_id, "position");
+
+
+--
+-- Name: idx_memberships__group_assignments_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_memberships__group_assignments_uniq ON public.memberships__group_assignments USING btree (membership_id, membership_group_id);
+
+
+--
 -- Name: idx_memberships__groups_tenant_id_name_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX idx_memberships__groups_tenant_id_name_uniq ON public.memberships__groups USING btree (tenant_id, name);
+
+
+--
+-- Name: idx_memberships__groups_tenant_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_memberships__groups_tenant_position ON public.memberships__groups USING btree (tenant_id, "position");
 
 
 --
@@ -2074,6 +2140,27 @@ CREATE INDEX index_memberships__activation_sources_on_tenant_id ON public.member
 --
 
 CREATE INDEX index_memberships__activation_sources_on_user_id ON public.memberships__activation_sources USING btree (user_id);
+
+
+--
+-- Name: index_memberships__group_assignments_on_membership_group_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__group_assignments_on_membership_group_id ON public.memberships__group_assignments USING btree (membership_group_id);
+
+
+--
+-- Name: index_memberships__group_assignments_on_membership_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__group_assignments_on_membership_id ON public.memberships__group_assignments USING btree (membership_id);
+
+
+--
+-- Name: index_memberships__group_assignments_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__group_assignments_on_tenant_id ON public.memberships__group_assignments USING btree (tenant_id);
 
 
 --
@@ -2779,6 +2866,30 @@ ALTER TABLE ONLY public.memberships__activation_sources
 
 ALTER TABLE ONLY public.memberships__activation_sources
     ADD CONSTRAINT fk_memberships__activation_sources_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: memberships__group_assignments fk_memberships__group_assignments_groups; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__group_assignments
+    ADD CONSTRAINT fk_memberships__group_assignments_groups FOREIGN KEY (membership_group_id) REFERENCES public.memberships__groups(id);
+
+
+--
+-- Name: memberships__group_assignments fk_memberships__group_assignments_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__group_assignments
+    ADD CONSTRAINT fk_memberships__group_assignments_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
+
+
+--
+-- Name: memberships__group_assignments fk_memberships__group_assignments_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__group_assignments
+    ADD CONSTRAINT fk_memberships__group_assignments_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --

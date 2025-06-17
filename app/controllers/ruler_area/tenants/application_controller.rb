@@ -13,6 +13,7 @@ module RulerArea::Tenants
     def set_tenant
       RequestStore.store[:current_tenant_domain] = Tenant.find(params[:tenant_id]).domain || '-'
       @tenant_id = params[:tenant_id]
+      @tenant = Tenant.current
       Tenant.current
     end
   end

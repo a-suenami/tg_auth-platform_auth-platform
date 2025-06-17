@@ -1,4 +1,16 @@
 .uk-margin-top.uk-container
+  nav.uk-breadcrumb aria-label="Breadcrumb"
+    li
+      = link_to "テナント一覧", ruler_area_tenants_path
+    li
+      = link_to @tenant.name, ruler_area_tenant_root_path(@tenant)
+    li
+      = link_to "メンバーシップ管理", top_ruler_area_tenant_memberships_path(@tenant)
+    li
+      = link_to "メンバーシッププラン一覧", ruler_area_tenant_memberships_plans_path(@tenant)
+    li
+      span = @membership_plan.name
+
   h2 メンバーシッププラン詳細
 
   .uk-margin-top.uk-card.uk-card-default.uk-card-body
@@ -29,5 +41,5 @@
           p.uk-text-meta 決済方法が設定されていません
 
     .uk-margin-top
-      = link_to "編集", edit_ruler_area_tenant_membership_plan_path(@tenant_id, @membership_plan), class: "uk-button uk-button-primary"
-      = link_to "一覧に戻る", ruler_area_tenant_membership_plans_path(@tenant_id), class: "uk-button uk-button-secondary uk-margin-left"
+      = link_to "編集", edit_ruler_area_tenant_memberships_plan_path(@tenant_id, @membership_plan), class: "uk-button uk-button-primary"
+      = link_to "一覧に戻る", ruler_area_tenant_memberships_plans_path(@tenant_id), class: "uk-button uk-button-secondary uk-margin-left"

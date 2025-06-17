@@ -99,6 +99,9 @@ module GeneratedUrlHelpersModule
   def edit_ruler_area_tenant_login_spa_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_membership_group_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_membership_plan_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -142,6 +145,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_login_spa_application_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_membership_group_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_membership_plan_url(*args); end
@@ -259,6 +265,12 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_login_spa_applications_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_membership_group_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_membership_groups_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_membership_plan_url(*args); end

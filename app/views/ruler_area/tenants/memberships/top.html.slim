@@ -1,4 +1,12 @@
 .uk-margin-top.uk-container
+  nav.uk-breadcrumb aria-label="Breadcrumb"
+    li
+      = link_to "テナント一覧", ruler_area_tenants_path
+    li
+      = link_to @tenant.name, ruler_area_tenant_root_path(@tenant)
+    li
+      span メンバーシップ管理
+
   h2 メンバーシップ管理
 
   .uk-margin-top.uk-grid.uk-grid-small.uk-child-width-1-3
@@ -10,10 +18,9 @@
     .uk-card.uk-card-default.uk-card-body
       h3.uk-card-title メンバーシッププラン設定
       p.uk-text-meta メンバーシッププランの設定を行います
-      = link_to "プラン設定", ruler_area_tenant_membership_plans_path(@tenant_id), class: "uk-button uk-button-primary"
+      = link_to "プラン設定", ruler_area_tenant_memberships_plans_path(@tenant_id), class: "uk-button uk-button-primary"
 
     .uk-card.uk-card-default.uk-card-body
       h3.uk-card-title メンバーシップグループ設定
       p.uk-text-meta メンバーシップグループの設定を行います
-      .uk-button.uk-button-secondary.uk-disabled
-        | 準備中
+      = link_to "グループ設定", ruler_area_tenant_memberships_groups_path(@tenant_id), class: "uk-button uk-button-primary"

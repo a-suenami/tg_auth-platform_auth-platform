@@ -1,0 +1,46 @@
+.uk-margin-top.uk-container
+  nav.uk-breadcrumb aria-label="Breadcrumb"
+    li
+      = link_to "テナント一覧", ruler_area_tenants_path
+    li
+      = link_to @tenant.name, ruler_area_tenant_root_path(@tenant)
+    li
+      = link_to "メンバーシップ管理", top_ruler_area_tenant_memberships_path(@tenant)
+    li
+      span メンバーシップグループ一覧
+
+  h2 メンバーシップグループ一覧
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    .uk-flex.uk-flex-right.uk-margin-bottom
+      = link_to "メンバーシップ管理", top_ruler_area_tenant_memberships_path(@tenant_id), class: "uk-button uk-button-secondary uk-margin-right"
+      = link_to "新規作成", new_ruler_area_tenant_memberships_group_path(@tenant_id), class: "uk-button uk-button-primary"
+
+    - if @membership_groups.empty?
+      p.uk-text-lead
+        | No メンバーシップグループ found.
+      = link_to "新規登録", new_ruler_area_tenant_memberships_group_path(@tenant_id), class: "uk-button uk-button-primary"
+
+    - else
+      table.uk-table.uk-table-divider
+        tr
+          th = Memberships::Group.human_attribute_name(:name)
+          th = Memberships::Group.human_attribute_name(:display_name)
+          th = Memberships::Group.human_attribute_name(:position)
+          th = "操作"
+
+        - @membership_groups.each do |membership_group|
+          tr
+            td
+              = membership_group.name
+            td
+              = membership_group.display_name
+            td
+              = membership_group.position
+            td
+              = link_to "詳細", ruler_area_tenant_memberships_group_path(@tenant_id, membership_group), class: "uk-button uk-button-secondary"
+              .uk-margin
+                = link_to "編集", edit_ruler_area_tenant_memberships_group_path(@tenant_id, membership_group), class: "uk-button uk-button-primary"
+
+    .uk-margin-top
+      = link_to "メンバーシップ管理", top_ruler_area_tenant_memberships_path(@tenant_id), class: "uk-button uk-button-default"

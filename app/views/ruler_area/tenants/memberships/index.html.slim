@@ -1,11 +1,24 @@
 .uk-margin-top.uk-container
+  nav.uk-breadcrumb aria-label="Breadcrumb"
+    li
+      = link_to "テナント一覧", ruler_area_tenants_path
+    li
+      = link_to @tenant.name, ruler_area_tenant_root_path(@tenant)
+    li
+      = link_to "メンバーシップ管理", top_ruler_area_tenant_memberships_path(@tenant)
+    li
+      span メンバーシップ一覧
+
   h2 メンバーシップ一覧
 
   .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    .uk-flex.uk-flex-right.uk-margin-bottom
+      = link_to "メンバーシップグループ", ruler_area_tenant_memberships_groups_path(@tenant_id), class: "uk-button uk-button-secondary uk-margin-right"
+      = link_to "新規登録", new_ruler_area_tenant_membership_path(@tenant_id), class: "uk-button uk-button-primary"
+
     - if @memberships.empty?
       p.uk-text-lead
         | No メンバーシップ found.
-      = link_to "新規登録", new_ruler_area_tenant_membership_path(@tenant_id), class: "uk-button uk-button-primary"
 
     - else
       table.uk-table.uk-table-divider
