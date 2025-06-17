@@ -81,6 +81,9 @@ module GeneratedPathHelpersModule
   def api_v1_private_userinfo_index_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def assign_memberships_ruler_area_tenant_memberships_group_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def authenticate_api_v1_authentication_mfa_sms_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -99,13 +102,13 @@ module GeneratedPathHelpersModule
   def edit_ruler_area_tenant_login_spa_application_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def edit_ruler_area_tenant_membership_group_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_membership_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def edit_ruler_area_tenant_membership_plan_path(*args); end
+  def edit_ruler_area_tenant_memberships_group_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_memberships_plan_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_oauth_application_path(*args); end
@@ -147,13 +150,13 @@ module GeneratedPathHelpersModule
   def new_ruler_area_tenant_login_spa_application_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def new_ruler_area_tenant_membership_group_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_membership_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def new_ruler_area_tenant_membership_plan_path(*args); end
+  def new_ruler_area_tenant_memberships_group_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_memberships_plan_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_oauth_application_path(*args); end
@@ -267,22 +270,22 @@ module GeneratedPathHelpersModule
   def ruler_area_tenant_login_spa_applications_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_membership_group_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_membership_groups_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_membership_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_membership_plan_path(*args); end
+  def ruler_area_tenant_memberships_group_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_membership_plans_path(*args); end
+  def ruler_area_tenant_memberships_groups_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_memberships_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_memberships_plan_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_memberships_plans_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_oauth_application_path(*args); end
@@ -358,6 +361,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def unlock_account_locks_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def update_memberships_ruler_area_tenant_memberships_group_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def verify_email_api_v1_authentication_registrations_path(*args); end

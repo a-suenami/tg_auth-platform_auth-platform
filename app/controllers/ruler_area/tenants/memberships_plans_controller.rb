@@ -4,7 +4,7 @@ class RulerArea::Tenants::MembershipsPlansController < RulerArea::Tenants::Appli
   before_action :set_membership_plan, only: [:show, :edit, :update, :destroy]
 
   def index
-    @membership_plans = Memberships::Plan.all
+    @membership_plans = Memberships::Plan.where(tenant_id: @tenant_id)
     @pagy, @membership_plans = pagy @membership_plans
   end
 
@@ -51,13 +51,13 @@ class RulerArea::Tenants::MembershipsPlansController < RulerArea::Tenants::Appli
   def membership_plan_params
     params.require(:memberships_plan).permit(
       :name,
-      :membership_id,
       :billing_cycle,
       :validity_period,
       :amount,
       :enabled_at,
       :disabled_at,
       plan_payment_methods_attributes: [:id, :payment_type, :_destroy],
-    )
+      plan_components_attributes: [:id, :membership_id, :tenant_id, :_destroy],
+    ).merge(tenant_id: @tenant_id)
   end
 end

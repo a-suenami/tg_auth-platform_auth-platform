@@ -32,7 +32,15 @@
             td = @membership_plan.amount
 
       .uk-width-1-2
-        h3 決済方法
+        h3 メンバーシップ
+        - if @membership_plan.memberships.any?
+          - @membership_plan.memberships.each do |membership|
+            span.uk-badge.uk-margin-small-right
+              = membership.display_name
+        - else
+          p.uk-text-meta メンバーシップが設定されていません
+
+        h3.uk-margin-top 決済方法
         - if @membership_plan.plan_payment_methods.any?
           - @membership_plan.plan_payment_methods.each do |payment_method|
             span.uk-badge.uk-margin-small-right

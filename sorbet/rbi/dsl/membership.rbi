@@ -294,6 +294,20 @@ class Membership
     def groups=(value); end
 
     sig { returns(T::Array[T.untyped]) }
+    def membership_plan_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def membership_plan_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :membership_plans, through: :plan_components`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
+    sig { returns(::Memberships::Plan::PrivateCollectionProxy) }
+    def membership_plans; end
+
+    sig { params(value: T::Enumerable[::Memberships::Plan]).void }
+    def membership_plans=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
     def membership_user_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
@@ -320,20 +334,6 @@ class Membership
 
     sig { params(value: T::Enumerable[::Memberships::PlanComponent]).void }
     def plan_components=(value); end
-
-    sig { returns(T::Array[T.untyped]) }
-    def plan_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def plan_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :plans`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::Plan::PrivateCollectionProxy) }
-    def plans; end
-
-    sig { params(value: T::Enumerable[::Memberships::Plan]).void }
-    def plans=(value); end
 
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end

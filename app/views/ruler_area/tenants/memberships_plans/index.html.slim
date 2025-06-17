@@ -26,6 +26,7 @@
           th = Memberships::Plan.human_attribute_name(:billing_cycle)
           th = Memberships::Plan.human_attribute_name(:validity_period)
           th = Memberships::Plan.human_attribute_name(:amount)
+          th = "メンバーシップ"
           th = "決済方法"
           th = "操作"
 
@@ -39,6 +40,13 @@
               = membership_plan.validity_period
             td
               = membership_plan.amount
+            td
+              - if membership_plan.memberships.any?
+                - membership_plan.memberships.each do |membership|
+                  span.uk-badge.uk-margin-small-right
+                    = membership.display_name
+              - else
+                span.uk-text-muted 未設定
             td
               - membership_plan.plan_payment_methods.each do |payment_method|
                 span.uk-badge.uk-margin-small-right

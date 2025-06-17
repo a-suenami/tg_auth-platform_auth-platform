@@ -270,17 +270,8 @@ class Memberships::Plan
     sig { params(value: T::Enumerable[::Memberships::ActivationSource]).void }
     def activation_sources=(value); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership) }
-    def build_membership(*args, &blk); end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership) }
-    def create_membership(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership) }
-    def create_membership!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant(*args, &blk); end
@@ -288,11 +279,19 @@ class Memberships::Plan
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant!(*args, &blk); end
 
-    sig { returns(T.nilable(::Membership)) }
-    def membership; end
+    sig { returns(T::Array[T.untyped]) }
+    def membership_ids; end
 
-    sig { params(value: T.nilable(::Membership)).void }
-    def membership=(value); end
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def membership_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `Memberships::Plan` class because it declared `has_many :memberships, through: :plan_components`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
+    sig { returns(::Membership::PrivateCollectionProxy) }
+    def memberships; end
+
+    sig { params(value: T::Enumerable[::Membership]).void }
+    def memberships=(value); end
 
     sig { returns(T::Array[T.untyped]) }
     def plan_component_ids; end
@@ -307,6 +306,9 @@ class Memberships::Plan
 
     sig { params(value: T::Enumerable[::Memberships::PlanComponent]).void }
     def plan_components=(value); end
+
+    sig { params(attributes: T.untyped).returns(T.untyped) }
+    def plan_components_attributes=(attributes); end
 
     sig { returns(T::Array[T.untyped]) }
     def plan_payment_method_ids; end
@@ -324,9 +326,6 @@ class Memberships::Plan
 
     sig { params(attributes: T.untyped).returns(T.untyped) }
     def plan_payment_methods_attributes=(attributes); end
-
-    sig { returns(T.nilable(::Membership)) }
-    def reload_membership; end
 
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
@@ -564,7 +563,6 @@ class Memberships::Plan
         string_query: String,
         id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        membership_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         billing_cycle: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         validity_period: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         amount: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -577,7 +575,7 @@ class Memberships::Plan
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, membership_id: nil, billing_cycle: nil, validity_period: nil, amount: nil, is_active: nil, enabled_at: nil, disabled_at: nil, created_at: nil, updated_at: nil, name: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, billing_cycle: nil, validity_period: nil, amount: nil, is_active: nil, enabled_at: nil, disabled_at: nil, created_at: nil, updated_at: nil, name: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -967,51 +965,6 @@ class Memberships::Plan
     sig { void }
     def is_active_will_change!; end
 
-    sig { returns(T.untyped) }
-    def membership_id; end
-
-    sig { params(value: T.untyped).returns(T.untyped) }
-    def membership_id=(value); end
-
-    sig { returns(T::Boolean) }
-    def membership_id?; end
-
-    sig { returns(T.untyped) }
-    def membership_id_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def membership_id_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def membership_id_came_from_user?; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def membership_id_change; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def membership_id_change_to_be_saved; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def membership_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.untyped) }
-    def membership_id_in_database; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def membership_id_previous_change; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def membership_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.untyped) }
-    def membership_id_previously_was; end
-
-    sig { returns(T.untyped) }
-    def membership_id_was; end
-
-    sig { void }
-    def membership_id_will_change!; end
-
     sig { returns(::String) }
     def name; end
 
@@ -1082,9 +1035,6 @@ class Memberships::Plan
     def restore_is_active!; end
 
     sig { void }
-    def restore_membership_id!; end
-
-    sig { void }
     def restore_name!; end
 
     sig { void }
@@ -1143,12 +1093,6 @@ class Memberships::Plan
 
     sig { returns(T::Boolean) }
     def saved_change_to_is_active?; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def saved_change_to_membership_id; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_membership_id?; end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_name; end
@@ -1334,9 +1278,6 @@ class Memberships::Plan
     def will_save_change_to_is_active?; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_membership_id?; end
-
-    sig { returns(T::Boolean) }
     def will_save_change_to_name?; end
 
     sig { returns(T::Boolean) }
@@ -1481,7 +1422,6 @@ class Memberships::Plan
         string_query: String,
         id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        membership_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         billing_cycle: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         validity_period: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         amount: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -1494,7 +1434,7 @@ class Memberships::Plan
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, membership_id: nil, billing_cycle: nil, validity_period: nil, amount: nil, is_active: nil, enabled_at: nil, disabled_at: nil, created_at: nil, updated_at: nil, name: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, billing_cycle: nil, validity_period: nil, amount: nil, is_active: nil, enabled_at: nil, disabled_at: nil, created_at: nil, updated_at: nil, name: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

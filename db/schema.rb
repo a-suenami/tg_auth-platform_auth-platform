@@ -174,6 +174,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   end
 
   create_table "memberships__plan_components", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシッププランの構成要素（バンドルプラン用）", force: :cascade do |t|
+    t.citext "tenant_id", null: false
     t.uuid "membership_plan_id", null: false
     t.uuid "membership_id", null: false
     t.datetime "created_at", null: false
@@ -181,6 +182,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["membership_id"], name: "index_memberships__plan_components_on_membership_id"
     t.index ["membership_plan_id", "membership_id"], name: "idx_memberships__plan_components_plan_membership_uniq", unique: true
     t.index ["membership_plan_id"], name: "index_memberships__plan_components_on_membership_plan_id"
+    t.index ["tenant_id"], name: "index_memberships__plan_components_on_tenant_id"
   end
 
   create_table "memberships__plan_payment_methods", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシッププランの支払い方法", force: :cascade do |t|
@@ -197,7 +199,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
 
   create_table "memberships__plans", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップの契約プラン", force: :cascade do |t|
     t.citext "tenant_id", null: false
-    t.uuid "membership_id", null: false
     t.string "name", null: false, comment: "プラン名"
     t.string "billing_cycle", null: false, comment: "請求サイクル: monthly, yearly, one-time"
     t.string "validity_period", null: false, comment: "有効期間: month, year"
@@ -207,8 +208,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "disabled_at", comment: "無効化日時"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["membership_id"], name: "index_memberships__plans_on_membership_id"
-    t.index ["tenant_id", "membership_id", "billing_cycle"], name: "idx_memberships__plans_tenant_membership_billing", unique: true
     t.index ["tenant_id"], name: "index_memberships__plans_on_tenant_id"
   end
 
@@ -773,9 +772,9 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "memberships__groups", "tenants", name: "fk_memberships__groups_tenants"
   add_foreign_key "memberships__plan_components", "memberships", name: "fk_memberships__plan_components_memberships"
   add_foreign_key "memberships__plan_components", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__plan_components_plans"
+  add_foreign_key "memberships__plan_components", "tenants", name: "fk_memberships__plan_components_tenants"
   add_foreign_key "memberships__plan_payment_methods", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__plan_payment_methods_plans"
   add_foreign_key "memberships__plan_payment_methods", "tenants", name: "fk_memberships__plan_payment_methods_tenants"
-  add_foreign_key "memberships__plans", "memberships", name: "fk_memberships__plans_memberships"
   add_foreign_key "memberships__plans", "tenants", name: "fk_memberships__plans_tenants"
   add_foreign_key "memberships__user_achievements", "memberships", name: "fk_memberships__user_achievements_memberships"
   add_foreign_key "memberships__user_achievements", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__user_achievements_plans"

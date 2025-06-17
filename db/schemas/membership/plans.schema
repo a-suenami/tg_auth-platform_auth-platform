@@ -1,6 +1,5 @@
 create_table :memberships__plans, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'メンバーシップの契約プラン' do |t|
   t.references :tenant, type: :citext, null: false
-  t.references :membership, type: :uuid, null: false
   t.string :name, null: false, comment: 'プラン名'
   t.string :billing_cycle, null: false, comment: '請求サイクル: monthly, yearly, one-time'
   t.string :validity_period, null: false, comment: '有効期間: month, year'
@@ -10,8 +9,6 @@ create_table :memberships__plans, force: :cascade, id: :uuid, default: -> { 'gen
   t.datetime :disabled_at, comment: '無効化日時'
 
   t.timestamps null: false
-  t.index [:tenant_id, :membership_id, :billing_cycle], name: :idx_memberships__plans_tenant_membership_billing, using: :btree, unique: true
 end
 
 add_foreign_key :memberships__plans, :tenants, name: :fk_memberships__plans_tenants
-add_foreign_key :memberships__plans, :memberships, column: :membership_id, name: :fk_memberships__plans_memberships

@@ -364,6 +364,7 @@ COMMENT ON COLUMN public.memberships__groups."position" IS '表示順序（段�
 
 CREATE TABLE public.memberships__plan_components (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
     membership_plan_id uuid NOT NULL,
     membership_id uuid NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
@@ -421,7 +422,6 @@ COMMENT ON COLUMN public.memberships__plan_payment_methods.is_active IS '有効�
 CREATE TABLE public.memberships__plans (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
-    membership_id uuid NOT NULL,
     name character varying NOT NULL,
     billing_cycle character varying NOT NULL,
     validity_period character varying NOT NULL,
@@ -1877,13 +1877,6 @@ CREATE UNIQUE INDEX idx_memberships__plan_payment_methods_plan_type_uniq ON publ
 
 
 --
--- Name: idx_memberships__plans_tenant_membership_billing; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_memberships__plans_tenant_membership_billing ON public.memberships__plans USING btree (tenant_id, membership_id, billing_cycle);
-
-
---
 -- Name: idx_memberships__user_achievements_date; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2185,6 +2178,13 @@ CREATE INDEX index_memberships__plan_components_on_membership_plan_id ON public.
 
 
 --
+-- Name: index_memberships__plan_components_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__plan_components_on_tenant_id ON public.memberships__plan_components USING btree (tenant_id);
+
+
+--
 -- Name: index_memberships__plan_payment_methods_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2196,13 +2196,6 @@ CREATE INDEX index_memberships__plan_payment_methods_on_membership_plan_id ON pu
 --
 
 CREATE INDEX index_memberships__plan_payment_methods_on_tenant_id ON public.memberships__plan_payment_methods USING btree (tenant_id);
-
-
---
--- Name: index_memberships__plans_on_membership_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__plans_on_membership_id ON public.memberships__plans USING btree (membership_id);
 
 
 --
@@ -2917,6 +2910,14 @@ ALTER TABLE ONLY public.memberships__plan_components
 
 
 --
+-- Name: memberships__plan_components fk_memberships__plan_components_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__plan_components
+    ADD CONSTRAINT fk_memberships__plan_components_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: memberships__plan_payment_methods fk_memberships__plan_payment_methods_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2930,14 +2931,6 @@ ALTER TABLE ONLY public.memberships__plan_payment_methods
 
 ALTER TABLE ONLY public.memberships__plan_payment_methods
     ADD CONSTRAINT fk_memberships__plan_payment_methods_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: memberships__plans fk_memberships__plans_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__plans
-    ADD CONSTRAINT fk_memberships__plans_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
 
 
 --

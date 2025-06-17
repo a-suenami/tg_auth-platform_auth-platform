@@ -6,8 +6,8 @@ class Membership < ApplicationRecord
 
   belongs_to :tenant
 
-  has_many :plans, class_name: 'Memberships::Plan', dependent: :destroy
   has_many :plan_components, class_name: 'Memberships::PlanComponent', dependent: :destroy
+  has_many :membership_plans, through: :plan_components, source: :membership_plan
   has_many :membership_users, class_name: 'Memberships::User', dependent: :destroy
   has_many :users, through: :membership_users
   has_many :user_achievements, class_name: 'Memberships::UserAchievement', dependent: :destroy
