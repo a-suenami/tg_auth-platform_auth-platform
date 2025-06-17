@@ -14,7 +14,7 @@ class Membership < ApplicationRecord
   has_many :group_assignments, class_name: 'Memberships::GroupAssignment', dependent: :destroy, inverse_of: :membership
   has_many :groups, through: :group_assignments, source: :membership_group
 
-  validates :name, presence: true, uniqueness: { scope: :tenant_id }
+  validates :name, presence: true
   validates :display_name, presence: true
   validates :position, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 end

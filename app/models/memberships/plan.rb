@@ -11,8 +11,8 @@ class Memberships::Plan < ApplicationRecord
   has_many :plan_payment_methods, class_name: 'Memberships::PlanPaymentMethod', dependent: :destroy, inverse_of: :membership_plan
   has_many :plan_components, class_name: 'Memberships::PlanComponent', dependent: :destroy, inverse_of: :membership_plan
   has_many :memberships, through: :plan_components
-  has_many :user_contracts, class_name: 'Memberships::UserContract', foreign_key: :current_membership_plan_id, dependent: :nullify
-  has_many :user_contracts_next, class_name: 'Memberships::UserContract', foreign_key: :next_membership_plan_id, dependent: :nullify
+  has_many :user_contracts, class_name: 'Memberships::UserContract', foreign_key: :current_membership_plan_id, dependent: :nullify, inverse_of: :current_membership_plan
+  has_many :user_contracts_next, class_name: 'Memberships::UserContract', foreign_key: :next_membership_plan_id, dependent: :nullify, inverse_of: :next_membership_plan
   has_many :activation_sources, class_name: 'Memberships::ActivationSource', dependent: :destroy
   has_many :user_achievements, class_name: 'Memberships::UserAchievement', dependent: :destroy
 

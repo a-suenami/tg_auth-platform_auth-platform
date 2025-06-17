@@ -9,7 +9,7 @@ create_table :memberships__user_contracts, force: :cascade, id: :uuid, default: 
   t.references :next_membership_activation_source, type: :uuid, comment: '次回変更予定の決済情報'
 
   t.timestamps null: false
-  t.index [:tenant_id, :user_id], name: :idx_memberships__user_contracts_tenant_user, using: :btree
+  t.index [:tenant_id, :user_id], name: :idx_memberships__user_contracts_tenant_user, using: :btree, unique: true
   t.index :expires_at, name: :idx_memberships__user_contracts_expires_at, using: :btree
 end
 

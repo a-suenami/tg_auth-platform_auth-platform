@@ -1901,7 +1901,7 @@ CREATE INDEX idx_memberships__user_contracts_expires_at ON public.memberships__u
 -- Name: idx_memberships__user_contracts_tenant_user; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_memberships__user_contracts_tenant_user ON public.memberships__user_contracts USING btree (tenant_id, user_id);
+CREATE UNIQUE INDEX idx_memberships__user_contracts_tenant_user ON public.memberships__user_contracts USING btree (tenant_id, user_id);
 
 
 --

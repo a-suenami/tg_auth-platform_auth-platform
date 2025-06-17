@@ -245,7 +245,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["expires_at"], name: "idx_memberships__user_contracts_expires_at"
     t.index ["next_membership_activation_source_id"], name: "idx_on_next_membership_activation_source_id_91334145d7"
     t.index ["next_membership_plan_id"], name: "index_memberships__user_contracts_on_next_membership_plan_id"
-    t.index ["tenant_id", "user_id"], name: "idx_memberships__user_contracts_tenant_user"
+    t.index ["tenant_id", "user_id"], name: "idx_memberships__user_contracts_tenant_user", unique: true
     t.index ["tenant_id"], name: "index_memberships__user_contracts_on_tenant_id"
     t.index ["user_id"], name: "index_memberships__user_contracts_on_user_id"
   end
