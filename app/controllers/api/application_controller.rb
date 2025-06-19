@@ -8,6 +8,16 @@ module API
     include ExpirableCookieUseable
     before_action :set_tenant
 
+
+    # Blueprinterヘルパーメソッド
+    def render_blueprint(blueprint_class, object, options = {})
+      render json: blueprint_class.render_as_hash(object, options)
+    end
+
+    def render_blueprint_collection(blueprint_class, collection, options = {})
+      render json: blueprint_class.render_as_hash(collection, options)
+    end
+
     private
 
     sig { returns(T.nilable(Tenant)) }

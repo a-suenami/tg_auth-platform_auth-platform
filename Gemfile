@@ -69,6 +69,8 @@ gem 'rack-attack', '~> 6.7'
 gem 'slim-rails', '~> 3.6', '>= 3.6.3'
 # # JSON API serializer
 gem 'jb', '~> 0.8.2'
+# Blueprint for API documentation and serialization
+gem 'blueprinter', '~> 1.1', '>= 1.1.2'
 # gem 'jsonapi-serializer', git: 'https://github.com/twogate/fast_jsonapi', ref: '62c1cc8'
 # Pagination
 gem 'api-pagination', '~> 5.0.0'
