@@ -1,29 +1,27 @@
 
 if Settings&.stripe&.default_key_for_develop&.publishable_key&.present?
-
-  # 開発環境用にStripeのAPIキーをセットする
-  if StripeRecord::APIKey.find_by(id: 'f4cfae0c-a7b6-48f9-9ecd-b61ff7517d44').nil?
+  if StripeRecord::APIKey.find_by(id: '6da7f801-b36c-46b7-bba2-c759a883dd0f').nil?
+    # Sampleテナント用
     api_key = StripeRecord::APIKey.new(
-      id: 'f4cfae0c-a7b6-48f9-9ecd-b61ff7517d44',
+      id: '6da7f801-b36c-46b7-bba2-c759a883dd0f',
       remote_id: 'acct_1PiwCqLtOmpZVCAz',
-      display_name: 'twogate',
+      display_name: 'sample',
       publishable_key: Settings.stripe.default_key_for_develop.publishable_key,
       secret_key: Settings.stripe.default_key_for_develop.secret_key
     )
     api_key.build_account(
-      id: '3179439b-ef86-4188-b848-e915826d6c12',
+      id: '02ff0a8c-9e4d-49f5-b52b-cc7d5a82e904',
       remote_id: 'acct_1PiwCqLtOmpZVCAz',
-      display_name: 'twogate'
+      display_name: 'sample'
     )
     api_key.save!
-  end
 
-
-  Tenant::StripeAccount.seed do |s|
-    s.id = '82ef2ba0-d71a-4c35-86f0-ae0217b64948'
-    s.tenant_id = 'twogate'
-    s.stripe_account_id = nil
-    s.charge_type = nil
-    s.fee_rate = nil
+    Tenant::StripeAccount.seed do |s|
+      s.id = 'bce91857-ff0c-4bd2-8dce-cf5b08c1ad71'
+      s.tenant_id = 'sample'
+      s.stripe_account_id = api_key.account.id
+      s.charge_type = nil
+      s.fee_rate = nil
+    end
   end
 end
