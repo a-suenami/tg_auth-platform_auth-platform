@@ -102,20 +102,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["uid"], name: "index_login_spa_applications_on_uid", unique: true
   end
 
-  create_table "membership_subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.citext "tenant_id", null: false
-    t.uuid "user_id", null: false
-    t.uuid "chargeable_id"
-    t.string "chargeable_type"
-    t.datetime "started_at", null: false
-    t.datetime "expires_at", null: false
-    t.datetime "trial_end_at"
-    t.datetime "created_at"
-    t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_e1e867fd22"
-    t.index ["tenant_id"], name: "index_membership_subscriptions_on_tenant_id"
-    t.index ["user_id"], name: "index_membership_subscriptions_on_user_id"
-  end
-
   create_table "memberships", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップ", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "name", comment: "メンバーシップ識別子"
@@ -255,6 +241,8 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "user_id", null: false
     t.uuid "membership_id", null: false
     t.uuid "membership_group_id", comment: "段階的プランの場合のグループ"
+    t.datetime "expires_at", comment: "メンバーシップの有効期限"
+    t.string "status", comment: "メンバーシップのステータス"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["membership_group_id"], name: "index_memberships__users_on_membership_group_id"
@@ -634,6 +622,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "stripe_account_id", null: false
     t.string "charge_type", comment: "Connect の場合にどの支払いタイプを利用するか"
     t.decimal "fee_rate", precision: 6, scale: 5, comment: "手数料率（100% ~ 0.001%）。stripe_account.controlling_platform がいる場合のみ（Connect）利用する。"
+    t.string "tax_rate_id", comment: "stripe の税率ID"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["stripe_account_id"], name: "index_tenant_stripe_accounts_on_stripe_account_id"
@@ -761,7 +750,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "delivery_addresses", "users", name: "fk_delivery_addresses_users"
   add_foreign_key "email_templates", "tenants", name: "fk_email_templates_tenants"
   add_foreign_key "login_spa_applications", "tenants", name: "fk_login_spa_applications_tenants"
-  add_foreign_key "membership_subscriptions", "tenants", name: "fk_membership_subscriptions_tenants"
   add_foreign_key "memberships", "tenants", name: "fk_memberships_tenants"
   add_foreign_key "memberships__activation_sources", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__activation_sources_plans"
   add_foreign_key "memberships__activation_sources", "tenants", name: "fk_memberships__activation_sources_tenants"

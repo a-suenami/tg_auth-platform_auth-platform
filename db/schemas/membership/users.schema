@@ -3,6 +3,8 @@ create_table :memberships__users, force: :cascade, id: :uuid, default: -> { 'gen
   t.references :user, type: :uuid, null: false
   t.references :membership, type: :uuid, null: false
   t.references :membership_group, type: :uuid, comment: '段階的プランの場合のグループ'
+  t.datetime :expires_at, comment: 'メンバーシップの有効期限'
+  t.string :status, comment: 'メンバーシップのステータス'
 
   t.timestamps null: false
   t.index [:tenant_id, :user_id, :membership_id], name: :idx_memberships__users_tenant_user_membership_uniq, using: :btree, unique: true

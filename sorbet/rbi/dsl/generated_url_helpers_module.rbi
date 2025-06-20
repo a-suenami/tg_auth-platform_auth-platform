@@ -78,13 +78,25 @@ module GeneratedUrlHelpersModule
   def api_v1_internal_me_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def api_v1_internal_membership_user_contracts_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def api_v1_private_userinfo_index_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_public_membership_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_public_memberships_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def assign_memberships_ruler_area_tenant_memberships_group_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def authenticate_api_v1_authentication_mfa_sms_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def by_group_api_v1_public_memberships_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_contact_address_url(*args); end

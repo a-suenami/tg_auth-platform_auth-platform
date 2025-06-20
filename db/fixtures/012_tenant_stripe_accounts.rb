@@ -20,6 +20,7 @@ if Settings&.stripe&.default_key_for_develop&.publishable_key&.present?
       s.id = 'bce91857-ff0c-4bd2-8dce-cf5b08c1ad71'
       s.tenant_id = 'sample'
       s.stripe_account_id = api_key.account.id
+      s.tax_rate_id = nil
       s.charge_type = nil
       s.fee_rate = nil
     end

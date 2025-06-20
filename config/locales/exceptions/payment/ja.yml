@@ -1,0 +1,7 @@
+ja:
+  exceptions:
+    shopify:
+      already_have_subscriptions: すでに対象のメンバーシップを契約中もしくは、契約手続き中です。
+      invalid_plan: '契約プランに問題があります'
+      card_missing: '利用可能なカードが登録されていません'
+      unauthorized_plan: 'このプランは選択できません'

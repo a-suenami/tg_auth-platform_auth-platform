@@ -150,23 +150,6 @@ CREATE TABLE public.login_spa_applications (
 
 
 --
--- Name: membership_subscriptions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.membership_subscriptions (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    user_id uuid NOT NULL,
-    chargeable_id uuid,
-    chargeable_type character varying,
-    started_at timestamp(6) without time zone NOT NULL,
-    expires_at timestamp(6) without time zone NOT NULL,
-    trial_end_at timestamp(6) without time zone,
-    created_at timestamp(6) without time zone
-);
-
-
---
 -- Name: memberships; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -614,6 +597,8 @@ CREATE TABLE public.memberships__users (
     user_id uuid NOT NULL,
     membership_id uuid NOT NULL,
     membership_group_id uuid,
+    expires_at timestamp(6) without time zone,
+    status character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -631,6 +616,20 @@ COMMENT ON TABLE public.memberships__users IS 'メンバーシップとUserの�
 --
 
 COMMENT ON COLUMN public.memberships__users.membership_group_id IS '段階的プランの場合のグループ';
+
+
+--
+-- Name: COLUMN memberships__users.expires_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__users.expires_at IS 'メンバーシップの有効期限';
+
+
+--
+-- Name: COLUMN memberships__users.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__users.status IS 'メンバーシップのステータス';
 
 
 --
@@ -1266,6 +1265,7 @@ CREATE TABLE public.tenant_stripe_accounts (
     stripe_account_id uuid NOT NULL,
     charge_type character varying,
     fee_rate numeric(6,5),
+    tax_rate_id character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1283,6 +1283,13 @@ COMMENT ON COLUMN public.tenant_stripe_accounts.charge_type IS 'Connect の場�
 --
 
 COMMENT ON COLUMN public.tenant_stripe_accounts.fee_rate IS '手数料率（100% ~ 0.001%）。stripe_account.controlling_platform がいる場合のみ（Connect）利用する。';
+
+
+--
+-- Name: COLUMN tenant_stripe_accounts.tax_rate_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_stripe_accounts.tax_rate_id IS 'stripe の税率ID';
 
 
 --
@@ -1480,14 +1487,6 @@ ALTER TABLE ONLY public.email_templates
 
 ALTER TABLE ONLY public.login_spa_applications
     ADD CONSTRAINT login_spa_applications_pkey PRIMARY KEY (id);
-
-
---
--- Name: membership_subscriptions membership_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.membership_subscriptions
-    ADD CONSTRAINT membership_subscriptions_pkey PRIMARY KEY (id);
 
 
 --
@@ -1912,13 +1911,6 @@ CREATE UNIQUE INDEX idx_memberships__users_tenant_user_membership_uniq ON public
 
 
 --
--- Name: idx_on_chargeable_type_chargeable_id_e1e867fd22; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_on_chargeable_type_chargeable_id_e1e867fd22 ON public.membership_subscriptions USING btree (chargeable_type, chargeable_id);
-
-
---
 -- Name: idx_on_current_membership_activation_source_id_56821d61e7; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2098,20 +2090,6 @@ CREATE INDEX index_login_spa_applications_on_tenant_id ON public.login_spa_appli
 --
 
 CREATE UNIQUE INDEX index_login_spa_applications_on_uid ON public.login_spa_applications USING btree (uid);
-
-
---
--- Name: index_membership_subscriptions_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_membership_subscriptions_on_tenant_id ON public.membership_subscriptions USING btree (tenant_id);
-
-
---
--- Name: index_membership_subscriptions_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_membership_subscriptions_on_user_id ON public.membership_subscriptions USING btree (user_id);
 
 
 --
@@ -2827,14 +2805,6 @@ ALTER TABLE ONLY public.email_templates
 
 ALTER TABLE ONLY public.login_spa_applications
     ADD CONSTRAINT fk_login_spa_applications_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: membership_subscriptions fk_membership_subscriptions_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.membership_subscriptions
-    ADD CONSTRAINT fk_membership_subscriptions_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
