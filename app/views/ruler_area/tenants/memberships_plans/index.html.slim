@@ -23,7 +23,7 @@
       table.uk-table.uk-table-divider
         tr
           th = Memberships::Plan.human_attribute_name(:name)
-          th = Memberships::Plan.human_attribute_name(:billing_cycle)
+          th = Memberships::Plan.human_attribute_name(:recurrence)
           th = Memberships::Plan.human_attribute_name(:validity_period)
           th = Memberships::Plan.human_attribute_name(:amount)
           th = "メンバーシップ"
@@ -35,7 +35,7 @@
             td
               = membership_plan.name
             td
-              = membership_plan.billing_cycle
+              = membership_plan.recurrence ? "定期課金" : "買い切り"
             td
               = membership_plan.validity_period
             td
@@ -51,6 +51,8 @@
               - membership_plan.plan_payment_methods.each do |payment_method|
                 span.uk-badge.uk-margin-small-right
                   = payment_method.payment_type
+                  - if payment_method.payment_type == 'credit_card' && payment_method.stripe_record_price
+                    |  (#{payment_method.stripe_record_price.name})
             td
               = link_to "詳細", ruler_area_tenant_memberships_plan_path(@tenant_id, membership_plan), class: "uk-button uk-button-secondary"
               .uk-margin

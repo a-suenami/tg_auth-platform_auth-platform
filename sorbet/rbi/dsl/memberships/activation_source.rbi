@@ -275,6 +275,9 @@ class Memberships::ActivationSource
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Plan) }
     def build_membership_plan(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
+    def build_memberships__user_contract(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
 
@@ -282,16 +285,19 @@ class Memberships::ActivationSource
     def build_user(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
-    def build_user_contracts_current(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
-    def build_user_contracts_next(*args, &blk); end
+    def build_user_contract_last(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Plan) }
     def create_membership_plan(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Plan) }
     def create_membership_plan!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
+    def create_memberships__user_contract(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
+    def create_memberships__user_contract!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant(*args, &blk); end
@@ -306,16 +312,10 @@ class Memberships::ActivationSource
     def create_user!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
-    def create_user_contracts_current(*args, &blk); end
+    def create_user_contract_last(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
-    def create_user_contracts_current!(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
-    def create_user_contracts_next(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
-    def create_user_contracts_next!(*args, &blk); end
+    def create_user_contract_last!(*args, &blk); end
 
     sig { returns(T.nilable(::Memberships::Plan)) }
     def membership_plan; end
@@ -323,8 +323,17 @@ class Memberships::ActivationSource
     sig { params(value: T.nilable(::Memberships::Plan)).void }
     def membership_plan=(value); end
 
+    sig { returns(T.nilable(::Memberships::UserContract)) }
+    def memberships__user_contract; end
+
+    sig { params(value: T.nilable(::Memberships::UserContract)).void }
+    def memberships__user_contract=(value); end
+
     sig { returns(T.nilable(::Memberships::Plan)) }
     def reload_membership_plan; end
+
+    sig { returns(T.nilable(::Memberships::UserContract)) }
+    def reload_memberships__user_contract; end
 
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
@@ -333,10 +342,7 @@ class Memberships::ActivationSource
     def reload_user; end
 
     sig { returns(T.nilable(::Memberships::UserContract)) }
-    def reload_user_contracts_current; end
-
-    sig { returns(T.nilable(::Memberships::UserContract)) }
-    def reload_user_contracts_next; end
+    def reload_user_contract_last; end
 
     sig { returns(T.nilable(::Tenant)) }
     def tenant; end
@@ -351,16 +357,10 @@ class Memberships::ActivationSource
     def user=(value); end
 
     sig { returns(T.nilable(::Memberships::UserContract)) }
-    def user_contracts_current; end
+    def user_contract_last; end
 
     sig { params(value: T.nilable(::Memberships::UserContract)).void }
-    def user_contracts_current=(value); end
-
-    sig { returns(T.nilable(::Memberships::UserContract)) }
-    def user_contracts_next; end
-
-    sig { params(value: T.nilable(::Memberships::UserContract)).void }
-    def user_contracts_next=(value); end
+    def user_contract_last=(value); end
   end
 
   module GeneratedAssociationRelationMethods
@@ -557,10 +557,11 @@ class Memberships::ActivationSource
         expires_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        memberships__user_contract_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_plan_id: nil, payment_type: nil, payment_provider: nil, external_id: nil, payment_data: nil, activated_at: nil, expires_at: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_plan_id: nil, payment_type: nil, payment_provider: nil, external_id: nil, payment_data: nil, activated_at: nil, expires_at: nil, created_at: nil, updated_at: nil, memberships__user_contract_id: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -886,6 +887,51 @@ class Memberships::ActivationSource
     def membership_plan_id_will_change!; end
 
     sig { returns(T.untyped) }
+    def memberships__user_contract_id; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def memberships__user_contract_id=(value); end
+
+    sig { returns(T::Boolean) }
+    def memberships__user_contract_id?; end
+
+    sig { returns(T.untyped) }
+    def memberships__user_contract_id_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def memberships__user_contract_id_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def memberships__user_contract_id_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def memberships__user_contract_id_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def memberships__user_contract_id_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def memberships__user_contract_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def memberships__user_contract_id_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def memberships__user_contract_id_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def memberships__user_contract_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def memberships__user_contract_id_previously_was; end
+
+    sig { returns(T.untyped) }
+    def memberships__user_contract_id_was; end
+
+    sig { void }
+    def memberships__user_contract_id_will_change!; end
+
+    sig { returns(T.untyped) }
     def payment_data; end
 
     sig { params(value: T.untyped).returns(T.untyped) }
@@ -1042,6 +1088,9 @@ class Memberships::ActivationSource
     def restore_membership_plan_id!; end
 
     sig { void }
+    def restore_memberships__user_contract_id!; end
+
+    sig { void }
     def restore_payment_data!; end
 
     sig { void }
@@ -1100,6 +1149,12 @@ class Memberships::ActivationSource
 
     sig { returns(T::Boolean) }
     def saved_change_to_membership_plan_id?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_memberships__user_contract_id; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_memberships__user_contract_id?; end
 
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_payment_data; end
@@ -1294,6 +1349,9 @@ class Memberships::ActivationSource
     def will_save_change_to_membership_plan_id?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_memberships__user_contract_id?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_payment_data?; end
 
     sig { returns(T::Boolean) }
@@ -1454,10 +1512,11 @@ class Memberships::ActivationSource
         expires_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        memberships__user_contract_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_plan_id: nil, payment_type: nil, payment_provider: nil, external_id: nil, payment_data: nil, activated_at: nil, expires_at: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_plan_id: nil, payment_type: nil, payment_provider: nil, external_id: nil, payment_data: nil, activated_at: nil, expires_at: nil, created_at: nil, updated_at: nil, memberships__user_contract_id: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

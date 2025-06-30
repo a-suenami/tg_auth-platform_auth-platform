@@ -35,7 +35,6 @@ module API::V1::Internal::Membership
         expires_at = calculate_expires_at(@membership_plan)
         user_contract = current_user.membership_user_contracts.create!(
           tenant_id: current_user.tenant_id,
-          current_membership_plan: @membership_plan,
           expires_at:,
           cancel_at_period_end: false,
         )
@@ -45,13 +44,14 @@ module API::V1::Internal::Membership
           tenant_id: current_user.tenant_id,
           user: current_user,
           membership_plan: @membership_plan,
+          memberships__user_contract: user_contract,
           payment_type: payment_method,
           activated_at: Time.current,
           expires_at:,
         )
 
         # UserContractにActivationSourceを紐付け
-        user_contract.update!(current_membership_activation_source: activation_source)
+        user_contract.update!(last_membership_activation_source: activation_source)
 
         # MembershipUserを作成（プランに紐づく全てのメンバーシップに対して）
         @membership_plan.memberships.each do |membership|
@@ -99,7 +99,9 @@ module API::V1::Internal::Membership
 
       # Stripe決済の実装（簡略化）
       # 実際の実装では、StripeRecord::PaymentIntentを使用
-      { success: true }
+      # TODO: priceはmembership_planからひく
+      UserStripe::CreateMembershipSubscriptionService.new.execute(user: current_user, stripe_record_price: StripeRecord::Price.where(tenant_id: current_user.tenant_id).last)
+      # { success: true }
     end
 
     def process_convenience_payment(_membership_plan)
@@ -121,12 +123,8 @@ module API::V1::Internal::Membership
     end
 
     def calculate_expires_at(membership_plan)
-      case membership_plan.billing_cycle
-      when 'monthly'
-        1.month.from_now
-      when 'yearly'
-        1.year.from_now
-      when 'one-time'
+      if membership_plan.recurrence
+        # 定期課金（サブスクリプション）の場合
         case membership_plan.validity_period
         when 'month'
           1.month.from_now
@@ -136,7 +134,15 @@ module API::V1::Internal::Membership
           1.month.from_now # デフォルト
         end
       else
-        1.month.from_now # デフォルト
+        # 買い切りの場合
+        case membership_plan.validity_period
+        when 'month'
+          1.month.from_now
+        when 'year'
+          1.year.from_now
+        else
+          1.month.from_now # デフォルト
+        end
       end
     end
   end

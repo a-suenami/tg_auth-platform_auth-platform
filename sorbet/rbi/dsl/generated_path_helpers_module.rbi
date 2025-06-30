@@ -120,6 +120,9 @@ module GeneratedPathHelpersModule
   def edit_ruler_area_tenant_memberships_group_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_memberships_plan_memberships_plan_payment_method_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_memberships_plan_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -292,6 +295,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_memberships_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_memberships_plan_memberships_plan_payment_method_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_memberships_plan_path(*args); end

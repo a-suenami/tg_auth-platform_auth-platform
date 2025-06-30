@@ -24,7 +24,9 @@ Rails.application.routes.draw do
           get :assign_memberships, on: :member
           patch :update_memberships, on: :member
         end
-        resources :memberships_plans, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        resources :memberships_plans, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+          resources :memberships_plan_payment_methods, only: [:edit, :update]
+        end
         resources :shopify_multipass_stores, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :email_templates, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :oauth_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]

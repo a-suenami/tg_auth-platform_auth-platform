@@ -1,7 +1,7 @@
 create_table :memberships__plans, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'メンバーシップの契約プラン' do |t|
   t.references :tenant, type: :citext, null: false
   t.string :name, null: false, comment: 'プラン名'
-  t.string :billing_cycle, null: false, comment: '請求サイクル: monthly, yearly, one-time'
+  t.boolean :recurrence, null: false, default: false, comment: '定期課金フラグ: true=サブスクリプション, false=買い切り'
   t.string :validity_period, null: false, comment: '有効期間: month, year'
   t.integer :amount, null: false, comment: '請求金額'
   t.boolean :is_active, default: true, comment: '有効フラグ'

@@ -275,6 +275,9 @@ class Memberships::PlanPaymentMethod
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Plan) }
     def build_membership_plan(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Price) }
+    def build_stripe_record_price(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
 
@@ -283,6 +286,12 @@ class Memberships::PlanPaymentMethod
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Plan) }
     def create_membership_plan!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Price) }
+    def create_stripe_record_price(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Price) }
+    def create_stripe_record_price!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant(*args, &blk); end
@@ -299,8 +308,17 @@ class Memberships::PlanPaymentMethod
     sig { returns(T.nilable(::Memberships::Plan)) }
     def reload_membership_plan; end
 
+    sig { returns(T.nilable(::StripeRecord::Price)) }
+    def reload_stripe_record_price; end
+
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
+
+    sig { returns(T.nilable(::StripeRecord::Price)) }
+    def stripe_record_price; end
+
+    sig { params(value: T.nilable(::StripeRecord::Price)).void }
+    def stripe_record_price=(value); end
 
     sig { returns(T.nilable(::Tenant)) }
     def tenant; end
@@ -498,10 +516,11 @@ class Memberships::PlanPaymentMethod
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        stripe_record_price_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, membership_plan_id: nil, payment_type: nil, is_active: nil, created_at: nil, updated_at: nil, tenant_id: nil, **nested); end
+    def where(string_query = nil, id: nil, membership_plan_id: nil, payment_type: nil, is_active: nil, created_at: nil, updated_at: nil, tenant_id: nil, stripe_record_price_id: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -800,6 +819,9 @@ class Memberships::PlanPaymentMethod
     def restore_payment_type!; end
 
     sig { void }
+    def restore_stripe_record_price_id!; end
+
+    sig { void }
     def restore_tenant_id!; end
 
     sig { void }
@@ -841,6 +863,12 @@ class Memberships::PlanPaymentMethod
     sig { returns(T::Boolean) }
     def saved_change_to_payment_type?; end
 
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_stripe_record_price_id; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_stripe_record_price_id?; end
+
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
 
@@ -852,6 +880,51 @@ class Memberships::PlanPaymentMethod
 
     sig { returns(T::Boolean) }
     def saved_change_to_updated_at?; end
+
+    sig { returns(T.untyped) }
+    def stripe_record_price_id; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def stripe_record_price_id=(value); end
+
+    sig { returns(T::Boolean) }
+    def stripe_record_price_id?; end
+
+    sig { returns(T.untyped) }
+    def stripe_record_price_id_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def stripe_record_price_id_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def stripe_record_price_id_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def stripe_record_price_id_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def stripe_record_price_id_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def stripe_record_price_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def stripe_record_price_id_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def stripe_record_price_id_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def stripe_record_price_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def stripe_record_price_id_previously_was; end
+
+    sig { returns(T.untyped) }
+    def stripe_record_price_id_was; end
+
+    sig { void }
+    def stripe_record_price_id_will_change!; end
 
     sig { returns(::String) }
     def tenant_id; end
@@ -960,6 +1033,9 @@ class Memberships::PlanPaymentMethod
 
     sig { returns(T::Boolean) }
     def will_save_change_to_payment_type?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_stripe_record_price_id?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end
@@ -1105,10 +1181,11 @@ class Memberships::PlanPaymentMethod
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        stripe_record_price_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, membership_plan_id: nil, payment_type: nil, is_active: nil, created_at: nil, updated_at: nil, tenant_id: nil, **nested); end
+    def where(string_query = nil, id: nil, membership_plan_id: nil, payment_type: nil, is_active: nil, created_at: nil, updated_at: nil, tenant_id: nil, stripe_record_price_id: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

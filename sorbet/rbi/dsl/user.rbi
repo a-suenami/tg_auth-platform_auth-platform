@@ -493,6 +493,20 @@ class User
     sig { params(value: T::Enumerable[::StripeRecord::SetupIntent]).void }
     def stripe_setup_intents=(value); end
 
+    sig { returns(T::Array[T.untyped]) }
+    def stripe_subscription_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def stripe_subscription_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :stripe_subscriptions`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::StripeRecord::Subscription::PrivateCollectionProxy) }
+    def stripe_subscriptions; end
+
+    sig { params(value: T::Enumerable[::StripeRecord::Subscription]).void }
+    def stripe_subscriptions=(value); end
+
     sig { returns(T.nilable(::Tenant)) }
     def tenant; end
 

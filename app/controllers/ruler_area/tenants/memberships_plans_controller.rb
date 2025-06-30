@@ -51,12 +51,12 @@ class RulerArea::Tenants::MembershipsPlansController < RulerArea::Tenants::Appli
   def membership_plan_params
     params.require(:memberships_plan).permit(
       :name,
-      :billing_cycle,
+      :recurrence,
       :validity_period,
       :amount,
       :enabled_at,
       :disabled_at,
-      plan_payment_methods_attributes: [:id, :payment_type, :_destroy],
+      plan_payment_methods_attributes: [:id, :payment_type, :stripe_record_price_id, :_destroy],
       plan_components_attributes: [:id, :membership_id, :tenant_id, :_destroy],
     ).merge(tenant_id: @tenant_id)
   end

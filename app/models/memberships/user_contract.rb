@@ -8,10 +8,9 @@ class Memberships::UserContract < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :user
-  belongs_to :current_membership_plan, class_name: 'Memberships::Plan', inverse_of: :user_contracts
-  belongs_to :next_membership_plan, class_name: 'Memberships::Plan', optional: true, inverse_of: :user_contracts_next
-  belongs_to :current_membership_activation_source, class_name: 'Memberships::ActivationSource', optional: true, inverse_of: :user_contracts_current
-  belongs_to :next_membership_activation_source, class_name: 'Memberships::ActivationSource', optional: true, inverse_of: :user_contracts_next
+  belongs_to :last_membership_activation_source, class_name: 'Memberships::ActivationSource', optional: true, inverse_of: :user_contract_last
+
+  has_many :activation_sources, class_name: 'Memberships::ActivationSource', dependent: :destroy
 
   validates :expires_at, presence: true
   validates :user_id, uniqueness: { scope: :tenant_id }

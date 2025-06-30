@@ -6,7 +6,7 @@ ja:
       memberships/plan:
         id: ID
         name: プラン名
-        billing_cycle: 請求サイクル
+        recurrence: 定期課金
         validity_period: 有効期間
         amount: 金額
         enabled_at: 有効開始日時
@@ -16,10 +16,9 @@ ja:
         payment_type: 決済方法
     enums:
       memberships/plan:
-        billing_cycle:
-          monthly: 月額
-          yearly: 年額
-          one-time: 一回払い
+        recurrence:
+          true: 定期課金
+          false: 買い切り
         validity_period:
           month: 月単位
           year: 年単位

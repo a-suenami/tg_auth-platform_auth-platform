@@ -120,6 +120,9 @@ module GeneratedUrlHelpersModule
   def edit_ruler_area_tenant_memberships_group_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_memberships_plan_memberships_plan_payment_method_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_memberships_plan_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -289,6 +292,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_memberships_groups_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_memberships_plan_memberships_plan_payment_method_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_memberships_plan_url(*args); end

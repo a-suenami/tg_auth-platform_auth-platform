@@ -22,8 +22,8 @@
             th = Memberships::Plan.human_attribute_name(:name)
             td = @membership_plan.name
           tr
-            th = Memberships::Plan.human_attribute_name(:billing_cycle)
-            td = @membership_plan.billing_cycle
+            th = Memberships::Plan.human_attribute_name(:recurrence)
+            td = @membership_plan.recurrence ? "定期課金" : "買い切り"
           tr
             th = Memberships::Plan.human_attribute_name(:validity_period)
             td = @membership_plan.validity_period
@@ -45,6 +45,12 @@
           - @membership_plan.plan_payment_methods.each do |payment_method|
             span.uk-badge.uk-margin-small-right
               = payment_method.payment_type
+              - if payment_method.payment_type == 'credit_card' && payment_method.stripe_record_price
+                |  (#{payment_method.stripe_record_price.name})
+          - credit_card_method = @membership_plan.plan_payment_methods.find_by(payment_type: 'credit_card')
+          - if credit_card_method
+            .uk-margin-small-top
+              = link_to "決済方法を編集", edit_ruler_area_tenant_memberships_plan_memberships_plan_payment_method_path(@tenant_id, @membership_plan, credit_card_method), class: "uk-button uk-button-small uk-button-primary"
         - else
           p.uk-text-meta 決済方法が設定されていません
 
