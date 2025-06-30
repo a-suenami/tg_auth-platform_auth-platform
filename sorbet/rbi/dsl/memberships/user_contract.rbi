@@ -531,10 +531,11 @@ class Memberships::UserContract
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         last_membership_activation_source_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, expires_at: nil, cancel_at_period_end: nil, created_at: nil, updated_at: nil, last_membership_activation_source_id: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, expires_at: nil, cancel_at_period_end: nil, created_at: nil, updated_at: nil, last_membership_activation_source_id: nil, status: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -634,10 +635,10 @@ class Memberships::UserContract
     sig { void }
     def created_at_will_change!; end
 
-    sig { returns(::ActiveSupport::TimeWithZone) }
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def expires_at; end
 
-    sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
+    sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def expires_at=(value); end
 
     sig { returns(T::Boolean) }
@@ -652,22 +653,32 @@ class Memberships::UserContract
     sig { returns(T::Boolean) }
     def expires_at_came_from_user?; end
 
-    sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def expires_at_change; end
 
-    sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def expires_at_change_to_be_saved; end
 
-    sig { params(from: ::ActiveSupport::TimeWithZone, to: ::ActiveSupport::TimeWithZone).returns(T::Boolean) }
+    sig do
+      params(
+        from: T.nilable(::ActiveSupport::TimeWithZone),
+        to: T.nilable(::ActiveSupport::TimeWithZone)
+      ).returns(T::Boolean)
+    end
     def expires_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def expires_at_in_database; end
 
-    sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def expires_at_previous_change; end
 
-    sig { params(from: ::ActiveSupport::TimeWithZone, to: ::ActiveSupport::TimeWithZone).returns(T::Boolean) }
+    sig do
+      params(
+        from: T.nilable(::ActiveSupport::TimeWithZone),
+        to: T.nilable(::ActiveSupport::TimeWithZone)
+      ).returns(T::Boolean)
+    end
     def expires_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
@@ -833,6 +844,9 @@ class Memberships::UserContract
     def restore_last_membership_activation_source_id!; end
 
     sig { void }
+    def restore_status!; end
+
+    sig { void }
     def restore_tenant_id!; end
 
     sig { void }
@@ -853,7 +867,7 @@ class Memberships::UserContract
     sig { returns(T::Boolean) }
     def saved_change_to_created_at?; end
 
-    sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_expires_at; end
 
     sig { returns(T::Boolean) }
@@ -878,6 +892,12 @@ class Memberships::UserContract
     def saved_change_to_last_membership_activation_source_id?; end
 
     sig { returns(T.nilable([::String, ::String])) }
+    def saved_change_to_status; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_status?; end
+
+    sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
 
     sig { returns(T::Boolean) }
@@ -894,6 +914,51 @@ class Memberships::UserContract
 
     sig { returns(T::Boolean) }
     def saved_change_to_user_id?; end
+
+    sig { returns(::String) }
+    def status; end
+
+    sig { params(value: ::String).returns(::String) }
+    def status=(value); end
+
+    sig { returns(T::Boolean) }
+    def status?; end
+
+    sig { returns(T.nilable(::String)) }
+    def status_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def status_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def status_came_from_user?; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def status_change; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def status_change_to_be_saved; end
+
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def status_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def status_in_database; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def status_previous_change; end
+
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def status_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def status_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def status_was; end
+
+    sig { void }
+    def status_will_change!; end
 
     sig { returns(::String) }
     def tenant_id; end
@@ -1049,6 +1114,9 @@ class Memberships::UserContract
     def will_save_change_to_last_membership_activation_source_id?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_status?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end
 
     sig { returns(T::Boolean) }
@@ -1196,10 +1264,11 @@ class Memberships::UserContract
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         last_membership_activation_source_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, expires_at: nil, cancel_at_period_end: nil, created_at: nil, updated_at: nil, last_membership_activation_source_id: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, expires_at: nil, cancel_at_period_end: nil, created_at: nil, updated_at: nil, last_membership_activation_source_id: nil, status: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

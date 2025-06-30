@@ -117,21 +117,25 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.uuid "membership_plan_id", null: false
-    t.uuid "memberships__user_contract_id", null: false, comment: "メンバーシップ契約ID"
+    t.uuid "user_contract_id", null: false, comment: "メンバーシップ契約ID"
     t.string "payment_type", null: false, comment: "支払い方法: credit_card, convenience, campaign_code, external_linkage"
     t.string "payment_provider", comment: "決済プロバイダ: stripe, komojuなど"
     t.string "external_id", comment: "外部システムのID"
-    t.jsonb "payment_data", default: {}, comment: "決済詳細データ"
-    t.datetime "activated_at", null: false, comment: "有効化日時"
-    t.datetime "expires_at", null: false, comment: "有効期限"
+    t.datetime "activated_at", comment: "有効化日時"
+    t.datetime "expires_at", comment: "有効期限"
+    t.string "status", null: false, comment: "ステータス"
+    t.boolean "recurrence", default: false, null: false, comment: "定期課金フラグ: true=サブスクリプション, false=買い切り"
+    t.uuid "chargeable_id", comment: "決済情報"
+    t.string "chargeable_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_b05f49fd02"
     t.index ["expires_at"], name: "idx_memberships__activation_sources_expires_at"
     t.index ["external_id"], name: "idx_memberships__activation_sources_external_id"
     t.index ["membership_plan_id"], name: "index_memberships__activation_sources_on_membership_plan_id"
-    t.index ["memberships__user_contract_id"], name: "idx_on_memberships__user_contract_id_b53a6b7aeb"
     t.index ["tenant_id", "user_id"], name: "idx_memberships__activation_sources_tenant_user"
     t.index ["tenant_id"], name: "index_memberships__activation_sources_on_tenant_id"
+    t.index ["user_contract_id"], name: "index_memberships__activation_sources_on_user_contract_id"
     t.index ["user_id"], name: "index_memberships__activation_sources_on_user_id"
   end
 
@@ -222,9 +226,10 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   create_table "memberships__user_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップ契約", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
-    t.datetime "expires_at", null: false, comment: "有効期限"
+    t.datetime "expires_at", comment: "有効期限"
     t.boolean "cancel_at_period_end", default: false, comment: "次回更新時に解約フラグ"
     t.uuid "last_membership_activation_source_id", comment: "最後の決済情報"
+    t.string "status", default: "active", null: false, comment: "ステータス"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["expires_at"], name: "idx_memberships__user_contracts_expires_at"
@@ -750,7 +755,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "login_spa_applications", "tenants", name: "fk_login_spa_applications_tenants"
   add_foreign_key "memberships", "tenants", name: "fk_memberships_tenants"
   add_foreign_key "memberships__activation_sources", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__activation_sources_plans"
-  add_foreign_key "memberships__activation_sources", "memberships__user_contracts", name: "fk_memberships__activation_sources_user_contracts"
+  add_foreign_key "memberships__activation_sources", "memberships__user_contracts", column: "user_contract_id", name: "fk_memberships__activation_sources_user_contracts"
   add_foreign_key "memberships__activation_sources", "tenants", name: "fk_memberships__activation_sources_tenants"
   add_foreign_key "memberships__activation_sources", "users", name: "fk_memberships__activation_sources_users"
   add_foreign_key "memberships__group_assignments", "memberships", name: "fk_memberships__group_assignments_memberships"

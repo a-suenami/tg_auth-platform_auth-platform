@@ -88,7 +88,7 @@ module API::V1::Internal::Membership
       end
     end
 
-    def process_credit_card_payment(_membership_plan)
+    def process_credit_card_payment(membership_plan)
       # クレジットカード決済の実装
       # 実際の実装では、Stripeなどの決済サービスを使用
       payment_method = current_user.valid_stripe_card_payment_method
@@ -100,7 +100,8 @@ module API::V1::Internal::Membership
       # Stripe決済の実装（簡略化）
       # 実際の実装では、StripeRecord::PaymentIntentを使用
       # TODO: priceはmembership_planからひく
-      UserStripe::CreateMembershipSubscriptionService.new.execute(user: current_user, stripe_record_price: StripeRecord::Price.where(tenant_id: current_user.tenant_id).last)
+      UserStripe::CreateMembershipSubscriptionService.new.execute(user: current_user, stripe_record_price: StripeRecord::Price.where(tenant_id: current_user.tenant_id).last,
+membership_plan:,)
       # { success: true }
     end
 

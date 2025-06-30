@@ -209,13 +209,16 @@ CREATE TABLE public.memberships__activation_sources (
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
     membership_plan_id uuid NOT NULL,
-    memberships__user_contract_id uuid NOT NULL,
+    user_contract_id uuid NOT NULL,
     payment_type character varying NOT NULL,
     payment_provider character varying,
     external_id character varying,
-    payment_data jsonb DEFAULT '{}'::jsonb,
-    activated_at timestamp(6) without time zone NOT NULL,
-    expires_at timestamp(6) without time zone NOT NULL,
+    activated_at timestamp(6) without time zone,
+    expires_at timestamp(6) without time zone,
+    status character varying NOT NULL,
+    recurrence boolean DEFAULT false NOT NULL,
+    chargeable_id uuid,
+    chargeable_type character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -229,10 +232,10 @@ COMMENT ON TABLE public.memberships__activation_sources IS 'メンバーシッ�
 
 
 --
--- Name: COLUMN memberships__activation_sources.memberships__user_contract_id; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN memberships__activation_sources.user_contract_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.memberships__activation_sources.memberships__user_contract_id IS 'メンバーシップ契約ID';
+COMMENT ON COLUMN public.memberships__activation_sources.user_contract_id IS 'メンバーシップ契約ID';
 
 
 --
@@ -257,13 +260,6 @@ COMMENT ON COLUMN public.memberships__activation_sources.external_id IS '外部�
 
 
 --
--- Name: COLUMN memberships__activation_sources.payment_data; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__activation_sources.payment_data IS '決済詳細データ';
-
-
---
 -- Name: COLUMN memberships__activation_sources.activated_at; Type: COMMENT; Schema: public; Owner: -
 --
 
@@ -275,6 +271,27 @@ COMMENT ON COLUMN public.memberships__activation_sources.activated_at IS '有効
 --
 
 COMMENT ON COLUMN public.memberships__activation_sources.expires_at IS '有効期限';
+
+
+--
+-- Name: COLUMN memberships__activation_sources.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__activation_sources.status IS 'ステータス';
+
+
+--
+-- Name: COLUMN memberships__activation_sources.recurrence; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__activation_sources.recurrence IS '定期課金フラグ: true=サブスクリプション, false=買い切り';
+
+
+--
+-- Name: COLUMN memberships__activation_sources.chargeable_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__activation_sources.chargeable_id IS '決済情報';
 
 
 --
@@ -543,9 +560,10 @@ CREATE TABLE public.memberships__user_contracts (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
-    expires_at timestamp(6) without time zone NOT NULL,
+    expires_at timestamp(6) without time zone,
     cancel_at_period_end boolean DEFAULT false,
     last_membership_activation_source_id uuid,
+    status character varying DEFAULT 'active'::character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -577,6 +595,13 @@ COMMENT ON COLUMN public.memberships__user_contracts.cancel_at_period_end IS '�
 --
 
 COMMENT ON COLUMN public.memberships__user_contracts.last_membership_activation_source_id IS '最後の決済情報';
+
+
+--
+-- Name: COLUMN memberships__user_contracts.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__user_contracts.status IS 'ステータス';
 
 
 --
@@ -1903,17 +1928,17 @@ CREATE UNIQUE INDEX idx_memberships__users_tenant_user_membership_uniq ON public
 
 
 --
+-- Name: idx_on_chargeable_type_chargeable_id_b05f49fd02; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_chargeable_type_chargeable_id_b05f49fd02 ON public.memberships__activation_sources USING btree (chargeable_type, chargeable_id);
+
+
+--
 -- Name: idx_on_last_membership_activation_source_id_7db575a831; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_on_last_membership_activation_source_id_7db575a831 ON public.memberships__user_contracts USING btree (last_membership_activation_source_id);
-
-
---
--- Name: idx_on_memberships__user_contract_id_b53a6b7aeb; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_on_memberships__user_contract_id_b53a6b7aeb ON public.memberships__activation_sources USING btree (memberships__user_contract_id);
 
 
 --
@@ -2096,6 +2121,13 @@ CREATE INDEX index_memberships__activation_sources_on_membership_plan_id ON publ
 --
 
 CREATE INDEX index_memberships__activation_sources_on_tenant_id ON public.memberships__activation_sources USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__activation_sources_on_user_contract_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__activation_sources_on_user_contract_id ON public.memberships__activation_sources USING btree (user_contract_id);
 
 
 --
@@ -2813,7 +2845,7 @@ ALTER TABLE ONLY public.memberships__activation_sources
 --
 
 ALTER TABLE ONLY public.memberships__activation_sources
-    ADD CONSTRAINT fk_memberships__activation_sources_user_contracts FOREIGN KEY (memberships__user_contract_id) REFERENCES public.memberships__user_contracts(id);
+    ADD CONSTRAINT fk_memberships__activation_sources_user_contracts FOREIGN KEY (user_contract_id) REFERENCES public.memberships__user_contracts(id);
 
 
 --

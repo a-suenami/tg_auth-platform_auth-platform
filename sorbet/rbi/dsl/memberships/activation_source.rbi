@@ -552,16 +552,19 @@ class Memberships::ActivationSource
         payment_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         payment_provider: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         external_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        payment_data: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         activated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         expires_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        memberships__user_contract_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        user_contract_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        recurrence: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        chargeable_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        chargeable_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_plan_id: nil, payment_type: nil, payment_provider: nil, external_id: nil, payment_data: nil, activated_at: nil, expires_at: nil, created_at: nil, updated_at: nil, memberships__user_contract_id: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_plan_id: nil, payment_type: nil, payment_provider: nil, external_id: nil, activated_at: nil, expires_at: nil, created_at: nil, updated_at: nil, user_contract_id: nil, status: nil, recurrence: nil, chargeable_id: nil, chargeable_type: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -571,10 +574,10 @@ class Memberships::ActivationSource
   end
 
   module GeneratedAttributeMethods
-    sig { returns(::ActiveSupport::TimeWithZone) }
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def activated_at; end
 
-    sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
+    sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def activated_at=(value); end
 
     sig { returns(T::Boolean) }
@@ -589,22 +592,32 @@ class Memberships::ActivationSource
     sig { returns(T::Boolean) }
     def activated_at_came_from_user?; end
 
-    sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def activated_at_change; end
 
-    sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def activated_at_change_to_be_saved; end
 
-    sig { params(from: ::ActiveSupport::TimeWithZone, to: ::ActiveSupport::TimeWithZone).returns(T::Boolean) }
+    sig do
+      params(
+        from: T.nilable(::ActiveSupport::TimeWithZone),
+        to: T.nilable(::ActiveSupport::TimeWithZone)
+      ).returns(T::Boolean)
+    end
     def activated_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def activated_at_in_database; end
 
-    sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def activated_at_previous_change; end
 
-    sig { params(from: ::ActiveSupport::TimeWithZone, to: ::ActiveSupport::TimeWithZone).returns(T::Boolean) }
+    sig do
+      params(
+        from: T.nilable(::ActiveSupport::TimeWithZone),
+        to: T.nilable(::ActiveSupport::TimeWithZone)
+      ).returns(T::Boolean)
+    end
     def activated_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
@@ -615,6 +628,96 @@ class Memberships::ActivationSource
 
     sig { void }
     def activated_at_will_change!; end
+
+    sig { returns(T.untyped) }
+    def chargeable_id; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def chargeable_id=(value); end
+
+    sig { returns(T::Boolean) }
+    def chargeable_id?; end
+
+    sig { returns(T.untyped) }
+    def chargeable_id_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def chargeable_id_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def chargeable_id_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def chargeable_id_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def chargeable_id_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def chargeable_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def chargeable_id_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def chargeable_id_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def chargeable_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def chargeable_id_previously_was; end
+
+    sig { returns(T.untyped) }
+    def chargeable_id_was; end
+
+    sig { void }
+    def chargeable_id_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_type; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def chargeable_type=(value); end
+
+    sig { returns(T::Boolean) }
+    def chargeable_type?; end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_type_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def chargeable_type_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def chargeable_type_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def chargeable_type_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def chargeable_type_change_to_be_saved; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def chargeable_type_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_type_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def chargeable_type_previous_change; end
+
+    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    def chargeable_type_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_type_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_type_was; end
+
+    sig { void }
+    def chargeable_type_will_change!; end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def created_at; end
@@ -661,10 +764,10 @@ class Memberships::ActivationSource
     sig { void }
     def created_at_will_change!; end
 
-    sig { returns(::ActiveSupport::TimeWithZone) }
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def expires_at; end
 
-    sig { params(value: ::ActiveSupport::TimeWithZone).returns(::ActiveSupport::TimeWithZone) }
+    sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def expires_at=(value); end
 
     sig { returns(T::Boolean) }
@@ -679,22 +782,32 @@ class Memberships::ActivationSource
     sig { returns(T::Boolean) }
     def expires_at_came_from_user?; end
 
-    sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def expires_at_change; end
 
-    sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def expires_at_change_to_be_saved; end
 
-    sig { params(from: ::ActiveSupport::TimeWithZone, to: ::ActiveSupport::TimeWithZone).returns(T::Boolean) }
+    sig do
+      params(
+        from: T.nilable(::ActiveSupport::TimeWithZone),
+        to: T.nilable(::ActiveSupport::TimeWithZone)
+      ).returns(T::Boolean)
+    end
     def expires_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def expires_at_in_database; end
 
-    sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def expires_at_previous_change; end
 
-    sig { params(from: ::ActiveSupport::TimeWithZone, to: ::ActiveSupport::TimeWithZone).returns(T::Boolean) }
+    sig do
+      params(
+        from: T.nilable(::ActiveSupport::TimeWithZone),
+        to: T.nilable(::ActiveSupport::TimeWithZone)
+      ).returns(T::Boolean)
+    end
     def expires_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
@@ -887,105 +1000,15 @@ class Memberships::ActivationSource
     def membership_plan_id_will_change!; end
 
     sig { returns(T.untyped) }
-    def memberships__user_contract_id; end
-
-    sig { params(value: T.untyped).returns(T.untyped) }
-    def memberships__user_contract_id=(value); end
-
-    sig { returns(T::Boolean) }
-    def memberships__user_contract_id?; end
-
-    sig { returns(T.untyped) }
-    def memberships__user_contract_id_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def memberships__user_contract_id_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def memberships__user_contract_id_came_from_user?; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def memberships__user_contract_id_change; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def memberships__user_contract_id_change_to_be_saved; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def memberships__user_contract_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.untyped) }
-    def memberships__user_contract_id_in_database; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def memberships__user_contract_id_previous_change; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def memberships__user_contract_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.untyped) }
-    def memberships__user_contract_id_previously_was; end
-
-    sig { returns(T.untyped) }
-    def memberships__user_contract_id_was; end
-
-    sig { void }
-    def memberships__user_contract_id_will_change!; end
-
-    sig { returns(T.untyped) }
-    def payment_data; end
-
-    sig { params(value: T.untyped).returns(T.untyped) }
-    def payment_data=(value); end
-
-    sig { returns(T::Boolean) }
-    def payment_data?; end
-
-    sig { returns(T.untyped) }
-    def payment_data_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def payment_data_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def payment_data_came_from_user?; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def payment_data_change; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def payment_data_change_to_be_saved; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def payment_data_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.untyped) }
-    def payment_data_in_database; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def payment_data_previous_change; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def payment_data_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.untyped) }
-    def payment_data_previously_was; end
-
-    sig { returns(T.untyped) }
-    def payment_data_was; end
-
-    sig { void }
-    def payment_data_will_change!; end
-
-    sig { returns(T.nilable(::String)) }
     def payment_provider; end
 
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    sig { params(value: T.untyped).returns(T.untyped) }
     def payment_provider=(value); end
 
     sig { returns(T::Boolean) }
     def payment_provider?; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def payment_provider_before_last_save; end
 
     sig { returns(T.untyped) }
@@ -994,43 +1017,43 @@ class Memberships::ActivationSource
     sig { returns(T::Boolean) }
     def payment_provider_came_from_user?; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def payment_provider_change; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def payment_provider_change_to_be_saved; end
 
-    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def payment_provider_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def payment_provider_in_database; end
 
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def payment_provider_previous_change; end
 
-    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def payment_provider_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def payment_provider_previously_was; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def payment_provider_was; end
 
     sig { void }
     def payment_provider_will_change!; end
 
-    sig { returns(::String) }
+    sig { returns(T.untyped) }
     def payment_type; end
 
-    sig { params(value: ::String).returns(::String) }
+    sig { params(value: T.untyped).returns(T.untyped) }
     def payment_type=(value); end
 
     sig { returns(T::Boolean) }
     def payment_type?; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def payment_type_before_last_save; end
 
     sig { returns(T.untyped) }
@@ -1039,35 +1062,86 @@ class Memberships::ActivationSource
     sig { returns(T::Boolean) }
     def payment_type_came_from_user?; end
 
-    sig { returns(T.nilable([::String, ::String])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def payment_type_change; end
 
-    sig { returns(T.nilable([::String, ::String])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def payment_type_change_to_be_saved; end
 
-    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def payment_type_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def payment_type_in_database; end
 
-    sig { returns(T.nilable([::String, ::String])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def payment_type_previous_change; end
 
-    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def payment_type_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def payment_type_previously_was; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def payment_type_was; end
 
     sig { void }
     def payment_type_will_change!; end
 
+    sig { returns(T::Boolean) }
+    def recurrence; end
+
+    sig { params(value: T::Boolean).returns(T::Boolean) }
+    def recurrence=(value); end
+
+    sig { returns(T::Boolean) }
+    def recurrence?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def recurrence_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def recurrence_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def recurrence_came_from_user?; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def recurrence_change; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def recurrence_change_to_be_saved; end
+
+    sig { params(from: T::Boolean, to: T::Boolean).returns(T::Boolean) }
+    def recurrence_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def recurrence_in_database; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def recurrence_previous_change; end
+
+    sig { params(from: T::Boolean, to: T::Boolean).returns(T::Boolean) }
+    def recurrence_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def recurrence_previously_was; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def recurrence_was; end
+
+    sig { void }
+    def recurrence_will_change!; end
+
     sig { void }
     def restore_activated_at!; end
+
+    sig { void }
+    def restore_chargeable_id!; end
+
+    sig { void }
+    def restore_chargeable_type!; end
 
     sig { void }
     def restore_created_at!; end
@@ -1088,16 +1162,16 @@ class Memberships::ActivationSource
     def restore_membership_plan_id!; end
 
     sig { void }
-    def restore_memberships__user_contract_id!; end
-
-    sig { void }
-    def restore_payment_data!; end
-
-    sig { void }
     def restore_payment_provider!; end
 
     sig { void }
     def restore_payment_type!; end
+
+    sig { void }
+    def restore_recurrence!; end
+
+    sig { void }
+    def restore_status!; end
 
     sig { void }
     def restore_tenant_id!; end
@@ -1106,13 +1180,28 @@ class Memberships::ActivationSource
     def restore_updated_at!; end
 
     sig { void }
+    def restore_user_contract_id!; end
+
+    sig { void }
     def restore_user_id!; end
 
-    sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_activated_at; end
 
     sig { returns(T::Boolean) }
     def saved_change_to_activated_at?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_chargeable_id; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_chargeable_id?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_chargeable_type; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_chargeable_type?; end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_created_at; end
@@ -1120,7 +1209,7 @@ class Memberships::ActivationSource
     sig { returns(T::Boolean) }
     def saved_change_to_created_at?; end
 
-    sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_expires_at; end
 
     sig { returns(T::Boolean) }
@@ -1151,28 +1240,28 @@ class Memberships::ActivationSource
     def saved_change_to_membership_plan_id?; end
 
     sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def saved_change_to_memberships__user_contract_id; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_memberships__user_contract_id?; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def saved_change_to_payment_data; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_payment_data?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_payment_provider; end
 
     sig { returns(T::Boolean) }
     def saved_change_to_payment_provider?; end
 
-    sig { returns(T.nilable([::String, ::String])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_payment_type; end
 
     sig { returns(T::Boolean) }
     def saved_change_to_payment_type?; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def saved_change_to_recurrence; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_recurrence?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_status; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_status?; end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
@@ -1187,10 +1276,61 @@ class Memberships::ActivationSource
     def saved_change_to_updated_at?; end
 
     sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_user_contract_id; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_user_contract_id?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_user_id; end
 
     sig { returns(T::Boolean) }
     def saved_change_to_user_id?; end
+
+    sig { returns(T.untyped) }
+    def status; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def status=(value); end
+
+    sig { returns(T::Boolean) }
+    def status?; end
+
+    sig { returns(T.untyped) }
+    def status_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def status_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def status_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def status_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def status_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def status_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def status_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def status_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def status_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def status_previously_was; end
+
+    sig { returns(T.untyped) }
+    def status_was; end
+
+    sig { void }
+    def status_will_change!; end
 
     sig { returns(::String) }
     def tenant_id; end
@@ -1283,6 +1423,51 @@ class Memberships::ActivationSource
     def updated_at_will_change!; end
 
     sig { returns(T.untyped) }
+    def user_contract_id; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def user_contract_id=(value); end
+
+    sig { returns(T::Boolean) }
+    def user_contract_id?; end
+
+    sig { returns(T.untyped) }
+    def user_contract_id_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def user_contract_id_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def user_contract_id_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def user_contract_id_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def user_contract_id_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def user_contract_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def user_contract_id_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def user_contract_id_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def user_contract_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def user_contract_id_previously_was; end
+
+    sig { returns(T.untyped) }
+    def user_contract_id_was; end
+
+    sig { void }
+    def user_contract_id_will_change!; end
+
+    sig { returns(T.untyped) }
     def user_id; end
 
     sig { params(value: T.untyped).returns(T.untyped) }
@@ -1331,6 +1516,12 @@ class Memberships::ActivationSource
     def will_save_change_to_activated_at?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_chargeable_id?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_chargeable_type?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_created_at?; end
 
     sig { returns(T::Boolean) }
@@ -1349,22 +1540,25 @@ class Memberships::ActivationSource
     def will_save_change_to_membership_plan_id?; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_memberships__user_contract_id?; end
-
-    sig { returns(T::Boolean) }
-    def will_save_change_to_payment_data?; end
-
-    sig { returns(T::Boolean) }
     def will_save_change_to_payment_provider?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_payment_type?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_recurrence?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_status?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_updated_at?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_user_contract_id?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_user_id?; end
@@ -1507,16 +1701,19 @@ class Memberships::ActivationSource
         payment_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         payment_provider: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         external_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        payment_data: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         activated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         expires_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        memberships__user_contract_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        user_contract_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        recurrence: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        chargeable_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        chargeable_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_plan_id: nil, payment_type: nil, payment_provider: nil, external_id: nil, payment_data: nil, activated_at: nil, expires_at: nil, created_at: nil, updated_at: nil, memberships__user_contract_id: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_plan_id: nil, payment_type: nil, payment_provider: nil, external_id: nil, activated_at: nil, expires_at: nil, created_at: nil, updated_at: nil, user_contract_id: nil, status: nil, recurrence: nil, chargeable_id: nil, chargeable_type: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

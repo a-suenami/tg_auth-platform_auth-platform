@@ -5,39 +5,77 @@
 # ==============================================================================
 module UserStripe
   class CreateMembershipSubscriptionService < UserStripe::BaseService
-    def execute(user:, stripe_record_price:, stripe_record_subscription: nil)
+    def execute(user:, stripe_record_price:, membership_plan:)
       # stripe_record_subscription が nil の場合は新規作成
       # stripe_record_subscription が nil でない場合は 3DS などの追加アクションで契約フローを途中離脱した場合
-      if stripe_record_subscription.nil?
-        stripe_record_subscription = validate_before_subscribing_and_initialize_stripe_subscription(user:, stripe_record_price:)
+      stripe_record_subscription = validate_before_subscribing_and_initialize_stripe_subscription(user:, stripe_record_price:)
 
-        fetch_constants
+      fetch_constants
 
-        # TODO: payment_customer_idがpayjpユーザの場合、stripeには投げてはいけない 後で直す
-        stripe_subscription_params = {
-          customer: user.payment_customer_id,
-          items: [
-            {
-              price: stripe_record_subscription.price.remote_id,
-            },
-          ],
-          # default_tax_rates: [@tax_rate_id],
-          payment_behavior: 'default_incomplete',
-        }
+      # TODO: payment_customer_idがpayjpユーザの場合、stripeには投げてはいけない 後で直す
+      stripe_subscription_params = {
+        customer: user.payment_customer_id,
+        items: [
+          {
+            price: stripe_record_subscription.price.remote_id,
+          },
+        ],
+        # default_tax_rates: [@tax_rate_id],
+        payment_behavior: 'default_incomplete',
+      }
 
-        # Stripe の API を呼び subscription を作成する
-        stripe_subscription = Stripe::Subscription.create(
-          stripe_subscription_params,
-          stripe_api_key_config,
+      # Stripe の API を呼び subscription を作成する
+      stripe_subscription = Stripe::Subscription.create(
+        stripe_subscription_params,
+        stripe_api_key_config,
+      )
+
+      # FanApp 側に Stripe の情報を保存
+      stripe_record_subscription.status = stripe_subscription.status
+      stripe_record_subscription.remote_id = stripe_subscription.id
+      stripe_record_subscription.save!
+
+      create_user_contract(user:, stripe_record_subscription:, membership_plan:)
+      create_membership_users(user:, membership_plan:)
+      create_membership_users(user:, membership_plan:)
+
+      stripe_record_subscription
+    end
+
+    def create_user_contract(user:, stripe_record_subscription:, membership_plan:)
+      user_contract = Memberships::UserContract.create!(
+        user:,
+        status: 'pending',
+      )
+      # activation_sources作成
+      activation_source = Memberships::ActivationSource.create!(
+        user:,
+        membership_plan:,
+        user_contract:,
+        payment_type: 'credit_card',
+        payment_provider: 'stripe',
+        external_id: stripe_record_subscription.remote_id,
+        chargeable: stripe_record_subscription,
+        status: 'pending',
+        recurrence: true,
+      )
+
+      user_contract.last_membership_activation_source = activation_source
+      user_contract.save!
+
+      user_contract
+    end
+
+    def create_membership_users(user:, membership_plan:)
+      membership_plan.memberships.each do |membership|
+        Memberships::User.create!(
+          user:,
+          membership:,
+          status: 'pending',
         )
-
-        # FanApp 側に Stripe の情報を保存
-        stripe_record_subscription.status = stripe_subscription.status
-        stripe_record_subscription.remote_id = stripe_subscription.id
-        stripe_record_subscription.save!
-
       end
     end
+
 
     #   # 3DS などの追加アクションが必要な場合はエラーを返す
     #   stripe_subscription = stripe_record_subscription.refresh!

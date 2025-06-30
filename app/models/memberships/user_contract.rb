@@ -12,6 +12,12 @@ class Memberships::UserContract < ApplicationRecord
 
   has_many :activation_sources, class_name: 'Memberships::ActivationSource', dependent: :destroy
 
-  validates :expires_at, presence: true
   validates :user_id, uniqueness: { scope: :tenant_id }
+
+  enumerize :status, in: {
+    active: 'active',
+    pending: 'pending',
+    expired: 'expired',
+    canceled: 'canceled',
+  }
 end
