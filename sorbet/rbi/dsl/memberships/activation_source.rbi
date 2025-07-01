@@ -275,9 +275,6 @@ class Memberships::ActivationSource
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Plan) }
     def build_membership_plan(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
-    def build_memberships__user_contract(*args, &blk); end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
 
@@ -285,19 +282,22 @@ class Memberships::ActivationSource
     def build_user(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
+    def build_user_contract(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
     def build_user_contract_last(*args, &blk); end
+
+    sig { returns(T.untyped) }
+    def chargeable; end
+
+    sig { params(value: T.untyped).void }
+    def chargeable=(value); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Plan) }
     def create_membership_plan(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Plan) }
     def create_membership_plan!(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
-    def create_memberships__user_contract(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
-    def create_memberships__user_contract!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant(*args, &blk); end
@@ -312,6 +312,12 @@ class Memberships::ActivationSource
     def create_user!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
+    def create_user_contract(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
+    def create_user_contract!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
     def create_user_contract_last(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::UserContract) }
@@ -323,23 +329,20 @@ class Memberships::ActivationSource
     sig { params(value: T.nilable(::Memberships::Plan)).void }
     def membership_plan=(value); end
 
-    sig { returns(T.nilable(::Memberships::UserContract)) }
-    def memberships__user_contract; end
-
-    sig { params(value: T.nilable(::Memberships::UserContract)).void }
-    def memberships__user_contract=(value); end
+    sig { returns(T.untyped) }
+    def reload_chargeable; end
 
     sig { returns(T.nilable(::Memberships::Plan)) }
     def reload_membership_plan; end
-
-    sig { returns(T.nilable(::Memberships::UserContract)) }
-    def reload_memberships__user_contract; end
 
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
 
     sig { returns(T.nilable(::Memberships::User)) }
     def reload_user; end
+
+    sig { returns(T.nilable(::Memberships::UserContract)) }
+    def reload_user_contract; end
 
     sig { returns(T.nilable(::Memberships::UserContract)) }
     def reload_user_contract_last; end
@@ -355,6 +358,12 @@ class Memberships::ActivationSource
 
     sig { params(value: T.nilable(::Memberships::User)).void }
     def user=(value); end
+
+    sig { returns(T.nilable(::Memberships::UserContract)) }
+    def user_contract; end
+
+    sig { params(value: T.nilable(::Memberships::UserContract)).void }
+    def user_contract=(value); end
 
     sig { returns(T.nilable(::Memberships::UserContract)) }
     def user_contract_last; end

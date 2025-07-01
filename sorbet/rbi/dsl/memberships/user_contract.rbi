@@ -891,7 +891,7 @@ class Memberships::UserContract
     sig { returns(T::Boolean) }
     def saved_change_to_last_membership_activation_source_id?; end
 
-    sig { returns(T.nilable([::String, ::String])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_status; end
 
     sig { returns(T::Boolean) }
@@ -915,16 +915,16 @@ class Memberships::UserContract
     sig { returns(T::Boolean) }
     def saved_change_to_user_id?; end
 
-    sig { returns(::String) }
+    sig { returns(T.untyped) }
     def status; end
 
-    sig { params(value: ::String).returns(::String) }
+    sig { params(value: T.untyped).returns(T.untyped) }
     def status=(value); end
 
     sig { returns(T::Boolean) }
     def status?; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def status_before_last_save; end
 
     sig { returns(T.untyped) }
@@ -933,28 +933,28 @@ class Memberships::UserContract
     sig { returns(T::Boolean) }
     def status_came_from_user?; end
 
-    sig { returns(T.nilable([::String, ::String])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def status_change; end
 
-    sig { returns(T.nilable([::String, ::String])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def status_change_to_be_saved; end
 
-    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def status_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def status_in_database; end
 
-    sig { returns(T.nilable([::String, ::String])) }
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
     def status_previous_change; end
 
-    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def status_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def status_previously_was; end
 
-    sig { returns(T.nilable(::String)) }
+    sig { returns(T.untyped) }
     def status_was; end
 
     sig { void }

@@ -27,19 +27,65 @@ module UserStripe
       # Stripe の API を呼び subscription を作成する
       stripe_subscription = Stripe::Subscription.create(
         stripe_subscription_params,
-        stripe_api_key_config,
+      stripe_api_key_config,
       )
 
-      # FanApp 側に Stripe の情報を保存
-      stripe_record_subscription.status = stripe_subscription.status
-      stripe_record_subscription.remote_id = stripe_subscription.id
-      stripe_record_subscription.save!
+      user_contract = nil
 
-      create_user_contract(user:, stripe_record_subscription:, membership_plan:)
-      create_membership_users(user:, membership_plan:)
-      create_membership_users(user:, membership_plan:)
+      ActiveRecord::Base.transaction do
+        # FanApp 側に Stripe の情報を保存
+        stripe_record_subscription.status = stripe_subscription.status
+        stripe_record_subscription.remote_id = stripe_subscription.id
+        stripe_record_subscription.save!
 
-      stripe_record_subscription
+        # PaymentIntent または SetupIntent を保存
+        save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
+
+        user_contract = create_user_contract(user:, stripe_record_subscription:, membership_plan:)
+        create_membership_users(user:, membership_plan:)
+      end
+      user_contract
+    end
+
+    private
+
+    def save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
+      latest_invoice = Stripe::Invoice.retrieve(stripe_subscription.latest_invoice, stripe_api_key_config)
+
+
+      stripe_record_invoice = StripeRecord::Invoice.find_or_create_by!(remote_id: latest_invoice.id) do |record|
+        record.user = user
+        record.tenant_id = user.tenant_id
+        record.remote_id = latest_invoice.id
+        record.status = latest_invoice.status
+        record.chargeable = stripe_record_subscription
+      end
+
+      if latest_invoice&.payment_intent
+        # PaymentIntent が存在する場合
+        payment_intent = Stripe::PaymentIntent.retrieve(latest_invoice.payment_intent, stripe_api_key_config)
+        StripeRecord::PaymentIntent.find_or_create_by!(remote_id: payment_intent.id) do |record|
+          record.user = user
+          record.tenant_id = user.tenant_id
+          record.invoice = stripe_record_invoice
+          record.amount = payment_intent.amount
+          record.currency = payment_intent.currency
+          record.status = payment_intent.status
+          record.client_secret = payment_intent.client_secret
+          record.api_key_account = Tenant.current&.tenant_stripe_account&.stripe_account
+        end
+      elsif stripe_subscription.pending_setup_intent
+        # SetupIntent が存在する場合
+        setup_intent = stripe_subscription.pending_setup_intent
+        StripeRecord::SetupIntent.find_or_create_by!(remote_id: setup_intent.id) do |record|
+          record.user = user
+          record.tenant_id = user.tenant_id
+          record.status = setup_intent.status
+          record.usage = setup_intent.usage
+          record.client_secret = setup_intent.client_secret
+          record.api_key_account = Tenant.current&.tenant_stripe_account&.stripe_account
+        end
+      end
     end
 
     def create_user_contract(user:, stripe_record_subscription:, membership_plan:)

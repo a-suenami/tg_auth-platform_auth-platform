@@ -7,9 +7,7 @@ create_table :stripe_record_payment_intents, force: :cascade, id: :uuid, default
   t.string :remote_id, null: false, index: { unique: true, name: 'idx_stripe_record_payment_intent_remote_id_uniq' }, comment: 'Stripe の payment intent ID'
 
   t.references :user,          type: :uuid, null: false, index: true, foreign_key: { name: :fk_stripe_record_payment_intents__users }
-  t.references :latest_charge, type: :uuid, null: true,  index: true, foreign_key: {
-    to_table: :stripe_record_charges, column: :latest_charge_id, name: :fk_stripe_record_payment_intents_latest_charge_id,
-  }
+  t.references :invoice, type: :uuid, null: true, polymorphic: true, comment: 'subscription or charge'
 
   t.string  :currency
   t.integer :amount

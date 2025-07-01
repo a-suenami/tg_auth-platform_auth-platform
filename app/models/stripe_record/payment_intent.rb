@@ -12,7 +12,7 @@ class StripeRecord
     ACTIVE_DURATION = T.let(1.hour, ActiveSupport::Duration)
 
     belongs_to :user
-    belongs_to :latest_charge, class_name: 'StripeRecord::Charge', optional: true
+    belongs_to :invoice, class_name: 'StripeRecord::Invoice'
 
     has_many :refunds, dependent: :restrict_with_exception
 

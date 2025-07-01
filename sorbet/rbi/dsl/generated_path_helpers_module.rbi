@@ -78,7 +78,7 @@ module GeneratedPathHelpersModule
   def api_v1_internal_me_profile_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_v1_internal_membership_user_contracts_path(*args); end
+  def api_v1_internal_memberships_user_contracts_credit_card_payments_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def api_v1_private_userinfo_index_path(*args); end

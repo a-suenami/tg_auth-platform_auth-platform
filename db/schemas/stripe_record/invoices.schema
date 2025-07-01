@@ -1,0 +1,16 @@
+# ==============================================================================
+# db/schemas/stripe_record/invoices.schema
+# ==============================================================================
+create_table :stripe_record_invoices, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_invoices__tenants }
+
+  t.string :remote_id, null: false, index: { unique: true, name: 'idx_stripe_record_invoices_remote_id_uniq' }, comment: 'Stripe の invoices ID'
+
+  t.references :user,          type: :uuid, null: false, index: true, foreign_key: { name: :fk_stripe_record_payment_intents__users }
+  t.references :chargeable, type: :uuid, null: true, polymorphic: true, comment: 'subscription or charge'
+  t.string :status, null: false, default: 'draft', comment: 'draft, open, paid, uncollectible, or void'
+
+  t.timestamps null: false
+
+  t.index [:tenant_id, :remote_id], unique: true, name: 'index_stripe_record_invoices_on_tenant_and_remote_id'
+end

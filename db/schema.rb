@@ -443,11 +443,28 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["user_id"], name: "index_stripe_record_charges_on_user_id"
   end
 
+  create_table "stripe_record_invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "remote_id", null: false, comment: "Stripe の invoices ID"
+    t.uuid "user_id", null: false
+    t.uuid "chargeable_id", comment: "subscription or charge"
+    t.string "chargeable_type"
+    t.string "status", default: "draft", null: false, comment: "draft, open, paid, uncollectible, or void"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_28699c5a5e"
+    t.index ["remote_id"], name: "idx_stripe_record_invoices_remote_id_uniq", unique: true
+    t.index ["tenant_id", "remote_id"], name: "index_stripe_record_invoices_on_tenant_and_remote_id", unique: true
+    t.index ["tenant_id"], name: "index_stripe_record_invoices_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_invoices_on_user_id"
+  end
+
   create_table "stripe_record_payment_intents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "remote_id", null: false, comment: "Stripe の payment intent ID"
     t.uuid "user_id", null: false
-    t.uuid "latest_charge_id"
+    t.uuid "invoice_id", comment: "subscription or charge"
+    t.string "invoice_type"
     t.string "currency"
     t.integer "amount"
     t.string "status"
@@ -475,7 +492,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "charge_type", comment: "Connect のときだけ使用する。どの支払いタイプなのかを表す"
     t.index ["api_key_account_id"], name: "index_stripe_record_payment_intents_on_api_key_account_id"
     t.index ["connect_account_id"], name: "index_stripe_record_payment_intents_on_connect_account_id"
-    t.index ["latest_charge_id"], name: "index_stripe_record_payment_intents_on_latest_charge_id"
+    t.index ["invoice_type", "invoice_id"], name: "idx_on_invoice_type_invoice_id_5a00929e0d"
     t.index ["remote_id"], name: "idx_stripe_record_payment_intent_remote_id_uniq", unique: true
     t.index ["tenant_id", "remote_id"], name: "index_stripe_record_payment_intents_on_tenant_and_remote_id", unique: true
     t.index ["tenant_id"], name: "index_stripe_record_payment_intents_on_tenant_id"
@@ -794,9 +811,10 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "stripe_record_charges", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_charges_connect_account_id"
   add_foreign_key "stripe_record_charges", "tenants", name: "fk_stripe_record_charges__tenants"
   add_foreign_key "stripe_record_charges", "users", name: "fk_stripe_record_charges__users"
+  add_foreign_key "stripe_record_invoices", "tenants", name: "fk_stripe_record_invoices__tenants"
+  add_foreign_key "stripe_record_invoices", "users", name: "fk_stripe_record_payment_intents__users"
   add_foreign_key "stripe_record_payment_intents", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_payment_intents_api_key_account_id"
   add_foreign_key "stripe_record_payment_intents", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_payment_intents_connect_account_id"
-  add_foreign_key "stripe_record_payment_intents", "stripe_record_charges", column: "latest_charge_id", name: "fk_stripe_record_payment_intents_latest_charge_id"
   add_foreign_key "stripe_record_payment_intents", "tenants", name: "fk_stripe_record_payment_intents__tenants"
   add_foreign_key "stripe_record_payment_intents", "users", name: "fk_stripe_record_payment_intents__users"
   add_foreign_key "stripe_record_payment_methods", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_payment_methods_api_key_account_id"

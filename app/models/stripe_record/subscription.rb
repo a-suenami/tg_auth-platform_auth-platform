@@ -13,7 +13,7 @@ class StripeRecord
 
     # has_one :subscription, as: :chargeable
 
-    # has_many :app_stripe_invoices
+    has_many :invoices, inverse_of: :chargeable
 
     scope :active, -> { where(status: :active) }
 

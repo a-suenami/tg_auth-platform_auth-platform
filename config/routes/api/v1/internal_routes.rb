@@ -22,8 +22,10 @@ Rails.application.routes.draw do
           post :request, to: 'email_changes#email_change_request'
         end
 
-        namespace :membership do
-          resources :user_contracts, only: [:create]
+        namespace :memberships do
+          namespace :user_contracts do
+            resources :credit_card_payments, only: [:create]
+          end
         end
       end
     end
