@@ -5,7 +5,8 @@
 # ==============================================================================
 module UserStripe
   class CreateMembershipSubscriptionService < UserStripe::BaseService
-    def execute(user:, stripe_record_price:, membership_plan:)
+    def execute(user:, membership_plan:)
+      stripe_record_price = membership_plan.plan_payment_methods.where(payment_type: 'credit_card').last.stripe_record_price
       # stripe_record_subscription が nil の場合は新規作成
       # stripe_record_subscription が nil でない場合は 3DS などの追加アクションで契約フローを途中離脱した場合
       stripe_record_subscription = validate_before_subscribing_and_initialize_stripe_subscription(user:, stripe_record_price:)

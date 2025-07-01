@@ -15,6 +15,8 @@ class StripeRecord
 
     has_many :invoices, inverse_of: :chargeable
 
+    has_one :activation_source, inverse_of: :chargeable, dependent: :nullify, class_name: 'Memberships::ActivationSource'
+
     scope :active, -> { where(status: :active) }
 
     # 作成から incomplete 23時間以内のもの

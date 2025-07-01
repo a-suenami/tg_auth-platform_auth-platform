@@ -50,7 +50,7 @@ module API::V1::Internal::Memberships::UserContracts
       # Stripe決済の実装（簡略化）
       # 実際の実装では、StripeRecord::PaymentIntentを使用
       # TODO: priceはmembership_planからひく
-      user_contract = UserStripe::CreateMembershipSubscriptionService.new.execute(user: current_user, stripe_record_price: StripeRecord::Price.where(tenant_id: current_user.tenant_id).last,
+      user_contract = UserStripe::CreateMembershipSubscriptionService.new.execute(user: current_user,
 membership_plan:,)
     end
   end
