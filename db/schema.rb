@@ -643,6 +643,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "charge_type", comment: "Connect の場合にどの支払いタイプを利用するか"
     t.decimal "fee_rate", precision: 6, scale: 5, comment: "手数料率（100% ~ 0.001%）。stripe_account.controlling_platform がいる場合のみ（Connect）利用する。"
     t.string "tax_rate_id", comment: "stripe の税率ID"
+    t.string "webhook_secret", comment: "Stripe webhookの署名検証用シークレット"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["stripe_account_id"], name: "index_tenant_stripe_accounts_on_stripe_account_id"

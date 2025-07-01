@@ -1,0 +1,45 @@
+h1 Tenant Stripe Account
+
+.uk-grid.uk-grid-small
+  .uk-width-1-2
+    .uk-card.uk-card-default.uk-card-body
+      h3.uk-card-title Account Information
+
+      .uk-margin
+        strong Stripe Account:
+        br
+        = @tenant_stripe_account.stripe_account.display_name
+
+      .uk-margin
+        strong Charge Type:
+        br
+        = @tenant_stripe_account.charge_type
+
+      .uk-margin
+        strong Fee Rate:
+        br
+        = "#{@tenant_stripe_account.fee_rate_percentage}%"
+
+      .uk-margin
+        strong Tax Rate ID:
+        br
+        = @tenant_stripe_account.tax_rate_id
+
+      .uk-margin
+        strong Webhook Secret:
+        br
+        = @tenant_stripe_account.webhook_secret.present? ? '***' : 'Not set'
+
+      .uk-margin
+        strong Created at:
+        br
+        = @tenant_stripe_account.created_at
+
+      .uk-margin
+        strong Updated at:
+        br
+        = @tenant_stripe_account.updated_at
+
+.uk-margin
+  = link_to 'Edit', edit_ruler_area_tenant_tenant_stripe_account_path(@tenant), class: 'uk-button uk-button-primary'
+  = link_to 'Back', ruler_area_tenant_tenant_stripe_account_path(@tenant), class: 'uk-button uk-button-secondary'

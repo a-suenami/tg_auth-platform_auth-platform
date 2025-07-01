@@ -52,7 +52,6 @@ module API::V1::Internal::Memberships::UserContracts
       # TODO: priceはmembership_planからひく
       user_contract = UserStripe::CreateMembershipSubscriptionService.new.execute(user: current_user, stripe_record_price: StripeRecord::Price.where(tenant_id: current_user.tenant_id).last,
 membership_plan:,)
-      # { success: true }
     end
   end
 end

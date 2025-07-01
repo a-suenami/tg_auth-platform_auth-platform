@@ -299,6 +299,20 @@ class StripeRecord::Subscription
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user!(*args, &blk); end
 
+    sig { returns(T::Array[T.untyped]) }
+    def invoice_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def invoice_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `StripeRecord::Subscription` class because it declared `has_many :invoices`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::StripeRecord::Invoice::PrivateCollectionProxy) }
+    def invoices; end
+
+    sig { params(value: T::Enumerable[::StripeRecord::Invoice]).void }
+    def invoices=(value); end
+
     sig { returns(T.nilable(::StripeRecord::Price)) }
     def price; end
 

@@ -284,8 +284,8 @@ class StripeRecord::PaymentIntent
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Account) }
     def build_connect_account(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Charge) }
-    def build_latest_charge(*args, &blk); end
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Invoice) }
+    def build_invoice(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
@@ -308,11 +308,11 @@ class StripeRecord::PaymentIntent
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Account) }
     def create_connect_account!(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Charge) }
-    def create_latest_charge(*args, &blk); end
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Invoice) }
+    def create_invoice(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Charge) }
-    def create_latest_charge!(*args, &blk); end
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Invoice) }
+    def create_invoice!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user(*args, &blk); end
@@ -320,11 +320,11 @@ class StripeRecord::PaymentIntent
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user!(*args, &blk); end
 
-    sig { returns(T.nilable(::StripeRecord::Charge)) }
-    def latest_charge; end
+    sig { returns(T.nilable(::StripeRecord::Invoice)) }
+    def invoice; end
 
-    sig { params(value: T.nilable(::StripeRecord::Charge)).void }
-    def latest_charge=(value); end
+    sig { params(value: T.nilable(::StripeRecord::Invoice)).void }
+    def invoice=(value); end
 
     sig { returns(T::Array[T.untyped]) }
     def refund_ids; end
@@ -346,8 +346,8 @@ class StripeRecord::PaymentIntent
     sig { returns(T.nilable(::StripeRecord::Account)) }
     def reload_connect_account; end
 
-    sig { returns(T.nilable(::StripeRecord::Charge)) }
-    def reload_latest_charge; end
+    sig { returns(T.nilable(::StripeRecord::Invoice)) }
+    def reload_invoice; end
 
     sig { returns(T.nilable(::User)) }
     def reload_user; end

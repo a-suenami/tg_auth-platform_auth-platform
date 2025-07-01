@@ -135,6 +135,9 @@ module GeneratedUrlHelpersModule
   def edit_ruler_area_tenant_tenant_setting_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_tenant_stripe_account_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -181,6 +184,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_tenant_setting_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_tenant_stripe_account_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_url(*args); end
@@ -333,6 +339,9 @@ module GeneratedUrlHelpersModule
   def ruler_area_tenant_tenant_settings_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_tenant_stripe_account_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -388,4 +397,7 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def verify_sms_api_v1_authentication_sms_verify_index_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def webhook_area_stripe_url(*args); end
 end

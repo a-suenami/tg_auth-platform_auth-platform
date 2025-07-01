@@ -1329,6 +1329,7 @@ CREATE TABLE public.tenant_stripe_accounts (
     charge_type character varying,
     fee_rate numeric(6,5),
     tax_rate_id character varying,
+    webhook_secret character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1353,6 +1354,13 @@ COMMENT ON COLUMN public.tenant_stripe_accounts.fee_rate IS '手数料率（100%
 --
 
 COMMENT ON COLUMN public.tenant_stripe_accounts.tax_rate_id IS 'stripe の税率ID';
+
+
+--
+-- Name: COLUMN tenant_stripe_accounts.webhook_secret; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_stripe_accounts.webhook_secret IS 'Stripe webhookの署名検証用シークレット';
 
 
 --

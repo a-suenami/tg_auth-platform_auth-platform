@@ -138,6 +138,9 @@ module GeneratedPathHelpersModule
   def edit_ruler_area_tenant_tenant_setting_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_tenant_stripe_account_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def health_check_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -184,6 +187,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_tenant_setting_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_tenant_stripe_account_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def oauth_authorization_path(*args); end
@@ -336,6 +342,9 @@ module GeneratedPathHelpersModule
   def ruler_area_tenant_tenant_settings_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_tenant_stripe_account_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenants_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -388,4 +397,7 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def verify_sms_api_v1_authentication_sms_verify_index_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def webhook_area_stripe_path(*args); end
 end
