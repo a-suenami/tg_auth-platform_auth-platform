@@ -602,6 +602,27 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["user_id"], name: "index_stripe_record_setup_intents_on_user_id"
   end
 
+  create_table "stripe_record_subscription_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "subscription_id", null: false
+    t.uuid "price_id", null: false
+    t.string "remote_id", null: false
+    t.integer "quantity", default: 1
+    t.jsonb "billing_thresholds"
+    t.integer "current_period_start"
+    t.integer "current_period_end"
+    t.jsonb "discounts", default: []
+    t.jsonb "metadata", default: {}
+    t.jsonb "tax_rates", default: []
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["price_id"], name: "index_stripe_record_subscription_items_on_price_id"
+    t.index ["remote_id"], name: "index_stripe_record_subscription_items_on_remote_id", unique: true
+    t.index ["subscription_id", "price_id"], name: "index_stripe_record_si_on_subscription_and_price", unique: true
+    t.index ["subscription_id"], name: "index_stripe_record_subscription_items_on_subscription_id"
+    t.index ["tenant_id"], name: "index_stripe_record_subscription_items_on_tenant_id"
+  end
+
   create_table "stripe_record_subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
@@ -834,6 +855,9 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "stripe_record_setup_intents", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_setup_intents_connect_account_id"
   add_foreign_key "stripe_record_setup_intents", "tenants", name: "fk_stripe_record_setup_intents__tenants"
   add_foreign_key "stripe_record_setup_intents", "users", name: "fk_stripe_record_setup_intents__users"
+  add_foreign_key "stripe_record_subscription_items", "stripe_record_prices", column: "price_id", name: "fk_stripe_record_subscription_items__prices"
+  add_foreign_key "stripe_record_subscription_items", "stripe_record_subscriptions", column: "subscription_id", name: "fk_stripe_record_subscription_items__subscriptions"
+  add_foreign_key "stripe_record_subscription_items", "tenants", name: "fk_stripe_record_subscription_items__tenants"
   add_foreign_key "stripe_record_subscriptions", "tenants", name: "fk_stripe_record_subscriptions__tenants"
   add_foreign_key "tenant_stripe_accounts", "stripe_record_accounts", column: "stripe_account_id", name: "fk_tenant_stripe_accounts__stripe_accounts"
   add_foreign_key "tenant_stripe_accounts", "tenants", name: "fk_tenant_stripe_accounts__tenants"

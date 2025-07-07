@@ -303,6 +303,20 @@ class StripeRecord::Price
 
     sig { returns(T.nilable(::StripeRecord::Product)) }
     def reload_product; end
+
+    sig { returns(T::Array[T.untyped]) }
+    def subscription_item_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def subscription_item_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `StripeRecord::Price` class because it declared `has_many :subscription_items`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::StripeRecord::SubscriptionItem::PrivateCollectionProxy) }
+    def subscription_items; end
+
+    sig { params(value: T::Enumerable[::StripeRecord::SubscriptionItem]).void }
+    def subscription_items=(value); end
   end
 
   module GeneratedAssociationRelationMethods

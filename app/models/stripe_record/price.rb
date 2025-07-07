@@ -12,6 +12,7 @@ class StripeRecord
 
     belongs_to :product, class_name: 'StripeRecord::Product'
     has_many :plan_payment_methods, class_name: 'Memberships::PlanPaymentMethod'
+    has_many :subscription_items, class_name: 'StripeRecord::SubscriptionItem'
 
     attribute :interval_unit
 

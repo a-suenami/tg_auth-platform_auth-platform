@@ -1278,6 +1278,28 @@ COMMENT ON COLUMN public.stripe_record_setup_intents.charge_type IS 'Connect の
 
 
 --
+-- Name: stripe_record_subscription_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record_subscription_items (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    subscription_id uuid NOT NULL,
+    price_id uuid NOT NULL,
+    remote_id character varying NOT NULL,
+    quantity integer DEFAULT 1,
+    billing_thresholds jsonb,
+    current_period_start integer,
+    current_period_end integer,
+    discounts jsonb DEFAULT '[]'::jsonb,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    tax_rates jsonb DEFAULT '[]'::jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: stripe_record_subscriptions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1774,6 +1796,14 @@ ALTER TABLE ONLY public.stripe_record_refunds
 
 ALTER TABLE ONLY public.stripe_record_setup_intents
     ADD CONSTRAINT stripe_record_setup_intents_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record_subscription_items stripe_record_subscription_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_subscription_items
+    ADD CONSTRAINT stripe_record_subscription_items_pkey PRIMARY KEY (id);
 
 
 --
@@ -2711,6 +2741,41 @@ CREATE INDEX index_stripe_record_setup_intents_on_user_id ON public.stripe_recor
 
 
 --
+-- Name: index_stripe_record_si_on_subscription_and_price; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_stripe_record_si_on_subscription_and_price ON public.stripe_record_subscription_items USING btree (subscription_id, price_id);
+
+
+--
+-- Name: index_stripe_record_subscription_items_on_price_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_subscription_items_on_price_id ON public.stripe_record_subscription_items USING btree (price_id);
+
+
+--
+-- Name: index_stripe_record_subscription_items_on_remote_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_stripe_record_subscription_items_on_remote_id ON public.stripe_record_subscription_items USING btree (remote_id);
+
+
+--
+-- Name: index_stripe_record_subscription_items_on_subscription_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_subscription_items_on_subscription_id ON public.stripe_record_subscription_items USING btree (subscription_id);
+
+
+--
+-- Name: index_stripe_record_subscription_items_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_subscription_items_on_tenant_id ON public.stripe_record_subscription_items USING btree (tenant_id);
+
+
+--
 -- Name: index_stripe_record_subscriptions_on_price_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3423,6 +3488,30 @@ ALTER TABLE ONLY public.stripe_record_setup_intents
 
 ALTER TABLE ONLY public.stripe_record_setup_intents
     ADD CONSTRAINT fk_stripe_record_setup_intents_connect_account_id FOREIGN KEY (connect_account_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: stripe_record_subscription_items fk_stripe_record_subscription_items__prices; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_subscription_items
+    ADD CONSTRAINT fk_stripe_record_subscription_items__prices FOREIGN KEY (price_id) REFERENCES public.stripe_record_prices(id);
+
+
+--
+-- Name: stripe_record_subscription_items fk_stripe_record_subscription_items__subscriptions; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_subscription_items
+    ADD CONSTRAINT fk_stripe_record_subscription_items__subscriptions FOREIGN KEY (subscription_id) REFERENCES public.stripe_record_subscriptions(id);
+
+
+--
+-- Name: stripe_record_subscription_items fk_stripe_record_subscription_items__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_subscription_items
+    ADD CONSTRAINT fk_stripe_record_subscription_items__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --

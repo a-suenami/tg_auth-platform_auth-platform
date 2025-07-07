@@ -14,6 +14,7 @@ class StripeRecord
     # has_one :subscription, as: :chargeable
 
     has_many :invoices, inverse_of: :chargeable
+    has_many :subscription_items, class_name: 'StripeRecord::SubscriptionItem', dependent: :destroy
 
     has_one :activation_source, inverse_of: :chargeable, dependent: :nullify, class_name: 'Memberships::ActivationSource'
 
