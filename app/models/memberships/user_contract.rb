@@ -7,8 +7,9 @@ class Memberships::UserContract < ApplicationRecord
   self.table_name = 'memberships__user_contracts'
 
   belongs_to :tenant
-  belongs_to :user
-  belongs_to :last_membership_activation_source, class_name: 'Memberships::ActivationSource', optional: true, inverse_of: :user_contract_last
+  belongs_to :user, class_name: '::User'
+
+  belongs_to :current_membership_activation_source, class_name: 'Memberships::ActivationSource', optional: true, inverse_of: :user_contract_last
 
   has_many :activation_sources, class_name: 'Memberships::ActivationSource', dependent: :destroy
 

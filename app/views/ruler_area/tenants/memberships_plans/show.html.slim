@@ -30,6 +30,9 @@
           tr
             th = Memberships::Plan.human_attribute_name(:amount)
             td = @membership_plan.amount
+          tr
+            th = Memberships::Plan.human_attribute_name(:trial_period_days)
+            td = @membership_plan.trial_period_days > 0 ? "#{@membership_plan.trial_period_days}日" : "なし"
 
       .uk-width-1-2
         h3 メンバーシップ

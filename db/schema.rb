@@ -200,9 +200,30 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.boolean "is_active", default: true, comment: "有効フラグ"
     t.datetime "enabled_at", comment: "有効化日時"
     t.datetime "disabled_at", comment: "無効化日時"
+    t.integer "trial_period_days", default: 0, null: false, comment: "トライアル期間"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id"], name: "index_memberships__plans_on_tenant_id"
+  end
+
+  create_table "memberships__trial_histories", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップのトライアル履歴", force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "membership_id", null: false
+    t.uuid "membership_plan_id", null: false
+    t.uuid "stripe_record_subscription_id"
+    t.string "fingerprint", null: false, comment: "決済手段のユニークな識別子(ex: クレジットカードのfingerprint)"
+    t.datetime "trial_start", null: false, comment: "トライアル開始日時"
+    t.datetime "trial_end", comment: "トライアル終了日時"
+    t.integer "trial_period_days", null: false, comment: "トライアル日数"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["membership_id"], name: "index_memberships__trial_histories_on_membership_id"
+    t.index ["membership_plan_id"], name: "index_memberships__trial_histories_on_membership_plan_id"
+    t.index ["stripe_record_subscription_id"], name: "idx_on_stripe_record_subscription_id_9dfc1f52bd"
+    t.index ["tenant_id", "membership_id", "fingerprint"], name: "idx_memberships__trial_histories_unique", unique: true
+    t.index ["tenant_id"], name: "index_memberships__trial_histories_on_tenant_id"
+    t.index ["user_id"], name: "index_memberships__trial_histories_on_user_id"
   end
 
   create_table "memberships__user_achievements", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップアチーブメント", force: :cascade do |t|
@@ -228,12 +249,12 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "user_id", null: false
     t.datetime "expires_at", comment: "有効期限"
     t.boolean "cancel_at_period_end", default: false, comment: "次回更新時に解約フラグ"
-    t.uuid "last_membership_activation_source_id", comment: "最後の決済情報"
+    t.uuid "current_membership_activation_source_id", comment: "最後の決済情報"
     t.string "status", default: "active", null: false, comment: "ステータス"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["current_membership_activation_source_id"], name: "idx_on_current_membership_activation_source_id_56821d61e7"
     t.index ["expires_at"], name: "idx_memberships__user_contracts_expires_at"
-    t.index ["last_membership_activation_source_id"], name: "idx_on_last_membership_activation_source_id_7db575a831"
     t.index ["tenant_id", "user_id"], name: "idx_memberships__user_contracts_tenant_user", unique: true
     t.index ["tenant_id"], name: "index_memberships__user_contracts_on_tenant_id"
     t.index ["user_id"], name: "index_memberships__user_contracts_on_user_id"
@@ -628,15 +649,19 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "user_id", null: false
     t.uuid "product_id", null: false
     t.uuid "price_id", null: false
+    t.uuid "pending_setup_intent_id"
     t.integer "amount", default: 0
     t.integer "tax", default: 0
     t.string "currency", default: "JPY"
     t.boolean "refunded", default: false
     t.string "refund_reason"
+    t.datetime "trial_end", comment: "トライアル終了日時"
+    t.datetime "trial_start", comment: "トライアル開始日時"
     t.string "remote_id"
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["pending_setup_intent_id"], name: "index_stripe_record_subscriptions_on_pending_setup_intent_id"
     t.index ["price_id"], name: "index_stripe_record_subscriptions_on_price_id"
     t.index ["product_id"], name: "index_stripe_record_subscriptions_on_product_id"
     t.index ["tenant_id"], name: "index_stripe_record_subscriptions_on_tenant_id"
@@ -812,7 +837,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "memberships__user_achievements", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__user_achievements_plans"
   add_foreign_key "memberships__user_achievements", "tenants", name: "fk_memberships__user_achievements_tenants"
   add_foreign_key "memberships__user_achievements", "users", name: "fk_memberships__user_achievements_users"
-  add_foreign_key "memberships__user_contracts", "memberships__activation_sources", column: "last_membership_activation_source_id", name: "fk_memberships__user_contracts_last_activation_sources"
+  add_foreign_key "memberships__user_contracts", "memberships__activation_sources", column: "current_membership_activation_source_id", name: "fk_memberships__user_contracts_last_activation_sources"
   add_foreign_key "memberships__user_contracts", "tenants", name: "fk_memberships__user_contracts_tenants"
   add_foreign_key "memberships__user_contracts", "users", name: "fk_memberships__user_contracts_users"
   add_foreign_key "memberships__users", "memberships", name: "fk_memberships__users_memberships"

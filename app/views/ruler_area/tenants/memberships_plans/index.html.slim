@@ -26,6 +26,7 @@
           th = Memberships::Plan.human_attribute_name(:recurrence)
           th = Memberships::Plan.human_attribute_name(:validity_period)
           th = Memberships::Plan.human_attribute_name(:amount)
+          th = Memberships::Plan.human_attribute_name(:trial_period_days)
           th = "メンバーシップ"
           th = "決済方法"
           th = "操作"
@@ -40,6 +41,8 @@
               = membership_plan.validity_period
             td
               = membership_plan.amount
+            td
+              = membership_plan.trial_period_days > 0 ? "#{membership_plan.trial_period_days}日" : "なし"
             td
               - if membership_plan.memberships.any?
                 - membership_plan.memberships.each do |membership|

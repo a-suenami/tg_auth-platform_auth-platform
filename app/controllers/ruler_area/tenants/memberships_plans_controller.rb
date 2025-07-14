@@ -54,6 +54,7 @@ class RulerArea::Tenants::MembershipsPlansController < RulerArea::Tenants::Appli
       :recurrence,
       :validity_period,
       :amount,
+      :trial_period_days,
       :enabled_at,
       :disabled_at,
       plan_payment_methods_attributes: [:id, :payment_type, :stripe_record_price_id, :_destroy],

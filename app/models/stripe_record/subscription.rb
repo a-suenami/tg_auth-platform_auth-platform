@@ -10,6 +10,7 @@ class StripeRecord
     belongs_to :user
     belongs_to :product, class_name: 'StripeRecord::Product'
     belongs_to :price, class_name: 'StripeRecord::Price'
+    belongs_to :pending_setup_intent, class_name: 'StripeRecord::SetupIntent', optional: true, inverse_of: :subscription
 
     # has_one :subscription, as: :chargeable
 
@@ -17,7 +18,6 @@ class StripeRecord
     has_many :subscription_items, class_name: 'StripeRecord::SubscriptionItem', dependent: :destroy
 
     has_one :activation_source, inverse_of: :chargeable, dependent: :nullify, class_name: 'Memberships::ActivationSource'
-
     scope :active, -> { where(status: :active) }
 
     # 作成から incomplete 23時間以内のもの

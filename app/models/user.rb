@@ -56,6 +56,7 @@ class User < ApplicationRecord
   has_many :membership_user_contracts, class_name: 'Memberships::UserContract', dependent: :destroy
   has_many :membership_activation_sources, class_name: 'Memberships::ActivationSource', dependent: :destroy
   has_many :membership_user_achievements, class_name: 'Memberships::UserAchievement', dependent: :destroy
+  has_many :membership_trial_histories, class_name: 'Memberships::TrialHistory', dependent: :destroy
   # stripe
   has_many :stripe_subscriptions, class_name: 'StripeRecord::Subscription'
 

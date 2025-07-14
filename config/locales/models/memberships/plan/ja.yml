@@ -9,6 +9,7 @@ ja:
         recurrence: 定期課金
         validity_period: 有効期間
         amount: 金額
+        trial_period_days: トライアル期間
         enabled_at: 有効開始日時
         disabled_at: 無効開始日時
         created_at: 作成日時

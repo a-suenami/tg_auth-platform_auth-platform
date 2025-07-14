@@ -3,7 +3,7 @@ create_table :memberships__user_contracts, force: :cascade, id: :uuid, default: 
   t.references :user, type: :uuid, null: false
   t.datetime :expires_at, comment: '有効期限'
   t.boolean :cancel_at_period_end, default: false, comment: '次回更新時に解約フラグ'
-  t.references :last_membership_activation_source, type: :uuid, comment: '最後の決済情報'
+  t.references :current_membership_activation_source, type: :uuid, comment: '最後の決済情報'
   t.string :status, null: false, default: 'active', comment: 'ステータス'
 
   t.timestamps null: false
@@ -13,4 +13,4 @@ end
 
 add_foreign_key :memberships__user_contracts, :tenants, name: :fk_memberships__user_contracts_tenants
 add_foreign_key :memberships__user_contracts, :users, name: :fk_memberships__user_contracts_users
-add_foreign_key :memberships__user_contracts, :memberships__activation_sources, column: :last_membership_activation_source_id, name: :fk_memberships__user_contracts_last_activation_sources
+add_foreign_key :memberships__user_contracts, :memberships__activation_sources, column: :current_membership_activation_source_id, name: :fk_memberships__user_contracts_last_activation_sources

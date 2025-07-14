@@ -14,6 +14,7 @@ class StripeRecord
     belongs_to :user
 
     has_one :payment_method, class_name: 'StripeRecord::PaymentMethod'
+    has_one :subscription, class_name: 'StripeRecord::Subscription', dependent: :nullify, inverse_of: :pending_setup_intent
 
     validates :remote_id, presence: true, uniqueness: true
 

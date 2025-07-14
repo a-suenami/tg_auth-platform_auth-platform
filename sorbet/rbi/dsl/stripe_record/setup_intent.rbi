@@ -287,6 +287,9 @@ class StripeRecord::SetupIntent
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::PaymentMethod) }
     def build_payment_method(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Subscription) }
+    def build_subscription(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
 
@@ -314,6 +317,12 @@ class StripeRecord::SetupIntent
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::PaymentMethod) }
     def create_payment_method!(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Subscription) }
+    def create_subscription(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Subscription) }
+    def create_subscription!(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user(*args, &blk); end
 
@@ -335,8 +344,17 @@ class StripeRecord::SetupIntent
     sig { returns(T.nilable(::StripeRecord::PaymentMethod)) }
     def reload_payment_method; end
 
+    sig { returns(T.nilable(::StripeRecord::Subscription)) }
+    def reload_subscription; end
+
     sig { returns(T.nilable(::User)) }
     def reload_user; end
+
+    sig { returns(T.nilable(::StripeRecord::Subscription)) }
+    def subscription; end
+
+    sig { params(value: T.nilable(::StripeRecord::Subscription)).void }
+    def subscription=(value); end
 
     sig { returns(T.nilable(::User)) }
     def user; end

@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module UserStripe
-  class StripeWebhookHandlerService
+  class StripeWebhookHandlerService < UserStripe::BaseService
     def initialize(event)
       @event = event
     end
@@ -32,6 +32,7 @@ module UserStripe
 
     private
 
+    # TODO: 冪等な処理にする
     def handle_payment_intent_succeeded
       payment_intent = @event.data.object
       Rails.logger.info "Processing payment_intent.succeeded: #{payment_intent.id}"
@@ -49,18 +50,21 @@ module UserStripe
       user_contract = stripe_record_payment_intent.invoice&.chargeable&.activation_source&.user_contract
       return unless user_contract
 
+      invoice = stripe_record_payment_intent.invoice
+      stripe_record_subscription = invoice&.chargeable
+      # 関連するStripeRecordを更新
+      update_stripe_record_payment_intent(stripe_record_payment_intent)
       # 契約完了処理
-      complete_user_contract(user_contract, payment_intent, stripe_record_payment_intent)
+      complete_user_contract(user_contract, stripe_record_subscription)
     end
 
-    def complete_user_contract(user_contract, _payment_intent, stripe_record_payment_intent)
+    def complete_user_contract(user_contract, stripe_record_subscription)
       ActiveRecord::Base.transaction do
         # UserContractのステータスをアクティブに変更
         user_contract.update!(
           status: 'active',
         )
-        invoice = stripe_record_payment_intent.invoice
-        stripe_record_subscription = invoice&.chargeable
+
         activation_source = stripe_record_subscription&.activation_source
         plan = activation_source.membership_plan
         return unless plan
@@ -77,10 +81,13 @@ module UserStripe
             expires_at: calculate_recurring_expiry_date(Time.zone.now, plan),
           )
         end
-        # 関連するStripeRecordを更新
-        update_stripe_records(stripe_record_payment_intent)
+
         # Memberships::Userのステータスを有効に変更
         update_membership_user(user_contract)
+        # トライアル履歴を作成
+        if stripe_record_subscription.trial_start.present?
+          create_trial_history(user_contract:, stripe_record_subscription:)
+        end
         Rails.logger.info "User contract #{user_contract.id} completed successfully"
       end
     rescue => e
@@ -89,12 +96,41 @@ module UserStripe
       raise
     end
 
-    def update_stripe_records(stripe_record_payment_intent)
+
+    def create_trial_history(user_contract:, stripe_record_subscription:)
+      membership_plan = user_contract.current_membership_activation_source.membership_plan
+      memberships = membership_plan.memberships
+      memberships.each do |membership|
+        Memberships::TrialHistory.create!(
+          tenant_id: user_contract.tenant_id,
+          user: user_contract.user,
+          membership:,
+          membership_plan:,
+          stripe_record_subscription:,
+          fingerprint: get_card_fingerprint(fetch_default_payment_method_or_default_source_of(user_contract.user)),
+          trial_period_days: membership_plan.trial_period_days,
+          trial_start: stripe_record_subscription.trial_start,
+          trial_end: stripe_record_subscription.trial_end,
+        )
+      end
+    end
+
+    def update_stripe_record_payment_intent(stripe_record_payment_intent)
       # Stripeecord::Subscriptionの更新
       if stripe_record_payment_intent.invoice&.chargeable
+        # TODO: トライアル中の場合はstatusがactiveではなくtrialingになる。
+        # payment_intentの成功時にsubscriptionの更新を行なっても良いか要検討(基本ここから失敗することはないと思うが)
         stripe_record_payment_intent.invoice&.chargeable&.update!(
           status: 'active',
         )
+      end
+      # StripeRecord::SubscriptionItemの更新
+      if stripe_record_payment_intent.invoice&.chargeable&.subscription_items
+        stripe_record_payment_intent.invoice&.chargeable&.subscription_items&.each do |subscription_item|
+          subscription_item.update!(
+            current_period_end: 'active',
+          )
+        end
       end
       # StripeRecord::Invoiceの更新
       if stripe_record_payment_intent.invoice
@@ -106,6 +142,14 @@ module UserStripe
       # StripRecord::PaymentIntentの更新
       if stripe_record_payment_intent
         stripe_record_payment_intent.update!(
+          status: 'succeeded',
+        )
+      end
+    end
+
+    def update_stripe_record_setup_intent(stripe_record_setup_intent)
+      if stripe_record_setup_intent
+        stripe_record_setup_intent.update!(
           status: 'succeeded',
         )
       end
@@ -150,7 +194,19 @@ module UserStripe
 
     def handle_setup_intent_succeeded
       Rails.logger.info "Processing setup_intent.succeeded: #{@event.data.object.id}"
-      # TODO: 実装
+
+      setup_intent = @event.data.object
+      stripe_record_setup_intent = StripeRecord::SetupIntent.find_by(remote_id: setup_intent.id)
+      return unless stripe_record_setup_intent
+
+      update_stripe_record_setup_intent(stripe_record_setup_intent)
+      stripe_record_subscription = stripe_record_setup_intent.subscription
+      return unless stripe_record_subscription
+
+      user_contract = stripe_record_subscription.activation_source.user_contract
+      return unless user_contract
+
+      complete_user_contract(user_contract, stripe_record_subscription)
     end
 
     def handle_setup_intent_setup_failed
@@ -159,7 +215,20 @@ module UserStripe
     end
 
     def update_membership_user(user_contract)
-      # TODO: 実装
+      membership_plan = user_contract.current_membership_activation_source.membership_plan
+      memberships = membership_plan.memberships
+      memberships.each do |membership|
+        membership_user = Memberships::User.find_or_create_by!(
+          tenant_id: user_contract.tenant_id,
+          user: user_contract.user,
+          membership:,
+        )
+        # TODO: トライアルの場合、トライアル期限までに設定
+        membership_user.update!(
+          status: 'active',
+          expires_at: calculate_recurring_expiry_date(Time.zone.now, membership_plan),
+        )
+      end
     end
   end
 end

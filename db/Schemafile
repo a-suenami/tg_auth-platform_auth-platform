@@ -32,6 +32,7 @@ require 'schemas/membership/plan_components.schema'
 require 'schemas/membership/user_contracts.schema'
 require 'schemas/membership/activation_sources.schema'
 require 'schemas/membership/analytics.schema'
+require 'schemas/membership/trial_histories.schema'
 
 require 'schemas/tenant/stripe_accounts.schema'
 require 'schemas/stripe_record/accounts.schema'

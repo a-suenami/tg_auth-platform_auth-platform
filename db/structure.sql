@@ -445,6 +445,7 @@ CREATE TABLE public.memberships__plans (
     is_active boolean DEFAULT true,
     enabled_at timestamp(6) without time zone,
     disabled_at timestamp(6) without time zone,
+    trial_period_days integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -507,6 +508,68 @@ COMMENT ON COLUMN public.memberships__plans.disabled_at IS '無効化日時';
 
 
 --
+-- Name: COLUMN memberships__plans.trial_period_days; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.trial_period_days IS 'トライアル期間';
+
+
+--
+-- Name: memberships__trial_histories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships__trial_histories (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    membership_id uuid NOT NULL,
+    membership_plan_id uuid NOT NULL,
+    stripe_record_subscription_id uuid,
+    fingerprint character varying NOT NULL,
+    trial_start timestamp(6) without time zone NOT NULL,
+    trial_end timestamp(6) without time zone,
+    trial_period_days integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE memberships__trial_histories; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.memberships__trial_histories IS 'メンバーシップのトライアル履歴';
+
+
+--
+-- Name: COLUMN memberships__trial_histories.fingerprint; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__trial_histories.fingerprint IS '決済手段のユニークな識別子(ex: クレジットカードのfingerprint)';
+
+
+--
+-- Name: COLUMN memberships__trial_histories.trial_start; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__trial_histories.trial_start IS 'トライアル開始日時';
+
+
+--
+-- Name: COLUMN memberships__trial_histories.trial_end; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__trial_histories.trial_end IS 'トライアル終了日時';
+
+
+--
+-- Name: COLUMN memberships__trial_histories.trial_period_days; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__trial_histories.trial_period_days IS 'トライアル日数';
+
+
+--
 -- Name: memberships__user_achievements; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -562,7 +625,7 @@ CREATE TABLE public.memberships__user_contracts (
     user_id uuid NOT NULL,
     expires_at timestamp(6) without time zone,
     cancel_at_period_end boolean DEFAULT false,
-    last_membership_activation_source_id uuid,
+    current_membership_activation_source_id uuid,
     status character varying DEFAULT 'active'::character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -591,10 +654,10 @@ COMMENT ON COLUMN public.memberships__user_contracts.cancel_at_period_end IS '�
 
 
 --
--- Name: COLUMN memberships__user_contracts.last_membership_activation_source_id; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN memberships__user_contracts.current_membership_activation_source_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.memberships__user_contracts.last_membership_activation_source_id IS '最後の決済情報';
+COMMENT ON COLUMN public.memberships__user_contracts.current_membership_activation_source_id IS '最後の決済情報';
 
 
 --
@@ -1309,16 +1372,33 @@ CREATE TABLE public.stripe_record_subscriptions (
     user_id uuid NOT NULL,
     product_id uuid NOT NULL,
     price_id uuid NOT NULL,
+    pending_setup_intent_id uuid,
     amount integer DEFAULT 0,
     tax integer DEFAULT 0,
     currency character varying DEFAULT 'JPY'::character varying,
     refunded boolean DEFAULT false,
     refund_reason character varying,
+    trial_end timestamp(6) without time zone,
+    trial_start timestamp(6) without time zone,
     remote_id character varying,
     status character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: COLUMN stripe_record_subscriptions.trial_end; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_subscriptions.trial_end IS 'トライアル終了日時';
+
+
+--
+-- Name: COLUMN stripe_record_subscriptions.trial_start; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_subscriptions.trial_start IS 'トライアル開始日時';
 
 
 --
@@ -1628,6 +1708,14 @@ ALTER TABLE ONLY public.memberships__plan_payment_methods
 
 ALTER TABLE ONLY public.memberships__plans
     ADD CONSTRAINT memberships__plans_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: memberships__trial_histories memberships__trial_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__trial_histories
+    ADD CONSTRAINT memberships__trial_histories_pkey PRIMARY KEY (id);
 
 
 --
@@ -1985,6 +2073,13 @@ CREATE UNIQUE INDEX idx_memberships__plan_payment_methods_plan_type_uniq ON publ
 
 
 --
+-- Name: idx_memberships__trial_histories_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_memberships__trial_histories_unique ON public.memberships__trial_histories USING btree (tenant_id, membership_id, fingerprint);
+
+
+--
 -- Name: idx_memberships__user_achievements_date; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2034,6 +2129,13 @@ CREATE INDEX idx_on_chargeable_type_chargeable_id_b05f49fd02 ON public.membershi
 
 
 --
+-- Name: idx_on_current_membership_activation_source_id_56821d61e7; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_current_membership_activation_source_id_56821d61e7 ON public.memberships__user_contracts USING btree (current_membership_activation_source_id);
+
+
+--
 -- Name: idx_on_invoice_type_invoice_id_5a00929e0d; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2041,17 +2143,17 @@ CREATE INDEX idx_on_invoice_type_invoice_id_5a00929e0d ON public.stripe_record_p
 
 
 --
--- Name: idx_on_last_membership_activation_source_id_7db575a831; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_on_last_membership_activation_source_id_7db575a831 ON public.memberships__user_contracts USING btree (last_membership_activation_source_id);
-
-
---
 -- Name: idx_on_stripe_record_price_id_912fae4a3b; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_on_stripe_record_price_id_912fae4a3b ON public.memberships__plan_payment_methods USING btree (stripe_record_price_id);
+
+
+--
+-- Name: idx_on_stripe_record_subscription_id_9dfc1f52bd; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_stripe_record_subscription_id_9dfc1f52bd ON public.memberships__trial_histories USING btree (stripe_record_subscription_id);
 
 
 --
@@ -2318,6 +2420,34 @@ CREATE INDEX index_memberships__plan_payment_methods_on_tenant_id ON public.memb
 --
 
 CREATE INDEX index_memberships__plans_on_tenant_id ON public.memberships__plans USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__trial_histories_on_membership_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__trial_histories_on_membership_id ON public.memberships__trial_histories USING btree (membership_id);
+
+
+--
+-- Name: index_memberships__trial_histories_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__trial_histories_on_membership_plan_id ON public.memberships__trial_histories USING btree (membership_plan_id);
+
+
+--
+-- Name: index_memberships__trial_histories_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__trial_histories_on_tenant_id ON public.memberships__trial_histories USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__trial_histories_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__trial_histories_on_user_id ON public.memberships__trial_histories USING btree (user_id);
 
 
 --
@@ -2776,6 +2906,13 @@ CREATE INDEX index_stripe_record_subscription_items_on_tenant_id ON public.strip
 
 
 --
+-- Name: index_stripe_record_subscriptions_on_pending_setup_intent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_subscriptions_on_pending_setup_intent_id ON public.stripe_record_subscriptions USING btree (pending_setup_intent_id);
+
+
+--
 -- Name: index_stripe_record_subscriptions_on_price_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3143,7 +3280,7 @@ ALTER TABLE ONLY public.memberships__user_achievements
 --
 
 ALTER TABLE ONLY public.memberships__user_contracts
-    ADD CONSTRAINT fk_memberships__user_contracts_last_activation_sources FOREIGN KEY (last_membership_activation_source_id) REFERENCES public.memberships__activation_sources(id);
+    ADD CONSTRAINT fk_memberships__user_contracts_last_activation_sources FOREIGN KEY (current_membership_activation_source_id) REFERENCES public.memberships__activation_sources(id);
 
 
 --

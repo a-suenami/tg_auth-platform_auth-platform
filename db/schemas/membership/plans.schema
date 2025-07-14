@@ -7,6 +7,7 @@ create_table :memberships__plans, force: :cascade, id: :uuid, default: -> { 'gen
   t.boolean :is_active, default: true, comment: '有効フラグ'
   t.datetime :enabled_at, comment: '有効化日時'
   t.datetime :disabled_at, comment: '無効化日時'
+  t.integer :trial_period_days, null: false, default: 0, comment: 'トライアル期間'
 
   t.timestamps null: false
 end

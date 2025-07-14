@@ -25,6 +25,10 @@ module UserStripe
         payment_behavior: 'default_incomplete',
       }
 
+      if membership_plan.trial_period_days > 0 && check_trial_availability(user:, membership_plan:)
+        stripe_subscription_params[:trial_period_days] = membership_plan.trial_period_days
+      end
+
       # Stripe の API を呼び subscription を作成する
       stripe_subscription = Stripe::Subscription.create(
         stripe_subscription_params,
@@ -34,9 +38,11 @@ module UserStripe
       user_contract = nil
 
       ActiveRecord::Base.transaction do
-        # FanApp 側に Stripe の情報を保存
+        # IDP 側に Stripe の情報を保存
         stripe_record_subscription.status = stripe_subscription.status
         stripe_record_subscription.remote_id = stripe_subscription.id
+        stripe_record_subscription.trial_end = stripe_subscription.trial_end
+        stripe_record_subscription.trial_start = stripe_subscription.trial_start
         stripe_record_subscription.save!
 
         # SubscriptionItems を保存
@@ -102,8 +108,9 @@ module UserStripe
         end
       elsif stripe_subscription.pending_setup_intent
         # SetupIntent が存在する場合
-        setup_intent = stripe_subscription.pending_setup_intent
-        StripeRecord::SetupIntent.find_or_create_by!(remote_id: setup_intent.id) do |record|
+        setup_intent_remote_id = stripe_subscription.pending_setup_intent
+        setup_intent = Stripe::SetupIntent.retrieve(setup_intent_remote_id, stripe_api_key_config)
+        stripe_record_setup_intent = StripeRecord::SetupIntent.find_or_create_by!(remote_id: setup_intent.id) do |record|
           record.user = user
           record.tenant_id = user.tenant_id
           record.status = setup_intent.status
@@ -111,6 +118,8 @@ module UserStripe
           record.client_secret = setup_intent.client_secret
           record.api_key_account = Tenant.current&.tenant_stripe_account&.stripe_account
         end
+        stripe_record_subscription.pending_setup_intent = stripe_record_setup_intent
+        stripe_record_subscription.save!
       end
     end
 
@@ -132,7 +141,7 @@ module UserStripe
         recurrence: true,
       )
 
-      user_contract.last_membership_activation_source = activation_source
+      user_contract.current_membership_activation_source = activation_source
       user_contract.save!
 
       user_contract
@@ -148,6 +157,32 @@ module UserStripe
       end
     end
 
+    # MEMO: トライアルの制限方法は別要望があるかもだが、とりあえずメンバーシップごとクレジットカードfingerprintの制限にする
+    def check_trial_availability(user:, membership_plan:)
+      # トライアル履歴が存在する場合はトライアルを利用できない
+      memberships = membership_plan.memberships
+      if memberships.any? && Memberships::TrialHistory.exists?(membership: memberships, fingerprint: get_card_fingerprint(fetch_default_payment_method_or_default_source_of(user)))
+        return false
+      end
+
+      true
+    end
+
+    def create_trial_history(user:, membership_plan:, stripe_record_subscription:)
+      memberships = membership_plan.memberships
+      memberships.each do |membership|
+        Memberships::TrialHistory.create!(
+          tenant_id: user.tenant_id,
+          user:,
+          membership:,
+          membership_plan:,
+          stripe_record_subscription:,
+          trial_started_at: Time.zone.now,
+          fingerprint: get_card_fingerprint(fetch_default_payment_method_or_default_source_of(user)),
+          trial_period_days: membership_plan.trial_period_days,
+        )
+      end
+    end
 
     #   # 3DS などの追加アクションが必要な場合はエラーを返す
     #   stripe_subscription = stripe_record_subscription.refresh!

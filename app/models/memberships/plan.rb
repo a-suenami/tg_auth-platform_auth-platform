@@ -13,6 +13,7 @@ class Memberships::Plan < ApplicationRecord
   has_many :memberships, through: :plan_components
   has_many :activation_sources, class_name: 'Memberships::ActivationSource', dependent: :destroy
   has_many :user_achievements, class_name: 'Memberships::UserAchievement', dependent: :destroy
+  has_many :trial_histories, class_name: 'Memberships::TrialHistory', dependent: :destroy, inverse_of: :membership_plan
 
   accepts_nested_attributes_for :plan_payment_methods, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :plan_components, allow_destroy: true, reject_if: :all_blank

@@ -28,6 +28,12 @@
     = f.number_field :amount, class: "uk-input"
 
 .uk-margin
+  = f.label :trial_period_days, class: "uk-form-label"
+  .uk-form-controls
+    = f.number_field :trial_period_days, min: 0, class: "uk-input"
+    .uk-text-small.uk-text-muted トライアル期間（日数）。0の場合はトライアルなし。
+
+.uk-margin
   = f.label :enabled_at, class: "uk-form-label"
   .uk-form-controls
     = f.datetime_local_field :enabled_at, class: "uk-input"

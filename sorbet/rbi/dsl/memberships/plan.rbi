@@ -336,6 +336,20 @@ class Memberships::Plan
     sig { params(value: T.nilable(::Tenant)).void }
     def tenant=(value); end
 
+    # This method is created by ActiveRecord on the `Memberships::Plan` class because it declared `has_many :trial_histories`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Memberships::TrialHistory::PrivateCollectionProxy) }
+    def trial_histories; end
+
+    sig { params(value: T::Enumerable[::Memberships::TrialHistory]).void }
+    def trial_histories=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def trial_history_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def trial_history_ids=(ids); end
+
     sig { returns(T::Array[T.untyped]) }
     def user_achievement_ids; end
 
@@ -544,10 +558,11 @@ class Memberships::Plan
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         recurrence: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        trial_period_days: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, validity_period: nil, amount: nil, is_active: nil, enabled_at: nil, disabled_at: nil, created_at: nil, updated_at: nil, name: nil, recurrence: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, validity_period: nil, amount: nil, is_active: nil, enabled_at: nil, disabled_at: nil, created_at: nil, updated_at: nil, name: nil, recurrence: nil, trial_period_days: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -1013,6 +1028,9 @@ class Memberships::Plan
     def restore_tenant_id!; end
 
     sig { void }
+    def restore_trial_period_days!; end
+
+    sig { void }
     def restore_updated_at!; end
 
     sig { void }
@@ -1078,6 +1096,12 @@ class Memberships::Plan
     sig { returns(T::Boolean) }
     def saved_change_to_tenant_id?; end
 
+    sig { returns(T.nilable([::Integer, ::Integer])) }
+    def saved_change_to_trial_period_days; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_trial_period_days?; end
+
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_updated_at; end
 
@@ -1134,6 +1158,51 @@ class Memberships::Plan
 
     sig { void }
     def tenant_id_will_change!; end
+
+    sig { returns(::Integer) }
+    def trial_period_days; end
+
+    sig { params(value: ::Integer).returns(::Integer) }
+    def trial_period_days=(value); end
+
+    sig { returns(T::Boolean) }
+    def trial_period_days?; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def trial_period_days_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def trial_period_days_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def trial_period_days_came_from_user?; end
+
+    sig { returns(T.nilable([::Integer, ::Integer])) }
+    def trial_period_days_change; end
+
+    sig { returns(T.nilable([::Integer, ::Integer])) }
+    def trial_period_days_change_to_be_saved; end
+
+    sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
+    def trial_period_days_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def trial_period_days_in_database; end
+
+    sig { returns(T.nilable([::Integer, ::Integer])) }
+    def trial_period_days_previous_change; end
+
+    sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
+    def trial_period_days_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def trial_period_days_previously_was; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def trial_period_days_was; end
+
+    sig { void }
+    def trial_period_days_will_change!; end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def updated_at; end
@@ -1254,6 +1323,9 @@ class Memberships::Plan
 
     sig { returns(T::Boolean) }
     def will_save_change_to_tenant_id?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_trial_period_days?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_updated_at?; end
@@ -1403,10 +1475,11 @@ class Memberships::Plan
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         recurrence: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        trial_period_days: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, validity_period: nil, amount: nil, is_active: nil, enabled_at: nil, disabled_at: nil, created_at: nil, updated_at: nil, name: nil, recurrence: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, validity_period: nil, amount: nil, is_active: nil, enabled_at: nil, disabled_at: nil, created_at: nil, updated_at: nil, name: nil, recurrence: nil, trial_period_days: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

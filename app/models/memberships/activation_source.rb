@@ -12,7 +12,7 @@ class Memberships::ActivationSource < ApplicationRecord
   belongs_to :user_contract, class_name: 'Memberships::UserContract'
   belongs_to :chargeable, polymorphic: true, optional: true
 
-  has_one :user_contract_last, class_name: 'Memberships::UserContract', foreign_key: :last_membership_activation_source_id, dependent: :nullify, inverse_of: :last_membership_activation_source
+  has_one :user_contract_last, class_name: 'Memberships::UserContract', foreign_key: :current_membership_activation_source_id, dependent: :nullify, inverse_of: :current_membership_activation_source
 
   validates :payment_type, presence: true, inclusion: { in: %w[credit_card convenience campaign_code external_linkage] }
 
