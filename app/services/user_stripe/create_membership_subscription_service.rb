@@ -128,8 +128,8 @@ module UserStripe
         user:,
         status: 'pending',
       )
-      # activation_sources作成
-      activation_source = Memberships::ActivationSource.create!(
+      # billing_profiles作成
+      billing_profile = Memberships::BillingProfile.create!(
         user:,
         membership_plan:,
         user_contract:,
@@ -140,9 +140,6 @@ module UserStripe
         status: 'pending',
         recurrence: true,
       )
-
-      user_contract.current_membership_activation_source = activation_source
-      user_contract.save!
 
       user_contract
     end

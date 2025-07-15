@@ -272,14 +272,14 @@ class StripeRecord::Subscription
   end
 
   module GeneratedAssociationMethods
-    sig { returns(T.nilable(::Memberships::ActivationSource)) }
-    def activation_source; end
+    sig { returns(T.nilable(::Memberships::BillingProfile)) }
+    def billing_profile; end
 
-    sig { params(value: T.nilable(::Memberships::ActivationSource)).void }
-    def activation_source=(value); end
+    sig { params(value: T.nilable(::Memberships::BillingProfile)).void }
+    def billing_profile=(value); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ActivationSource) }
-    def build_activation_source(*args, &blk); end
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
+    def build_billing_profile(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SetupIntent) }
     def build_pending_setup_intent(*args, &blk); end
@@ -293,11 +293,11 @@ class StripeRecord::Subscription
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ActivationSource) }
-    def create_activation_source(*args, &blk); end
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
+    def create_billing_profile(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ActivationSource) }
-    def create_activation_source!(*args, &blk); end
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
+    def create_billing_profile!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SetupIntent) }
     def create_pending_setup_intent(*args, &blk); end
@@ -355,8 +355,8 @@ class StripeRecord::Subscription
     sig { params(value: T.nilable(::StripeRecord::Product)).void }
     def product=(value); end
 
-    sig { returns(T.nilable(::Memberships::ActivationSource)) }
-    def reload_activation_source; end
+    sig { returns(T.nilable(::Memberships::BillingProfile)) }
+    def reload_billing_profile; end
 
     sig { returns(T.nilable(::StripeRecord::SetupIntent)) }
     def reload_pending_setup_intent; end

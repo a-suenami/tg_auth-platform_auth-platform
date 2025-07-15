@@ -18,7 +18,7 @@ class Tenant < ApplicationRecord
   has_many :membership_groups, class_name: 'Memberships::Group', dependent: :destroy
   has_many :membership_plans, class_name: 'Memberships::Plan', dependent: :destroy
   has_many :membership_user_contracts, class_name: 'Memberships::UserContract', dependent: :destroy
-  has_many :membership_activation_sources, class_name: 'Memberships::ActivationSource', dependent: :destroy
+  has_many :membership_billing_profiles, class_name: 'Memberships::BillingProfile', dependent: :destroy
   has_many :membership_user_achievements, class_name: 'Memberships::UserAchievement', dependent: :destroy
 
   class CardPaymentGatewayEnum < T::Enum

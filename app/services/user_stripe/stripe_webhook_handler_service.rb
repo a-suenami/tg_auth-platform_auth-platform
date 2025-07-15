@@ -47,7 +47,7 @@ module UserStripe
       )
 
       # 関連するUserContractを取得（invoiceを通じて）
-      user_contract = stripe_record_payment_intent.invoice&.chargeable&.activation_source&.user_contract
+      user_contract = stripe_record_payment_intent.invoice&.chargeable&.current_billing_profile&.user_contract
       return unless user_contract
 
       invoice = stripe_record_payment_intent.invoice
@@ -65,8 +65,8 @@ module UserStripe
           status: 'active',
         )
 
-        activation_source = stripe_record_subscription&.activation_source
-        plan = activation_source.membership_plan
+        current_billing_profile = stripe_record_subscription&.current_billing_profile
+        plan = current_billing_profile.membership_plan
         return unless plan
 
         # プラン内容に従って有効期限を設定
@@ -98,7 +98,7 @@ module UserStripe
 
 
     def create_trial_history(user_contract:, stripe_record_subscription:)
-      membership_plan = user_contract.current_membership_activation_source.membership_plan
+      membership_plan = user_contract.current_billing_profile.membership_plan
       memberships = membership_plan.memberships
       memberships.each do |membership|
         Memberships::TrialHistory.create!(
@@ -203,7 +203,7 @@ module UserStripe
       stripe_record_subscription = stripe_record_setup_intent.subscription
       return unless stripe_record_subscription
 
-      user_contract = stripe_record_subscription.activation_source.user_contract
+      user_contract = stripe_record_subscription.current_billing_profile.user_contract
       return unless user_contract
 
       complete_user_contract(user_contract, stripe_record_subscription)
@@ -215,7 +215,7 @@ module UserStripe
     end
 
     def update_membership_user(user_contract)
-      membership_plan = user_contract.current_membership_activation_source.membership_plan
+      membership_plan = user_contract.current_billing_profile.membership_plan
       memberships = membership_plan.memberships
       memberships.each do |membership|
         membership_user = Memberships::User.find_or_create_by!(

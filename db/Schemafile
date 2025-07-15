@@ -30,7 +30,7 @@ require 'schemas/membership/group_assignments.schema'
 require 'schemas/membership/plan_payment_methods.schema'
 require 'schemas/membership/plan_components.schema'
 require 'schemas/membership/user_contracts.schema'
-require 'schemas/membership/activation_sources.schema'
+require 'schemas/membership/billing_profiles.schema'
 require 'schemas/membership/analytics.schema'
 require 'schemas/membership/trial_histories.schema'
 

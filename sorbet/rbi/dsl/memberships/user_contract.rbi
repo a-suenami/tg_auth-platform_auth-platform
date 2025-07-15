@@ -273,33 +273,24 @@ class Memberships::UserContract
 
   module GeneratedAssociationMethods
     sig { returns(T::Array[T.untyped]) }
-    def activation_source_ids; end
+    def billing_profile_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def activation_source_ids=(ids); end
+    def billing_profile_ids=(ids); end
 
-    # This method is created by ActiveRecord on the `Memberships::UserContract` class because it declared `has_many :activation_sources`.
+    # This method is created by ActiveRecord on the `Memberships::UserContract` class because it declared `has_many :billing_profiles`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::ActivationSource::PrivateCollectionProxy) }
-    def activation_sources; end
+    sig { returns(::Memberships::BillingProfile::PrivateCollectionProxy) }
+    def billing_profiles; end
 
-    sig { params(value: T::Enumerable[::Memberships::ActivationSource]).void }
-    def activation_sources=(value); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ActivationSource) }
-    def build_current_membership_activation_source(*args, &blk); end
+    sig { params(value: T::Enumerable[::Memberships::BillingProfile]).void }
+    def billing_profiles=(value); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ActivationSource) }
-    def create_current_membership_activation_source(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ActivationSource) }
-    def create_current_membership_activation_source!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant(*args, &blk); end
@@ -312,15 +303,6 @@ class Memberships::UserContract
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user!(*args, &blk); end
-
-    sig { returns(T.nilable(::Memberships::ActivationSource)) }
-    def current_membership_activation_source; end
-
-    sig { params(value: T.nilable(::Memberships::ActivationSource)).void }
-    def current_membership_activation_source=(value); end
-
-    sig { returns(T.nilable(::Memberships::ActivationSource)) }
-    def reload_current_membership_activation_source; end
 
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
@@ -531,11 +513,10 @@ class Memberships::UserContract
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        current_membership_activation_source_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, expires_at: nil, cancel_at_period_end: nil, created_at: nil, updated_at: nil, status: nil, current_membership_activation_source_id: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, expires_at: nil, cancel_at_period_end: nil, created_at: nil, updated_at: nil, status: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -634,51 +615,6 @@ class Memberships::UserContract
 
     sig { void }
     def created_at_will_change!; end
-
-    sig { returns(T.untyped) }
-    def current_membership_activation_source_id; end
-
-    sig { params(value: T.untyped).returns(T.untyped) }
-    def current_membership_activation_source_id=(value); end
-
-    sig { returns(T::Boolean) }
-    def current_membership_activation_source_id?; end
-
-    sig { returns(T.untyped) }
-    def current_membership_activation_source_id_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def current_membership_activation_source_id_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def current_membership_activation_source_id_came_from_user?; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def current_membership_activation_source_id_change; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def current_membership_activation_source_id_change_to_be_saved; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def current_membership_activation_source_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.untyped) }
-    def current_membership_activation_source_id_in_database; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def current_membership_activation_source_id_previous_change; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def current_membership_activation_source_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.untyped) }
-    def current_membership_activation_source_id_previously_was; end
-
-    sig { returns(T.untyped) }
-    def current_membership_activation_source_id_was; end
-
-    sig { void }
-    def current_membership_activation_source_id_will_change!; end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def expires_at; end
@@ -832,9 +768,6 @@ class Memberships::UserContract
     def restore_created_at!; end
 
     sig { void }
-    def restore_current_membership_activation_source_id!; end
-
-    sig { void }
     def restore_expires_at!; end
 
     sig { void }
@@ -866,12 +799,6 @@ class Memberships::UserContract
 
     sig { returns(T::Boolean) }
     def saved_change_to_created_at?; end
-
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
-    def saved_change_to_current_membership_activation_source_id; end
-
-    sig { returns(T::Boolean) }
-    def saved_change_to_current_membership_activation_source_id?; end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_expires_at; end
@@ -1102,9 +1029,6 @@ class Memberships::UserContract
     def will_save_change_to_created_at?; end
 
     sig { returns(T::Boolean) }
-    def will_save_change_to_current_membership_activation_source_id?; end
-
-    sig { returns(T::Boolean) }
     def will_save_change_to_expires_at?; end
 
     sig { returns(T::Boolean) }
@@ -1264,11 +1188,10 @@ class Memberships::UserContract
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        current_membership_activation_source_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, expires_at: nil, cancel_at_period_end: nil, created_at: nil, updated_at: nil, status: nil, current_membership_activation_source_id: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, expires_at: nil, cancel_at_period_end: nil, created_at: nil, updated_at: nil, status: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

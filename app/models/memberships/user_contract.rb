@@ -9,10 +9,9 @@ class Memberships::UserContract < ApplicationRecord
   belongs_to :tenant
   belongs_to :user, class_name: '::User'
 
-  belongs_to :current_membership_activation_source, class_name: 'Memberships::ActivationSource', optional: true, inverse_of: :user_contract_last
-
-  has_many :activation_sources, class_name: 'Memberships::ActivationSource', dependent: :destroy
-
+  has_many :billing_profiles, class_name: 'Memberships::BillingProfile', dependent: :destroy
+  # billing_profileの中でもphaseがcurrentのものを取得する
+  has_one :current_billing_profile, -> { where(phase: :current) }, class_name: 'Memberships::BillingProfile', dependent: :nullify, inverse_of: :user_contract
   validates :user_id, uniqueness: { scope: :tenant_id }
 
   enumerize :status, in: {

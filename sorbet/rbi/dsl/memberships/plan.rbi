@@ -257,18 +257,18 @@ class Memberships::Plan
 
   module GeneratedAssociationMethods
     sig { returns(T::Array[T.untyped]) }
-    def activation_source_ids; end
+    def billing_profile_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def activation_source_ids=(ids); end
+    def billing_profile_ids=(ids); end
 
-    # This method is created by ActiveRecord on the `Memberships::Plan` class because it declared `has_many :activation_sources`.
+    # This method is created by ActiveRecord on the `Memberships::Plan` class because it declared `has_many :billing_profiles`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::ActivationSource::PrivateCollectionProxy) }
-    def activation_sources; end
+    sig { returns(::Memberships::BillingProfile::PrivateCollectionProxy) }
+    def billing_profiles; end
 
-    sig { params(value: T::Enumerable[::Memberships::ActivationSource]).void }
-    def activation_sources=(value); end
+    sig { params(value: T::Enumerable[::Memberships::BillingProfile]).void }
+    def billing_profiles=(value); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end

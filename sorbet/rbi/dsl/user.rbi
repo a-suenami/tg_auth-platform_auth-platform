@@ -345,18 +345,18 @@ class User
     def linked_applications=(value); end
 
     sig { returns(T::Array[T.untyped]) }
-    def membership_activation_source_ids; end
+    def membership_billing_profile_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def membership_activation_source_ids=(ids); end
+    def membership_billing_profile_ids=(ids); end
 
-    # This method is created by ActiveRecord on the `User` class because it declared `has_many :membership_activation_sources`.
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :membership_billing_profiles`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::ActivationSource::PrivateCollectionProxy) }
-    def membership_activation_sources; end
+    sig { returns(::Memberships::BillingProfile::PrivateCollectionProxy) }
+    def membership_billing_profiles; end
 
-    sig { params(value: T::Enumerable[::Memberships::ActivationSource]).void }
-    def membership_activation_sources=(value); end
+    sig { params(value: T::Enumerable[::Memberships::BillingProfile]).void }
+    def membership_billing_profiles=(value); end
 
     sig { returns(T::Array[T.untyped]) }
     def membership_ids; end

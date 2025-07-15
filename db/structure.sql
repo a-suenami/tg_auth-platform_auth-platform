@@ -201,10 +201,10 @@ COMMENT ON COLUMN public.memberships.tier IS '階級';
 
 
 --
--- Name: memberships__activation_sources; Type: TABLE; Schema: public; Owner: -
+-- Name: memberships__billing_profiles; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.memberships__activation_sources (
+CREATE TABLE public.memberships__billing_profiles (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
@@ -213,10 +213,12 @@ CREATE TABLE public.memberships__activation_sources (
     payment_type character varying NOT NULL,
     payment_provider character varying,
     external_id character varying,
+    phase character varying DEFAULT 'current'::character varying NOT NULL,
     activated_at timestamp(6) without time zone,
     expires_at timestamp(6) without time zone,
     status character varying NOT NULL,
     recurrence boolean DEFAULT false NOT NULL,
+    revision integer DEFAULT 1 NOT NULL,
     chargeable_id uuid,
     chargeable_type character varying,
     created_at timestamp(6) without time zone NOT NULL,
@@ -225,73 +227,87 @@ CREATE TABLE public.memberships__activation_sources (
 
 
 --
--- Name: TABLE memberships__activation_sources; Type: COMMENT; Schema: public; Owner: -
+-- Name: TABLE memberships__billing_profiles; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.memberships__activation_sources IS 'メンバーシップの決済情報';
-
-
---
--- Name: COLUMN memberships__activation_sources.user_contract_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__activation_sources.user_contract_id IS 'メンバーシップ契約ID';
+COMMENT ON TABLE public.memberships__billing_profiles IS 'メンバーシップの決済情報';
 
 
 --
--- Name: COLUMN memberships__activation_sources.payment_type; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN memberships__billing_profiles.user_contract_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.memberships__activation_sources.payment_type IS '支払い方法: credit_card, convenience, campaign_code, external_linkage';
-
-
---
--- Name: COLUMN memberships__activation_sources.payment_provider; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__activation_sources.payment_provider IS '決済プロバイダ: stripe, komojuなど';
+COMMENT ON COLUMN public.memberships__billing_profiles.user_contract_id IS 'メンバーシップ契約ID';
 
 
 --
--- Name: COLUMN memberships__activation_sources.external_id; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN memberships__billing_profiles.payment_type; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.memberships__activation_sources.external_id IS '外部システムのID';
-
-
---
--- Name: COLUMN memberships__activation_sources.activated_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__activation_sources.activated_at IS '有効化日時';
+COMMENT ON COLUMN public.memberships__billing_profiles.payment_type IS '支払い方法: credit_card, convenience, campaign_code, external_linkage';
 
 
 --
--- Name: COLUMN memberships__activation_sources.expires_at; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN memberships__billing_profiles.payment_provider; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.memberships__activation_sources.expires_at IS '有効期限';
-
-
---
--- Name: COLUMN memberships__activation_sources.status; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__activation_sources.status IS 'ステータス';
+COMMENT ON COLUMN public.memberships__billing_profiles.payment_provider IS '決済プロバイダ: stripe, komojuなど';
 
 
 --
--- Name: COLUMN memberships__activation_sources.recurrence; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN memberships__billing_profiles.external_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.memberships__activation_sources.recurrence IS '定期課金フラグ: true=サブスクリプション, false=買い切り';
+COMMENT ON COLUMN public.memberships__billing_profiles.external_id IS '外部システムのID';
 
 
 --
--- Name: COLUMN memberships__activation_sources.chargeable_id; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN memberships__billing_profiles.phase; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.memberships__activation_sources.chargeable_id IS '決済情報';
+COMMENT ON COLUMN public.memberships__billing_profiles.phase IS 'phase: billing_profileの利用状態。プラン変更予定時はupcoming。current, upcoming, closed';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.activated_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.activated_at IS '有効化日時';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.expires_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.expires_at IS '有効期限';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.status IS 'ステータス';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.recurrence; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.recurrence IS '定期課金フラグ: true=サブスクリプション, false=買い切り';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.revision; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.revision IS 'バージョン管理用';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.chargeable_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.chargeable_id IS '決済情報';
 
 
 --
@@ -625,7 +641,6 @@ CREATE TABLE public.memberships__user_contracts (
     user_id uuid NOT NULL,
     expires_at timestamp(6) without time zone,
     cancel_at_period_end boolean DEFAULT false,
-    current_membership_activation_source_id uuid,
     status character varying DEFAULT 'active'::character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -651,13 +666,6 @@ COMMENT ON COLUMN public.memberships__user_contracts.expires_at IS '有効期限
 --
 
 COMMENT ON COLUMN public.memberships__user_contracts.cancel_at_period_end IS '次回更新時に解約フラグ';
-
-
---
--- Name: COLUMN memberships__user_contracts.current_membership_activation_source_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__user_contracts.current_membership_activation_source_id IS '最後の決済情報';
 
 
 --
@@ -1663,11 +1671,11 @@ ALTER TABLE ONLY public.login_spa_applications
 
 
 --
--- Name: memberships__activation_sources memberships__activation_sources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: memberships__billing_profiles memberships__billing_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__activation_sources
-    ADD CONSTRAINT memberships__activation_sources_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.memberships__billing_profiles
+    ADD CONSTRAINT memberships__billing_profiles_pkey PRIMARY KEY (id);
 
 
 --
@@ -2010,24 +2018,24 @@ CREATE UNIQUE INDEX idx_linked_applications_tenant_user_oauth_application_uniq O
 
 
 --
--- Name: idx_memberships__activation_sources_expires_at; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_memberships__billing_profiles_expires_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_memberships__activation_sources_expires_at ON public.memberships__activation_sources USING btree (expires_at);
-
-
---
--- Name: idx_memberships__activation_sources_external_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_memberships__activation_sources_external_id ON public.memberships__activation_sources USING btree (external_id);
+CREATE INDEX idx_memberships__billing_profiles_expires_at ON public.memberships__billing_profiles USING btree (expires_at);
 
 
 --
--- Name: idx_memberships__activation_sources_tenant_user; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_memberships__billing_profiles_external_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_memberships__activation_sources_tenant_user ON public.memberships__activation_sources USING btree (tenant_id, user_id);
+CREATE INDEX idx_memberships__billing_profiles_external_id ON public.memberships__billing_profiles USING btree (external_id);
+
+
+--
+-- Name: idx_memberships__billing_profiles_tenant_user; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_memberships__billing_profiles_tenant_user ON public.memberships__billing_profiles USING btree (tenant_id, user_id);
 
 
 --
@@ -2122,17 +2130,10 @@ CREATE INDEX idx_on_chargeable_type_chargeable_id_28699c5a5e ON public.stripe_re
 
 
 --
--- Name: idx_on_chargeable_type_chargeable_id_b05f49fd02; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_on_chargeable_type_chargeable_id_8f9e0b5657; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_on_chargeable_type_chargeable_id_b05f49fd02 ON public.memberships__activation_sources USING btree (chargeable_type, chargeable_id);
-
-
---
--- Name: idx_on_current_membership_activation_source_id_56821d61e7; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_on_current_membership_activation_source_id_56821d61e7 ON public.memberships__user_contracts USING btree (current_membership_activation_source_id);
+CREATE INDEX idx_on_chargeable_type_chargeable_id_8f9e0b5657 ON public.memberships__billing_profiles USING btree (chargeable_type, chargeable_id);
 
 
 --
@@ -2325,31 +2326,31 @@ CREATE UNIQUE INDEX index_login_spa_applications_on_uid ON public.login_spa_appl
 
 
 --
--- Name: index_memberships__activation_sources_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_memberships__billing_profiles_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__activation_sources_on_membership_plan_id ON public.memberships__activation_sources USING btree (membership_plan_id);
-
-
---
--- Name: index_memberships__activation_sources_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__activation_sources_on_tenant_id ON public.memberships__activation_sources USING btree (tenant_id);
+CREATE INDEX index_memberships__billing_profiles_on_membership_plan_id ON public.memberships__billing_profiles USING btree (membership_plan_id);
 
 
 --
--- Name: index_memberships__activation_sources_on_user_contract_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_memberships__billing_profiles_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__activation_sources_on_user_contract_id ON public.memberships__activation_sources USING btree (user_contract_id);
+CREATE INDEX index_memberships__billing_profiles_on_tenant_id ON public.memberships__billing_profiles USING btree (tenant_id);
 
 
 --
--- Name: index_memberships__activation_sources_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_memberships__billing_profiles_on_user_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__activation_sources_on_user_id ON public.memberships__activation_sources USING btree (user_id);
+CREATE INDEX index_memberships__billing_profiles_on_user_contract_id ON public.memberships__billing_profiles USING btree (user_contract_id);
+
+
+--
+-- Name: index_memberships__billing_profiles_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__billing_profiles_on_user_id ON public.memberships__billing_profiles USING btree (user_id);
 
 
 --
@@ -3124,35 +3125,35 @@ ALTER TABLE ONLY public.login_spa_applications
 
 
 --
--- Name: memberships__activation_sources fk_memberships__activation_sources_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: memberships__billing_profiles fk_memberships__billing_profiles_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__activation_sources
-    ADD CONSTRAINT fk_memberships__activation_sources_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
-
-
---
--- Name: memberships__activation_sources fk_memberships__activation_sources_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__activation_sources
-    ADD CONSTRAINT fk_memberships__activation_sources_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+ALTER TABLE ONLY public.memberships__billing_profiles
+    ADD CONSTRAINT fk_memberships__billing_profiles_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
 
 
 --
--- Name: memberships__activation_sources fk_memberships__activation_sources_user_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: memberships__billing_profiles fk_memberships__billing_profiles_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__activation_sources
-    ADD CONSTRAINT fk_memberships__activation_sources_user_contracts FOREIGN KEY (user_contract_id) REFERENCES public.memberships__user_contracts(id);
+ALTER TABLE ONLY public.memberships__billing_profiles
+    ADD CONSTRAINT fk_memberships__billing_profiles_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
--- Name: memberships__activation_sources fk_memberships__activation_sources_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: memberships__billing_profiles fk_memberships__billing_profiles_user_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__activation_sources
-    ADD CONSTRAINT fk_memberships__activation_sources_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.memberships__billing_profiles
+    ADD CONSTRAINT fk_memberships__billing_profiles_user_contracts FOREIGN KEY (user_contract_id) REFERENCES public.memberships__user_contracts(id);
+
+
+--
+-- Name: memberships__billing_profiles fk_memberships__billing_profiles_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__billing_profiles
+    ADD CONSTRAINT fk_memberships__billing_profiles_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -3273,14 +3274,6 @@ ALTER TABLE ONLY public.memberships__user_achievements
 
 ALTER TABLE ONLY public.memberships__user_achievements
     ADD CONSTRAINT fk_memberships__user_achievements_users FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
--- Name: memberships__user_contracts fk_memberships__user_contracts_last_activation_sources; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__user_contracts
-    ADD CONSTRAINT fk_memberships__user_contracts_last_activation_sources FOREIGN KEY (current_membership_activation_source_id) REFERENCES public.memberships__activation_sources(id);
 
 
 --

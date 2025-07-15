@@ -6,5 +6,5 @@ class Memberships::UserContractBlueprint < Blueprinter::Base
 
   fields :expires_at, :cancel_at_period_end
 
-  association :current_membership_activation_source, blueprint: Memberships::ActivationSourceBlueprint
+  association :billing_profiles, blueprint: Memberships::BillingProfileBlueprint
 end

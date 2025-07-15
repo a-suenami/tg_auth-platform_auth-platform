@@ -113,7 +113,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_memberships_on_tenant_id"
   end
 
-  create_table "memberships__activation_sources", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップの決済情報", force: :cascade do |t|
+  create_table "memberships__billing_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップの決済情報", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.uuid "membership_plan_id", null: false
@@ -121,22 +121,24 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "payment_type", null: false, comment: "支払い方法: credit_card, convenience, campaign_code, external_linkage"
     t.string "payment_provider", comment: "決済プロバイダ: stripe, komojuなど"
     t.string "external_id", comment: "外部システムのID"
+    t.string "phase", default: "current", null: false, comment: "phase: billing_profileの利用状態。プラン変更予定時はupcoming。current, upcoming, closed"
     t.datetime "activated_at", comment: "有効化日時"
     t.datetime "expires_at", comment: "有効期限"
     t.string "status", null: false, comment: "ステータス"
     t.boolean "recurrence", default: false, null: false, comment: "定期課金フラグ: true=サブスクリプション, false=買い切り"
+    t.integer "revision", default: 1, null: false, comment: "バージョン管理用"
     t.uuid "chargeable_id", comment: "決済情報"
     t.string "chargeable_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_b05f49fd02"
-    t.index ["expires_at"], name: "idx_memberships__activation_sources_expires_at"
-    t.index ["external_id"], name: "idx_memberships__activation_sources_external_id"
-    t.index ["membership_plan_id"], name: "index_memberships__activation_sources_on_membership_plan_id"
-    t.index ["tenant_id", "user_id"], name: "idx_memberships__activation_sources_tenant_user"
-    t.index ["tenant_id"], name: "index_memberships__activation_sources_on_tenant_id"
-    t.index ["user_contract_id"], name: "index_memberships__activation_sources_on_user_contract_id"
-    t.index ["user_id"], name: "index_memberships__activation_sources_on_user_id"
+    t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_8f9e0b5657"
+    t.index ["expires_at"], name: "idx_memberships__billing_profiles_expires_at"
+    t.index ["external_id"], name: "idx_memberships__billing_profiles_external_id"
+    t.index ["membership_plan_id"], name: "index_memberships__billing_profiles_on_membership_plan_id"
+    t.index ["tenant_id", "user_id"], name: "idx_memberships__billing_profiles_tenant_user"
+    t.index ["tenant_id"], name: "index_memberships__billing_profiles_on_tenant_id"
+    t.index ["user_contract_id"], name: "index_memberships__billing_profiles_on_user_contract_id"
+    t.index ["user_id"], name: "index_memberships__billing_profiles_on_user_id"
   end
 
   create_table "memberships__group_assignments", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップとグループの中間テーブル", force: :cascade do |t|
@@ -249,11 +251,9 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "user_id", null: false
     t.datetime "expires_at", comment: "有効期限"
     t.boolean "cancel_at_period_end", default: false, comment: "次回更新時に解約フラグ"
-    t.uuid "current_membership_activation_source_id", comment: "最後の決済情報"
     t.string "status", default: "active", null: false, comment: "ステータス"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["current_membership_activation_source_id"], name: "idx_on_current_membership_activation_source_id_56821d61e7"
     t.index ["expires_at"], name: "idx_memberships__user_contracts_expires_at"
     t.index ["tenant_id", "user_id"], name: "idx_memberships__user_contracts_tenant_user", unique: true
     t.index ["tenant_id"], name: "index_memberships__user_contracts_on_tenant_id"
@@ -818,10 +818,10 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "email_templates", "tenants", name: "fk_email_templates_tenants"
   add_foreign_key "login_spa_applications", "tenants", name: "fk_login_spa_applications_tenants"
   add_foreign_key "memberships", "tenants", name: "fk_memberships_tenants"
-  add_foreign_key "memberships__activation_sources", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__activation_sources_plans"
-  add_foreign_key "memberships__activation_sources", "memberships__user_contracts", column: "user_contract_id", name: "fk_memberships__activation_sources_user_contracts"
-  add_foreign_key "memberships__activation_sources", "tenants", name: "fk_memberships__activation_sources_tenants"
-  add_foreign_key "memberships__activation_sources", "users", name: "fk_memberships__activation_sources_users"
+  add_foreign_key "memberships__billing_profiles", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__billing_profiles_plans"
+  add_foreign_key "memberships__billing_profiles", "memberships__user_contracts", column: "user_contract_id", name: "fk_memberships__billing_profiles_user_contracts"
+  add_foreign_key "memberships__billing_profiles", "tenants", name: "fk_memberships__billing_profiles_tenants"
+  add_foreign_key "memberships__billing_profiles", "users", name: "fk_memberships__billing_profiles_users"
   add_foreign_key "memberships__group_assignments", "memberships", name: "fk_memberships__group_assignments_memberships"
   add_foreign_key "memberships__group_assignments", "memberships__groups", column: "membership_group_id", name: "fk_memberships__group_assignments_groups"
   add_foreign_key "memberships__group_assignments", "tenants", name: "fk_memberships__group_assignments_tenants"
@@ -837,7 +837,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "memberships__user_achievements", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__user_achievements_plans"
   add_foreign_key "memberships__user_achievements", "tenants", name: "fk_memberships__user_achievements_tenants"
   add_foreign_key "memberships__user_achievements", "users", name: "fk_memberships__user_achievements_users"
-  add_foreign_key "memberships__user_contracts", "memberships__activation_sources", column: "current_membership_activation_source_id", name: "fk_memberships__user_contracts_last_activation_sources"
   add_foreign_key "memberships__user_contracts", "tenants", name: "fk_memberships__user_contracts_tenants"
   add_foreign_key "memberships__user_contracts", "users", name: "fk_memberships__user_contracts_users"
   add_foreign_key "memberships__users", "memberships", name: "fk_memberships__users_memberships"
