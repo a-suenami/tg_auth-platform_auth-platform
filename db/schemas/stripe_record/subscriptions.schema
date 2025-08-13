@@ -14,6 +14,8 @@ create_table :stripe_record_subscriptions, force: :cascade, id: :uuid, default: 
   t.boolean  :refunded,           default: false
   t.string   :refund_reason
 
+  t.datetime :current_period_start, null: true, comment: '現在の請求期間の開始日時'
+  t.datetime :current_period_end, null: true, comment: '現在の請求期間の終了日時'
   t.datetime :trial_end, null: true, comment: 'トライアル終了日時'
   t.datetime :trial_start, null: true, comment: 'トライアル開始日時'
 

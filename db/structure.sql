@@ -156,6 +156,7 @@ CREATE TABLE public.login_spa_applications (
 CREATE TABLE public.memberships (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
+    membership_group_id uuid,
     name character varying,
     display_name character varying,
     "position" integer,
@@ -170,6 +171,13 @@ CREATE TABLE public.memberships (
 --
 
 COMMENT ON TABLE public.memberships IS 'メンバーシップ';
+
+
+--
+-- Name: COLUMN memberships.membership_group_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships.membership_group_id IS 'メンバーシップグループ';
 
 
 --
@@ -311,35 +319,6 @@ COMMENT ON COLUMN public.memberships__billing_profiles.chargeable_id IS '決済�
 
 
 --
--- Name: memberships__group_assignments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.memberships__group_assignments (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    membership_id uuid NOT NULL,
-    membership_group_id uuid NOT NULL,
-    "position" integer DEFAULT 0,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE memberships__group_assignments; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.memberships__group_assignments IS 'メンバーシップとグループの中間テーブル';
-
-
---
--- Name: COLUMN memberships__group_assignments."position"; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__group_assignments."position" IS '表示順序';
-
-
---
 -- Name: memberships__groups; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -462,6 +441,7 @@ CREATE TABLE public.memberships__plans (
     enabled_at timestamp(6) without time zone,
     disabled_at timestamp(6) without time zone,
     trial_period_days integer DEFAULT 0 NOT NULL,
+    "position" integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -528,6 +508,13 @@ COMMENT ON COLUMN public.memberships__plans.disabled_at IS '無効化日時';
 --
 
 COMMENT ON COLUMN public.memberships__plans.trial_period_days IS 'トライアル期間';
+
+
+--
+-- Name: COLUMN memberships__plans."position"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans."position" IS '表示順序';
 
 
 --
@@ -1386,6 +1373,8 @@ CREATE TABLE public.stripe_record_subscriptions (
     currency character varying DEFAULT 'JPY'::character varying,
     refunded boolean DEFAULT false,
     refund_reason character varying,
+    current_period_start timestamp(6) without time zone,
+    current_period_end timestamp(6) without time zone,
     trial_end timestamp(6) without time zone,
     trial_start timestamp(6) without time zone,
     remote_id character varying,
@@ -1393,6 +1382,20 @@ CREATE TABLE public.stripe_record_subscriptions (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: COLUMN stripe_record_subscriptions.current_period_start; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_subscriptions.current_period_start IS '現在の請求期間の開始日時';
+
+
+--
+-- Name: COLUMN stripe_record_subscriptions.current_period_end; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_subscriptions.current_period_end IS '現在の請求期間の終了日時';
 
 
 --
@@ -1676,14 +1679,6 @@ ALTER TABLE ONLY public.login_spa_applications
 
 ALTER TABLE ONLY public.memberships__billing_profiles
     ADD CONSTRAINT memberships__billing_profiles_pkey PRIMARY KEY (id);
-
-
---
--- Name: memberships__group_assignments memberships__group_assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__group_assignments
-    ADD CONSTRAINT memberships__group_assignments_pkey PRIMARY KEY (id);
 
 
 --
@@ -2039,20 +2034,6 @@ CREATE INDEX idx_memberships__billing_profiles_tenant_user ON public.memberships
 
 
 --
--- Name: idx_memberships__group_assignments_membership_position; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_memberships__group_assignments_membership_position ON public.memberships__group_assignments USING btree (membership_id, "position");
-
-
---
--- Name: idx_memberships__group_assignments_uniq; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_memberships__group_assignments_uniq ON public.memberships__group_assignments USING btree (membership_id, membership_group_id);
-
-
---
 -- Name: idx_memberships__groups_tenant_id_name_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2354,27 +2335,6 @@ CREATE INDEX index_memberships__billing_profiles_on_user_id ON public.membership
 
 
 --
--- Name: index_memberships__group_assignments_on_membership_group_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__group_assignments_on_membership_group_id ON public.memberships__group_assignments USING btree (membership_group_id);
-
-
---
--- Name: index_memberships__group_assignments_on_membership_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__group_assignments_on_membership_id ON public.memberships__group_assignments USING btree (membership_id);
-
-
---
--- Name: index_memberships__group_assignments_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__group_assignments_on_tenant_id ON public.memberships__group_assignments USING btree (tenant_id);
-
-
---
 -- Name: index_memberships__groups_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2519,6 +2479,13 @@ CREATE INDEX index_memberships__users_on_tenant_id ON public.memberships__users 
 --
 
 CREATE INDEX index_memberships__users_on_user_id ON public.memberships__users USING btree (user_id);
+
+
+--
+-- Name: index_memberships_on_membership_group_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships_on_membership_group_id ON public.memberships USING btree (membership_group_id);
 
 
 --
@@ -3157,30 +3124,6 @@ ALTER TABLE ONLY public.memberships__billing_profiles
 
 
 --
--- Name: memberships__group_assignments fk_memberships__group_assignments_groups; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__group_assignments
-    ADD CONSTRAINT fk_memberships__group_assignments_groups FOREIGN KEY (membership_group_id) REFERENCES public.memberships__groups(id);
-
-
---
--- Name: memberships__group_assignments fk_memberships__group_assignments_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__group_assignments
-    ADD CONSTRAINT fk_memberships__group_assignments_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
-
-
---
--- Name: memberships__group_assignments fk_memberships__group_assignments_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__group_assignments
-    ADD CONSTRAINT fk_memberships__group_assignments_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
 -- Name: memberships__groups fk_memberships__groups_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3322,6 +3265,14 @@ ALTER TABLE ONLY public.memberships__users
 
 ALTER TABLE ONLY public.memberships__users
     ADD CONSTRAINT fk_memberships__users_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: memberships fk_memberships_groups; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships
+    ADD CONSTRAINT fk_memberships_groups FOREIGN KEY (membership_group_id) REFERENCES public.memberships__groups(id);
 
 
 --

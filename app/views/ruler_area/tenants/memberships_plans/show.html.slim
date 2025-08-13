@@ -22,6 +22,9 @@
             th = Memberships::Plan.human_attribute_name(:name)
             td = @membership_plan.name
           tr
+            th = Memberships::Plan.human_attribute_name(:position)
+            td = @membership_plan.position
+          tr
             th = Memberships::Plan.human_attribute_name(:recurrence)
             td = @membership_plan.recurrence ? "定期課金" : "買い切り"
           tr

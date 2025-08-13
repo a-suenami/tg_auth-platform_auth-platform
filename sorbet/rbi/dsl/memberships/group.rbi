@@ -281,34 +281,6 @@ class Memberships::Group
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant!(*args, &blk); end
 
-    sig { returns(T::Array[T.untyped]) }
-    def group_assignment_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def group_assignment_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `Memberships::Group` class because it declared `has_many :group_assignments`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::GroupAssignment::PrivateCollectionProxy) }
-    def group_assignments; end
-
-    sig { params(value: T::Enumerable[::Memberships::GroupAssignment]).void }
-    def group_assignments=(value); end
-
-    sig { returns(T::Array[T.untyped]) }
-    def membership_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def membership_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `Memberships::Group` class because it declared `has_many :memberships, through: :group_assignments`.
-    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
-    sig { returns(::Membership::PrivateCollectionProxy) }
-    def memberships; end
-
-    sig { params(value: T::Enumerable[::Membership]).void }
-    def memberships=(value); end
-
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
 

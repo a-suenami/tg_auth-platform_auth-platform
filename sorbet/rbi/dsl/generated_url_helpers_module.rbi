@@ -225,6 +225,12 @@ module GeneratedUrlHelpersModule
   def oauth_userinfo_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def plan_change_api_v1_internal_memberships_user_contract_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def plan_change_preview_api_v1_internal_memberships_user_contract_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def preview_ruler_area_tenant_stripe_records_products_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }

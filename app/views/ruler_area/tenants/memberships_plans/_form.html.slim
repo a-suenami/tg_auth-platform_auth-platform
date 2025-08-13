@@ -34,6 +34,12 @@
     .uk-text-small.uk-text-muted トライアル期間（日数）。0の場合はトライアルなし。
 
 .uk-margin
+  = f.label :position, class: "uk-form-label"
+  .uk-form-controls
+    = f.number_field :position, min: 0, class: "uk-input"
+    .uk-text-small.uk-text-muted 表示順序（数値が小さいほど上位に表示）
+
+.uk-margin
   = f.label :enabled_at, class: "uk-form-label"
   .uk-form-controls
     = f.datetime_local_field :enabled_at, class: "uk-input"

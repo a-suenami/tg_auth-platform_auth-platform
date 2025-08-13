@@ -1,7 +1,18 @@
 ja:
   exceptions:
-    shopify:
+    payment:
+      already_have_membership: 既にこのメンバーシッププランに契約しています
+      payment_method_not_available: 対象のプランは支払い方法が対応しておません。
       already_have_subscriptions: すでに対象のメンバーシップを契約中もしくは、契約手続き中です。
       invalid_plan: '契約プランに問題があります'
       card_missing: '利用可能なカードが登録されていません'
       unauthorized_plan: 'このプランは選択できません'
+      plan_change_error: 'プラン変更中にエラーが発生しました'
+      invalid_plan_change: 'プラン変更ができません'
+      user_contract_not_active: 'ユーザー契約が完了していません'
+      non_recurring_subscription: 'プラン変更はクレジットカードのサブスクリプション契約のみ可能です'
+      different_membership_plan: '異なるメンバーシップのプランには変更できません'
+      unchangeable_plan: '指定されたプランには変更できません'
+      no_current_billing_profile: '現在の請求プロファイルが見つかりません'
+      no_stripe_subscription: 'Stripeサブスクリプションが見つかりません'
+      stripe_plan_change_error: 'Stripeでのプラン変更中にエラーが発生しました'

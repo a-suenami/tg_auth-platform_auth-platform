@@ -22,6 +22,7 @@
     - else
       table.uk-table.uk-table-divider
         tr
+          th = Memberships::Plan.human_attribute_name(:position)
           th = Memberships::Plan.human_attribute_name(:name)
           th = Memberships::Plan.human_attribute_name(:recurrence)
           th = Memberships::Plan.human_attribute_name(:validity_period)
@@ -33,6 +34,8 @@
 
         - @membership_plans.each do |membership_plan|
           tr
+            td
+              = membership_plan.position
             td
               = membership_plan.name
             td

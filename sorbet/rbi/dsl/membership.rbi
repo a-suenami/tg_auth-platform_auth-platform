@@ -266,34 +266,6 @@ class Membership
     def create_tenant!(*args, &blk); end
 
     sig { returns(T::Array[T.untyped]) }
-    def group_assignment_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def group_assignment_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :group_assignments`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::GroupAssignment::PrivateCollectionProxy) }
-    def group_assignments; end
-
-    sig { params(value: T::Enumerable[::Memberships::GroupAssignment]).void }
-    def group_assignments=(value); end
-
-    sig { returns(T::Array[T.untyped]) }
-    def group_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def group_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :groups, through: :group_assignments`.
-    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
-    sig { returns(::Memberships::Group::PrivateCollectionProxy) }
-    def groups; end
-
-    sig { params(value: T::Enumerable[::Memberships::Group]).void }
-    def groups=(value); end
-
-    sig { returns(T::Array[T.untyped]) }
     def membership_plan_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
@@ -563,10 +535,11 @@ class Membership
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         position: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tier: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        membership_group_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, display_name: nil, created_at: nil, updated_at: nil, position: nil, tier: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, display_name: nil, created_at: nil, updated_at: nil, position: nil, tier: nil, membership_group_id: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -756,6 +729,51 @@ class Membership
     sig { void }
     def id_will_change!; end
 
+    sig { returns(T.untyped) }
+    def membership_group_id; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def membership_group_id=(value); end
+
+    sig { returns(T::Boolean) }
+    def membership_group_id?; end
+
+    sig { returns(T.untyped) }
+    def membership_group_id_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def membership_group_id_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def membership_group_id_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def membership_group_id_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def membership_group_id_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def membership_group_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def membership_group_id_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def membership_group_id_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def membership_group_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def membership_group_id_previously_was; end
+
+    sig { returns(T.untyped) }
+    def membership_group_id_was; end
+
+    sig { void }
+    def membership_group_id_will_change!; end
+
     sig { returns(T.nilable(::String)) }
     def name; end
 
@@ -859,6 +877,9 @@ class Membership
     def restore_id_value!; end
 
     sig { void }
+    def restore_membership_group_id!; end
+
+    sig { void }
     def restore_name!; end
 
     sig { void }
@@ -896,6 +917,12 @@ class Membership
 
     sig { returns(T::Boolean) }
     def saved_change_to_id_value?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_membership_group_id; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_membership_group_id?; end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_name; end
@@ -1075,6 +1102,9 @@ class Membership
     def will_save_change_to_id_value?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_membership_group_id?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_name?; end
 
     sig { returns(T::Boolean) }
@@ -1228,10 +1258,11 @@ class Membership
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         position: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tier: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        membership_group_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, display_name: nil, created_at: nil, updated_at: nil, position: nil, tier: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, display_name: nil, created_at: nil, updated_at: nil, position: nil, tier: nil, membership_group_id: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

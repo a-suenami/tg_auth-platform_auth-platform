@@ -20,7 +20,7 @@ module RulerArea
     end
 
     def create
-      if ::Tenants::CreateService.new(tenant_params).execute
+      if ::Tenants::CreateService.new(tenant_params.to_h).execute
         redirect_to ruler_area_tenants_path, notice: t('helpers.messages.created')
       else
         render :new, status: :unprocessable_entity

@@ -104,12 +104,14 @@ ActiveRecord::Schema[7.1].define(version: 0) do
 
   create_table "memberships", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップ", force: :cascade do |t|
     t.citext "tenant_id", null: false
+    t.uuid "membership_group_id", comment: "メンバーシップグループ"
     t.string "name", comment: "メンバーシップ識別子"
     t.string "display_name", comment: "メンバーシップ名称"
     t.integer "position", comment: "表示順序"
     t.integer "tier", comment: "階級"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["membership_group_id"], name: "index_memberships_on_membership_group_id"
     t.index ["tenant_id"], name: "index_memberships_on_tenant_id"
   end
 
@@ -139,20 +141,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_memberships__billing_profiles_on_tenant_id"
     t.index ["user_contract_id"], name: "index_memberships__billing_profiles_on_user_contract_id"
     t.index ["user_id"], name: "index_memberships__billing_profiles_on_user_id"
-  end
-
-  create_table "memberships__group_assignments", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップとグループの中間テーブル", force: :cascade do |t|
-    t.citext "tenant_id", null: false
-    t.uuid "membership_id", null: false
-    t.uuid "membership_group_id", null: false
-    t.integer "position", default: 0, comment: "表示順序"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["membership_group_id"], name: "index_memberships__group_assignments_on_membership_group_id"
-    t.index ["membership_id", "membership_group_id"], name: "idx_memberships__group_assignments_uniq", unique: true
-    t.index ["membership_id", "position"], name: "idx_memberships__group_assignments_membership_position"
-    t.index ["membership_id"], name: "index_memberships__group_assignments_on_membership_id"
-    t.index ["tenant_id"], name: "index_memberships__group_assignments_on_tenant_id"
   end
 
   create_table "memberships__groups", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップグループ（段階的プラン用）", force: :cascade do |t|
@@ -203,6 +191,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "enabled_at", comment: "有効化日時"
     t.datetime "disabled_at", comment: "無効化日時"
     t.integer "trial_period_days", default: 0, null: false, comment: "トライアル期間"
+    t.integer "position", default: 0, null: false, comment: "表示順序"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id"], name: "index_memberships__plans_on_tenant_id"
@@ -655,6 +644,8 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "currency", default: "JPY"
     t.boolean "refunded", default: false
     t.string "refund_reason"
+    t.datetime "current_period_start", comment: "現在の請求期間の開始日時"
+    t.datetime "current_period_end", comment: "現在の請求期間の終了日時"
     t.datetime "trial_end", comment: "トライアル終了日時"
     t.datetime "trial_start", comment: "トライアル開始日時"
     t.string "remote_id"
@@ -817,14 +808,12 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "delivery_addresses", "users", name: "fk_delivery_addresses_users"
   add_foreign_key "email_templates", "tenants", name: "fk_email_templates_tenants"
   add_foreign_key "login_spa_applications", "tenants", name: "fk_login_spa_applications_tenants"
+  add_foreign_key "memberships", "memberships__groups", column: "membership_group_id", name: "fk_memberships_groups"
   add_foreign_key "memberships", "tenants", name: "fk_memberships_tenants"
   add_foreign_key "memberships__billing_profiles", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__billing_profiles_plans"
   add_foreign_key "memberships__billing_profiles", "memberships__user_contracts", column: "user_contract_id", name: "fk_memberships__billing_profiles_user_contracts"
   add_foreign_key "memberships__billing_profiles", "tenants", name: "fk_memberships__billing_profiles_tenants"
   add_foreign_key "memberships__billing_profiles", "users", name: "fk_memberships__billing_profiles_users"
-  add_foreign_key "memberships__group_assignments", "memberships", name: "fk_memberships__group_assignments_memberships"
-  add_foreign_key "memberships__group_assignments", "memberships__groups", column: "membership_group_id", name: "fk_memberships__group_assignments_groups"
-  add_foreign_key "memberships__group_assignments", "tenants", name: "fk_memberships__group_assignments_tenants"
   add_foreign_key "memberships__groups", "tenants", name: "fk_memberships__groups_tenants"
   add_foreign_key "memberships__plan_components", "memberships", name: "fk_memberships__plan_components_memberships"
   add_foreign_key "memberships__plan_components", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__plan_components_plans"

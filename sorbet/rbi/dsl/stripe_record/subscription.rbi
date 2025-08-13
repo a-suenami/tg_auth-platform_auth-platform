@@ -281,6 +281,9 @@ class StripeRecord::Subscription
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
     def build_billing_profile(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
+    def build_current_billing_profile(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SetupIntent) }
     def build_pending_setup_intent(*args, &blk); end
 
@@ -298,6 +301,12 @@ class StripeRecord::Subscription
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
     def create_billing_profile!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
+    def create_current_billing_profile(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
+    def create_current_billing_profile!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SetupIntent) }
     def create_pending_setup_intent(*args, &blk); end
@@ -322,6 +331,12 @@ class StripeRecord::Subscription
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user!(*args, &blk); end
+
+    sig { returns(T.nilable(::Memberships::BillingProfile)) }
+    def current_billing_profile; end
+
+    sig { params(value: T.nilable(::Memberships::BillingProfile)).void }
+    def current_billing_profile=(value); end
 
     sig { returns(T::Array[T.untyped]) }
     def invoice_ids; end
@@ -357,6 +372,9 @@ class StripeRecord::Subscription
 
     sig { returns(T.nilable(::Memberships::BillingProfile)) }
     def reload_billing_profile; end
+
+    sig { returns(T.nilable(::Memberships::BillingProfile)) }
+    def reload_current_billing_profile; end
 
     sig { returns(T.nilable(::StripeRecord::SetupIntent)) }
     def reload_pending_setup_intent; end
@@ -596,10 +614,12 @@ class StripeRecord::Subscription
         trial_end: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         pending_setup_intent_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         trial_start: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        current_period_start: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        current_period_end: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, product_id: nil, price_id: nil, amount: nil, tax: nil, currency: nil, refunded: nil, refund_reason: nil, remote_id: nil, status: nil, created_at: nil, updated_at: nil, trial_end: nil, pending_setup_intent_id: nil, trial_start: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, product_id: nil, price_id: nil, amount: nil, tax: nil, currency: nil, refunded: nil, refund_reason: nil, remote_id: nil, status: nil, created_at: nil, updated_at: nil, trial_end: nil, pending_setup_intent_id: nil, trial_start: nil, current_period_start: nil, current_period_end: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -743,6 +763,116 @@ class StripeRecord::Subscription
 
     sig { void }
     def currency_will_change!; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def current_period_end; end
+
+    sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def current_period_end=(value); end
+
+    sig { returns(T::Boolean) }
+    def current_period_end?; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def current_period_end_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def current_period_end_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def current_period_end_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def current_period_end_change; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def current_period_end_change_to_be_saved; end
+
+    sig do
+      params(
+        from: T.nilable(::ActiveSupport::TimeWithZone),
+        to: T.nilable(::ActiveSupport::TimeWithZone)
+      ).returns(T::Boolean)
+    end
+    def current_period_end_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def current_period_end_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def current_period_end_previous_change; end
+
+    sig do
+      params(
+        from: T.nilable(::ActiveSupport::TimeWithZone),
+        to: T.nilable(::ActiveSupport::TimeWithZone)
+      ).returns(T::Boolean)
+    end
+    def current_period_end_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def current_period_end_previously_was; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def current_period_end_was; end
+
+    sig { void }
+    def current_period_end_will_change!; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def current_period_start; end
+
+    sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def current_period_start=(value); end
+
+    sig { returns(T::Boolean) }
+    def current_period_start?; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def current_period_start_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def current_period_start_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def current_period_start_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def current_period_start_change; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def current_period_start_change_to_be_saved; end
+
+    sig do
+      params(
+        from: T.nilable(::ActiveSupport::TimeWithZone),
+        to: T.nilable(::ActiveSupport::TimeWithZone)
+      ).returns(T::Boolean)
+    end
+    def current_period_start_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def current_period_start_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def current_period_start_previous_change; end
+
+    sig do
+      params(
+        from: T.nilable(::ActiveSupport::TimeWithZone),
+        to: T.nilable(::ActiveSupport::TimeWithZone)
+      ).returns(T::Boolean)
+    end
+    def current_period_start_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def current_period_start_previously_was; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def current_period_start_was; end
+
+    sig { void }
+    def current_period_start_will_change!; end
 
     sig { returns(T.untyped) }
     def id; end
@@ -1114,6 +1244,12 @@ class StripeRecord::Subscription
     def restore_currency!; end
 
     sig { void }
+    def restore_current_period_end!; end
+
+    sig { void }
+    def restore_current_period_start!; end
+
+    sig { void }
     def restore_id!; end
 
     sig { void }
@@ -1181,6 +1317,18 @@ class StripeRecord::Subscription
 
     sig { returns(T::Boolean) }
     def saved_change_to_currency?; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def saved_change_to_current_period_end; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_current_period_end?; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def saved_change_to_current_period_start; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_current_period_start?; end
 
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_id; end
@@ -1719,6 +1867,12 @@ class StripeRecord::Subscription
     def will_save_change_to_currency?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_current_period_end?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_current_period_start?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_id?; end
 
     sig { returns(T::Boolean) }
@@ -1923,10 +2077,12 @@ class StripeRecord::Subscription
         trial_end: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         pending_setup_intent_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         trial_start: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        current_period_start: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        current_period_end: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, product_id: nil, price_id: nil, amount: nil, tax: nil, currency: nil, refunded: nil, refund_reason: nil, remote_id: nil, status: nil, created_at: nil, updated_at: nil, trial_end: nil, pending_setup_intent_id: nil, trial_start: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, product_id: nil, price_id: nil, amount: nil, tax: nil, currency: nil, refunded: nil, refund_reason: nil, remote_id: nil, status: nil, created_at: nil, updated_at: nil, trial_end: nil, pending_setup_intent_id: nil, trial_start: nil, current_period_start: nil, current_period_end: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

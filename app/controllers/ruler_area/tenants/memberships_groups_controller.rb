@@ -47,19 +47,13 @@ class RulerArea::Tenants::MembershipsGroupsController < RulerArea::Tenants::Appl
 
   def update_memberships
     ActiveRecord::Base.transaction do
-      # 新しい紐づけを作成
+      # 指定されたメンバーシップをこのグループに紐づける
       if params[:membership_ids].present?
-        params[:membership_ids].each_with_index do |membership_id, index|
-          @membership_group.group_assignments.create!(
-            membership_id:,
-            tenant_id: @tenant_id,
-            position: index,
-          )
-        end
+        Membership.where(id: params[:membership_ids], tenant_id: @tenant_id).update_all(membership_group_id: @membership_group.id)
       end
 
-      # 現在紐づけられているメンバーシップのうち、id指定がなかったものを削除
-      @membership_group.group_assignments.where.not(membership_id: params[:membership_ids]).destroy_all
+      # 現在このグループに紐づけられているメンバーシップのうち、id指定がなかったものをグループから外す
+      @membership_group.memberships.where.not(id: params[:membership_ids]).update_all(membership_group_id: nil)
     end
 
     redirect_to ruler_area_tenant_memberships_group_path(@tenant, @membership_group), notice: 'メンバーシップの紐づけを更新しました。'

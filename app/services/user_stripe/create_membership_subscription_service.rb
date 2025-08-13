@@ -43,6 +43,9 @@ module UserStripe
         stripe_record_subscription.remote_id = stripe_subscription.id
         stripe_record_subscription.trial_end = stripe_subscription.trial_end
         stripe_record_subscription.trial_start = stripe_subscription.trial_start
+        # 現在の請求期間の開始日時と終了日時を保存
+        stripe_record_subscription.current_period_start = Time.at(stripe_subscription.current_period_start) if  stripe_subscription.current_period_start
+        stripe_record_subscription.current_period_end = Time.at(stripe_subscription.current_period_end) if stripe_subscription.current_period_end
         stripe_record_subscription.save!
 
         # SubscriptionItems を保存
