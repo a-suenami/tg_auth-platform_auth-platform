@@ -1358,6 +1358,24 @@ CREATE TABLE public.stripe_record_subscription_items (
 
 
 --
+-- Name: stripe_record_subscription_schedules; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record_subscription_schedules (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    subscription_id uuid NOT NULL,
+    remote_id character varying NOT NULL,
+    remote_customer character varying,
+    status character varying,
+    phases jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: stripe_record_subscriptions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1895,6 +1913,14 @@ ALTER TABLE ONLY public.stripe_record_setup_intents
 
 ALTER TABLE ONLY public.stripe_record_subscription_items
     ADD CONSTRAINT stripe_record_subscription_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record_subscription_schedules stripe_record_subscription_schedules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_subscription_schedules
+    ADD CONSTRAINT stripe_record_subscription_schedules_pkey PRIMARY KEY (id);
 
 
 --
@@ -2874,6 +2900,27 @@ CREATE INDEX index_stripe_record_subscription_items_on_tenant_id ON public.strip
 
 
 --
+-- Name: index_stripe_record_subscription_schedules_on_subscription_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_subscription_schedules_on_subscription_id ON public.stripe_record_subscription_schedules USING btree (subscription_id);
+
+
+--
+-- Name: index_stripe_record_subscription_schedules_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_subscription_schedules_on_tenant_id ON public.stripe_record_subscription_schedules USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record_subscription_schedules_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_subscription_schedules_on_user_id ON public.stripe_record_subscription_schedules USING btree (user_id);
+
+
+--
 -- Name: index_stripe_record_subscriptions_on_pending_setup_intent_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3593,6 +3640,14 @@ ALTER TABLE ONLY public.stripe_record_subscription_items
 
 ALTER TABLE ONLY public.stripe_record_subscription_items
     ADD CONSTRAINT fk_stripe_record_subscription_items__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record_subscription_schedules fk_stripe_record_subscription_schedules__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_subscription_schedules
+    ADD CONSTRAINT fk_stripe_record_subscription_schedules__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --

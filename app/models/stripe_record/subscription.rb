@@ -20,6 +20,9 @@ class StripeRecord
     has_one :billing_profile, inverse_of: :chargeable, dependent: :nullify, class_name: 'Memberships::BillingProfile'
     # billing_profileの中でもphaseがcurrentのものを取得する
     has_one :current_billing_profile, -> { where(phase: :current) }, class_name: 'Memberships::BillingProfile', inverse_of: :chargeable, dependent: :nullify
+    has_many :subscription_schedules, class_name: 'StripeRecord::SubscriptionSchedule', dependent: :nullify
+    has_one :last_subscription_schedule, -> { order(created_at: :desc) }, class_name: 'StripeRecord::SubscriptionSchedule', dependent: :nullify
+
     scope :active, -> { where(status: :active) }
 
     # 作成から incomplete 23時間以内のもの

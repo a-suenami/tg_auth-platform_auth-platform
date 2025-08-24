@@ -165,6 +165,8 @@ module Memberships
 
 
     def change_plan_immediately(stripe_subscription:, subscription_item:, new_stripe_price:)
+      # TODO: subscription schedule中の契約を即時プラン変更させてはいけない
+      # 現在のsubscriptionのみ即時変更されて、scheduleが残ることになる
       Stripe::Subscription.update(
         stripe_subscription.remote_id,
         {
@@ -180,9 +182,43 @@ module Memberships
     end
 
     def change_plan_schedule(stripe_subscription:, subscription_item:, new_stripe_price:)
-      stripe_subscription_schedule = Stripe::SubscriptionSchedule.create({
-        from_subscription: stripe_subscription.remote_id,
-      }, stripe_api_key_config,)
+      stripe_subscription_schedule = if stripe_subscription.last_subscription_schedule.present?
+        stripe_subscription_schedule = Stripe::SubscriptionSchedule.retrieve(stripe_subscription.last_subscription_schedule.remote_id, stripe_api_key_config)
+        # 終了済みのscheduleが紐づいている場合は新しいものに作り替える
+        if stripe_subscription_schedule.status == 'completed' || stripe_subscription_schedule.status == 'canceled' || stripe_subscription_schedule.status == 'released'
+          stripe_subscription_schedule = Stripe::SubscriptionSchedule.create({
+            from_subscription: stripe_subscription.remote_id,
+          }, stripe_api_key_config,)
+          stripe_subscription.update!(
+            subscription_schedule: stripe_subscription_schedule.id,
+          )
+
+          StripeRecord::SubscriptionSchedule.create(
+            tenant_id: stripe_subscription.tenant_id,
+            user_id: stripe_subscription.user_id,
+            subscription_id: stripe_subscription.id,
+            remote_id: stripe_subscription_schedule.id,
+            status: stripe_subscription_schedule.status,
+            phases: stripe_subscription_schedule.phases,
+          )
+        end
+
+        stripe_subscription_schedule
+      else
+        stripe_subscription_schedule = Stripe::SubscriptionSchedule.create({
+          from_subscription: stripe_subscription.remote_id,
+        }, stripe_api_key_config,)
+        StripeRecord::SubscriptionSchedule.create(
+          tenant_id: stripe_subscription.tenant_id,
+          user_id: stripe_subscription.user_id,
+          subscription_id: stripe_subscription.id,
+          remote_id: stripe_subscription_schedule.id,
+          status: stripe_subscription_schedule.status,
+          phases: stripe_subscription_schedule.phases,
+        )
+
+        stripe_subscription_schedule
+      end
 
       Stripe::SubscriptionSchedule.update(
         stripe_subscription_schedule.id,

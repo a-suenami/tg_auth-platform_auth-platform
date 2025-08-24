@@ -99,6 +99,9 @@ module GeneratedUrlHelpersModule
   def by_group_api_v1_public_memberships_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def cancel_api_v1_internal_memberships_user_contract_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_contact_address_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }

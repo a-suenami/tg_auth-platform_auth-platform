@@ -27,6 +27,7 @@ Rails.application.routes.draw do
             member do
               get :plan_change_preview, to: 'user_contracts/plan_change#preview'
               post :plan_change, to: 'user_contracts/plan_change#create'
+              post :cancel, to: 'user_contracts#cancel'
             end
           end
           namespace :user_contracts do

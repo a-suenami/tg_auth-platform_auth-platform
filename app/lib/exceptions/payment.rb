@@ -16,6 +16,19 @@ module Exceptions
       end
     end
 
+    class AlreadyCanceled < BaseError
+
+      sig { returns(Symbol) }
+      def code
+        :already_canceled
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t('exceptions.payment.already_canceled')
+      end
+    end
+
     class InvalidPlan < BaseError
       sig { returns(Symbol) }
       def code
