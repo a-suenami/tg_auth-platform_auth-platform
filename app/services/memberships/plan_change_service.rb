@@ -5,12 +5,12 @@
 # ==============================================================================
 module Memberships
   class PlanChangeService < Memberships::BaseService
-    def execute(user_contract:, new_membership_plan:)
+    def execute(contract:, new_membership_plan:)
       # プラン変更の検証
-      validate_plan_change(user_contract:, new_membership_plan:)
+      validate_plan_change(contract:, new_membership_plan:)
 
       # 現在のBillingProfileを取得
-      current_billing_profile = user_contract.current_billing_profile
+      current_billing_profile = contract.current_billing_profile
       raise Exceptions::Payment::NoCurrentBillingProfile unless current_billing_profile
 
       # Stripeのsubscriptionを取得
@@ -20,7 +20,7 @@ module Memberships
       ActiveRecord::Base.transaction do
         # 新しいBillingProfileを作成（phase: upcoming）
         new_billing_profile = create_upcoming_billing_profile(
-          user_contract:,
+          contract:,
           new_membership_plan:,
           current_billing_profile:,
         )
@@ -35,20 +35,20 @@ module Memberships
         # 新しいBillingProfileを保存
         new_billing_profile.save!
 
-        user_contract
+        contract
       end
     end
 
     private
 
-    def validate_plan_change(user_contract:, new_membership_plan:)
-      # user_contractが完了済みかチェック
-      unless user_contract.status == 'active'
-        raise Exceptions::Payment::UserContractNotActive
+    def validate_plan_change(contract:, new_membership_plan:)
+      # contractが完了済みかチェック
+      unless contract.status == 'active'
+        raise Exceptions::Payment::ContractNotActive
       end
 
       # 現在のBillingProfileを取得
-      current_billing_profile = user_contract.current_billing_profile
+      current_billing_profile = contract.current_billing_profile
       raise Exceptions::Payment::NoCurrentBillingProfile unless current_billing_profile
 
       # 支払い方法がクレジットカードでサブスクリプション契約かチェック
@@ -114,13 +114,13 @@ module Memberships
       current_membership_plan.validity_period != new_membership_plan.validity_period
     end
 
-    def create_upcoming_billing_profile(user_contract:, new_membership_plan:, current_billing_profile:)
+    def create_upcoming_billing_profile(contract:, new_membership_plan:, current_billing_profile:)
       # 新しいBillingProfileを作成（phase: upcoming）
       new_billing_profile = Memberships::BillingProfile.new(
-        tenant_id: user_contract.tenant_id,
-        user: user_contract.user,
+        tenant_id: contract.tenant_id,
+        user: contract.user,
         membership_plan: new_membership_plan,
-        user_contract:,
+        contract:,
         payment_type: current_billing_profile.payment_type,
         payment_provider: current_billing_profile.payment_provider,
         external_id: current_billing_profile.external_id, # 同じStripe subscriptionを使用

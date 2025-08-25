@@ -35,7 +35,7 @@ module UserStripe
       stripe_api_key_config,
       )
 
-      user_contract = nil
+      contract = nil
 
       ActiveRecord::Base.transaction do
         # IDP 側に Stripe の情報を保存
@@ -54,10 +54,10 @@ module UserStripe
         # PaymentIntent または SetupIntent を保存
         save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
 
-        user_contract = create_user_contract(user:, stripe_record_subscription:, membership_plan:)
+        contract = create_contract(user:, stripe_record_subscription:, membership_plan:)
         create_membership_users(user:, membership_plan:)
       end
-      user_contract
+      contract
     end
 
     private
@@ -126,8 +126,8 @@ module UserStripe
       end
     end
 
-    def create_user_contract(user:, stripe_record_subscription:, membership_plan:)
-      user_contract = Memberships::UserContract.create!(
+    def create_contract(user:, stripe_record_subscription:, membership_plan:)
+      contract = Memberships::Contract.create!(
         user:,
         status: 'pending',
       )
@@ -135,7 +135,7 @@ module UserStripe
       billing_profile = Memberships::BillingProfile.create!(
         user:,
         membership_plan:,
-        user_contract:,
+        contract:,
         payment_type: 'credit_card',
         payment_provider: 'stripe',
         external_id: stripe_record_subscription.remote_id,
@@ -144,7 +144,7 @@ module UserStripe
         recurrence: true,
       )
 
-      user_contract
+      contract
     end
 
     def create_membership_users(user:, membership_plan:)

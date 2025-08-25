@@ -114,15 +114,15 @@ module Exceptions
     end
 
     # より具体的なプラン変更エラークラス
-    class UserContractNotActive < BaseError
+    class ContractNotActive < BaseError
       sig { returns(Symbol) }
       def code
-        :user_contract_not_active
+        :contract_not_active
       end
 
       sig { returns(String) }
       def message
-        I18n.t 'exceptions.payment.user_contract_not_active'
+        I18n.t 'exceptions.payment.contract_not_active'
       end
     end
 

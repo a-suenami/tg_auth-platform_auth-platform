@@ -3,7 +3,7 @@
 # ==============================================================================
 # app - services - user stripe - create service
 # ==============================================================================
-module Memberships::UserContracts
+module Memberships::Contracts
   class CreateService < BaseService
 
     def execute(user:, membership_plan:, payment_method:)
@@ -11,12 +11,12 @@ module Memberships::UserContracts
 
       case payment_method
       when 'credit_card'
-        user_contract = process_credit_card_payment(user:, membership_plan:)
+        contract = process_credit_card_payment(user:, membership_plan:)
       else
         raise Exceptions::Payment::PaymentMethodNotAvailable
       end
 
-      user_contract
+      contract
     end
 
     private

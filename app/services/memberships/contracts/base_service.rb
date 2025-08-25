@@ -3,7 +3,7 @@
 # ==============================================================================
 # app - services - user stripe - base service
 # ==============================================================================
-module Memberships::UserContracts
+module Memberships::Contracts
   class BaseService < ::BaseService
 
     def validate_contractable(user:, membership_plan:, payment_method:)

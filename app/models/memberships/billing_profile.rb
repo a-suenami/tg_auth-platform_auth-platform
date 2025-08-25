@@ -9,7 +9,7 @@ class Memberships::BillingProfile < ApplicationRecord
   belongs_to :tenant
   belongs_to :user
   belongs_to :membership_plan, class_name: 'Memberships::Plan'
-  belongs_to :user_contract, class_name: 'Memberships::UserContract'
+  belongs_to :contract, class_name: 'Memberships::Contract'
   belongs_to :chargeable, polymorphic: true, optional: true
 
   validates :payment_type, presence: true, inclusion: { in: %w[credit_card convenience campaign_code external_linkage] }

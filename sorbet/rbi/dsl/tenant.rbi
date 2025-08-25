@@ -259,6 +259,20 @@ class Tenant
     def membership_billing_profiles=(value); end
 
     sig { returns(T::Array[T.untyped]) }
+    def membership_contract_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def membership_contract_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `Tenant` class because it declared `has_many :membership_contracts`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Memberships::Contract::PrivateCollectionProxy) }
+    def membership_contracts; end
+
+    sig { params(value: T::Enumerable[::Memberships::Contract]).void }
+    def membership_contracts=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
     def membership_group_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
@@ -305,20 +319,6 @@ class Tenant
 
     sig { params(value: T::Enumerable[::Memberships::UserAchievement]).void }
     def membership_user_achievements=(value); end
-
-    sig { returns(T::Array[T.untyped]) }
-    def membership_user_contract_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def membership_user_contract_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `Tenant` class because it declared `has_many :membership_user_contracts`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::UserContract::PrivateCollectionProxy) }
-    def membership_user_contracts; end
-
-    sig { params(value: T::Enumerable[::Memberships::UserContract]).void }
-    def membership_user_contracts=(value); end
 
     # This method is created by ActiveRecord on the `Tenant` class because it declared `has_many :memberships`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)

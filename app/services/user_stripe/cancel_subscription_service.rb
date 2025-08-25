@@ -5,14 +5,14 @@
 # ==============================================================================
 module UserStripe
   class CancelSubscriptionService < UserStripe::BaseService
-    def execute(user_contract:)
+    def execute(contract:)
       # すでに停止済みの場合はエラーを返す
-      if user_contract.cancel_at_period_end
+      if contract.cancel_at_period_end
         raise Exceptions::Payment::AlreadyCanceled, 'すでに停止済みです'
       end
 
       # 現在のBillingProfileを取得
-      current_billing_profile = user_contract.current_billing_profile
+      current_billing_profile = contract.current_billing_profile
       raise Exceptions::Payment::NoCurrentBillingProfile unless current_billing_profile
 
       # Stripeのsubscriptionを取得
@@ -47,12 +47,12 @@ module UserStripe
 
 
 
-        # UserContractのcancel_at_period_endフラグを更新
-        user_contract.update!(
+        # Contractのcancel_at_period_endフラグを更新
+        contract.update!(
           cancel_at_period_end: true,
         )
 
-        p user_contract
+        p contract
 
         # StripeRecord::Subscriptionのステータスを更新
         stripe_subscription.update!(
@@ -62,7 +62,7 @@ module UserStripe
         p stripe_subscription
 
       end
-      user_contract
+      contract
     rescue Stripe::StripeError => e
       p 'Stripe::StripeError'
       p e

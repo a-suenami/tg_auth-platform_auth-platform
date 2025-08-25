@@ -256,14 +256,29 @@ class Membership
   end
 
   module GeneratedAssociationMethods
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Group) }
+    def build_membership_group(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Group) }
+    def create_membership_group(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Group) }
+    def create_membership_group!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant!(*args, &blk); end
+
+    sig { returns(T.nilable(::Memberships::Group)) }
+    def membership_group; end
+
+    sig { params(value: T.nilable(::Memberships::Group)).void }
+    def membership_group=(value); end
 
     sig { returns(T::Array[T.untyped]) }
     def membership_plan_ids; end
@@ -306,6 +321,9 @@ class Membership
 
     sig { params(value: T::Enumerable[::Memberships::PlanComponent]).void }
     def plan_components=(value); end
+
+    sig { returns(T.nilable(::Memberships::Group)) }
+    def reload_membership_group; end
 
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end

@@ -57,7 +57,7 @@ module WebhookArea
     def handle_invoice_payment_succeeded(event)
       Rails.logger.info "Processing invoice.payment_succeeded: #{event.data.object.id}"
       # TODO: 実装
-      # - 関連するUserContractのステータスを更新
+      # - 関連するContractのステータスを更新
       # - メンバーシップの有効期限を延長
       # - 必要に応じてメール通知
     end
@@ -65,7 +65,7 @@ module WebhookArea
     def handle_invoice_payment_failed(event)
       Rails.logger.info "Processing invoice.payment_failed: #{event.data.object.id}"
       # TODO: 実装
-      # - 関連するUserContractのステータスを更新
+      # - 関連するContractのステータスを更新
       # - 決済失敗の通知
       # - 再試行の設定
     end
@@ -74,21 +74,21 @@ module WebhookArea
       Rails.logger.info "Processing customer.subscription.created: #{event.data.object.id}"
       # TODO: 実装
       # - StripeRecord::Subscriptionの作成/更新
-      # - 関連するUserContractの初期化
+      # - 関連するContractの初期化
     end
 
     def handle_customer_subscription_updated(event)
       Rails.logger.info "Processing customer.subscription.updated: #{event.data.object.id}"
       # TODO: 実装
       # - StripeRecord::Subscriptionの更新
-      # - 関連するUserContractの更新
+      # - 関連するContractの更新
     end
 
     def handle_customer_subscription_deleted(event)
       Rails.logger.info "Processing customer.subscription.deleted: #{event.data.object.id}"
       # TODO: 実装
       # - StripeRecord::Subscriptionのステータス更新
-      # - 関連するUserContractのキャンセル処理
+      # - 関連するContractのキャンセル処理
     end
 
     def handle_payment_intent_succeeded(event)

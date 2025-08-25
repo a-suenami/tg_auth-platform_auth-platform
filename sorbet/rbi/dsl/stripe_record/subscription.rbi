@@ -284,6 +284,9 @@ class StripeRecord::Subscription
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
     def build_current_billing_profile(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SubscriptionSchedule) }
+    def build_last_subscription_schedule(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SetupIntent) }
     def build_pending_setup_intent(*args, &blk); end
 
@@ -307,6 +310,12 @@ class StripeRecord::Subscription
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
     def create_current_billing_profile!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SubscriptionSchedule) }
+    def create_last_subscription_schedule(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SubscriptionSchedule) }
+    def create_last_subscription_schedule!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SetupIntent) }
     def create_pending_setup_intent(*args, &blk); end
@@ -352,6 +361,12 @@ class StripeRecord::Subscription
     sig { params(value: T::Enumerable[::StripeRecord::Invoice]).void }
     def invoices=(value); end
 
+    sig { returns(T.nilable(::StripeRecord::SubscriptionSchedule)) }
+    def last_subscription_schedule; end
+
+    sig { params(value: T.nilable(::StripeRecord::SubscriptionSchedule)).void }
+    def last_subscription_schedule=(value); end
+
     sig { returns(T.nilable(::StripeRecord::SetupIntent)) }
     def pending_setup_intent; end
 
@@ -375,6 +390,9 @@ class StripeRecord::Subscription
 
     sig { returns(T.nilable(::Memberships::BillingProfile)) }
     def reload_current_billing_profile; end
+
+    sig { returns(T.nilable(::StripeRecord::SubscriptionSchedule)) }
+    def reload_last_subscription_schedule; end
 
     sig { returns(T.nilable(::StripeRecord::SetupIntent)) }
     def reload_pending_setup_intent; end
@@ -401,6 +419,20 @@ class StripeRecord::Subscription
 
     sig { params(value: T::Enumerable[::StripeRecord::SubscriptionItem]).void }
     def subscription_items=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def subscription_schedule_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def subscription_schedule_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `StripeRecord::Subscription` class because it declared `has_many :subscription_schedules`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::StripeRecord::SubscriptionSchedule::PrivateCollectionProxy) }
+    def subscription_schedules; end
+
+    sig { params(value: T::Enumerable[::StripeRecord::SubscriptionSchedule]).void }
+    def subscription_schedules=(value); end
 
     sig { returns(T.nilable(::User)) }
     def user; end

@@ -217,7 +217,7 @@ CREATE TABLE public.memberships__billing_profiles (
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
     membership_plan_id uuid NOT NULL,
-    user_contract_id uuid NOT NULL,
+    contract_id uuid NOT NULL,
     payment_type character varying NOT NULL,
     payment_provider character varying,
     external_id character varying,
@@ -242,10 +242,10 @@ COMMENT ON TABLE public.memberships__billing_profiles IS 'メンバーシップ�
 
 
 --
--- Name: COLUMN memberships__billing_profiles.user_contract_id; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN memberships__billing_profiles.contract_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.memberships__billing_profiles.user_contract_id IS 'メンバーシップ契約ID';
+COMMENT ON COLUMN public.memberships__billing_profiles.contract_id IS 'メンバーシップ契約ID';
 
 
 --
@@ -316,6 +316,50 @@ COMMENT ON COLUMN public.memberships__billing_profiles.revision IS 'バージョ
 --
 
 COMMENT ON COLUMN public.memberships__billing_profiles.chargeable_id IS '決済情報';
+
+
+--
+-- Name: memberships__contracts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships__contracts (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    expires_at timestamp(6) without time zone,
+    cancel_at_period_end boolean DEFAULT false,
+    status character varying DEFAULT 'active'::character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE memberships__contracts; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.memberships__contracts IS 'ユーザーのメンバーシップ契約';
+
+
+--
+-- Name: COLUMN memberships__contracts.expires_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__contracts.expires_at IS '有効期限';
+
+
+--
+-- Name: COLUMN memberships__contracts.cancel_at_period_end; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__contracts.cancel_at_period_end IS '次回更新時に解約フラグ';
+
+
+--
+-- Name: COLUMN memberships__contracts.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__contracts.status IS 'ステータス';
 
 
 --
@@ -616,50 +660,6 @@ COMMENT ON COLUMN public.memberships__user_achievements.achievement_type IS 'ア
 --
 
 COMMENT ON COLUMN public.memberships__user_achievements.achievement_data IS 'アチーブメント詳細データ';
-
-
---
--- Name: memberships__user_contracts; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.memberships__user_contracts (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    user_id uuid NOT NULL,
-    expires_at timestamp(6) without time zone,
-    cancel_at_period_end boolean DEFAULT false,
-    status character varying DEFAULT 'active'::character varying NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE memberships__user_contracts; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.memberships__user_contracts IS 'ユーザーのメンバーシップ契約';
-
-
---
--- Name: COLUMN memberships__user_contracts.expires_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__user_contracts.expires_at IS '有効期限';
-
-
---
--- Name: COLUMN memberships__user_contracts.cancel_at_period_end; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__user_contracts.cancel_at_period_end IS '次回更新時に解約フラグ';
-
-
---
--- Name: COLUMN memberships__user_contracts.status; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__user_contracts.status IS 'ステータス';
 
 
 --
@@ -1700,6 +1700,14 @@ ALTER TABLE ONLY public.memberships__billing_profiles
 
 
 --
+-- Name: memberships__contracts memberships__contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__contracts
+    ADD CONSTRAINT memberships__contracts_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: memberships__groups memberships__groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1745,14 +1753,6 @@ ALTER TABLE ONLY public.memberships__trial_histories
 
 ALTER TABLE ONLY public.memberships__user_achievements
     ADD CONSTRAINT memberships__user_achievements_pkey PRIMARY KEY (id);
-
-
---
--- Name: memberships__user_contracts memberships__user_contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__user_contracts
-    ADD CONSTRAINT memberships__user_contracts_pkey PRIMARY KEY (id);
 
 
 --
@@ -2060,6 +2060,20 @@ CREATE INDEX idx_memberships__billing_profiles_tenant_user ON public.memberships
 
 
 --
+-- Name: idx_memberships__contracts_expires_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_memberships__contracts_expires_at ON public.memberships__contracts USING btree (expires_at);
+
+
+--
+-- Name: idx_memberships__contracts_tenant_user; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_memberships__contracts_tenant_user ON public.memberships__contracts USING btree (tenant_id, user_id);
+
+
+--
 -- Name: idx_memberships__groups_tenant_id_name_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2106,20 +2120,6 @@ CREATE INDEX idx_memberships__user_achievements_date ON public.memberships__user
 --
 
 CREATE INDEX idx_memberships__user_achievements_tenant_user_membership_date ON public.memberships__user_achievements USING btree (tenant_id, user_id, membership_id, date);
-
-
---
--- Name: idx_memberships__user_contracts_expires_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_memberships__user_contracts_expires_at ON public.memberships__user_contracts USING btree (expires_at);
-
-
---
--- Name: idx_memberships__user_contracts_tenant_user; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_memberships__user_contracts_tenant_user ON public.memberships__user_contracts USING btree (tenant_id, user_id);
 
 
 --
@@ -2333,6 +2333,13 @@ CREATE UNIQUE INDEX index_login_spa_applications_on_uid ON public.login_spa_appl
 
 
 --
+-- Name: index_memberships__billing_profiles_on_contract_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__billing_profiles_on_contract_id ON public.memberships__billing_profiles USING btree (contract_id);
+
+
+--
 -- Name: index_memberships__billing_profiles_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2347,17 +2354,24 @@ CREATE INDEX index_memberships__billing_profiles_on_tenant_id ON public.membersh
 
 
 --
--- Name: index_memberships__billing_profiles_on_user_contract_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__billing_profiles_on_user_contract_id ON public.memberships__billing_profiles USING btree (user_contract_id);
-
-
---
 -- Name: index_memberships__billing_profiles_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_memberships__billing_profiles_on_user_id ON public.memberships__billing_profiles USING btree (user_id);
+
+
+--
+-- Name: index_memberships__contracts_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__contracts_on_tenant_id ON public.memberships__contracts USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__contracts_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__contracts_on_user_id ON public.memberships__contracts USING btree (user_id);
 
 
 --
@@ -2463,20 +2477,6 @@ CREATE INDEX index_memberships__user_achievements_on_tenant_id ON public.members
 --
 
 CREATE INDEX index_memberships__user_achievements_on_user_id ON public.memberships__user_achievements USING btree (user_id);
-
-
---
--- Name: index_memberships__user_contracts_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__user_contracts_on_tenant_id ON public.memberships__user_contracts USING btree (tenant_id);
-
-
---
--- Name: index_memberships__user_contracts_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__user_contracts_on_user_id ON public.memberships__user_contracts USING btree (user_id);
 
 
 --
@@ -3139,6 +3139,14 @@ ALTER TABLE ONLY public.login_spa_applications
 
 
 --
+-- Name: memberships__billing_profiles fk_memberships__billing_profiles_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__billing_profiles
+    ADD CONSTRAINT fk_memberships__billing_profiles_contracts FOREIGN KEY (contract_id) REFERENCES public.memberships__contracts(id);
+
+
+--
 -- Name: memberships__billing_profiles fk_memberships__billing_profiles_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3155,19 +3163,27 @@ ALTER TABLE ONLY public.memberships__billing_profiles
 
 
 --
--- Name: memberships__billing_profiles fk_memberships__billing_profiles_user_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__billing_profiles
-    ADD CONSTRAINT fk_memberships__billing_profiles_user_contracts FOREIGN KEY (user_contract_id) REFERENCES public.memberships__user_contracts(id);
-
-
---
 -- Name: memberships__billing_profiles fk_memberships__billing_profiles_users; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.memberships__billing_profiles
     ADD CONSTRAINT fk_memberships__billing_profiles_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: memberships__contracts fk_memberships__contracts_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__contracts
+    ADD CONSTRAINT fk_memberships__contracts_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: memberships__contracts fk_memberships__contracts_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__contracts
+    ADD CONSTRAINT fk_memberships__contracts_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -3264,22 +3280,6 @@ ALTER TABLE ONLY public.memberships__user_achievements
 
 ALTER TABLE ONLY public.memberships__user_achievements
     ADD CONSTRAINT fk_memberships__user_achievements_users FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
--- Name: memberships__user_contracts fk_memberships__user_contracts_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__user_contracts
-    ADD CONSTRAINT fk_memberships__user_contracts_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: memberships__user_contracts fk_memberships__user_contracts_users; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__user_contracts
-    ADD CONSTRAINT fk_memberships__user_contracts_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --

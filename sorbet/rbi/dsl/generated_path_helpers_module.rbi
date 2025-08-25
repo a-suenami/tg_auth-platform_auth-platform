@@ -78,13 +78,31 @@ module GeneratedPathHelpersModule
   def api_v1_internal_me_profile_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_v1_internal_memberships_user_contracts_credit_card_payments_path(*args); end
+  def api_v1_internal_memberships_contract_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_internal_memberships_contracts_credit_card_payments_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_internal_memberships_contracts_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def api_v1_private_userinfo_index_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def api_v1_public_membership_group_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_public_membership_groups_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def api_v1_public_membership_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_public_membership_plan_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def api_v1_public_membership_plans_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def api_v1_public_memberships_path(*args); end
@@ -99,7 +117,7 @@ module GeneratedPathHelpersModule
   def by_group_api_v1_public_memberships_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def cancel_api_v1_internal_memberships_user_contract_path(*args); end
+  def cancel_api_v1_internal_memberships_contract_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_contact_address_path(*args); end
@@ -228,10 +246,13 @@ module GeneratedPathHelpersModule
   def oauth_userinfo_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def plan_change_api_v1_internal_memberships_user_contract_path(*args); end
+  def plan_change_api_v1_internal_memberships_contract_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def plan_change_preview_api_v1_internal_memberships_user_contract_path(*args); end
+  def plan_change_preview_api_v1_internal_memberships_contract_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def polling_api_v1_internal_memberships_contract_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def preview_ruler_area_tenant_stripe_records_products_path(*args); end

@@ -23,15 +23,15 @@ Rails.application.routes.draw do
         end
 
         namespace :memberships do
-          resources :user_contracts, only: [:index, :show] do
+          resources :contracts, only: [:index, :show] do
             member do
-              get :polling, to: 'user_contracts#polling'
-              get :plan_change_preview, to: 'user_contracts/plan_change#preview'
-              post :plan_change, to: 'user_contracts/plan_change#create'
-              post :cancel, to: 'user_contracts#cancel'
+              get :polling, to: 'contracts#polling'
+              get :plan_change_preview, to: 'contracts/plan_change#preview'
+              post :plan_change, to: 'contracts/plan_change#create'
+              post :cancel, to: 'contracts#cancel'
             end
           end
-          namespace :user_contracts do
+          namespace :contracts do
             resources :credit_card_payments, only: [:create]
           end
         end

@@ -46,22 +46,22 @@ module UserStripe
         metadata: payment_intent.metadata&.to_h,
       )
 
-      # 関連するUserContractを取得（invoiceを通じて）
-      user_contract = stripe_record_payment_intent.invoice&.chargeable&.current_billing_profile&.user_contract
-      return unless user_contract
+      # 関連するContractを取得（invoiceを通じて）
+      contract = stripe_record_payment_intent.invoice&.chargeable&.current_billing_profile&.contract
+      return unless contract
 
       invoice = stripe_record_payment_intent.invoice
       stripe_record_subscription = invoice&.chargeable
       # 関連するStripeRecordを更新
       update_stripe_record_payment_intent(stripe_record_payment_intent)
       # 契約完了処理
-      complete_user_contract(user_contract, stripe_record_subscription)
+      complete_contract(contract, stripe_record_subscription)
     end
 
-    def complete_user_contract(user_contract, stripe_record_subscription)
+    def complete_contract(contract, stripe_record_subscription)
       ActiveRecord::Base.transaction do
-        # UserContractのステータスをアクティブに変更
-        user_contract.update!(
+        # Contractのステータスをアクティブに変更
+        contract.update!(
           status: 'active',
         )
 
@@ -72,23 +72,23 @@ module UserStripe
         # プラン内容に従って有効期限を設定
         if plan.recurrence
           # 定期契約の場合
-          user_contract.update!(
+          contract.update!(
             expires_at: calculate_recurring_expiry_date(Time.zone.now, plan),
           )
         else
           # 一回払いの場合
-          user_contract.update!(
+          contract.update!(
             expires_at: calculate_recurring_expiry_date(Time.zone.now, plan),
           )
         end
 
         # Memberships::Userのステータスを有効に変更
-        update_membership_user(user_contract)
+        update_membership_user(contract)
         # トライアル履歴を作成
         if stripe_record_subscription.trial_start.present?
-          create_trial_history(user_contract:, stripe_record_subscription:)
+          create_trial_history(contract:, stripe_record_subscription:)
         end
-        Rails.logger.info "User contract #{user_contract.id} completed successfully"
+        Rails.logger.info "User contract #{contract.id} completed successfully"
       end
     rescue => e
       Rails.logger.error "Failed to complete user contract: #{e.message}"
@@ -97,17 +97,17 @@ module UserStripe
     end
 
 
-    def create_trial_history(user_contract:, stripe_record_subscription:)
-      membership_plan = user_contract.current_billing_profile.membership_plan
+    def create_trial_history(contract:, stripe_record_subscription:)
+      membership_plan = contract.current_billing_profile.membership_plan
       memberships = membership_plan.memberships
       memberships.each do |membership|
         Memberships::TrialHistory.create!(
-          tenant_id: user_contract.tenant_id,
-          user: user_contract.user,
+          tenant_id: contract.tenant_id,
+          user: contract.user,
           membership:,
           membership_plan:,
           stripe_record_subscription:,
-          fingerprint: get_card_fingerprint(fetch_default_payment_method_or_default_source_of(user_contract.user)),
+          fingerprint: get_card_fingerprint(fetch_default_payment_method_or_default_source_of(contract.user)),
           trial_period_days: membership_plan.trial_period_days,
           trial_start: stripe_record_subscription.trial_start,
           trial_end: stripe_record_subscription.trial_end,
@@ -203,10 +203,10 @@ module UserStripe
       stripe_record_subscription = stripe_record_setup_intent.subscription
       return unless stripe_record_subscription
 
-      user_contract = stripe_record_subscription.current_billing_profile.user_contract
-      return unless user_contract
+      contract = stripe_record_subscription.current_billing_profile.contract
+      return unless contract
 
-      complete_user_contract(user_contract, stripe_record_subscription)
+      complete_contract(contract, stripe_record_subscription)
     end
 
     def handle_setup_intent_setup_failed
@@ -214,13 +214,13 @@ module UserStripe
       # TODO: 実装
     end
 
-    def update_membership_user(user_contract)
-      membership_plan = user_contract.current_billing_profile.membership_plan
+    def update_membership_user(contract)
+      membership_plan = contract.current_billing_profile.membership_plan
       memberships = membership_plan.memberships
       memberships.each do |membership|
         membership_user = Memberships::User.find_or_create_by!(
-          tenant_id: user_contract.tenant_id,
-          user: user_contract.user,
+          tenant_id: contract.tenant_id,
+          user: contract.user,
           membership:,
         )
         # TODO: トライアルの場合、トライアル期限までに設定

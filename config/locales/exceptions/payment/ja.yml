@@ -9,7 +9,7 @@ ja:
       unauthorized_plan: 'このプランは選択できません'
       plan_change_error: 'プラン変更中にエラーが発生しました'
       invalid_plan_change: 'プラン変更ができません'
-      user_contract_not_active: 'ユーザー契約が完了していません'
+      contract_not_active: 'ユーザー契約が完了していません'
       non_recurring_subscription: 'プラン変更はクレジットカードのサブスクリプション契約のみ可能です'
       different_membership_plan: '異なるメンバーシップのプランには変更できません'
       unchangeable_plan: '指定されたプランには変更できません'
