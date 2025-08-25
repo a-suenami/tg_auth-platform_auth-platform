@@ -25,7 +25,7 @@ module UserStripe
         payment_behavior: 'default_incomplete',
       }
 
-      if membership_plan.trial_period_days > 0 && check_trial_availability(user:, membership_plan:)
+      if membership_plan.trial_period_days.positive? && check_trial_availability(user:, membership_plan:)
         stripe_subscription_params[:trial_period_days] = membership_plan.trial_period_days
       end
 
@@ -44,8 +44,8 @@ module UserStripe
         stripe_record_subscription.trial_end = stripe_subscription.trial_end
         stripe_record_subscription.trial_start = stripe_subscription.trial_start
         # 現在の請求期間の開始日時と終了日時を保存
-        stripe_record_subscription.current_period_start = Time.at(stripe_subscription.current_period_start) if  stripe_subscription.current_period_start
-        stripe_record_subscription.current_period_end = Time.at(stripe_subscription.current_period_end) if stripe_subscription.current_period_end
+        stripe_record_subscription.current_period_start = Time.zone.at(stripe_subscription.current_period_start) if  stripe_subscription.current_period_start
+        stripe_record_subscription.current_period_end = Time.zone.at(stripe_subscription.current_period_end) if stripe_subscription.current_period_end
         stripe_record_subscription.save!
 
         # SubscriptionItems を保存
@@ -132,7 +132,7 @@ module UserStripe
         status: 'pending',
       )
       # billing_profiles作成
-      billing_profile = Memberships::BillingProfile.create!(
+      Memberships::BillingProfile.create!(
         user:,
         membership_plan:,
         contract:,

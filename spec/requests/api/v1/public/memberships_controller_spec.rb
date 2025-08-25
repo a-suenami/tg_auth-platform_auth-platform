@@ -3,7 +3,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'API::V1::Public::MembershipsController', type: :request do
+RSpec.describe 'API::V1::Public::MembershipsController' do
   let(:tenant) { create(:tenant) }
   let(:membership) { create(:membership, tenant:) }
   let(:membership_group) { create(:memberships_group, tenant:) }
@@ -21,7 +21,7 @@ RSpec.describe 'API::V1::Public::MembershipsController', type: :request do
       get '/api/v1/public/memberships'
 
       expect(response).to have_http_status(:ok)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json).to be_an(Array)
       expect(json.first).to include(
@@ -37,7 +37,7 @@ RSpec.describe 'API::V1::Public::MembershipsController', type: :request do
       get "/api/v1/public/memberships/#{membership.id}"
 
       expect(response).to have_http_status(:ok)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json).to include(
         'id' => membership.id,
@@ -60,7 +60,7 @@ RSpec.describe 'API::V1::Public::MembershipsController', type: :request do
       get "/api/v1/public/memberships/by_group?group_id=#{membership_group.id}"
 
       expect(response).to have_http_status(:ok)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
 
       expect(json).to be_an(Array)
       expect(json.first).to include(

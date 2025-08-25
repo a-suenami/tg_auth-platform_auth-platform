@@ -21,7 +21,7 @@ class StripeRecord
     # billing_profileの中でもphaseがcurrentのものを取得する
     has_one :current_billing_profile, -> { where(phase: :current) }, class_name: 'Memberships::BillingProfile', inverse_of: :chargeable, dependent: :nullify
     has_many :subscription_schedules, class_name: 'StripeRecord::SubscriptionSchedule', dependent: :nullify
-    has_one :last_subscription_schedule, -> { order(created_at: :desc) }, class_name: 'StripeRecord::SubscriptionSchedule', dependent: :nullify
+    has_one :last_subscription_schedule, -> { order(created_at: :desc) }, class_name: 'StripeRecord::SubscriptionSchedule', dependent: :nullify, inverse_of: :subscription
 
     scope :active, -> { where(status: :active) }
 

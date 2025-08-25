@@ -106,7 +106,7 @@ module Memberships
       current_tiers = current_membership_plan.memberships.where(membership_group_id: common_groups).pluck(:tier)
       new_tiers = new_membership_plan.memberships.where(membership_group_id: common_groups).pluck(:tier)
 
-      (current_tiers & new_tiers).empty?
+      !current_tiers.intersect?(new_tiers)
     end
 
     def different_billing_cycle?(current_membership_plan:, new_membership_plan:)
@@ -203,7 +203,6 @@ module Memberships
           )
         end
 
-        stripe_subscription_schedule
       else
         stripe_subscription_schedule = Stripe::SubscriptionSchedule.create({
           from_subscription: stripe_subscription.remote_id,
@@ -217,7 +216,6 @@ module Memberships
           phases: stripe_subscription_schedule.phases,
         )
 
-        stripe_subscription_schedule
       end
 
       Stripe::SubscriptionSchedule.update(

@@ -14,7 +14,6 @@ module API::V1::Internal::Memberships::Contracts
     rescue ActiveRecord::RecordNotFound
       render json: { error: '指定されたメンバーシッププランが見つかりません' }, status: :not_found
     rescue => e
-      Rails.logger.error "Membership contract creation failed: #{e.message}"
       render json: { error: 'メンバーシップ契約の作成に失敗しました' }, status: :internal_server_error
     end
   end

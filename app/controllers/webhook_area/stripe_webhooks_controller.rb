@@ -13,8 +13,9 @@ module WebhookArea
 
       head :ok
     rescue => e
-      Rails.logger.error "Stripe webhook error: #{e.message}"
-      Rails.logger.error e.backtrace.join("\n")
+      Sentry.capture_exception(e, extra: {
+        event: @event,
+      },)
       head :unprocessable_entity
     end
 
@@ -29,7 +30,6 @@ module WebhookArea
       endpoint_secret = tenant_stripe_account&.webhook_secret
 
       unless endpoint_secret
-        Rails.logger.error 'No webhook secret found for tenant'
         head :bad_request
         return
       end
@@ -37,11 +37,9 @@ module WebhookArea
       begin
         event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
       rescue JSON::ParserError => e
-        Rails.logger.error "Invalid payload: #{e.message}"
         head :bad_request
         return
       rescue Stripe::SignatureVerificationError => e
-        Rails.logger.error "Invalid signature: #{e.message}"
         head :bad_request
         return
       end

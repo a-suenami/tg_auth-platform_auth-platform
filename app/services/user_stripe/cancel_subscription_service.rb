@@ -41,39 +41,18 @@ module UserStripe
           stripe_api_key_config,
         )
 
-        p 'stripe_subscription_remote'
-
-        p stripe_subscription_remote
-
-
-
         # Contractのcancel_at_period_endフラグを更新
         contract.update!(
           cancel_at_period_end: true,
         )
-
-        p contract
 
         # StripeRecord::Subscriptionのステータスを更新
         stripe_subscription.update!(
           status: stripe_subscription_remote.status,
         )
 
-        p stripe_subscription
-
       end
       contract
-    rescue Stripe::StripeError => e
-      p 'Stripe::StripeError'
-      p e
-
-      raise e
-      # Stripeエラーの場合
-    rescue => e
-      p 'その他のエラー'
-      p e
-
-      raise e
     end
   end
 end
