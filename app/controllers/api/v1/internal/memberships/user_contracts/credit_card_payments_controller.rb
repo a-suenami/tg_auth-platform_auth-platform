@@ -10,7 +10,7 @@ module API::V1::Internal::Memberships::UserContracts
       # TODO: もしクレカ会社が3DSに対応しておらず、即時決済完了になったら、3DSをスキップして、決済完了とする
 
       # UserContractをBlueprintでシリアライズ
-      render json: Memberships::UserContractBlueprint.render(user_contract), status: :created
+      render json: Memberships::UserContractBlueprint.render(user_contract, view: :normal), status: :created
     rescue ActiveRecord::RecordNotFound
       render json: { error: '指定されたメンバーシッププランが見つかりません' }, status: :not_found
     rescue => e

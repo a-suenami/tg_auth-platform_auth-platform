@@ -10,6 +10,10 @@ Rails.application.routes.draw do
             get :by_group
           end
         end
+
+        resources :membership_plans, only: [:index, :show]
+
+        resources :membership_groups, only: [:index, :show]
       end
     end
   end

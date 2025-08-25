@@ -23,8 +23,9 @@ Rails.application.routes.draw do
         end
 
         namespace :memberships do
-          resources :user_contracts, only: [] do
+          resources :user_contracts, only: [:index, :show] do
             member do
+              get :polling, to: 'user_contracts#polling'
               get :plan_change_preview, to: 'user_contracts/plan_change#preview'
               post :plan_change, to: 'user_contracts/plan_change#create'
               post :cancel, to: 'user_contracts#cancel'

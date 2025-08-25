@@ -4,7 +4,11 @@
 class MembershipPlanBlueprint < Blueprinter::Base
   identifier :id
 
-  fields :recurrence, :validity_period, :amount
+  fields :name, :recurrence, :validity_period, :amount, :is_active, :enabled_at, :disabled_at, :trial_period_days, :position, :created_at, :updated_at
 
-  association :plan_payment_methods, blueprint: MembershipPlanPaymentMethodBlueprint
+  view :normal do
+    association :plan_payment_methods, blueprint: MembershipPlanPaymentMethodBlueprint
+
+    association :memberships, blueprint: MembershipBlueprint
+  end
 end

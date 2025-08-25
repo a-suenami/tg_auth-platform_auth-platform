@@ -3,6 +3,28 @@
 
 module API::V1::Internal::Memberships
   class UserContractsController < API::V1::Internal::Memberships::ApplicationController
+    def index
+      user_contracts = current_user.membership_user_contracts
+                                   .includes(:billing_profiles)
+                                   .order(created_at: :desc)
+
+      render_blueprint_collection(Memberships::UserContractBlueprint, user_contracts, view: :normal)
+    end
+
+    def show
+      user_contract = current_user.membership_user_contracts
+                                 .includes(:billing_profiles)
+                                 .find(params[:id])
+
+      render_blueprint(Memberships::UserContractBlueprint, user_contract, view: :normal)
+    end
+
+    def polling
+      user_contract = current_user.membership_user_contracts.find(params[:id])
+
+      render_blueprint(Memberships::UserContractBlueprint, user_contract, view: :normal)
+    end
+
     # メンバーシップの自動更新のキャンセル（次回から)
     def cancel
       user_contract = current_user.membership_user_contracts.find(params[:id])
@@ -14,7 +36,7 @@ module API::V1::Internal::Memberships
 
       user_contract = UserStripe::CancelSubscriptionService.new.execute(user_contract:)
 
-      render json: Memberships::UserContractBlueprint.render(user_contract), status: :updated
+      render_blueprint(Memberships::UserContractBlueprint, user_contract, view: :normal)
     end
   end
 end

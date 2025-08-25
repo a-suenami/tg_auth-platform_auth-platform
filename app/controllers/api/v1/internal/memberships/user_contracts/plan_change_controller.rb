@@ -6,6 +6,7 @@ module API::V1::Internal::Memberships::UserContracts
 
     before_action :set_user_contract
 
+    # TODO: 料金の確認
     def preview
       # プラン変更のプレビュー情報を返す
       new_membership_plan = Memberships::Plan.find(plan_change_params[:memberships_plan_id])

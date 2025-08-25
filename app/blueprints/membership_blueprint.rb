@@ -6,6 +6,8 @@ class MembershipBlueprint < Blueprinter::Base
 
   fields :name, :display_name, :position, :tier
 
-  association :membership_group, blueprint: MembershipGroupBlueprint
-  association :membership_plans, blueprint: MembershipPlanBlueprint
+  view :normal do
+    association :membership_group, blueprint: MembershipGroupBlueprint
+    association :membership_plans, blueprint: MembershipPlanBlueprint
+  end
 end
