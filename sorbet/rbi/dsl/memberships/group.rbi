@@ -281,6 +281,20 @@ class Memberships::Group
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant!(*args, &blk); end
 
+    sig { returns(T::Array[T.untyped]) }
+    def membership_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def membership_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `Memberships::Group` class because it declared `has_many :memberships`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Membership::PrivateCollectionProxy) }
+    def memberships; end
+
+    sig { params(value: T::Enumerable[::Membership]).void }
+    def memberships=(value); end
+
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
 

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # Blueprinter configuration
-# rubocop:disable Lint/EmptyBlock
 Blueprinter.configure do |config|
+  config.datetime_format = ->(datetime) { datetime.nil? ? datetime : datetime.iso8601 }
 end
-# rubocop:enable Lint/EmptyBlock

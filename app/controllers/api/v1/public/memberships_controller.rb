@@ -28,13 +28,5 @@ module API::V1::Public
 
       render_blueprint(MembershipBlueprint, membership, view: :normal)
     end
-
-    def by_group
-      group = Memberships::Group.find(params[:group_id])
-      memberships = group.memberships.includes(:membership_group, membership_plans: :plan_payment_methods)
-                        .order(:position)
-
-      render_blueprint_collection(MembershipBlueprint, memberships, view: :normal)
-    end
   end
 end

@@ -292,6 +292,9 @@ class Memberships::Contract
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
+    def build_upcoming_billing_profile(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
 
@@ -306,6 +309,12 @@ class Memberships::Contract
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
+    def create_upcoming_billing_profile(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
+    def create_upcoming_billing_profile!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user(*args, &blk); end
@@ -325,6 +334,9 @@ class Memberships::Contract
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
 
+    sig { returns(T.nilable(::Memberships::BillingProfile)) }
+    def reload_upcoming_billing_profile; end
+
     sig { returns(T.nilable(::User)) }
     def reload_user; end
 
@@ -333,6 +345,12 @@ class Memberships::Contract
 
     sig { params(value: T.nilable(::Tenant)).void }
     def tenant=(value); end
+
+    sig { returns(T.nilable(::Memberships::BillingProfile)) }
+    def upcoming_billing_profile; end
+
+    sig { params(value: T.nilable(::Memberships::BillingProfile)).void }
+    def upcoming_billing_profile=(value); end
 
     sig { returns(T.nilable(::User)) }
     def user; end

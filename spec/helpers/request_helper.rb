@@ -5,7 +5,18 @@
 # ==============================================================================
 module RequestHelpers
   def body_hash
-    ActiveSupport::HashWithIndifferentAccess.new(JSON.parse(response.body)) if response.body.present?
+    return nil unless response.body.present?
+
+    response_body_hash = JSON.parse(response.body)
+
+    case response_body_hash
+    when Hash
+      ActiveSupport::HashWithIndifferentAccess.new(response_body_hash)
+    when Array
+      response_body_hash.map(&:with_indifferent_access)
+    else
+      response_body_hash
+    end
   end
 
   def body_array

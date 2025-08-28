@@ -8,8 +8,7 @@ class Memberships::Group < ApplicationRecord
 
   belongs_to :tenant
 
-  has_many :group_assignments, class_name: 'Memberships::GroupAssignment', dependent: :destroy, inverse_of: :membership_group
-  has_many :memberships, through: :group_assignments
+  has_many :memberships, class_name: 'Membership', dependent: :destroy, inverse_of: :membership_group
 
   validates :name, presence: true, uniqueness: { scope: :tenant_id }
   validates :display_name, presence: true

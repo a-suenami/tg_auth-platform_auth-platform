@@ -1,79 +1,116 @@
 # typed: false
 # frozen_string_literal: true
 
-require 'rails_helper'
+RSpec.describe '[ API::V1::Public::MembershipsController API ]' do
+  # パターン別メンバーシッププラン
+  # 1. 段階的プラン
+  # - メンバーシップに上下関係があり、上位のものが下位の完全な上位互換の権限を持つタイプ
+  # - 同じグループに囲われたメンバーシップは同時に契約不可(上位互換のため同時契約するメリットはなし)
+  # - membershipに同じmembership_groupを紐づける
+  let!(:membership_level_1) { create(:membership, tenant_id: current_tenant.id, membership_group: membership_group_for_level, position: 1) }
+  let!(:membership_level_2) { create(:membership, tenant_id: current_tenant.id, membership_group: membership_group_for_level, position: 2) }
+  let!(:membership_level_3) { create(:membership, tenant_id: current_tenant.id, membership_group: membership_group_for_level, position: 3) }
+  let!(:membership_group_for_level) { create(:memberships__group, tenant_id: current_tenant.id) }
+  let!(:membership_plan_for_level_1) { create(:memberships__plan, tenant_id: current_tenant.id, position: 1) }
+  let!(:membership_plan_for_level_2) { create(:memberships__plan, tenant_id: current_tenant.id, position: 1) }
+  let!(:membership_plan_for_level_3) { create(:memberships__plan, tenant_id: current_tenant.id, position: 1) }
+  let!(:membership_plan_component_for_level_1) { create(:memberships__plan_component, membership_plan: membership_plan_for_level_1, membership: membership_level_1, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_for_level_2) { create(:memberships__plan_component, membership_plan: membership_plan_for_level_2, membership: membership_level_2, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_for_level_3) { create(:memberships__plan_component, membership_plan: membership_plan_for_level_3, membership: membership_level_3, tenant_id: current_tenant.id) }
+  let!(:membership_plan_payment_method_for_level_1) { create(:memberships__plan_payment_method, membership_plan: membership_plan_for_level_1, tenant_id: current_tenant.id) }
+  let!(:membership_plan_payment_method_for_level_2) {
+    create(:memberships__plan_payment_method, membership_plan: membership_plan_for_level_2, tenant_id: current_tenant.id)
+  }
+  let!(:membership_plan_payment_method_for_level_3) {
+    create(:memberships__plan_payment_method, membership_plan: membership_plan_for_level_3, tenant_id: current_tenant.id)
+  }
+  # 2. 個別メンバーシッププラン
+  # - 独立したプラン 各々同時契約可能
+  # - ex) アイドルの各メンバーごとのメンバーシップ
+  let!(:membership_a) { create(:membership, tenant_id: current_tenant.id, position: 4) }
+  let!(:membership_b) { create(:membership, tenant_id: current_tenant.id, position: 5) }
+  let!(:membership_c) { create(:membership, tenant_id: current_tenant.id, position: 6) }
+  let!(:membership_plan_a) { create(:memberships__plan, tenant_id: current_tenant.id, position: 1) }
+  let!(:membership_plan_b) { create(:memberships__plan, tenant_id: current_tenant.id, position: 1) }
+  let!(:membership_plan_c) { create(:memberships__plan, tenant_id: current_tenant.id, position: 1) }
+  let!(:membership_plan_component_a) { create(:memberships__plan_component, membership_plan: membership_plan_a, membership: membership_a, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_b) { create(:memberships__plan_component, membership_plan: membership_plan_b, membership: membership_b, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_c) { create(:memberships__plan_component, membership_plan: membership_plan_c, membership: membership_c, tenant_id: current_tenant.id) }
+  let!(:membership_plan_payment_method_a) { create(:memberships__plan_payment_method, membership_plan: membership_plan_a, tenant_id: current_tenant.id) }
+  let!(:membership_plan_payment_method_b) { create(:memberships__plan_payment_method, membership_plan: membership_plan_b, tenant_id: current_tenant.id) }
+  let!(:membership_plan_payment_method_c) { create(:memberships__plan_payment_method, membership_plan: membership_plan_c, tenant_id: current_tenant.id) }
 
-RSpec.describe 'API::V1::Public::MembershipsController' do
-  let(:tenant) { create(:tenant) }
-  let(:membership) { create(:membership, tenant:) }
-  let(:membership_group) { create(:memberships_group, tenant:) }
-  let(:membership_plan) { create(:memberships_plan, tenant:) }
-
-  before do
-    # 関連データを作成
-    create(:memberships_group_assignment, membership:, membership_group:)
-    create(:memberships_plan_component, membership:, membership_plan:)
-    create(:memberships_plan_payment_method, membership_plan:)
-  end
+  # 3. バンドルプラン
+  # - 複数のメンバーシップを組み合わせたプラン
+  # - ex) アイドルのメンバーごとのメンバーシップを組み合わせたプラン
+  let!(:membership_plan_bundle) { create(:memberships__plan, tenant_id: current_tenant.id, position: 7) }
+  let!(:membership_plan_component_bundle) { create(:memberships__plan_component, membership_plan: membership_plan_bundle, membership: membership_a, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_bundle) { create(:memberships__plan_component, membership_plan: membership_plan_bundle, membership: membership_b, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_bundle) { create(:memberships__plan_component, membership_plan: membership_plan_bundle, membership: membership_c, tenant_id: current_tenant.id) }
+  let!(:membership_plan_payment_method_bundle) { create(:memberships__plan_payment_method, membership_plan: membership_plan_bundle, tenant_id: current_tenant.id) }
 
   describe 'GET /api/v1/public/memberships' do
     it 'returns all memberships' do
-      get '/api/v1/public/memberships'
+      is_expected.to eq 200
 
-      expect(response).to have_http_status(:ok)
-      json = response.parsed_body
-
-      expect(json).to be_an(Array)
-      expect(json.first).to include(
-        'id' => membership.id,
-        'name' => membership.name,
-        'display_name' => membership.display_name,
-      )
+      # body_array example
+      expect(body_array.size).to eq 6
+      expect(body_array[0]['id']).to eq membership_level_1.id
+      expect(body_array[0]['display_name']).to eq membership_level_1.display_name
+      expect(body_array[0]['membership_group']['id']).to eq membership_level_1.membership_group.id
+      expect(body_array[0]['name']).to eq membership_level_1.name
+      expect(body_array[0]['position']).to eq membership_level_1.position
+      expect(body_array[0]['tier']).to eq membership_level_1.tier
+      expect(body_array[0]['membership_plans'].count).to eq 1
+      expect(body_array[0]['membership_plans'][0]['id']).to eq membership_plan_for_level_1.id
+      expect(body_array[0]['membership_plans'][0]['amount']).to eq membership_plan_for_level_1.amount
+      expect(body_array[0]['membership_plans'][0]['disabled_at']).to eq membership_plan_for_level_1.disabled_at
+      expect(body_array[0]['membership_plans'][0]['enabled_at']).to eq membership_plan_for_level_1.enabled_at.iso8601
+      expect(body_array[0]['membership_plans'][0]['is_active']).to eq membership_plan_for_level_1.is_active
+      expect(body_array[0]['membership_plans'][0]['name']).to eq membership_plan_for_level_1.name
+      expect(body_array[0]['membership_plans'][0]['position']).to eq membership_plan_for_level_1.position
+      expect(body_array[0]['membership_plans'][0]['recurrence']).to eq membership_plan_for_level_1.recurrence
+      expect(body_array[0]['membership_plans'][0]['trial_period_days']).to eq membership_plan_for_level_1.trial_period_days
+      expect(body_array[0]['membership_plans'][0]['validity_period']).to eq membership_plan_for_level_1.validity_period
     end
   end
 
-  describe 'GET /api/v1/public/memberships/:id' do
-    it 'returns a specific membership' do
-      get "/api/v1/public/memberships/#{membership.id}"
+  describe 'GET /api/v1/public/memberships/:membership_id' do
 
-      expect(response).to have_http_status(:ok)
-      json = response.parsed_body
+    context 'when membership_id is present' do
+      let(:membership_id) { membership_level_1.id }
 
-      expect(json).to include(
-        'id' => membership.id,
-        'name' => membership.name,
-        'display_name' => membership.display_name,
-      )
-      expect(json['groups']).to be_an(Array)
-      expect(json['membership_plans']).to be_an(Array)
+      it 'returns a specific membership' do
+        is_expected.to eq 200
+
+        # body example
+        expect(body_hash['id']).to eq membership_level_1.id
+        expect(body_hash['display_name']).to eq membership_level_1.display_name
+        expect(body_hash['membership_group']['id']).to eq membership_level_1.membership_group.id
+        expect(body_hash['name']).to eq membership_level_1.name
+        expect(body_hash['position']).to eq membership_level_1.position
+        expect(body_hash['tier']).to eq membership_level_1.tier
+        expect(body_hash['membership_plans'].count).to eq 1
+        expect(body_hash['membership_plans'][0]['id']).to eq membership_plan_for_level_1.id
+        expect(body_hash['membership_plans'][0]['amount']).to eq membership_plan_for_level_1.amount
+        expect(body_hash['membership_plans'][0]['disabled_at']).to eq nil
+        expect(body_hash['membership_plans'][0]['enabled_at']).to eq membership_plan_for_level_1.enabled_at.iso8601
+        expect(body_hash['membership_plans'][0]['is_active']).to eq membership_plan_for_level_1.is_active
+        expect(body_hash['membership_plans'][0]['name']).to eq membership_plan_for_level_1.name
+        expect(body_hash['membership_plans'][0]['position']).to eq membership_plan_for_level_1.position
+        expect(body_hash['membership_plans'][0]['recurrence']).to eq membership_plan_for_level_1.recurrence
+        expect(body_hash['membership_plans'][0]['trial_period_days']).to eq membership_plan_for_level_1.trial_period_days
+        expect(body_hash['membership_plans'][0]['validity_period']).to eq membership_plan_for_level_1.validity_period
+      end
     end
 
-    it 'returns 404 for non-existent membership' do
-      get '/api/v1/public/memberships/non-existent-id'
+    context 'when membership_id is not present' do
+      let(:membership_id) { 'nil' }
 
-      expect(response).to have_http_status(:not_found)
-    end
-  end
+      it 'returns 404 for non-existent membership' do
 
-  describe 'GET /api/v1/public/memberships/by_group' do
-    it 'returns memberships by group' do
-      get "/api/v1/public/memberships/by_group?group_id=#{membership_group.id}"
-
-      expect(response).to have_http_status(:ok)
-      json = response.parsed_body
-
-      expect(json).to be_an(Array)
-      expect(json.first).to include(
-        'id' => membership.id,
-        'name' => membership.name,
-        'display_name' => membership.display_name,
-      )
-    end
-
-    it 'returns 404 for non-existent group' do
-      get '/api/v1/public/memberships/by_group?group_id=non-existent-id'
-
-      expect(response).to have_http_status(:not_found)
+        is_expected.to eq 404
+      end
     end
   end
 end
