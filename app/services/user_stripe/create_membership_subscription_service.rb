@@ -55,7 +55,7 @@ module UserStripe
         save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
 
         contract = create_contract(user:, stripe_record_subscription:, membership_plan:)
-        create_membership_users(user:, membership_plan:)
+        create_membership_users(user:, membership_plan:, contract:)
       end
       contract
     end
@@ -147,12 +147,13 @@ module UserStripe
       contract
     end
 
-    def create_membership_users(user:, membership_plan:)
+    def create_membership_users(user:, membership_plan:, contract:)
       membership_plan.memberships.each do |membership|
         Memberships::User.create!(
           user:,
           membership:,
           status: 'pending',
+          membership_contract: contract,
         )
       end
     end

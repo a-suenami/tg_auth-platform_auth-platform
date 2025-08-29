@@ -672,6 +672,7 @@ CREATE TABLE public.memberships__users (
     user_id uuid NOT NULL,
     membership_id uuid NOT NULL,
     membership_group_id uuid,
+    membership_contract_id uuid,
     expires_at timestamp(6) without time zone,
     status character varying,
     created_at timestamp(6) without time zone NOT NULL,
@@ -691,6 +692,13 @@ COMMENT ON TABLE public.memberships__users IS 'メンバーシップとUserの�
 --
 
 COMMENT ON COLUMN public.memberships__users.membership_group_id IS '段階的プランの場合のグループ';
+
+
+--
+-- Name: COLUMN memberships__users.membership_contract_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__users.membership_contract_id IS 'メンバーシップ契約';
 
 
 --
@@ -2480,6 +2488,13 @@ CREATE INDEX index_memberships__user_achievements_on_user_id ON public.membershi
 
 
 --
+-- Name: index_memberships__users_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__users_on_membership_contract_id ON public.memberships__users USING btree (membership_contract_id);
+
+
+--
 -- Name: index_memberships__users_on_membership_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3280,6 +3295,14 @@ ALTER TABLE ONLY public.memberships__user_achievements
 
 ALTER TABLE ONLY public.memberships__user_achievements
     ADD CONSTRAINT fk_memberships__user_achievements_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: memberships__users fk_memberships__users_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__users
+    ADD CONSTRAINT fk_memberships__users_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.memberships__contracts(id);
 
 
 --

@@ -6,7 +6,7 @@
 module UserStripe
   class RenewMembershipSubscriptionService < UserStripe::BaseService
 
-    def initialize(event)
+    def initialize(event:)
       @event = event
     end
 
@@ -14,8 +14,6 @@ module UserStripe
       # subscription契約の自動更新処理
       stripe_record_subscription = StripeRecord::Subscription.find_by(remote_id: @event.data.object.subscription)
       return if stripe_record_subscription.nil?
-
-      Rails.logger.info "Processing subscription auto-renewal: #{stripe_record_subscription.id}"
 
       stripe_record_subscription.current_billing_profile.contract
 
@@ -38,6 +36,7 @@ module UserStripe
         return
       end
 
+      # TODO: 失敗時のステータス考慮
       # 決済失敗後の自動リトライで決済された場合の処理
       if contract.status == 'pending'
         handle_payment_retry_success(contract, stripe_record_subscription, current_billing_profile)
@@ -55,17 +54,16 @@ module UserStripe
       next_period_end = Time.zone.at(@event&.data&.object&.lines&.data&.[](0)&.period&.end)
 
       ActiveRecord::Base.transaction do
+        contract.update(expires_at: next_period_end)
         # 共通処理: membership_userの更新
         update_membership_user(contract, next_period_end)
 
         if upcoming_billing_profile.present?
-          # プラン変更の場合は、upcoming_billing_profileをcurrentに変更
-          renew_with_plan_change(contract, stripe_record_subscription, current_billing_profile, next_period_end)
+          renew_with_plan_change(contract, stripe_record_subscription, current_billing_profile, upcoming_billing_profile, next_period_end)
         else
-          renew_without_changes(contract, stripe_record_subscription, current_billing_profile, upcoming_billing_profile, next_period_end)
+          # プラン変更の場合は、upcoming_billing_profileをcurrentに変更
+          renew_without_changes(contract, stripe_record_subscription, current_billing_profile, next_period_end)
         end
-
-        Rails.logger.info "Subscription renewal completed for contract #{contract.id}"
       end
     rescue => e
       Sentry.capture_exception(e, extra: {
@@ -75,7 +73,7 @@ module UserStripe
       raise
     end
 
-    def renew_with_plan_change(contract, stripe_record_subscription, current_billing_profile, next_period_end)
+    def renew_without_changes(contract, stripe_record_subscription, current_billing_profile, next_period_end)
       # 現在のbilling_profileをpastに変更
       current_billing_profile.update!(
         phase: 'closed',
@@ -110,13 +108,16 @@ module UserStripe
       )
     end
 
-    def renew_without_changes(contract, stripe_record_subscription, current_billing_profile, upcoming_billing_profile, next_period_end)
+    def renew_with_plan_change(contract, stripe_record_subscription, current_billing_profile, upcoming_billing_profile, next_period_end)
       # 現在のbilling_profileをpastに変更
       current_billing_profile.update!(
         phase: 'closed',
       )
       upcoming_billing_profile.update!(
+        status: 'active',
         phase: 'current',
+        expires_at: next_period_end,
+        activated_at: Time.zone.now,
       )
 
       # contractの期限更新
@@ -125,7 +126,7 @@ module UserStripe
       # stripe_record_subscriptionの更新
       stripe_record_subscription.update!(
         current_period_start: Time.zone.now,
-        current_period_end: new_expires_at,
+        current_period_end: next_period_end,
         status: 'active',
       )
     end
@@ -133,7 +134,6 @@ module UserStripe
     def update_membership_user(contract, next_period_end)
       membership_plan = contract.current_billing_profile.membership_plan
       # TODO:期限をStripeの次回更新に合わせる
-      contract.update(expires_at: next_period_end)
       memberships = membership_plan.memberships
       memberships.each do |membership|
         membership_user = Memberships::User.find_or_create_by!(

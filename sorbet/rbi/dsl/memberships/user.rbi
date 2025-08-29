@@ -520,10 +520,11 @@ class Memberships::User
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         expires_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        membership_contract_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_id: nil, membership_group_id: nil, created_at: nil, updated_at: nil, expires_at: nil, status: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_id: nil, membership_group_id: nil, created_at: nil, updated_at: nil, expires_at: nil, status: nil, membership_contract_id: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -724,6 +725,51 @@ class Memberships::User
     def id_will_change!; end
 
     sig { returns(T.untyped) }
+    def membership_contract_id; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def membership_contract_id=(value); end
+
+    sig { returns(T::Boolean) }
+    def membership_contract_id?; end
+
+    sig { returns(T.untyped) }
+    def membership_contract_id_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def membership_contract_id_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def membership_contract_id_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def membership_contract_id_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def membership_contract_id_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def membership_contract_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def membership_contract_id_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def membership_contract_id_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def membership_contract_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def membership_contract_id_previously_was; end
+
+    sig { returns(T.untyped) }
+    def membership_contract_id_was; end
+
+    sig { void }
+    def membership_contract_id_will_change!; end
+
+    sig { returns(T.untyped) }
     def membership_group_id; end
 
     sig { params(value: T.untyped).returns(T.untyped) }
@@ -826,6 +872,9 @@ class Memberships::User
     def restore_id_value!; end
 
     sig { void }
+    def restore_membership_contract_id!; end
+
+    sig { void }
     def restore_membership_group_id!; end
 
     sig { void }
@@ -866,6 +915,12 @@ class Memberships::User
 
     sig { returns(T::Boolean) }
     def saved_change_to_id_value?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_membership_contract_id; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_membership_contract_id?; end
 
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_membership_group_id; end
@@ -1096,6 +1151,9 @@ class Memberships::User
     def will_save_change_to_id_value?; end
 
     sig { returns(T::Boolean) }
+    def will_save_change_to_membership_contract_id?; end
+
+    sig { returns(T::Boolean) }
     def will_save_change_to_membership_group_id?; end
 
     sig { returns(T::Boolean) }
@@ -1253,10 +1311,11 @@ class Memberships::User
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         expires_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        membership_contract_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_id: nil, membership_group_id: nil, created_at: nil, updated_at: nil, expires_at: nil, status: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_id: nil, membership_group_id: nil, created_at: nil, updated_at: nil, expires_at: nil, status: nil, membership_contract_id: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

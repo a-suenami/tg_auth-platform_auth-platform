@@ -114,9 +114,6 @@ module GeneratedUrlHelpersModule
   def authenticate_api_v1_authentication_mfa_sms_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def by_group_api_v1_public_memberships_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def cancel_api_v1_internal_memberships_contract_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }

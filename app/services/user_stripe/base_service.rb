@@ -40,7 +40,7 @@ module UserStripe
         stripe_api_key_config,
       )
 
-      @fetch_default_payment_method_or_default_source_of ||= stripe_customer.invoice_settings&.default_payment_method || stripe_customer&.default_source
+      @fetch_default_payment_method_or_default_source_of ||= stripe_customer&.invoice_settings&.default_payment_method || stripe_customer&.default_source
     end
 
     def get_card_fingerprint(default_payment_method_or_default_source)

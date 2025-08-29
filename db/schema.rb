@@ -254,10 +254,12 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "user_id", null: false
     t.uuid "membership_id", null: false
     t.uuid "membership_group_id", comment: "段階的プランの場合のグループ"
+    t.uuid "membership_contract_id", comment: "メンバーシップ契約"
     t.datetime "expires_at", comment: "メンバーシップの有効期限"
     t.string "status", comment: "メンバーシップのステータス"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["membership_contract_id"], name: "index_memberships__users_on_membership_contract_id"
     t.index ["membership_group_id"], name: "index_memberships__users_on_membership_group_id"
     t.index ["membership_id"], name: "index_memberships__users_on_membership_id"
     t.index ["tenant_id", "user_id", "membership_id"], name: "idx_memberships__users_tenant_user_membership_uniq", unique: true
@@ -844,6 +846,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "memberships__user_achievements", "tenants", name: "fk_memberships__user_achievements_tenants"
   add_foreign_key "memberships__user_achievements", "users", name: "fk_memberships__user_achievements_users"
   add_foreign_key "memberships__users", "memberships", name: "fk_memberships__users_memberships"
+  add_foreign_key "memberships__users", "memberships__contracts", column: "membership_contract_id", name: "fk_memberships__users_contracts"
   add_foreign_key "memberships__users", "memberships__groups", column: "membership_group_id", name: "fk_memberships__users_groups"
   add_foreign_key "memberships__users", "tenants", name: "fk_memberships__users_tenants"
   add_foreign_key "memberships__users", "users", name: "fk_memberships__users_users"

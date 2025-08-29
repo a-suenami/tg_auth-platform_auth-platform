@@ -197,5 +197,29 @@ module Exceptions
         I18n.t 'exceptions.payment.stripe_plan_change_error'
       end
     end
+
+    class InvoicePaidOnCanceledSubscription < BaseError
+      sig { returns(Symbol) }
+      def code
+        :invoice_paid_on_canceled_subscription
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.payment.invoice_paid_on_canceled_subscription'
+      end
+    end
+
+    class PlanChangeInProgress < BaseError
+      sig { returns(Symbol) }
+      def code
+        :plan_change_in_progress
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.payment.plan_change_in_progress'
+      end
+    end
   end
 end

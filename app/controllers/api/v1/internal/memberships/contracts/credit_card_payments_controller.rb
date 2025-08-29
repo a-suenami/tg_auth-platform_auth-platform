@@ -11,10 +11,6 @@ module API::V1::Internal::Memberships::Contracts
 
       # ContractをBlueprintでシリアライズ
       render json: Memberships::ContractBlueprint.render(contract, view: :normal), status: :created
-    rescue ActiveRecord::RecordNotFound
-      render json: { error: '指定されたメンバーシッププランが見つかりません' }, status: :not_found
-    rescue => e
-      render json: { error: 'メンバーシップ契約の作成に失敗しました' }, status: :internal_server_error
     end
   end
 end
