@@ -36,10 +36,7 @@ module WebhookArea
 
       begin
         event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
-      rescue JSON::ParserError => e
-        head :bad_request
-        return
-      rescue Stripe::SignatureVerificationError => e
+      rescue JSON::ParserError, Stripe::SignatureVerificationError
         head :bad_request
         return
       end

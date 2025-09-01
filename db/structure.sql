@@ -845,6 +845,7 @@ CREATE TABLE public.shopify_record__multipass_stores (
 CREATE TABLE public.stripe_record_accounts (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     remote_id character varying NOT NULL,
+    tenant_id public.citext NOT NULL,
     api_key_id uuid,
     controlling_platform_id uuid,
     type character varying,
@@ -878,6 +879,7 @@ COMMENT ON COLUMN public.stripe_record_accounts.display_name IS 'API キーが�
 
 CREATE TABLE public.stripe_record_api_keys (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
     remote_id character varying NOT NULL,
     display_name character varying NOT NULL,
     publishable_key character varying NOT NULL,
@@ -2670,10 +2672,24 @@ CREATE INDEX index_stripe_record_accounts_on_controlling_platform_id ON public.s
 
 
 --
+-- Name: index_stripe_record_accounts_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_accounts_on_tenant_id ON public.stripe_record_accounts USING btree (tenant_id);
+
+
+--
 -- Name: index_stripe_record_accounts_remote_id_unique; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_stripe_record_accounts_remote_id_unique ON public.stripe_record_accounts USING btree (remote_id, controlling_platform_id) NULLS NOT DISTINCT;
+
+
+--
+-- Name: index_stripe_record_api_keys_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record_api_keys_on_tenant_id ON public.stripe_record_api_keys USING btree (tenant_id);
 
 
 --
@@ -3418,6 +3434,14 @@ ALTER TABLE ONLY public.oauth_access_tokens
 
 
 --
+-- Name: stripe_record_accounts fk_stripe_record_accounts__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_accounts
+    ADD CONSTRAINT fk_stripe_record_accounts__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: stripe_record_accounts fk_stripe_record_accounts_api_key_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3431,6 +3455,14 @@ ALTER TABLE ONLY public.stripe_record_accounts
 
 ALTER TABLE ONLY public.stripe_record_accounts
     ADD CONSTRAINT fk_stripe_record_accounts_controlling_platform_id FOREIGN KEY (controlling_platform_id) REFERENCES public.stripe_record_accounts(id);
+
+
+--
+-- Name: stripe_record_api_keys fk_stripe_record_api_keys__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record_api_keys
+    ADD CONSTRAINT fk_stripe_record_api_keys__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --

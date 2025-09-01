@@ -368,6 +368,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
 
   create_table "stripe_record_accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "remote_id", null: false, comment: "Stripe のアカウント ID"
+    t.citext "tenant_id", null: false
     t.uuid "api_key_id"
     t.uuid "controlling_platform_id"
     t.string "type"
@@ -381,9 +382,11 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["api_key_id"], name: "index_stripe_record_accounts_on_api_key_id"
     t.index ["controlling_platform_id"], name: "index_stripe_record_accounts_on_controlling_platform_id"
     t.index ["remote_id", "controlling_platform_id"], name: "index_stripe_record_accounts_remote_id_unique", unique: true, nulls_not_distinct: true
+    t.index ["tenant_id"], name: "index_stripe_record_accounts_on_tenant_id"
   end
 
   create_table "stripe_record_api_keys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
     t.string "remote_id", null: false, comment: "Stripe の API キー ID"
     t.string "display_name", null: false, comment: "API キーがどのアカウントのものかを識別するための名前"
     t.string "publishable_key", null: false
@@ -391,6 +394,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["remote_id"], name: "idx_stripe_record_api_keys_remote_id_uniq", unique: true
+    t.index ["tenant_id"], name: "index_stripe_record_api_keys_on_tenant_id"
   end
 
   create_table "stripe_record_charges", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -860,6 +864,8 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "oauth_openid_requests", "oauth_access_grants", column: "access_grant_id", name: "fk_oauth_openid_requests_oauth_access_grants"
   add_foreign_key "stripe_record_accounts", "stripe_record_accounts", column: "controlling_platform_id", name: "fk_stripe_record_accounts_controlling_platform_id"
   add_foreign_key "stripe_record_accounts", "stripe_record_api_keys", column: "api_key_id", name: "fk_stripe_record_accounts_api_key_id"
+  add_foreign_key "stripe_record_accounts", "tenants", name: "fk_stripe_record_accounts__tenants"
+  add_foreign_key "stripe_record_api_keys", "tenants", name: "fk_stripe_record_api_keys__tenants"
   add_foreign_key "stripe_record_charges", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_charges_api_key_account_id"
   add_foreign_key "stripe_record_charges", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_charges_connect_account_id"
   add_foreign_key "stripe_record_charges", "tenants", name: "fk_stripe_record_charges__tenants"

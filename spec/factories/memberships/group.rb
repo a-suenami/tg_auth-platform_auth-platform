@@ -8,4 +8,3 @@ FactoryBot.define do
     position { rand(0..100) }
   end
 end
-

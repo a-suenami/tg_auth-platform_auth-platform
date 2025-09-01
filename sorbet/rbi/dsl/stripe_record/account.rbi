@@ -545,10 +545,11 @@ class StripeRecord::Account
         display_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateAssociationRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, remote_id: nil, api_key_id: nil, controlling_platform_id: nil, type: nil, business_profile_name: nil, payments_statement_descriptor: nil, payments_statement_descriptor_kana: nil, payments_statement_descriptor_kanji: nil, display_name: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, remote_id: nil, api_key_id: nil, controlling_platform_id: nil, type: nil, business_profile_name: nil, payments_statement_descriptor: nil, payments_statement_descriptor_kana: nil, payments_statement_descriptor_kanji: nil, display_name: nil, created_at: nil, updated_at: nil, tenant_id: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -1087,6 +1088,9 @@ class StripeRecord::Account
     def restore_remote_id!; end
 
     sig { void }
+    def restore_tenant_id!; end
+
+    sig { void }
     def restore_type!; end
 
     sig { void }
@@ -1158,6 +1162,12 @@ class StripeRecord::Account
     sig { returns(T::Boolean) }
     def saved_change_to_remote_id?; end
 
+    sig { returns(T.nilable([::String, ::String])) }
+    def saved_change_to_tenant_id; end
+
+    sig { returns(T::Boolean) }
+    def saved_change_to_tenant_id?; end
+
     sig { returns(T.nilable([T.untyped, T.untyped])) }
     def saved_change_to_type; end
 
@@ -1169,6 +1179,51 @@ class StripeRecord::Account
 
     sig { returns(T::Boolean) }
     def saved_change_to_updated_at?; end
+
+    sig { returns(::String) }
+    def tenant_id; end
+
+    sig { params(value: ::String).returns(::String) }
+    def tenant_id=(value); end
+
+    sig { returns(T::Boolean) }
+    def tenant_id?; end
+
+    sig { returns(T.nilable(::String)) }
+    def tenant_id_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def tenant_id_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def tenant_id_came_from_user?; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def tenant_id_change; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def tenant_id_change_to_be_saved; end
+
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def tenant_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def tenant_id_in_database; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def tenant_id_previous_change; end
+
+    sig { params(from: ::String, to: ::String).returns(T::Boolean) }
+    def tenant_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def tenant_id_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def tenant_id_was; end
+
+    sig { void }
+    def tenant_id_will_change!; end
 
     sig { returns(T.untyped) }
     def type; end
@@ -1292,6 +1347,9 @@ class StripeRecord::Account
 
     sig { returns(T::Boolean) }
     def will_save_change_to_remote_id?; end
+
+    sig { returns(T::Boolean) }
+    def will_save_change_to_tenant_id?; end
 
     sig { returns(T::Boolean) }
     def will_save_change_to_type?; end
@@ -1442,10 +1500,11 @@ class StripeRecord::Account
         display_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])
       ).returns(PrivateRelationWhereChain)
     end
-    def where(string_query = nil, id: nil, remote_id: nil, api_key_id: nil, controlling_platform_id: nil, type: nil, business_profile_name: nil, payments_statement_descriptor: nil, payments_statement_descriptor_kana: nil, payments_statement_descriptor_kanji: nil, display_name: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, remote_id: nil, api_key_id: nil, controlling_platform_id: nil, type: nil, business_profile_name: nil, payments_statement_descriptor: nil, payments_statement_descriptor_kana: nil, payments_statement_descriptor_kanji: nil, display_name: nil, created_at: nil, updated_at: nil, tenant_id: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

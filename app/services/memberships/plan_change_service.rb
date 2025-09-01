@@ -284,7 +284,7 @@ module Memberships
     end
 
     def fetch_or_create_remote_subscription_schedule(stripe_subscription:)
-      stripe_subscription_schedule = if stripe_subscription.last_subscription_schedule.present?
+      if stripe_subscription.last_subscription_schedule.present?
         stripe_subscription_schedule = Stripe::SubscriptionSchedule.retrieve(stripe_subscription.last_subscription_schedule.remote_id, stripe_api_key_config)
         # 終了済みのscheduleが紐づいている場合は新しいものに作り替える
         if stripe_subscription_schedule.status == 'completed' || stripe_subscription_schedule.status == 'canceled' || stripe_subscription_schedule.status == 'released'
@@ -304,7 +304,6 @@ module Memberships
             phases: stripe_subscription_schedule.phases,
           )
         end
-        stripe_subscription_schedule
       else
         stripe_subscription_schedule = begin
           Stripe::SubscriptionSchedule.create({
@@ -330,8 +329,8 @@ module Memberships
           phases: stripe_subscription_schedule.phases,
         )
 
-        stripe_subscription_schedule
       end
+      stripe_subscription_schedule
     end
   end
 end

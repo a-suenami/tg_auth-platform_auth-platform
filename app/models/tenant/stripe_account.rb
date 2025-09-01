@@ -4,6 +4,7 @@
 # app/models/tenant/stripe_account.rb
 # ==============================================================================
 class Tenant::StripeAccount < ApplicationRecord
+  include Multitenancy
   belongs_to :tenant
   belongs_to :stripe_account, class_name: 'StripeRecord::Account'
 

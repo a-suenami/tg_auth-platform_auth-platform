@@ -5,7 +5,7 @@
 # ==============================================================================
 module RequestHelpers
   def body_hash
-    return nil unless response.body.present?
+    return nil if response.body.blank?
 
     response_body_hash = JSON.parse(response.body)
 

@@ -10,4 +10,3 @@ FactoryBot.define do
     achieved_at { Time.current }
   end
 end
-

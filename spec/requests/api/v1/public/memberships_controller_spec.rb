@@ -44,10 +44,29 @@ RSpec.describe '[ API::V1::Public::MembershipsController API ]' do
   # - 複数のメンバーシップを組み合わせたプラン
   # - ex) アイドルのメンバーごとのメンバーシップを組み合わせたプラン
   let!(:membership_plan_bundle) { create(:memberships__plan, tenant_id: current_tenant.id, position: 7) }
-  let!(:membership_plan_component_bundle) { create(:memberships__plan_component, membership_plan: membership_plan_bundle, membership: membership_a, tenant_id: current_tenant.id) }
-  let!(:membership_plan_component_bundle) { create(:memberships__plan_component, membership_plan: membership_plan_bundle, membership: membership_b, tenant_id: current_tenant.id) }
-  let!(:membership_plan_component_bundle) { create(:memberships__plan_component, membership_plan: membership_plan_bundle, membership: membership_c, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_bundle_a) { create(:memberships__plan_component, membership_plan: membership_plan_bundle, membership: membership_a, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_bundle_b) { create(:memberships__plan_component, membership_plan: membership_plan_bundle, membership: membership_b, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_bundle_c) { create(:memberships__plan_component, membership_plan: membership_plan_bundle, membership: membership_c, tenant_id: current_tenant.id) }
   let!(:membership_plan_payment_method_bundle) { create(:memberships__plan_payment_method, membership_plan: membership_plan_bundle, tenant_id: current_tenant.id) }
+
+  before do
+    membership_plan_component_for_level_1
+    membership_plan_component_for_level_2
+    membership_plan_component_for_level_3
+    membership_plan_payment_method_for_level_1
+    membership_plan_payment_method_for_level_2
+    membership_plan_payment_method_for_level_3
+    membership_plan_component_a
+    membership_plan_component_b
+    membership_plan_component_c
+    membership_plan_payment_method_a
+    membership_plan_payment_method_b
+    membership_plan_payment_method_c
+    membership_plan_payment_method_bundle
+    membership_plan_component_bundle_a
+    membership_plan_component_bundle_b
+    membership_plan_component_bundle_c
+  end
 
   describe 'GET /api/v1/public/memberships' do
     it 'returns all memberships' do
@@ -93,7 +112,7 @@ RSpec.describe '[ API::V1::Public::MembershipsController API ]' do
         expect(body_hash['membership_plans'].count).to eq 1
         expect(body_hash['membership_plans'][0]['id']).to eq membership_plan_for_level_1.id
         expect(body_hash['membership_plans'][0]['amount']).to eq membership_plan_for_level_1.amount
-        expect(body_hash['membership_plans'][0]['disabled_at']).to eq nil
+        expect(body_hash['membership_plans'][0]['disabled_at']).to be_nil
         expect(body_hash['membership_plans'][0]['enabled_at']).to eq membership_plan_for_level_1.enabled_at.iso8601
         expect(body_hash['membership_plans'][0]['is_active']).to eq membership_plan_for_level_1.is_active
         expect(body_hash['membership_plans'][0]['name']).to eq membership_plan_for_level_1.name

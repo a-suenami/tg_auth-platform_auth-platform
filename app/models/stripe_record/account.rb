@@ -6,6 +6,7 @@
 class StripeRecord
   class Account < ApplicationRecord
     extend T::Sig
+    include Multitenancy
 
     self.inheritance_column = :_type_disabled
 

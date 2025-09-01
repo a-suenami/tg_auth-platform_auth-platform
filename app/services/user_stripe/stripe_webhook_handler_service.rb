@@ -21,19 +21,18 @@ module UserStripe
           # 3dセキュアの確認のためpayment_intent.succeededで処理を受けるのでここでは処理しない
         when 'subscription_cycle'
           # 自動更新の確定処理
-          handle_invoice_paid_on_subscription_cycle
+          handle_invoice_paid_on_subscription_cycle(type: 'subscription_cycle')
         when 'subscription_update'
           # subscription_scheduleで自動切り替え時にここに入る
           # TODO: もしかして、subscription updateでも来ちゃう？
-          handle_invoice_paid_on_subscription_cycle
-        else
+          handle_invoice_paid_on_subscription_cycle(type: 'subscription_update')
+          # else
           # manual / subscription_threshold など
         end
       else
         Rails.logger.info "Unhandled webhook event: #{@event.type}"
       end
     rescue => e
-      p e
       Sentry.capture_exception(e)
       raise e
     end
@@ -51,7 +50,7 @@ module UserStripe
     end
 
 
-    def handle_invoice_paid_on_subscription_cycle
+    def handle_invoice_paid_on_subscription_cycle(_type:)
       UserStripe::RenewMembershipSubscriptionService.new(event: @event).execute
     end
 

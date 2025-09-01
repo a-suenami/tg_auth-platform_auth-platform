@@ -259,6 +259,9 @@ class Memberships::User
     sig { params(args: T.untyped, blk: T.untyped).returns(::Membership) }
     def build_membership(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Contract) }
+    def build_membership_contract(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Group) }
     def build_membership_group(*args, &blk); end
 
@@ -273,6 +276,12 @@ class Memberships::User
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Membership) }
     def create_membership!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Contract) }
+    def create_membership_contract(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Contract) }
+    def create_membership_contract!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Group) }
     def create_membership_group(*args, &blk); end
@@ -298,6 +307,12 @@ class Memberships::User
     sig { params(value: T.nilable(::Membership)).void }
     def membership=(value); end
 
+    sig { returns(T.nilable(::Memberships::Contract)) }
+    def membership_contract; end
+
+    sig { params(value: T.nilable(::Memberships::Contract)).void }
+    def membership_contract=(value); end
+
     sig { returns(T.nilable(::Memberships::Group)) }
     def membership_group; end
 
@@ -306,6 +321,9 @@ class Memberships::User
 
     sig { returns(T.nilable(::Membership)) }
     def reload_membership; end
+
+    sig { returns(T.nilable(::Memberships::Contract)) }
+    def reload_membership_contract; end
 
     sig { returns(T.nilable(::Memberships::Group)) }
     def reload_membership_group; end

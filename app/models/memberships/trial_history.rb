@@ -1,6 +1,7 @@
 # typed: false
 
 class Memberships::TrialHistory < ApplicationRecord
+  include Multitenancy
   belongs_to :user, class_name: 'User'
   belongs_to :membership
   belongs_to :membership_plan, class_name: 'Memberships::Plan', inverse_of: :trial_histories
