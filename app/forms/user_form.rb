@@ -81,8 +81,8 @@ class UserForm < ApplicationForm
   def self.build(id:, params: nil)
     user = User.find(id)
     tenant = user.tenant
-    merged_rules = if tenant.tenant_setting&.profile_field_rules.present?
-      persed_rules = safe_parse_json(tenant.tenant_setting&.profile_field_rules)
+    merged_rules = if tenant&.tenant_setting&.profile_field_rules.present?
+      persed_rules = safe_parse_json(tenant&.tenant_setting&.profile_field_rules)
       deep_merge(DEFAULT_PROFILE_FIELD_RULES, persed_rules)
     else
       DEFAULT_PROFILE_FIELD_RULES

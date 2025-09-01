@@ -11,6 +11,9 @@ class StripeRecord::Account
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::StripeRecord::Account::Type)) }
+  def type; end
+
   private
 
   sig { returns(NilClass) }
@@ -24,6 +27,29 @@ class StripeRecord::Account
       ).returns(::StripeRecord::Account)
     end
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::StripeRecord::Account::Type < ::Enumerize::Value
+    sig { params(other: StripeRecord::Account::TypeEnum).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: StripeRecord::Account::TypeEnum).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: StripeRecord::Account::TypeEnum).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def custom?; end
+
+    sig { returns(StripeRecord::Account::TypeEnum) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def express?; end
+
+    sig { returns(T::Boolean) }
+    def standard?; end
   end
 
   module CommonRelationMethods

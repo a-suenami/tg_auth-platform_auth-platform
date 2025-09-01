@@ -23,7 +23,7 @@ module Authentication
         raise Exceptions::Authentication::InvalidCode
       end
 
-      if sms_verifier.remaining_attempts <= 0
+      if T.must(sms_verifier.remaining_attempts) <= 0
         raise Exceptions::Authentication::SmsVerificationCodeAttemptsIsOver
       elsif Time.zone.now > sms_verifier.expired_at
         raise Exceptions::Authentication::ExpiredSmsVerificationCode

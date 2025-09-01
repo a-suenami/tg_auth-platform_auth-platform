@@ -5557,16 +5557,43 @@ RuboCop::AST::NodePattern::Sets::SET_AP_P_PP_ETC = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_ARRAY_HASH = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
-RuboCop::AST::NodePattern::Sets::SET_ASSERT_EQUAL_REFUTE_EQUAL = T.let(T.unsafe(nil), Set)
+RuboCop::AST::NodePattern::Sets::SET_ASSERT_EMPTY_ASSERT_NOT_EMPTY_REFUTE_EMPTY = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_ASSERT_EQUAL_ASSERT_NOT_EQUAL_REFUTE_EQUAL = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_ASSERT_FALSE = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_ASSERT_INCLUDES_ASSERT_NOT_INCLUDES_REFUTE_INCLUDES = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_ASSERT_INSTANCE_OF_ASSERT_NOT_INSTANCE_OF_REFUTE_INSTANCE_OF = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_ASSERT_IN_DELTA_ASSERT_NOT_IN_DELTA_REFUTE_IN_DELTA = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_ASSERT_KIND_OF_ASSERT_NOT_KIND_OF_REFUTE_KIND_OF = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_ASSERT_MATCH_REFUTE_MATCH = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_ASSERT_NIL_ASSERT_NOT_NIL_REFUTE_NIL = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_ASSERT_PREDICATE_ASSERT_NOT_PREDICATE_REFUTE_PREDICATE = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_ASSERT_TRUE = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_ATTR_READER_ATTR_WRITER_ATTR_ACCESSOR = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_ATTR_READER_ATTR_WRITER_ATTR_ACCESSOR_ATTR = T.let(T.unsafe(nil), Set)
-
-# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
-RuboCop::AST::NodePattern::Sets::SET_BACKGROUND_SCENARIO_XSCENARIO_ETC = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_BELONGS_TO_HAS_ONE_HAS_MANY_HAS_AND_BELONGS_TO_MANY = T.let(T.unsafe(nil), Set)
@@ -5623,6 +5650,9 @@ RuboCop::AST::NodePattern::Sets::SET_CREATED_AT_UPDATED_AT = T.let(T.unsafe(nil)
 RuboCop::AST::NodePattern::Sets::SET_CREATED_AT_UPDATED_AT_2 = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_CSS_ID = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_DEFINE_METHOD_DEFINE_SINGLETON_METHOD = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
@@ -5677,6 +5707,9 @@ RuboCop::AST::NodePattern::Sets::SET_FILE_TEMPFILE = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_FILE_TEMPFILE_STRINGIO = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_FIND_ALL = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_FIRST_LAST__ETC = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
@@ -5701,7 +5734,13 @@ RuboCop::AST::NodePattern::Sets::SET_HAS_MANY_HAS_ONE = T.let(T.unsafe(nil), Set
 RuboCop::AST::NodePattern::Sets::SET_HAS_MANY_HAS_ONE_BELONGS_TO = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_HEAD_ASSERT_RESPONSE = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_HTML_HTML5 = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_IF = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_IF_UNLESS = T.let(T.unsafe(nil), Set)
@@ -5779,6 +5818,9 @@ RuboCop::AST::NodePattern::Sets::SET_NIL_ = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_NOTICE_ALERT = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_NOT_TO_TO_NOT = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_ONLY_EXCEPT = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
@@ -5801,9 +5843,6 @@ RuboCop::AST::NodePattern::Sets::SET_PUBLIC_CONSTANT_PRIVATE_CONSTANT = T.let(T.
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_PUBLIC_PROTECTED_PRIVATE_MODULE_FUNCTION = T.let(T.unsafe(nil), Set)
-
-# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
-RuboCop::AST::NodePattern::Sets::SET_RAISE_ERROR_RAISE_EXCEPTION = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_RAISE_FAIL = T.let(T.unsafe(nil), Set)
@@ -5833,7 +5872,7 @@ RuboCop::AST::NodePattern::Sets::SET_REDUCE_INJECT = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_REFERER_REFERRER = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
-RuboCop::AST::NodePattern::Sets::SET_REJECT_DELETE_IF_REJECT = T.let(T.unsafe(nil), Set)
+RuboCop::AST::NodePattern::Sets::SET_REJECT_DELETE_IF = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_REJECT_REJECT = T.let(T.unsafe(nil), Set)
@@ -5855,6 +5894,9 @@ RuboCop::AST::NodePattern::Sets::SET_SELECT_FILTER = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_SELECT_FILTER_FIND_ALL = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_SELECT_FILTER_KEEP_IF = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_SELECT_SELECT_FILTER_FILTER = T.let(T.unsafe(nil), Set)
@@ -5939,6 +5981,9 @@ RuboCop::AST::NodePattern::Sets::SET_TRY_TRY = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_T_TRANSLATE_L_LOCALIZE = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_WHERE_NOT = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_ZERO_POSITIVE_NEGATIVE = T.let(T.unsafe(nil), Set)

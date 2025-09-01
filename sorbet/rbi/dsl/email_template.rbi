@@ -10,6 +10,9 @@ class EmailTemplate
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::EmailTemplate::TemplateType)) }
+  def template_type; end
+
   private
 
   sig { returns(NilClass) }
@@ -23,6 +26,35 @@ class EmailTemplate
       ).returns(::EmailTemplate)
     end
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::EmailTemplate::TemplateType < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def account_lock?; end
+
+    sig { returns(T::Boolean) }
+    def email_address_change?; end
+
+    sig { returns(T::Boolean) }
+    def email_address_verification?; end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def password_reset?; end
+
+    sig { returns(T::Boolean) }
+    def registered?; end
   end
 
   module CommonRelationMethods

@@ -11,6 +11,15 @@ class StripeRecord::PaymentIntent
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::StripeRecord::PaymentIntent::ChargeType)) }
+  def charge_type; end
+
+  sig { returns(T.nilable(::Enumerize::Value::StripeRecord::PaymentIntent::Currency)) }
+  def currency; end
+
+  sig { returns(T.nilable(::Enumerize::Value::StripeRecord::PaymentIntent::Status)) }
+  def status; end
+
   private
 
   sig { returns(NilClass) }
@@ -24,6 +33,81 @@ class StripeRecord::PaymentIntent
       ).returns(::StripeRecord::PaymentIntent)
     end
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::StripeRecord::PaymentIntent::ChargeType < ::Enumerize::Value
+    sig { params(other: Tenant::StripeAccount::ChargeTypeEnum).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: Tenant::StripeAccount::ChargeTypeEnum).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: Tenant::StripeAccount::ChargeTypeEnum).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def destination_charges_application_fee?; end
+
+    sig { returns(T::Boolean) }
+    def destination_charges_transfer?; end
+
+    sig { returns(T::Boolean) }
+    def direct_charges?; end
+
+    sig { returns(Tenant::StripeAccount::ChargeTypeEnum) }
+    def enum; end
+  end
+
+  class ::Enumerize::Value::StripeRecord::PaymentIntent::Currency < ::Enumerize::Value
+    sig { params(other: AuthPlatform::Currency).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: AuthPlatform::Currency).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: AuthPlatform::Currency).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(AuthPlatform::Currency) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def jpy?; end
+  end
+
+  class ::Enumerize::Value::StripeRecord::PaymentIntent::Status < ::Enumerize::Value
+    sig { params(other: StripeRecord::PaymentIntent::StatusEnum).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: StripeRecord::PaymentIntent::StatusEnum).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: StripeRecord::PaymentIntent::StatusEnum).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def canceled?; end
+
+    sig { returns(StripeRecord::PaymentIntent::StatusEnum) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def processing?; end
+
+    sig { returns(T::Boolean) }
+    def requires_action?; end
+
+    sig { returns(T::Boolean) }
+    def requires_capture?; end
+
+    sig { returns(T::Boolean) }
+    def requires_confirmation?; end
+
+    sig { returns(T::Boolean) }
+    def requires_payment_method?; end
+
+    sig { returns(T::Boolean) }
+    def succeeded?; end
   end
 
   module CommonRelationMethods

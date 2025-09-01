@@ -46,7 +46,7 @@ module RailsApp
     # --------------------------------------------------------------------------
     # Routing
     # --------------------------------------------------------------------------
-    config.paths['config/routes.rb'].concat Dir[Rails.root.join('config/routes/**/*.rb')]
+    config.paths['config/routes.rb'].concat Rails.root.glob('config/routes/**/*.rb')
 
     # --------------------------------------------------------------------------
     # Loading files

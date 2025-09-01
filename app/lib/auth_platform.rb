@@ -28,6 +28,7 @@ module AuthPlatform
       JPY = new('jpy')
     end
   end
+  # rubocop:enable Sorbet/MultipleTEnumValues
 
-  PaymentableClasses = T.type_alias { T.any(PayjpPayment, KomojuPayment, Gacha::Coupon, StripeRecord::PaymentIntent, NullPayment) }
+  # PaymentableClasses = T.type_alias { T.any(PayjpPayment, KomojuPayment, StripeRecord::PaymentIntent, NullPayment) }
 end

@@ -11,6 +11,9 @@ class StripeRecord::Invoice
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::StripeRecord::Invoice::Status)) }
+  def status; end
+
   private
 
   sig { returns(NilClass) }
@@ -24,6 +27,35 @@ class StripeRecord::Invoice
       ).returns(::StripeRecord::Invoice)
     end
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::StripeRecord::Invoice::Status < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def draft?; end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def open?; end
+
+    sig { returns(T::Boolean) }
+    def paid?; end
+
+    sig { returns(T::Boolean) }
+    def uncollectible?; end
+
+    sig { returns(T::Boolean) }
+    def void?; end
   end
 
   module CommonRelationMethods

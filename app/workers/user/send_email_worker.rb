@@ -9,7 +9,7 @@ class User
 
     sig { params(tenant_id: String, template_type: String, params: Hash, send_to: String).void }
     def perform(tenant_id, template_type, params, send_to)
-      Tenant.current_domain = Tenant.find(tenant_id).domain
+      Tenant.current_domain = T.cast(Tenant.find(tenant_id).domain, String)
       throttle = T.let(Sidekiq::Limiter.window('blastengine', Settings.blastengine.rate_limit, :second, wait_timeout: 6.hours.to_i), Sidekiq::Limiter::Window)
 
       throttle.within_limit do

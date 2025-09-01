@@ -287,7 +287,7 @@ module Memberships
       if stripe_subscription.last_subscription_schedule.present?
         stripe_subscription_schedule = Stripe::SubscriptionSchedule.retrieve(stripe_subscription.last_subscription_schedule.remote_id, stripe_api_key_config)
         # 終了済みのscheduleが紐づいている場合は新しいものに作り替える
-        if stripe_subscription_schedule.status == 'completed' || stripe_subscription_schedule.status == 'canceled' || stripe_subscription_schedule.status == 'released'
+        if ['completed', 'canceled', 'released'].include?(stripe_subscription_schedule.status)
           stripe_subscription_schedule = Stripe::SubscriptionSchedule.create({
             from_subscription: stripe_subscription.remote_id,
           }, stripe_api_key_config,)

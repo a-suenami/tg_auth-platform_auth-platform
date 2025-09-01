@@ -11,6 +11,12 @@ class StripeRecord::Price
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::StripeRecord::Price::Interval)) }
+  def interval; end
+
+  sig { returns(T.nilable(::Enumerize::Value::StripeRecord::Price::IntervalUnit)) }
+  def interval_unit; end
+
   private
 
   sig { returns(NilClass) }
@@ -24,6 +30,58 @@ class StripeRecord::Price
       ).returns(::StripeRecord::Price)
     end
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::StripeRecord::Price::Interval < ::Enumerize::Value
+    sig { params(other: StripeRecord::Price::IntervalEnum).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: StripeRecord::Price::IntervalEnum).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: StripeRecord::Price::IntervalEnum).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def day?; end
+
+    sig { returns(StripeRecord::Price::IntervalEnum) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def month?; end
+
+    sig { returns(T::Boolean) }
+    def week?; end
+
+    sig { returns(T::Boolean) }
+    def year?; end
+  end
+
+  class ::Enumerize::Value::StripeRecord::Price::IntervalUnit < ::Enumerize::Value
+    sig { params(other: StripeRecord::Price::IntervalEnum).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: StripeRecord::Price::IntervalEnum).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: StripeRecord::Price::IntervalEnum).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def day?; end
+
+    sig { returns(StripeRecord::Price::IntervalEnum) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def month?; end
+
+    sig { returns(T::Boolean) }
+    def week?; end
+
+    sig { returns(T::Boolean) }
+    def year?; end
   end
 
   module CommonRelationMethods

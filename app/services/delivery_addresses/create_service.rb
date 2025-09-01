@@ -6,7 +6,7 @@ module DeliveryAddresses
     sig { params(user: User).returns(DeliveryAddress) }
     def execute(user:)
       ActiveRecord::Base.transaction do
-        delivery_address = user.delivery_addresses.new(params)
+        delivery_address = user.delivery_addresses.new(T.let(params, ActionController::Parameters))
         delivery_address.is_default = true if delivery_address.user&.delivery_addresses.blank?
         delivery_address.save!
         if delivery_address.is_default

@@ -11,6 +11,12 @@ class Users::SmsVerifier
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::Users::SmsVerifier::DeliveryType)) }
+  def delivery_type; end
+
+  sig { returns(T.nilable(::Enumerize::Value::Users::SmsVerifier::VerifierType)) }
+  def verifier_type; end
+
   private
 
   sig { returns(NilClass) }
@@ -24,6 +30,52 @@ class Users::SmsVerifier
       ).returns(::Users::SmsVerifier)
     end
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::Users::SmsVerifier::DeliveryType < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def sms?; end
+
+    sig { returns(T::Boolean) }
+    def sms_voice?; end
+
+    sig { returns(T::Boolean) }
+    def voice?; end
+
+    sig { returns(T::Boolean) }
+    def voide_sms?; end
+  end
+
+  class ::Enumerize::Value::Users::SmsVerifier::VerifierType < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def mfa?; end
+
+    sig { returns(T::Boolean) }
+    def registration?; end
   end
 
   module CommonRelationMethods

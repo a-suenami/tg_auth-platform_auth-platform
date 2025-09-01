@@ -28,12 +28,14 @@ class StripeRecord
     enumerize :interval, enum_class: IntervalEnum
     enumerize :interval_unit, enum_class: IntervalEnum
 
+    sig { returns(String) }
     def deleted_text
       self.class.human_attribute_name("deleted.#{self.deleted}")
     end
 
     private
 
+    sig { void }
     def set_interval_unit
       self.interval_unit = self.interval&.value
     end

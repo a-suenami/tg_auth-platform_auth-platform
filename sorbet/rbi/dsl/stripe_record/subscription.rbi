@@ -11,6 +11,12 @@ class StripeRecord::Subscription
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::StripeRecord::Subscription::Status)) }
+  def status; end
+
+  sig { returns(T.nilable(::Enumerize::Value::StripeRecord::Subscription::TrialStatus)) }
+  def trial_status; end
+
   private
 
   sig { returns(NilClass) }
@@ -24,6 +30,64 @@ class StripeRecord::Subscription
       ).returns(::StripeRecord::Subscription)
     end
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::StripeRecord::Subscription::Status < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def active?; end
+
+    sig { returns(T::Boolean) }
+    def canceled?; end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def incomplete?; end
+
+    sig { returns(T::Boolean) }
+    def incomplete_expired?; end
+
+    sig { returns(T::Boolean) }
+    def past_due?; end
+
+    sig { returns(T::Boolean) }
+    def trialing?; end
+
+    sig { returns(T::Boolean) }
+    def unpaid?; end
+  end
+
+  class ::Enumerize::Value::StripeRecord::Subscription::TrialStatus < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def available?; end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def none?; end
+
+    sig { returns(T::Boolean) }
+    def unavailable?; end
   end
 
   module CommonRelationMethods

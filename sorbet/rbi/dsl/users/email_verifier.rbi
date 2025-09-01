@@ -11,6 +11,9 @@ class Users::EmailVerifier
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::Users::EmailVerifier::VerifierType)) }
+  def verifier_type; end
+
   private
 
   sig { returns(NilClass) }
@@ -24,6 +27,26 @@ class Users::EmailVerifier
       ).returns(::Users::EmailVerifier)
     end
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::Users::EmailVerifier::VerifierType < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def email_change?; end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def registration?; end
   end
 
   module CommonRelationMethods

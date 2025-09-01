@@ -132,7 +132,7 @@ class StripeRecord
       end
 
       # 3. PaymentMethod (card) を引く
-      result = StripeRecord::Client::PaymentMethod.retrieve(T.must(remote_setup_intent.payment_method), stripe_account_id: self.stripe_account_id_if_needed, api_key:)
+      result = StripeRecord::Client::PaymentMethod.retrieve(remote_setup_intent.payment_method, stripe_account_id: self.stripe_account_id_if_needed, api_key:)
       return CreateCardPaymentMethodResult::StripeError.new(result.err_inner) if result.is_a?(Mangrove::Result::Err)
 
       remote_payment_method = result.ok_inner
@@ -186,6 +186,7 @@ class StripeRecord
           StripeRecord::Client::Customer.update(
             remote_customer_id,
             { invoice_settings: { default_payment_method: remote_payment_method.id } },
+            {},
             stripe_account_id: self.stripe_account_id_if_needed,
             api_key:,
           )

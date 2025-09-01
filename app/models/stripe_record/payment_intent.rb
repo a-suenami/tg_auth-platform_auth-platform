@@ -266,14 +266,15 @@ class StripeRecord
         stripe_payment_intent.api_key_account = controlling_platform
         stripe_payment_intent.connect_account = stripe_account
         stripe_payment_intent.charge_type = charge_type.serialize
-        remote_latest_charge = T.let(result.ok_inner.try(:latest_charge), T.nilable(Stripe::Charge))
-        if remote_latest_charge.present?
-          latest_charge = stripe_payment_intent.latest_charge || stripe_payment_intent.build_latest_charge(user: T.must(stripe_payment_intent.user), remote_id: remote_latest_charge.id)
-          latest_charge.api_key_account = stripe_payment_intent.api_key_account
-          latest_charge.connect_account = stripe_payment_intent.connect_account
-          latest_charge.charge_type     = stripe_payment_intent.charge_type
-          latest_charge.assign_remote_attributes(remote_latest_charge)
-        end
+        # TODO: FIX latest_chargeはsubscriptionがある都合上、一つに定まらないので廃止予定。要修正
+        # remote_latest_charge = T.let(result.ok_inner.try(:latest_charge), T.nilable(Stripe::Charge))
+        # if remote_latest_charge.present?
+        #   latest_charge = stripe_payment_intent.latest_charge || stripe_payment_intent.build_latest_charge(user: T.must(stripe_payment_intent.user), remote_id: remote_latest_charge.id)
+        #   latest_charge.api_key_account = stripe_payment_intent.api_key_account
+        #   latest_charge.connect_account = stripe_payment_intent.connect_account
+        #   latest_charge.charge_type     = stripe_payment_intent.charge_type
+        #   latest_charge.assign_remote_attributes(remote_latest_charge)
+        # end
         stripe_payment_intent.save!
         Mangrove::Result.ok(stripe_payment_intent)
       end
@@ -302,7 +303,8 @@ class StripeRecord
       def add_three_d_secure_params(params, request_three_d_secure:, tenant:)
         return if request_three_d_secure == StripeRecord::Request3DS::None
 
-        domain = T.must(tenant.user_page_domain)
+        # TODO: Stripe買い切り決済導入時にここのS3セキュアについて要修正
+        domain = T.unsafe(tenant).user_page_domain
 
         params.merge!(
           {
@@ -321,33 +323,34 @@ class StripeRecord
       end
     end
 
-    sig { params(auto_save: T::Boolean).returns(Mangrove::Result[StripeRecord::PaymentIntent, Stripe::StripeError]) }
-    def api_refresh(auto_save: true)
-      account = T.must(self.api_key_account)
-      api_key = T.must(account.api_key)
-      result = StripeRecord::Client::PaymentIntent.retrieve(remote_id, expand: ['latest_charge'], stripe_account_id: self.stripe_account_id_if_needed, api_key:)
+    # TODO: メモ) latest_chargeはsubscriptionがある都合上、一つに定まらないので廃止予定。要修正
+    # sig { params(auto_save: T::Boolean).returns(Mangrove::Result[StripeRecord::PaymentIntent, Stripe::StripeError]) }
+    # def api_refresh(auto_save: true)
+    #   account = T.must(self.api_key_account)
+    #   api_key = T.must(account.api_key)
+    #   result = StripeRecord::Client::PaymentIntent.retrieve(remote_id, expand: ['latest_charge'], stripe_account_id: self.stripe_account_id_if_needed, api_key:)
 
-      if result.is_a?(Mangrove::Result::Err)
-        return Mangrove::Result.err(result.err_inner)
-      end
+    #   if result.is_a?(Mangrove::Result::Err)
+    #     return Mangrove::Result.err(result.err_inner)
+    #   end
 
-      T.assert_type!(result, Mangrove::Result[Stripe::PaymentIntent, Stripe::StripeError])
+    #   T.assert_type!(result, Mangrove::Result[Stripe::PaymentIntent, Stripe::StripeError])
 
-      self.assign_remote_attributes(result.ok_inner)
-      remote_latest_charge = T.let(result.ok_inner.try(:latest_charge), T.nilable(Stripe::Charge))
-      if remote_latest_charge.present?
-        latest_charge = self.latest_charge || self.build_latest_charge(user: T.must(self.user), remote_id: remote_latest_charge.id)
-        latest_charge.assign_remote_attributes(remote_latest_charge)
-        latest_charge.api_key_account = self.api_key_account # nilable (only Connect)
-        latest_charge.connect_account = self.connect_account # nilable (only Connect)
-      end
-      if auto_save
-        latest_charge&.save!
-        self.save!
-      end
+    #   self.assign_remote_attributes(result.ok_inner)
+    #   remote_latest_charge = T.let(result.ok_inner.try(:latest_charge), T.nilable(Stripe::Charge))
+    #   if remote_latest_charge.present?
+    #     latest_charge = self.latest_charge || self.build_latest_charge(user: T.must(self.user), remote_id: remote_latest_charge.id)
+    #     latest_charge.assign_remote_attributes(remote_latest_charge)
+    #     latest_charge.api_key_account = self.api_key_account # nilable (only Connect)
+    #     latest_charge.connect_account = self.connect_account # nilable (only Connect)
+    #   end
+    #   if auto_save
+    #     latest_charge&.save!
+    #     self.save!
+    #   end
 
-      Mangrove::Result.ok(self)
-    end
+    #   Mangrove::Result.ok(self)
+    # end
 
     sig { returns(Mangrove::Result[Stripe::PaymentIntent, Stripe::StripeError]) }
     def capture

@@ -11,6 +11,9 @@ class StripeRecord::PaymentMethod
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::StripeRecord::PaymentMethod::ChargeType)) }
+  def charge_type; end
+
   private
 
   sig { returns(NilClass) }
@@ -24,6 +27,29 @@ class StripeRecord::PaymentMethod
       ).returns(::StripeRecord::PaymentMethod)
     end
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::StripeRecord::PaymentMethod::ChargeType < ::Enumerize::Value
+    sig { params(other: Tenant::StripeAccount::ChargeTypeEnum).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: Tenant::StripeAccount::ChargeTypeEnum).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: Tenant::StripeAccount::ChargeTypeEnum).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def destination_charges_application_fee?; end
+
+    sig { returns(T::Boolean) }
+    def destination_charges_transfer?; end
+
+    sig { returns(T::Boolean) }
+    def direct_charges?; end
+
+    sig { returns(Tenant::StripeAccount::ChargeTypeEnum) }
+    def enum; end
   end
 
   module CommonRelationMethods

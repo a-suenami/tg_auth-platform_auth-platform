@@ -11,6 +11,9 @@ class Memberships::Contract
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::Memberships::Contract::Status)) }
+  def status; end
+
   private
 
   sig { returns(NilClass) }
@@ -24,6 +27,32 @@ class Memberships::Contract
       ).returns(::Memberships::Contract)
     end
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::Memberships::Contract::Status < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def active?; end
+
+    sig { returns(T::Boolean) }
+    def canceled?; end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def expired?; end
+
+    sig { returns(T::Boolean) }
+    def pending?; end
   end
 
   module CommonRelationMethods

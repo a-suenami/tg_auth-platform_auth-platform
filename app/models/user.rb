@@ -81,16 +81,7 @@ class User < ApplicationRecord
 
   sig { params(tenant_stripe_account: Tenant::StripeAccount).returns(Mangrove::Result[Stripe::Customer, Stripe::StripeError]) }
   def create_stripe_customer(tenant_stripe_account:)
-    charge_type = tenant_stripe_account.charge_type
-
-    stripe_account = case charge_type&.enum
-    when Tenant::StripeAccount::ChargeTypeEnum::DirectCharges
-      T.must(tenant_stripe_account.stripe_account&.remote_id)
-    when NilClass, Tenant::StripeAccount::ChargeTypeEnum::DestinationChargesApplicationFee, Tenant::StripeAccount::ChargeTypeEnum::DestinationChargesTransfer
-      nil
-    else
-      T.absurd(charge_type)
-    end
+    stripe_account = tenant_stripe_account.stripe_account&.remote_id
 
     result = StripeRecord::Client::Customer.create(
       {

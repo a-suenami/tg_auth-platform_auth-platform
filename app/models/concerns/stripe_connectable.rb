@@ -27,6 +27,6 @@ module StripeConnectable
   # それ以外の場合は nil を返すので { stripe_account: nil } として request を飛ばせばよい
   sig { returns(T.nilable(String)) }
   def stripe_account_id_if_needed
-    self.connect_account&.stripe_account_id_if_needed(charge_type: T.must(self.charge_type).enum)
+    T.unsafe(self).connect_account&.stripe_account_id_if_needed(charge_type: T.unsafe(self).charge_type.enum)
   end
 end

@@ -7521,7 +7521,7 @@ module CGI::Escape
 
   def escape_uri_component(arg); end
 
-  def unescapeURIComponent(*arg); end
+  def unescapeURIComponent(string, encoding = T.unsafe(nil)); end
 
   def unescape_uri_component(*arg); end
 end
@@ -7580,7 +7580,7 @@ module CGI::Util
 
   def escape_uri_component(arg); end
 
-  def unescapeURIComponent(*arg); end
+  def unescapeURIComponent(string, encoding = T.unsafe(nil)); end
 
   def unescape_uri_component(*arg); end
 end
@@ -29598,7 +29598,7 @@ end
 class Prism::ParseError
   def deconstruct_keys(keys); end
 
-  def initialize(message, location); end
+  def initialize(type, message, location, level); end
 end
 
 class Prism::ParseResult
@@ -29622,7 +29622,7 @@ end
 class Prism::ParseWarning
   def deconstruct_keys(keys); end
 
-  def initialize(message, location); end
+  def initialize(type, message, location, level); end
 end
 
 class Prism::Pattern
@@ -29911,7 +29911,7 @@ class Prism::Serialize::Loader
 
   def io(); end
 
-  def load_comments(); end
+  def load_comments(freeze); end
 
   def load_encoding(); end
 
@@ -30176,19 +30176,19 @@ module Prism
 
   def self.lex_ripper(source); end
 
-  def self.load(source, serialized); end
+  def self.load(source, serialized, freeze = T.unsafe(nil)); end
 
   def self.parse(*arg); end
 
   def self.parse_comments(*arg); end
 
-  def self.parse_failure?(source, **options); end
+  def self.parse_failure?(*_arg0); end
 
   def self.parse_file(*arg); end
 
   def self.parse_file_comments(*arg); end
 
-  def self.parse_file_failure?(filepath, **options); end
+  def self.parse_file_failure?(*_arg0); end
 
   def self.parse_file_success?(*arg); end
 

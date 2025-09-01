@@ -6,17 +6,22 @@
 module RulerArea
   class Tenants::StripeRecords::ProductsController < RulerArea::Tenants::ApplicationController
     extend T::Sig
+
     sig { void }
     def index
-      @stripe_record_products = StripeRecord::Product.all
-    end
-    sig { void }
-    def show
-      @stripe_record_product = StripeRecord::Product.find(params[:id])
+      @stripe_record_products = T.let(StripeRecord::Product.all, T.untyped)
     end
 
+    sig { void }
+    def show
+      @stripe_record_product = T.let(StripeRecord::Product.find(params[:id]), T.untyped)
+    end
+
+    sig { void }
     def preview
-      @stripe_record_product = StripeRecords::Products::RetrieveService.new(tenant_stripe_account: T.must(Tenant.current!.tenant_stripe_account)).execute(stripe_product_id: params[:stripe_product_id])
+      @stripe_record_product = T.let(
+        StripeRecords::Products::RetrieveService.new(tenant_stripe_account: T.must(Tenant.current!.tenant_stripe_account)).execute(stripe_product_id: params[:stripe_product_id]), T.untyped,
+      )
 
       render :preview
     rescue => e
@@ -24,6 +29,7 @@ module RulerArea
       redirect_to({ action: :index }, alert: '同期に失敗しました。API キーの設定などを確認してください')
     end
 
+    sig { void }
     def sync
       StripeRecords::Products::SyncProductAndPlansService.new(tenant_stripe_account: T.must(Tenant.current!.tenant_stripe_account)).execute(stripe_product_id: params[:stripe_product_id])
 
@@ -33,6 +39,7 @@ module RulerArea
       redirect_to({ action: :index }, alert: '同期に失敗しました。API キーの設定などを確認してください')
     end
 
+    sig { void }
     def destroy
       # 論理削除
       StripeRecords::Products::DestroyService.new(tenant_stripe_account: T.must(Tenant.current!.tenant_stripe_account)).execute(stripe_record_product_id: params[:id])

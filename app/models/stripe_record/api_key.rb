@@ -26,7 +26,7 @@ class StripeRecord
 
     sig { void }
     def decrypt_secret_key
-      self.secret_key = AppEncryptor.decrypt(self.secret_key_encrypted, salt: T.must(self.id))
+      self.secret_key = AppEncryptor.decrypt(self.secret_key_encrypted, salt: self.id)
     end
 
     sig { void }
@@ -70,7 +70,7 @@ class StripeRecord
       secret_key = T.let(self.secret_key, T.nilable(String))
       return if secret_key.blank?
 
-      id = self.id || SecureRandom.uuid
+      id = T.let(self.id, T.nilable(String)) || SecureRandom.uuid
       self.id = id
       self.secret_key_encrypted = AppEncryptor.encrypt(secret_key, salt: id)
     end

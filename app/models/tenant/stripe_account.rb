@@ -8,6 +8,7 @@ class Tenant::StripeAccount < ApplicationRecord
   belongs_to :tenant
   belongs_to :stripe_account, class_name: 'StripeRecord::Account'
 
+  # TODO: FIX stripe connect廃止するので、charge_typeは必要ないはず
   # Connect の支払いタイプ
   class ChargeTypeEnum < T::Enum
     enums do
@@ -91,7 +92,6 @@ class Tenant::StripeAccount < ApplicationRecord
     return if self.association(:stripe_account).loaded?
 
     stripe_account = StripeRecord::Account.eager_load(:api_key, [controlling_platform: :api_key]).find(self.stripe_account_id)
-    T.assert_type!(stripe_account, StripeRecord::Account)
 
     stripe_account_association = T.let(self.association(:stripe_account), ActiveRecord::Associations::BelongsToAssociation)
     stripe_account_association.target = stripe_account

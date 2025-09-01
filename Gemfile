@@ -184,11 +184,14 @@ group :development, :test do
   # gem 'pry-byebug', '~> 3.9.0'
   # gem 'pry-stack_explorer', '~> 0.4.0'
   # Ruby code style checking
-  gem 'rubocop', '~> 1.60', '>= 1.60.2'
+  gem 'rubocop', '~> 1.80.1'
   # A RuboCop extension focused on enforcing Rails best practices and coding conventions
-  gem 'rubocop-rails', '~> 2.23', '>= 2.23.1'
+  gem 'rubocop-rails', '~> 2.33.3'
   # RuboCop extension for RSpec
-  gem 'rubocop-rspec', '~> 2.26', '>= 2.26.1'
+  gem 'rubocop-rspec', '~> 3.6.0'
+  gem 'rubocop-rspec_rails'
+  gem 'rubocop-factory_bot'
+  gem 'rubocop-capybara', '~> 2.22.0', require: false
   # Testing framework
   gem 'rspec-rails', '~> 6.1'
   # Sorbet type checking for RSpec

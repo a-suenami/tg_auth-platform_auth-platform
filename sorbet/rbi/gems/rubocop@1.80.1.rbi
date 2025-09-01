@@ -5866,38 +5866,6 @@ module RuboCop::Cop::EndlessMethodRewriter
   def arguments(node, missing = T.unsafe(nil)); end
 end
 
-# Common functionality for enforcing a specific superclass.
-#
-# IMPORTANT: RuboCop core depended on this module when it supported Rails department.
-# Rails department has been extracted to RuboCop Rails gem.
-#
-# It will not be updated to `RuboCop::Cop::Base` v1 API to maintain compatibility
-# with existing RuboCop Rails 2.8 or lower.
-#
-# @api private
-# @deprecated This module is deprecated and will be removed by RuboCop 2.0.
-#
-# source://rubocop//lib/rubocop/cop/mixin/enforce_superclass.rb#15
-module RuboCop::Cop::EnforceSuperclass
-  # @api private
-  #
-  # source://rubocop//lib/rubocop/cop/mixin/enforce_superclass.rb#35
-  def on_class(node); end
-
-  # @api private
-  #
-  # source://rubocop//lib/rubocop/cop/mixin/enforce_superclass.rb#39
-  def on_send(node); end
-
-  class << self
-    # @api private
-    # @private
-    #
-    # source://rubocop//lib/rubocop/cop/mixin/enforce_superclass.rb#16
-    def included(base); end
-  end
-end
-
 # Common functionality for checking for a line break before the first
 # element in a multi-line collection.
 #
@@ -32790,6 +32758,11 @@ class RuboCop::Cop::PunctuationCorrector
     def swap_comma(corrector, range); end
   end
 end
+
+module RuboCop::Cop::RSpec; end
+class RuboCop::Cop::RSpec::MultipleExpectations < ::RuboCop::Cop::RSpec::Base; end
+class RuboCop::Cop::RSpec::MultipleMemoizedHelpers < ::RuboCop::Cop::RSpec::Base; end
+class RuboCop::Cop::RSpec::NestedGroups < ::RuboCop::Cop::RSpec::Base; end
 
 # Methods that calculate and return Parser::Source::Ranges
 #

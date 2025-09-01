@@ -8,6 +8,32 @@
 class UserProfileForm
   include GeneratedAttributeMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::UserProfileForm::Gender)) }
+  def gender; end
+
+  class ::Enumerize::Value::UserProfileForm::Gender < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def female?; end
+
+    sig { returns(T::Boolean) }
+    def male?; end
+
+    sig { returns(T::Boolean) }
+    def other?; end
+  end
+
   module GeneratedAttributeMethods
     sig { returns(T.untyped) }
     def birth_date; end

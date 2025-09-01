@@ -221,5 +221,30 @@ module Exceptions
         I18n.t 'exceptions.payment.plan_change_in_progress'
       end
     end
+
+    module Stripe
+      module SetupIntent
+        class AlreadyCreated < BaseError
+          sig { returns(String) }
+          def message
+            I18n.t 'exceptions.payments.stripe.setup_intent.already_created'
+          end
+        end
+
+        class NotCompleted < BaseError
+          sig { returns(String) }
+          def message
+            I18n.t 'exceptions.payments.stripe.setup_intent.not_completed'
+          end
+        end
+
+        class NotCard < BaseError
+          sig { returns(String) }
+          def message
+            I18n.t 'exceptions.payments.stripe.setup_intent.not_card'
+          end
+        end
+      end
+    end
   end
 end

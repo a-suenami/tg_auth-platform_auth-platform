@@ -11,6 +11,9 @@ class Tenant
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::Tenant::CardPaymentGateway)) }
+  def card_payment_gateway; end
+
   private
 
   sig { returns(NilClass) }
@@ -19,6 +22,23 @@ class Tenant
   class << self
     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Tenant).void)).returns(::Tenant) }
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::Tenant::CardPaymentGateway < ::Enumerize::Value
+    sig { params(other: Tenant::CardPaymentGatewayEnum).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: Tenant::CardPaymentGatewayEnum).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: Tenant::CardPaymentGatewayEnum).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(Tenant::CardPaymentGatewayEnum) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def stripe?; end
   end
 
   module CommonRelationMethods

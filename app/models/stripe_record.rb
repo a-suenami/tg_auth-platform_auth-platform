@@ -114,9 +114,15 @@ class StripeRecord
       sig { override.returns(T::Class[StripeClass]) }
       def self.stripe_class = Stripe::Customer
 
-      def self.update(customer_id, params = nil, opts = {}, stripe_account_id:, api_key:)
+      sig {
+        params(
+          id: String, params: T::Hash[T.untyped, T.untyped], opts: T::Hash[Symbol, T.untyped], stripe_account_id: T.nilable(String), api_key: StripeRecord::APIKey,
+        )
+        .returns(Mangrove::Result[StripeClass, Stripe::StripeError])
+      }
+      def self.update(id, params = {}, opts = {}, stripe_account_id:, api_key:)
         self.handle_exception do
-          T.unsafe(self.stripe_class).update(customer_id, params, self.opts(api_key:, stripe_account: stripe_account_id).merge(opts))
+          T.unsafe(self.stripe_class).update(id, params, self.opts(api_key:, stripe_account: stripe_account_id).merge(opts))
         end
       end
     end
@@ -216,6 +222,7 @@ class StripeRecord
       sig { override.returns(T::Class[StripeClass]) }
       def self.stripe_class = Stripe::Refund
     end
+
 
     module Product
       extend T::Sig

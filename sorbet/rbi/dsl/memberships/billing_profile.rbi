@@ -11,6 +11,18 @@ class Memberships::BillingProfile
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::Memberships::BillingProfile::PaymentProvider)) }
+  def payment_provider; end
+
+  sig { returns(T.nilable(::Enumerize::Value::Memberships::BillingProfile::PaymentType)) }
+  def payment_type; end
+
+  sig { returns(T.nilable(::Enumerize::Value::Memberships::BillingProfile::Phase)) }
+  def phase; end
+
+  sig { returns(T.nilable(::Enumerize::Value::Memberships::BillingProfile::Status)) }
+  def status; end
+
   private
 
   sig { returns(NilClass) }
@@ -24,6 +36,107 @@ class Memberships::BillingProfile
       ).returns(::Memberships::BillingProfile)
     end
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::Memberships::BillingProfile::PaymentProvider < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def komoju?; end
+
+    sig { returns(T::Boolean) }
+    def other?; end
+
+    sig { returns(T::Boolean) }
+    def stripe?; end
+  end
+
+  class ::Enumerize::Value::Memberships::BillingProfile::PaymentType < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def campaign_code?; end
+
+    sig { returns(T::Boolean) }
+    def convenience?; end
+
+    sig { returns(T::Boolean) }
+    def credit_card?; end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def external_linkage?; end
+  end
+
+  class ::Enumerize::Value::Memberships::BillingProfile::Phase < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def closed?; end
+
+    sig { returns(T::Boolean) }
+    def current?; end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def pending?; end
+
+    sig { returns(T::Boolean) }
+    def upcoming?; end
+  end
+
+  class ::Enumerize::Value::Memberships::BillingProfile::Status < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T::Boolean) }
+    def active?; end
+
+    sig { returns(T::Boolean) }
+    def canceled?; end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def expired?; end
+
+    sig { returns(T::Boolean) }
+    def pending?; end
   end
 
   module CommonRelationMethods

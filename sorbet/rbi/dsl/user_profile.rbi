@@ -11,6 +11,9 @@ class UserProfile
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::UserProfile::Gender)) }
+  def gender; end
+
   private
 
   sig { returns(NilClass) }
@@ -24,6 +27,29 @@ class UserProfile
       ).returns(::UserProfile)
     end
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::UserProfile::Gender < ::Enumerize::Value
+    sig { params(other: String).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: String).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(T.untyped) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def female?; end
+
+    sig { returns(T::Boolean) }
+    def male?; end
+
+    sig { returns(T::Boolean) }
+    def other?; end
   end
 
   module CommonRelationMethods

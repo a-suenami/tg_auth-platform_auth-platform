@@ -7,7 +7,7 @@ module Users::LinkedApplications
     sig { params(tenant_id: String, resource_owner_id: String, oauth_application_id: String, scopes: T.nilable(Doorkeeper::OAuth::Scopes)).returns(T::Boolean) }
     def execute(tenant_id:, resource_owner_id:, oauth_application_id:, scopes:)
       return false if User.active.find(resource_owner_id).blank?
-      return false if OauthApplication.find(oauth_application_id).blank?
+      return false unless OauthApplication.find_by(id: oauth_application_id)
       return false if tenant_id.blank?
 
       linked_application = Users::LinkedApplication.find_or_initialize_by(tenant_id:, user_id: resource_owner_id, oauth_application_id:)
