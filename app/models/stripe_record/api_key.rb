@@ -5,6 +5,7 @@
 # ==============================================================================
 class StripeRecord
   class APIKey < ApplicationRecord
+    include Multitenancy
     has_one :account, validate: true, autosave: true
 
     attribute :secret_key, :string
