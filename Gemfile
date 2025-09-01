@@ -62,6 +62,9 @@ gem 'omniauth-auth0', '~> 3.1', '>= 3.1.1'
 gem 'omniauth-rails_csrf_protection', '~> 1.0', '>= 1.0.1'
 gem 'auth0', '~> 5.16'
 gem 'rack-attack', '~> 6.7'
+# Prism (for Rubocop spoom
+gem 'prism', '~> 1.4.0'
+
 # ------------------------------------------------------------------------------
 # Front
 # ------------------------------------------------------------------------------
@@ -161,14 +164,14 @@ gem 'twilio-ruby', '~> 6.9', '>= 6.9.1'
 gem 'phony_rails'
 
 # typing
-gem 'sorbet-runtime', '~> 0.5.11525'
+gem 'sorbet-runtime', '~> 0.6.12466'
 
 # reCAPTCHA Enterprise Client
 gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.17.3'
 # Stripe Client
-gem 'stripe', '~> 12.4.0'
+gem 'stripe', '~> 15.5.0'
 # Mangrove provides type utility to use with Sorbet
-gem 'mangrove', '~> 0.29.0'
+gem 'mangrove', '~> 0.37.3'
 
 # for shopify
 gem 'shopify_api', '~> 14.11.1'
@@ -221,10 +224,10 @@ group :development, :test do
   # gem 'knapsack_pro', '~> 3.7.0'
 
   # typing
-  gem 'sorbet', '~> 0.5.11525'
-  gem 'rubocop-sorbet', '~> 0.7.6', require: false
-  gem 'tapioca', git: 'https://github.com/twogate/tapioca', ref: 'd0a8227'
-  gem 'spoom', '~> 1.2.4', require: false
+  gem 'sorbet', '~> 0.6.12466'
+  gem 'rubocop-sorbet', '~> 0.10.5', require: false
+  gem 'tapioca', git: 'https://github.com/twogate/tapioca', ref: 'e8922d2'
+  gem 'spoom', '~> 1.7.0', require: false
 end
 
 # ------------------------------------------------------------------------------
@@ -243,5 +246,5 @@ group :development do
   # Generate Entity-Relationship Diagrams
   gem 'rails-erd', '~> 1.7.2'
   # Ruby Language Server by Shopify
-  gem 'ruby-lsp', '~> 0.13.4'
+  gem 'ruby-lsp', '~> 0.26.1'
 end
