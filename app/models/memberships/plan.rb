@@ -19,6 +19,8 @@ class Memberships::Plan < ApplicationRecord
   accepts_nested_attributes_for :plan_components, allow_destroy: true, reject_if: :all_blank
 
   validates :recurrence, inclusion: { in: [true, false] }
-  validates :validity_period, presence: true, inclusion: { in: %w[month year] }
+  validates :billing_cycle_months, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :billing_anchor, presence: true, inclusion: { in: %w[by_start_day by_fixed_month_day] }
+  validates :anchor_day_of_month, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 31 }, allow_nil: true
   validates :amount, presence: true, numericality: { only_integer: true, greater_than: 0 }
 end

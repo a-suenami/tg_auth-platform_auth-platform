@@ -200,11 +200,14 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "name", null: false, comment: "プラン名"
     t.boolean "recurrence", default: false, null: false, comment: "定期課金フラグ: true=サブスクリプション, false=買い切り"
     t.string "validity_period", null: false, comment: "有効期間: month, year"
+    t.string "billing_cycle_months", default: "1", null: false, comment: "課金サイクル（月単位）。例: 1=月額, 6=半年, 12=年額"
     t.integer "amount", null: false, comment: "請求金額"
     t.boolean "is_active", default: true, comment: "有効フラグ"
     t.datetime "enabled_at", comment: "有効化日時"
     t.datetime "disabled_at", comment: "無効化日時"
     t.integer "trial_period_days", default: 0, null: false, comment: "トライアル期間"
+    t.string "billing_anchor", default: "by_start_day", null: false, comment: "締めの基準: by_start_day(登録日基準), by_fixed_month_day(毎月の特定日)"
+    t.integer "anchor_day_of_month", comment: "fixed_month_day時の締め日(1-31 月末指定時は31)。by_fixed_month_day時のみ使用"
     t.integer "position", default: 0, null: false, comment: "表示順序"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

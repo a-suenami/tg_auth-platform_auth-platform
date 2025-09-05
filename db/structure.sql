@@ -1,8 +1,3 @@
-\restrict sMNDlSsRDXKH0ia6pQL60vpAVZBgmwgaPPl6bJA3ctUwJvY7GDGtNW3ZyTWufwU
-
--- Dumped from database version 15.5
--- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -485,11 +480,14 @@ CREATE TABLE public.memberships__plans (
     name character varying NOT NULL,
     recurrence boolean DEFAULT false NOT NULL,
     validity_period character varying NOT NULL,
+    billing_cycle_months character varying DEFAULT '1'::character varying NOT NULL,
     amount integer NOT NULL,
     is_active boolean DEFAULT true,
     enabled_at timestamp(6) without time zone,
     disabled_at timestamp(6) without time zone,
     trial_period_days integer DEFAULT 0 NOT NULL,
+    billing_anchor character varying DEFAULT 'by_start_day'::character varying NOT NULL,
+    anchor_day_of_month integer,
     "position" integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -525,6 +523,13 @@ COMMENT ON COLUMN public.memberships__plans.validity_period IS '有効期間: mo
 
 
 --
+-- Name: COLUMN memberships__plans.billing_cycle_months; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.billing_cycle_months IS '課金サイクル（月単位）。例: 1=月額, 6=半年, 12=年額';
+
+
+--
 -- Name: COLUMN memberships__plans.amount; Type: COMMENT; Schema: public; Owner: -
 --
 
@@ -557,6 +562,20 @@ COMMENT ON COLUMN public.memberships__plans.disabled_at IS '無効化日時';
 --
 
 COMMENT ON COLUMN public.memberships__plans.trial_period_days IS 'トライアル期間';
+
+
+--
+-- Name: COLUMN memberships__plans.billing_anchor; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.billing_anchor IS '締めの基準: by_start_day(登録日基準), by_fixed_month_day(毎月の特定日)';
+
+
+--
+-- Name: COLUMN memberships__plans.anchor_day_of_month; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.anchor_day_of_month IS 'fixed_month_day時の締め日(1-31 月末指定時は31)。by_fixed_month_day時のみ使用';
 
 
 --
@@ -3833,8 +3852,6 @@ ALTER TABLE ONLY public.users
 --
 -- PostgreSQL database dump complete
 --
-
-\unrestrict sMNDlSsRDXKH0ia6pQL60vpAVZBgmwgaPPl6bJA3ctUwJvY7GDGtNW3ZyTWufwU
 
 SET search_path TO "$user", public;
 

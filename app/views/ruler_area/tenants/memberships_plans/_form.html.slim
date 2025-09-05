@@ -18,9 +18,21 @@
       = f.label :recurrence, "定期課金（サブスクリプション）", class: "uk-form-label uk-margin-small-left"
 
 .uk-margin
-  = f.label :validity_period, class: "uk-form-label"
+  = f.label :billing_cycle_months, class: "uk-form-label"
   .uk-form-controls
-    = f.select :validity_period, options_for_select([['月単位', 'month'], ['年単位', 'year']], membership_plan.validity_period), { prompt: '選択してください' }, class: "uk-select"
+    = f.number_field :billing_cycle_months, min: 1, class: "uk-input"
+    .uk-text-small.uk-text-muted 課金サイクル（月単位）。例: 1=月額, 6=半年, 12=年額
+
+.uk-margin
+  = f.label :billing_anchor, class: "uk-form-label"
+  .uk-form-controls
+    = f.select :billing_anchor, options_for_select([['登録日基準', 'by_start_day'], ['毎月の特定日', 'by_fixed_month_day']], membership_plan.billing_anchor), { prompt: '選択してください' }, class: "uk-select"
+
+.uk-margin
+  = f.label :anchor_day_of_month, class: "uk-form-label"
+  .uk-form-controls
+    = f.number_field :anchor_day_of_month, min: 1, max: 31, class: "uk-input"
+    .uk-text-small.uk-text-muted 締め日（1-31）。月末指定時は31を入力してください。by_fixed_month_day時のみ使用されます。
 
 .uk-margin
   = f.label :amount, class: "uk-form-label"
