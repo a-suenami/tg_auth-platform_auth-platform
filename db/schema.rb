@@ -199,8 +199,8 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.citext "tenant_id", null: false
     t.string "name", null: false, comment: "プラン名"
     t.boolean "recurrence", default: false, null: false, comment: "定期課金フラグ: true=サブスクリプション, false=買い切り"
-    t.string "validity_period", null: false, comment: "有効期間: month, year"
-    t.string "billing_cycle_months", default: "1", null: false, comment: "課金サイクル（月単位）。例: 1=月額, 6=半年, 12=年額"
+    t.integer "recurring_interval_count", default: 1, null: false, comment: "更新サイクルの数(1=1日/週/月/年, 2=2日/週/月/年)"
+    t.string "recurring_interval_unit", default: "month", null: false, comment: "更新サイクルの単位 (day/week/month/year)"
     t.integer "amount", null: false, comment: "請求金額"
     t.boolean "is_active", default: true, comment: "有効フラグ"
     t.datetime "enabled_at", comment: "有効化日時"
@@ -469,6 +469,8 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "chargeable_id", comment: "subscription or charge"
     t.string "chargeable_type"
     t.string "status", default: "draft", null: false, comment: "draft, open, paid, uncollectible, or void"
+    t.string "confirmation_secret", comment: "confirmation_secret payment_intent.secret"
+    t.string "confirmation_secret_type", comment: "基本的にはpayment_intentのみ"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_28699c5a5e"

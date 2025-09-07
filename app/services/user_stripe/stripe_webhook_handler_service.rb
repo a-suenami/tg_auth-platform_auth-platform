@@ -10,15 +10,13 @@ module UserStripe
     def process
       case @event.type
       when 'payment_intent.succeeded'
-        handle_payment_intent_succeeded
-      when 'setup_intent.setup_failed'
-        handle_setup_intent_setup_failed
+        # invoice.paidで処理を受ける
       when 'invoice.paid'
         invoice = @event.data.object
         case invoice.billing_reason
         when 'subscription_create'
           # 初回課金
-          # 3dセキュアの確認のためpayment_intent.succeededで処理を受けるのでここでは処理しない
+          handle_invoice_paid_on_subscription_create
         when 'subscription_cycle'
           # 自動更新の確定処理
           handle_invoice_paid_on_subscription_cycle(type: 'subscription_cycle')
@@ -40,7 +38,7 @@ module UserStripe
     private
 
     # TODO: 冪等な処理にする
-    def handle_payment_intent_succeeded
+    def handle_invoice_paid_on_subscription_create
       UserStripe::CompletePaymentIntentContractService.new(event: @event).execute
     end
 

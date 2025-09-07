@@ -7,7 +7,10 @@ ja:
         id: ID
         name: プラン名
         recurrence: 定期課金
-        validity_period: 有効期間
+        recurring_interval_unit: 更新サイクル単位
+        recurring_interval_count: 更新サイクル数
+        billing_anchor: 締め基準
+        anchor_day_of_month: 締め日
         amount: 金額
         trial_period_days: トライアル期間
         enabled_at: 有効開始日時
@@ -20,6 +23,11 @@ ja:
         recurrence:
           true: 定期課金
           false: 買い切り
-        validity_period:
-          month: 月単位
-          year: 年単位
+        recurring_interval_unit:
+          day: 日
+          week: 週
+          month: 月
+          year: 年
+        billing_anchor:
+          by_start_day: 登録日基準
+          by_fixed_month_day: 毎月の特定日

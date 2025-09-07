@@ -3,8 +3,8 @@
 # ==============================================================================
 # app/services/memberships/plan_change_service.rb
 # ==============================================================================
-module Memberships
-  class PlanChangeService < Memberships::BaseService
+module UserStripe
+  class ChangePlanService < UserStripe::BaseService
     def execute(contract:, new_membership_plan:)
       # プラン変更の検証
       validate_plan_change(contract:, new_membership_plan:)
@@ -102,8 +102,9 @@ module Memberships
     end
 
     def different_billing_cycle?(current_membership_plan:, new_membership_plan:)
-      # 有効期間が異なる場合（月額 vs 年額）
-      current_membership_plan.validity_period != new_membership_plan.validity_period
+      # 課金サイクルが異なる場合（期間の単位や数が異なる）
+      current_membership_plan.recurring_interval_unit != new_membership_plan.recurring_interval_unit ||
+        current_membership_plan.recurring_interval_count != new_membership_plan.recurring_interval_count
     end
 
     def create_upcoming_billing_profile(contract:, new_membership_plan:, current_billing_profile:)
@@ -127,6 +128,11 @@ module Memberships
     end
 
     def change_stripe_plan(stripe_subscription:, new_membership_plan:, current_billing_profile:, contract:)
+      p 'change_stripe_plan'
+      p stripe_subscription
+      p new_membership_plan
+      p current_billing_profile
+      p contract
       # 新しいプランのStripe Priceを取得
       new_stripe_price = new_membership_plan.plan_payment_methods
         .where(payment_type: 'credit_card')
@@ -153,6 +159,7 @@ module Memberships
 
 
     def change_plan_immediately(stripe_subscription:, new_stripe_price:, contract:)
+      p 'change_plan_immediately'
       # # subscription schedule中の契約を即時プラン変更させてはいけない。現在のsubscriptionのみ即時変更されて、scheduleが残る
       # if stripe_subscription.last_subscription_schedule.present?
       #   # 更新がスケジュールされている場合は、スケジュールを破棄
@@ -190,12 +197,6 @@ module Memberships
         {
           end_behavior: 'release',
           phases: [
-            {
-              start_date: stripe_subscription_schedule.current_phase.start_date,
-              items: [{ price: stripe_subscription.price.remote_id }],
-              end_date: 'now',
-              proration_behavior: 'always_invoice',
-            },
             {
               # 次回更新時に新しいプランに変更
               start_date: 'now',
@@ -249,9 +250,14 @@ module Memberships
     end
 
     def change_plan_schedule(stripe_subscription:, new_stripe_price:)
+      p 'change_plan_schedule'
       stripe_subscription_schedule = fetch_or_create_remote_subscription_schedule(stripe_subscription:)
 
-      Stripe::SubscriptionSchedule.update(
+      p stripe_subscription_schedule
+      p stripe_subscription
+      p new_stripe_price
+
+      p Stripe::SubscriptionSchedule.update(
         stripe_subscription_schedule.id,
         {
           end_behavior: 'release',

@@ -28,8 +28,28 @@
             th = Memberships::Plan.human_attribute_name(:recurrence)
             td = @membership_plan.recurrence ? "定期課金" : "買い切り"
           tr
-            th = Memberships::Plan.human_attribute_name(:validity_period)
-            td = @membership_plan.validity_period
+            th = Memberships::Plan.human_attribute_name(:recurring_interval_unit)
+            td
+              - case @membership_plan.recurring_interval_unit
+              - when 'day'
+                | 日
+              - when 'week'
+                | 週
+              - when 'month'
+                | 月
+              - when 'year'
+                | 年
+              - else
+                = @membership_plan.recurring_interval_unit
+          tr
+            th = Memberships::Plan.human_attribute_name(:recurring_interval_count)
+            td = "#{@membership_plan.recurring_interval_count}回"
+          tr
+            th = Memberships::Plan.human_attribute_name(:billing_anchor)
+            td = @membership_plan.billing_anchor == 'by_start_day' ? '登録日基準' : '毎月の特定日'
+          tr
+            th = Memberships::Plan.human_attribute_name(:anchor_day_of_month)
+            td = @membership_plan.anchor_day_of_month || '未設定'
           tr
             th = Memberships::Plan.human_attribute_name(:amount)
             td = @membership_plan.amount

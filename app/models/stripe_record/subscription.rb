@@ -63,7 +63,7 @@ class StripeRecord
       return @stripe_subscription if @stripe_subscription.present?
 
       @stripe_subscription ||= Stripe::Subscription.retrieve(
-        { id: self.stripe_subscription_id, expand: ['latest_invoice.payment_intent', 'pending_setup_intent'] },
+        { id: self.stripe_subscription_id, expand: ['latest_invoice.confirmation_secret', 'pending_setup_intent'] },
         AppStripe.configuration,
       )
 
@@ -77,7 +77,7 @@ class StripeRecord
       when :setup_intent
         true
       when :payment_intent
-        stripe_subscription.latest_invoice.payment_intent.status != 'succeeded'
+        stripe_subscription.latest_invoice.status != 'paid'
       end
     end
 
@@ -98,18 +98,7 @@ class StripeRecord
       when :setup_intent
         stripe_subscription.pending_setup_intent.client_secret
       when :payment_intent
-        stripe_subscription.latest_invoice.payment_intent.client_secret
-      end
-    end
-
-    def stripe_intent_status
-      stripe_subscription = self.fetch_stripe_subscription
-
-      case stripe_intent_type
-      when :setup_intent
-        stripe_subscription.pending_setup_intent.status
-      when :payment_intent
-        stripe_subscription.latest_invoice.payment_intent.status
+        stripe_subscription.latest_invoice.confirmation_secret.client_secret
       end
     end
   end

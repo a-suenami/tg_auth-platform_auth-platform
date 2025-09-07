@@ -3,6 +3,9 @@
 # ==============================================================================
 # app/models/stripe_record/payment_intent.rb
 # ==============================================================================
+# 廃止予定
+# Invoiceが複数のPaymentIntentを持つようになり、管理が面倒なので
+# Subscription以外では使うかも？と思ったので残している
 class StripeRecord
   class PaymentIntent < ApplicationRecord
     extend T::Sig

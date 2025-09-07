@@ -90,7 +90,10 @@ RSpec.describe '[ API::V1::Public::MembershipsController API ]' do
       expect(body_array[0]['membership_plans'][0]['position']).to eq membership_plan_basic.position
       expect(body_array[0]['membership_plans'][0]['recurrence']).to eq membership_plan_basic.recurrence
       expect(body_array[0]['membership_plans'][0]['trial_period_days']).to eq membership_plan_basic.trial_period_days
-      expect(body_array[0]['membership_plans'][0]['validity_period']).to eq membership_plan_basic.validity_period
+      expect(body_array[0]['membership_plans'][0]['recurring_interval_unit']).to eq membership_plan_basic.recurring_interval_unit
+      expect(body_array[0]['membership_plans'][0]['recurring_interval_count']).to eq membership_plan_basic.recurring_interval_count
+      expect(body_array[0]['membership_plans'][0]['billing_anchor']).to eq membership_plan_basic.billing_anchor
+      expect(body_array[0]['membership_plans'][0]['anchor_day_of_month']).to eq membership_plan_basic.anchor_day_of_month
     end
   end
 
@@ -119,7 +122,10 @@ RSpec.describe '[ API::V1::Public::MembershipsController API ]' do
         expect(body_hash['membership_plans'][0]['position']).to eq membership_plan_basic.position
         expect(body_hash['membership_plans'][0]['recurrence']).to eq membership_plan_basic.recurrence
         expect(body_hash['membership_plans'][0]['trial_period_days']).to eq membership_plan_basic.trial_period_days
-        expect(body_hash['membership_plans'][0]['validity_period']).to eq membership_plan_basic.validity_period
+        expect(body_hash['membership_plans'][0]['recurring_interval_unit']).to eq membership_plan_basic.recurring_interval_unit
+        expect(body_hash['membership_plans'][0]['recurring_interval_count']).to eq membership_plan_basic.recurring_interval_count
+        expect(body_hash['membership_plans'][0]['billing_anchor']).to eq membership_plan_basic.billing_anchor
+        expect(body_hash['membership_plans'][0]['anchor_day_of_month']).to eq membership_plan_basic.anchor_day_of_month
       end
     end
 

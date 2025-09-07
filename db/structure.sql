@@ -479,8 +479,8 @@ CREATE TABLE public.memberships__plans (
     tenant_id public.citext NOT NULL,
     name character varying NOT NULL,
     recurrence boolean DEFAULT false NOT NULL,
-    validity_period character varying NOT NULL,
-    billing_cycle_months character varying DEFAULT '1'::character varying NOT NULL,
+    recurring_interval_count integer DEFAULT 1 NOT NULL,
+    recurring_interval_unit character varying DEFAULT 'month'::character varying NOT NULL,
     amount integer NOT NULL,
     is_active boolean DEFAULT true,
     enabled_at timestamp(6) without time zone,
@@ -516,17 +516,17 @@ COMMENT ON COLUMN public.memberships__plans.recurrence IS '定期課金フラグ
 
 
 --
--- Name: COLUMN memberships__plans.validity_period; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN memberships__plans.recurring_interval_count; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.memberships__plans.validity_period IS '有効期間: month, year';
+COMMENT ON COLUMN public.memberships__plans.recurring_interval_count IS '更新サイクルの数(1=1日/週/月/年, 2=2日/週/月/年)';
 
 
 --
--- Name: COLUMN memberships__plans.billing_cycle_months; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN memberships__plans.recurring_interval_unit; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.memberships__plans.billing_cycle_months IS '課金サイクル（月単位）。例: 1=月額, 6=半年, 12=年額';
+COMMENT ON COLUMN public.memberships__plans.recurring_interval_unit IS '更新サイクルの単位 (day/week/month/year)';
 
 
 --
@@ -1030,6 +1030,8 @@ CREATE TABLE public.stripe_record_invoices (
     chargeable_id uuid,
     chargeable_type character varying,
     status character varying DEFAULT 'draft'::character varying NOT NULL,
+    confirmation_secret character varying,
+    confirmation_secret_type character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1054,6 +1056,20 @@ COMMENT ON COLUMN public.stripe_record_invoices.chargeable_id IS 'subscription o
 --
 
 COMMENT ON COLUMN public.stripe_record_invoices.status IS 'draft, open, paid, uncollectible, or void';
+
+
+--
+-- Name: COLUMN stripe_record_invoices.confirmation_secret; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_invoices.confirmation_secret IS 'confirmation_secret payment_intent.secret';
+
+
+--
+-- Name: COLUMN stripe_record_invoices.confirmation_secret_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record_invoices.confirmation_secret_type IS '基本的にはpayment_intentのみ';
 
 
 --

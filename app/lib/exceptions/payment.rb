@@ -89,6 +89,18 @@ module Exceptions
       end
     end
 
+    class IntentNotFound < BaseError
+      sig { returns(Symbol) }
+      def code
+        :intent_not_found
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.payment.intent_not_found'
+      end
+    end
+
     class PlanChangeError < BaseError
       sig { returns(Symbol) }
       def code

@@ -4,7 +4,5 @@
 class StripeRecord::InvoiceBlueprint < Blueprinter::Base
   identifier :id
 
-  fields :remote_id, :status
-
-  association :payment_intent, blueprint: StripeRecord::PaymentIntentBlueprint
+  fields :remote_id, :status, :confirmation_secret, :confirmation_secret_type
 end

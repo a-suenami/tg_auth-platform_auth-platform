@@ -12,7 +12,7 @@ module API::V1::Internal::Memberships::Contracts
       new_membership_plan = Memberships::Plan.find(plan_change_params[:memberships_plan_id])
 
       # 変更可能かチェック
-      service = Memberships::PlanChangeService.new
+      service = UserStripe::ChangePlanService.new
       can_change = service.send(:validate_plan_change, contract: @contract, new_membership_plan:)
 
       render json: {
@@ -35,7 +35,7 @@ module API::V1::Internal::Memberships::Contracts
     def create
       new_membership_plan = Memberships::Plan.find(plan_change_params[:memberships_plan_id])
 
-      service = Memberships::PlanChangeService.new
+      service = UserStripe::ChangePlanService.new
       contract = service.execute(contract: @contract, new_membership_plan:)
 
       render json: Memberships::ContractBlueprint.render(contract)

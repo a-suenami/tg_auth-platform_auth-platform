@@ -32,7 +32,7 @@ module API::V1::Internal::Memberships
       # 現在のBillingProfileを取得
       current_billing_profile = contract.current_billing_profile
 
-      raise Exceptions::Payment::NoStripeSubscription if current_billing_profile&.chargeable_type == 'StripeRecord::Subscription'
+      raise Exceptions::Payment::NoStripeSubscription if current_billing_profile&.chargeable_type != 'StripeRecord::Subscription'
 
       contract = UserStripe::CancelSubscriptionService.new.execute(contract:)
 

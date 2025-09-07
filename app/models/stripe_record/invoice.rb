@@ -11,8 +11,6 @@ class StripeRecord
     belongs_to :user
     belongs_to :chargeable, polymorphic: true, optional: true
 
-    has_one :payment_intent, inverse_of: :invoice
-
     validates :remote_id, presence: true, uniqueness: true
 
     enumerize :status, in: %w[draft open paid uncollectible void], default: 'draft'

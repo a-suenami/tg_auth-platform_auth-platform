@@ -23,6 +23,12 @@ module UserStripe
         ],
         # default_tax_rates: [@tax_rate_id],
         payment_behavior: 'default_incomplete',
+        collection_method: 'charge_automatically',
+        payment_settings: {
+          save_default_payment_method: 'on_subscription',
+          payment_method_types: ['card'],
+        },
+        expand: ['latest_invoice.confirmation_secret', 'pending_setup_intent'],
       }
 
       if membership_plan.trial_period_days.positive? && check_trial_availability(user:, membership_plan:)
@@ -44,14 +50,19 @@ module UserStripe
         stripe_record_subscription.trial_end = stripe_subscription.trial_end
         stripe_record_subscription.trial_start = stripe_subscription.trial_start
         # 現在の請求期間の開始日時と終了日時を保存
-        stripe_record_subscription.current_period_start = Time.zone.at(stripe_subscription.current_period_start) if  stripe_subscription.current_period_start
-        stripe_record_subscription.current_period_end = Time.zone.at(stripe_subscription.current_period_end) if stripe_subscription.current_period_end
+        if  stripe_subscription.try(:current_period_start)
+          stripe_record_subscription.current_period_start = Time.zone.at(stripe_subscription.current_period_start)
+          stripe_record_subscription.current_period_end = Time.zone.at(stripe_subscription.current_period_end)
+        elsif stripe_subscription&.items&.data&.first.try(:current_period_start)
+          stripe_record_subscription.current_period_start = Time.zone.at(stripe_subscription.items.data.first.current_period_start)
+          stripe_record_subscription.current_period_end = Time.zone.at(stripe_subscription.items.data.first.current_period_end)
+        end
         stripe_record_subscription.save!
 
         # SubscriptionItems を保存
         save_subscription_items(stripe_subscription, user, stripe_record_subscription)
 
-        # PaymentIntent または SetupIntent を保存
+        # PaymentIntent(confirmation_secret) または SetupIntent を保存
         save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
 
         contract = create_contract(user:, stripe_record_subscription:, membership_plan:)
@@ -85,8 +96,7 @@ module UserStripe
     end
 
     def save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
-      latest_invoice = Stripe::Invoice.retrieve(stripe_subscription.latest_invoice, stripe_api_key_config)
-
+      latest_invoice = Stripe::Invoice.retrieve({ id: stripe_subscription.latest_invoice.id, expand: ['confirmation_secret'] }, stripe_api_key_config)
 
       stripe_record_invoice = StripeRecord::Invoice.find_or_create_by!(remote_id: latest_invoice.id) do |record|
         record.user = user
@@ -94,21 +104,14 @@ module UserStripe
         record.remote_id = latest_invoice.id
         record.status = latest_invoice.status
         record.chargeable = stripe_record_subscription
+        record.confirmation_secret = latest_invoice&.confirmation_secret&.client_secret
+        record.confirmation_secret_type = 'payment_intent' if latest_invoice&.confirmation_secret&.client_secret.present?
       end
 
-      if latest_invoice&.payment_intent
-        # PaymentIntent が存在する場合
-        payment_intent = Stripe::PaymentIntent.retrieve(latest_invoice.payment_intent, stripe_api_key_config)
-        StripeRecord::PaymentIntent.find_or_create_by!(remote_id: payment_intent.id) do |record|
-          record.user = user
-          record.tenant_id = user.tenant_id
-          record.invoice = stripe_record_invoice
-          record.amount = payment_intent.amount
-          record.currency = payment_intent.currency
-          record.status = payment_intent.status
-          record.client_secret = payment_intent.client_secret
-          record.api_key_account = Tenant.current&.tenant_stripe_account&.stripe_account
-        end
+      if latest_invoice.try(:confirmation_secret)
+        # confirmation_secret が存在する場合
+        confirmation_secret = latest_invoice.confirmation_secret
+
       elsif stripe_subscription.pending_setup_intent
         # SetupIntent が存在する場合
         setup_intent_remote_id = stripe_subscription.pending_setup_intent
@@ -123,6 +126,8 @@ module UserStripe
         end
         stripe_record_subscription.pending_setup_intent = stripe_record_setup_intent
         stripe_record_subscription.save!
+      else
+        raise Exceptions::Payment::IntentNotFound, 'PaymentIntent or SetupIntent not found'
       end
     end
 

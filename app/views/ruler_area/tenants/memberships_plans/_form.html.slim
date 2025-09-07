@@ -18,10 +18,15 @@
       = f.label :recurrence, "定期課金（サブスクリプション）", class: "uk-form-label uk-margin-small-left"
 
 .uk-margin
-  = f.label :billing_cycle_months, class: "uk-form-label"
+  = f.label :recurring_interval_unit, class: "uk-form-label"
   .uk-form-controls
-    = f.number_field :billing_cycle_months, min: 1, class: "uk-input"
-    .uk-text-small.uk-text-muted 課金サイクル（月単位）。例: 1=月額, 6=半年, 12=年額
+    = f.select :recurring_interval_unit, options_for_select([['日', 'day'], ['週', 'week'], ['月', 'month'], ['年', 'year']], membership_plan.recurring_interval_unit), { prompt: '選択してください' }, class: "uk-select"
+
+.uk-margin
+  = f.label :recurring_interval_count, class: "uk-form-label"
+  .uk-form-controls
+    = f.number_field :recurring_interval_count, min: 1, class: "uk-input"
+    .uk-text-small.uk-text-muted 更新サイクルの数（例: 1=1日/週/月/年、2=2日/週/月/年）
 
 .uk-margin
   = f.label :billing_anchor, class: "uk-form-label"

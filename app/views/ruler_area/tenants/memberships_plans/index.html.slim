@@ -25,7 +25,7 @@
           th = Memberships::Plan.human_attribute_name(:position)
           th = Memberships::Plan.human_attribute_name(:name)
           th = Memberships::Plan.human_attribute_name(:recurrence)
-          th = Memberships::Plan.human_attribute_name(:validity_period)
+          th = "更新サイクル"
           th = Memberships::Plan.human_attribute_name(:amount)
           th = Memberships::Plan.human_attribute_name(:trial_period_days)
           th = "メンバーシップ"
@@ -41,7 +41,17 @@
             td
               = membership_plan.recurrence ? "定期課金" : "買い切り"
             td
-              = membership_plan.validity_period
+              - case membership_plan.recurring_interval_unit
+              - when 'day'
+                = "#{membership_plan.recurring_interval_count}日"
+              - when 'week'
+                = "#{membership_plan.recurring_interval_count}週"
+              - when 'month'
+                = "#{membership_plan.recurring_interval_count}ヶ月"
+              - when 'year'
+                = "#{membership_plan.recurring_interval_count}年"
+              - else
+                = "#{membership_plan.recurring_interval_count}#{membership_plan.recurring_interval_unit}"
             td
               = membership_plan.amount
             td

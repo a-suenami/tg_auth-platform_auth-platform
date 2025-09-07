@@ -52,7 +52,8 @@ class RulerArea::Tenants::MembershipsPlansController < RulerArea::Tenants::Appli
     params.require(:memberships_plan).permit(
       :name,
       :recurrence,
-      :billing_cycle_months,
+      :recurring_interval_unit,
+      :recurring_interval_count,
       :billing_anchor,
       :anchor_day_of_month,
       :amount,
