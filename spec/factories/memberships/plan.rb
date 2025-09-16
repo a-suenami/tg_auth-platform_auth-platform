@@ -5,7 +5,10 @@ FactoryBot.define do
     tenant_id { create(:tenant).id }
     sequence(:name) { |n| "plan_#{n}" }
     recurrence { [true, false].sample }
-    validity_period { %w[month year].sample }
+    recurring_interval_unit { %w[day week month year].sample }
+    recurring_interval_count { rand(1..12) }
+    billing_anchor { 'by_start_day' }
+    anchor_day_of_month { nil }
     amount { rand(1000..10_000) }
     is_active { true }
     enabled_at { Time.current }
@@ -21,12 +24,24 @@ FactoryBot.define do
       recurrence { false }
     end
 
+    trait :daily do
+      recurring_interval_unit { 'day' }
+      recurring_interval_count { 1 }
+    end
+
+    trait :weekly do
+      recurring_interval_unit { 'week' }
+      recurring_interval_count { 1 }
+    end
+
     trait :monthly do
-      validity_period { 'month' }
+      recurring_interval_unit { 'month' }
+      recurring_interval_count { 1 }
     end
 
     trait :yearly do
-      validity_period { 'year' }
+      recurring_interval_unit { 'year' }
+      recurring_interval_count { 1 }
     end
 
     trait :inactive do

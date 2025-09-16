@@ -7,7 +7,6 @@ create_table :memberships__contracts, force: :cascade, id: :uuid, default: -> { 
   t.string :status, null: false, default: 'active', comment: 'ステータス'
 
   t.timestamps null: false
-  t.index [:tenant_id, :user_id], name: :idx_memberships__contracts_tenant_user, using: :btree, unique: true
   t.index :expires_at, name: :idx_memberships__contracts_expires_at, using: :btree
 end
 

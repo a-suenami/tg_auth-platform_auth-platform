@@ -77,6 +77,18 @@ module Exceptions
       end
     end
 
+    class CardFingerprintMissing < BaseError
+      sig { returns(Symbol) }
+      def code
+        :card_fingerprint_missing
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.payment.card_fingerprint_missing'
+      end
+    end
+
     class UnauthorizedPlan < BaseError
       sig { returns(Symbol) }
       def code
@@ -235,6 +247,18 @@ module Exceptions
     end
 
     module Stripe
+      class StripeError < BaseError
+        sig { returns(String) }
+        def message
+          I18n.t 'exceptions.payment.stripe.stripe_error'
+        end
+
+        sig { returns(Symbol) }
+        def code
+          :stripe_error
+        end
+      end
+
       module SetupIntent
         class AlreadyCreated < BaseError
           sig { returns(String) }

@@ -32,7 +32,7 @@ module API::ExceptionRescuable
     # rescue_from Exceptions::App::RecordInvalid, with: :handle_record_invalid_with_object
   end
 
-  def handle_record_not_found
+  def handle_record_not_found(_exception = nil)
     resource_not_found(message: I18n.t('errors.messages.not_found'))
   end
 

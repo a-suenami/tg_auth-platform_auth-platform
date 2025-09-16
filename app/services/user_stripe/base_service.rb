@@ -5,9 +5,11 @@
 # ==============================================================================
 module UserStripe
   class BaseService < ::BaseService
-    def validate_before_subscribing_and_initialize_stripe_subscription(user:, stripe_record_price:)
-      # TODO: memberships_usersを確認してチェックする
-      # raise Exceptions::Payment::AlreadyHaveSubscriptions if user.premium_member?
+    def validate_before_subscribing_and_initialize_stripe_subscription(user:, membership_plan:, stripe_record_price:)
+      # memberships_usersを確認してチェックする
+      target_memberships = membership_plan.memberships
+      raise Exceptions::Payment::AlreadyHaveSubscriptions if user.membership_users.exists?(membership: target_memberships)
+
 
       stripe_subscription = user.stripe_subscriptions.new
       stripe_subscription.tenant_id = Tenant.current.id
@@ -24,7 +26,7 @@ module UserStripe
     end
 
     def stripe_api_key_config
-      { api_key: Tenant.current&.tenant_stripe_account&.stripe_account&.api_key&.secret_key, stripe_version: "2025-08-27.basil" }
+      { api_key: Tenant.current&.tenant_stripe_account&.stripe_account&.api_key&.secret_key, stripe_version: '2025-08-27.basil' }
     end
 
 
@@ -50,7 +52,7 @@ module UserStripe
       when Stripe::Card
         default_payment_method_or_default_source&.fingerprint
       else
-        raise Exceptions::Payment::CardMissing
+        raise Exceptions::Payment::CardFingerprintMissing
       end
 
       card_fingerprint

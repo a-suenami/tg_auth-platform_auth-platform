@@ -113,7 +113,7 @@ module UserStripe
         tenant_id: contract.tenant_id,
         user: contract.user,
         membership_plan: new_membership_plan,
-        contract:,
+        membership_contract: contract,
         payment_type: current_billing_profile.payment_type,
         payment_provider: current_billing_profile.payment_provider,
         external_id: current_billing_profile.external_id, # 同じStripe subscriptionを使用
@@ -128,11 +128,6 @@ module UserStripe
     end
 
     def change_stripe_plan(stripe_subscription:, new_membership_plan:, current_billing_profile:, contract:)
-      p 'change_stripe_plan'
-      p stripe_subscription
-      p new_membership_plan
-      p current_billing_profile
-      p contract
       # 新しいプランのStripe Priceを取得
       new_stripe_price = new_membership_plan.plan_payment_methods
         .where(payment_type: 'credit_card')
@@ -148,18 +143,17 @@ module UserStripe
         current_tiers = current_membership_plan.memberships.pluck(:tier)
         new_tiers = new_membership_plan.memberships.pluck(:tier)
         if current_tiers.sum > new_tiers.sum
-          change_plan_immediately(stripe_subscription:, new_stripe_price:, contract:)
+          change_plan_immediately(stripe_subscription:, new_stripe_price:, contract:, new_membership_plan:)
         else
-          change_plan_schedule(stripe_subscription:, new_stripe_price:)
+          change_plan_schedule(stripe_subscription:, new_stripe_price:, contract:, new_membership_plan:)
         end
       else
-        change_plan_schedule(stripe_subscription:, new_stripe_price:)
+        change_plan_schedule(stripe_subscription:, new_stripe_price:, contract:, new_membership_plan:)
       end
     end
 
 
-    def change_plan_immediately(stripe_subscription:, new_stripe_price:, contract:)
-      p 'change_plan_immediately'
+    def change_plan_immediately(stripe_subscription:, new_stripe_price:, contract:, new_membership_plan:)
       # # subscription schedule中の契約を即時プラン変更させてはいけない。現在のsubscriptionのみ即時変更されて、scheduleが残る
       # if stripe_subscription.last_subscription_schedule.present?
       #   # 更新がスケジュールされている場合は、スケジュールを破棄
@@ -190,53 +184,63 @@ module UserStripe
       #   }, stripe_api_key_config,
       # )
 
-      stripe_subscription_schedule = fetch_or_create_remote_subscription_schedule(stripe_subscription:)
+      # TODO: 有効なスケジュールがある場合にプランを即時反映で上書きはできなそう
 
-      remote_subscription_schedule = Stripe::SubscriptionSchedule.update(
-        stripe_subscription_schedule.id,
-        {
-          end_behavior: 'release',
-          phases: [
-            {
-              # 次回更新時に新しいプランに変更
-              start_date: 'now',
-              items: [{ price: new_stripe_price.remote_id }],
-              proration_behavior: 'always_invoice',
-              # start_date は前の phase の end_date と自動連結されるので省略可能
-            },
-          ],
-        }, stripe_api_key_config,
-      )
+      ActiveRecord::Base.transaction do
+        stripe_subscription_schedule = fetch_or_create_remote_subscription_schedule(stripe_subscription:)
 
-      # Contractの期限更新
-      next_period_end = Time.zone.at(remote_subscription_schedule.phases.first.end_date)
-      contract.update(expires_at: next_period_end)
-      # 現在のbilling_profileを取得
-      current_billing_profile = stripe_subscription.current_billing_profile
-      # 現在のbilling_profileをpastに変更
-      current_billing_profile.update!(
-        phase: 'closed',
-      )
+        remote_subscription_schedule = Stripe::SubscriptionSchedule.update(
+          stripe_subscription_schedule.id,
+          {
+            end_behavior: 'release',
+            phases: [
+              {
+                start_date: stripe_subscription_schedule.current_phase.start_date,
+                items: [{ price: stripe_subscription.price.remote_id }],
+                end_date: 'now',
+              },
+              {
+                # 次回更新時に新しいプランに変更
+                start_date: 'now',
+                items: [{ price: new_stripe_price.remote_id }],
+                proration_behavior: 'always_invoice',
+                # start_date は前の phase の end_date と自動連結されるので省略可能
+              },
+            ],
+          }, stripe_api_key_config,
+        )
 
-      # 新しいbilling_profileを作成
-      create_new_billing_profile_for_plan_change(current_billing_profile, contract, stripe_subscription)
+        # Contractの期限更新
+        next_period_end = Time.zone.at(remote_subscription_schedule.phases.first.end_date)
+        contract.update(expires_at: next_period_end)
+        # 現在のbilling_profileを取得
+        current_billing_profile = stripe_subscription.current_billing_profile
+        # 現在のbilling_profileをpastに変更
+        current_billing_profile.update!(
+          phase: 'closed',
+        )
 
-      # stripe_subscriptionの更新
-      stripe_subscription.update!(
-        current_period_start: Time.zone.now,
-        current_period_end: next_period_end,
-        status: 'active',
-      )
+        # 新しいbilling_profileを作成
+        create_new_billing_profile_for_plan_change(current_billing_profile, contract, stripe_subscription, new_membership_plan)
+
+        # stripe_subscriptionの更新
+        stripe_subscription.update!(
+          current_period_start: Time.zone.now,
+          current_period_end: next_period_end,
+          price: new_stripe_price,
+          status: 'active',
+        )
+      end
     rescue Stripe::StripeError => e
       raise Exceptions::Payment::StripePlanChangeError, "Stripeでのプラン変更に失敗しました: #{e.message}"
     end
 
-    def create_new_billing_profile_for_plan_change(current_billing_profile, contract, stripe_subscription)
+    def create_new_billing_profile_for_plan_change(current_billing_profile, contract, stripe_subscription, new_membership_plan)
       Memberships::BillingProfile.create!(
         tenant_id: contract.tenant_id,
         user: contract.user,
-        membership_plan: current_billing_profile.membership_plan,
-        contract:,
+        membership_plan: new_membership_plan,
+        membership_contract: contract,
         chargeable: stripe_subscription,
         payment_type: current_billing_profile.payment_type,
         payment_provider: current_billing_profile.payment_provider,
@@ -249,15 +253,10 @@ module UserStripe
       )
     end
 
-    def change_plan_schedule(stripe_subscription:, new_stripe_price:)
-      p 'change_plan_schedule'
+    def change_plan_schedule(stripe_subscription:, new_stripe_price:, contract:, new_membership_plan:)
       stripe_subscription_schedule = fetch_or_create_remote_subscription_schedule(stripe_subscription:)
 
-      p stripe_subscription_schedule
-      p stripe_subscription
-      p new_stripe_price
-
-      p Stripe::SubscriptionSchedule.update(
+      Stripe::SubscriptionSchedule.update(
         stripe_subscription_schedule.id,
         {
           end_behavior: 'release',
@@ -277,9 +276,10 @@ module UserStripe
         }, stripe_api_key_config,
       )
 
+      current_billing_profile = stripe_subscription.current_billing_profile
       # 新しいBillingProfileを作成（phase: upcoming）
       new_billing_profile = create_upcoming_billing_profile(
-        contract:,
+        membership_contract: contract,
         new_membership_plan:,
         current_billing_profile:,
       )
@@ -294,12 +294,21 @@ module UserStripe
         stripe_subscription_schedule = Stripe::SubscriptionSchedule.retrieve(stripe_subscription.last_subscription_schedule.remote_id, stripe_api_key_config)
         # 終了済みのscheduleが紐づいている場合は新しいものに作り替える
         if ['completed', 'canceled', 'released'].include?(stripe_subscription_schedule.status)
-          stripe_subscription_schedule = Stripe::SubscriptionSchedule.create({
-            from_subscription: stripe_subscription.remote_id,
-          }, stripe_api_key_config,)
-          stripe_subscription.update!(
-            subscription_schedule: stripe_subscription_schedule.id,
-          )
+          # TODO: subscriptionのscheduleを確認する
+          remote_subscription = Stripe::Subscription.retrieve(stripe_subscription.remote_id, stripe_api_key_config)
+          if remote_subscription.schedule.present?
+            stripe_subscription_schedule = Stripe::SubscriptionSchedule.retrieve(remote_subscription.schedule, stripe_api_key_config)
+
+            if ['completed', 'canceled', 'released'].include?(stripe_subscription_schedule.status)
+              stripe_subscription_schedule = Stripe::SubscriptionSchedule.create({
+                from_subscription: stripe_subscription.remote_id,
+              }, stripe_api_key_config,)
+            end
+          else
+            stripe_subscription_schedule = Stripe::SubscriptionSchedule.create({
+              from_subscription: stripe_subscription.remote_id,
+            }, stripe_api_key_config,)
+          end
 
           StripeRecord::SubscriptionSchedule.create(
             tenant_id: stripe_subscription.tenant_id,
@@ -311,7 +320,7 @@ module UserStripe
           )
         end
       else
-        stripe_subscription_schedule = begin
+        begin
           Stripe::SubscriptionSchedule.create({
             from_subscription: stripe_subscription.remote_id,
           }, stripe_api_key_config,)

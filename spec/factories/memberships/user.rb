@@ -2,7 +2,10 @@
 
 FactoryBot.define do
   factory :memberships__user, class: 'Memberships::User' do
-    membership_group { nil }
+    tenant_id { create(:tenant).id }
+    user { create(:user) }
+    membership { create(:membership) }
+    membership_contract { create(:memberships__contract) }
     expires_at { 1.year.from_now }
     status { 'active' }
 

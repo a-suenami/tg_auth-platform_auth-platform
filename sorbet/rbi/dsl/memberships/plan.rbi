@@ -692,21 +692,24 @@ class Memberships::Plan
         string_query: String,
         id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        recurrence: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        validity_period: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         amount: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         is_active: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         enabled_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         disabled_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        trial_period_days: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        position: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        recurrence: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        trial_period_days: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        position: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        billing_anchor: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        anchor_day_of_month: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        recurring_interval_unit: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        recurring_interval_count: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateAssociationRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, recurrence: nil, validity_period: nil, amount: nil, is_active: nil, enabled_at: nil, disabled_at: nil, trial_period_days: nil, position: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, amount: nil, is_active: nil, enabled_at: nil, disabled_at: nil, created_at: nil, updated_at: nil, name: nil, recurrence: nil, trial_period_days: nil, position: nil, billing_anchor: nil, anchor_day_of_month: nil, recurring_interval_unit: nil, recurring_interval_count: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -760,6 +763,96 @@ class Memberships::Plan
 
     sig { void }
     def amount_will_change!; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def anchor_day_of_month; end
+
+    sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+    def anchor_day_of_month=(value); end
+
+    sig { returns(T::Boolean) }
+    def anchor_day_of_month?; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def anchor_day_of_month_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def anchor_day_of_month_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def anchor_day_of_month_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def anchor_day_of_month_change; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def anchor_day_of_month_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def anchor_day_of_month_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def anchor_day_of_month_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def anchor_day_of_month_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def anchor_day_of_month_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def anchor_day_of_month_previously_was; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def anchor_day_of_month_was; end
+
+    sig { void }
+    def anchor_day_of_month_will_change!; end
+
+    sig { returns(::String) }
+    def billing_anchor; end
+
+    sig { params(value: ::String).returns(::String) }
+    def billing_anchor=(value); end
+
+    sig { returns(T::Boolean) }
+    def billing_anchor?; end
+
+    sig { returns(T.nilable(::String)) }
+    def billing_anchor_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def billing_anchor_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def billing_anchor_came_from_user?; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def billing_anchor_change; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def billing_anchor_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def billing_anchor_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def billing_anchor_in_database; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def billing_anchor_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def billing_anchor_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def billing_anchor_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def billing_anchor_was; end
+
+    sig { void }
+    def billing_anchor_will_change!; end
 
     sig { returns(::ActiveSupport::TimeWithZone) }
     def created_at; end
@@ -1166,8 +1259,104 @@ class Memberships::Plan
     sig { void }
     def recurrence_will_change!; end
 
+    sig { returns(::Integer) }
+    def recurring_interval_count; end
+
+    sig { params(value: ::Integer).returns(::Integer) }
+    def recurring_interval_count=(value); end
+
+    sig { returns(T::Boolean) }
+    def recurring_interval_count?; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def recurring_interval_count_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def recurring_interval_count_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def recurring_interval_count_came_from_user?; end
+
+    sig { returns(T.nilable([::Integer, ::Integer])) }
+    def recurring_interval_count_change; end
+
+    sig { returns(T.nilable([::Integer, ::Integer])) }
+    def recurring_interval_count_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def recurring_interval_count_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def recurring_interval_count_in_database; end
+
+    sig { returns(T.nilable([::Integer, ::Integer])) }
+    def recurring_interval_count_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def recurring_interval_count_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def recurring_interval_count_previously_was; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def recurring_interval_count_was; end
+
+    sig { void }
+    def recurring_interval_count_will_change!; end
+
+    sig { returns(::String) }
+    def recurring_interval_unit; end
+
+    sig { params(value: ::String).returns(::String) }
+    def recurring_interval_unit=(value); end
+
+    sig { returns(T::Boolean) }
+    def recurring_interval_unit?; end
+
+    sig { returns(T.nilable(::String)) }
+    def recurring_interval_unit_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def recurring_interval_unit_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def recurring_interval_unit_came_from_user?; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def recurring_interval_unit_change; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def recurring_interval_unit_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def recurring_interval_unit_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def recurring_interval_unit_in_database; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def recurring_interval_unit_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def recurring_interval_unit_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def recurring_interval_unit_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def recurring_interval_unit_was; end
+
+    sig { void }
+    def recurring_interval_unit_will_change!; end
+
     sig { void }
     def restore_amount!; end
+
+    sig { void }
+    def restore_anchor_day_of_month!; end
+
+    sig { void }
+    def restore_billing_anchor!; end
 
     sig { void }
     def restore_created_at!; end
@@ -1197,6 +1386,12 @@ class Memberships::Plan
     def restore_recurrence!; end
 
     sig { void }
+    def restore_recurring_interval_count!; end
+
+    sig { void }
+    def restore_recurring_interval_unit!; end
+
+    sig { void }
     def restore_tenant_id!; end
 
     sig { void }
@@ -1205,14 +1400,23 @@ class Memberships::Plan
     sig { void }
     def restore_updated_at!; end
 
-    sig { void }
-    def restore_validity_period!; end
-
     sig { returns(T.nilable([::Integer, ::Integer])) }
     def saved_change_to_amount; end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_amount?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def saved_change_to_anchor_day_of_month; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_anchor_day_of_month?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def saved_change_to_billing_anchor; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_billing_anchor?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
     def saved_change_to_created_at; end
@@ -1268,6 +1472,18 @@ class Memberships::Plan
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_recurrence?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
+    sig { returns(T.nilable([::Integer, ::Integer])) }
+    def saved_change_to_recurring_interval_count; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_recurring_interval_count?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def saved_change_to_recurring_interval_unit; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_recurring_interval_unit?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
 
@@ -1285,12 +1501,6 @@ class Memberships::Plan
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_updated_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable([::String, ::String])) }
-    def saved_change_to_validity_period; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def saved_change_to_validity_period?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(::String) }
     def tenant_id; end
@@ -1427,53 +1637,14 @@ class Memberships::Plan
     sig { void }
     def updated_at_will_change!; end
 
-    sig { returns(::String) }
-    def validity_period; end
-
-    sig { params(value: ::String).returns(::String) }
-    def validity_period=(value); end
-
-    sig { returns(T::Boolean) }
-    def validity_period?; end
-
-    sig { returns(T.nilable(::String)) }
-    def validity_period_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def validity_period_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def validity_period_came_from_user?; end
-
-    sig { returns(T.nilable([::String, ::String])) }
-    def validity_period_change; end
-
-    sig { returns(T.nilable([::String, ::String])) }
-    def validity_period_change_to_be_saved; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def validity_period_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def validity_period_in_database; end
-
-    sig { returns(T.nilable([::String, ::String])) }
-    def validity_period_previous_change; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def validity_period_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def validity_period_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def validity_period_was; end
-
-    sig { void }
-    def validity_period_will_change!; end
-
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_amount?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_anchor_day_of_month?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_billing_anchor?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_created_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
@@ -1503,6 +1674,12 @@ class Memberships::Plan
     def will_save_change_to_recurrence?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_recurring_interval_count?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_recurring_interval_unit?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_tenant_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -1510,9 +1687,6 @@ class Memberships::Plan
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_updated_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def will_save_change_to_validity_period?(from: T.unsafe(nil), to: T.unsafe(nil)); end
   end
 
   module GeneratedRelationMethods
@@ -1653,21 +1827,24 @@ class Memberships::Plan
         string_query: String,
         id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        recurrence: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        validity_period: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         amount: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         is_active: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         enabled_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         disabled_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        trial_period_days: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        position: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        recurrence: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        trial_period_days: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        position: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        billing_anchor: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        anchor_day_of_month: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        recurring_interval_unit: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        recurring_interval_count: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, name: nil, recurrence: nil, validity_period: nil, amount: nil, is_active: nil, enabled_at: nil, disabled_at: nil, trial_period_days: nil, position: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, amount: nil, is_active: nil, enabled_at: nil, disabled_at: nil, created_at: nil, updated_at: nil, name: nil, recurrence: nil, trial_period_days: nil, position: nil, billing_anchor: nil, anchor_day_of_month: nil, recurring_interval_unit: nil, recurring_interval_count: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

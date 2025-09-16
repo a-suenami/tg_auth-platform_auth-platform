@@ -17,7 +17,7 @@ module UserStripe
       )
 
       # 関連するContractを取得（invoiceを通じて）
-      contract = stripe_record_invoice&.chargeable&.current_billing_profile&.contract
+      contract = stripe_record_invoice&.chargeable&.current_billing_profile&.membership_contract
       contract.update!(
         status: 'active',
       )

@@ -2,7 +2,7 @@ create_table :memberships__billing_profiles, force: :cascade, id: :uuid, default
   t.references :tenant, type: :citext, null: false
   t.references :user, type: :uuid, null: false
   t.references :membership_plan, type: :uuid, null: false
-  t.references :contract, type: :uuid, null: false, comment: 'メンバーシップ契約ID'
+  t.references :membership_contract, type: :uuid, null: false, comment: 'メンバーシップ契約ID'
   t.string :payment_type, null: false, comment: '支払い方法: credit_card, convenience, campaign_code, external_linkage'
   t.string :payment_provider, comment: '決済プロバイダ: stripe, komojuなど'
   t.string :external_id, comment: '外部システムのID'
@@ -25,4 +25,4 @@ end
 add_foreign_key :memberships__billing_profiles, :tenants, name: :fk_memberships__billing_profiles_tenants
 add_foreign_key :memberships__billing_profiles, :users, name: :fk_memberships__billing_profiles_users
 add_foreign_key :memberships__billing_profiles, :memberships__plans, column: :membership_plan_id, name: :fk_memberships__billing_profiles_plans
-add_foreign_key :memberships__billing_profiles, :memberships__contracts, column: :contract_id, name: :fk_memberships__billing_profiles_contracts
+add_foreign_key :memberships__billing_profiles, :memberships__contracts, column: :membership_contract_id, name: :fk_memberships__billing_profiles_contracts

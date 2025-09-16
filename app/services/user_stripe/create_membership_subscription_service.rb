@@ -9,7 +9,7 @@ module UserStripe
       stripe_record_price = membership_plan.plan_payment_methods.where(payment_type: 'credit_card').last.stripe_record_price
       # stripe_record_subscription が nil の場合は新規作成
       # stripe_record_subscription が nil でない場合は 3DS などの追加アクションで契約フローを途中離脱した場合
-      stripe_record_subscription = validate_before_subscribing_and_initialize_stripe_subscription(user:, stripe_record_price:)
+      stripe_record_subscription = validate_before_subscribing_and_initialize_stripe_subscription(user:, membership_plan:, stripe_record_price:)
 
       fetch_constants
 
@@ -59,8 +59,6 @@ module UserStripe
         end
         stripe_record_subscription.save!
 
-        # SubscriptionItems を保存
-        save_subscription_items(stripe_subscription, user, stripe_record_subscription)
 
         # PaymentIntent(confirmation_secret) または SetupIntent を保存
         save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
@@ -69,36 +67,17 @@ module UserStripe
         create_membership_users(user:, membership_plan:, contract:)
       end
       contract
+    rescue Stripe::StripeError => e
+      Sentry.capture_exception(e)
+      raise Exceptions::Payment::Stripe::StripeError, "Stripeでの契約に失敗しました: #{e.message}"
     end
 
     private
 
-    def save_subscription_items(stripe_subscription, user, stripe_record_subscription)
-      # Stripe::Subscription.createのレスポンスからsubscription_itemsを取得
-      stripe_subscription.items.data.each do |stripe_subscription_item|
-        # Stripeのprice_idからStripeRecord::Priceを検索
-        stripe_record_price = StripeRecord::Price.find_by!(remote_id: stripe_subscription_item.price.id)
-
-        StripeRecord::SubscriptionItem.find_or_create_by!(remote_id: stripe_subscription_item.id) do |record|
-          record.tenant_id = user.tenant_id
-          record.subscription = stripe_record_subscription
-          record.price = stripe_record_price
-          record.remote_id = stripe_subscription_item.id
-          record.quantity = stripe_subscription_item.quantity
-          record.billing_thresholds = stripe_subscription_item.billing_thresholds
-          record.current_period_start = stripe_subscription_item.current_period_start
-          record.current_period_end = stripe_subscription_item.current_period_end
-          record.discounts = stripe_subscription_item.discounts
-          record.metadata = stripe_subscription_item.metadata
-          record.tax_rates = stripe_subscription_item.tax_rates
-        end
-      end
-    end
-
     def save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
       latest_invoice = Stripe::Invoice.retrieve({ id: stripe_subscription.latest_invoice.id, expand: ['confirmation_secret'] }, stripe_api_key_config)
 
-      stripe_record_invoice = StripeRecord::Invoice.find_or_create_by!(remote_id: latest_invoice.id) do |record|
+      StripeRecord::Invoice.find_or_create_by!(remote_id: latest_invoice.id) do |record|
         record.user = user
         record.tenant_id = user.tenant_id
         record.remote_id = latest_invoice.id
@@ -110,7 +89,7 @@ module UserStripe
 
       if latest_invoice.try(:confirmation_secret)
         # confirmation_secret が存在する場合
-        confirmation_secret = latest_invoice.confirmation_secret
+        latest_invoice.confirmation_secret
 
       elsif stripe_subscription.pending_setup_intent
         # SetupIntent が存在する場合
@@ -140,7 +119,7 @@ module UserStripe
       Memberships::BillingProfile.create!(
         user:,
         membership_plan:,
-        contract:,
+        membership_contract: contract,
         payment_type: 'credit_card',
         payment_provider: 'stripe',
         external_id: stripe_record_subscription.remote_id,

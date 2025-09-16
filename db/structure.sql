@@ -217,7 +217,7 @@ CREATE TABLE public.memberships__billing_profiles (
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
     membership_plan_id uuid NOT NULL,
-    contract_id uuid NOT NULL,
+    membership_contract_id uuid NOT NULL,
     payment_type character varying NOT NULL,
     payment_provider character varying,
     external_id character varying,
@@ -242,10 +242,10 @@ COMMENT ON TABLE public.memberships__billing_profiles IS 'メンバーシップ�
 
 
 --
--- Name: COLUMN memberships__billing_profiles.contract_id; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN memberships__billing_profiles.membership_contract_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.memberships__billing_profiles.contract_id IS 'メンバーシップ契約ID';
+COMMENT ON COLUMN public.memberships__billing_profiles.membership_contract_id IS 'メンバーシップ契約ID';
 
 
 --
@@ -2117,13 +2117,6 @@ CREATE INDEX idx_memberships__contracts_expires_at ON public.memberships__contra
 
 
 --
--- Name: idx_memberships__contracts_tenant_user; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_memberships__contracts_tenant_user ON public.memberships__contracts USING btree (tenant_id, user_id);
-
-
---
 -- Name: idx_memberships__groups_tenant_id_name_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2383,10 +2376,10 @@ CREATE UNIQUE INDEX index_login_spa_applications_on_uid ON public.login_spa_appl
 
 
 --
--- Name: index_memberships__billing_profiles_on_contract_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_memberships__billing_profiles_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__billing_profiles_on_contract_id ON public.memberships__billing_profiles USING btree (contract_id);
+CREATE INDEX index_memberships__billing_profiles_on_membership_contract_id ON public.memberships__billing_profiles USING btree (membership_contract_id);
 
 
 --
@@ -3214,7 +3207,7 @@ ALTER TABLE ONLY public.login_spa_applications
 --
 
 ALTER TABLE ONLY public.memberships__billing_profiles
-    ADD CONSTRAINT fk_memberships__billing_profiles_contracts FOREIGN KEY (contract_id) REFERENCES public.memberships__contracts(id);
+    ADD CONSTRAINT fk_memberships__billing_profiles_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.memberships__contracts(id);
 
 
 --

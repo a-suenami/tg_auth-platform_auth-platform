@@ -15,14 +15,14 @@ module UserStripe
       stripe_record_subscription = StripeRecord::Subscription.find_by(remote_id: @event.data.object.subscription)
       return if stripe_record_subscription.nil?
 
-      stripe_record_subscription.current_billing_profile.contract
+      stripe_record_subscription.current_billing_profile.membership_contract
 
       # 現在のbilling_profileを取得
       current_billing_profile = stripe_record_subscription.current_billing_profile
 
       return unless current_billing_profile
 
-      contract = current_billing_profile.contract
+      contract = current_billing_profile.membership_contract
       return unless contract
 
       # 自動更新停止済みの場合は処理しない
@@ -95,7 +95,7 @@ module UserStripe
         tenant_id: contract.tenant_id,
         user: contract.user,
         membership_plan: current_billing_profile.membership_plan,
-        contract:,
+        membership_contract: contract,
         chargeable: stripe_record_subscription,
         payment_type: current_billing_profile.payment_type,
         payment_provider: current_billing_profile.payment_provider,

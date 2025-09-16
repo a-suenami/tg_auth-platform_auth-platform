@@ -119,7 +119,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.uuid "membership_plan_id", null: false
-    t.uuid "contract_id", null: false, comment: "メンバーシップ契約ID"
+    t.uuid "membership_contract_id", null: false, comment: "メンバーシップ契約ID"
     t.string "payment_type", null: false, comment: "支払い方法: credit_card, convenience, campaign_code, external_linkage"
     t.string "payment_provider", comment: "決済プロバイダ: stripe, komojuなど"
     t.string "external_id", comment: "外部システムのID"
@@ -134,9 +134,9 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_8f9e0b5657"
-    t.index ["contract_id"], name: "index_memberships__billing_profiles_on_contract_id"
     t.index ["expires_at"], name: "idx_memberships__billing_profiles_expires_at"
     t.index ["external_id"], name: "idx_memberships__billing_profiles_external_id"
+    t.index ["membership_contract_id"], name: "index_memberships__billing_profiles_on_membership_contract_id"
     t.index ["membership_plan_id"], name: "index_memberships__billing_profiles_on_membership_plan_id"
     t.index ["tenant_id", "user_id"], name: "idx_memberships__billing_profiles_tenant_user"
     t.index ["tenant_id"], name: "index_memberships__billing_profiles_on_tenant_id"
@@ -152,7 +152,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["expires_at"], name: "idx_memberships__contracts_expires_at"
-    t.index ["tenant_id", "user_id"], name: "idx_memberships__contracts_tenant_user", unique: true
     t.index ["tenant_id"], name: "index_memberships__contracts_on_tenant_id"
     t.index ["user_id"], name: "index_memberships__contracts_on_user_id"
   end
@@ -836,7 +835,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "login_spa_applications", "tenants", name: "fk_login_spa_applications_tenants"
   add_foreign_key "memberships", "memberships__groups", column: "membership_group_id", name: "fk_memberships_groups"
   add_foreign_key "memberships", "tenants", name: "fk_memberships_tenants"
-  add_foreign_key "memberships__billing_profiles", "memberships__contracts", column: "contract_id", name: "fk_memberships__billing_profiles_contracts"
+  add_foreign_key "memberships__billing_profiles", "memberships__contracts", column: "membership_contract_id", name: "fk_memberships__billing_profiles_contracts"
   add_foreign_key "memberships__billing_profiles", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__billing_profiles_plans"
   add_foreign_key "memberships__billing_profiles", "tenants", name: "fk_memberships__billing_profiles_tenants"
   add_foreign_key "memberships__billing_profiles", "users", name: "fk_memberships__billing_profiles_users"
