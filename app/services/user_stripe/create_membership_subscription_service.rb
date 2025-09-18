@@ -6,21 +6,55 @@
 module UserStripe
   class CreateMembershipSubscriptionService < UserStripe::BaseService
     def execute(user:, membership_plan:)
-      stripe_record_price = membership_plan.plan_payment_methods.where(payment_type: 'credit_card').last.stripe_record_price
-      # stripe_record_subscription が nil の場合は新規作成
-      # stripe_record_subscription が nil でない場合は 3DS などの追加アクションで契約フローを途中離脱した場合
-      stripe_record_subscription = validate_before_subscribing_and_initialize_stripe_subscription(user:, membership_plan:, stripe_record_price:)
+      stripe_record_price = find_stripe_record_price(membership_plan)
+      stripe_record_subscription = initialize_stripe_subscription(user, membership_plan, stripe_record_price)
 
       fetch_constants
 
+      stripe_subscription = create_stripe_subscription(user, membership_plan, stripe_record_subscription)
+
+      ActiveRecord::Base.transaction do
+        update_stripe_record_subscription(stripe_record_subscription, stripe_subscription)
+        save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
+
+        contract = create_contract(user: user, stripe_record_subscription: stripe_record_subscription, membership_plan: membership_plan)
+        create_membership_users(user: user, membership_plan: membership_plan, contract: contract)
+
+        contract
+      end
+    rescue Stripe::StripeError => e
+      Sentry.capture_exception(e)
+      raise Exceptions::Payment::Stripe::StripeError, "Stripeでの契約に失敗しました: #{e.message}"
+    end
+
+    private
+
+    def find_stripe_record_price(membership_plan)
+      membership_plan.plan_payment_methods.where(payment_type: 'credit_card').last.stripe_record_price
+    end
+
+    def initialize_stripe_subscription(user, membership_plan, stripe_record_price)
+      # stripe_record_subscription が nil の場合は新規作成
+      # stripe_record_subscription が nil でない場合は 3DS などの追加アクションで契約フローを途中離脱した場合
+      validate_before_subscribing_and_initialize_stripe_subscription(
+        user: user,
+        membership_plan: membership_plan,
+        stripe_record_price: stripe_record_price,
+      )
+    end
+
+    def create_stripe_subscription(user, membership_plan, stripe_record_subscription)
       # TODO: payment_customer_idがpayjpユーザの場合、stripeには投げてはいけない 後で直す
-      stripe_subscription_params = {
+      stripe_subscription_params = build_stripe_subscription_params(user, membership_plan, stripe_record_subscription)
+
+      # Stripe の API を呼び subscription を作成する
+      Stripe::Subscription.create(stripe_subscription_params, stripe_api_key_config)
+    end
+
+    def build_stripe_subscription_params(user, membership_plan, stripe_record_subscription)
+      params = {
         customer: user.payment_customer_id,
-        items: [
-          {
-            price: stripe_record_subscription.price.remote_id,
-          },
-        ],
+        items: [{ price: stripe_record_subscription.price.remote_id }],
         # default_tax_rates: [@tax_rate_id],
         payment_behavior: 'default_incomplete',
         collection_method: 'charge_automatically',
@@ -31,48 +65,35 @@ module UserStripe
         expand: ['latest_invoice.confirmation_secret', 'pending_setup_intent'],
       }
 
-      if membership_plan.trial_period_days.positive? && check_trial_availability(user:, membership_plan:)
-        stripe_subscription_params[:trial_period_days] = membership_plan.trial_period_days
+      if membership_plan.trial_period_days.positive? && check_trial_availability(user: user, membership_plan: membership_plan)
+        params[:trial_period_days] = membership_plan.trial_period_days
       end
 
-      # Stripe の API を呼び subscription を作成する
-      stripe_subscription = Stripe::Subscription.create(
-        stripe_subscription_params,
-      stripe_api_key_config,
-      )
-
-      contract = nil
-
-      ActiveRecord::Base.transaction do
-        # IDP 側に Stripe の情報を保存
-        stripe_record_subscription.status = stripe_subscription.status
-        stripe_record_subscription.remote_id = stripe_subscription.id
-        stripe_record_subscription.trial_end = stripe_subscription.trial_end
-        stripe_record_subscription.trial_start = stripe_subscription.trial_start
-        # 現在の請求期間の開始日時と終了日時を保存
-        if  stripe_subscription.try(:current_period_start)
-          stripe_record_subscription.current_period_start = Time.zone.at(stripe_subscription.current_period_start)
-          stripe_record_subscription.current_period_end = Time.zone.at(stripe_subscription.current_period_end)
-        elsif stripe_subscription&.items&.data&.first.try(:current_period_start)
-          stripe_record_subscription.current_period_start = Time.zone.at(stripe_subscription.items.data.first.current_period_start)
-          stripe_record_subscription.current_period_end = Time.zone.at(stripe_subscription.items.data.first.current_period_end)
-        end
-        stripe_record_subscription.save!
-
-
-        # PaymentIntent(confirmation_secret) または SetupIntent を保存
-        save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
-
-        contract = create_contract(user:, stripe_record_subscription:, membership_plan:)
-        create_membership_users(user:, membership_plan:, contract:)
-      end
-      contract
-    rescue Stripe::StripeError => e
-      Sentry.capture_exception(e)
-      raise Exceptions::Payment::Stripe::StripeError, "Stripeでの契約に失敗しました: #{e.message}"
+      params
     end
 
-    private
+    def update_stripe_record_subscription(stripe_record_subscription, stripe_subscription)
+      # IDP 側に Stripe の情報を保存
+      stripe_record_subscription.status = stripe_subscription.status
+      stripe_record_subscription.remote_id = stripe_subscription.id
+      stripe_record_subscription.trial_end = stripe_subscription.trial_end
+      stripe_record_subscription.trial_start = stripe_subscription.trial_start
+
+      update_period_dates(stripe_record_subscription, stripe_subscription)
+      stripe_record_subscription.save!
+    end
+
+    def update_period_dates(stripe_record_subscription, stripe_subscription)
+      # 現在の請求期間の開始日時と終了日時を保存
+      if stripe_subscription.try(:current_period_start)
+        stripe_record_subscription.current_period_start = Time.zone.at(stripe_subscription.current_period_start)
+        stripe_record_subscription.current_period_end = Time.zone.at(stripe_subscription.current_period_end)
+      elsif stripe_subscription&.items&.data&.first.try(:current_period_start)
+        first_item = stripe_subscription.items.data.first
+        stripe_record_subscription.current_period_start = Time.zone.at(first_item.current_period_start)
+        stripe_record_subscription.current_period_end = Time.zone.at(first_item.current_period_end)
+      end
+    end
 
     def save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
       latest_invoice = Stripe::Invoice.retrieve({ id: stripe_subscription.latest_invoice.id, expand: ['confirmation_secret'] }, stripe_api_key_config)
@@ -169,103 +190,5 @@ module UserStripe
       end
     end
 
-    #   # 3DS などの追加アクションが必要な場合はエラーを返す
-    #   stripe_subscription = stripe_record_subscription.refresh!
-    #   if stripe_record_subscription.requires_action?
-    #     raise Exceptions::Payment::ActionMayBeNeeded.new(stripe_record_subscription:)
-    #   end
-
-    #   # 追加アクションが必要ではないのに、 status が active, trialing ではないときは失敗扱いにする
-    #   unless stripe_record_subscription.status == 'active' || stripe_record_subscription.status == 'trialing'
-    #     # Stripe 上の subscription もキャンセルする
-    #     stripe_subscription.cancel
-
-    #     raise Exceptions::Payment::PaymentFailed
-    #   end
-    # else
-    #   # stripe 上で契約が active になっていない場合はエラー
-    #   stripe_subscription = stripe_record_subscription.refresh!
-    #   raise Exceptions::Payment::ActionMayBeNeeded.new(stripe_record_subscription:) if stripe_record_subscription.requires_action?
-    #   raise Exceptions::Payment::PaymentFailed unless stripe_record_subscription.status == 'active' || stripe_record_subscription.status == 'trialing'
-    #   raise Exceptions::Payment::AlreadyHaveSubscriptions if stripe_record_subscription.subscription.present?
-
-    #   stripe_record_subscription = evaluate_trial_availability(stripe_record_subscription)
-    #   price_options = stripe_record_subscription.price.active_options
-
-    #   # 無料期間は契約実行時刻から「日数 x 24時間」
-    #   trial_end = if stripe_record_subscription.trial_status.available?
-    #     (Time.zone.now + stripe_record_subscription.price.trial_period_days.days).to_i
-    #   end
-    # end
-
-
-    # #
-    # # 以降 Stripe 上で subscription が active もしくは trialing の状態の必要で処理行う必要がある
-    # #
-    # subscription = nil
-
-    # ApplicationRecord.transaction do
-    #   # すべて成功したら FanApp 側に subscription を作成し、有料会員に昇格させる
-    #   subscription = Subscription.create!(
-    #     user_id: user.id,
-    #     kind: :membership,
-    #     chargeable: stripe_record_subscription,
-    #     started_at: Time.zone.at(stripe_subscription.current_period_start),
-    #     expires_at: Time.zone.at(stripe_subscription.current_period_end),
-    #     trial_end_at: trial_end.present? ? Time.zone.at(trial_end) : nil, # 無料トライアルが無効な場合は nil となる
-    #   )
-
-    #   # 万が一 MembershipRenewalHistory, AppStripeTrialHistory の作成に失敗したとしても無視する
-    #   suppress(StandardError) do
-    #     MembershipRenewalHistories::CreateService.new.execute(user: subscription.user, subscription:)
-
-    #     if stripe_record_subscription.trial_status.available?
-    #       AppStripeTrialHistory.create(
-    #         price: stripe_record_subscription.price,
-    #         user:,
-    #         subscription:,
-    #         card_fingerprint: get_card_fingerprint(fetch_default_payment_method_or_default_source_of(user)),
-    #         trial_period_days: stripe_record_subscription.price.trial_period_days,
-    #       )
-    #     end
-    #   end
-    # end
-
-    # #
-    # # プランのオプション処理
-    # #
-    # if price_options.present?
-    #   # オプションを紐付けるためのインボイスを作成
-    #   app_stripe_invoice = AppStripeInvoice.create!(
-    #     stripe_record_subscription:,
-    #     user:,
-    #     stripe_invoice_id: stripe_subscription.latest_invoice.id,
-    #   )
-
-    #   # オプションの紐付け
-    #   price_option_items = price_options.map {
-    #     { group_id: RequestStore.store[:current_group], app_stripe_invoice_id: app_stripe_invoice.id, price_option_id: _1.id }
-    #   }
-    #   AppStripePlanOptionItem.import(price_option_items, on_duplicate_key_ignore: true)
-
-    #   # オプションにグッズ付きのものが含まれる場合は配送処理を行う
-    #   if price_options.has_active_shopify_product.present?
-    #     ShopifyCreateOrderWorker.perform_async(
-    #       RequestStore.store[:current_group],
-    #       user.id,
-    #       price_options.pluck(:app_shopify_product_id).reject(&:nil?),
-    #       app_stripe_invoice.class.name,
-    #       app_stripe_invoice.id,
-    #     )
-    #   end
-    # end
-
-    # SendgridRegistrationCompletedEmailWorker.perform_async(
-    #   RequestStore.store[:current_group],
-    #   subscription.id,
-    # )
-
-    # stripe_record_subscription
-    # end
   end
 end
