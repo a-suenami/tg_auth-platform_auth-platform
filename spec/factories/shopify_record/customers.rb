@@ -8,6 +8,6 @@ FactoryBot.define do
     store_name { 'store_name' }
     remote_id { '1234567890123' }
     email { 'test@example.com' }
-    tags { '' }
+    tags { nil }
   end
 end

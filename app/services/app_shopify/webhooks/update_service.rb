@@ -15,13 +15,16 @@ module AppShopify::Webhooks
       if @event.dig(:detail, :payload).nil?
         raise Exceptions::Shopify::WebhookEventInvaildError
       end
-      if @event.dig(:detail, :payload, :email).nil?
-        raise Exceptions::Shopify::WebhookEventInvaildError
-      end
-      if @event.dig(:detail, :payload, :multipass_identifier).nil?
-        # multipass_identifierがない => shopify管理画面で作成されたユーザの可能性が高い
-        # 同期処理はスキップ
-        return false
+
+      if @event[:detail][:metadata][:'X-Shopify-Topic'].in?(['customers/create', 'customers/update'])
+        if @event.dig(:detail, :payload, :email).nil?
+          raise Exceptions::Shopify::WebhookEventInvaildError
+        end
+        if @event.dig(:detail, :payload, :multipass_identifier).nil?
+          # multipass_identifierがない => shopify管理画面で作成されたユーザの可能性が高い
+          # 同期処理はスキップ
+          return false
+        end
       end
 
       # HTTP webhook以外では、 event['detail']['metadata']['X-Shopify-Hmac-SHA256'] のベリファイは不要
@@ -36,6 +39,10 @@ module AppShopify::Webhooks
       case @event[:detail][:metadata][:'X-Shopify-Topic']
       when 'customers/create', 'customers/update'
         upsert_customer
+      when 'customer_tags_added'
+        handle_customer_tags_added
+      when 'customer_tags_removed'
+        handle_customer_tags_removed
       end
     end
 
@@ -52,7 +59,7 @@ module AppShopify::Webhooks
           remote_id: @event.dig(:detail, :payload, :id),
           email: @event.dig(:detail, :payload, :email),
           updated_at: @event.dig(:detail, :payload, :updated_at),
-          tags: @event.dig(:detail, :payload, :tags),
+          # tagsフィールドは2025-01以降のAPIバージョンでは削除されているため、別途CUSTOMER_TAGS_ADDED/REMOVEDで処理
         )
       else
         user.shopify_customers.create(
@@ -61,9 +68,45 @@ module AppShopify::Webhooks
           remote_id: @event.dig(:detail, :payload, :id),
           email: @event.dig(:detail, :payload, :email),
           updated_at: @event.dig(:detail, :payload, :updated_at),
-          tags: @event.dig(:detail, :payload, :tags),
+          # tagsフィールドは2025-01以降のAPIバージョンでは削除されているため、別途CUSTOMER_TAGS_ADDED/REMOVEDで処理
         )
       end
+    end
+
+    sig { void }
+    def handle_customer_tags_added
+      customer_id = @event.dig(:detail, :payload, :id)
+      added_tags = @event.dig(:detail, :payload, :tags_added) || []
+
+      shopify_customer = ShopifyRecord::Customer.find_by(
+        multipass_store: @multipass_store,
+        remote_id: customer_id,
+      )
+
+      return if shopify_customer.nil?
+
+      current_tags = shopify_customer.tags.to_s.split(',').map(&:strip).compact_blank
+      new_tags = (current_tags + added_tags).uniq
+
+      shopify_customer.update(tags: new_tags.join(','))
+    end
+
+    sig { void }
+    def handle_customer_tags_removed
+      customer_id = @event.dig(:detail, :payload, :id)
+      removed_tags = @event.dig(:detail, :payload, :tags_removed) || []
+
+      shopify_customer = ShopifyRecord::Customer.find_by(
+        multipass_store: @multipass_store,
+        remote_id: customer_id,
+      )
+
+      return if shopify_customer.nil?
+
+      current_tags = shopify_customer.tags.to_s.split(',').map(&:strip).compact_blank
+      new_tags = current_tags - removed_tags
+
+      shopify_customer.update(tags: new_tags.join(','))
     end
   end
 end

@@ -111,7 +111,7 @@ RSpec.describe '[ ShopifyArea::Webhooks::Eventbridge::ShopifyController API ]' d
               'X-Shopify-Shop-Domain': "#{store_name}.myshopify.com",
               'X-Shopify-Hmac-SHA256': 'xxxxxxxx',
               'X-Shopify-Webhook-Id': '2b70bc39-d8ab-4792-936f-4dea65704b43',
-              'X-Shopify-API-Version': '2024-10',
+              'X-Shopify-API-Version': '2025-07',
               'X-Shopify-Event-Id': '7a53163e-19f8-4f7d-ab32-5f7df441efc5',
               'X-Shopify-Triggered-At': '2024-12-05T03:04:47.103612672Z',
             },
@@ -142,10 +142,10 @@ store_name: multipass_store.store_name,)
 
         it 'update customer' do
           expect(ShopifyRecord::Customer.count).to eq 1
-          expect(shopify_record__customer.tags).to eq ''
+          expect(shopify_record__customer.tags).to be_nil
           is_expected.to eq 204
           expect(ShopifyRecord::Customer.count).to eq 1
-          expect(shopify_record__customer.reload.tags).to eq 'test_tag'
+          expect(shopify_record__customer.reload.tags).to be_nil # 2025-01以降のAPIバージョンでは、tagsフィールドが削除されたため、nilになる
         end
       end
 
@@ -157,6 +157,120 @@ store_name: multipass_store.store_name,)
           is_expected.to eq 204
           expect(ShopifyRecord::Customer.count).to eq 0
         end
+      end
+    end
+
+    context 'when event_topic is customer_tags_added' do
+      let(:event_topic) { 'customer_tags_added' }
+      let(:event_user_id) { current_user.id }
+      let(:headers) {
+        {
+          'Authorization' => "Bearer #{multipass_store.webhook_token}",
+        }
+      }
+      # rubocop:disable Naming/VariableNumber
+      let(:params) {
+        {
+          version: '0',
+          id: '14b41a2b-81a8-3f71-4a6b-29d64aa49424',
+          'detail-type': 'shopifyWebhook',
+          source: "aws.partner/shopify.com/123456789012/#{store_name}",
+          account: '121212121212',
+          time: '2024-12-05T03:04:48Z',
+          region: 'ap-northeast-1',
+          resources: [],
+          detail: {
+            payload: {
+              id: 1_234_567_890_123,
+              tags_added: ['vip', 'premium'],
+            },
+            metadata: {
+              'Content-Type': 'application/json',
+              'X-Shopify-Topic': event_topic,
+              'X-Shopify-Shop-Domain': "#{store_name}.myshopify.com",
+              'X-Shopify-Hmac-SHA256': 'xxxxxxxx',
+              'X-Shopify-Webhook-Id': '2b70bc39-d8ab-4792-936f-4dea65704b43',
+              'X-Shopify-API-Version': '2025-07',
+              'X-Shopify-Event-Id': '7a53163e-19f8-4f7d-ab32-5f7df441efc5',
+              'X-Shopify-Triggered-At': '2024-12-05T03:04:47.103612672Z',
+            },
+          },
+        }
+      }
+      # rubocop:enable Naming/VariableNumber
+
+      let(:shopify_record__customer) {
+        create(:shopify_record__customer, tenant_id: current_tenant.id, user: current_user, remote_id: '1234567890123', email: current_email, multipass_store:, store_name: multipass_store.store_name,
+tags: 'existing_tag',)
+      }
+
+      before do
+        shopify_record__customer
+      end
+
+      it 'adds tags to customer' do
+        expect(ShopifyRecord::Customer.count).to eq 1
+        expect(shopify_record__customer.tags).to eq 'existing_tag'
+        is_expected.to eq 204
+        expect(ShopifyRecord::Customer.count).to eq 1
+        expect(shopify_record__customer.reload.tags).to eq 'existing_tag,vip,premium'
+      end
+    end
+
+    context 'when event_topic is customer_tags_removed' do
+      let(:event_topic) { 'customer_tags_removed' }
+      let(:event_user_id) { current_user.id }
+      let(:headers) {
+        {
+          'Authorization' => "Bearer #{multipass_store.webhook_token}",
+        }
+      }
+      # rubocop:disable Naming/VariableNumber
+      let(:params) {
+        {
+          version: '0',
+          id: '14b41a2b-81a8-3f71-4a6b-29d64aa49424',
+          'detail-type': 'shopifyWebhook',
+          source: "aws.partner/shopify.com/123456789012/#{store_name}",
+          account: '121212121212',
+          time: '2024-12-05T03:04:48Z',
+          region: 'ap-northeast-1',
+          resources: [],
+          detail: {
+            payload: {
+              id: 1_234_567_890_123,
+              tags_removed: ['vip'],
+            },
+            metadata: {
+              'Content-Type': 'application/json',
+              'X-Shopify-Topic': event_topic,
+              'X-Shopify-Shop-Domain': "#{store_name}.myshopify.com",
+              'X-Shopify-Hmac-SHA256': 'xxxxxxxx',
+              'X-Shopify-Webhook-Id': '2b70bc39-d8ab-4792-936f-4dea65704b43',
+              'X-Shopify-API-Version': '2025-07',
+              'X-Shopify-Event-Id': '7a53163e-19f8-4f7d-ab32-5f7df441efc5',
+              'X-Shopify-Triggered-At': '2024-12-05T03:04:47.103612672Z',
+            },
+          },
+        }
+      }
+      # rubocop:enable Naming/VariableNumber
+
+      let(:shopify_record__customer) {
+        create(:shopify_record__customer, tenant_id: current_tenant.id, user: current_user, remote_id: '1234567890123', email: current_email, multipass_store:, store_name: multipass_store.store_name,
+tags: 'existing_tag,vip,premium',)
+      }
+
+      before do
+        shopify_record__customer
+      end
+
+      it 'removes tags from customer' do
+        expect(ShopifyRecord::Customer.count).to eq 1
+        expect(shopify_record__customer.tags).to eq 'existing_tag,vip,premium'
+        is_expected.to eq 204
+        expect(ShopifyRecord::Customer.count).to eq 1
+        expect(shopify_record__customer.reload.tags).to eq 'existing_tag,premium'
       end
     end
   end
