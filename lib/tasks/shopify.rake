@@ -14,7 +14,7 @@ namespace :shopify do
       api_secret_key: ENV.fetch('SHOPIFY_API_SECRET_KEY', nil),
       scope: 'write_webhooks', # Updated scope
       is_embedded: false, # Set to false if not embedded
-      api_version: ENV.fetch('SHOPIFY_API_VERSION', '2024-10'),
+      api_version: ENV.fetch('SHOPIFY_API_VERSION', '2025-07'),
       is_private: true,
     )
 
@@ -99,6 +99,82 @@ namespace :shopify do
     puts JSON.pretty_generate(result.body)
 
     # Updated error handling
+    unless result.code == 200
+      raise StandardError, "API request failed with status #{result.code}: #{result.body}"
+    end
+
+    user_errors = result.body['data']['eventBridgeWebhookSubscriptionCreate']['userErrors']
+    raise StandardError, user_errors.to_s if user_errors.any?
+
+    p result.body['data']['eventBridgeWebhookSubscriptionCreate']['webhookSubscription']
+  end
+
+  task register_webhook_customer_tags_added: :environment do
+    arn = ENV.fetch('EVENT_BRIDGE_ARN', nil)
+    _, client = initialize_shopify_session
+
+    query = <<~GRAPHQL
+      mutation ($arn: ARN) {
+        eventBridgeWebhookSubscriptionCreate(
+          topic: CUSTOMER_TAGS_ADDED
+          webhookSubscription: {
+            arn: $arn
+            format: JSON
+          }
+        ) {
+          webhookSubscription {
+            id
+          }
+          userErrors {
+            message
+          }
+        }
+      }
+    GRAPHQL
+
+    result = client.query(query:, variables: { arn: })
+
+    puts 'Full Shopify response:'
+    puts JSON.pretty_generate(result.body)
+
+    unless result.code == 200
+      raise StandardError, "API request failed with status #{result.code}: #{result.body}"
+    end
+
+    user_errors = result.body['data']['eventBridgeWebhookSubscriptionCreate']['userErrors']
+    raise StandardError, user_errors.to_s if user_errors.any?
+
+    p result.body['data']['eventBridgeWebhookSubscriptionCreate']['webhookSubscription']
+  end
+
+  task register_webhook_customer_tags_removed: :environment do
+    arn = ENV.fetch('EVENT_BRIDGE_ARN', nil)
+    _, client = initialize_shopify_session
+
+    query = <<~GRAPHQL
+      mutation ($arn: ARN) {
+        eventBridgeWebhookSubscriptionCreate(
+          topic: CUSTOMER_TAGS_REMOVED
+          webhookSubscription: {
+            arn: $arn
+            format: JSON
+          }
+        ) {
+          webhookSubscription {
+            id
+          }
+          userErrors {
+            message
+          }
+        }
+      }
+    GRAPHQL
+
+    result = client.query(query:, variables: { arn: })
+
+    puts 'Full Shopify response:'
+    puts JSON.pretty_generate(result.body)
+
     unless result.code == 200
       raise StandardError, "API request failed with status #{result.code}: #{result.body}"
     end

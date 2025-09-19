@@ -165,7 +165,7 @@ gem 'sorbet-runtime', '~> 0.5.11525'
 gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.17.3'
 
 # for shopify
-gem 'shopify_api', '~> 14.6.0'
+gem 'shopify_api', '~> 14.11.1'
 
 # ------------------------------------------------------------------------------
 # Development and Test Only

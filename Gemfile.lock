@@ -174,7 +174,7 @@ GEM
     countries (5.7.1)
       unaccent (~> 0.3)
     crass (1.0.6)
-    csv (3.3.0)
+    csv (3.3.5)
     database_cleaner (2.0.2)
       database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.1.0)
@@ -295,7 +295,7 @@ GEM
     http-accept (1.7.0)
     http-cookie (1.0.5)
       domain_name (~> 0.5)
-    httparty (0.22.0)
+    httparty (0.23.1)
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
@@ -370,7 +370,7 @@ GEM
       rack (>= 1.2, < 4)
       snaky_hash (~> 2.0)
       version_gem (~> 1.1)
-    oj (3.16.7)
+    oj (3.16.11)
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
     omniauth (2.1.2)
@@ -386,9 +386,9 @@ GEM
     omniauth-rails_csrf_protection (1.0.1)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
-    openssl (3.2.0)
+    openssl (3.3.0)
     os (1.1.4)
-    ostruct (0.6.1)
+    ostruct (0.6.3)
     pagy (6.4.3)
     parallel (1.24.0)
     parser (3.3.0.5)
@@ -565,7 +565,7 @@ GEM
     ruby2_keywords (0.0.5)
     rufus-scheduler (3.9.1)
       fugit (~> 1.1, >= 1.1.6)
-    securerandom (0.3.2)
+    securerandom (0.4.1)
     seed-fu (2.3.9)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
@@ -577,7 +577,7 @@ GEM
     sentry-sidekiq (5.16.1)
       sentry-ruby (~> 5.16.1)
       sidekiq (>= 3.0)
-    shopify_api (14.6.0)
+    shopify_api (14.11.1)
       activesupport
       concurrent-ruby
       hash_diff
@@ -768,7 +768,7 @@ DEPENDENCIES
   sentry-rails (~> 5.16, >= 5.16.1)
   sentry-ruby (~> 5.16, >= 5.16.1)
   sentry-sidekiq (~> 5.16, >= 5.16.1)
-  shopify_api (~> 14.6.0)
+  shopify_api (~> 14.11.1)
   sidekiq (~> 7.2.4)
   sidekiq-ent (~> 7.2.4)!
   sidekiq-pro (~> 7.2.1)!
