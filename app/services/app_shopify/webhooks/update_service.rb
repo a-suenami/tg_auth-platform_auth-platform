@@ -39,9 +39,9 @@ module AppShopify::Webhooks
       case @event[:detail][:metadata][:'X-Shopify-Topic']
       when 'customers/create', 'customers/update'
         upsert_customer
-      when 'customer_tags_added'
+      when 'customer.tags_added'
         handle_customer_tags_added
-      when 'customer_tags_removed'
+      when 'customer.tags_removed'
         handle_customer_tags_removed
       end
     end

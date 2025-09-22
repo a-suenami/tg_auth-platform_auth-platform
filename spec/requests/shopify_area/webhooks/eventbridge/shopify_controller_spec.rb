@@ -161,7 +161,7 @@ store_name: multipass_store.store_name,)
     end
 
     context 'when event_topic is customer_tags_added' do
-      let(:event_topic) { 'customer_tags_added' }
+      let(:event_topic) { 'customer.tags_added' }
       let(:event_user_id) { current_user.id }
       let(:headers) {
         {
@@ -218,7 +218,7 @@ tags: 'existing_tag',)
     end
 
     context 'when event_topic is customer_tags_removed' do
-      let(:event_topic) { 'customer_tags_removed' }
+      let(:event_topic) { 'customer.tags_removed' }
       let(:event_user_id) { current_user.id }
       let(:headers) {
         {
