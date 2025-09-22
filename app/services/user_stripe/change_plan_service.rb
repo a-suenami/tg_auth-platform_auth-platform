@@ -291,61 +291,88 @@ module UserStripe
 
     def fetch_or_create_remote_subscription_schedule(stripe_subscription:)
       if stripe_subscription.last_subscription_schedule.present?
-        stripe_subscription_schedule = Stripe::SubscriptionSchedule.retrieve(stripe_subscription.last_subscription_schedule.remote_id, stripe_api_key_config)
-        # 終了済みのscheduleが紐づいている場合は新しいものに作り替える
-        if ['completed', 'canceled', 'released'].include?(stripe_subscription_schedule.status)
-          # TODO: subscriptionのscheduleを確認する
-          remote_subscription = Stripe::Subscription.retrieve(stripe_subscription.remote_id, stripe_api_key_config)
-          if remote_subscription.schedule.present?
-            stripe_subscription_schedule = Stripe::SubscriptionSchedule.retrieve(remote_subscription.schedule, stripe_api_key_config)
-
-            if ['completed', 'canceled', 'released'].include?(stripe_subscription_schedule.status)
-              stripe_subscription_schedule = Stripe::SubscriptionSchedule.create({
-                from_subscription: stripe_subscription.remote_id,
-              }, stripe_api_key_config,)
-            end
-          else
-            stripe_subscription_schedule = Stripe::SubscriptionSchedule.create({
-              from_subscription: stripe_subscription.remote_id,
-            }, stripe_api_key_config,)
-          end
-
-          StripeRecord::SubscriptionSchedule.create(
-            tenant_id: stripe_subscription.tenant_id,
-            user_id: stripe_subscription.user_id,
-            subscription_id: stripe_subscription.id,
-            remote_id: stripe_subscription_schedule.id,
-            status: stripe_subscription_schedule.status,
-            phases: stripe_subscription_schedule.phases,
-          )
-        end
+        handle_existing_schedule(stripe_subscription)
       else
-        begin
-          Stripe::SubscriptionSchedule.create({
-            from_subscription: stripe_subscription.remote_id,
-          }, stripe_api_key_config,)
-        rescue Stripe::InvalidRequestError => e
-          # scheduleは複数作成できないため、すでに存在しているとエラーする恐れがある。
-          # その場合、Subscriptionを再取得し既存のスケジュールを利用する
-          remote_subscription = Stripe::Subscription.retrieve(stripe_subscription.remote_id, stripe_api_key_config)
-          if remote_subscription.schedule.present?
-            remote_subscription.schedule
-            Stripe::SubscriptionSchedule.retrieve(remote_subscription.schedule, stripe_api_key_config)
-          else
-            raise e
-          end
-        end
-        StripeRecord::SubscriptionSchedule.create(
-          tenant_id: stripe_subscription.tenant_id,
-          user_id: stripe_subscription.user_id,
-          subscription_id: stripe_subscription.id,
-          remote_id: stripe_subscription_schedule.id,
-          status: stripe_subscription_schedule.status,
-          phases: stripe_subscription_schedule.phases,
+        create_new_schedule(stripe_subscription)
+      end
+    end
+
+
+    def handle_existing_schedule(stripe_subscription)
+      stripe_subscription_schedule = Stripe::SubscriptionSchedule.retrieve(
+        stripe_subscription.last_subscription_schedule.remote_id,
+        stripe_api_key_config,
+      )
+
+      if schedule_completed?(stripe_subscription_schedule)
+        create_schedule_from_subscription(stripe_subscription)
+      else
+        stripe_subscription_schedule
+      end
+    end
+
+    def create_new_schedule(stripe_subscription)
+      begin
+        stripe_subscription_schedule = Stripe::SubscriptionSchedule.create({
+          from_subscription: stripe_subscription.remote_id,
+        }, stripe_api_key_config,)
+      rescue Stripe::InvalidRequestError => e
+        stripe_subscription_schedule = handle_schedule_creation_error(stripe_subscription, e)
+      end
+
+      save_subscription_schedule(stripe_subscription, stripe_subscription_schedule)
+      stripe_subscription_schedule
+    end
+
+    def schedule_completed?(schedule)
+      ['completed', 'canceled', 'released'].include?(schedule.status)
+    end
+
+    def create_schedule_from_subscription(stripe_subscription)
+      remote_subscription = Stripe::Subscription.retrieve(stripe_subscription.remote_id, stripe_api_key_config)
+
+      if remote_subscription.schedule.present?
+        stripe_subscription_schedule = Stripe::SubscriptionSchedule.retrieve(
+          remote_subscription.schedule,
+          stripe_api_key_config,
         )
 
+        if schedule_completed?(stripe_subscription_schedule)
+          stripe_subscription_schedule = Stripe::SubscriptionSchedule.create({
+            from_subscription: stripe_subscription.remote_id,
+          }, stripe_api_key_config,)
+        end
+      else
+        stripe_subscription_schedule = Stripe::SubscriptionSchedule.create({
+          from_subscription: stripe_subscription.remote_id,
+        }, stripe_api_key_config,)
       end
+
+      save_subscription_schedule(stripe_subscription, stripe_subscription_schedule)
       stripe_subscription_schedule
+    end
+
+    def handle_schedule_creation_error(stripe_subscription, error)
+      # scheduleは複数作成できないため、すでに存在しているとエラーする恐れがある。
+      # その場合、Subscriptionを再取得し既存のスケジュールを利用する
+      remote_subscription = Stripe::Subscription.retrieve(stripe_subscription.remote_id, stripe_api_key_config)
+
+      if remote_subscription.schedule.present?
+        Stripe::SubscriptionSchedule.retrieve(remote_subscription.schedule, stripe_api_key_config)
+      else
+        raise error
+      end
+    end
+
+    def save_subscription_schedule(stripe_subscription, stripe_subscription_schedule)
+      StripeRecord::SubscriptionSchedule.create(
+        tenant_id: stripe_subscription.tenant_id,
+        user_id: stripe_subscription.user_id,
+        subscription_id: stripe_subscription.id,
+        remote_id: stripe_subscription_schedule.id,
+        status: stripe_subscription_schedule.status,
+        phases: stripe_subscription_schedule.phases,
+      )
     end
   end
 end
