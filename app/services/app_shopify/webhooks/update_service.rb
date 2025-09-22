@@ -76,7 +76,7 @@ module AppShopify::Webhooks
     sig { void }
     def handle_customer_tags_added
       customer_id = @event.dig(:detail, :payload, :customerId)
-      added_tags = @event.dig(:detail, :payload, :tags_added) || []
+      added_tags = @event.dig(:detail, :payload, :tags) || []
 
       if customer_id.blank?
         return
@@ -100,7 +100,7 @@ module AppShopify::Webhooks
     sig { void }
     def handle_customer_tags_removed
       customer_id = @event.dig(:detail, :payload, :customerId)
-      removed_tags = @event.dig(:detail, :payload, :tags_removed) || []
+      removed_tags = @event.dig(:detail, :payload, :tags) || []
 
       if customer_id.blank?
         return

@@ -182,7 +182,7 @@ store_name: multipass_store.store_name,)
           detail: {
             payload: {
               customerId: 'gid://shopify/Customer/1234567890123',
-              tags_added: ['vip', 'premium'],
+              tags: ['vip', 'premium'],
             },
             metadata: {
               'Content-Type': 'application/json',
@@ -239,7 +239,7 @@ tags: 'existing_tag',)
           detail: {
             payload: {
               customerId: 'gid://shopify/Customer/1234567890123',
-              tags_removed: ['vip'],
+              tags: ['vip'],
             },
             metadata: {
               'Content-Type': 'application/json',
