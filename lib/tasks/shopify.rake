@@ -227,7 +227,7 @@ namespace :shopify do
   task :delete_webhook, [:webhook_id] => :environment do |_task, args|
     webhook_id = args[:webhook_id] || ENV.fetch('WEBHOOK_ID', nil)
 
-    if webhook_id.nil? || webhook_id.empty?
+    if webhook_id.blank?
       puts 'Usage: rake shopify:delete_webhook[gid://shopify/WebhookSubscription/525699895]'
       puts 'Or: WEBHOOK_ID=gid://shopify/WebhookSubscription/525699895 rake shopify:delete_webhook'
       puts 'Please provide a webhook subscription ID'
