@@ -75,8 +75,14 @@ module AppShopify::Webhooks
 
     sig { void }
     def handle_customer_tags_added
-      customer_id = @event.dig(:detail, :payload, :id)
+      customer_id = @event.dig(:detail, :payload, :customerId)
       added_tags = @event.dig(:detail, :payload, :tags_added) || []
+
+      if customer_id.blank?
+        return
+      end
+
+      customer_id = customer_id.split('/').last
 
       shopify_customer = ShopifyRecord::Customer.find_by(
         multipass_store: @multipass_store,
@@ -93,8 +99,14 @@ module AppShopify::Webhooks
 
     sig { void }
     def handle_customer_tags_removed
-      customer_id = @event.dig(:detail, :payload, :id)
+      customer_id = @event.dig(:detail, :payload, :customerId)
       removed_tags = @event.dig(:detail, :payload, :tags_removed) || []
+
+      if customer_id.blank?
+        return
+      end
+
+      customer_id = customer_id.split('/').last
 
       shopify_customer = ShopifyRecord::Customer.find_by(
         multipass_store: @multipass_store,
