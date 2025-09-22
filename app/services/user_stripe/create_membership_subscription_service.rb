@@ -17,8 +17,8 @@ module UserStripe
         update_stripe_record_subscription(stripe_record_subscription, stripe_subscription)
         save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
 
-        contract = create_contract(user: user, stripe_record_subscription: stripe_record_subscription, membership_plan: membership_plan)
-        create_membership_users(user: user, membership_plan: membership_plan, contract: contract)
+        contract = create_contract(user:, stripe_record_subscription:, membership_plan:)
+        create_membership_users(user:, membership_plan:, contract:)
 
         contract
       end
@@ -37,9 +37,9 @@ module UserStripe
       # stripe_record_subscription が nil の場合は新規作成
       # stripe_record_subscription が nil でない場合は 3DS などの追加アクションで契約フローを途中離脱した場合
       validate_before_subscribing_and_initialize_stripe_subscription(
-        user: user,
-        membership_plan: membership_plan,
-        stripe_record_price: stripe_record_price,
+        user:,
+        membership_plan:,
+        stripe_record_price:,
       )
     end
 
@@ -65,7 +65,7 @@ module UserStripe
         expand: ['latest_invoice.confirmation_secret', 'pending_setup_intent'],
       }
 
-      if membership_plan.trial_period_days.positive? && check_trial_availability(user: user, membership_plan: membership_plan)
+      if membership_plan.trial_period_days.positive? && check_trial_availability(user:, membership_plan:)
         params[:trial_period_days] = membership_plan.trial_period_days
       end
 
@@ -108,14 +108,12 @@ module UserStripe
         record.confirmation_secret_type = 'payment_intent' if latest_invoice&.confirmation_secret&.client_secret.present?
       end
 
-      if latest_invoice.try(:confirmation_secret)
+      if latest_invoice.try(:confirmation_secret) && latest_invoice.confirmation_secret.present?
         # confirmation_secret が存在する場合
         latest_invoice.confirmation_secret
-
       elsif stripe_subscription.pending_setup_intent
         # SetupIntent が存在する場合
-        setup_intent_remote_id = stripe_subscription.pending_setup_intent
-        setup_intent = Stripe::SetupIntent.retrieve(setup_intent_remote_id, stripe_api_key_config)
+        setup_intent = stripe_subscription.pending_setup_intent
         stripe_record_setup_intent = StripeRecord::SetupIntent.find_or_create_by!(remote_id: setup_intent.id) do |record|
           record.user = user
           record.tenant_id = user.tenant_id
@@ -125,6 +123,7 @@ module UserStripe
           record.api_key_account = Tenant.current&.tenant_stripe_account&.stripe_account
         end
         stripe_record_subscription.pending_setup_intent = stripe_record_setup_intent
+
         stripe_record_subscription.save!
       else
         raise Exceptions::Payment::IntentNotFound, 'PaymentIntent or SetupIntent not found'
@@ -172,22 +171,6 @@ module UserStripe
       end
 
       true
-    end
-
-    def create_trial_history(user:, membership_plan:, stripe_record_subscription:)
-      memberships = membership_plan.memberships
-      memberships.each do |membership|
-        Memberships::TrialHistory.create!(
-          tenant_id: user.tenant_id,
-          user:,
-          membership:,
-          membership_plan:,
-          stripe_record_subscription:,
-          trial_started_at: Time.zone.now,
-          fingerprint: get_card_fingerprint(fetch_default_payment_method_or_default_source_of(user)),
-          trial_period_days: membership_plan.trial_period_days,
-        )
-      end
     end
 
   end

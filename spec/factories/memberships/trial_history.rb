@@ -5,8 +5,8 @@ FactoryBot.define do
     tenant_id { create(:tenant).id }
     membership { create(:membership) }
     fingerprint { 'test_fingerprint' }
-    started_at { Time.current }
-    ended_at { 30.days.from_now }
-    status { 'active' }
+    trial_start { Time.current }
+    trial_end { 30.days.from_now }
+    trial_period_days { 30 }
   end
 end

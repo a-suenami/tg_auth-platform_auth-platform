@@ -7,9 +7,9 @@ class Memberships::BillingProfile < ApplicationRecord
   self.table_name = 'memberships__billing_profiles'
 
   belongs_to :tenant
-  belongs_to :user
+  belongs_to :user, class_name: '::User', inverse_of: :membership_billing_profiles
   belongs_to :membership_plan, class_name: 'Memberships::Plan'
-  belongs_to :membership_contract, class_name: 'Memberships::Contract'
+  belongs_to :membership_contract, class_name: 'Memberships::Contract', inverse_of: :billing_profiles
   belongs_to :chargeable, polymorphic: true, optional: true
 
   validates :payment_type, presence: true, inclusion: { in: %w[credit_card convenience campaign_code external_linkage] }

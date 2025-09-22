@@ -7,7 +7,7 @@ class Memberships::User < ApplicationRecord
   self.table_name = 'memberships__users'
 
   belongs_to :tenant
-  belongs_to :user
+  belongs_to :user, class_name: '::User', inverse_of: :membership_users
   belongs_to :membership
   belongs_to :membership_group, class_name: 'Memberships::Group', optional: true
   belongs_to :membership_contract, class_name: 'Memberships::Contract'

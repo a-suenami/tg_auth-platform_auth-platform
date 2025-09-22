@@ -1,5 +1,6 @@
 # typed: false
 
+require 'stripe'
 
 # --- Shared Contexts & Examples ---
 RSpec.shared_context 'membership and stripe setup' do
@@ -75,15 +76,23 @@ end
 
 RSpec.shared_context 'stripe api mocks' do
   # rubocop:disable  Metrics/AbcSize
+
+  # rubocop:disable RSpec/VerifiedDoubles
+  let(:confirmation_secret) { double('confirmation_secret', client_secret: 'pi_test123_secret') }
+  # rubocop:enable RSpec/VerifiedDoubles
+  let(:latest_invoice_double) { instance_double(Stripe::Invoice, id: 'in_test123', confirmation_secret:) }
+  let(:pending_setup_intent_double) { nil }
   def mock_stripe_apis
-    # rubocop:disable RSpec/VerifiedDoubles
     mock_stripe_card = Stripe::Card.new
     allow(mock_stripe_card).to receive(:fingerprint).and_return('test_card_fingerprint')
     mock_stripe_payment_method = Stripe::PaymentMethod.new
     allow(mock_stripe_payment_method).to receive(:card).and_return(mock_stripe_card)
     mock_stripe_customer = Stripe::Customer.new
+    # rubocop:disable RSpec/VerifiedDoubles
     allow(mock_stripe_customer).to receive_messages(invoice_settings: double('invoice_settings', default_payment_method: mock_stripe_payment_method), default_source: nil)
+    # rubocop:enable RSpec/VerifiedDoubles
     allow(Stripe::Customer).to receive(:retrieve).and_return(mock_stripe_customer)
+    # rubocop:disable RSpec/VerifiedDoubles
     mock_stripe_subscription = double('Stripe::Subscription')
     allow(mock_stripe_subscription).to receive_messages(
       id: 'sub_test123',
@@ -95,30 +104,40 @@ RSpec.shared_context 'stripe api mocks' do
       items: double('items', data: [
         double('subscription_item', current_period_start: Time.current.to_i, current_period_end: 1.month.from_now.to_i),
       ],),
-      latest_invoice: double('latest_invoice', id: 'in_test123'),
-      pending_setup_intent: nil,
+      latest_invoice: latest_invoice_double,
+      pending_setup_intent: pending_setup_intent_double,
     )
+    # rubocop:enable RSpec/VerifiedDoubles
     allow(Stripe::Subscription).to receive_messages(create: mock_stripe_subscription, retrieve: mock_stripe_subscription, update: mock_stripe_subscription)
-    mock_stripe_invoice = double('Stripe::Invoice')
+    mock_stripe_invoice = instance_double(Stripe::Invoice)
+    # rubocop:disable RSpec/VerifiedDoubles
     allow(mock_stripe_invoice).to receive_messages(id: 'in_test123', status: 'open', confirmation_secret: double('confirmation_secret', client_secret: 'pi_test123_secret'))
+    # rubocop:enable RSpec/VerifiedDoubles
     allow(Stripe::Invoice).to receive(:retrieve).and_return(mock_stripe_invoice)
-    mock_stripe_setup_intent = double('Stripe::SetupIntent')
+    mock_stripe_setup_intent = instance_double(Stripe::SetupIntent)
     allow(mock_stripe_setup_intent).to receive_messages(id: 'seti_test123', status: 'requires_payment_method', usage: 'off_session', client_secret: 'seti_test123_secret')
     allow(Stripe::SetupIntent).to receive(:retrieve).and_return(mock_stripe_setup_intent)
-    mock_stripe_payment_method = double('Stripe::PaymentMethod')
+    mock_stripe_payment_method = instance_double(Stripe::PaymentMethod)
+    # rubocop:disable RSpec/VerifiedDoubles
     allow(mock_stripe_payment_method).to receive(:card).and_return(double('card', fingerprint: 'test_fingerprint'))
+    # rubocop:enable RSpec/VerifiedDoubles
     allow(Stripe::PaymentMethod).to receive(:retrieve).and_return(mock_stripe_payment_method)
-    mock_stripe_card = double('Stripe::Card')
+    mock_stripe_card = instance_double(Stripe::Card)
     allow(mock_stripe_card).to receive(:fingerprint).and_return('test_fingerprint')
     allow(Stripe::Card).to receive(:retrieve).and_return(mock_stripe_card)
+    # rubocop:disable RSpec/VerifiedDoubles
     mock_stripe_account = double('Stripe::Account')
     allow(mock_stripe_account).to receive_messages(id: 'acct_test123', type: 'standard', display_name: 'Test Account')
+    # rubocop:enable RSpec/VerifiedDoubles
     allow(Stripe::Account).to receive(:retrieve).and_return(mock_stripe_account)
-    mock_stripe_subscription_schedule = double('Stripe::SubscriptionSchedule')
+    mock_stripe_subscription_schedule = instance_double(Stripe::SubscriptionSchedule)
+    # rubocop:disable RSpec/VerifiedDoubles
     allow(mock_stripe_subscription_schedule).to receive_messages(id: 'sub_sched_test123', status: 'active',
 current_phase: double('current_phase', start_date: Time.current.to_i, end_date: 1.month.from_now.to_i),)
+    # rubocop:enable RSpec/VerifiedDoubles
     allow(Stripe::SubscriptionSchedule).to receive_messages(retrieve: mock_stripe_subscription_schedule, create: mock_stripe_subscription_schedule, update: mock_stripe_subscription_schedule)
-    mock_stripe_subscription_item = double('Stripe::SubscriptionItem')
+    mock_stripe_subscription_item = instance_double(Stripe::SubscriptionItem)
+    # rubocop:disable RSpec/VerifiedDoubles
     allow(mock_stripe_subscription_item).to receive_messages(id: 'si_test123', price: double('price', id: 'price_test123'))
     allow(Stripe::SubscriptionItem).to receive(:list).and_return(double('list', data: [mock_stripe_subscription_item]))
     # rubocop:enable RSpec/VerifiedDoubles
@@ -173,6 +192,41 @@ RSpec.describe '[ credit card payments API ]' do
           expect(json_response['billing_profiles'].first['payment_provider']).to eq('stripe')
         end
 
+        it 'creates memberships_user with correct status' do
+          is_expected.to eq 201
+
+          contract = Memberships::Contract.find(body_hash['id'])
+          memberships_users = contract.membership_users
+
+          expect(memberships_users.count).to eq(leveled_membership_plan_platinum.memberships.count)
+          memberships_users.each do |membership_user|
+            expect(membership_user.status).to eq('pending')
+            expect(membership_user.user).to eq(current_user)
+            expect(membership_user.membership_contract).to eq(contract)
+          end
+        end
+
+        it 'creates memberships_contract with correct attributes' do
+          is_expected.to eq 201
+
+          contract = Memberships::Contract.last
+          expect(contract.user).to eq(current_user)
+          expect(contract.status).to eq('pending')
+        end
+
+        it 'creates memberships_billing_profile with correct attributes' do
+          is_expected.to eq 201
+
+          contract = Memberships::Contract.find(body_hash['id'])
+          billing_profile = contract.current_billing_profile
+          expect(billing_profile.user).to eq(current_user)
+          expect(billing_profile.membership_plan).to eq(leveled_membership_plan_platinum)
+          expect(billing_profile.payment_type).to eq('credit_card')
+          expect(billing_profile.payment_provider).to eq('stripe')
+          expect(billing_profile.status).to eq('pending')
+          expect(billing_profile.recurrence).to be true
+        end
+
         it 'returns correct response format' do
           is_expected.to eq 201
           json_response = response.parsed_body
@@ -209,13 +263,17 @@ RSpec.describe '[ credit card payments API ]' do
           create(:memberships__plan, tenant_id: current_tenant.id, name: 'trial_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 7, position: 4)
         }
         let(:params) { { memberships_contracts: { memberships_plan_id: trial_plan.id } } }
+        let(:confirmation_secret) { nil }
+        # rubocop:disable RSpec/VerifiedDoubles
+        let(:pending_setup_intent_double) { double('pending_setup_intent', client_secret: 'seti_trial_test123_secret', id: 'seti_trial_test123', status: 'requires_action', usage: 'off_session') }
+        let(:mock_trial_stripe_subscription) { double('Stripe::Subscription') }
+        # rubocop:enable RSpec/VerifiedDoubles
 
         before do
           create(:memberships__plan_payment_method, tenant_id: current_tenant.id, membership_plan: trial_plan, payment_type: 'credit_card', stripe_record_price: stripe_record_price_platinum,
 is_active: true,)
-          # rubocop:disable RSpec/VerifiedDoubles
           # Mock Stripe API for trial plan
-          mock_trial_stripe_subscription = double('Stripe::Subscription')
+          # rubocop:disable RSpec/VerifiedDoubles
           allow(mock_trial_stripe_subscription).to receive_messages(
             id: 'sub_trial_test123',
             status: 'trialing',
@@ -226,17 +284,109 @@ is_active: true,)
             items: double('items', data: [
               double('subscription_item', current_period_start: Time.current.to_i, current_period_end: 1.month.from_now.to_i),
             ],),
-            latest_invoice: double('latest_invoice', id: 'in_trial_test123'),
-            pending_setup_intent: nil,
+            latest_invoice: latest_invoice_double,
+            pending_setup_intent: pending_setup_intent_double,
           )
-          allow(Stripe::Subscription).to receive(:create).and_return(mock_trial_stripe_subscription)
           # rubocop:enable RSpec/VerifiedDoubles
+          allow(Stripe::Subscription).to receive(:create).and_return(mock_trial_stripe_subscription)
+
+          mock_trial_stripe_invoice = instance_double(Stripe::Invoice, id: 'in_trial_test123', status: :open, confirmation_secret:)
+          allow(Stripe::Invoice).to receive(:retrieve).and_return(mock_trial_stripe_invoice)
         end
 
         it 'creates contract with trial period' do
           is_expected.to eq 201
           json_response = response.parsed_body
           expect(json_response['status']).to eq('pending')
+        end
+
+        it 'sets trial period in stripe subscription' do
+          is_expected.to eq 201
+
+          # Stripe APIがtrial_period_daysで呼ばれることを確認
+          expect(Stripe::Subscription).to have_received(:create).with(
+            hash_including(trial_period_days: 7),
+            anything,
+          )
+        end
+
+        it 'includes pending_setup_intent in response body' do
+          is_expected.to eq 201
+
+
+          contract = Memberships::Contract.find(body_hash['id'])
+          contract.billing_profiles.first.chargeable
+
+          expect(body_hash['billing_profiles'][0]['chargeable']['pending_setup_intent']).to be_present
+        end
+      end
+
+      context 'trial history restriction' do
+        let(:trial_plan) {
+          create(:memberships__plan, tenant_id: current_tenant.id, name: 'trial_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 7, position: 4)
+        }
+        let(:trial_plan_component) {
+          create(:memberships__plan_component, tenant_id: current_tenant.id, membership_plan: trial_plan, membership: leveled_membership_platinum)
+        }
+        let(:params) { { memberships_contracts: { memberships_plan_id: trial_plan.id } } }
+
+        let(:trial_history) {
+          create(:memberships__trial_history,
+                 user: current_user,
+                 tenant_id: current_tenant.id,
+                 membership: trial_plan.memberships.first,
+                 membership_plan: trial_plan,
+                 fingerprint: 'test_card_fingerprint',)
+        }
+
+        before do
+          trial_plan_component
+          trial_history
+          create(:memberships__plan_payment_method, tenant_id: current_tenant.id, membership_plan: trial_plan, payment_type: 'credit_card', stripe_record_price: stripe_record_price_platinum,
+is_active: true,)
+
+          # トライアルなしのsubscriptionをモック
+          # rubocop:disable RSpec/VerifiedDoubles
+          mock_no_trial_subscription_item = double('subscription_item', current_period_start: Time.current.to_i, current_period_end: 1.month.from_now.to_i)
+          mock_no_trial_items = double('items', data: [mock_no_trial_subscription_item])
+          mock_no_trial_latest_invoice = double('latest_invoice', id: 'in_no_trial_test123')
+          mock_no_trial_stripe_subscription = double('Stripe::Subscription')
+          # rubocop:enable RSpec/VerifiedDoubles
+          allow(mock_no_trial_stripe_subscription).to receive_messages(
+            id: 'sub_no_trial_test123',
+            status: 'incomplete',
+            trial_end: nil,
+            trial_start: nil,
+            current_period_start: Time.current.to_i,
+            current_period_end: 1.month.from_now.to_i,
+            items: mock_no_trial_items,
+            latest_invoice: mock_no_trial_latest_invoice,
+            pending_setup_intent: nil,
+          )
+          allow(Stripe::Subscription).to receive(:create).and_return(mock_no_trial_stripe_subscription)
+        end
+
+        it 'creates contract without trial period for user with trial history' do
+          is_expected.to eq 201
+          json_response = response.parsed_body
+          expect(json_response['status']).to eq('pending')
+        end
+
+        it 'does not set trial_period_days for user with trial history' do
+          is_expected.to eq 201
+
+          # Stripe APIがtrial_period_daysなしで呼ばれることを確認
+          expect(Stripe::Subscription).to have_received(:create).with(
+            hash_not_including(:trial_period_days),
+            anything,
+          )
+        end
+
+        it 'checks trial availability using card fingerprint' do
+          is_expected.to eq 201
+
+          # トライアル履歴が存在することを確認
+          expect(Memberships::TrialHistory.exists?(membership: trial_plan.memberships, fingerprint: 'test_card_fingerprint')).to be true
         end
       end
     end
@@ -294,6 +444,48 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
           is_expected.to eq 400
           expect(body_hash[:error][:code]).to eq('already_have_membership')
         end
+
+        it 'does not create new contract when already have membership' do
+          expect {
+            is_expected.to eq 400
+          }.not_to change(Memberships::Contract, :count)
+        end
+      end
+
+      context 'same membership group contract' do
+        let(:params) { { memberships_contracts: { memberships_plan_id: leveled_membership_plan_platinum.id } } }
+        let(:existing_contract) {
+          create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'pending')
+        }
+        let(:existing_billing_profile) {
+          create(:memberships__billing_profile, tenant_id: current_tenant.id, user: current_user, membership_plan: leveled_membership_plan_basic, membership_contract: existing_contract,
+payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'dummy_external_id', chargeable: existing_stripe_record_subscription, status: 'pending', recurrence: true,)
+        }
+        let(:existing_stripe_record_subscription) {
+          create(:stripe_record_subscription, tenant_id: current_tenant.id, user: current_user, price: stripe_record_price_platinum, product: stripe_record_product_platinum, status: :incomplete,
+remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, current_period_start: 1.month.ago, current_period_end: 1.month.from_now,)
+        }
+        let(:existing_membership_user) {
+          create(:memberships__user, tenant_id: current_tenant.id, user: current_user, status: 'pending', membership: leveled_membership_platinum, membership_contract: existing_contract)
+        }
+
+
+        before do
+          existing_membership_user
+          existing_billing_profile
+          existing_stripe_record_subscription
+        end
+
+        it 'returns 400 Bad Request with already_have_membership error for same group' do
+          is_expected.to eq 400
+          expect(body_hash[:error][:code]).to eq('already_have_membership')
+        end
+
+        it 'does not create new contract for same membership group' do
+          expect {
+            is_expected.to eq 400
+          }.not_to change(Memberships::Contract, :count)
+        end
       end
 
       context 'no credit card registered' do
@@ -307,6 +499,12 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
         it 'returns 400 Bad Request with card_missing error' do
           is_expected.to eq 400
           expect(body_hash[:error][:code]).to eq('card_missing')
+        end
+
+        it 'does not create contract when no credit card' do
+          expect {
+            is_expected.to eq 400
+          }.not_to change(Memberships::Contract, :count)
         end
       end
 
@@ -330,6 +528,18 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
         it 'returns 400 Bad Request with stripe_error' do
           is_expected.to eq 400
           expect(body_hash[:error][:code]).to eq('stripe_error')
+        end
+
+        it 'does not create contract when Stripe API fails' do
+          expect {
+            is_expected.to eq 400
+          }.not_to change(Memberships::Contract, :count)
+        end
+
+        it 'captures exception in Sentry when Stripe API fails' do
+          allow(Sentry).to receive(:capture_exception)
+          is_expected.to eq 400
+          expect(Sentry).to have_received(:capture_exception).with(instance_of(Stripe::CardError))
         end
       end
 
