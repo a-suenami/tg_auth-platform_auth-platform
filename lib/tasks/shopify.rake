@@ -223,5 +223,53 @@ namespace :shopify do
 
     p(result.body['data']['webhookSubscriptions']['edges'].pluck('node'))
   end
+
+  task :delete_webhook, [:webhook_id] => :environment do |_task, args|
+    webhook_id = args[:webhook_id] || ENV.fetch('WEBHOOK_ID', nil)
+
+    if webhook_id.nil? || webhook_id.empty?
+      puts 'Usage: rake shopify:delete_webhook[gid://shopify/WebhookSubscription/525699895]'
+      puts 'Or: WEBHOOK_ID=gid://shopify/WebhookSubscription/525699895 rake shopify:delete_webhook'
+      puts 'Please provide a webhook subscription ID'
+      exit 1
+    end
+
+    _, client = initialize_shopify_session
+
+    query = <<~GRAPHQL
+      mutation webhookSubscriptionDelete($id: ID!) {
+        webhookSubscriptionDelete(id: $id) {
+          userErrors {
+            field
+            message
+          }
+          deletedWebhookSubscriptionId
+        }
+      }
+    GRAPHQL
+
+    variables = { id: webhook_id }
+
+    result = client.query(query:, variables:)
+
+    puts 'Full Shopify response:'
+    puts JSON.pretty_generate(result.body)
+
+    unless result.code == 200
+      raise StandardError, "API request failed with status #{result.code}: #{result.body}"
+    end
+
+    user_errors = result.body['data']['webhookSubscriptionDelete']['userErrors']
+    if user_errors.any?
+      puts 'Error occurred:'
+      user_errors.each do |error|
+        puts "- #{error['field']}: #{error['message']}"
+      end
+      exit 1
+    end
+
+    deleted_id = result.body['data']['webhookSubscriptionDelete']['deletedWebhookSubscriptionId']
+    puts "Successfully deleted webhook subscription: #{deleted_id}"
+  end
 end
 # rubocop:enable Metrics/BlockLength
