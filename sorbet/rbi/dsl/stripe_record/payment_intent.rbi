@@ -812,6 +812,8 @@ class StripeRecord::PaymentIntent
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         remote_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        invoice_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        invoice_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         currency: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         amount: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -837,12 +839,10 @@ class StripeRecord::PaymentIntent
         api_key_account_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         connect_account_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         charge_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        invoice_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        invoice_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateAssociationRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, remote_id: nil, user_id: nil, currency: nil, amount: nil, status: nil, customer_id: nil, client_secret: nil, confirmation_method: nil, capture_method: nil, payment_method_id: nil, payment_method_configuration_details: nil, payment_method_options: nil, cancellation_reason: nil, description: nil, metadata: nil, next_action: nil, on_behalf_of_id: nil, application_fee_amount: nil, transfer_data: nil, transfer_group: nil, created_at: nil, updated_at: nil, created: nil, canceled_at: nil, api_key_account_id: nil, connect_account_id: nil, charge_type: nil, invoice_id: nil, invoice_type: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, remote_id: nil, user_id: nil, invoice_id: nil, invoice_type: nil, currency: nil, amount: nil, status: nil, customer_id: nil, client_secret: nil, confirmation_method: nil, capture_method: nil, payment_method_id: nil, payment_method_configuration_details: nil, payment_method_options: nil, cancellation_reason: nil, description: nil, metadata: nil, next_action: nil, on_behalf_of_id: nil, application_fee_amount: nil, transfer_data: nil, transfer_group: nil, created_at: nil, updated_at: nil, created: nil, canceled_at: nil, api_key_account_id: nil, connect_account_id: nil, charge_type: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -2823,6 +2823,8 @@ class StripeRecord::PaymentIntent
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         remote_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        invoice_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        invoice_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         currency: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         amount: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -2848,12 +2850,10 @@ class StripeRecord::PaymentIntent
         api_key_account_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         connect_account_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         charge_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        invoice_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        invoice_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, remote_id: nil, user_id: nil, currency: nil, amount: nil, status: nil, customer_id: nil, client_secret: nil, confirmation_method: nil, capture_method: nil, payment_method_id: nil, payment_method_configuration_details: nil, payment_method_options: nil, cancellation_reason: nil, description: nil, metadata: nil, next_action: nil, on_behalf_of_id: nil, application_fee_amount: nil, transfer_data: nil, transfer_group: nil, created_at: nil, updated_at: nil, created: nil, canceled_at: nil, api_key_account_id: nil, connect_account_id: nil, charge_type: nil, invoice_id: nil, invoice_type: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, remote_id: nil, user_id: nil, invoice_id: nil, invoice_type: nil, currency: nil, amount: nil, status: nil, customer_id: nil, client_secret: nil, confirmation_method: nil, capture_method: nil, payment_method_id: nil, payment_method_configuration_details: nil, payment_method_options: nil, cancellation_reason: nil, description: nil, metadata: nil, next_action: nil, on_behalf_of_id: nil, application_fee_amount: nil, transfer_data: nil, transfer_group: nil, created_at: nil, updated_at: nil, created: nil, canceled_at: nil, api_key_account_id: nil, connect_account_id: nil, charge_type: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

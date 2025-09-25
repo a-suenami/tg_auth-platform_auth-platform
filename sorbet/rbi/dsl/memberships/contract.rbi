@@ -501,6 +501,20 @@ class Memberships::Contract
     sig { params(value: T.nilable(::Memberships::BillingProfile)).void }
     def current_billing_profile=(value); end
 
+    sig { returns(T::Array[T.untyped]) }
+    def membership_user_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def membership_user_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `Memberships::Contract` class because it declared `has_many :membership_users`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Memberships::User::PrivateCollectionProxy) }
+    def membership_users; end
+
+    sig { params(value: T::Enumerable[::Memberships::User]).void }
+    def membership_users=(value); end
+
     sig { returns(T.nilable(::Memberships::BillingProfile)) }
     def reload_current_billing_profile; end
 
