@@ -6,6 +6,7 @@ module API::V1::Public
     def index
       plans = Memberships::Plan.includes(:plan_payment_methods, :plan_components, plan_components: :membership)
                               .joins(:plan_components)
+                              .active
                               .distinct
 
       # メンバーシップIDで絞り込み
@@ -27,6 +28,7 @@ module API::V1::Public
 
     def show
       plan = Memberships::Plan.includes(:plan_payment_methods, :plan_components, plan_components: :membership)
+                             .active
                              .find(params[:id])
 
       render_blueprint(MembershipPlanBlueprint, plan, view: :normal)

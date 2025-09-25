@@ -24,4 +24,6 @@ class Memberships::Plan < ApplicationRecord
   validates :billing_anchor, presence: true, inclusion: { in: %w[by_start_day by_fixed_month_day] }
   validates :anchor_day_of_month, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 31 }, allow_nil: true
   validates :amount, presence: true, numericality: { only_integer: true, greater_than: 0 }
+
+  scope :active, -> { where(is_active: true) }
 end
