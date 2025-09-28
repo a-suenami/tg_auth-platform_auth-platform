@@ -11,7 +11,11 @@ module UserStripe
 
         current_billing_profile = stripe_record_subscription&.current_billing_profile
         plan = current_billing_profile.membership_plan
-        next_period_end = calculate_recurring_expiry_date(Time.zone.now, plan)
+        next_period_end = if stripe_record_subscription.trial_period_days.present?
+          calculate_trial_recurring_expiry_date(Time.zone.now, stripe_record_subscription)
+        else
+          calculate_recurring_expiry_date(Time.zone.now, plan)
+        end
         current_billing_profile.update!(
           status: 'active',
           activated_at: Time.zone.now,
@@ -54,6 +58,10 @@ module UserStripe
       else
         raise Exceptions::Payment::InvalidPlan, "Invalid recurring_interval_unit: #{plan.recurring_interval_unit}"
       end
+    end
+
+    def calculate_trial_recurring_expiry_date(activated_at, stripe_record_subscription)
+      activated_at + stripe_record_subscription.trial_period_days.days
     end
 
     def create_trial_history(contract:, stripe_record_subscription:)

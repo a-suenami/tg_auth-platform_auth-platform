@@ -30,7 +30,7 @@ class StripeRecord
     # 23時間以上経過した incomplete は stripe 上では incomplete_expired になる
     scope :action_may_be_required, lambda { |now = Time.zone.now|
       where(status: :trialing).or(
-        where(status: :incomplete).where('stripe_record_subscriptions.created_at > ?', now - 23.hours),
+        where(status: :incomplete).where('stripe_record__subscriptions.created_at > ?', now - 23.hours),
       ).order(created_at: :desc)
     }
 

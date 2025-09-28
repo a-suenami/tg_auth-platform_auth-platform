@@ -12,6 +12,7 @@ create_table :memberships__billing_profiles, force: :cascade, id: :uuid, default
   t.string :status, null: false, comment: 'ステータス'
   t.boolean :recurrence, null: false, default: false, comment: '定期課金フラグ: true=サブスクリプション, false=買い切り'
   t.integer :revision, null: false, default: 1, comment: 'バージョン管理用'
+  t.integer :paid_amount, null: false, default: 0, comment: '支払い済み金額'
 
   # 決済情報
   t.references :chargeable, type: :uuid,   polymorphic: true, comment: '決済情報'

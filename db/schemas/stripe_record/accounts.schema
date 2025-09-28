@@ -1,16 +1,16 @@
 # ==============================================================================
 # db/schemas/stripe_record/accounts.schema
 # ==============================================================================
-create_table :stripe_record_accounts, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+create_table :stripe_record__accounts, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.string :remote_id, null: false, comment: 'Stripe のアカウント ID' # controlling_platform_id との組み合わせで unique
 
   t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_accounts__tenants }
 
   t.references :api_key,              type: :uuid, null: true, foreign_key: {
-    to_table: :stripe_record_api_keys, column: :api_key_id, name: :fk_stripe_record_accounts_api_key_id,
+    to_table: :stripe_record__api_keys, column: :api_key_id, name: :fk_stripe_record_accounts_api_key_id,
   }
   t.references :controlling_platform, type: :uuid, null: true, foreign_key: {
-    to_table: :stripe_record_accounts, column: :controlling_platform_id, name: :fk_stripe_record_accounts_controlling_platform_id,
+    to_table: :stripe_record__accounts, column: :controlling_platform_id, name: :fk_stripe_record_accounts_controlling_platform_id,
   }
 
   t.string :type

@@ -920,6 +920,7 @@ class StripeRecord::Subscription
         refund_reason: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         current_period_start: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         current_period_end: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        trial_period_days: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         trial_end: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         trial_start: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         remote_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -929,7 +930,7 @@ class StripeRecord::Subscription
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateAssociationRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, product_id: nil, price_id: nil, pending_setup_intent_id: nil, amount: nil, tax: nil, currency: nil, refunded: nil, refund_reason: nil, current_period_start: nil, current_period_end: nil, trial_end: nil, trial_start: nil, remote_id: nil, status: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, product_id: nil, price_id: nil, pending_setup_intent_id: nil, amount: nil, tax: nil, currency: nil, refunded: nil, refund_reason: nil, current_period_start: nil, current_period_end: nil, trial_period_days: nil, trial_end: nil, trial_start: nil, remote_id: nil, status: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -1579,6 +1580,9 @@ class StripeRecord::Subscription
     def restore_trial_end_date!; end
 
     sig { void }
+    def restore_trial_period_days!; end
+
+    sig { void }
     def restore_trial_start!; end
 
     sig { void }
@@ -1697,6 +1701,12 @@ class StripeRecord::Subscription
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_trial_end_date?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def saved_change_to_trial_period_days; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_trial_period_days?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_trial_start; end
@@ -1947,6 +1957,51 @@ class StripeRecord::Subscription
     sig { void }
     def trial_end_will_change!; end
 
+    sig { returns(T.nilable(::Integer)) }
+    def trial_period_days; end
+
+    sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+    def trial_period_days=(value); end
+
+    sig { returns(T::Boolean) }
+    def trial_period_days?; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def trial_period_days_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def trial_period_days_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def trial_period_days_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def trial_period_days_change; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def trial_period_days_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def trial_period_days_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def trial_period_days_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def trial_period_days_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def trial_period_days_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def trial_period_days_previously_was; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def trial_period_days_was; end
+
+    sig { void }
+    def trial_period_days_will_change!; end
+
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
     def trial_start; end
 
@@ -2182,6 +2237,9 @@ class StripeRecord::Subscription
     def will_save_change_to_trial_end_date?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_trial_period_days?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_trial_start?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -2349,6 +2407,7 @@ class StripeRecord::Subscription
         refund_reason: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         current_period_start: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         current_period_end: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        trial_period_days: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         trial_end: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         trial_start: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         remote_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -2358,7 +2417,7 @@ class StripeRecord::Subscription
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, product_id: nil, price_id: nil, pending_setup_intent_id: nil, amount: nil, tax: nil, currency: nil, refunded: nil, refund_reason: nil, current_period_start: nil, current_period_end: nil, trial_end: nil, trial_start: nil, remote_id: nil, status: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, product_id: nil, price_id: nil, pending_setup_intent_id: nil, amount: nil, tax: nil, currency: nil, refunded: nil, refund_reason: nil, current_period_start: nil, current_period_end: nil, trial_period_days: nil, trial_end: nil, trial_start: nil, remote_id: nil, status: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

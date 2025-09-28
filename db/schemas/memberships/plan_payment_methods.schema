@@ -11,4 +11,4 @@ end
 
 add_foreign_key :memberships__plan_payment_methods, :memberships__plans, column: :membership_plan_id, name: :fk_memberships__plan_payment_methods_plans
 add_foreign_key :memberships__plan_payment_methods, :tenants, name: :fk_memberships__plan_payment_methods_tenants
-add_foreign_key :memberships__plan_payment_methods, :stripe_record_prices, column: :stripe_record_price_id, name: :fk_memberships__plan_payment_methods_stripe_prices
+add_foreign_key :memberships__plan_payment_methods, :stripe_record__prices, column: :stripe_record_price_id, name: :fk_memberships__plan_payment_methods_stripe_prices

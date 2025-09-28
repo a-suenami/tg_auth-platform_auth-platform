@@ -17,7 +17,7 @@ class StripeRecord
 
   sig { returns(String) }
   def self.table_name_prefix
-    'stripe_record_'
+    'stripe_record__'
   end
 
 
