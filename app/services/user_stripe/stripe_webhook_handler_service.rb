@@ -42,11 +42,6 @@ module UserStripe
       UserStripe::CompletePaymentIntentContractService.new(event: @event).execute
     end
 
-    # トライアル、繰越残高があり、請求が発生しない場合など
-    def handle_setup_intent_succeeded
-      UserStripe::CompleteSetupIntentContractService.new(event: @event).execute
-    end
-
 
     def handle_invoice_paid_on_subscription_cycle(_type:)
       UserStripe::RenewMembershipSubscriptionService.new(event: @event).execute

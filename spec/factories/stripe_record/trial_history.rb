@@ -1,7 +1,7 @@
 # typed: false
 
 FactoryBot.define do
-  factory :memberships__trial_history, class: 'Memberships::TrialHistory' do
+  factory :stripe_record_trial_history, class: 'StripeRecord::TrialHistory' do
     tenant_id { create(:tenant).id }
     membership { create(:membership) }
     fingerprint { 'test_fingerprint' }

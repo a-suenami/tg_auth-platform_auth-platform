@@ -213,26 +213,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_memberships__plans_on_tenant_id"
   end
 
-  create_table "memberships__trial_histories", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップのトライアル履歴", force: :cascade do |t|
-    t.citext "tenant_id", null: false
-    t.uuid "user_id", null: false
-    t.uuid "membership_id", null: false
-    t.uuid "membership_plan_id", null: false
-    t.uuid "stripe_record_subscription_id"
-    t.string "fingerprint", null: false, comment: "決済手段のユニークな識別子(ex: クレジットカードのfingerprint)"
-    t.datetime "trial_start", null: false, comment: "トライアル開始日時"
-    t.datetime "trial_end", comment: "トライアル終了日時"
-    t.integer "trial_period_days", null: false, comment: "トライアル日数"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["membership_id"], name: "index_memberships__trial_histories_on_membership_id"
-    t.index ["membership_plan_id"], name: "index_memberships__trial_histories_on_membership_plan_id"
-    t.index ["stripe_record_subscription_id"], name: "idx_on_stripe_record_subscription_id_9dfc1f52bd"
-    t.index ["tenant_id", "membership_id", "fingerprint"], name: "idx_memberships__trial_histories_unique", unique: true
-    t.index ["tenant_id"], name: "index_memberships__trial_histories_on_tenant_id"
-    t.index ["user_id"], name: "index_memberships__trial_histories_on_user_id"
-  end
-
   create_table "memberships__user_achievements", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップアチーブメント", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
@@ -682,6 +662,26 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["product_id"], name: "index_stripe_record_subscriptions_on_product_id"
     t.index ["tenant_id"], name: "index_stripe_record_subscriptions_on_tenant_id"
     t.index ["user_id"], name: "index_stripe_record_subscriptions_on_user_id"
+  end
+
+  create_table "stripe_record_trial_histories", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Stripeのトライアル履歴", force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "membership_id", null: false
+    t.uuid "membership_plan_id", null: false
+    t.uuid "stripe_record_subscription_id"
+    t.string "fingerprint", null: false, comment: "決済手段のユニークな識別子(ex: クレジットカードのfingerprint)"
+    t.datetime "trial_start", null: false, comment: "トライアル開始日時"
+    t.datetime "trial_end", comment: "トライアル終了日時"
+    t.integer "trial_period_days", null: false, comment: "トライアル日数"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["membership_id"], name: "index_stripe_record_trial_histories_on_membership_id"
+    t.index ["membership_plan_id"], name: "index_stripe_record_trial_histories_on_membership_plan_id"
+    t.index ["stripe_record_subscription_id"], name: "idx_on_stripe_record_subscription_id_95f8fd9518"
+    t.index ["tenant_id", "membership_id", "fingerprint"], name: "idx_stripe_record__trial_histories_unique", unique: true
+    t.index ["tenant_id"], name: "index_stripe_record_trial_histories_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_trial_histories_on_user_id"
   end
 
   create_table "tenant_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

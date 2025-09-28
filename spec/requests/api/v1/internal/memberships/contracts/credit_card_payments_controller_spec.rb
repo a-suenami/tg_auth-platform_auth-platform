@@ -331,7 +331,7 @@ is_active: true,)
         let(:params) { { memberships_contracts: { memberships_plan_id: trial_plan.id } } }
 
         let(:trial_history) {
-          create(:memberships__trial_history,
+          create(:stripe_record_trial_history,
                  user: current_user,
                  tenant_id: current_tenant.id,
                  membership: trial_plan.memberships.first,
@@ -386,7 +386,7 @@ is_active: true,)
           is_expected.to eq 201
 
           # トライアル履歴が存在することを確認
-          expect(Memberships::TrialHistory.exists?(membership: trial_plan.memberships, fingerprint: 'test_card_fingerprint')).to be true
+          expect(StripeRecord::TrialHistory.exists?(membership: trial_plan.memberships, fingerprint: 'test_card_fingerprint')).to be true
         end
       end
     end

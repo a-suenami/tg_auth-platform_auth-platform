@@ -60,7 +60,7 @@ module UserStripe
       membership_plan = contract.current_billing_profile.membership_plan
       memberships = membership_plan.memberships
       memberships.each do |membership|
-        Memberships::TrialHistory.create!(
+        StripeRecord::TrialHistory.create!(
           tenant_id: contract.tenant_id,
           user: contract.user,
           membership:,

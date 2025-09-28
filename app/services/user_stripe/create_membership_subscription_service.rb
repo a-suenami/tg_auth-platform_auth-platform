@@ -166,7 +166,7 @@ module UserStripe
     def check_trial_availability(user:, membership_plan:)
       # トライアル履歴が存在する場合はトライアルを利用できない
       memberships = membership_plan.memberships
-      if memberships.any? && Memberships::TrialHistory.exists?(membership: memberships, fingerprint: get_card_fingerprint(fetch_default_payment_method_or_default_source_of(user)))
+      if memberships.any? && StripeRecord::TrialHistory.exists?(membership: memberships, fingerprint: get_card_fingerprint(fetch_default_payment_method_or_default_source_of(user)))
         return false
       end
 
