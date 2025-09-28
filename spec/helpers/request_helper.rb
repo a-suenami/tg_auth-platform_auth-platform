@@ -5,7 +5,18 @@
 # ==============================================================================
 module RequestHelpers
   def body_hash
-    ActiveSupport::HashWithIndifferentAccess.new(JSON.parse(response.body)) if response.body.present?
+    return nil if response.body.blank?
+
+    response_body_hash = JSON.parse(response.body)
+
+    case response_body_hash
+    when Hash
+      ActiveSupport::HashWithIndifferentAccess.new(response_body_hash)
+    when Array
+      response_body_hash.map(&:with_indifferent_access)
+    else
+      response_body_hash
+    end
   end
 
   def body_array
@@ -31,8 +42,7 @@ module RequestHelpers
 
     before do
       allow(ExpirableCookie).to receive(:new).and_return(session_mock)
-      allow(session_mock).to receive(:[]=).and_return(nil)
-      allow(session_mock).to receive(:session_clear).and_return(nil)
+      allow(session_mock).to receive_messages('[]=': nil, session_clear: nil)
       allow(session_mock).to receive(:[]) do |key|
         case key
         when :current_user_id

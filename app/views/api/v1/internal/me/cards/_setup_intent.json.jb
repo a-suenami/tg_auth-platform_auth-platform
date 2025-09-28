@@ -1,0 +1,4 @@
+{
+  remote_id: setup_intent.remote_id,
+  client_secret: setup_intent.client_secret,
+}

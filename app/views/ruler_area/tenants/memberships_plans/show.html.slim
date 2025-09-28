@@ -1,0 +1,85 @@
+.uk-margin-top.uk-container
+  nav.uk-breadcrumb aria-label="Breadcrumb"
+    li
+      = link_to "テナント一覧", ruler_area_tenants_path
+    li
+      = link_to @tenant.name, ruler_area_tenant_root_path(@tenant)
+    li
+      = link_to "メンバーシップ管理", top_ruler_area_tenant_memberships_path(@tenant)
+    li
+      = link_to "メンバーシッププラン一覧", ruler_area_tenant_memberships_plans_path(@tenant)
+    li
+      span = @membership_plan.name
+
+  h2 メンバーシッププラン詳細
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    .uk-grid.uk-grid-small
+      .uk-width-1-2
+        h3 基本情報
+        table.uk-table.uk-table-divider
+          tr
+            th = Memberships::Plan.human_attribute_name(:name)
+            td = @membership_plan.name
+          tr
+            th = Memberships::Plan.human_attribute_name(:position)
+            td = @membership_plan.position
+          tr
+            th = Memberships::Plan.human_attribute_name(:recurrence)
+            td = @membership_plan.recurrence ? "定期課金" : "買い切り"
+          tr
+            th = Memberships::Plan.human_attribute_name(:recurring_interval_unit)
+            td
+              - case @membership_plan.recurring_interval_unit
+              - when 'day'
+                | 日
+              - when 'week'
+                | 週
+              - when 'month'
+                | 月
+              - when 'year'
+                | 年
+              - else
+                = @membership_plan.recurring_interval_unit
+          tr
+            th = Memberships::Plan.human_attribute_name(:recurring_interval_count)
+            td = "#{@membership_plan.recurring_interval_count}回"
+          tr
+            th = Memberships::Plan.human_attribute_name(:billing_anchor)
+            td = @membership_plan.billing_anchor == 'by_start_day' ? '登録日基準' : '毎月の特定日'
+          tr
+            th = Memberships::Plan.human_attribute_name(:anchor_day_of_month)
+            td = @membership_plan.anchor_day_of_month || '未設定'
+          tr
+            th = Memberships::Plan.human_attribute_name(:amount)
+            td = @membership_plan.amount
+          tr
+            th = Memberships::Plan.human_attribute_name(:trial_period_days)
+            td = @membership_plan.trial_period_days > 0 ? "#{@membership_plan.trial_period_days}日" : "なし"
+
+      .uk-width-1-2
+        h3 メンバーシップ
+        - if @membership_plan.memberships.any?
+          - @membership_plan.memberships.each do |membership|
+            span.uk-badge.uk-margin-small-right
+              = membership.display_name
+        - else
+          p.uk-text-meta メンバーシップが設定されていません
+
+        h3.uk-margin-top 決済方法
+        - if @membership_plan.plan_payment_methods.any?
+          - @membership_plan.plan_payment_methods.each do |payment_method|
+            span.uk-badge.uk-margin-small-right
+              = payment_method.payment_type
+              - if payment_method.payment_type == 'credit_card' && payment_method.stripe_record_price
+                |  (#{payment_method.stripe_record_price.name})
+          - credit_card_method = @membership_plan.plan_payment_methods.find_by(payment_type: 'credit_card')
+          - if credit_card_method
+            .uk-margin-small-top
+              = link_to "決済方法を編集", edit_ruler_area_tenant_memberships_plan_memberships_plan_payment_method_path(@tenant_id, @membership_plan, credit_card_method), class: "uk-button uk-button-small uk-button-primary"
+        - else
+          p.uk-text-meta 決済方法が設定されていません
+
+    .uk-margin-top
+      = link_to "編集", edit_ruler_area_tenant_memberships_plan_path(@tenant_id, @membership_plan), class: "uk-button uk-button-primary"
+      = link_to "一覧に戻る", ruler_area_tenant_memberships_plans_path(@tenant_id), class: "uk-button uk-button-secondary uk-margin-left"

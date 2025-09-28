@@ -1,0 +1,27 @@
+# ==============================================================================
+# db/schemas/stripe_record/subscriptions.schema
+# ==============================================================================
+create_table :stripe_record__subscriptions, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_subscriptions__tenants }
+  t.references :user,               type: :uuid,   null: false
+  t.references :product, type: :uuid,   null: false
+  t.references :price,    type: :uuid,   null: false
+  t.references :pending_setup_intent, type: :uuid, null: true
+
+  t.integer  :amount,             default: 0
+  t.integer  :tax,                default: 0
+  t.string   :currency,           default: 'JPY'
+  t.boolean  :refunded,           default: false
+  t.string   :refund_reason
+
+  t.datetime :current_period_start, null: true, comment: '現在の請求期間の開始日時'
+  t.datetime :current_period_end, null: true, comment: '現在の請求期間の終了日時'
+  t.integer  :trial_period_days, null: true, comment: 'トライアル日数'
+  t.datetime :trial_end, null: true, comment: 'トライアル終了日時'
+  t.datetime :trial_start, null: true, comment: 'トライアル開始日時'
+
+  t.string :remote_id
+  t.string :status
+
+  t.timestamps null: false
+end

@@ -18,3 +18,10 @@ Ruler.seed do |s|
   s.email = 'sakata@twogate.com'
   s.uid = 'auth0|6756bb34b16b2779ba0c3fd6'
 end
+
+Ruler.seed do |s|
+  s.id = "3869b7cd-fffa-41bc-93af-593edf97afc7"
+  s.name = 'Tenant Sakata Ruler'
+  s.email = 'sakata@twogate.com'
+  s.uid = 'auth0|e582a1be-7d59-4574-8c61-04196e605acc'
+end

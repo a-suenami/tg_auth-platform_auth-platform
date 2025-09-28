@@ -1,0 +1,17 @@
+ja:
+  activerecord:
+    models:
+      memberships/plan_payment_method: プラン決済方法
+    attributes:
+      memberships/plan_payment_method:
+        id: ID
+        payment_type: 決済方法
+        created_at: 作成日時
+        updated_at: 更新日時
+    enums:
+      memberships/plan_payment_method:
+        payment_type:
+          credit_card: クレジットカード
+          convenience: コンビニ決済
+          campaign_code: キャンペーンコード
+          external_linkage: 外部連携

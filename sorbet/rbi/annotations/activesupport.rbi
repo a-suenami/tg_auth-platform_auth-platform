@@ -81,10 +81,26 @@ end
 
 class Hash
   sig { returns(T::Boolean) }
+  def blank?; end
+
+  sig { returns(T::Boolean) }
+  def present?; end
+
+  sig { returns(T::Boolean) }
   def extractable_options?; end
+
+  # @version >= 6.1.0
+  sig { returns(T::Hash[K, V]) }
+  def compact_blank; end
 end
 
 class Array
+  sig { returns(T::Boolean) }
+  def blank?; end
+
+  sig { returns(T::Boolean) }
+  def present?; end
+
   sig { params(position: Integer).returns(T.self_type) }
   def from(position); end
 
@@ -181,6 +197,32 @@ class DateTime
   def present?; end
 end
 
+module Enumerable
+  sig { type_parameters(:Block).params(block: T.proc.params(arg0: Elem).returns(T.type_parameter(:Block))).returns(T::Hash[T.type_parameter(:Block), Elem]) }
+  sig { returns(T::Enumerable[T.untyped]) }
+  def index_by(&block); end
+
+  sig { type_parameters(:Block).params(block: T.proc.params(arg0: Elem).returns(T.type_parameter(:Block))).returns(T::Hash[Elem, T.type_parameter(:Block)]) }
+  sig { returns(T::Enumerable[T.untyped]) }
+  sig { type_parameters(:Default).params(default: T.type_parameter(:Default)).returns(T::Hash[Elem, T.type_parameter(:Default)]) }
+  def index_with(default = nil, &block); end
+
+  sig { params(block: T.proc.params(arg0: Elem).returns(BasicObject)).returns(T::Boolean) }
+  sig { returns(T::Boolean) }
+  def many?(&block); end
+
+  sig { params(object: BasicObject).returns(T::Boolean) }
+  def exclude?(object); end
+
+  # @version >= 6.1.0
+  sig { returns(T::Array[Elem]) }
+  def compact_blank; end
+
+  # @version >= 7.0.0
+  sig { returns(Elem) }
+  def sole; end
+end
+
 class NilClass
   sig { returns(TrueClass) }
   def blank?; end
@@ -247,9 +289,21 @@ class Time
   # @shim: since `blank?` is always false, `present?` always returns `true`
   sig { returns(TrueClass) }
   def present?; end
+
+  sig { returns(ActiveSupport::TimeZone) }
+  def self.zone; end
+
+  sig { returns(T.any(ActiveSupport::TimeWithZone, ::Time)) }
+  def self.current; end
 end
 
 class Symbol
+  sig { returns(T::Boolean) }
+  def blank?; end
+
+  sig { returns(T::Boolean) }
+  def present?; end
+
   # alias for `#start_with?`
   sig { params(string_or_regexp: T.any(String, Regexp)).returns(T::Boolean) }
   def starts_with?(*string_or_regexp); end
@@ -349,6 +403,9 @@ class String
   sig { params(count: T.nilable(T.any(Integer, Symbol)), locale: T.nilable(Symbol)).returns(String) }
   def pluralize(count = nil, locale = :en); end
 
+  sig { returns(T::Boolean) }
+  def present?; end
+
   sig { params(patterns: T.any(String, Regexp)).returns(String) }
   def remove(*patterns); end
 
@@ -399,7 +456,7 @@ class String
   def truncate(truncate_to, options = {}); end
 
   sig { params(truncate_to: Integer, omission: T.nilable(String)).returns(String) }
-  def truncate_bytes(truncate_to, omission: "\xE2\x80\xA6"); end
+  def truncate_bytes(truncate_to, omission: "…"); end
 
   sig { params(words_count: Integer, options: T::Hash[Symbol, T.anything]).returns(String) }
   def truncate_words(words_count, options = {}); end
@@ -409,4 +466,23 @@ class String
 
   sig { returns(String) }
   def upcase_first; end
+end
+
+class ActiveSupport::ErrorReporter
+  # @version >= 7.1.0.beta1
+  sig { type_parameters(:Block, :Fallback).params(error_classes: T.class_of(Exception), severity: T.nilable(Symbol), context: T.nilable(T::Hash[Symbol, T.untyped]), fallback: T.nilable(T.proc.returns(T.type_parameter(:Fallback))), source: T.nilable(String), blk: T.proc.returns(T.type_parameter(:Block))).returns(T.any(T.type_parameter(:Block), T.type_parameter(:Fallback))) }
+  def handle(*error_classes, severity: T.unsafe(nil), context: T.unsafe(nil), fallback: T.unsafe(nil), source: T.unsafe(nil), &blk); end
+
+  # @version >= 7.1.0.beta1
+  sig { type_parameters(:Block).params(error_classes: T.class_of(Exception), severity: T.nilable(Symbol), context: T.nilable(T::Hash[Symbol, T.untyped]), source: T.nilable(String), blk: T.proc.returns(T.type_parameter(:Block))).returns(T.type_parameter(:Block)) }
+  def record(*error_classes, severity: T.unsafe(nil), context: T.unsafe(nil), source: T.unsafe(nil), &blk); end
+
+  # @version >= 7.1.0.beta1
+  sig { params(error: Exception, handled: T::Boolean, severity: T.nilable(Symbol), context: T::Hash[Symbol, T.untyped], source: T.nilable(String)).void }
+  def report(error, handled: true, severity: T.unsafe(nil), context: T.unsafe(nil), source: T.unsafe(nil)); end
+end
+
+module ActiveSupport::Testing::Assertions
+  sig { type_parameters(:Block).params(block: T.proc.returns(T.type_parameter(:Block))).returns(T.type_parameter(:Block)) }
+  def assert_nothing_raised(&block); end
 end

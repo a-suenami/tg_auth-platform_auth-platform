@@ -1,0 +1,14 @@
+create_table :memberships__contracts, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'ユーザーのメンバーシップ契約' do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :user, type: :uuid, null: false
+  t.datetime :expires_at, comment: '有効期限'
+  t.boolean :cancel_at_period_end, default: false, comment: '次回更新時に解約フラグ'
+
+  t.string :status, null: false, default: 'active', comment: 'ステータス'
+
+  t.timestamps null: false
+  t.index :expires_at, name: :idx_memberships__contracts_expires_at, using: :btree
+end
+
+add_foreign_key :memberships__contracts, :tenants, name: :fk_memberships__contracts_tenants
+add_foreign_key :memberships__contracts, :users, name: :fk_memberships__contracts_users

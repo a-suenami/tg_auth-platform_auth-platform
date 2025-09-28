@@ -8,7 +8,7 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 require 'rspec/rails'
 # require 'knapsack_pro'
 
-Dir[Rails.root.join('spec', 'helpers', '**', '*.rb')].each { |f| require f }
+Rails.root.glob('spec/helpers/**/*.rb').each { |f| require f.to_s }
 
 RSpec.configure do |config|
   config.example_status_persistence_file_path = 'spec/examples.txt'

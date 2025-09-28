@@ -150,6 +150,549 @@ CREATE TABLE public.login_spa_applications (
 
 
 --
+-- Name: memberships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    membership_group_id uuid,
+    name character varying,
+    display_name character varying,
+    "position" integer,
+    tier integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE memberships; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.memberships IS 'メンバーシップ';
+
+
+--
+-- Name: COLUMN memberships.membership_group_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships.membership_group_id IS 'メンバーシップグループ';
+
+
+--
+-- Name: COLUMN memberships.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships.name IS 'メンバーシップ識別子';
+
+
+--
+-- Name: COLUMN memberships.display_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships.display_name IS 'メンバーシップ名称';
+
+
+--
+-- Name: COLUMN memberships."position"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships."position" IS '表示順序';
+
+
+--
+-- Name: COLUMN memberships.tier; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships.tier IS '階級';
+
+
+--
+-- Name: memberships__billing_profiles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships__billing_profiles (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    membership_plan_id uuid NOT NULL,
+    membership_contract_id uuid NOT NULL,
+    payment_type character varying NOT NULL,
+    payment_provider character varying,
+    external_id character varying,
+    phase character varying DEFAULT 'current'::character varying NOT NULL,
+    activated_at timestamp(6) without time zone,
+    expires_at timestamp(6) without time zone,
+    status character varying NOT NULL,
+    recurrence boolean DEFAULT false NOT NULL,
+    revision integer DEFAULT 1 NOT NULL,
+    paid_amount integer DEFAULT 0 NOT NULL,
+    chargeable_id uuid,
+    chargeable_type character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE memberships__billing_profiles; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.memberships__billing_profiles IS 'メンバーシップの決済情報';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.membership_contract_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.membership_contract_id IS 'メンバーシップ契約ID';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.payment_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.payment_type IS '支払い方法: credit_card, convenience, campaign_code, external_linkage';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.payment_provider; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.payment_provider IS '決済プロバイダ: stripe, komojuなど';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.external_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.external_id IS '外部システムのID';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.phase; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.phase IS 'phase: billing_profileの利用状態。プラン変更予定時はupcoming。current, upcoming, closed';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.activated_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.activated_at IS '有効化日時';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.expires_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.expires_at IS '有効期限';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.status IS 'ステータス';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.recurrence; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.recurrence IS '定期課金フラグ: true=サブスクリプション, false=買い切り';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.revision; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.revision IS 'バージョン管理用';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.paid_amount; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.paid_amount IS '支払い済み金額';
+
+
+--
+-- Name: COLUMN memberships__billing_profiles.chargeable_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__billing_profiles.chargeable_id IS '決済情報';
+
+
+--
+-- Name: memberships__contracts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships__contracts (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    expires_at timestamp(6) without time zone,
+    cancel_at_period_end boolean DEFAULT false,
+    status character varying DEFAULT 'active'::character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE memberships__contracts; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.memberships__contracts IS 'ユーザーのメンバーシップ契約';
+
+
+--
+-- Name: COLUMN memberships__contracts.expires_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__contracts.expires_at IS '有効期限';
+
+
+--
+-- Name: COLUMN memberships__contracts.cancel_at_period_end; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__contracts.cancel_at_period_end IS '次回更新時に解約フラグ';
+
+
+--
+-- Name: COLUMN memberships__contracts.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__contracts.status IS 'ステータス';
+
+
+--
+-- Name: memberships__groups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships__groups (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    name character varying NOT NULL,
+    display_name character varying NOT NULL,
+    "position" integer DEFAULT 0,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE memberships__groups; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.memberships__groups IS 'メンバーシップグループ（段階的プラン用）';
+
+
+--
+-- Name: COLUMN memberships__groups.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__groups.name IS 'グループ名（英数字のみ）';
+
+
+--
+-- Name: COLUMN memberships__groups.display_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__groups.display_name IS '表示名';
+
+
+--
+-- Name: COLUMN memberships__groups."position"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__groups."position" IS '表示順序（段階の順番）';
+
+
+--
+-- Name: memberships__plan_components; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships__plan_components (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    membership_plan_id uuid NOT NULL,
+    membership_id uuid NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE memberships__plan_components; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.memberships__plan_components IS 'メンバーシッププランの構成要素（バンドルプラン用）';
+
+
+--
+-- Name: memberships__plan_payment_methods; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships__plan_payment_methods (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    membership_plan_id uuid NOT NULL,
+    payment_type character varying NOT NULL,
+    stripe_record_price_id uuid,
+    is_active boolean DEFAULT true,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE memberships__plan_payment_methods; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.memberships__plan_payment_methods IS 'メンバーシッププランの支払い方法';
+
+
+--
+-- Name: COLUMN memberships__plan_payment_methods.payment_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plan_payment_methods.payment_type IS '支払い方法: credit_card, convenience, campaign_code, external_linkage';
+
+
+--
+-- Name: COLUMN memberships__plan_payment_methods.stripe_record_price_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plan_payment_methods.stripe_record_price_id IS 'Stripe価格ID';
+
+
+--
+-- Name: COLUMN memberships__plan_payment_methods.is_active; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plan_payment_methods.is_active IS '有効フラグ';
+
+
+--
+-- Name: memberships__plans; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships__plans (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    name character varying NOT NULL,
+    recurrence boolean DEFAULT false NOT NULL,
+    recurring_interval_count integer DEFAULT 1 NOT NULL,
+    recurring_interval_unit character varying DEFAULT 'month'::character varying NOT NULL,
+    amount integer NOT NULL,
+    is_active boolean DEFAULT true,
+    enabled_at timestamp(6) without time zone,
+    disabled_at timestamp(6) without time zone,
+    trial_period_days integer DEFAULT 0 NOT NULL,
+    billing_anchor character varying DEFAULT 'by_start_day'::character varying NOT NULL,
+    anchor_day_of_month integer,
+    "position" integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE memberships__plans; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.memberships__plans IS 'メンバーシップの契約プラン';
+
+
+--
+-- Name: COLUMN memberships__plans.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.name IS 'プラン名';
+
+
+--
+-- Name: COLUMN memberships__plans.recurrence; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.recurrence IS '定期課金フラグ: true=サブスクリプション, false=買い切り';
+
+
+--
+-- Name: COLUMN memberships__plans.recurring_interval_count; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.recurring_interval_count IS '更新サイクルの数(1=1日/週/月/年, 2=2日/週/月/年)';
+
+
+--
+-- Name: COLUMN memberships__plans.recurring_interval_unit; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.recurring_interval_unit IS '更新サイクルの単位 (day/week/month/year)';
+
+
+--
+-- Name: COLUMN memberships__plans.amount; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.amount IS '請求金額';
+
+
+--
+-- Name: COLUMN memberships__plans.is_active; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.is_active IS '有効フラグ';
+
+
+--
+-- Name: COLUMN memberships__plans.enabled_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.enabled_at IS '有効化日時';
+
+
+--
+-- Name: COLUMN memberships__plans.disabled_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.disabled_at IS '無効化日時';
+
+
+--
+-- Name: COLUMN memberships__plans.trial_period_days; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.trial_period_days IS 'トライアル期間';
+
+
+--
+-- Name: COLUMN memberships__plans.billing_anchor; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.billing_anchor IS '締めの基準: by_start_day(登録日基準), by_fixed_month_day(毎月の特定日)';
+
+
+--
+-- Name: COLUMN memberships__plans.anchor_day_of_month; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans.anchor_day_of_month IS 'fixed_month_day時の締め日(1-31 月末指定時は31)。by_fixed_month_day時のみ使用';
+
+
+--
+-- Name: COLUMN memberships__plans."position"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__plans."position" IS '表示順序';
+
+
+--
+-- Name: memberships__user_achievements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships__user_achievements (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    membership_id uuid NOT NULL,
+    membership_plan_id uuid NOT NULL,
+    date date NOT NULL,
+    achievement_type character varying NOT NULL,
+    achievement_data jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE memberships__user_achievements; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.memberships__user_achievements IS 'ユーザーのメンバーシップアチーブメント';
+
+
+--
+-- Name: COLUMN memberships__user_achievements.date; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__user_achievements.date IS '達成日';
+
+
+--
+-- Name: COLUMN memberships__user_achievements.achievement_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__user_achievements.achievement_type IS 'アチーブメントタイプ';
+
+
+--
+-- Name: COLUMN memberships__user_achievements.achievement_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__user_achievements.achievement_data IS 'アチーブメント詳細データ';
+
+
+--
+-- Name: memberships__users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberships__users (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    membership_id uuid NOT NULL,
+    membership_group_id uuid,
+    membership_contract_id uuid,
+    expires_at timestamp(6) without time zone,
+    status character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE memberships__users; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.memberships__users IS 'メンバーシップとUserの中間テーブル';
+
+
+--
+-- Name: COLUMN memberships__users.membership_group_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__users.membership_group_id IS '段階的プランの場合のグループ';
+
+
+--
+-- Name: COLUMN memberships__users.membership_contract_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__users.membership_contract_id IS 'メンバーシップ契約';
+
+
+--
+-- Name: COLUMN memberships__users.expires_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__users.expires_at IS 'メンバーシップの有効期限';
+
+
+--
+-- Name: COLUMN memberships__users.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.memberships__users.status IS 'メンバーシップのステータス';
+
+
+--
 -- Name: oauth_access_grants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -273,6 +816,687 @@ CREATE TABLE public.shopify_record__multipass_stores (
 
 
 --
+-- Name: stripe_record__accounts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__accounts (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    remote_id character varying NOT NULL,
+    tenant_id public.citext NOT NULL,
+    api_key_id uuid,
+    controlling_platform_id uuid,
+    type character varying,
+    business_profile_name character varying,
+    payments_statement_descriptor character varying,
+    payments_statement_descriptor_kana character varying,
+    payments_statement_descriptor_kanji character varying,
+    display_name character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN stripe_record__accounts.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__accounts.remote_id IS 'Stripe のアカウント ID';
+
+
+--
+-- Name: COLUMN stripe_record__accounts.display_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__accounts.display_name IS 'API キーがどのアカウントのものかを識別するための名前';
+
+
+--
+-- Name: stripe_record__api_keys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__api_keys (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying NOT NULL,
+    display_name character varying NOT NULL,
+    publishable_key character varying NOT NULL,
+    secret_key_encrypted character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN stripe_record__api_keys.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__api_keys.remote_id IS 'Stripe の API キー ID';
+
+
+--
+-- Name: COLUMN stripe_record__api_keys.display_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__api_keys.display_name IS 'API キーがどのアカウントのものかを識別するための名前';
+
+
+--
+-- Name: stripe_record__charges; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__charges (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying NOT NULL,
+    user_id uuid NOT NULL,
+    amount integer,
+    amount_captured integer,
+    amount_refunded integer,
+    application_id character varying,
+    application_fee_id character varying,
+    application_fee_amount integer,
+    balance_transaction_id character varying,
+    billing_details jsonb,
+    calculated_statement_descriptor character varying,
+    captured boolean,
+    currency character varying,
+    customer_id character varying,
+    description character varying,
+    destination character varying,
+    dispute jsonb,
+    disputed boolean,
+    failure_balance_transaction_id character varying,
+    failure_code character varying,
+    failure_message character varying,
+    fraud_details jsonb,
+    invoice_id character varying,
+    livemode boolean,
+    metadata jsonb,
+    on_behalf_of_id character varying,
+    "order" character varying,
+    outcome jsonb,
+    paid boolean,
+    payment_intent_id character varying,
+    payment_method character varying,
+    payment_method_details jsonb,
+    radar_options jsonb,
+    receipt_email character varying,
+    receipt_number character varying,
+    receipt_url character varying,
+    refunded boolean,
+    review_id character varying,
+    shipping jsonb,
+    source character varying,
+    source_transfer_id character varying,
+    statement_descriptor character varying,
+    statement_descriptor_suffix character varying,
+    status character varying,
+    transfer_id character varying,
+    transfer_data jsonb,
+    transfer_group character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    created integer,
+    api_key_account_id uuid NOT NULL,
+    connect_account_id uuid,
+    charge_type character varying
+);
+
+
+--
+-- Name: COLUMN stripe_record__charges.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__charges.remote_id IS 'Stripe の charge ID';
+
+
+--
+-- Name: COLUMN stripe_record__charges.api_key_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__charges.api_key_account_id IS 'API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。';
+
+
+--
+-- Name: COLUMN stripe_record__charges.connect_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__charges.connect_account_id IS 'Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。';
+
+
+--
+-- Name: COLUMN stripe_record__charges.charge_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__charges.charge_type IS 'Connect のときだけ使用する。どの支払いタイプなのかを表す';
+
+
+--
+-- Name: stripe_record__invoices; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__invoices (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying NOT NULL,
+    user_id uuid NOT NULL,
+    chargeable_id uuid,
+    chargeable_type character varying,
+    status character varying DEFAULT 'draft'::character varying NOT NULL,
+    confirmation_secret character varying,
+    confirmation_secret_type character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN stripe_record__invoices.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__invoices.remote_id IS 'Stripe の invoices ID';
+
+
+--
+-- Name: COLUMN stripe_record__invoices.chargeable_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__invoices.chargeable_id IS 'subscription or charge';
+
+
+--
+-- Name: COLUMN stripe_record__invoices.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__invoices.status IS 'draft, open, paid, uncollectible, or void';
+
+
+--
+-- Name: COLUMN stripe_record__invoices.confirmation_secret; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__invoices.confirmation_secret IS 'confirmation_secret payment_intent.secret';
+
+
+--
+-- Name: COLUMN stripe_record__invoices.confirmation_secret_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__invoices.confirmation_secret_type IS '基本的にはpayment_intentのみ';
+
+
+--
+-- Name: stripe_record__payment_intents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__payment_intents (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying NOT NULL,
+    user_id uuid NOT NULL,
+    invoice_id uuid,
+    invoice_type character varying,
+    currency character varying,
+    amount integer,
+    status character varying,
+    customer_id character varying,
+    client_secret character varying,
+    confirmation_method character varying,
+    capture_method character varying,
+    payment_method_id character varying,
+    payment_method_configuration_details jsonb,
+    payment_method_options jsonb,
+    cancellation_reason character varying,
+    description character varying,
+    metadata jsonb,
+    next_action jsonb,
+    on_behalf_of_id character varying,
+    application_fee_amount integer,
+    transfer_data jsonb,
+    transfer_group character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    created integer,
+    canceled_at timestamp(6) without time zone,
+    api_key_account_id uuid NOT NULL,
+    connect_account_id uuid,
+    charge_type character varying
+);
+
+
+--
+-- Name: COLUMN stripe_record__payment_intents.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_intents.remote_id IS 'Stripe の payment intent ID';
+
+
+--
+-- Name: COLUMN stripe_record__payment_intents.invoice_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_intents.invoice_id IS 'subscription or charge';
+
+
+--
+-- Name: COLUMN stripe_record__payment_intents.api_key_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_intents.api_key_account_id IS 'API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。';
+
+
+--
+-- Name: COLUMN stripe_record__payment_intents.connect_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_intents.connect_account_id IS 'Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。';
+
+
+--
+-- Name: COLUMN stripe_record__payment_intents.charge_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_intents.charge_type IS 'Connect のときだけ使用する。どの支払いタイプなのかを表す';
+
+
+--
+-- Name: stripe_record__payment_methods; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__payment_methods (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying NOT NULL,
+    user_id uuid NOT NULL,
+    setup_intent_id uuid,
+    type character varying NOT NULL,
+    billing_details jsonb DEFAULT '{}'::jsonb,
+    card jsonb DEFAULT '{}'::jsonb,
+    customer_id character varying NOT NULL,
+    detached_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    api_key_account_id uuid NOT NULL,
+    connect_account_id uuid,
+    charge_type character varying
+);
+
+
+--
+-- Name: COLUMN stripe_record__payment_methods.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_methods.remote_id IS 'Stripe の payment method ID';
+
+
+--
+-- Name: COLUMN stripe_record__payment_methods.type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_methods.type IS 'payment method の種類。card など';
+
+
+--
+-- Name: COLUMN stripe_record__payment_methods.billing_details; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_methods.billing_details IS '請求先情報';
+
+
+--
+-- Name: COLUMN stripe_record__payment_methods.card; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_methods.card IS 'card の詳細情報';
+
+
+--
+-- Name: COLUMN stripe_record__payment_methods.customer_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_methods.customer_id IS 'この PaymentMethod の持ち主の customer ID';
+
+
+--
+-- Name: COLUMN stripe_record__payment_methods.detached_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_methods.detached_at IS 'detach された日時';
+
+
+--
+-- Name: COLUMN stripe_record__payment_methods.api_key_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_methods.api_key_account_id IS 'API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。';
+
+
+--
+-- Name: COLUMN stripe_record__payment_methods.connect_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_methods.connect_account_id IS 'Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。';
+
+
+--
+-- Name: COLUMN stripe_record__payment_methods.charge_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_methods.charge_type IS 'Connect のときだけ使用する。どの支払いタイプなのかを表す';
+
+
+--
+-- Name: stripe_record__prices; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__prices (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    product_id uuid NOT NULL,
+    remote_id character varying,
+    name character varying,
+    amount integer,
+    "interval" character varying,
+    interval_count integer,
+    trial_period_days integer,
+    deleted boolean DEFAULT false NOT NULL,
+    "position" integer DEFAULT 1000,
+    displayed boolean DEFAULT true NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: stripe_record__products; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__products (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying,
+    name character varying,
+    deleted boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: stripe_record__refunds; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__refunds (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying NOT NULL,
+    user_id uuid NOT NULL,
+    payment_intent_id uuid NOT NULL,
+    amount integer,
+    balance_transaction_id character varying,
+    currency character varying,
+    destination_details jsonb,
+    metadata jsonb,
+    reason character varying,
+    receipt_number character varying,
+    source_transfer_reversal_id character varying,
+    status character varying,
+    transfer_reversal_id character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    created integer,
+    api_key_account_id uuid NOT NULL,
+    connect_account_id uuid,
+    charge_type character varying
+);
+
+
+--
+-- Name: COLUMN stripe_record__refunds.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__refunds.remote_id IS 'Stripe の refund ID';
+
+
+--
+-- Name: COLUMN stripe_record__refunds.api_key_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__refunds.api_key_account_id IS 'API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。';
+
+
+--
+-- Name: COLUMN stripe_record__refunds.connect_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__refunds.connect_account_id IS 'Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。';
+
+
+--
+-- Name: COLUMN stripe_record__refunds.charge_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__refunds.charge_type IS 'Connect のときだけ使用する。どの支払いタイプなのかを表す';
+
+
+--
+-- Name: stripe_record__setup_intents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__setup_intents (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying NOT NULL,
+    user_id uuid NOT NULL,
+    client_secret character varying NOT NULL,
+    customer_id character varying,
+    on_behalf_of_id character varying,
+    payment_method_id character varying,
+    status character varying,
+    usage character varying,
+    activated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    api_key_account_id uuid NOT NULL,
+    connect_account_id uuid,
+    charge_type character varying
+);
+
+
+--
+-- Name: COLUMN stripe_record__setup_intents.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__setup_intents.remote_id IS 'Stripe の setup intent ID';
+
+
+--
+-- Name: COLUMN stripe_record__setup_intents.activated_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__setup_intents.activated_at IS 'このカードが有効になった日時。NULL だがカードの登録自体には成功している場合、この SetupIntent で登録されたカードは定期的に削除する。';
+
+
+--
+-- Name: COLUMN stripe_record__setup_intents.api_key_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__setup_intents.api_key_account_id IS 'API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。';
+
+
+--
+-- Name: COLUMN stripe_record__setup_intents.connect_account_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__setup_intents.connect_account_id IS 'Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。';
+
+
+--
+-- Name: COLUMN stripe_record__setup_intents.charge_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__setup_intents.charge_type IS 'Connect のときだけ使用する。どの支払いタイプなのかを表す';
+
+
+--
+-- Name: stripe_record__subscription_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__subscription_items (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    subscription_id uuid NOT NULL,
+    price_id uuid NOT NULL,
+    remote_id character varying NOT NULL,
+    quantity integer DEFAULT 1,
+    billing_thresholds jsonb,
+    current_period_start integer,
+    current_period_end integer,
+    discounts jsonb DEFAULT '[]'::jsonb,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    tax_rates jsonb DEFAULT '[]'::jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: stripe_record__subscription_schedules; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__subscription_schedules (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    subscription_id uuid NOT NULL,
+    remote_id character varying NOT NULL,
+    remote_customer character varying,
+    status character varying,
+    phases jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: stripe_record__subscriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__subscriptions (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    product_id uuid NOT NULL,
+    price_id uuid NOT NULL,
+    pending_setup_intent_id uuid,
+    amount integer DEFAULT 0,
+    tax integer DEFAULT 0,
+    currency character varying DEFAULT 'JPY'::character varying,
+    refunded boolean DEFAULT false,
+    refund_reason character varying,
+    current_period_start timestamp(6) without time zone,
+    current_period_end timestamp(6) without time zone,
+    trial_period_days integer,
+    trial_end timestamp(6) without time zone,
+    trial_start timestamp(6) without time zone,
+    remote_id character varying,
+    status character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN stripe_record__subscriptions.current_period_start; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__subscriptions.current_period_start IS '現在の請求期間の開始日時';
+
+
+--
+-- Name: COLUMN stripe_record__subscriptions.current_period_end; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__subscriptions.current_period_end IS '現在の請求期間の終了日時';
+
+
+--
+-- Name: COLUMN stripe_record__subscriptions.trial_period_days; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__subscriptions.trial_period_days IS 'トライアル日数';
+
+
+--
+-- Name: COLUMN stripe_record__subscriptions.trial_end; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__subscriptions.trial_end IS 'トライアル終了日時';
+
+
+--
+-- Name: COLUMN stripe_record__subscriptions.trial_start; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__subscriptions.trial_start IS 'トライアル開始日時';
+
+
+--
+-- Name: stripe_record__trial_histories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.stripe_record__trial_histories (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    membership_id uuid NOT NULL,
+    membership_plan_id uuid NOT NULL,
+    stripe_record_subscription_id uuid,
+    fingerprint character varying NOT NULL,
+    trial_start timestamp(6) without time zone NOT NULL,
+    trial_end timestamp(6) without time zone,
+    trial_period_days integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE stripe_record__trial_histories; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.stripe_record__trial_histories IS 'Stripeのトライアル履歴';
+
+
+--
+-- Name: COLUMN stripe_record__trial_histories.fingerprint; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__trial_histories.fingerprint IS '決済手段のユニークな識別子(ex: クレジットカードのfingerprint)';
+
+
+--
+-- Name: COLUMN stripe_record__trial_histories.trial_start; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__trial_histories.trial_start IS 'トライアル開始日時';
+
+
+--
+-- Name: COLUMN stripe_record__trial_histories.trial_end; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__trial_histories.trial_end IS 'トライアル終了日時';
+
+
+--
+-- Name: COLUMN stripe_record__trial_histories.trial_period_days; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__trial_histories.trial_period_days IS 'トライアル日数';
+
+
+--
 -- Name: tenant_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -292,6 +1516,51 @@ CREATE TABLE public.tenant_settings (
 
 
 --
+-- Name: tenant_stripe_accounts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_stripe_accounts (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    stripe_account_id uuid NOT NULL,
+    charge_type character varying,
+    fee_rate numeric(6,5),
+    tax_rate_id character varying,
+    webhook_secret character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN tenant_stripe_accounts.charge_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_stripe_accounts.charge_type IS 'Connect の場合にどの支払いタイプを利用するか';
+
+
+--
+-- Name: COLUMN tenant_stripe_accounts.fee_rate; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_stripe_accounts.fee_rate IS '手数料率（100% ~ 0.001%）。stripe_account.controlling_platform がいる場合のみ（Connect）利用する。';
+
+
+--
+-- Name: COLUMN tenant_stripe_accounts.tax_rate_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_stripe_accounts.tax_rate_id IS 'stripe の税率ID';
+
+
+--
+-- Name: COLUMN tenant_stripe_accounts.webhook_secret; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_stripe_accounts.webhook_secret IS 'Stripe webhookの署名検証用シークレット';
+
+
+--
 -- Name: tenants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -300,9 +1569,17 @@ CREATE TABLE public.tenants (
     name character varying,
     domain character varying,
     sms_verification_required boolean DEFAULT false,
+    card_payment_gateway character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: COLUMN tenants.card_payment_gateway; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenants.card_payment_gateway IS 'カード決済で使用するペイメントゲートウェイ';
 
 
 --
@@ -342,6 +1619,9 @@ CREATE TABLE public.users (
     deleted_at timestamp(6) without time zone DEFAULT NULL::timestamp without time zone,
     password_reset_code character varying,
     captcha_score double precision,
+    payment_provider character varying,
+    payment_customer_id character varying,
+    default_payment_method character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -478,6 +1758,78 @@ ALTER TABLE ONLY public.login_spa_applications
 
 
 --
+-- Name: memberships__billing_profiles memberships__billing_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__billing_profiles
+    ADD CONSTRAINT memberships__billing_profiles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: memberships__contracts memberships__contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__contracts
+    ADD CONSTRAINT memberships__contracts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: memberships__groups memberships__groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__groups
+    ADD CONSTRAINT memberships__groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: memberships__plan_components memberships__plan_components_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__plan_components
+    ADD CONSTRAINT memberships__plan_components_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: memberships__plan_payment_methods memberships__plan_payment_methods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__plan_payment_methods
+    ADD CONSTRAINT memberships__plan_payment_methods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: memberships__plans memberships__plans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__plans
+    ADD CONSTRAINT memberships__plans_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: memberships__user_achievements memberships__user_achievements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__user_achievements
+    ADD CONSTRAINT memberships__user_achievements_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: memberships__users memberships__users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__users
+    ADD CONSTRAINT memberships__users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: memberships memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships
+    ADD CONSTRAINT memberships_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: oauth_access_grants oauth_access_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -534,11 +1886,131 @@ ALTER TABLE ONLY public.shopify_record__multipass_stores
 
 
 --
+-- Name: stripe_record__accounts stripe_record__accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__accounts
+    ADD CONSTRAINT stripe_record__accounts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record__api_keys stripe_record__api_keys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__api_keys
+    ADD CONSTRAINT stripe_record__api_keys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record__charges stripe_record__charges_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__charges
+    ADD CONSTRAINT stripe_record__charges_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record__invoices stripe_record__invoices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__invoices
+    ADD CONSTRAINT stripe_record__invoices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record__payment_intents stripe_record__payment_intents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__payment_intents
+    ADD CONSTRAINT stripe_record__payment_intents_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record__payment_methods stripe_record__payment_methods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__payment_methods
+    ADD CONSTRAINT stripe_record__payment_methods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record__prices stripe_record__prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__prices
+    ADD CONSTRAINT stripe_record__prices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record__products stripe_record__products_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__products
+    ADD CONSTRAINT stripe_record__products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record__refunds stripe_record__refunds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__refunds
+    ADD CONSTRAINT stripe_record__refunds_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record__setup_intents stripe_record__setup_intents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__setup_intents
+    ADD CONSTRAINT stripe_record__setup_intents_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record__subscription_items stripe_record__subscription_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__subscription_items
+    ADD CONSTRAINT stripe_record__subscription_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record__subscription_schedules stripe_record__subscription_schedules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__subscription_schedules
+    ADD CONSTRAINT stripe_record__subscription_schedules_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record__subscriptions stripe_record__subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__subscriptions
+    ADD CONSTRAINT stripe_record__subscriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stripe_record__trial_histories stripe_record__trial_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__trial_histories
+    ADD CONSTRAINT stripe_record__trial_histories_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: tenant_settings tenant_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.tenant_settings
     ADD CONSTRAINT tenant_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tenant_stripe_accounts tenant_stripe_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_stripe_accounts
+    ADD CONSTRAINT tenant_stripe_accounts_pkey PRIMARY KEY (id);
 
 
 --
@@ -633,6 +2105,118 @@ CREATE UNIQUE INDEX idx_linked_applications_tenant_user_oauth_application_uniq O
 
 
 --
+-- Name: idx_memberships__billing_profiles_expires_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_memberships__billing_profiles_expires_at ON public.memberships__billing_profiles USING btree (expires_at);
+
+
+--
+-- Name: idx_memberships__billing_profiles_external_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_memberships__billing_profiles_external_id ON public.memberships__billing_profiles USING btree (external_id);
+
+
+--
+-- Name: idx_memberships__billing_profiles_tenant_user; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_memberships__billing_profiles_tenant_user ON public.memberships__billing_profiles USING btree (tenant_id, user_id);
+
+
+--
+-- Name: idx_memberships__contracts_expires_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_memberships__contracts_expires_at ON public.memberships__contracts USING btree (expires_at);
+
+
+--
+-- Name: idx_memberships__groups_tenant_id_name_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_memberships__groups_tenant_id_name_uniq ON public.memberships__groups USING btree (tenant_id, name);
+
+
+--
+-- Name: idx_memberships__groups_tenant_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_memberships__groups_tenant_position ON public.memberships__groups USING btree (tenant_id, "position");
+
+
+--
+-- Name: idx_memberships__plan_components_plan_membership_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_memberships__plan_components_plan_membership_uniq ON public.memberships__plan_components USING btree (membership_plan_id, membership_id);
+
+
+--
+-- Name: idx_memberships__plan_payment_methods_plan_type_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_memberships__plan_payment_methods_plan_type_uniq ON public.memberships__plan_payment_methods USING btree (membership_plan_id, payment_type);
+
+
+--
+-- Name: idx_memberships__user_achievements_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_memberships__user_achievements_date ON public.memberships__user_achievements USING btree (date);
+
+
+--
+-- Name: idx_memberships__user_achievements_tenant_user_membership_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_memberships__user_achievements_tenant_user_membership_date ON public.memberships__user_achievements USING btree (tenant_id, user_id, membership_id, date);
+
+
+--
+-- Name: idx_memberships__users_tenant_user_membership_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_memberships__users_tenant_user_membership_uniq ON public.memberships__users USING btree (tenant_id, user_id, membership_id);
+
+
+--
+-- Name: idx_on_chargeable_type_chargeable_id_12fd49ee92; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_chargeable_type_chargeable_id_12fd49ee92 ON public.stripe_record__invoices USING btree (chargeable_type, chargeable_id);
+
+
+--
+-- Name: idx_on_chargeable_type_chargeable_id_8f9e0b5657; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_chargeable_type_chargeable_id_8f9e0b5657 ON public.memberships__billing_profiles USING btree (chargeable_type, chargeable_id);
+
+
+--
+-- Name: idx_on_invoice_type_invoice_id_19d26676ac; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_invoice_type_invoice_id_19d26676ac ON public.stripe_record__payment_intents USING btree (invoice_type, invoice_id);
+
+
+--
+-- Name: idx_on_stripe_record_price_id_912fae4a3b; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_stripe_record_price_id_912fae4a3b ON public.memberships__plan_payment_methods USING btree (stripe_record_price_id);
+
+
+--
+-- Name: idx_on_stripe_record_subscription_id_9e35bed4eb; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_stripe_record_subscription_id_9e35bed4eb ON public.stripe_record__trial_histories USING btree (stripe_record_subscription_id);
+
+
+--
 -- Name: idx_rulers_uid_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -644,6 +2228,62 @@ CREATE UNIQUE INDEX idx_rulers_uid_uniq ON public.rulers USING btree (uid);
 --
 
 CREATE UNIQUE INDEX idx_shopify_record__customers_store_name_email_uniq ON public.shopify_record__customers USING btree (store_name, email);
+
+
+--
+-- Name: idx_stripe_record__trial_histories_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record__trial_histories_unique ON public.stripe_record__trial_histories USING btree (tenant_id, membership_id, fingerprint);
+
+
+--
+-- Name: idx_stripe_record_api_keys_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record_api_keys_remote_id_uniq ON public.stripe_record__api_keys USING btree (remote_id);
+
+
+--
+-- Name: idx_stripe_record_charge_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record_charge_remote_id_uniq ON public.stripe_record__charges USING btree (remote_id);
+
+
+--
+-- Name: idx_stripe_record_invoices_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record_invoices_remote_id_uniq ON public.stripe_record__invoices USING btree (remote_id);
+
+
+--
+-- Name: idx_stripe_record_payment_intent_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record_payment_intent_remote_id_uniq ON public.stripe_record__payment_intents USING btree (remote_id);
+
+
+--
+-- Name: idx_stripe_record_payment_methods_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record_payment_methods_remote_id_uniq ON public.stripe_record__payment_methods USING btree (remote_id);
+
+
+--
+-- Name: idx_stripe_record_refund_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record_refund_remote_id_uniq ON public.stripe_record__refunds USING btree (remote_id);
+
+
+--
+-- Name: idx_stripe_record_setup_intents_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_stripe_record_setup_intents_remote_id_uniq ON public.stripe_record__setup_intents USING btree (remote_id);
 
 
 --
@@ -749,6 +2389,174 @@ CREATE INDEX index_login_spa_applications_on_tenant_id ON public.login_spa_appli
 --
 
 CREATE UNIQUE INDEX index_login_spa_applications_on_uid ON public.login_spa_applications USING btree (uid);
+
+
+--
+-- Name: index_memberships__billing_profiles_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__billing_profiles_on_membership_contract_id ON public.memberships__billing_profiles USING btree (membership_contract_id);
+
+
+--
+-- Name: index_memberships__billing_profiles_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__billing_profiles_on_membership_plan_id ON public.memberships__billing_profiles USING btree (membership_plan_id);
+
+
+--
+-- Name: index_memberships__billing_profiles_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__billing_profiles_on_tenant_id ON public.memberships__billing_profiles USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__billing_profiles_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__billing_profiles_on_user_id ON public.memberships__billing_profiles USING btree (user_id);
+
+
+--
+-- Name: index_memberships__contracts_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__contracts_on_tenant_id ON public.memberships__contracts USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__contracts_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__contracts_on_user_id ON public.memberships__contracts USING btree (user_id);
+
+
+--
+-- Name: index_memberships__groups_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__groups_on_tenant_id ON public.memberships__groups USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__plan_components_on_membership_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__plan_components_on_membership_id ON public.memberships__plan_components USING btree (membership_id);
+
+
+--
+-- Name: index_memberships__plan_components_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__plan_components_on_membership_plan_id ON public.memberships__plan_components USING btree (membership_plan_id);
+
+
+--
+-- Name: index_memberships__plan_components_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__plan_components_on_tenant_id ON public.memberships__plan_components USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__plan_payment_methods_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__plan_payment_methods_on_membership_plan_id ON public.memberships__plan_payment_methods USING btree (membership_plan_id);
+
+
+--
+-- Name: index_memberships__plan_payment_methods_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__plan_payment_methods_on_tenant_id ON public.memberships__plan_payment_methods USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__plans_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__plans_on_tenant_id ON public.memberships__plans USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__user_achievements_on_membership_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__user_achievements_on_membership_id ON public.memberships__user_achievements USING btree (membership_id);
+
+
+--
+-- Name: index_memberships__user_achievements_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__user_achievements_on_membership_plan_id ON public.memberships__user_achievements USING btree (membership_plan_id);
+
+
+--
+-- Name: index_memberships__user_achievements_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__user_achievements_on_tenant_id ON public.memberships__user_achievements USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__user_achievements_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__user_achievements_on_user_id ON public.memberships__user_achievements USING btree (user_id);
+
+
+--
+-- Name: index_memberships__users_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__users_on_membership_contract_id ON public.memberships__users USING btree (membership_contract_id);
+
+
+--
+-- Name: index_memberships__users_on_membership_group_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__users_on_membership_group_id ON public.memberships__users USING btree (membership_group_id);
+
+
+--
+-- Name: index_memberships__users_on_membership_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__users_on_membership_id ON public.memberships__users USING btree (membership_id);
+
+
+--
+-- Name: index_memberships__users_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__users_on_tenant_id ON public.memberships__users USING btree (tenant_id);
+
+
+--
+-- Name: index_memberships__users_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships__users_on_user_id ON public.memberships__users USING btree (user_id);
+
+
+--
+-- Name: index_memberships_on_membership_group_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships_on_membership_group_id ON public.memberships USING btree (membership_group_id);
+
+
+--
+-- Name: index_memberships_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_memberships_on_tenant_id ON public.memberships USING btree (tenant_id);
 
 
 --
@@ -864,10 +2672,388 @@ CREATE INDEX index_shopify_record__multipass_stores_on_tenant_id ON public.shopi
 
 
 --
+-- Name: index_stripe_account_per_tenant_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_stripe_account_per_tenant_unique ON public.tenant_stripe_accounts USING btree (tenant_id, stripe_account_id);
+
+
+--
+-- Name: index_stripe_record__accounts_on_api_key_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__accounts_on_api_key_id ON public.stripe_record__accounts USING btree (api_key_id);
+
+
+--
+-- Name: index_stripe_record__accounts_on_controlling_platform_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__accounts_on_controlling_platform_id ON public.stripe_record__accounts USING btree (controlling_platform_id);
+
+
+--
+-- Name: index_stripe_record__accounts_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__accounts_on_tenant_id ON public.stripe_record__accounts USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__api_keys_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__api_keys_on_tenant_id ON public.stripe_record__api_keys USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__charges_on_api_key_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__charges_on_api_key_account_id ON public.stripe_record__charges USING btree (api_key_account_id);
+
+
+--
+-- Name: index_stripe_record__charges_on_connect_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__charges_on_connect_account_id ON public.stripe_record__charges USING btree (connect_account_id);
+
+
+--
+-- Name: index_stripe_record__charges_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__charges_on_tenant_id ON public.stripe_record__charges USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__charges_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__charges_on_user_id ON public.stripe_record__charges USING btree (user_id);
+
+
+--
+-- Name: index_stripe_record__invoices_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__invoices_on_tenant_id ON public.stripe_record__invoices USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__invoices_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__invoices_on_user_id ON public.stripe_record__invoices USING btree (user_id);
+
+
+--
+-- Name: index_stripe_record__payment_intents_on_api_key_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__payment_intents_on_api_key_account_id ON public.stripe_record__payment_intents USING btree (api_key_account_id);
+
+
+--
+-- Name: index_stripe_record__payment_intents_on_connect_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__payment_intents_on_connect_account_id ON public.stripe_record__payment_intents USING btree (connect_account_id);
+
+
+--
+-- Name: index_stripe_record__payment_intents_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__payment_intents_on_tenant_id ON public.stripe_record__payment_intents USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__payment_intents_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__payment_intents_on_user_id ON public.stripe_record__payment_intents USING btree (user_id);
+
+
+--
+-- Name: index_stripe_record__payment_methods_on_api_key_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__payment_methods_on_api_key_account_id ON public.stripe_record__payment_methods USING btree (api_key_account_id);
+
+
+--
+-- Name: index_stripe_record__payment_methods_on_connect_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__payment_methods_on_connect_account_id ON public.stripe_record__payment_methods USING btree (connect_account_id);
+
+
+--
+-- Name: index_stripe_record__payment_methods_on_setup_intent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__payment_methods_on_setup_intent_id ON public.stripe_record__payment_methods USING btree (setup_intent_id);
+
+
+--
+-- Name: index_stripe_record__payment_methods_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__payment_methods_on_tenant_id ON public.stripe_record__payment_methods USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__payment_methods_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__payment_methods_on_user_id ON public.stripe_record__payment_methods USING btree (user_id);
+
+
+--
+-- Name: index_stripe_record__prices_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__prices_on_product_id ON public.stripe_record__prices USING btree (product_id);
+
+
+--
+-- Name: index_stripe_record__prices_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__prices_on_tenant_id ON public.stripe_record__prices USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__products_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__products_on_tenant_id ON public.stripe_record__products USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__refunds_on_api_key_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__refunds_on_api_key_account_id ON public.stripe_record__refunds USING btree (api_key_account_id);
+
+
+--
+-- Name: index_stripe_record__refunds_on_connect_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__refunds_on_connect_account_id ON public.stripe_record__refunds USING btree (connect_account_id);
+
+
+--
+-- Name: index_stripe_record__refunds_on_payment_intent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__refunds_on_payment_intent_id ON public.stripe_record__refunds USING btree (payment_intent_id);
+
+
+--
+-- Name: index_stripe_record__refunds_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__refunds_on_tenant_id ON public.stripe_record__refunds USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__refunds_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__refunds_on_user_id ON public.stripe_record__refunds USING btree (user_id);
+
+
+--
+-- Name: index_stripe_record__setup_intents_on_api_key_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__setup_intents_on_api_key_account_id ON public.stripe_record__setup_intents USING btree (api_key_account_id);
+
+
+--
+-- Name: index_stripe_record__setup_intents_on_connect_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__setup_intents_on_connect_account_id ON public.stripe_record__setup_intents USING btree (connect_account_id);
+
+
+--
+-- Name: index_stripe_record__setup_intents_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__setup_intents_on_tenant_id ON public.stripe_record__setup_intents USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__setup_intents_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__setup_intents_on_user_id ON public.stripe_record__setup_intents USING btree (user_id);
+
+
+--
+-- Name: index_stripe_record__subscription_items_on_price_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__subscription_items_on_price_id ON public.stripe_record__subscription_items USING btree (price_id);
+
+
+--
+-- Name: index_stripe_record__subscription_items_on_remote_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_stripe_record__subscription_items_on_remote_id ON public.stripe_record__subscription_items USING btree (remote_id);
+
+
+--
+-- Name: index_stripe_record__subscription_items_on_subscription_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__subscription_items_on_subscription_id ON public.stripe_record__subscription_items USING btree (subscription_id);
+
+
+--
+-- Name: index_stripe_record__subscription_items_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__subscription_items_on_tenant_id ON public.stripe_record__subscription_items USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__subscription_schedules_on_subscription_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__subscription_schedules_on_subscription_id ON public.stripe_record__subscription_schedules USING btree (subscription_id);
+
+
+--
+-- Name: index_stripe_record__subscription_schedules_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__subscription_schedules_on_tenant_id ON public.stripe_record__subscription_schedules USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__subscription_schedules_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__subscription_schedules_on_user_id ON public.stripe_record__subscription_schedules USING btree (user_id);
+
+
+--
+-- Name: index_stripe_record__subscriptions_on_pending_setup_intent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__subscriptions_on_pending_setup_intent_id ON public.stripe_record__subscriptions USING btree (pending_setup_intent_id);
+
+
+--
+-- Name: index_stripe_record__subscriptions_on_price_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__subscriptions_on_price_id ON public.stripe_record__subscriptions USING btree (price_id);
+
+
+--
+-- Name: index_stripe_record__subscriptions_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__subscriptions_on_product_id ON public.stripe_record__subscriptions USING btree (product_id);
+
+
+--
+-- Name: index_stripe_record__subscriptions_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__subscriptions_on_tenant_id ON public.stripe_record__subscriptions USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__subscriptions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__subscriptions_on_user_id ON public.stripe_record__subscriptions USING btree (user_id);
+
+
+--
+-- Name: index_stripe_record__trial_histories_on_membership_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__trial_histories_on_membership_id ON public.stripe_record__trial_histories USING btree (membership_id);
+
+
+--
+-- Name: index_stripe_record__trial_histories_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__trial_histories_on_membership_plan_id ON public.stripe_record__trial_histories USING btree (membership_plan_id);
+
+
+--
+-- Name: index_stripe_record__trial_histories_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__trial_histories_on_tenant_id ON public.stripe_record__trial_histories USING btree (tenant_id);
+
+
+--
+-- Name: index_stripe_record__trial_histories_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__trial_histories_on_user_id ON public.stripe_record__trial_histories USING btree (user_id);
+
+
+--
+-- Name: index_stripe_record_accounts_remote_id_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_stripe_record_accounts_remote_id_unique ON public.stripe_record__accounts USING btree (remote_id, controlling_platform_id) NULLS NOT DISTINCT;
+
+
+--
+-- Name: index_stripe_record_invoices_on_tenant_and_remote_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_stripe_record_invoices_on_tenant_and_remote_id ON public.stripe_record__invoices USING btree (tenant_id, remote_id);
+
+
+--
+-- Name: index_stripe_record_payment_intents_on_tenant_and_remote_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_stripe_record_payment_intents_on_tenant_and_remote_id ON public.stripe_record__payment_intents USING btree (tenant_id, remote_id);
+
+
+--
+-- Name: index_stripe_record_si_on_subscription_and_price; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_stripe_record_si_on_subscription_and_price ON public.stripe_record__subscription_items USING btree (subscription_id, price_id);
+
+
+--
 -- Name: index_tenant_settings_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_tenant_settings_on_tenant_id ON public.tenant_settings USING btree (tenant_id);
+
+
+--
+-- Name: index_tenant_stripe_accounts_on_stripe_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tenant_stripe_accounts_on_stripe_account_id ON public.tenant_stripe_accounts USING btree (stripe_account_id);
+
+
+--
+-- Name: index_tenant_stripe_accounts_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_tenant_stripe_accounts_on_tenant_id ON public.tenant_stripe_accounts USING btree (tenant_id);
 
 
 --
@@ -1033,6 +3219,206 @@ ALTER TABLE ONLY public.login_spa_applications
 
 
 --
+-- Name: memberships__billing_profiles fk_memberships__billing_profiles_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__billing_profiles
+    ADD CONSTRAINT fk_memberships__billing_profiles_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.memberships__contracts(id);
+
+
+--
+-- Name: memberships__billing_profiles fk_memberships__billing_profiles_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__billing_profiles
+    ADD CONSTRAINT fk_memberships__billing_profiles_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
+
+
+--
+-- Name: memberships__billing_profiles fk_memberships__billing_profiles_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__billing_profiles
+    ADD CONSTRAINT fk_memberships__billing_profiles_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: memberships__billing_profiles fk_memberships__billing_profiles_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__billing_profiles
+    ADD CONSTRAINT fk_memberships__billing_profiles_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: memberships__contracts fk_memberships__contracts_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__contracts
+    ADD CONSTRAINT fk_memberships__contracts_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: memberships__contracts fk_memberships__contracts_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__contracts
+    ADD CONSTRAINT fk_memberships__contracts_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: memberships__groups fk_memberships__groups_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__groups
+    ADD CONSTRAINT fk_memberships__groups_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: memberships__plan_components fk_memberships__plan_components_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__plan_components
+    ADD CONSTRAINT fk_memberships__plan_components_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
+
+
+--
+-- Name: memberships__plan_components fk_memberships__plan_components_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__plan_components
+    ADD CONSTRAINT fk_memberships__plan_components_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
+
+
+--
+-- Name: memberships__plan_components fk_memberships__plan_components_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__plan_components
+    ADD CONSTRAINT fk_memberships__plan_components_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: memberships__plan_payment_methods fk_memberships__plan_payment_methods_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__plan_payment_methods
+    ADD CONSTRAINT fk_memberships__plan_payment_methods_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
+
+
+--
+-- Name: memberships__plan_payment_methods fk_memberships__plan_payment_methods_stripe_prices; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__plan_payment_methods
+    ADD CONSTRAINT fk_memberships__plan_payment_methods_stripe_prices FOREIGN KEY (stripe_record_price_id) REFERENCES public.stripe_record__prices(id);
+
+
+--
+-- Name: memberships__plan_payment_methods fk_memberships__plan_payment_methods_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__plan_payment_methods
+    ADD CONSTRAINT fk_memberships__plan_payment_methods_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: memberships__plans fk_memberships__plans_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__plans
+    ADD CONSTRAINT fk_memberships__plans_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: memberships__user_achievements fk_memberships__user_achievements_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__user_achievements
+    ADD CONSTRAINT fk_memberships__user_achievements_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
+
+
+--
+-- Name: memberships__user_achievements fk_memberships__user_achievements_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__user_achievements
+    ADD CONSTRAINT fk_memberships__user_achievements_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
+
+
+--
+-- Name: memberships__user_achievements fk_memberships__user_achievements_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__user_achievements
+    ADD CONSTRAINT fk_memberships__user_achievements_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: memberships__user_achievements fk_memberships__user_achievements_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__user_achievements
+    ADD CONSTRAINT fk_memberships__user_achievements_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: memberships__users fk_memberships__users_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__users
+    ADD CONSTRAINT fk_memberships__users_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.memberships__contracts(id);
+
+
+--
+-- Name: memberships__users fk_memberships__users_groups; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__users
+    ADD CONSTRAINT fk_memberships__users_groups FOREIGN KEY (membership_group_id) REFERENCES public.memberships__groups(id);
+
+
+--
+-- Name: memberships__users fk_memberships__users_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__users
+    ADD CONSTRAINT fk_memberships__users_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
+
+
+--
+-- Name: memberships__users fk_memberships__users_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__users
+    ADD CONSTRAINT fk_memberships__users_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: memberships__users fk_memberships__users_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships__users
+    ADD CONSTRAINT fk_memberships__users_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: memberships fk_memberships_groups; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships
+    ADD CONSTRAINT fk_memberships_groups FOREIGN KEY (membership_group_id) REFERENCES public.memberships__groups(id);
+
+
+--
+-- Name: memberships fk_memberships_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberships
+    ADD CONSTRAINT fk_memberships_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: oauth_access_grants fk_oauth_access_grants_oauth_applications; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1094,6 +3480,302 @@ ALTER TABLE ONLY public.oauth_access_grants
 
 ALTER TABLE ONLY public.oauth_access_tokens
     ADD CONSTRAINT fk_rails_ee63f25419 FOREIGN KEY (resource_owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: stripe_record__accounts fk_stripe_record_accounts__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__accounts
+    ADD CONSTRAINT fk_stripe_record_accounts__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record__accounts fk_stripe_record_accounts_api_key_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__accounts
+    ADD CONSTRAINT fk_stripe_record_accounts_api_key_id FOREIGN KEY (api_key_id) REFERENCES public.stripe_record__api_keys(id);
+
+
+--
+-- Name: stripe_record__accounts fk_stripe_record_accounts_controlling_platform_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__accounts
+    ADD CONSTRAINT fk_stripe_record_accounts_controlling_platform_id FOREIGN KEY (controlling_platform_id) REFERENCES public.stripe_record__accounts(id);
+
+
+--
+-- Name: stripe_record__api_keys fk_stripe_record_api_keys__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__api_keys
+    ADD CONSTRAINT fk_stripe_record_api_keys__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record__charges fk_stripe_record_charges__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__charges
+    ADD CONSTRAINT fk_stripe_record_charges__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record__charges fk_stripe_record_charges__users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__charges
+    ADD CONSTRAINT fk_stripe_record_charges__users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: stripe_record__charges fk_stripe_record_charges_api_key_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__charges
+    ADD CONSTRAINT fk_stripe_record_charges_api_key_account_id FOREIGN KEY (api_key_account_id) REFERENCES public.stripe_record__accounts(id);
+
+
+--
+-- Name: stripe_record__charges fk_stripe_record_charges_connect_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__charges
+    ADD CONSTRAINT fk_stripe_record_charges_connect_account_id FOREIGN KEY (connect_account_id) REFERENCES public.stripe_record__accounts(id);
+
+
+--
+-- Name: stripe_record__invoices fk_stripe_record_invoices__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__invoices
+    ADD CONSTRAINT fk_stripe_record_invoices__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record__payment_intents fk_stripe_record_payment_intents__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__payment_intents
+    ADD CONSTRAINT fk_stripe_record_payment_intents__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record__refunds fk_stripe_record_payment_intents__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__refunds
+    ADD CONSTRAINT fk_stripe_record_payment_intents__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record__payment_intents fk_stripe_record_payment_intents__users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__payment_intents
+    ADD CONSTRAINT fk_stripe_record_payment_intents__users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: stripe_record__invoices fk_stripe_record_payment_intents__users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__invoices
+    ADD CONSTRAINT fk_stripe_record_payment_intents__users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: stripe_record__payment_intents fk_stripe_record_payment_intents_api_key_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__payment_intents
+    ADD CONSTRAINT fk_stripe_record_payment_intents_api_key_account_id FOREIGN KEY (api_key_account_id) REFERENCES public.stripe_record__accounts(id);
+
+
+--
+-- Name: stripe_record__payment_intents fk_stripe_record_payment_intents_connect_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__payment_intents
+    ADD CONSTRAINT fk_stripe_record_payment_intents_connect_account_id FOREIGN KEY (connect_account_id) REFERENCES public.stripe_record__accounts(id);
+
+
+--
+-- Name: stripe_record__payment_methods fk_stripe_record_payment_methods__setup_intents; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__payment_methods
+    ADD CONSTRAINT fk_stripe_record_payment_methods__setup_intents FOREIGN KEY (setup_intent_id) REFERENCES public.stripe_record__setup_intents(id);
+
+
+--
+-- Name: stripe_record__payment_methods fk_stripe_record_payment_methods__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__payment_methods
+    ADD CONSTRAINT fk_stripe_record_payment_methods__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record__payment_methods fk_stripe_record_payment_methods__users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__payment_methods
+    ADD CONSTRAINT fk_stripe_record_payment_methods__users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: stripe_record__payment_methods fk_stripe_record_payment_methods_api_key_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__payment_methods
+    ADD CONSTRAINT fk_stripe_record_payment_methods_api_key_account_id FOREIGN KEY (api_key_account_id) REFERENCES public.stripe_record__accounts(id);
+
+
+--
+-- Name: stripe_record__payment_methods fk_stripe_record_payment_methods_connect_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__payment_methods
+    ADD CONSTRAINT fk_stripe_record_payment_methods_connect_account_id FOREIGN KEY (connect_account_id) REFERENCES public.stripe_record__accounts(id);
+
+
+--
+-- Name: stripe_record__prices fk_stripe_record_prices__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__prices
+    ADD CONSTRAINT fk_stripe_record_prices__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record__products fk_stripe_record_products__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__products
+    ADD CONSTRAINT fk_stripe_record_products__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record__refunds fk_stripe_record_refunds__users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__refunds
+    ADD CONSTRAINT fk_stripe_record_refunds__users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: stripe_record__refunds fk_stripe_record_refunds_api_key_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__refunds
+    ADD CONSTRAINT fk_stripe_record_refunds_api_key_account_id FOREIGN KEY (api_key_account_id) REFERENCES public.stripe_record__accounts(id);
+
+
+--
+-- Name: stripe_record__refunds fk_stripe_record_refunds_connect_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__refunds
+    ADD CONSTRAINT fk_stripe_record_refunds_connect_account_id FOREIGN KEY (connect_account_id) REFERENCES public.stripe_record__accounts(id);
+
+
+--
+-- Name: stripe_record__refunds fk_stripe_record_refunds_payment_intent_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__refunds
+    ADD CONSTRAINT fk_stripe_record_refunds_payment_intent_id FOREIGN KEY (payment_intent_id) REFERENCES public.stripe_record__payment_intents(id);
+
+
+--
+-- Name: stripe_record__setup_intents fk_stripe_record_setup_intents__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__setup_intents
+    ADD CONSTRAINT fk_stripe_record_setup_intents__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record__setup_intents fk_stripe_record_setup_intents__users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__setup_intents
+    ADD CONSTRAINT fk_stripe_record_setup_intents__users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: stripe_record__setup_intents fk_stripe_record_setup_intents_api_key_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__setup_intents
+    ADD CONSTRAINT fk_stripe_record_setup_intents_api_key_account_id FOREIGN KEY (api_key_account_id) REFERENCES public.stripe_record__accounts(id);
+
+
+--
+-- Name: stripe_record__setup_intents fk_stripe_record_setup_intents_connect_account_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__setup_intents
+    ADD CONSTRAINT fk_stripe_record_setup_intents_connect_account_id FOREIGN KEY (connect_account_id) REFERENCES public.stripe_record__accounts(id);
+
+
+--
+-- Name: stripe_record__subscription_items fk_stripe_record_subscription_items__prices; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__subscription_items
+    ADD CONSTRAINT fk_stripe_record_subscription_items__prices FOREIGN KEY (price_id) REFERENCES public.stripe_record__prices(id);
+
+
+--
+-- Name: stripe_record__subscription_items fk_stripe_record_subscription_items__subscriptions; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__subscription_items
+    ADD CONSTRAINT fk_stripe_record_subscription_items__subscriptions FOREIGN KEY (subscription_id) REFERENCES public.stripe_record__subscriptions(id);
+
+
+--
+-- Name: stripe_record__subscription_items fk_stripe_record_subscription_items__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__subscription_items
+    ADD CONSTRAINT fk_stripe_record_subscription_items__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record__subscription_schedules fk_stripe_record_subscription_schedules__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__subscription_schedules
+    ADD CONSTRAINT fk_stripe_record_subscription_schedules__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record__subscriptions fk_stripe_record_subscriptions__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__subscriptions
+    ADD CONSTRAINT fk_stripe_record_subscriptions__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: tenant_stripe_accounts fk_tenant_stripe_accounts__stripe_accounts; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_stripe_accounts
+    ADD CONSTRAINT fk_tenant_stripe_accounts__stripe_accounts FOREIGN KEY (stripe_account_id) REFERENCES public.stripe_record__accounts(id);
+
+
+--
+-- Name: tenant_stripe_accounts fk_tenant_stripe_accounts__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_stripe_accounts
+    ADD CONSTRAINT fk_tenant_stripe_accounts__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --

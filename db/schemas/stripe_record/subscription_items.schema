@@ -1,0 +1,25 @@
+# ==============================================================================
+# db/schemas/stripe_record/subscription_items.schema
+# ==============================================================================
+create_table :stripe_record__subscription_items, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_subscription_items__tenants }
+  t.references :subscription, type: :uuid, null: false
+  t.references :price, type: :uuid, null: false
+
+  t.string :remote_id, null: false
+  t.integer :quantity, default: 1
+  t.jsonb :billing_thresholds
+  t.integer :current_period_start
+  t.integer :current_period_end
+  t.jsonb :discounts, default: []
+  t.jsonb :metadata, default: {}
+  t.jsonb :tax_rates, default: []
+
+  t.timestamps null: false
+end
+
+add_foreign_key :stripe_record__subscription_items, :stripe_record__subscriptions, column: :subscription_id, name: :fk_stripe_record_subscription_items__subscriptions
+add_foreign_key :stripe_record__subscription_items, :stripe_record__prices, column: :price_id, name: :fk_stripe_record_subscription_items__prices
+
+add_index :stripe_record__subscription_items, :remote_id, unique: true
+add_index :stripe_record__subscription_items, [:subscription_id, :price_id], unique: true, name: :index_stripe_record_si_on_subscription_and_price

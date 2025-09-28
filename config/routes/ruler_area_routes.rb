@@ -17,9 +17,26 @@ Rails.application.routes.draw do
         resources :admins, only: [:index, :new, :create, :destroy]
         resources :login_spa_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :tenant_settings, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        resources :memberships, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+          get :top, on: :collection
+        end
+        resources :memberships_groups, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+          get :assign_memberships, on: :member
+          patch :update_memberships, on: :member
+        end
+        resources :memberships_plans, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+          resources :memberships_plan_payment_methods, only: [:edit, :update]
+        end
         resources :shopify_multipass_stores, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :email_templates, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :oauth_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        resource :tenant_stripe_account, only: [:show, :new, :create, :edit, :update, :destroy]
+        namespace :stripe_records do
+          resources :products, only: [:index, :show, :destroy] do
+            post :preview, on: :collection
+            put :sync, on: :collection
+          end
+        end
       end
     end
   end

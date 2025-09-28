@@ -62,6 +62,9 @@ gem 'omniauth-auth0', '~> 3.1', '>= 3.1.1'
 gem 'omniauth-rails_csrf_protection', '~> 1.0', '>= 1.0.1'
 gem 'auth0', '~> 5.16'
 gem 'rack-attack', '~> 6.7'
+# Prism (for Rubocop spoom
+gem 'prism', '~> 1.4.0'
+
 # ------------------------------------------------------------------------------
 # Front
 # ------------------------------------------------------------------------------
@@ -69,6 +72,8 @@ gem 'rack-attack', '~> 6.7'
 gem 'slim-rails', '~> 3.6', '>= 3.6.3'
 # # JSON API serializer
 gem 'jb', '~> 0.8.2'
+# Blueprint for API documentation and serialization
+gem 'blueprinter', '~> 1.1', '>= 1.1.2'
 # gem 'jsonapi-serializer', git: 'https://github.com/twogate/fast_jsonapi', ref: '62c1cc8'
 # Pagination
 gem 'api-pagination', '~> 5.0.0'
@@ -159,10 +164,14 @@ gem 'twilio-ruby', '~> 6.9', '>= 6.9.1'
 gem 'phony_rails'
 
 # typing
-gem 'sorbet-runtime', '~> 0.5.11525'
+gem 'sorbet-runtime', '~> 0.6.12466'
 
 # reCAPTCHA Enterprise Client
 gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.17.3'
+# Stripe Client
+gem 'stripe', '~> 15.4.0'
+# Mangrove provides type utility to use with Sorbet
+gem 'mangrove', '~> 0.37.3'
 
 # for shopify
 gem 'shopify_api', '~> 14.11.1'
@@ -175,11 +184,14 @@ group :development, :test do
   # gem 'pry-byebug', '~> 3.9.0'
   # gem 'pry-stack_explorer', '~> 0.4.0'
   # Ruby code style checking
-  gem 'rubocop', '~> 1.60', '>= 1.60.2'
+  gem 'rubocop', '~> 1.80.1'
   # A RuboCop extension focused on enforcing Rails best practices and coding conventions
-  gem 'rubocop-rails', '~> 2.23', '>= 2.23.1'
+  gem 'rubocop-rails', '~> 2.33.3'
   # RuboCop extension for RSpec
-  gem 'rubocop-rspec', '~> 2.26', '>= 2.26.1'
+  gem 'rubocop-rspec', '~> 3.6.0'
+  gem 'rubocop-rspec_rails'
+  gem 'rubocop-factory_bot'
+  gem 'rubocop-capybara', '~> 2.22.0', require: false
   # Testing framework
   gem 'rspec-rails', '~> 6.1'
   # Sorbet type checking for RSpec
@@ -215,10 +227,10 @@ group :development, :test do
   # gem 'knapsack_pro', '~> 3.7.0'
 
   # typing
-  gem 'sorbet', '~> 0.5.11525'
-  gem 'rubocop-sorbet', '~> 0.7.6', require: false
-  gem 'tapioca', git: 'https://github.com/twogate/tapioca', ref: 'd0a8227'
-  gem 'spoom', '~> 1.2.4', require: false
+  gem 'sorbet', '~> 0.6.12466'
+  gem 'rubocop-sorbet', '~> 0.10.5', require: false
+  gem 'tapioca', git: 'https://github.com/twogate/tapioca', ref: 'e8922d2'
+  gem 'spoom', '~> 1.7.0', require: false
 end
 
 # ------------------------------------------------------------------------------
@@ -237,5 +249,5 @@ group :development do
   # Generate Entity-Relationship Diagrams
   gem 'rails-erd', '~> 1.7.2'
   # Ruby Language Server by Shopify
-  gem 'ruby-lsp', '~> 0.13.4'
+  gem 'ruby-lsp', '~> 0.26.1'
 end

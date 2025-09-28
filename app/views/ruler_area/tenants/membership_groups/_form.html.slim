@@ -1,0 +1,28 @@
+- if membership_group.errors.any?
+  .uk-alert.uk-alert-danger
+    h3 = "#{pluralize(membership_group.errors.count, "error")} prohibited this membership_group from being saved:"
+    ul
+      - membership_group.errors.full_messages.each do |message|
+        li = message
+
+.uk-margin
+  = f.label :name, class: "uk-form-label"
+  .uk-form-controls
+    = f.text_field :name, class: "uk-input"
+    p.uk-text-small.uk-text-muted 英数字のみ使用可能（例：basic, premium, enterprise）
+
+.uk-margin
+  = f.label :display_name, class: "uk-form-label"
+  .uk-form-controls
+    = f.text_field :display_name, class: "uk-input"
+    p.uk-text-small.uk-text-muted 表示用の名前（例：ベーシック、プレミアム、エンタープライズ）
+
+.uk-margin
+  = f.label :position, class: "uk-form-label"
+  .uk-form-controls
+    = f.number_field :position, class: "uk-input"
+    p.uk-text-small.uk-text-muted 表示順序（小さい数字が先に表示）
+
+.uk-margin-top
+  = f.submit class: "uk-button uk-button-primary"
+  = link_to "キャンセル", ruler_area_tenant_membership_path(@tenant_id), class: "uk-button uk-button-secondary uk-margin-left"

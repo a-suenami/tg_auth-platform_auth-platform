@@ -1,0 +1,12 @@
+create_table :memberships__groups, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'メンバーシップグループ（段階的プラン用）' do |t|
+  t.references :tenant, type: :citext, null: false
+  t.string :name, null: false, comment: 'グループ名（英数字のみ）'
+  t.string :display_name, null: false, comment: '表示名'
+  t.integer :position, default: 0, comment: '表示順序（段階の順番）'
+
+  t.timestamps null: false
+  t.index [:tenant_id, :name], name: :idx_memberships__groups_tenant_id_name_uniq, using: :btree, unique: true
+  t.index [:tenant_id, :position], name: :idx_memberships__groups_tenant_position, using: :btree
+end
+
+add_foreign_key :memberships__groups, :tenants, name: :fk_memberships__groups_tenants

@@ -1,0 +1,77 @@
+.uk-margin-top.uk-container
+  nav.uk-breadcrumb aria-label="Breadcrumb"
+    li
+      = link_to "テナント一覧", ruler_area_tenants_path
+    li
+      = link_to @tenant.name, ruler_area_tenant_root_path(@tenant)
+    li
+      = link_to "メンバーシップ管理", top_ruler_area_tenant_memberships_path(@tenant)
+    li
+      span メンバーシッププラン一覧
+
+  h2 メンバーシッププラン一覧
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    .uk-flex.uk-flex-right.uk-margin-bottom
+      = link_to "新規作成", new_ruler_area_tenant_memberships_plan_path(@tenant_id), class: "uk-button uk-button-primary"
+
+    - if @membership_plans.empty?
+      p.uk-text-lead
+        | No メンバーシッププラン found.
+
+    - else
+      table.uk-table.uk-table-divider
+        tr
+          th = Memberships::Plan.human_attribute_name(:position)
+          th = Memberships::Plan.human_attribute_name(:name)
+          th = Memberships::Plan.human_attribute_name(:recurrence)
+          th = "更新サイクル"
+          th = Memberships::Plan.human_attribute_name(:amount)
+          th = Memberships::Plan.human_attribute_name(:trial_period_days)
+          th = "メンバーシップ"
+          th = "決済方法"
+          th = "操作"
+
+        - @membership_plans.each do |membership_plan|
+          tr
+            td
+              = membership_plan.position
+            td
+              = membership_plan.name
+            td
+              = membership_plan.recurrence ? "定期課金" : "買い切り"
+            td
+              - case membership_plan.recurring_interval_unit
+              - when 'day'
+                = "#{membership_plan.recurring_interval_count}日"
+              - when 'week'
+                = "#{membership_plan.recurring_interval_count}週"
+              - when 'month'
+                = "#{membership_plan.recurring_interval_count}ヶ月"
+              - when 'year'
+                = "#{membership_plan.recurring_interval_count}年"
+              - else
+                = "#{membership_plan.recurring_interval_count}#{membership_plan.recurring_interval_unit}"
+            td
+              = membership_plan.amount
+            td
+              = membership_plan.trial_period_days > 0 ? "#{membership_plan.trial_period_days}日" : "なし"
+            td
+              - if membership_plan.memberships.any?
+                - membership_plan.memberships.each do |membership|
+                  span.uk-badge.uk-margin-small-right
+                    = membership.display_name
+              - else
+                span.uk-text-muted 未設定
+            td
+              - membership_plan.plan_payment_methods.each do |payment_method|
+                span.uk-badge.uk-margin-small-right
+                  = payment_method.payment_type
+                  - if payment_method.payment_type == 'credit_card' && payment_method.stripe_record_price
+                    |  (#{payment_method.stripe_record_price.name})
+            td
+              = link_to "詳細", ruler_area_tenant_memberships_plan_path(@tenant_id, membership_plan), class: "uk-button uk-button-secondary"
+              .uk-margin
+                = link_to "編集", edit_ruler_area_tenant_memberships_plan_path(@tenant_id, membership_plan), class: "uk-button uk-button-primary"
+
+      == pagy_nav(@pagy)

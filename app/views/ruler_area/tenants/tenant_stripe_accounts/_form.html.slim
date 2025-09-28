@@ -1,0 +1,35 @@
+= form_with(model: [:ruler_area, @tenant, tenant_stripe_account], local: true) do |form|
+  - if tenant_stripe_account.errors.any?
+    #error_explanation.uk-alert.uk-alert-danger
+      h2 = pluralize(tenant_stripe_account.errors.count, "error") + " prohibited this tenant_stripe_account from being saved:"
+      ul
+        - tenant_stripe_account.errors.full_messages.each do |message|
+          li = message
+
+  .uk-margin
+    = form.label :stripe_account_id, class: 'uk-form-label'
+    .uk-form-controls
+      = form.collection_select :stripe_account_id, StripeRecord::Account.all, :id, :display_name, { prompt: "Select a stripe account" }, class: 'uk-select'
+
+  .uk-margin
+    = form.label :charge_type, class: 'uk-form-label'
+    .uk-form-controls
+      = form.select :charge_type, Tenant::StripeAccount::ChargeTypeEnum.values.map { |v| [v.serialize, v.serialize] }, { prompt: "Select charge type" }, class: 'uk-select'
+
+  .uk-margin
+    = form.label :fee_rate_percentage, "Fee Rate (%)", class: 'uk-form-label'
+    .uk-form-controls
+      = form.number_field :fee_rate_percentage, step: 0.01, min: 0, max: 100, class: 'uk-input'
+
+  .uk-margin
+    = form.label :tax_rate_id, class: 'uk-form-label'
+    .uk-form-controls
+      = form.text_field :tax_rate_id, class: 'uk-input'
+
+  .uk-margin
+    = form.label :webhook_secret, class: 'uk-form-label'
+    .uk-form-controls
+      = form.text_field :webhook_secret, placeholder: "whsec_...", class: 'uk-input'
+
+  .uk-margin
+    = form.submit class: 'uk-button uk-button-primary'

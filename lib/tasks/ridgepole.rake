@@ -13,23 +13,23 @@ namespace :ridgepole do # rubocop:disable Metrics/BlockLength
     if Rails.env.development?
       print "\n"
       puts 'Re-creating test database...'
-      suppress_output do
-        # test の DB を利用する
-        Rails.env = 'test'
+      # suppress_output do
+      # test の DB を利用する
+      Rails.env = 'test'
 
-        Rake::Task['db:drop'].invoke
-        Rake::Task['db:create'].invoke
+      Rake::Task['db:drop'].invoke
+      Rake::Task['db:create'].invoke
 
-        ridgepole('--apply', "--file #{schema_file}", '--env test')
+      ridgepole('--apply', "--file #{schema_file}", '--env test')
 
-        # schema.rb と structure.sql の両方吐かせる
-        ENV['SCHEMA_FORMAT'] = 'ruby'
-        Rake::Task['db:schema:dump'].invoke
-        ENV['SCHEMA_FORMAT'] = 'sql'
-        Rake::Task['db:schema:dump'].invoke
+      # schema.rb と structure.sql の両方吐かせる
+      ENV['SCHEMA_FORMAT'] = 'ruby'
+      Rake::Task['db:schema:dump'].invoke
+      ENV['SCHEMA_FORMAT'] = 'sql'
+      Rake::Task['db:schema:dump'].invoke
 
-        system('FORCE_TEST_DATABASE=true bin/tapioca dsl', exception: true)
-      end
+      system('FORCE_TEST_DATABASE=true bin/tapioca dsl', exception: true)
+      # end
       puts 'done'
     end
   end

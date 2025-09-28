@@ -31,6 +31,8 @@ html lang='ja'
                       li
                         = link_to 'テナント詳細設定', ruler_area_tenant_tenant_settings_path(@tenant_id)
                       li
+                        = link_to 'メンバーシップ管理', top_ruler_area_tenant_memberships_path(@tenant_id)
+                      li
                         = link_to 'SPA 設定', ruler_area_tenant_login_spa_applications_path(@tenant_id)
                       li
                         = link_to 'テンプレート管理', ruler_area_tenant_email_templates_path(@tenant_id)
@@ -40,6 +42,10 @@ html lang='ja'
                         = link_to 'Admin一覧', ruler_area_tenant_admins_path(@tenant_id)
                       li
                         = link_to 'Shopify Multipass設定', ruler_area_tenant_shopify_multipass_stores_path(@tenant_id)
+                      li
+                        = link_to 'StripeProducts', ruler_area_tenant_stripe_records_products_path(@tenant_id)
+                      li
+                        = link_to 'Stripe設定', ruler_area_tenant_tenant_stripe_account_path(@tenant_id)
             .tg-sidebar-section
               ul.uk-nav.uk-nav-default
                 ul.uk-parent

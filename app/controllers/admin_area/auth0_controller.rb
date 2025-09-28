@@ -15,10 +15,10 @@ module AdminArea
 
       if admin.present?
         session[:current_admin_id] = admin.id
-        redirect_to admin_area_users_path, notice: 'ログインしました。' # rubocop:disable Rails/I18nLocaleTexts
+        redirect_to admin_area_users_path, notice: 'ログインしました。'
       else
         logout
-        flash.now[:error] = 'ログインに失敗しました' # rubocop:disable Rails/I18nLocaleTexts
+        flash.now[:error] = 'ログインに失敗しました'
         flash.keep
       end
     end

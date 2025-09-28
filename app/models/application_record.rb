@@ -3,6 +3,7 @@
 
 class ApplicationRecord < ActiveRecord::Base
   extend T::Helpers
+  extend T::Sig
   extend Enumerize
   abstract!
 

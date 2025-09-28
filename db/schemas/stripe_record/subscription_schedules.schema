@@ -1,0 +1,14 @@
+# ==============================================================================
+# db/schemas/stripe_record/subscription_schedules.schema
+# ==============================================================================
+create_table :stripe_record__subscription_schedules, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_subscription_schedules__tenants }
+  t.references :user,               type: :uuid,   null: false
+  t.references :subscription, type: :uuid, null: false
+  t.string :remote_id, null: false
+  t.string :remote_customer
+  t.string :status
+  t.jsonb :phases
+
+  t.timestamps null: false
+end
