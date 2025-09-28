@@ -10,7 +10,7 @@ module API::V1::Internal
                                        .includes(:membership_group)
                                        .order(:position)
 
-      render_blueprint_collection(MembershipBlueprint, active_memberships, view: :normal)
+      render_blueprint_collection(MembershipBlueprint, active_memberships, view: :personal)
     end
   end
 end
