@@ -8,6 +8,5 @@ class MembershipBlueprint < Blueprinter::Base
 
   view :normal do
     association :membership_group, blueprint: MembershipGroupBlueprint
-    association :membership_plans, blueprint: MembershipPlanBlueprint
   end
 end

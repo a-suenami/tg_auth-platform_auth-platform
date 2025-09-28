@@ -22,6 +22,8 @@ Rails.application.routes.draw do
           post :request, to: 'email_changes#email_change_request'
         end
 
+        resources :memberships, only: [:index]
+
         namespace :memberships do
           resources :contracts, only: [:index, :show] do
             member do
