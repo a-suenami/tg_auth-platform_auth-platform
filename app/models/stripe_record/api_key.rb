@@ -47,7 +47,11 @@ class StripeRecord
 
         # account がない場合はここで initialize する
         # 各種 attributes は account 自身の callback で set される
-        self.account || self.build_account
+        account = self.account || self.build_account
+        if account.tenant_id.blank?
+          account.tenant_id = self.tenant_id
+        end
+        account
       rescue Stripe::AuthenticationError
         # do nothing
         self.errors.add(:secret_key, :authentication_error)

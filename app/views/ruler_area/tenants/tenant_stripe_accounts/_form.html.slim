@@ -1,4 +1,4 @@
-= form_with(model: [:ruler_area, @tenant, tenant_stripe_account], local: true) do |form|
+= form_with(model: [:ruler_area, @tenant, tenant_stripe_account], url: tenant_stripe_account.persisted? ? ruler_area_tenant_tenant_stripe_account_path(@tenant) : ruler_area_tenant_tenant_stripe_account_path(@tenant), method: tenant_stripe_account.persisted? ? :patch : :post, local: true) do |form|
   - if tenant_stripe_account.errors.any?
     #error_explanation.uk-alert.uk-alert-danger
       h2 = pluralize(tenant_stripe_account.errors.count, "error") + " prohibited this tenant_stripe_account from being saved:"

@@ -10,17 +10,16 @@ class StripeRecord
 
     self.inheritance_column = :_type_disabled
 
-    belongs_to :api_key, optional: true, validate: true
+    belongs_to :api_key, optional: true, validate: true, class_name: 'StripeRecord::APIKey'
     belongs_to :controlling_platform, class_name: 'Account', optional: true
 
     has_many :connect_accounts, class_name: 'Account', foreign_key: :controlling_platform_id, inverse_of: :controlling_platform
-    has_many :tenant_stripe_accounts, class_name: 'Tenant::StripeAccount', foreign_key: :stripe_account_id, inverse_of: :stripe_account
-    has_many :tenants, through: :tenant_stripe_accounts
+    has_one :tenant_stripe_account, class_name: 'Tenant::StripeAccount', foreign_key: :stripe_account_id, inverse_of: :stripe_account
 
     before_validation :set_attributes
 
     validate :validate_controlling_platform
-    validates :remote_id, :display_name, :payments_statement_descriptor,
+    validates :remote_id, :display_name,
       presence: true
     validates :api_key, presence: true, if: lambda {
       T.bind(self, Account)

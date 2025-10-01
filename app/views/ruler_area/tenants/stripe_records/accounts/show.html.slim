@@ -1,0 +1,21 @@
+h1 Stripe Record Account Details
+
+.uk-card.uk-card-default.uk-card-body
+  h3 Account Information
+  dl.uk-description-list.uk-description-list-divider
+    dt Display Name
+    dd = @stripe_account.display_name
+    dt Remote ID
+    dd = @stripe_account.remote_id
+    dt Type
+    dd = @stripe_account.type
+    - if @stripe_account.business_profile_name
+      dt Business Profile Name
+      dd = @stripe_account.business_profile_name
+    - if @stripe_account.payments_statement_descriptor
+      dt Statement Descriptor
+      dd = @stripe_account.payments_statement_descriptor
+
+.uk-margin
+  = link_to 'Edit', edit_ruler_area_tenant_stripe_records_account_path(@tenant, @stripe_account), class: 'uk-button uk-button-secondary uk-margin-small-right'
+  = link_to 'Back', ruler_area_tenant_stripe_records_accounts_path(@tenant), class: 'uk-button uk-button-secondary'
