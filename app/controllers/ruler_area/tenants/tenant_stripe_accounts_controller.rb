@@ -3,12 +3,10 @@
 
 module RulerArea
   module Tenants
-    class TenantStripeAccountsController < RulerArea::ApplicationController
-      before_action :set_tenant
-      before_action :set_tenant_stripe_account, only: [:show, :edit, :update, :destroy]
+    class TenantStripeAccountsController < RulerArea::Tenants::ApplicationController
+      before_action :set_tenant_stripe_account, only: [:index, :show, :edit, :update, :destroy]
 
       def index
-        @tenant_stripe_account = @tenant.tenant_stripe_account
       end
 
       def show
@@ -46,12 +44,12 @@ module RulerArea
 
       private
 
-      def set_tenant
-        @tenant = Tenant.find(params[:tenant_id])
-      end
-
       def set_tenant_stripe_account
         @tenant_stripe_account = @tenant.tenant_stripe_account
+        # nilの場合は新規作成にリダイレクト
+        if @tenant_stripe_account.nil?
+          redirect_to new_ruler_area_tenant_tenant_stripe_account_path(@tenant), notice: 'Tenant Stripe Account not found. Please create one.'
+        end
       end
 
       def tenant_stripe_account_params

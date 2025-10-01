@@ -36,6 +36,7 @@ Rails.application.routes.draw do
             post :preview, on: :collection
             put :sync, on: :collection
           end
+          resources :accounts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         end
       end
     end

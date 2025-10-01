@@ -154,6 +154,9 @@ module GeneratedUrlHelpersModule
   def edit_ruler_area_tenant_shopify_multipass_store_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_stripe_records_account_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_tenant_setting_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -203,6 +206,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_shopify_multipass_store_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_stripe_records_account_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_tenant_setting_url(*args); end
@@ -356,6 +362,12 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_shopify_multipass_stores_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_stripe_records_account_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_stripe_records_accounts_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_stripe_records_product_url(*args); end

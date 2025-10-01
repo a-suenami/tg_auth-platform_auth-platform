@@ -1,0 +1,36 @@
+= form_with(model: [:ruler_area, @tenant, @stripe_account], url: @stripe_account.persisted? ? ruler_area_tenant_stripe_records_account_path(@tenant, @stripe_account) : ruler_area_tenant_stripe_records_accounts_path(@tenant), local: true) do |form|
+  - if @stripe_account.errors.any?
+    #error_explanation.uk-alert.uk-alert-danger
+      h2 = "#{pluralize(@stripe_account.errors.count, 'error')} prohibited this stripe account from being saved:"
+      ul
+        - @stripe_account.errors.full_messages.each do |message|
+          li = message
+
+  h3 API Key Information
+
+  = form.fields_for :api_key_attributes do |api_key_form|
+    .uk-margin
+      = api_key_form.label :display_name, 'Display Name', class: 'uk-form-label'
+      .uk-form-controls
+        = api_key_form.text_field :display_name, class: 'uk-input', placeholder: 'API Key Display Name', required: true
+
+    .uk-margin
+      = api_key_form.label :remote_id, 'Remote ID (Account ID)', class: 'uk-form-label'
+      .uk-form-controls
+        = api_key_form.text_field :remote_id, class: 'uk-input', placeholder: 'acct_1SA0hjKBp6ILGQCp', required: true
+        .uk-text-meta The Stripe account ID that this API key belongs to
+
+    .uk-margin
+      = api_key_form.label :publishable_key, 'Publishable Key', class: 'uk-form-label'
+      .uk-form-controls
+        = api_key_form.text_field :publishable_key, class: 'uk-input', placeholder: 'pk_test_51SA0hjKBp6ILGQCp...', required: true
+        .uk-text-meta The publishable API key from Stripe
+
+    .uk-margin
+      = api_key_form.label :secret_key, 'Secret Key', class: 'uk-form-label'
+      .uk-form-controls
+        = api_key_form.password_field :secret_key, class: 'uk-input', placeholder: 'sk_test_51SA0hjKBp6ILGQCp...', required: true
+        .uk-text-meta The secret API key from Stripe (starts with sk_)
+
+  .uk-margin
+    = form.submit 'Create Stripe Account', class: 'uk-button uk-button-primary'
