@@ -460,6 +460,9 @@ class StripeRecord::Account
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Account) }
     def build_controlling_platform(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::StripeAccount) }
+    def build_tenant_stripe_account(*args, &blk); end
+
     sig { returns(T::Array[T.untyped]) }
     def connect_account_ids; end
 
@@ -498,11 +501,20 @@ class StripeRecord::Account
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Account) }
     def create_controlling_platform!(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::StripeAccount) }
+    def create_tenant_stripe_account(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::StripeAccount) }
+    def create_tenant_stripe_account!(*args, &blk); end
+
     sig { returns(T.nilable(::StripeRecord::APIKey)) }
     def reload_api_key; end
 
     sig { returns(T.nilable(::StripeRecord::Account)) }
     def reload_controlling_platform; end
+
+    sig { returns(T.nilable(::Tenant::StripeAccount)) }
+    def reload_tenant_stripe_account; end
 
     sig { void }
     def reset_api_key; end
@@ -510,33 +522,14 @@ class StripeRecord::Account
     sig { void }
     def reset_controlling_platform; end
 
-    sig { returns(T::Array[T.untyped]) }
-    def tenant_ids; end
+    sig { void }
+    def reset_tenant_stripe_account; end
 
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def tenant_ids=(ids); end
+    sig { returns(T.nilable(::Tenant::StripeAccount)) }
+    def tenant_stripe_account; end
 
-    sig { returns(T::Array[T.untyped]) }
-    def tenant_stripe_account_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def tenant_stripe_account_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `StripeRecord::Account` class because it declared `has_many :tenant_stripe_accounts`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Tenant::StripeAccount::PrivateCollectionProxy) }
-    def tenant_stripe_accounts; end
-
-    sig { params(value: T::Enumerable[::Tenant::StripeAccount]).void }
-    def tenant_stripe_accounts=(value); end
-
-    # This method is created by ActiveRecord on the `StripeRecord::Account` class because it declared `has_many :tenants, through: :tenant_stripe_accounts`.
-    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
-    sig { returns(::Tenant::PrivateCollectionProxy) }
-    def tenants; end
-
-    sig { params(value: T::Enumerable[::Tenant]).void }
-    def tenants=(value); end
+    sig { params(value: T.nilable(::Tenant::StripeAccount)).void }
+    def tenant_stripe_account=(value); end
   end
 
   module GeneratedAssociationRelationMethods
