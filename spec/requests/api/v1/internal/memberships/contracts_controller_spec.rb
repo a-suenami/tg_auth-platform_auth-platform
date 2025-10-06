@@ -22,17 +22,14 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
   let!(:expired_contract) { create(:memberships__contract, :expired, tenant_id: current_tenant.id, user: current_user) }
   let!(:canceled_contract) { create(:memberships__contract, :canceled, tenant_id: current_tenant.id, user: current_user) }
 
-  # 請求プロファイル
-  let!(:active_billing_profile) {
-    create(:memberships__billing_profile, tenant_id: current_tenant.id, user: current_user, membership_plan:, membership_contract: active_contract, payment_type: 'credit_card',
+  # 支払い取引
+  let!(:active_transaction) {
+    create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: active_contract, payment_type: 'credit_card',
    payment_provider: 'stripe', external_id: 'sub_test123', chargeable: stripe_record_subscription, status: 'active', recurrence: true,)
   }
-  let!(:pending_billing_profile) {
-    create(:memberships__billing_profile, :pending, tenant_id: current_tenant.id, user: current_user, membership_plan:, membership_contract: pending_contract, payment_type: 'credit_card',
-   payment_provider: 'stripe', external_id: 'sub_pending123', status: 'pending', recurrence: true,)
-  }
-  let!(:expired_billing_profile) {
-    create(:memberships__billing_profile, :closed, tenant_id: current_tenant.id, user: current_user, membership_plan:, membership_contract: expired_contract, payment_type: 'credit_card',
+
+  let!(:expired_transaction) {
+    create(:payment__transaction, :closed, tenant_id: current_tenant.id, user: current_user, membership_contract: expired_contract, payment_type: 'credit_card',
    payment_provider: 'stripe', external_id: 'sub_expired123', status: 'expired', recurrence: false,)
   }
 
@@ -57,9 +54,8 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
     # すべてのレコードを確実に作成
     membership_plan_component
     membership_plan_payment_method
-    active_billing_profile
-    pending_billing_profile
-    expired_billing_profile
+    active_transaction
+    expired_transaction
     active_membership_user
     pending_membership_user
     expired_membership_user
@@ -90,30 +86,30 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
       expect(created_at_times).to eq created_at_times.sort.reverse
     end
 
-    it 'includes billing profiles in contracts' do
+    it 'includes transactions in contracts' do
       is_expected.to eq 200
 
       active_contract_response = body_array.find { |contract| contract['id'] == active_contract.id }
-      expect(active_contract_response['billing_profiles']).to be_present
-      expect(active_contract_response['billing_profiles'].size).to eq 1
+      expect(active_contract_response['transactions']).to be_present
+      expect(active_contract_response['transactions'].size).to eq 1
 
-      billing_profile = active_contract_response['billing_profiles'][0]
-      expect(billing_profile['id']).to eq active_billing_profile.id
-      expect(billing_profile['payment_type']).to eq active_billing_profile.payment_type
-      expect(billing_profile['payment_provider']).to eq active_billing_profile.payment_provider
-      expect(billing_profile['external_id']).to eq active_billing_profile.external_id
-      expect(billing_profile['membership_plan_id']).to eq active_billing_profile.membership_plan_id
+      transaction = active_contract_response['transactions'][0]
+      expect(transaction['id']).to eq active_transaction.id
+      expect(transaction['payment_type']).to eq active_transaction.payment_type
+      expect(transaction['payment_provider']).to eq active_transaction.payment_provider
+      expect(transaction['external_id']).to eq active_transaction.external_id
+      expect(transaction['membership_contract_id']).to eq active_transaction.membership_contract_id
     end
 
-    it 'includes chargeable subscription in billing profiles' do
+    it 'includes chargeable subscription in transactions' do
       is_expected.to eq 200
 
       active_contract_response = body_array.find { |contract| contract['id'] == active_contract.id }
-      billing_profile = active_contract_response['billing_profiles'][0]
+      transaction = active_contract_response['transactions'][0]
 
-      expect(billing_profile['chargeable']).to be_present
-      expect(billing_profile['chargeable']['id']).to eq stripe_record_subscription.id
-      expect(billing_profile['chargeable']['remote_id']).to eq stripe_record_subscription.remote_id
+      expect(transaction['chargeable']).to be_present
+      expect(transaction['chargeable']['id']).to eq stripe_record_subscription.id
+      expect(transaction['chargeable']['remote_id']).to eq stripe_record_subscription.remote_id
     end
 
     context 'when user has no contracts' do
@@ -147,30 +143,30 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
         expect(body_hash['updated_at']).to eq active_contract.updated_at.iso8601
       end
 
-      it 'includes billing profiles' do
+      it 'includes transactions' do
         is_expected.to eq 200
 
-        expect(body_hash['billing_profiles']).to be_present
-        expect(body_hash['billing_profiles'].size).to eq 1
+        expect(body_hash['transactions']).to be_present
+        expect(body_hash['transactions'].size).to eq 1
 
-        billing_profile = body_hash['billing_profiles'][0]
-        expect(billing_profile['id']).to eq active_billing_profile.id
-        expect(billing_profile['payment_type']).to eq active_billing_profile.payment_type
-        expect(billing_profile['payment_provider']).to eq active_billing_profile.payment_provider
-        expect(billing_profile['external_id']).to eq active_billing_profile.external_id
-        expect(billing_profile['membership_plan_id']).to eq active_billing_profile.membership_plan_id
-        expect(billing_profile['activated_at']).to eq active_billing_profile.activated_at.iso8601
-        expect(billing_profile['expires_at']).to eq active_billing_profile.expires_at.iso8601
+        transaction = body_hash['transactions'][0]
+        expect(transaction['id']).to eq active_transaction.id
+        expect(transaction['payment_type']).to eq active_transaction.payment_type
+        expect(transaction['payment_provider']).to eq active_transaction.payment_provider
+        expect(transaction['external_id']).to eq active_transaction.external_id
+        expect(transaction['membership_contract_id']).to eq active_transaction.membership_contract_id
+        expect(transaction['activated_at']).to eq active_transaction.activated_at.iso8601
+        expect(transaction['expires_at']).to eq active_transaction.expires_at.iso8601
       end
 
       it 'includes chargeable subscription' do
         is_expected.to eq 200
 
-        billing_profile = body_hash['billing_profiles'][0]
-        expect(billing_profile['chargeable']).to be_present
-        expect(billing_profile['chargeable']['id']).to eq stripe_record_subscription.id
-        expect(billing_profile['chargeable']['remote_id']).to eq stripe_record_subscription.remote_id
-        expect(billing_profile['chargeable']['status']).to eq stripe_record_subscription.status
+        transaction = body_hash['transactions'][0]
+        expect(transaction['chargeable']).to be_present
+        expect(transaction['chargeable']['id']).to eq stripe_record_subscription.id
+        expect(transaction['chargeable']['remote_id']).to eq stripe_record_subscription.remote_id
+        expect(transaction['chargeable']['status']).to eq stripe_record_subscription.status
       end
     end
 
@@ -204,15 +200,15 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
 
         expect(body_hash['id']).to eq pending_contract.id
         expect(body_hash['status']).to eq pending_contract.status
-        expect(body_hash['billing_profiles']).to be_present
+        expect(body_hash['transactions']).to be_present
       end
 
-      it 'includes billing profiles without includes' do
+      it 'includes transactions without includes' do
         is_expected.to eq 200
 
-        # pollingエンドポイントはincludes(:billing_profiles)を使わない
-        expect(body_hash['billing_profiles']).to be_present
-        expect(body_hash['billing_profiles'].size).to eq 1
+        # pollingエンドポイントはincludes(:transactions)を使わない
+        expect(body_hash['transactions']).to be_present
+        expect(body_hash['transactions'].size).to eq 1
       end
     end
 
@@ -254,7 +250,7 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
       let(:id) { contract_without_stripe.id }
 
       before do
-        create(:memberships__billing_profile, tenant_id: current_tenant.id, user: current_user, membership_plan:, membership_contract: contract_without_stripe, payment_type: 'credit_card',
+        create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: contract_without_stripe, payment_type: 'credit_card',
          payment_provider: 'stripe', chargeable: nil, status: 'active',)
       end
 
@@ -269,7 +265,7 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
       let(:id) { contract_with_non_stripe.id }
 
       before do
-        create(:memberships__billing_profile, tenant_id: current_tenant.id, user: current_user, membership_plan:, membership_contract: contract_with_non_stripe, payment_type: 'credit_card',
+        create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: contract_with_non_stripe, payment_type: 'credit_card',
          payment_provider: 'stripe', chargeable_type: 'SomeOtherModel', chargeable_id: 1, status: 'active',)
       end
 

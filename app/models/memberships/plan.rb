@@ -11,7 +11,6 @@ class Memberships::Plan < ApplicationRecord
   has_many :plan_payment_methods, class_name: 'Memberships::PlanPaymentMethod', dependent: :destroy, inverse_of: :membership_plan
   has_many :plan_components, class_name: 'Memberships::PlanComponent', dependent: :destroy, inverse_of: :membership_plan
   has_many :memberships, through: :plan_components
-  has_many :billing_profiles, class_name: 'Memberships::BillingProfile', dependent: :destroy
   has_many :user_achievements, class_name: 'Memberships::UserAchievement', dependent: :destroy
   has_many :stripe_trial_histories, class_name: 'StripeRecord::TrialHistory', dependent: :destroy, inverse_of: :membership_plan
 

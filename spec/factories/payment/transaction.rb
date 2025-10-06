@@ -1,10 +1,9 @@
 # typed: false
 
 FactoryBot.define do
-  factory :memberships__billing_profile, class: 'Memberships::BillingProfile' do
+  factory :payment__transaction, class: 'Payment::Transaction' do
     tenant_id { create(:tenant).id }
     user { create(:user) }
-    membership_plan { create(:membership_plan) }
     membership_contract { create(:membership_contract) }
     payment_type { 'credit_card' }
     payment_provider { 'stripe' }

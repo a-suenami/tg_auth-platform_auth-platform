@@ -54,7 +54,7 @@ class User < ApplicationRecord
   has_many :membership_users, class_name: 'Memberships::User', dependent: :destroy
   has_many :memberships, through: :membership_users
   has_many :membership_contracts, class_name: 'Memberships::Contract', dependent: :destroy
-  has_many :membership_billing_profiles, class_name: 'Memberships::BillingProfile', dependent: :destroy
+  has_many :payment_transactions, class_name: 'Payment::Transaction', dependent: :destroy
   has_many :membership_user_achievements, class_name: 'Memberships::UserAchievement', dependent: :destroy
   has_many :stripe_trial_histories, class_name: 'StripeRecord::TrialHistory', dependent: :destroy
   # stripe

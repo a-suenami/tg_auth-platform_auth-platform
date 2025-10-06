@@ -115,33 +115,20 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_memberships_on_tenant_id"
   end
 
-  create_table "memberships__billing_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップの決済情報", force: :cascade do |t|
+  create_table "memberships__contract_terms", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップ契約の詳細,変更履歴", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
+    t.uuid "contract_id", null: false
     t.uuid "membership_plan_id", null: false
-    t.uuid "membership_contract_id", null: false, comment: "メンバーシップ契約ID"
-    t.string "payment_type", null: false, comment: "支払い方法: credit_card, convenience, campaign_code, external_linkage"
-    t.string "payment_provider", comment: "決済プロバイダ: stripe, komojuなど"
-    t.string "external_id", comment: "外部システムのID"
-    t.string "phase", default: "current", null: false, comment: "phase: billing_profileの利用状態。プラン変更予定時はupcoming。current, upcoming, closed"
-    t.datetime "activated_at", comment: "有効化日時"
-    t.datetime "expires_at", comment: "有効期限"
-    t.string "status", null: false, comment: "ステータス"
-    t.boolean "recurrence", default: false, null: false, comment: "定期課金フラグ: true=サブスクリプション, false=買い切り"
-    t.integer "revision", default: 1, null: false, comment: "バージョン管理用"
-    t.integer "paid_amount", default: 0, null: false, comment: "支払い済み金額"
-    t.uuid "chargeable_id", comment: "決済情報"
-    t.string "chargeable_type"
+    t.string "status", default: "active", null: false, comment: "ステータス"
+    t.datetime "start_at", comment: "開始日時"
+    t.datetime "end_at", comment: "終了日時"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_8f9e0b5657"
-    t.index ["expires_at"], name: "idx_memberships__billing_profiles_expires_at"
-    t.index ["external_id"], name: "idx_memberships__billing_profiles_external_id"
-    t.index ["membership_contract_id"], name: "index_memberships__billing_profiles_on_membership_contract_id"
-    t.index ["membership_plan_id"], name: "index_memberships__billing_profiles_on_membership_plan_id"
-    t.index ["tenant_id", "user_id"], name: "idx_memberships__billing_profiles_tenant_user"
-    t.index ["tenant_id"], name: "index_memberships__billing_profiles_on_tenant_id"
-    t.index ["user_id"], name: "index_memberships__billing_profiles_on_user_id"
+    t.index ["contract_id"], name: "index_memberships__contract_terms_on_contract_id"
+    t.index ["membership_plan_id"], name: "index_memberships__contract_terms_on_membership_plan_id"
+    t.index ["tenant_id"], name: "index_memberships__contract_terms_on_tenant_id"
+    t.index ["user_id"], name: "index_memberships__contract_terms_on_user_id"
   end
 
   create_table "memberships__contracts", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップ契約", force: :cascade do |t|
@@ -179,6 +166,23 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["membership_plan_id", "membership_id"], name: "idx_memberships__plan_components_plan_membership_uniq", unique: true
     t.index ["membership_plan_id"], name: "index_memberships__plan_components_on_membership_plan_id"
     t.index ["tenant_id"], name: "index_memberships__plan_components_on_tenant_id"
+  end
+
+  create_table "memberships__plan_payment_method_mappings", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシッププランの支払い方法のマッピング", force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "membership_plan_id", null: false
+    t.uuid "membership_plan_payment_method_id", null: false
+    t.uuid "priceable_id", comment: "Priceオブジェクト"
+    t.string "priceable_type"
+    t.integer "amount", null: false, comment: "金額"
+    t.string "currency", null: false, comment: "通貨"
+    t.boolean "is_active", default: true, comment: "有効フラグ"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["membership_plan_id"], name: "idx_on_membership_plan_id_0fb74d17fc"
+    t.index ["membership_plan_payment_method_id"], name: "idx_on_membership_plan_payment_method_id_a85e09354e"
+    t.index ["priceable_type", "priceable_id"], name: "idx_on_priceable_type_priceable_id_dfb53324a7"
+    t.index ["tenant_id"], name: "index_memberships__plan_payment_method_mappings_on_tenant_id"
   end
 
   create_table "memberships__plan_payment_methods", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシッププランの支払い方法", force: :cascade do |t|
@@ -308,6 +312,48 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "access_grant_id", null: false
     t.string "nonce", null: false
     t.index ["access_grant_id"], name: "index_oauth_openid_requests_on_access_grant_id"
+  end
+
+  create_table "payment__subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "支払い取引情報", force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "membership_contract_id", null: false, comment: "メンバーシップ契約ID"
+    t.uuid "subscribable_id", comment: "サブスクリプションオブジェクト"
+    t.string "subscribable_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["membership_contract_id"], name: "index_payment__subscriptions_on_membership_contract_id"
+    t.index ["subscribable_type", "subscribable_id"], name: "idx_on_subscribable_type_subscribable_id_36fbd91894"
+    t.index ["tenant_id", "user_id"], name: "idx_payment__subscriptions_tenant_user"
+    t.index ["tenant_id"], name: "index_payment__subscriptions_on_tenant_id"
+    t.index ["user_id"], name: "index_payment__subscriptions_on_user_id"
+  end
+
+  create_table "payment__transactions", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "支払い取引情報", force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "membership_contract_id", null: false, comment: "メンバーシップ契約ID"
+    t.string "payment_type", null: false, comment: "支払い方法: credit_card, convenience, campaign_code, external_linkage"
+    t.string "payment_provider", comment: "決済プロバイダ: stripe, komojuなど"
+    t.string "external_id", comment: "外部システムのID"
+    t.string "phase", default: "current", null: false, comment: "phase: transactionの利用状態。プラン変更予定時はupcoming。current, upcoming, closed"
+    t.datetime "activated_at", comment: "有効化日時"
+    t.datetime "expires_at", comment: "有効期限"
+    t.string "status", null: false, comment: "ステータス"
+    t.boolean "recurrence", default: false, null: false, comment: "定期課金フラグ: true=サブスクリプション, false=買い切り"
+    t.integer "revision", default: 1, null: false, comment: "バージョン管理用"
+    t.integer "paid_amount", default: 0, null: false, comment: "支払い済み金額"
+    t.uuid "chargeable_id", comment: "決済情報"
+    t.string "chargeable_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_8534730e7a"
+    t.index ["expires_at"], name: "idx_payment__transactions_expires_at"
+    t.index ["external_id"], name: "idx_payment__transactions_external_id"
+    t.index ["membership_contract_id"], name: "index_payment__transactions_on_membership_contract_id"
+    t.index ["tenant_id", "user_id"], name: "idx_payment__transactions_tenant_user"
+    t.index ["tenant_id"], name: "index_payment__transactions_on_tenant_id"
+    t.index ["user_id"], name: "index_payment__transactions_on_user_id"
   end
 
   create_table "rulers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -837,16 +883,18 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "login_spa_applications", "tenants", name: "fk_login_spa_applications_tenants"
   add_foreign_key "memberships", "memberships__groups", column: "membership_group_id", name: "fk_memberships_groups"
   add_foreign_key "memberships", "tenants", name: "fk_memberships_tenants"
-  add_foreign_key "memberships__billing_profiles", "memberships__contracts", column: "membership_contract_id", name: "fk_memberships__billing_profiles_contracts"
-  add_foreign_key "memberships__billing_profiles", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__billing_profiles_plans"
-  add_foreign_key "memberships__billing_profiles", "tenants", name: "fk_memberships__billing_profiles_tenants"
-  add_foreign_key "memberships__billing_profiles", "users", name: "fk_memberships__billing_profiles_users"
+  add_foreign_key "memberships__contract_terms", "memberships__contracts", column: "contract_id", name: "fk_memberships__contract_terms_contracts"
+  add_foreign_key "memberships__contract_terms", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__contract_terms_plans"
+  add_foreign_key "memberships__contract_terms", "tenants", name: "fk_memberships__contract_terms_tenants"
+  add_foreign_key "memberships__contract_terms", "users", name: "fk_memberships__contract_terms_users"
   add_foreign_key "memberships__contracts", "tenants", name: "fk_memberships__contracts_tenants"
   add_foreign_key "memberships__contracts", "users", name: "fk_memberships__contracts_users"
   add_foreign_key "memberships__groups", "tenants", name: "fk_memberships__groups_tenants"
   add_foreign_key "memberships__plan_components", "memberships", name: "fk_memberships__plan_components_memberships"
   add_foreign_key "memberships__plan_components", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__plan_components_plans"
   add_foreign_key "memberships__plan_components", "tenants", name: "fk_memberships__plan_components_tenants"
+  add_foreign_key "memberships__plan_payment_method_mappings", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__plan_payment_method_mappings_plans"
+  add_foreign_key "memberships__plan_payment_method_mappings", "tenants", name: "fk_memberships__plan_payment_methods_tenants"
   add_foreign_key "memberships__plan_payment_methods", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__plan_payment_methods_plans"
   add_foreign_key "memberships__plan_payment_methods", "stripe_record__prices", column: "stripe_record_price_id", name: "fk_memberships__plan_payment_methods_stripe_prices"
   add_foreign_key "memberships__plan_payment_methods", "tenants", name: "fk_memberships__plan_payment_methods_tenants"
@@ -868,6 +916,12 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
   add_foreign_key "oauth_applications", "tenants", name: "fk_oauth_applications_tenants"
   add_foreign_key "oauth_openid_requests", "oauth_access_grants", column: "access_grant_id", name: "fk_oauth_openid_requests_oauth_access_grants"
+  add_foreign_key "payment__subscriptions", "memberships__contracts", column: "membership_contract_id", name: "fk_payment__transactions_contracts"
+  add_foreign_key "payment__subscriptions", "tenants", name: "fk_payment__subscriptions_tenants"
+  add_foreign_key "payment__subscriptions", "users", name: "fk_payment__transactions_users"
+  add_foreign_key "payment__transactions", "memberships__contracts", column: "membership_contract_id", name: "fk_payment__transactions_contracts"
+  add_foreign_key "payment__transactions", "tenants", name: "fk_payment__transactions_tenants"
+  add_foreign_key "payment__transactions", "users", name: "fk_payment__transactions_users"
   add_foreign_key "stripe_record__accounts", "stripe_record__accounts", column: "controlling_platform_id", name: "fk_stripe_record_accounts_controlling_platform_id"
   add_foreign_key "stripe_record__accounts", "stripe_record__api_keys", column: "api_key_id", name: "fk_stripe_record_accounts_api_key_id"
   add_foreign_key "stripe_record__accounts", "tenants", name: "fk_stripe_record_accounts__tenants"

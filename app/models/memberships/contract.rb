@@ -9,10 +9,11 @@ class Memberships::Contract < ApplicationRecord
   belongs_to :tenant
   belongs_to :user, class_name: '::User'
 
-  has_many :billing_profiles, class_name: 'Memberships::BillingProfile', dependent: :destroy, inverse_of: :membership_contract
-  # billing_profileの中でもphaseがcurrentのものを取得する
-  has_one :current_billing_profile, -> { where(phase: :current) }, class_name: 'Memberships::BillingProfile', dependent: :nullify, inverse_of: :membership_contract
-  has_one :upcoming_billing_profile, -> { where(phase: :upcoming) }, class_name: 'Memberships::BillingProfile', dependent: :nullify, inverse_of: :membership_contract
+  has_many :transactions, class_name: 'Payment::Transaction', dependent: :destroy, inverse_of: :membership_contract
+  # transactionの中でもphaseがcurrentのものを取得する
+  has_many :contract_terms, class_name: 'Memberships::ContractTerm', dependent: :destroy, inverse_of: :contract
+  has_one :current_contract_term, -> { where(status: :current) }, class_name: 'Memberships::ContractTerm', dependent: :nullify, inverse_of: :contract
+  has_one :upcoming_contract_term, -> { where(status: :upcoming) }, class_name: 'Memberships::ContractTerm', dependent: :nullify, inverse_of: :contract
   has_many :membership_users, class_name: 'Memberships::User', dependent: :destroy, inverse_of: :membership_contract
 
   enumerize :status, in: {

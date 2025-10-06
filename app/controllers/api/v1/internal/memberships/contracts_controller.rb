@@ -5,7 +5,7 @@ module API::V1::Internal::Memberships
   class ContractsController < API::V1::Internal::Memberships::ApplicationController
     def index
       contracts = current_user.membership_contracts
-                                   .includes(:billing_profiles)
+                                   .includes(:transactions)
                                    .order(created_at: :desc)
 
       render_blueprint_collection(Memberships::ContractBlueprint, contracts, view: :normal)
@@ -13,7 +13,7 @@ module API::V1::Internal::Memberships
 
     def show
       contract = current_user.membership_contracts
-                                 .includes(:billing_profiles)
+                                 .includes(:transactions)
                                  .find(params[:id])
 
       render_blueprint(Memberships::ContractBlueprint, contract, view: :normal)
@@ -29,10 +29,10 @@ module API::V1::Internal::Memberships
     def cancel
       contract = current_user.membership_contracts.find(params[:id])
 
-      # 現在のBillingProfileを取得
-      current_billing_profile = contract.current_billing_profile
+      # 現在のTransactionを取得
+      current_transaction = contract.current_transaction
 
-      raise Exceptions::Payment::NoStripeSubscription if current_billing_profile&.chargeable_type != 'StripeRecord::Subscription'
+      raise Exceptions::Payment::NoStripeSubscription if current_transaction&.chargeable_type != 'StripeRecord::Subscription'
 
       contract = UserStripe::CancelSubscriptionService.new.execute(contract:)
 

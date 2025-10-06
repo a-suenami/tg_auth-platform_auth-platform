@@ -182,14 +182,14 @@ RSpec.describe '[ credit card payments API ]' do
           expect {
             is_expected.to eq 201
           }.to change(Memberships::Contract, :count).by(1)
-            .and change(Memberships::BillingProfile, :count).by(1)
+            .and change(Payment::Transaction, :count).by(1)
             .and change(Memberships::User, :count).by(leveled_membership_plan_platinum.memberships.count)
           json_response = response.parsed_body
           expect(json_response['id']).to be_present
           expect(json_response['status']).to eq('pending')
-          expect(json_response['billing_profiles']).to be_present
-          expect(json_response['billing_profiles'].first['payment_type']).to eq('credit_card')
-          expect(json_response['billing_profiles'].first['payment_provider']).to eq('stripe')
+          expect(json_response['transactions']).to be_present
+          expect(json_response['transactions'].first['payment_type']).to eq('credit_card')
+          expect(json_response['transactions'].first['payment_provider']).to eq('stripe')
         end
 
         it 'creates memberships_user with correct status' do
@@ -218,21 +218,21 @@ RSpec.describe '[ credit card payments API ]' do
           is_expected.to eq 201
 
           contract = Memberships::Contract.find(body_hash['id'])
-          billing_profile = contract.current_billing_profile
-          expect(billing_profile.user).to eq(current_user)
-          expect(billing_profile.membership_plan).to eq(leveled_membership_plan_platinum)
-          expect(billing_profile.payment_type).to eq('credit_card')
-          expect(billing_profile.payment_provider).to eq('stripe')
-          expect(billing_profile.status).to eq('pending')
-          expect(billing_profile.recurrence).to be true
+          contract_term = contract.current_contract_term
+          expect(contract_term.user).to eq(current_user)
+          expect(contract_term.membership_plan).to eq(leveled_membership_plan_platinum)
+          expect(contract_term.payment_type).to eq('credit_card')
+          expect(contract_term.payment_provider).to eq('stripe')
+          expect(contract_term.status).to eq('pending')
+          expect(contract_term.recurrence).to be true
         end
 
         it 'returns correct response format' do
           is_expected.to eq 201
           json_response = response.parsed_body
-          expect(json_response).to include('id', 'status', 'created_at', 'updated_at', 'billing_profiles')
-          expect(json_response['billing_profiles']).to be_an(Array)
-          expect(json_response['billing_profiles'].first).to include('id', 'payment_type', 'payment_provider', 'membership_plan_id')
+          expect(json_response).to include('id', 'status', 'created_at', 'updated_at', 'transactions')
+          expect(json_response['transactions']).to be_an(Array)
+          expect(json_response['transactions'].first).to include('id', 'payment_type', 'payment_provider', 'membership_contract_id')
         end
       end
 
@@ -315,9 +315,9 @@ is_active: true,)
 
 
           contract = Memberships::Contract.find(body_hash['id'])
-          contract.billing_profiles.first.chargeable
+          contract.transactions.first.chargeable
 
-          expect(body_hash['billing_profiles'][0]['chargeable']['pending_setup_intent']).to be_present
+          expect(body_hash['transactions'][0]['chargeable']['pending_setup_intent']).to be_present
         end
       end
 
@@ -422,8 +422,8 @@ is_active: true,)
         let(:existing_contract) {
           create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'pending')
         }
-        let(:existing_billing_profile) {
-          create(:memberships__billing_profile, tenant_id: current_tenant.id, user: current_user, membership_plan: leveled_membership_plan_platinum, membership_contract: existing_contract,
+        let(:existing_transaction) {
+          create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: existing_contract,
 payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'dummy_external_id', chargeable: existing_stripe_record_subscription, status: 'pending', recurrence: true,)
         }
         let(:existing_stripe_record_subscription) {
@@ -436,7 +436,6 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
 
         before do
           existing_membership_user
-          existing_billing_profile
           existing_stripe_record_subscription
         end
 
@@ -457,8 +456,8 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
         let(:existing_contract) {
           create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'pending')
         }
-        let(:existing_billing_profile) {
-          create(:memberships__billing_profile, tenant_id: current_tenant.id, user: current_user, membership_plan: leveled_membership_plan_basic, membership_contract: existing_contract,
+        let(:existing_transaction) {
+          create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: existing_contract,
 payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'dummy_external_id', chargeable: existing_stripe_record_subscription, status: 'pending', recurrence: true,)
         }
         let(:existing_stripe_record_subscription) {
@@ -472,7 +471,6 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
 
         before do
           existing_membership_user
-          existing_billing_profile
           existing_stripe_record_subscription
         end
 

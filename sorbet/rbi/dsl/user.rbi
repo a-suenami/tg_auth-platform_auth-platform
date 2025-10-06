@@ -463,20 +463,6 @@ class User
     def linked_applications=(value); end
 
     sig { returns(T::Array[T.untyped]) }
-    def membership_billing_profile_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def membership_billing_profile_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `User` class because it declared `has_many :membership_billing_profiles`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::BillingProfile::PrivateCollectionProxy) }
-    def membership_billing_profiles; end
-
-    sig { params(value: T::Enumerable[::Memberships::BillingProfile]).void }
-    def membership_billing_profiles=(value); end
-
-    sig { returns(T::Array[T.untyped]) }
     def membership_contract_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
@@ -545,6 +531,20 @@ class User
 
     sig { params(value: T::Enumerable[::OauthApplication]).void }
     def oauth_applications=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def payment_transaction_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def payment_transaction_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :payment_transactions`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Payment::Transaction::PrivateCollectionProxy) }
+    def payment_transactions; end
+
+    sig { params(value: T::Enumerable[::Payment::Transaction]).void }
+    def payment_transactions=(value); end
 
     sig { returns(T.nilable(::ContactAddress)) }
     def reload_contact_address; end
