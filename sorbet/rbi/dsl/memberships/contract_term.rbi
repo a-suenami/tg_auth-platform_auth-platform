@@ -11,9 +11,6 @@ class Memberships::ContractTerm
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
-  sig { returns(T.nilable(::Enumerize::Value::Memberships::ContractTerm::Status)) }
-  def status; end
-
   private
 
   sig { returns(NilClass) }
@@ -27,32 +24,6 @@ class Memberships::ContractTerm
       ).returns(::Memberships::ContractTerm)
     end
     def new(attributes = nil, &block); end
-  end
-
-  class ::Enumerize::Value::Memberships::ContractTerm::Status < ::Enumerize::Value
-    sig { params(other: String).returns(T::Boolean) }
-    def !=(other); end
-
-    sig { params(other: String).returns(T::Boolean) }
-    def ==(other); end
-
-    sig { params(other: String).returns(T::Boolean) }
-    def ===(other); end
-
-    sig { returns(T::Boolean) }
-    def active?; end
-
-    sig { returns(T::Boolean) }
-    def canceled?; end
-
-    sig { returns(T.untyped) }
-    def enum; end
-
-    sig { returns(T::Boolean) }
-    def expired?; end
-
-    sig { returns(T::Boolean) }
-    def pending?; end
   end
 
   module CommonRelationMethods
@@ -450,37 +421,32 @@ class Memberships::ContractTerm
   end
 
   module GeneratedAssociationMethods
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ContractTerm) }
-    def build_current_contract_term(*args, &blk); end
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Contract) }
+    def build_contract(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ContractTerm) }
-    def build_upcoming_contract_term(*args, &blk); end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
 
-    sig { returns(T::Array[T.untyped]) }
-    def contract_term_ids; end
+    sig { returns(T.nilable(::Memberships::Contract)) }
+    def contract; end
 
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def contract_term_ids=(ids); end
+    sig { params(value: T.nilable(::Memberships::Contract)).void }
+    def contract=(value); end
 
-    # This method is created by ActiveRecord on the `Memberships::ContractTerm` class because it declared `has_many :contract_terms`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::ContractTerm::PrivateCollectionProxy) }
-    def contract_terms; end
+    sig { returns(T::Boolean) }
+    def contract_changed?; end
 
-    sig { params(value: T::Enumerable[::Memberships::ContractTerm]).void }
-    def contract_terms=(value); end
+    sig { returns(T::Boolean) }
+    def contract_previously_changed?; end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ContractTerm) }
-    def create_current_contract_term(*args, &blk); end
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Contract) }
+    def create_contract(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ContractTerm) }
-    def create_current_contract_term!(*args, &blk); end
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Contract) }
+    def create_contract!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant(*args, &blk); end
@@ -488,58 +454,26 @@ class Memberships::ContractTerm
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant!(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ContractTerm) }
-    def create_upcoming_contract_term(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ContractTerm) }
-    def create_upcoming_contract_term!(*args, &blk); end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user!(*args, &blk); end
 
-    sig { returns(T.nilable(::Memberships::ContractTerm)) }
-    def current_contract_term; end
-
-    sig { params(value: T.nilable(::Memberships::ContractTerm)).void }
-    def current_contract_term=(value); end
-
-    sig { returns(T::Array[T.untyped]) }
-    def membership_user_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def membership_user_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `Memberships::ContractTerm` class because it declared `has_many :membership_users`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::User::PrivateCollectionProxy) }
-    def membership_users; end
-
-    sig { params(value: T::Enumerable[::Memberships::User]).void }
-    def membership_users=(value); end
-
-    sig { returns(T.nilable(::Memberships::ContractTerm)) }
-    def reload_current_contract_term; end
+    sig { returns(T.nilable(::Memberships::Contract)) }
+    def reload_contract; end
 
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
-
-    sig { returns(T.nilable(::Memberships::ContractTerm)) }
-    def reload_upcoming_contract_term; end
 
     sig { returns(T.nilable(::User)) }
     def reload_user; end
 
     sig { void }
-    def reset_current_contract_term; end
+    def reset_contract; end
 
     sig { void }
     def reset_tenant; end
-
-    sig { void }
-    def reset_upcoming_contract_term; end
 
     sig { void }
     def reset_user; end
@@ -555,26 +489,6 @@ class Memberships::ContractTerm
 
     sig { returns(T::Boolean) }
     def tenant_previously_changed?; end
-
-    sig { returns(T::Array[T.untyped]) }
-    def transaction_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def transaction_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `Memberships::ContractTerm` class because it declared `has_many :transactions`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Payment::Transaction::PrivateCollectionProxy) }
-    def transactions; end
-
-    sig { params(value: T::Enumerable[::Payment::Transaction]).void }
-    def transactions=(value); end
-
-    sig { returns(T.nilable(::Memberships::ContractTerm)) }
-    def upcoming_contract_term; end
-
-    sig { params(value: T.nilable(::Memberships::ContractTerm)).void }
-    def upcoming_contract_term=(value); end
 
     sig { returns(T.nilable(::User)) }
     def user; end
@@ -1145,7 +1059,7 @@ class Memberships::ContractTerm
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_start_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_status; end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -1214,16 +1128,16 @@ class Memberships::ContractTerm
     sig { void }
     def start_at_will_change!; end
 
-    sig { returns(T.untyped) }
+    sig { returns(::String) }
     def status; end
 
-    sig { params(value: T.untyped).returns(T.untyped) }
+    sig { params(value: ::String).returns(::String) }
     def status=(value); end
 
     sig { returns(T::Boolean) }
     def status?; end
 
-    sig { returns(T.untyped) }
+    sig { returns(T.nilable(::String)) }
     def status_before_last_save; end
 
     sig { returns(T.untyped) }
@@ -1232,28 +1146,28 @@ class Memberships::ContractTerm
     sig { returns(T::Boolean) }
     def status_came_from_user?; end
 
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def status_change; end
 
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def status_change_to_be_saved; end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def status_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-    sig { returns(T.untyped) }
+    sig { returns(T.nilable(::String)) }
     def status_in_database; end
 
-    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    sig { returns(T.nilable([::String, ::String])) }
     def status_previous_change; end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def status_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-    sig { returns(T.untyped) }
+    sig { returns(T.nilable(::String)) }
     def status_previously_was; end
 
-    sig { returns(T.untyped) }
+    sig { returns(T.nilable(::String)) }
     def status_was; end
 
     sig { void }

@@ -10,7 +10,7 @@ module API::V1::Internal::Memberships::Contracts
       # TODO: もしクレカ会社が3DSに対応しておらず、即時決済完了になったら、3DSをスキップして、決済完了とする
 
       # ContractをBlueprintでシリアライズ
-      render json: Memberships::ContractBlueprint.render(contract, view: :normal), status: :created
+      render json: Memberships::ContractBlueprint.render(contract, view: :detailed), status: :created
     end
 
     private

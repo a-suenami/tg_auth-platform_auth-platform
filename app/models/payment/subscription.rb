@@ -10,5 +10,7 @@ module Payment
 
     belongs_to :tenant
     belongs_to :user, class_name: '::User'
+    belongs_to :membership_contract, class_name: 'Memberships::Contract'
+    belongs_to :subscribable, polymorphic: true
   end
 end

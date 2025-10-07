@@ -14,7 +14,7 @@
 
 ```ruby
 # app/blueprints/user_blueprint.rb
-class UserBlueprint < Blueprinter::Base
+class UserBlueprint < ApplicationBlueprint
   identifier :id
 
   fields :email, :enabled, :email_verified, :sms_verified
@@ -32,7 +32,7 @@ end
 
 ```ruby
 # app/blueprints/user_profile_blueprint.rb
-class UserProfileBlueprint < Blueprinter::Base
+class UserProfileBlueprint < ApplicationBlueprint
   fields :first_name, :last_name, :first_name_kana, :last_name_kana, :birth_date, :gender
 end
 ```
@@ -78,7 +78,7 @@ end
 private
 
 def create_scoped_blueprint
-  Class.new(Blueprinter::Base) do
+  Class.new(ApplicationBlueprint) do
     identifier :id
     fields :email, :enabled
 
@@ -126,7 +126,7 @@ end
 ### blueprinter
 ```ruby
 # app/blueprints/user_blueprint.rb
-class UserBlueprint < Blueprinter::Base
+class UserBlueprint < ApplicationBlueprint
   identifier :id
   fields :email
   association :profile, blueprint: UserProfileBlueprint
@@ -206,7 +206,7 @@ render_blueprint(UserBlueprint, user)
 
 ```ruby
 # app/blueprints/membership_blueprint.rb
-class MembershipBlueprint < Blueprinter::Base
+class MembershipBlueprint < ApplicationBlueprint
   identifier :id
   fields :name, :display_name, :position, :tier
   association :groups, blueprint: MembershipGroupBlueprint
@@ -214,15 +214,49 @@ class MembershipBlueprint < Blueprinter::Base
 end
 
 # app/blueprints/membership_group_blueprint.rb
-class MembershipGroupBlueprint < Blueprinter::Base
+class MembershipGroupBlueprint < ApplicationBlueprint
   identifier :id
   fields :name, :display_name
 end
 
 # app/blueprints/membership_plan_blueprint.rb
-class MembershipPlanBlueprint < Blueprinter::Base
+class MembershipPlanBlueprint < ApplicationBlueprint
   identifier :id
   fields :billing_cycle, :validity_period, :amount
   association :plan_payment_methods, blueprint: MembershipPlanPaymentMethodBlueprint
+end
+```
+
+## BluePrint view 規則
+### 1. default view、view定義なし
+- 基本的にfieldの定義のみ、N+1を避けるためassociationの定義を極力しない
+```ruby
+fields :billing_cycle, :validity_period, :amount
+```
+
+### 2. normal view 汎用的なview 最低限必要なassociationはここに定義
+* ex)一覧API用のview
+```ruby
+view :normal do
+  association :items, blueprint: ItemBlueprint
+end
+```
+
+### 3. detailed view 詳細API用のview
+* 対象のモデルの詳細APIで含めたいリレーションを定義
+```ruby
+view :detailed do
+  include_view :normal
+  association :images, blueprint: ImagesBlueprint
+  association :parent, blueprint: ParentBlueprint
+end
+```
+
+### 4. embedded view 親クラスからの埋め込み用view
+* 親クラスから詳細までシリアライズしたい場合、循環参照を避けるため、絞り込んだassociationを定義
+```ruby
+view :detailed do
+  include_view :normal
+  association :images, blueprint: ImagesBlueprint
 end
 ```

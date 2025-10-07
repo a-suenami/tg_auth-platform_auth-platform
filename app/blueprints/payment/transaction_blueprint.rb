@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module Payment
-  class TransactionBlueprint < Blueprinter::Base
+  class TransactionBlueprint < ApplicationBlueprint
     identifier :id
 
     fields :tenant_id,
@@ -24,12 +24,21 @@ module Payment
            :updated_at
 
     association :membership_contract, blueprint: Memberships::ContractBlueprint
-    association :chargeable, polymorphic: true, blueprint: Payment::ChargeableBlueprint
 
-    view :with_details do
-      fields :tenant_id, :user_id, :membership_contract_id
-      association :membership_contract, blueprint: Memberships::ContractBlueprint
-      association :chargeable, polymorphic: true, blueprint: Payment::ChargeableBlueprint
+    # view :normal do
+    # end
+
+    view :embedded do
+      field :chargeable do |transaction, options|
+        case transaction.chargeable
+        when StripeRecord::PaymentIntent
+          StripeRecord::PaymentIntentBlueprint.render_as_hash(transaction.chargeable, view: :normal)
+        when StripeRecord::SetupIntent
+          StripeRecord::SetupIntentBlueprint.render_as_hash(transaction.chargeable, view: :normal)
+        end
+      end
     end
+
+
   end
 end
