@@ -29,7 +29,7 @@ module Payment
     # end
 
     view :embedded do
-      field :chargeable do |transaction, options|
+      field :chargeable do |transaction, _options|
         case transaction.chargeable
         when StripeRecord::PaymentIntent
           StripeRecord::PaymentIntentBlueprint.render_as_hash(transaction.chargeable, view: :normal)

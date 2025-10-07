@@ -10,7 +10,7 @@ class Payment::SubscriptionBlueprint < ApplicationBlueprint
   # end
 
   view :embedded do
-    field :subscribable do |transaction, options|
+    field :subscribable do |transaction, _options|
       case transaction.subscribable
       when StripeRecord::Subscription
         StripeRecord::SubscriptionBlueprint.render_as_hash(transaction.subscribable, view: :normal)

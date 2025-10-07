@@ -15,9 +15,9 @@ module UserStripe
 
       ActiveRecord::Base.transaction do
         update_stripe_record_subscription(stripe_record_subscription, stripe_subscription)
-        save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
+        chargeable = save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
 
-        contract = create_contract(user:, stripe_record_subscription:, membership_plan:)
+        contract = create_contract(user:, stripe_record_subscription:, membership_plan:, chargeable:)
         create_membership_users(user:, membership_plan:, contract:)
 
         contract
@@ -96,9 +96,9 @@ module UserStripe
     end
 
     def save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
-      latest_invoice = Stripe::Invoice.retrieve({ id: stripe_subscription.latest_invoice.id, expand: ['confirmation_secret'] }, stripe_api_key_config)
+      latest_invoice = Stripe::Invoice.retrieve({ id: stripe_subscription.latest_invoice.id, expand: ['confirmation_secret', 'payments.data.payment.payment_intent'] }, stripe_api_key_config)
 
-      StripeRecord::Invoice.find_or_create_by!(remote_id: latest_invoice.id) do |record|
+      invoice_record = StripeRecord::Invoice.find_or_create_by!(remote_id: latest_invoice.id) do |record|
         record.user = user
         record.tenant_id = user.tenant_id
         record.remote_id = latest_invoice.id
@@ -109,8 +109,23 @@ module UserStripe
       end
 
       if latest_invoice.try(:confirmation_secret) && latest_invoice.confirmation_secret.present?
-        # confirmation_secret が存在する場合
-        latest_invoice.confirmation_secret
+        # confirmation_secret が存在する場合 (PaymentIntentベース)
+        payment_intent = latest_invoice.payments.data.first.payment.payment_intent
+
+        # Stripe::PaymentIntent -> StripeRecord::PaymentIntent へ反映
+        stripe_record_payment_intent = StripeRecord::PaymentIntent.find_or_initialize_by(remote_id: payment_intent.id)
+        stripe_record_payment_intent.user = user
+        stripe_record_payment_intent.tenant_id = user.tenant_id
+        stripe_record_payment_intent.invoice = invoice_record
+        stripe_record_payment_intent.assign_remote_attributes(payment_intent)
+        # assign_remote_attributes で埋まらない分を補完
+        stripe_record_payment_intent.client_secret = payment_intent&.client_secret
+        stripe_record_payment_intent.confirmation_method = payment_intent.confirmation_method
+        stripe_record_payment_intent.capture_method = payment_intent.capture_method
+        stripe_record_payment_intent.api_key_account = Tenant.current&.tenant_stripe_account&.stripe_account
+        stripe_record_payment_intent.save!
+
+        stripe_record_payment_intent
       elsif stripe_subscription.pending_setup_intent
         # SetupIntent が存在する場合
         setup_intent = stripe_subscription.pending_setup_intent
@@ -125,27 +140,38 @@ module UserStripe
         stripe_record_subscription.pending_setup_intent = stripe_record_setup_intent
 
         stripe_record_subscription.save!
+        stripe_record_setup_intent
       else
         raise Exceptions::Payment::IntentNotFound, 'PaymentIntent or SetupIntent not found'
       end
     end
 
-    def create_contract(user:, stripe_record_subscription:, membership_plan:)
+    def create_contract(user:, stripe_record_subscription:, membership_plan:, chargeable:)
       contract = Memberships::Contract.create!(
         user:,
         status: 'pending',
       )
-      # billing_profiles作成
-      Memberships::BillingProfile.create!(
+      # transactions作成
+      Payment::Transaction.create!(
         user:,
-        membership_plan:,
         membership_contract: contract,
         payment_type: 'credit_card',
         payment_provider: 'stripe',
-        external_id: stripe_record_subscription.remote_id,
-        chargeable: stripe_record_subscription,
+        external_id: chargeable.remote_id,
+        chargeable: chargeable,
         status: 'pending',
         recurrence: true,
+      )
+      Payment::Subscription.create!(
+        user:,
+        membership_contract: contract,
+        subscribable: stripe_record_subscription,
+      )
+      Memberships::ContractTerm.create!(
+        user:,
+        membership_contract: contract,
+        membership_plan:,
+        status: 'current',
       )
 
       contract

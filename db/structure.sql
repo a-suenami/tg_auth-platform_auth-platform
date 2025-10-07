@@ -216,9 +216,9 @@ CREATE TABLE public.memberships__contract_terms (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
-    contract_id uuid NOT NULL,
+    membership_contract_id uuid NOT NULL,
     membership_plan_id uuid NOT NULL,
-    status character varying DEFAULT 'active'::character varying NOT NULL,
+    status character varying NOT NULL,
     start_at timestamp(6) without time zone,
     end_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
@@ -2587,10 +2587,10 @@ CREATE UNIQUE INDEX index_login_spa_applications_on_uid ON public.login_spa_appl
 
 
 --
--- Name: index_memberships__contract_terms_on_contract_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_memberships__contract_terms_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__contract_terms_on_contract_id ON public.memberships__contract_terms USING btree (contract_id);
+CREATE INDEX index_memberships__contract_terms_on_membership_contract_id ON public.memberships__contract_terms USING btree (membership_contract_id);
 
 
 --
@@ -3467,7 +3467,7 @@ ALTER TABLE ONLY public.login_spa_applications
 --
 
 ALTER TABLE ONLY public.memberships__contract_terms
-    ADD CONSTRAINT fk_memberships__contract_terms_contracts FOREIGN KEY (contract_id) REFERENCES public.memberships__contracts(id);
+    ADD CONSTRAINT fk_memberships__contract_terms_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.memberships__contracts(id);
 
 
 --

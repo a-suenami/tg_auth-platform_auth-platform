@@ -416,11 +416,20 @@ class Payment::Subscription
   end
 
   module GeneratedAssociationMethods
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Contract) }
+    def build_membership_contract(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Contract) }
+    def create_membership_contract(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Contract) }
+    def create_membership_contract!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant(*args, &blk); end
@@ -434,6 +443,24 @@ class Payment::Subscription
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user!(*args, &blk); end
 
+    sig { returns(T.nilable(::Memberships::Contract)) }
+    def membership_contract; end
+
+    sig { params(value: T.nilable(::Memberships::Contract)).void }
+    def membership_contract=(value); end
+
+    sig { returns(T::Boolean) }
+    def membership_contract_changed?; end
+
+    sig { returns(T::Boolean) }
+    def membership_contract_previously_changed?; end
+
+    sig { returns(T.nilable(::Memberships::Contract)) }
+    def reload_membership_contract; end
+
+    sig { returns(T.untyped) }
+    def reload_subscribable; end
+
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
 
@@ -441,10 +468,28 @@ class Payment::Subscription
     def reload_user; end
 
     sig { void }
+    def reset_membership_contract; end
+
+    sig { void }
+    def reset_subscribable; end
+
+    sig { void }
     def reset_tenant; end
 
     sig { void }
     def reset_user; end
+
+    sig { returns(T.untyped) }
+    def subscribable; end
+
+    sig { params(value: T.untyped).void }
+    def subscribable=(value); end
+
+    sig { returns(T::Boolean) }
+    def subscribable_changed?; end
+
+    sig { returns(T::Boolean) }
+    def subscribable_previously_changed?; end
 
     sig { returns(T.nilable(::Tenant)) }
     def tenant; end

@@ -448,6 +448,9 @@ class Memberships::Contract
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ContractTerm) }
     def build_current_contract_term(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Subscription) }
+    def build_payment_subscription(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
 
@@ -476,6 +479,12 @@ class Memberships::Contract
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::ContractTerm) }
     def create_current_contract_term!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Subscription) }
+    def create_payment_subscription(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Subscription) }
+    def create_payment_subscription!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant(*args, &blk); end
@@ -515,8 +524,31 @@ class Memberships::Contract
     sig { params(value: T::Enumerable[::Memberships::User]).void }
     def membership_users=(value); end
 
+    sig { returns(T.nilable(::Payment::Subscription)) }
+    def payment_subscription; end
+
+    sig { params(value: T.nilable(::Payment::Subscription)).void }
+    def payment_subscription=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def payment_transaction_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def payment_transaction_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `Memberships::Contract` class because it declared `has_many :payment_transactions`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Payment::Transaction::PrivateCollectionProxy) }
+    def payment_transactions; end
+
+    sig { params(value: T::Enumerable[::Payment::Transaction]).void }
+    def payment_transactions=(value); end
+
     sig { returns(T.nilable(::Memberships::ContractTerm)) }
     def reload_current_contract_term; end
+
+    sig { returns(T.nilable(::Payment::Subscription)) }
+    def reload_payment_subscription; end
 
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
@@ -529,6 +561,9 @@ class Memberships::Contract
 
     sig { void }
     def reset_current_contract_term; end
+
+    sig { void }
+    def reset_payment_subscription; end
 
     sig { void }
     def reset_tenant; end
@@ -550,20 +585,6 @@ class Memberships::Contract
 
     sig { returns(T::Boolean) }
     def tenant_previously_changed?; end
-
-    sig { returns(T::Array[T.untyped]) }
-    def transaction_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def transaction_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `Memberships::Contract` class because it declared `has_many :transactions`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Payment::Transaction::PrivateCollectionProxy) }
-    def transactions; end
-
-    sig { params(value: T::Enumerable[::Payment::Transaction]).void }
-    def transactions=(value); end
 
     sig { returns(T.nilable(::Memberships::ContractTerm)) }
     def upcoming_contract_term; end

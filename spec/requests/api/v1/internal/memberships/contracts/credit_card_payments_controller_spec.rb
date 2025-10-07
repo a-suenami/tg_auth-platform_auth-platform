@@ -109,9 +109,47 @@ RSpec.shared_context 'stripe api mocks' do
     )
     # rubocop:enable RSpec/VerifiedDoubles
     allow(Stripe::Subscription).to receive_messages(create: mock_stripe_subscription, retrieve: mock_stripe_subscription, update: mock_stripe_subscription)
+    # Invoice.retrieve で返すオブジェクトに payments.data.first.payment.payment_intent を持たせる
     mock_stripe_invoice = instance_double(Stripe::Invoice)
+    # PaymentIntent の必要最小限フィールドを実体で用意（Sorbet型チェック対応）
+    mock_payment_intent = Stripe::PaymentIntent.construct_from(
+      {
+        id: 'pi_test123',
+        amount: 500,
+        currency: 'jpy',
+        status: 'requires_confirmation',
+        customer: 'cus_test123',
+        payment_method: 'pm_test123',
+        payment_method_configuration_details: nil,
+        payment_method_options: { card: { request_three_d_secure: 'automatic' } },
+        cancellation_reason: nil,
+        description: 'Subscription creation',
+        metadata: {},
+        next_action: nil,
+        on_behalf_of: nil,
+        application_fee_amount: nil,
+        transfer_data: nil,
+        transfer_group: nil,
+        created: Time.current.to_i,
+        canceled_at: nil,
+        confirmation_method: 'automatic',
+        capture_method: 'automatic',
+        client_secret: 'pi_test123_secret',
+      },
+    )
+
+    # payments のネスト構造
+    payments_item_payment = double('payment', payment_intent: mock_payment_intent)
+    payments_item = double('invoice_payment', payment: payments_item_payment)
+    payments_list = double('payments', data: [payments_item])
+
     # rubocop:disable RSpec/VerifiedDoubles
-    allow(mock_stripe_invoice).to receive_messages(id: 'in_test123', status: 'open', confirmation_secret: double('confirmation_secret', client_secret: 'pi_test123_secret'))
+    allow(mock_stripe_invoice).to receive_messages(
+      id: 'in_test123',
+      status: 'open',
+      confirmation_secret: double('confirmation_secret', client_secret: 'pi_test123_secret'),
+      payments: payments_list,
+    )
     # rubocop:enable RSpec/VerifiedDoubles
     allow(Stripe::Invoice).to receive(:retrieve).and_return(mock_stripe_invoice)
     mock_stripe_setup_intent = instance_double(Stripe::SetupIntent)
@@ -187,9 +225,9 @@ RSpec.describe '[ credit card payments API ]' do
           json_response = response.parsed_body
           expect(json_response['id']).to be_present
           expect(json_response['status']).to eq('pending')
-          expect(json_response['transactions']).to be_present
-          expect(json_response['transactions'].first['payment_type']).to eq('credit_card')
-          expect(json_response['transactions'].first['payment_provider']).to eq('stripe')
+          expect(json_response['payment_transactions']).to be_present
+          expect(json_response['payment_transactions'].first['payment_type']).to eq('credit_card')
+          expect(json_response['payment_transactions'].first['payment_provider']).to eq('stripe')
         end
 
         it 'creates memberships_user with correct status' do
@@ -221,18 +259,14 @@ RSpec.describe '[ credit card payments API ]' do
           contract_term = contract.current_contract_term
           expect(contract_term.user).to eq(current_user)
           expect(contract_term.membership_plan).to eq(leveled_membership_plan_platinum)
-          expect(contract_term.payment_type).to eq('credit_card')
-          expect(contract_term.payment_provider).to eq('stripe')
-          expect(contract_term.status).to eq('pending')
-          expect(contract_term.recurrence).to be true
         end
 
         it 'returns correct response format' do
           is_expected.to eq 201
           json_response = response.parsed_body
-          expect(json_response).to include('id', 'status', 'created_at', 'updated_at', 'transactions')
-          expect(json_response['transactions']).to be_an(Array)
-          expect(json_response['transactions'].first).to include('id', 'payment_type', 'payment_provider', 'membership_contract_id')
+          expect(json_response).to include('id', 'status', 'created_at', 'updated_at', 'payment_transactions')
+          expect(json_response['payment_transactions']).to be_an(Array)
+          expect(json_response['payment_transactions'].first).to include('id', 'payment_type', 'payment_provider', 'membership_contract_id')
         end
       end
 
@@ -315,9 +349,9 @@ is_active: true,)
 
 
           contract = Memberships::Contract.find(body_hash['id'])
-          contract.transactions.first.chargeable
+          contract.payment_transactions.first.chargeable
 
-          expect(body_hash['transactions'][0]['chargeable']['pending_setup_intent']).to be_present
+          expect(body_hash['payment_transactions'][0]['chargeable']['client_secret']).to be_present
         end
       end
 

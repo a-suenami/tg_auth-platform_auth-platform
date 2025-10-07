@@ -8,6 +8,12 @@ class Memberships::ContractTerm < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :user, class_name: '::User'
-  belongs_to :contract, class_name: 'Memberships::Contract'
+  belongs_to :membership_contract, class_name: 'Memberships::Contract'
   belongs_to :membership_plan, class_name: 'Memberships::Plan'
+
+  enum status: {
+    current: 'current',
+    upcoming: 'upcoming',
+    closed: 'closed',
+  }
 end

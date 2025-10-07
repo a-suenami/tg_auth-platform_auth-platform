@@ -118,14 +118,14 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   create_table "memberships__contract_terms", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップ契約の詳細,変更履歴", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
-    t.uuid "contract_id", null: false
+    t.uuid "membership_contract_id", null: false
     t.uuid "membership_plan_id", null: false
-    t.string "status", default: "active", null: false, comment: "ステータス"
+    t.string "status", null: false, comment: "ステータス"
     t.datetime "start_at", comment: "開始日時"
     t.datetime "end_at", comment: "終了日時"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["contract_id"], name: "index_memberships__contract_terms_on_contract_id"
+    t.index ["membership_contract_id"], name: "index_memberships__contract_terms_on_membership_contract_id"
     t.index ["membership_plan_id"], name: "index_memberships__contract_terms_on_membership_plan_id"
     t.index ["tenant_id"], name: "index_memberships__contract_terms_on_tenant_id"
     t.index ["user_id"], name: "index_memberships__contract_terms_on_user_id"
@@ -883,7 +883,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "login_spa_applications", "tenants", name: "fk_login_spa_applications_tenants"
   add_foreign_key "memberships", "memberships__groups", column: "membership_group_id", name: "fk_memberships_groups"
   add_foreign_key "memberships", "tenants", name: "fk_memberships_tenants"
-  add_foreign_key "memberships__contract_terms", "memberships__contracts", column: "contract_id", name: "fk_memberships__contract_terms_contracts"
+  add_foreign_key "memberships__contract_terms", "memberships__contracts", column: "membership_contract_id", name: "fk_memberships__contract_terms_contracts"
   add_foreign_key "memberships__contract_terms", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__contract_terms_plans"
   add_foreign_key "memberships__contract_terms", "tenants", name: "fk_memberships__contract_terms_tenants"
   add_foreign_key "memberships__contract_terms", "users", name: "fk_memberships__contract_terms_users"
