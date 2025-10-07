@@ -5,11 +5,6 @@
 # ==============================================================================
 module Memberships
   class BaseService < ::BaseService
-    def stripe_api_key_config
-      { api_key: Tenant.current&.tenant_stripe_account&.stripe_account&.api_key&.secret_key }
-    end
-
-
     def fetch_constants
       @tax_rate_id = Tenant.current&.tenant_stripe_account&.tax_rate_id
     end

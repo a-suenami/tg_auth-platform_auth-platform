@@ -1172,6 +1172,7 @@ CREATE TABLE public.stripe_record__payment_intents (
     user_id uuid NOT NULL,
     invoice_id uuid,
     invoice_type character varying,
+    latest_charge_id uuid,
     currency character varying,
     amount integer,
     status character varying,
@@ -1212,6 +1213,13 @@ COMMENT ON COLUMN public.stripe_record__payment_intents.remote_id IS 'Stripe の
 --
 
 COMMENT ON COLUMN public.stripe_record__payment_intents.invoice_id IS 'subscription or charge';
+
+
+--
+-- Name: COLUMN stripe_record__payment_intents.latest_charge_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.stripe_record__payment_intents.latest_charge_id IS 'latest charge';
 
 
 --
@@ -3004,6 +3012,13 @@ CREATE INDEX index_stripe_record__payment_intents_on_api_key_account_id ON publi
 --
 
 CREATE INDEX index_stripe_record__payment_intents_on_connect_account_id ON public.stripe_record__payment_intents USING btree (connect_account_id);
+
+
+--
+-- Name: index_stripe_record__payment_intents_on_latest_charge_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__payment_intents_on_latest_charge_id ON public.stripe_record__payment_intents USING btree (latest_charge_id);
 
 
 --

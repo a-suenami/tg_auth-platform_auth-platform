@@ -8,6 +8,7 @@ create_table :stripe_record__payment_intents, force: :cascade, id: :uuid, defaul
 
   t.references :user,          type: :uuid, null: false, index: true, foreign_key: { name: :fk_stripe_record_payment_intents__users }
   t.references :invoice, type: :uuid, null: true, polymorphic: true, comment: 'subscription or charge'
+  t.references :latest_charge, type: :uuid, null: true, comment: 'latest charge'
 
   t.string  :currency
   t.integer :amount

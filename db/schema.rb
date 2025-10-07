@@ -512,6 +512,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "user_id", null: false
     t.uuid "invoice_id", comment: "subscription or charge"
     t.string "invoice_type"
+    t.uuid "latest_charge_id", comment: "latest charge"
     t.string "currency"
     t.integer "amount"
     t.string "status"
@@ -540,6 +541,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["api_key_account_id"], name: "index_stripe_record__payment_intents_on_api_key_account_id"
     t.index ["connect_account_id"], name: "index_stripe_record__payment_intents_on_connect_account_id"
     t.index ["invoice_type", "invoice_id"], name: "idx_on_invoice_type_invoice_id_19d26676ac"
+    t.index ["latest_charge_id"], name: "index_stripe_record__payment_intents_on_latest_charge_id"
     t.index ["remote_id"], name: "idx_stripe_record_payment_intent_remote_id_uniq", unique: true
     t.index ["tenant_id", "remote_id"], name: "index_stripe_record_payment_intents_on_tenant_and_remote_id", unique: true
     t.index ["tenant_id"], name: "index_stripe_record__payment_intents_on_tenant_id"

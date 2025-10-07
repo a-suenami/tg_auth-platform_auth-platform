@@ -34,7 +34,11 @@ Rails.application.routes.draw do
             end
           end
           namespace :contracts do
-            resources :credit_card_payments, only: [:create]
+            resources :credit_card_payments, only: [:create] do
+              collection do
+                post :complete
+              end
+            end
           end
         end
       end
