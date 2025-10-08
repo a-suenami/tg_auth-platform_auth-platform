@@ -36,7 +36,7 @@ Rails.application.routes.draw do
           namespace :contracts do
             resources :credit_card_payments, only: [:create] do
               collection do
-                post :complete
+                post '/:contract_id/complete', to: 'credit_card_payments#complete'
               end
             end
           end

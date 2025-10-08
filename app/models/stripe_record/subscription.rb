@@ -17,7 +17,7 @@ class StripeRecord
     has_many :invoices, inverse_of: :chargeable
     has_many :subscription_items, class_name: 'StripeRecord::SubscriptionItem', dependent: :destroy
 
-    has_many :transactions, inverse_of: :chargeable, dependent: :nullify, class_name: 'Payment::Transaction'
+    has_many :payment_subscriptions, inverse_of: :subscribable, dependent: :nullify, class_name: 'Payment::Transaction'
     # transactionの中でもphaseがcurrentのものを取得する
     has_one :current_transaction, -> { where(phase: :current) }, class_name: 'Payment::Transaction', inverse_of: :chargeable, dependent: :nullify
     has_one :upcoming_transaction, -> { where(phase: :upcoming) }, class_name: 'Payment::Transaction', inverse_of: :chargeable, dependent: :nullify
@@ -50,9 +50,10 @@ class StripeRecord
         self.update!(status: stripe_subscription.status)
 
         if stripe_subscription.status == 'canceled'
-          subscription&.update(expires_at: Time.zone.at(stripe_subscription.canceled_at))
+          self&.update(current_period_end: Time.zone.at(stripe_subscription.canceled_at))
         else
-          subscription&.update(expires_at: Time.zone.at(stripe_subscription.current_period_end))
+          current_period_end = stripe_subscription.items.data.first.current_period_end
+          self&.update(current_period_end: Time.zone.at(current_period_end))
         end
 
         stripe_subscription
@@ -63,7 +64,7 @@ class StripeRecord
       return @stripe_subscription if @stripe_subscription.present?
 
       @stripe_subscription ||= Stripe::Subscription.retrieve(
-        { id: self.stripe_subscription_id, expand: ['latest_invoice.confirmation_secret', 'pending_setup_intent'] },
+        { id: self.remote_id, expand: ['latest_invoice.confirmation_secret', 'pending_setup_intent'] },
         AppStripe.configuration,
       )
 

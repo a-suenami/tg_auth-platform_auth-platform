@@ -54,8 +54,7 @@ module API::V1::Internal::Memberships::Contracts
       end
 
       # 成功していれば契約完了処理
-      stripe_record_subscription = contract.current_billing_profile&.chargeable
-      UserStripe::CompleteContractService.new.execute(contract, stripe_record_subscription)
+      UserStripe::CompleteContractService.new.execute(contract)
 
       render json: Memberships::ContractBlueprint.render(contract.reload, view: :detailed), status: :ok
     end
