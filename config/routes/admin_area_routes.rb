@@ -18,9 +18,7 @@ Rails.application.routes.draw do
     end
 
     resources :templates, only: [:index, :new, :create, :show] do
-      member do
-        put 'mail/draft', to: 'templates#update_mail_draft', as: :mail_draft
-      end
+      resource :mail_template, only: [:edit, :update]
     end
   end
 end

@@ -28,7 +28,7 @@
             h4 = @mail_template.title
             p.uk-text-small.uk-text-muted = @mail_template.body
             .uk-margin-top
-              button.uk-button.uk-button-default.uk-button-small uk-toggle="target: #mail-template-modal" 編集する
+              a.uk-button.uk-button-default.uk-button-small href=edit_admin_area_template_mail_template_path(@template) 編集する
           = render 'change_history'
 
         / Right: Metadata & History sidebar
@@ -37,4 +37,4 @@
     - else
       / Empty state with create button
       .uk-position-center.uk-margin
-        button.uk-button.uk-button-primary uk-toggle="target: #mail-template-modal" メールテンプレートを新規作成する
+        a.uk-button.uk-button-primary href=edit_admin_area_template_mail_template_path(@template) メールテンプレートを新規作成する
