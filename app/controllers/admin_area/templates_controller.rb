@@ -53,87 +53,36 @@ module AdminArea
       MOCK_TEMPLATES_DATA.map { |data| MockTemplate.new(**data) }
     end
 
-    def find_mock_template(id)
-      template_data = MOCK_TEMPLATES_DATA.find { |t| t[:id] == id.to_i }
-      template_data ||= MOCK_TEMPLATES_DATA.first
-      MockTemplate.new(**template_data)
-    end
-
-    def find_mock_mail_template(id)
-      # Mock different states based on template_id
-      case id.to_i
-      when 1
-        MockMailTemplate.new(
-          title: 'Welcome Email',
-          body: 'Hello {{user_name}}, welcome!',
-          public_started_at: nil, # Draft
-          created_by: 'Yamada TARO',
-          updated_by: 'Yamada TARO',
-          updated_at: '2025/09/27 12:00',
-        )
-      when 3
-        MockMailTemplate.new(
-          title: 'Campaign Email',
-          body: 'Special campaign for you!',
-          public_started_at: Time.zone.parse('2025/09/29 12:00'), # Scheduled
-          created_by: 'Yamada TARO',
-          updated_by: 'Yamada TARO',
-          updated_at: '2025/09/27 12:00',
-        )
-      when 4
-        MockMailTemplate.new(
-          title: 'Newsletter',
-          body: 'Monthly newsletter content',
-          public_started_at: Time.zone.parse('2025/09/15 10:00'), # Published
-          created_by: 'Yamada TARO',
-          updated_by: 'Yamada TARO',
-          updated_at: '2025/09/15 10:00',
-        )
+    def format_change_history(histories)
+      histories.map do |history|
+        {
+          icon: event_icon(history.event_type),
+          action: event_action(history.event_type),
+          user: history.payload['user_name'] || history.payload[:user_name] || 'Unknown',
+          timestamp: history.created_at
+        }
       end
     end
 
-    def determine_state(mail_template)
-      return :no_template unless mail_template
-      return :draft if mail_template.public_started_at.nil?
-      return :scheduled if mail_template.public_started_at > Time.current
-
-      :published
-    end
-
-    def mock_change_history(id)
-      case id.to_i
-      when 1 # Draft
-        [
-          { icon: '✏️', action: 'が下書きを編集しました', user: 'Yamada TARO', timestamp: '2025/09/18 12:00' },
-          { icon: '📄', action: 'がメールテンプレートを作成しました', user: 'Yamada TARO', timestamp: '2025/09/18 12:00' },
-        ]
-      when 3 # Scheduled
-        [
-          { icon: '📅', action: 'が公開予約をしました', user: 'Yamada TARO', timestamp: '2025/09/19 12:00' },
-          { icon: '✏️', action: 'が下書きを編集しました', user: 'Yamada TARO', timestamp: '2025/09/18 12:00' },
-          { icon: '📄', action: 'が下書きを作成しました', user: 'Yamada TARO', timestamp: '2025/09/18 12:00' },
-        ]
-      when 4 # Published
-        [
-          { icon: '🌐', action: 'が公開しました', user: 'Yamada TARO', timestamp: '2025/09/15 10:00' },
-          { icon: '📄', action: 'が下書きを作成しました', user: 'Yamada TARO', timestamp: '2025/09/15 09:00' },
-        ]
-      else
-        []
+    def event_icon(event_type)
+      case event_type
+      when 'draft_updated' then '✏️'
+      when 'published' then '🌐'
+      when 'scheduled', 'rescheduled' then '📅'
+      when 'canceled' then '❌'
+      else '📝'
       end
     end
 
-    def mock_pagination
-      MockPagination.new(
-        page: 1,
-        total_count: 999,
-        pages: 20,
-        items: 50,
-        from: 1,
-        to: 50,
-        prev: nil,
-        next: 2,
-      )
+    def event_action(event_type)
+      case event_type
+      when 'draft_updated' then 'が下書きを編集しました'
+      when 'published' then 'が公開しました'
+      when 'scheduled' then 'が公開予約をしました'
+      when 'rescheduled' then 'が公開予約を変更しました'
+      when 'canceled' then 'が公開をキャンセルしました'
+      else 'が操作を実行しました'
+      end
     end
   end
 end

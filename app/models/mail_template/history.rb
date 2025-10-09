@@ -17,7 +17,6 @@ class MailTemplate::History < ApplicationRecord
   # Event types
   EVENT_TYPES = T.let(
     {
-      draft_created: 'draft_created',
       draft_updated: 'draft_updated',
       published: 'published',
       scheduled: 'scheduled',

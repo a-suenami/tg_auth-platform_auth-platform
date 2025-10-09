@@ -10,6 +10,6 @@
           .uk-text-small
             = event[:user]
             = event[:action]
-          .uk-text-meta.uk-text-small = event[:timestamp]
+          .uk-text-meta.uk-text-small = local_time(event[:timestamp])
       - unless event == @change_history.last
         hr.uk-margin-small

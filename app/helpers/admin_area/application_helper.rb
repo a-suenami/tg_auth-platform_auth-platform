@@ -19,6 +19,26 @@ module AdminArea
       cookies[:page]
     end
 
+    # Display time in client's local timezone
+    # Usage: <%= local_time(user.created_at) %>
+    # Usage: <%= local_time(user.created_at, format: 'short') %>
+    def local_time(time, format: 'short')
+      return '-' if time.nil?
+
+      # Output timestamp and let JavaScript handle formatting
+      timestamp = time.to_i * 1000  # JavaScript uses milliseconds
+
+      content_tag(:time,
+        time.in_time_zone.strftime('%Y/%m/%d %H:%M'),  # Fallback for no-JS
+        datetime: time.iso8601,
+        data: {
+          timestamp: timestamp,
+          format: format
+        },
+        class: 'js-local-time'
+      )
+    end
+
     private
 
     def class_of(key)

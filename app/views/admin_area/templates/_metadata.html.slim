@@ -1,27 +1,43 @@
-.uk-card.uk-card-default.uk-card-body
-  / Status Badge
-  - case @template_state
-  - when :draft
-    span.uk-label.uk-label-primary 下書き
-  - when :scheduled
-    span.uk-label.uk-label-warning 公開予約中
-  - when :published
-    span.uk-label.uk-label-success 公開中
+/ Draft Card (show only if no version yet OR different from latest version)
+- show_draft = @mail_template && (!@template.latest_version || @template_state == :draft)
+- if show_draft
+  .uk-card.uk-card-default.uk-card-body
+    .uk-flex.uk-flex-column style="gap: 0.5rem"
+      h4.uk-card-title.uk-margin-remove 下書き
+      span.uk-label.uk-label-primary style="width: fit-content" 編集中
 
-  / Metadata Fields
-  .uk-margin-top.uk-margin-small-top
-    .uk-margin-small
-      .uk-text-small.uk-text-muted 公開日時
-      .uk-text-bold = @mail_template.public_started_at&.strftime('%Y/%m/%d %H:%M') || '未設定'
+    .uk-margin-top
+      .uk-margin-small
+        .uk-text-small.uk-text-muted タイトル
+        .uk-text-bold = @mail_template.title.present? ? @mail_template.title : '-'
 
-    .uk-margin-small
-      .uk-text-small.uk-text-muted 公開者
-      .uk-text-bold = @mail_template.created_by || '-'
+      .uk-margin-small
+        .uk-text-small.uk-text-muted 最終更新日時
+        .uk-text-bold = local_time(@mail_template.updated_at)
 
-    .uk-margin-small
-      .uk-text-small.uk-text-muted 最終更新日時
-      .uk-text-bold = @mail_template.updated_at
+/ Published Version Card
+- if @template.latest_version
+  .uk-card.uk-card-default.uk-card-body class=(@mail_template && show_draft ? 'uk-margin-top' : '')
+    .uk-flex.uk-flex-column style="gap: 0.5rem"
+      h4.uk-card-title.uk-margin-remove 公開中のバージョン
+      - if @template.latest_version.public_started_at > Time.current
+        span.uk-label.uk-label-warning style="width: fit-content" 公開予約中
+      - else
+        span.uk-label.uk-label-success style="width: fit-content" 公開中
 
-    .uk-margin-small
-      .uk-text-small.uk-text-muted 最終更新者
-      .uk-text-bold = @mail_template.updated_by
+    .uk-margin-top
+      .uk-margin-small
+        .uk-text-small.uk-text-muted バージョン
+        .uk-text-bold v#{@template.latest_version.version}
+
+      .uk-margin-small
+        .uk-text-small.uk-text-muted タイトル
+        .uk-text-bold = @template.latest_version.title.present? ? @template.latest_version.title : '-'
+
+      .uk-margin-small
+        .uk-text-small.uk-text-muted 公開日時
+        .uk-text-bold = local_time(@template.latest_version.public_started_at)
+
+      .uk-margin-small
+        .uk-text-small.uk-text-muted 公開者
+        .uk-text-bold = @template.latest_version.published_by || '-'
