@@ -1,0 +1,42 @@
+- case @template_state
+- when :draft
+  .uk-inline
+    button.uk-button.uk-button-primary type="button"
+      | 公開する
+      span uk-icon="icon: triangle-down"
+    div uk-dropdown="mode: click; pos: bottom-justify"
+      ul.uk-nav.uk-dropdown-nav
+        li
+          = link_to '#', onclick: "UIkit.modal('#mail-template-modal').show(); return false;" do
+            | 下書きを編集する
+        li
+          = link_to '#', onclick: "alert('Step 3: Publish now'); return false;" do
+            | 公開する
+        li
+          = link_to '#', onclick: "alert('Step 3: Schedule publish'); return false;" do
+            | 公開予約設定
+
+- when :scheduled
+  .uk-inline
+    button.uk-button.uk-button-warning type="button"
+      | 公開設定を編集する
+      span uk-icon="icon: triangle-down"
+    div uk-dropdown="mode: click; pos: bottom-justify"
+      ul.uk-nav.uk-dropdown-nav
+        li
+          = link_to '#', onclick: "alert('Step 3: Edit schedule'); return false;" do
+            | 公開設定を編集する
+        li
+          = link_to '#', onclick: "if(confirm('公開予約を取り消しますか？')) alert('Cancelled'); return false;" do
+            | 公開予約を取り消す
+
+- when :published
+  .uk-inline
+    button.uk-button.uk-button-success type="button"
+      | 公開中
+      span uk-icon="icon: triangle-down"
+    div uk-dropdown="mode: click; pos: bottom-justify"
+      ul.uk-nav.uk-dropdown-nav
+        li
+          = link_to '#', onclick: "UIkit.modal('#mail-template-modal').show(); return false;" do
+            | 編集する
