@@ -23,11 +23,12 @@ html lang='ja'
                   ul.uk-nav-sub
                     li
                       = link_to '会員ID一覧', admin_area_users_path
-                / ul.uk-parent
-                  / li.uk-parent 配信
-                  / ul.uk-nav-sub
-                    / li
-                      / = link_to 'テンプレート', admin_area_templates_path
+                - unless Rails.env.production?
+                  ul.uk-parent
+                    li.uk-parent 配信
+                    ul.uk-nav-sub
+                      li
+                        = link_to 'テンプレート', admin_area_templates_path
             .tg-sidebar-section.bottom
               ul.uk-nav.uk-nav-default
                 li アカウント
