@@ -34,7 +34,7 @@
 
     .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-top
       .uk-text-small.uk-text-muted
-        | #{@pagy.from}-#{@pagy.to} / #{@pagy.count}
+        | #{@pagy.from}-#{@pagy.to} / #{@pagy.total_count}
       .uk-flex.uk-flex-middle
         button.uk-button.uk-button-default.uk-button-small disabled=(@pagy.prev.nil?) onclick="console.log('Previous page')"
           | < 前のページ
