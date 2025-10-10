@@ -17,12 +17,8 @@ module AdminArea
       @template = find_mock_template(params[:id])
       @mail_template = find_mock_mail_template(params[:id])
       @has_mail_template = @mail_template.present?
-      @template_state = determine_state(@mail_template) if @has_mail_template
-      @change_history = mock_change_history(params[:id]) if @has_mail_template
-    end
-
-    def new
-      # Step 1: Just render form, no model needed yet
+      @template_state = @template.state
+      @histories = @template.mail_template_histories.ordered if @has_mail_template
     end
 
     def create
@@ -51,38 +47,6 @@ module AdminArea
 
     def mock_templates
       MOCK_TEMPLATES_DATA.map { |data| MockTemplate.new(**data) }
-    end
-
-    def format_change_history(histories)
-      histories.map do |history|
-        {
-          icon: event_icon(history.event_type),
-          action: event_action(history.event_type),
-          user: history.payload['user_name'] || history.payload[:user_name] || 'Unknown',
-          timestamp: history.created_at
-        }
-      end
-    end
-
-    def event_icon(event_type)
-      case event_type
-      when 'draft_updated' then '✏️'
-      when 'published' then '🌐'
-      when 'scheduled', 'rescheduled' then '📅'
-      when 'canceled' then '❌'
-      else '📝'
-      end
-    end
-
-    def event_action(event_type)
-      case event_type
-      when 'draft_updated' then 'が下書きを編集しました'
-      when 'published' then 'が公開しました'
-      when 'scheduled' then 'が公開予約をしました'
-      when 'rescheduled' then 'が公開予約を変更しました'
-      when 'canceled' then 'が公開をキャンセルしました'
-      else 'が操作を実行しました'
-      end
     end
   end
 end

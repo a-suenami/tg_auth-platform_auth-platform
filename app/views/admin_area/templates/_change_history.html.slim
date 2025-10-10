@@ -2,7 +2,7 @@
   h4.uk-card-title 変更履歴
 
   .uk-margin-top
-    - @change_history.each do |event|
+    - format_change_history(@histories).each do |event|
       .uk-grid.uk-grid-small.uk-margin-small uk-grid=""
         .uk-width-auto
           .uk-text-large = event[:icon]
@@ -11,5 +11,5 @@
             = event[:user]
             = event[:action]
           .uk-text-meta.uk-text-small = local_time(event[:timestamp])
-      - unless event == @change_history.last
+      - unless event == format_change_history(@histories).last
         hr.uk-margin-small
