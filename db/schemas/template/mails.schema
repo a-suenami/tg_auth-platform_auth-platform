@@ -1,6 +1,6 @@
 create_table :template_mails, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant, type: :citext, null: false
-  t.references :template, type: :uuid, null: false, comment: 'Parent template'
+  t.references :template, type: :uuid, null: false, comment: 'Parent template', index: false
   t.string :title, comment: 'メールタイトル（現在の下書き）'
   t.text :body, comment: 'メール本文（現在の下書き）'
 

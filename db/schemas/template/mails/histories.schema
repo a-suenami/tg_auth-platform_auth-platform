@@ -8,7 +8,6 @@ create_table :template_mail_histories, force: :cascade, id: :uuid, default: -> {
 
   t.datetime :created_at, null: false
   t.index [:template_id, :created_at], name: :idx_template_mail_histories_template_created
-  t.index :version_id, name: :idx_template_mail_histories_version_id
   t.index :event_type, name: :idx_template_mail_histories_event_type
   t.index :created_at, name: :idx_template_mail_histories_created_at
 end

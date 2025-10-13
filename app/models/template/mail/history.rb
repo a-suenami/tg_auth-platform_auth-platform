@@ -9,9 +9,6 @@ class Template::Mail::History < ApplicationRecord
   belongs_to :version, class_name: 'Template::Mail::Version', optional: true
   belongs_to :actor, class_name: 'Admin', optional: true
 
-  validates :event_type, presence: true
-  validates :payload, presence: true
-
   # Event types
   EVENT_TYPES = T.let(
     {
@@ -24,6 +21,9 @@ class Template::Mail::History < ApplicationRecord
     }.freeze,
     T::Hash[Symbol, String],
   )
+
+  validates :event_type, presence: true, inclusion: { in: EVENT_TYPES.values }
+  validates :payload, presence: true
 
   scope :ordered, -> { order(created_at: :desc) }
   scope :for_template, ->(template_id) { where(template_id: template_id) }

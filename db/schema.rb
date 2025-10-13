@@ -700,7 +700,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["template_id", "created_at"], name: "idx_template_mail_histories_template_created"
     t.index ["template_id"], name: "index_template_mail_histories_on_template_id"
     t.index ["tenant_id"], name: "index_template_mail_histories_on_tenant_id"
-    t.index ["version_id"], name: "idx_template_mail_histories_version_id"
     t.index ["version_id"], name: "index_template_mail_histories_on_version_id"
   end
 
@@ -717,7 +716,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["public_started_at"], name: "idx_template_mail_versions_public_started_at"
     t.index ["published_by_id"], name: "index_template_mail_versions_on_published_by_id"
     t.index ["template_id", "version"], name: "idx_template_mail_versions_template_version", unique: true
-    t.index ["template_id"], name: "idx_template_mail_versions_template_id"
     t.index ["template_id"], name: "index_template_mail_versions_on_template_id"
     t.index ["tenant_id"], name: "index_template_mail_versions_on_tenant_id"
   end
@@ -730,7 +728,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["template_id"], name: "idx_template_mails_template_id", unique: true
-    t.index ["template_id"], name: "index_template_mails_on_template_id"
     t.index ["tenant_id"], name: "index_template_mails_on_tenant_id"
   end
 

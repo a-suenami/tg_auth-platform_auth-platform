@@ -124,6 +124,9 @@ module GeneratedUrlHelpersModule
   def authenticate_api_v1_authentication_mfa_sms_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def cancel_admin_area_template_mail_template_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def cancel_api_v1_internal_memberships_contract_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -176,9 +179,6 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def logout_sessions_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def mail_draft_admin_area_template_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_url(*args); end
@@ -275,6 +275,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def preview_ruler_area_tenant_stripe_records_products_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def publish_admin_area_template_mail_template_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def rails_info_properties_url(*args); end
@@ -401,6 +404,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenants_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def schedule_admin_area_template_mail_template_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def send_api_v1_authentication_mfa_sms_url(*args); end

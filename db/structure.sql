@@ -1,4 +1,4 @@
-\restrict FfQdEuMnj8KTIYbOga01xOSl9VW5a4lG38YgD8IhhKcneLEJhecTPLEoKPau2T1
+\restrict OjpNesLF8hH6wspsBjzRJB1aVSqpM4YFHItXKjD1FnCSvvieFhD8lXiWggdiRy4
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -2512,24 +2512,10 @@ CREATE INDEX idx_template_mail_histories_template_created ON public.template_mai
 
 
 --
--- Name: idx_template_mail_histories_version_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_template_mail_histories_version_id ON public.template_mail_histories USING btree (version_id);
-
-
---
 -- Name: idx_template_mail_versions_public_started_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_template_mail_versions_public_started_at ON public.template_mail_versions USING btree (public_started_at);
-
-
---
--- Name: idx_template_mail_versions_template_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_template_mail_versions_template_id ON public.template_mail_versions USING btree (template_id);
 
 
 --
@@ -3349,13 +3335,6 @@ CREATE INDEX index_template_mail_versions_on_template_id ON public.template_mail
 --
 
 CREATE INDEX index_template_mail_versions_on_tenant_id ON public.template_mail_versions USING btree (tenant_id);
-
-
---
--- Name: index_template_mails_on_template_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_template_mails_on_template_id ON public.template_mails USING btree (template_id);
 
 
 --
@@ -4295,7 +4274,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict FfQdEuMnj8KTIYbOga01xOSl9VW5a4lG38YgD8IhhKcneLEJhecTPLEoKPau2T1
+\unrestrict OjpNesLF8hH6wspsBjzRJB1aVSqpM4YFHItXKjD1FnCSvvieFhD8lXiWggdiRy4
 
 SET search_path TO "$user", public;
 
