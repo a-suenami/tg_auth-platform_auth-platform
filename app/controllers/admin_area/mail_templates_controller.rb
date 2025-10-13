@@ -7,16 +7,18 @@ module AdminArea
     before_action :set_template
 
     def edit
-      @mail_template = @template.mail_template
+      @mail_template = @template.template_mail
 
       # Build new mail_template if not exists (not saved yet)
-      @edit ||= @template.build_mail_template(
-        tenant_id: RequestStore.store[:current_tenant],
-      )
+      unless @mail_template
+        @mail_template = @template.build_template_mail(
+          tenant_id: RequestStore.store[:current_tenant]
+        )
+      end
     end
 
     def update
-      mail_template = @template.mail_template
+      mail_template = @template.template_mail
       is_new = mail_template.nil?
 
       # Create or update mail_template
@@ -26,7 +28,7 @@ module AdminArea
           body: params[:body],
         )
       else
-        @template.create_mail_template!(
+        @template.create_template_mail!(
           tenant_id: RequestStore.store[:current_tenant],
           title: params[:title],
           body: params[:body],
@@ -47,7 +49,7 @@ module AdminArea
     end
 
     def set_template
-      @template = Template.includes(:mail_template).find(params[:template_id])
+      @template = Template.includes(:template_mail).find(params[:template_id])
     end
   end
 end

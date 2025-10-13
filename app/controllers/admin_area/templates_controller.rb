@@ -7,16 +7,16 @@ module AdminArea
 
     def index
       # Real data from database
-      @templates = Template.includes(:mail_template, :mail_template_versions).order(created_at: :desc)
-      @pagy = MockPagination.new(page: 1, count: @templates.count, pages: 1, items: @templates.count, from: 1, to: @templates.count, prev: nil, next: nil)
+      @templates = Template.includes(:template_mail, :template_mail_versions).order(created_at: :desc)
+      @pagy = OpenStruct.new(page: 1, count: @templates.count, pages: 1, items: @templates.count, from: 1, to: @templates.count, prev: nil, next: nil)
     end
 
     def show
-      @template = Template.includes(:mail_template, :mail_template_histories).find(params[:id])
-      @mail_template = @template.mail_template
+      @template = Template.includes(:template_mail, :template_mail_histories).find(params[:id])
+      @mail_template = @template.template_mail
       @has_mail_template = @mail_template.present?
       @template_state = @template.state
-      @change_history = format_change_history(@template.mail_template_histories.ordered) if @has_mail_template
+      @change_history = format_change_history(@template.template_mail_histories.ordered) if @has_mail_template
     end
 
     def new
