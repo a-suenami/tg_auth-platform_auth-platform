@@ -42,7 +42,7 @@ class Template < ApplicationRecord
   sig { returns(T.nilable(Template::Mail::Version)) }
   def latest_published_version
     template_mail_versions
-      .where('public_started_at <= ?', Time.current)
+      .where('public_started_at <= :time', time: Time.current)
       .order(version: :desc)
       .first
   end

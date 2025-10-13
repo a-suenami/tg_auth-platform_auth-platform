@@ -15,5 +15,5 @@ class Template::Mail::Version < ApplicationRecord
   validates :public_started_at, presence: true
 
   scope :ordered, -> { order(version: :desc) }
-  scope :published, -> { where('public_started_at <= ?', Time.current) }
+  scope :published, -> { where('public_started_at <= :time', time: Time.current) }
 end
