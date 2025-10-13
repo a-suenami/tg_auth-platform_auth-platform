@@ -1,4 +1,4 @@
-\restrict BQujlMf9dbErK9cAK2iPAycs5czzFR8Beout0KFSjoGcGNg2FlzB6waFRfg4lRH
+\restrict FfQdEuMnj8KTIYbOga01xOSl9VW5a4lG38YgD8IhhKcneLEJhecTPLEoKPau2T1
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -152,153 +152,6 @@ CREATE TABLE public.login_spa_applications (
     sign_up_url character varying,
     redirect_url_on_password_reset character varying NOT NULL
 );
-
-
---
--- Name: mail_template_histories; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.mail_template_histories (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    template_id uuid NOT NULL,
-    version_id uuid,
-    event_type character varying NOT NULL,
-    payload jsonb DEFAULT '{}'::jsonb NOT NULL,
-    actor_id uuid,
-    created_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: COLUMN mail_template_histories.template_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_template_histories.template_id IS 'Parent template';
-
-
---
--- Name: COLUMN mail_template_histories.version_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_template_histories.version_id IS 'Mail template version (nullable)';
-
-
---
--- Name: COLUMN mail_template_histories.event_type; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_template_histories.event_type IS 'Event type: published, scheduled, rescheduled, draft_created, draft_updated';
-
-
---
--- Name: COLUMN mail_template_histories.payload; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_template_histories.payload IS 'Event metadata';
-
-
---
--- Name: COLUMN mail_template_histories.actor_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_template_histories.actor_id IS 'Admin who performed action';
-
-
---
--- Name: mail_template_versions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.mail_template_versions (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    template_id uuid NOT NULL,
-    version integer NOT NULL,
-    title character varying NOT NULL,
-    body text NOT NULL,
-    public_started_at timestamp(6) without time zone NOT NULL,
-    published_by_id uuid,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: COLUMN mail_template_versions.template_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_template_versions.template_id IS 'Parent template';
-
-
---
--- Name: COLUMN mail_template_versions.version; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_template_versions.version IS 'バージョン番号';
-
-
---
--- Name: COLUMN mail_template_versions.title; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_template_versions.title IS 'メールタイトル（スナップショット）';
-
-
---
--- Name: COLUMN mail_template_versions.body; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_template_versions.body IS 'メール本文（スナップショット）';
-
-
---
--- Name: COLUMN mail_template_versions.public_started_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_template_versions.public_started_at IS '公開開始日時';
-
-
---
--- Name: COLUMN mail_template_versions.published_by_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_template_versions.published_by_id IS '公開者（Admin）';
-
-
---
--- Name: mail_templates; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.mail_templates (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    template_id uuid NOT NULL,
-    title character varying,
-    body text,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: COLUMN mail_templates.template_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_templates.template_id IS 'Parent template';
-
-
---
--- Name: COLUMN mail_templates.title; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_templates.title IS 'メールタイトル（現在の下書き）';
-
-
---
--- Name: COLUMN mail_templates.body; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.mail_templates.body IS 'メール本文（現在の下書き）';
 
 
 --
@@ -1649,6 +1502,153 @@ COMMENT ON COLUMN public.stripe_record__trial_histories.trial_period_days IS '�
 
 
 --
+-- Name: template_mail_histories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.template_mail_histories (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    template_id uuid NOT NULL,
+    version_id uuid,
+    event_type character varying NOT NULL,
+    payload jsonb DEFAULT '{}'::jsonb NOT NULL,
+    actor_id uuid,
+    created_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN template_mail_histories.template_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mail_histories.template_id IS 'Parent template';
+
+
+--
+-- Name: COLUMN template_mail_histories.version_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mail_histories.version_id IS 'Mail template version (nullable)';
+
+
+--
+-- Name: COLUMN template_mail_histories.event_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mail_histories.event_type IS 'Event type: published, scheduled, rescheduled, draft_created, draft_updated';
+
+
+--
+-- Name: COLUMN template_mail_histories.payload; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mail_histories.payload IS 'Event metadata';
+
+
+--
+-- Name: COLUMN template_mail_histories.actor_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mail_histories.actor_id IS 'Admin who performed action';
+
+
+--
+-- Name: template_mail_versions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.template_mail_versions (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    template_id uuid NOT NULL,
+    version integer NOT NULL,
+    title character varying NOT NULL,
+    body text NOT NULL,
+    public_started_at timestamp(6) without time zone NOT NULL,
+    published_by_id uuid,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN template_mail_versions.template_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mail_versions.template_id IS 'Parent template';
+
+
+--
+-- Name: COLUMN template_mail_versions.version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mail_versions.version IS 'バージョン番号';
+
+
+--
+-- Name: COLUMN template_mail_versions.title; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mail_versions.title IS 'メールタイトル（スナップショット）';
+
+
+--
+-- Name: COLUMN template_mail_versions.body; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mail_versions.body IS 'メール本文（スナップショット）';
+
+
+--
+-- Name: COLUMN template_mail_versions.public_started_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mail_versions.public_started_at IS '公開開始日時';
+
+
+--
+-- Name: COLUMN template_mail_versions.published_by_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mail_versions.published_by_id IS '公開者（Admin）';
+
+
+--
+-- Name: template_mails; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.template_mails (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    template_id uuid NOT NULL,
+    title character varying,
+    body text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN template_mails.template_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mails.template_id IS 'Parent template';
+
+
+--
+-- Name: COLUMN template_mails.title; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mails.title IS 'メールタイトル（現在の下書き）';
+
+
+--
+-- Name: COLUMN template_mails.body; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.template_mails.body IS 'メール本文（現在の下書き）';
+
+
+--
 -- Name: templates; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1930,30 +1930,6 @@ ALTER TABLE ONLY public.login_spa_applications
 
 
 --
--- Name: mail_template_histories mail_template_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_template_histories
-    ADD CONSTRAINT mail_template_histories_pkey PRIMARY KEY (id);
-
-
---
--- Name: mail_template_versions mail_template_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_template_versions
-    ADD CONSTRAINT mail_template_versions_pkey PRIMARY KEY (id);
-
-
---
--- Name: mail_templates mail_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_templates
-    ADD CONSTRAINT mail_templates_pkey PRIMARY KEY (id);
-
-
---
 -- Name: memberships__billing_profiles memberships__billing_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2194,6 +2170,30 @@ ALTER TABLE ONLY public.stripe_record__trial_histories
 
 
 --
+-- Name: template_mail_histories template_mail_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.template_mail_histories
+    ADD CONSTRAINT template_mail_histories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: template_mail_versions template_mail_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.template_mail_versions
+    ADD CONSTRAINT template_mail_versions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: template_mails template_mails_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.template_mails
+    ADD CONSTRAINT template_mails_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: templates templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2306,62 +2306,6 @@ CREATE UNIQUE INDEX idx_contact_addresses_tenant_id_user_id_uniq ON public.conta
 --
 
 CREATE UNIQUE INDEX idx_linked_applications_tenant_user_oauth_application_uniq ON public.users__linked_applications USING btree (tenant_id, user_id, oauth_application_id);
-
-
---
--- Name: idx_mail_template_histories_created_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_mail_template_histories_created_at ON public.mail_template_histories USING btree (created_at);
-
-
---
--- Name: idx_mail_template_histories_event_type; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_mail_template_histories_event_type ON public.mail_template_histories USING btree (event_type);
-
-
---
--- Name: idx_mail_template_histories_template_created; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_mail_template_histories_template_created ON public.mail_template_histories USING btree (template_id, created_at);
-
-
---
--- Name: idx_mail_template_histories_version_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_mail_template_histories_version_id ON public.mail_template_histories USING btree (version_id);
-
-
---
--- Name: idx_mail_template_versions_public_started_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_mail_template_versions_public_started_at ON public.mail_template_versions USING btree (public_started_at);
-
-
---
--- Name: idx_mail_template_versions_template_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_mail_template_versions_template_id ON public.mail_template_versions USING btree (template_id);
-
-
---
--- Name: idx_mail_template_versions_template_version; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_mail_template_versions_template_version ON public.mail_template_versions USING btree (template_id, version);
-
-
---
--- Name: idx_mail_templates_template_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_mail_templates_template_id ON public.mail_templates USING btree (template_id);
 
 
 --
@@ -2547,6 +2491,62 @@ CREATE UNIQUE INDEX idx_stripe_record_setup_intents_remote_id_uniq ON public.str
 
 
 --
+-- Name: idx_template_mail_histories_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_template_mail_histories_created_at ON public.template_mail_histories USING btree (created_at);
+
+
+--
+-- Name: idx_template_mail_histories_event_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_template_mail_histories_event_type ON public.template_mail_histories USING btree (event_type);
+
+
+--
+-- Name: idx_template_mail_histories_template_created; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_template_mail_histories_template_created ON public.template_mail_histories USING btree (template_id, created_at);
+
+
+--
+-- Name: idx_template_mail_histories_version_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_template_mail_histories_version_id ON public.template_mail_histories USING btree (version_id);
+
+
+--
+-- Name: idx_template_mail_versions_public_started_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_template_mail_versions_public_started_at ON public.template_mail_versions USING btree (public_started_at);
+
+
+--
+-- Name: idx_template_mail_versions_template_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_template_mail_versions_template_id ON public.template_mail_versions USING btree (template_id);
+
+
+--
+-- Name: idx_template_mail_versions_template_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_template_mail_versions_template_version ON public.template_mail_versions USING btree (template_id, version);
+
+
+--
+-- Name: idx_template_mails_template_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_template_mails_template_id ON public.template_mails USING btree (template_id);
+
+
+--
 -- Name: idx_templates_tenant_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2656,69 +2656,6 @@ CREATE INDEX index_login_spa_applications_on_tenant_id ON public.login_spa_appli
 --
 
 CREATE UNIQUE INDEX index_login_spa_applications_on_uid ON public.login_spa_applications USING btree (uid);
-
-
---
--- Name: index_mail_template_histories_on_actor_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_mail_template_histories_on_actor_id ON public.mail_template_histories USING btree (actor_id);
-
-
---
--- Name: index_mail_template_histories_on_template_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_mail_template_histories_on_template_id ON public.mail_template_histories USING btree (template_id);
-
-
---
--- Name: index_mail_template_histories_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_mail_template_histories_on_tenant_id ON public.mail_template_histories USING btree (tenant_id);
-
-
---
--- Name: index_mail_template_histories_on_version_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_mail_template_histories_on_version_id ON public.mail_template_histories USING btree (version_id);
-
-
---
--- Name: index_mail_template_versions_on_published_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_mail_template_versions_on_published_by_id ON public.mail_template_versions USING btree (published_by_id);
-
-
---
--- Name: index_mail_template_versions_on_template_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_mail_template_versions_on_template_id ON public.mail_template_versions USING btree (template_id);
-
-
---
--- Name: index_mail_template_versions_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_mail_template_versions_on_tenant_id ON public.mail_template_versions USING btree (tenant_id);
-
-
---
--- Name: index_mail_templates_on_template_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_mail_templates_on_template_id ON public.mail_templates USING btree (template_id);
-
-
---
--- Name: index_mail_templates_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_mail_templates_on_tenant_id ON public.mail_templates USING btree (tenant_id);
 
 
 --
@@ -3366,6 +3303,69 @@ CREATE UNIQUE INDEX index_stripe_record_si_on_subscription_and_price ON public.s
 
 
 --
+-- Name: index_template_mail_histories_on_actor_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_template_mail_histories_on_actor_id ON public.template_mail_histories USING btree (actor_id);
+
+
+--
+-- Name: index_template_mail_histories_on_template_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_template_mail_histories_on_template_id ON public.template_mail_histories USING btree (template_id);
+
+
+--
+-- Name: index_template_mail_histories_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_template_mail_histories_on_tenant_id ON public.template_mail_histories USING btree (tenant_id);
+
+
+--
+-- Name: index_template_mail_histories_on_version_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_template_mail_histories_on_version_id ON public.template_mail_histories USING btree (version_id);
+
+
+--
+-- Name: index_template_mail_versions_on_published_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_template_mail_versions_on_published_by_id ON public.template_mail_versions USING btree (published_by_id);
+
+
+--
+-- Name: index_template_mail_versions_on_template_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_template_mail_versions_on_template_id ON public.template_mail_versions USING btree (template_id);
+
+
+--
+-- Name: index_template_mail_versions_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_template_mail_versions_on_tenant_id ON public.template_mail_versions USING btree (tenant_id);
+
+
+--
+-- Name: index_template_mails_on_template_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_template_mails_on_template_id ON public.template_mails USING btree (template_id);
+
+
+--
+-- Name: index_template_mails_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_template_mails_on_tenant_id ON public.template_mails USING btree (tenant_id);
+
+
+--
 -- Name: index_templates_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3553,78 +3553,6 @@ ALTER TABLE ONLY public.email_templates
 
 ALTER TABLE ONLY public.login_spa_applications
     ADD CONSTRAINT fk_login_spa_applications_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: mail_template_histories fk_mail_template_histories_actors; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_template_histories
-    ADD CONSTRAINT fk_mail_template_histories_actors FOREIGN KEY (actor_id) REFERENCES public.admins(id);
-
-
---
--- Name: mail_template_histories fk_mail_template_histories_templates; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_template_histories
-    ADD CONSTRAINT fk_mail_template_histories_templates FOREIGN KEY (template_id) REFERENCES public.templates(id);
-
-
---
--- Name: mail_template_histories fk_mail_template_histories_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_template_histories
-    ADD CONSTRAINT fk_mail_template_histories_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: mail_template_histories fk_mail_template_histories_versions; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_template_histories
-    ADD CONSTRAINT fk_mail_template_histories_versions FOREIGN KEY (version_id) REFERENCES public.mail_template_versions(id);
-
-
---
--- Name: mail_template_versions fk_mail_template_versions_published_by; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_template_versions
-    ADD CONSTRAINT fk_mail_template_versions_published_by FOREIGN KEY (published_by_id) REFERENCES public.admins(id);
-
-
---
--- Name: mail_template_versions fk_mail_template_versions_templates; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_template_versions
-    ADD CONSTRAINT fk_mail_template_versions_templates FOREIGN KEY (template_id) REFERENCES public.templates(id);
-
-
---
--- Name: mail_template_versions fk_mail_template_versions_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_template_versions
-    ADD CONSTRAINT fk_mail_template_versions_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: mail_templates fk_mail_templates_templates; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_templates
-    ADD CONSTRAINT fk_mail_templates_templates FOREIGN KEY (template_id) REFERENCES public.templates(id);
-
-
---
--- Name: mail_templates fk_mail_templates_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.mail_templates
-    ADD CONSTRAINT fk_mail_templates_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
@@ -4172,6 +4100,78 @@ ALTER TABLE ONLY public.stripe_record__subscriptions
 
 
 --
+-- Name: template_mail_histories fk_template_mail_histories_actors; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.template_mail_histories
+    ADD CONSTRAINT fk_template_mail_histories_actors FOREIGN KEY (actor_id) REFERENCES public.admins(id);
+
+
+--
+-- Name: template_mail_histories fk_template_mail_histories_templates; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.template_mail_histories
+    ADD CONSTRAINT fk_template_mail_histories_templates FOREIGN KEY (template_id) REFERENCES public.templates(id);
+
+
+--
+-- Name: template_mail_histories fk_template_mail_histories_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.template_mail_histories
+    ADD CONSTRAINT fk_template_mail_histories_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: template_mail_histories fk_template_mail_histories_versions; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.template_mail_histories
+    ADD CONSTRAINT fk_template_mail_histories_versions FOREIGN KEY (version_id) REFERENCES public.template_mail_versions(id);
+
+
+--
+-- Name: template_mail_versions fk_template_mail_versions_published_by; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.template_mail_versions
+    ADD CONSTRAINT fk_template_mail_versions_published_by FOREIGN KEY (published_by_id) REFERENCES public.admins(id);
+
+
+--
+-- Name: template_mail_versions fk_template_mail_versions_templates; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.template_mail_versions
+    ADD CONSTRAINT fk_template_mail_versions_templates FOREIGN KEY (template_id) REFERENCES public.templates(id);
+
+
+--
+-- Name: template_mail_versions fk_template_mail_versions_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.template_mail_versions
+    ADD CONSTRAINT fk_template_mail_versions_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: template_mails fk_template_mails_templates; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.template_mails
+    ADD CONSTRAINT fk_template_mails_templates FOREIGN KEY (template_id) REFERENCES public.templates(id);
+
+
+--
+-- Name: template_mails fk_template_mails_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.template_mails
+    ADD CONSTRAINT fk_template_mails_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: templates fk_templates_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4295,7 +4295,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict BQujlMf9dbErK9cAK2iPAycs5czzFR8Beout0KFSjoGcGNg2FlzB6waFRfg4lRH
+\unrestrict FfQdEuMnj8KTIYbOga01xOSl9VW5a4lG38YgD8IhhKcneLEJhecTPLEoKPau2T1
 
 SET search_path TO "$user", public;
 

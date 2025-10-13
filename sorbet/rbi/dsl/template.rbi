@@ -329,17 +329,17 @@ class Template
   end
 
   module GeneratedAssociationMethods
-    sig { params(args: T.untyped, blk: T.untyped).returns(::MailTemplate) }
-    def build_mail_template(*args, &blk); end
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Template::Mail) }
+    def build_template_mail(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::MailTemplate) }
-    def create_mail_template(*args, &blk); end
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Template::Mail) }
+    def create_template_mail(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::MailTemplate) }
-    def create_mail_template!(*args, &blk); end
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Template::Mail) }
+    def create_template_mail!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant(*args, &blk); end
@@ -347,51 +347,51 @@ class Template
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant!(*args, &blk); end
 
-    sig { returns(T.nilable(::MailTemplate)) }
-    def mail_template; end
-
-    sig { params(value: T.nilable(::MailTemplate)).void }
-    def mail_template=(value); end
-
-    # This method is created by ActiveRecord on the `Template` class because it declared `has_many :mail_template_histories`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::MailTemplate::History::PrivateCollectionProxy) }
-    def mail_template_histories; end
-
-    sig { params(value: T::Enumerable[::MailTemplate::History]).void }
-    def mail_template_histories=(value); end
-
-    sig { returns(T::Array[T.untyped]) }
-    def mail_template_history_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def mail_template_history_ids=(ids); end
-
-    sig { returns(T::Array[T.untyped]) }
-    def mail_template_version_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def mail_template_version_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `Template` class because it declared `has_many :mail_template_versions`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::MailTemplate::Version::PrivateCollectionProxy) }
-    def mail_template_versions; end
-
-    sig { params(value: T::Enumerable[::MailTemplate::Version]).void }
-    def mail_template_versions=(value); end
-
-    sig { returns(T.nilable(::MailTemplate)) }
-    def reload_mail_template; end
+    sig { returns(T.nilable(::Template::Mail)) }
+    def reload_template_mail; end
 
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
 
     sig { void }
-    def reset_mail_template; end
+    def reset_template_mail; end
 
     sig { void }
     def reset_tenant; end
+
+    sig { returns(T.nilable(::Template::Mail)) }
+    def template_mail; end
+
+    sig { params(value: T.nilable(::Template::Mail)).void }
+    def template_mail=(value); end
+
+    # This method is created by ActiveRecord on the `Template` class because it declared `has_many :template_mail_histories`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Template::Mail::History::PrivateCollectionProxy) }
+    def template_mail_histories; end
+
+    sig { params(value: T::Enumerable[::Template::Mail::History]).void }
+    def template_mail_histories=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def template_mail_history_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def template_mail_history_ids=(ids); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def template_mail_version_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def template_mail_version_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `Template` class because it declared `has_many :template_mail_versions`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Template::Mail::Version::PrivateCollectionProxy) }
+    def template_mail_versions; end
+
+    sig { params(value: T::Enumerable[::Template::Mail::Version]).void }
+    def template_mail_versions=(value); end
 
     sig { returns(T.nilable(::Tenant)) }
     def tenant; end
