@@ -22,7 +22,7 @@ class MailTemplate::History < ApplicationRecord
       rescheduled: 'rescheduled',
       canceled: 'canceled',
     }.freeze,
-    T::Hash[Symbol, String]
+    T::Hash[Symbol, String],
   )
 
   scope :ordered, -> { order(created_at: :desc) }
@@ -37,7 +37,7 @@ class MailTemplate::History < ApplicationRecord
       actor: actor,
       version: version,
       payload: payload,
-      created_at: Time.current
+      created_at: Time.current,
     )
   end
 end

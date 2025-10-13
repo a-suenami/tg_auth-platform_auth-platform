@@ -10,11 +10,9 @@ module AdminArea
       @mail_template = @template.mail_template
 
       # Build new mail_template if not exists (not saved yet)
-      unless @mail_template
-        @mail_template = @template.build_mail_template(
-          tenant_id: RequestStore.store[:current_tenant]
-        )
-      end
+      @edit ||= @template.build_mail_template(
+        tenant_id: RequestStore.store[:current_tenant],
+      )
     end
 
     def update
@@ -25,17 +23,17 @@ module AdminArea
       if mail_template
         mail_template.update!(
           title: params[:title],
-          body: params[:body]
+          body: params[:body],
         )
       else
         @template.create_mail_template!(
           tenant_id: RequestStore.store[:current_tenant],
           title: params[:title],
-          body: params[:body]
+          body: params[:body],
         )
       end
 
-      flash[:notice] = is_new ? "メールテンプレートを作成しました" : "メールテンプレートを保存しました"
+      flash[:notice] = is_new ? 'メールテンプレートを作成しました' : 'メールテンプレートを保存しました'
       redirect_to admin_area_template_path(@template)
     rescue => e
       flash[:error] = "エラー: #{e.message}"

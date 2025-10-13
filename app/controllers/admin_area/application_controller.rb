@@ -6,6 +6,13 @@ module AdminArea
     extend T::Sig
     include Pagy::Backend
 
+    # Basic authentication to protect admin area (production only)
+    http_basic_authenticate_with(
+      name: ENV.fetch('BASIC_AUTH_USERNAME', 'admin'),
+      password: ENV.fetch('BASIC_AUTH_PASSWORD', 'changeme'),
+      unless: -> { Rails.env.development? || Rails.env.test? },
+    )
+
     before_action :authenticate!
     before_action :set_tenant
 

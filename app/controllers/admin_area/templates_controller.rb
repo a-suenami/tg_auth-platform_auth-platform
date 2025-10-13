@@ -8,7 +8,7 @@ module AdminArea
     def index
       # Real data from database
       @templates = Template.includes(:mail_template, :mail_template_versions).order(created_at: :desc)
-      @pagy = OpenStruct.new(page: 1, count: @templates.count, pages: 1, items: @templates.count, from: 1, to: @templates.count, prev: nil, next: nil)
+      @pagy = MockPagination.new(page: 1, count: @templates.count, pages: 1, items: @templates.count, from: 1, to: @templates.count, prev: nil, next: nil)
     end
 
     def show
@@ -28,7 +28,7 @@ module AdminArea
 
       template = Template.create!(
         tenant_id: RequestStore.store[:current_tenant],
-        name: template_name
+        name: template_name,
       )
 
       flash[:notice] = "テンプレート「#{template_name}」を作成しました"
@@ -50,7 +50,7 @@ module AdminArea
           icon: event_icon(history.event_type),
           action: event_action(history.event_type),
           user: history.payload['user_name'] || history.payload[:user_name] || 'Unknown',
-          timestamp: history.created_at.strftime('%Y/%m/%d %H:%M')
+          timestamp: history.created_at.strftime('%Y/%m/%d %H:%M'),
         }
       end
     end
@@ -60,8 +60,7 @@ module AdminArea
       when 'draft_created' then '📄'
       when 'draft_updated' then '✏️'
       when 'published' then '🌐'
-      when 'scheduled' then '📅'
-      when 'rescheduled' then '📅'
+      when 'scheduled', 'rescheduled' then '📅'
       when 'canceled' then '❌'
       else '📝'
       end
