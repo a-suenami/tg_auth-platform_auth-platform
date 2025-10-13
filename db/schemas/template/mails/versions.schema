@@ -1,0 +1,18 @@
+create_table :template_mail_versions, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :template, type: :uuid, null: false, comment: 'Parent template'
+  t.integer :version, null: false, comment: 'バージョン番号'
+  t.string :title, null: false, comment: 'メールタイトル（スナップショット）'
+  t.text :body, null: false, comment: 'メール本文（スナップショット）'
+  t.datetime :public_started_at, null: false, comment: '公開開始日時'
+  t.references :published_by, type: :uuid, comment: '公開者（Admin）'
+
+  t.timestamps null: false
+  t.index [:template_id, :version], name: :idx_template_mail_versions_template_version, unique: true
+  t.index :public_started_at, name: :idx_template_mail_versions_public_started_at
+  t.index :template_id, name: :idx_template_mail_versions_template_id
+end
+
+add_foreign_key :template_mail_versions, :tenants, name: :fk_template_mail_versions_tenants
+add_foreign_key :template_mail_versions, :templates, name: :fk_template_mail_versions_templates
+add_foreign_key :template_mail_versions, :admins, column: :published_by_id, name: :fk_template_mail_versions_published_by
