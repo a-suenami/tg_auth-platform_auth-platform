@@ -31,6 +31,12 @@ module GeneratedUrlHelpersModule
   def admin_area_ruler_area_tenant_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_template_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_templates_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_user_contact_address_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -172,7 +178,13 @@ module GeneratedUrlHelpersModule
   def logout_sessions_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def mail_draft_admin_area_template_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_template_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_contact_address_url(*args); end

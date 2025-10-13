@@ -16,5 +16,11 @@ Rails.application.routes.draw do
       resource :user_profile, only: [:new, :create, :edit, :update]
       resource :contact_address, only: [:new, :create, :edit, :update]
     end
+
+    resources :templates, only: [:index, :new, :create, :show] do
+      member do
+        put 'mail/draft', to: 'templates#update_mail_draft', as: :mail_draft
+      end
+    end
   end
 end

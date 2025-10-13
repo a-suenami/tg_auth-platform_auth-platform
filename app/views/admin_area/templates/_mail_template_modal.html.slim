@@ -1,0 +1,81 @@
+#mail-template-modal uk-modal=""
+  .uk-modal-dialog.uk-modal-body style="width: 800px; max-width: 90vw;"
+    button.uk-modal-close-default type="button" uk-close=""
+
+    / Modal Header
+    h2.uk-modal-title メールテンプレート新規作成
+
+    / Tabs with Switcher
+    ul.uk-tab uk-tab="connect: #tab-content"
+      li.uk-active
+        a href="#" 編集
+      li
+        a href="#" プレビュー
+
+    / Tab Content Switcher
+    ul#tab-content.uk-switcher.uk-margin-top
+      / Edit Tab
+      li
+        = form_with url: mail_draft_admin_area_template_path(@template.id), method: :put, class: 'uk-form-stacked', id: 'mail-template-form' do |f|
+          / Email Title
+          .uk-margin
+            = f.label :title, 'メールタイトル', class: 'uk-form-label'
+            .uk-form-controls
+              = f.text_field :title, placeholder: 'メールのタイトルを入力...', required: true, class: 'uk-input', name: 'mail_template[title]'
+
+          / Email Body Template
+          .uk-margin
+            = f.label :body, 'メール本文テンプレート', class: 'uk-form-label'
+
+            / Mock Toolbar (non-functional)
+            .uk-background-muted.uk-padding-small style="border: 1px solid #e5e5e5; border-bottom: none;"
+              .uk-button-group
+                select.uk-select.uk-form-small style="width: auto; opacity: 0.6;" disabled=true
+                  option Normal Text
+                button.uk-button.uk-button-small type="button" disabled=true title="Undo" ↶
+                button.uk-button.uk-button-small type="button" disabled=true title="Redo" ↷
+                button.uk-button.uk-button-small type="button" disabled=true title="Bold"
+                  strong B
+                button.uk-button.uk-button-small type="button" disabled=true title="Italic"
+                  em I
+                button.uk-button.uk-button-small type="button" disabled=true title="Underline"
+                  u U
+                button.uk-button.uk-button-small type="button" disabled=true title="List" ≡
+                button.uk-button.uk-button-small type="button" disabled=true title="Link" 🔗
+                button.uk-button.uk-button-small type="button" disabled=true title="Image" 🖼
+
+            / Simple Textarea
+            .uk-form-controls
+              = f.text_area :body, placeholder: '本文のテンプレートを入力...', required: true, rows: 15, class: 'uk-textarea', style: 'border-top: none; font-family: monospace;', name: 'mail_template[body]'
+
+          / Submit Button
+          .uk-margin
+            = f.submit 'メールテンプレートを作成する', class: 'uk-button uk-button-primary'
+
+      / Preview Tab
+      li
+        .uk-background-muted.uk-padding style="min-height: 500px;"
+          / Email Header
+          .uk-card.uk-card-default.uk-card-body.uk-margin
+            .uk-flex.uk-flex-middle
+              .uk-margin-right
+                / Avatar circle
+                .uk-border-circle style="width: 50px; height: 50px; background: #e5e5e5; display: flex; align-items: center; justify-content: center;"
+                  span uk-icon="icon: user; ratio: 1.5"
+              div
+                .uk-text-bold Haguruma ファンクラブ
+                .uk-text-small.uk-text-muted お誕生日おめでとうございます
+                .uk-text-small.uk-text-muted to: Yamada TARO
+
+          / Email Card
+          .uk-card.uk-card-default.uk-card-body style="max-width: 600px;"
+            h3.uk-card-title BirthDay Message
+            p Yamada Taro さん誕生日おめでとう〜
+
+            / Play button (decorative)
+            .uk-text-center.uk-margin-top.uk-padding style="border: 1px solid #e5e5e5; background: #f9f9f9;"
+              span uk-icon="icon: play-circle; ratio: 4" style="opacity: 0.7;"
+
+        / Submit Button (same form)
+        .uk-margin-top
+          button.uk-button.uk-button-primary type="button" onclick="document.getElementById('mail-template-form').requestSubmit()" メールテンプレートを作成する

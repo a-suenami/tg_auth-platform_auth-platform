@@ -1,0 +1,16 @@
+.uk-margin-top.uk-container
+  / Breadcrumb
+  - breadcrumb_items = [{ text: '配信' }, { text: 'テンプレート', link: admin_area_templates_path }, { text: '新規作成' }]
+  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+
+  h2 テンプレート新規作成
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with url: admin_area_templates_path, method: :post, class: 'uk-form-stacked' do |f|
+      .uk-margin
+        = f.label :name, 'テンプレート名', class: 'uk-form-label'
+        .uk-form-controls
+          = f.text_field :name, placeholder: 'テンプレート名を入力...', required: true, class: 'uk-input', name: 'template[name]'
+
+      .uk-margin
+        = f.submit 'テンプレートを新規作成する', class: 'uk-button uk-button-primary'

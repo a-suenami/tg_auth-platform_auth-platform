@@ -1,0 +1,27 @@
+.uk-card.uk-card-default.uk-card-body
+  / Status Badge
+  - case @template_state
+  - when :draft
+    span.uk-label.uk-label-primary 下書き
+  - when :scheduled
+    span.uk-label.uk-label-warning 公開予約中
+  - when :published
+    span.uk-label.uk-label-success 公開中
+
+  / Metadata Fields
+  .uk-margin-top.uk-margin-small-top
+    .uk-margin-small
+      .uk-text-small.uk-text-muted 公開日時
+      .uk-text-bold = @mail_template.public_started_at&.strftime('%Y/%m/%d %H:%M') || '未設定'
+
+    .uk-margin-small
+      .uk-text-small.uk-text-muted 公開者
+      .uk-text-bold = @mail_template.created_by || '-'
+
+    .uk-margin-small
+      .uk-text-small.uk-text-muted 最終更新日時
+      .uk-text-bold = @mail_template.updated_at
+
+    .uk-margin-small
+      .uk-text-small.uk-text-muted 最終更新者
+      .uk-text-bold = @mail_template.updated_by

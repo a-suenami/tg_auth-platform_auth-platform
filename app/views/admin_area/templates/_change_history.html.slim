@@ -1,0 +1,15 @@
+.uk-card.uk-card-default.uk-card-body.uk-margin-top
+  h4.uk-card-title 変更履歴
+
+  .uk-margin-top
+    - @change_history.each do |event|
+      .uk-grid.uk-grid-small.uk-margin-small uk-grid=""
+        .uk-width-auto
+          .uk-text-large = event[:icon]
+        .uk-width-expand
+          .uk-text-small
+            = event[:user]
+            = event[:action]
+          .uk-text-meta.uk-text-small = event[:timestamp]
+      - unless event == @change_history.last
+        hr.uk-margin-small
