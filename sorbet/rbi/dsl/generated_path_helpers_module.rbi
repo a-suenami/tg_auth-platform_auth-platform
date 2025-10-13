@@ -31,9 +31,6 @@ module GeneratedPathHelpersModule
   def admin_area_ruler_area_tenant_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def admin_area_template_mail_template_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def admin_area_template_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -130,9 +127,6 @@ module GeneratedPathHelpersModule
   def cancel_api_v1_internal_memberships_contract_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def edit_admin_area_template_mail_template_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_contact_address_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -182,6 +176,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def logout_sessions_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def mail_draft_admin_area_template_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_path(*args); end
