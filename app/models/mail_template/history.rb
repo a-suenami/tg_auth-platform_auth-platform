@@ -4,8 +4,6 @@ class MailTemplate::History < ApplicationRecord
   extend T::Sig
   include Multitenancy
 
-  self.table_name = 'mail_template_histories'
-
   belongs_to :tenant
   belongs_to :template
   belongs_to :version, class_name: 'MailTemplate::Version', optional: true

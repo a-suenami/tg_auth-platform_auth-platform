@@ -4,8 +4,6 @@ class MailTemplate::Version < ApplicationRecord
   extend T::Sig
   include Multitenancy
 
-  self.table_name = 'mail_template_versions'
-
   belongs_to :tenant
   belongs_to :template
   belongs_to :published_by, class_name: 'Admin', optional: true
