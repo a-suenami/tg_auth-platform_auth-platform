@@ -6,13 +6,6 @@ module RulerArea
     extend T::Sig
     include Pagy::Backend
 
-    # Basic authentication to protect ruler area
-    http_basic_authenticate_with(
-      name: ENV.fetch('BASIC_AUTH_USERNAME', 'admin'),
-      password: ENV.fetch('BASIC_AUTH_PASSWORD', 'changeme'),
-      unless: -> { Rails.env.development? || Rails.env.test? },
-    )
-
     before_action :authenticate!
 
     sig { void }
