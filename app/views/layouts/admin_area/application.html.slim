@@ -25,6 +25,15 @@ html lang='ja'
                       = link_to '会員ID一覧', admin_area_users_path
                 - unless Rails.env.production?
                   ul.uk-parent
+                    li.uk-parent ユーザー
+                    ul.uk-nav-sub
+                      li
+                        = link_to 'タグ', admin_area_user_tags_path
+                      li
+                        = link_to 'オートタギング', admin_area_user_auto_taggings_path
+                      
+                - unless Rails.env.production?
+                  ul.uk-parent
                     li.uk-parent 配信
                     ul.uk-nav-sub
                       li

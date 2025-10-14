@@ -37,7 +37,19 @@ module GeneratedUrlHelpersModule
   def admin_area_templates_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_auto_tagging_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_auto_taggings_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_user_contact_address_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_tag_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_tags_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def admin_area_user_url(*args); end
@@ -127,7 +139,13 @@ module GeneratedUrlHelpersModule
   def cancel_api_v1_internal_memberships_contract_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_user_auto_tagging_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_contact_address_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_user_tag_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_url(*args); end
@@ -187,7 +205,13 @@ module GeneratedUrlHelpersModule
   def new_admin_area_template_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_user_auto_tagging_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_contact_address_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_user_tag_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_user_profile_url(*args); end

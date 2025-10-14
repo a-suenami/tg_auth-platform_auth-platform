@@ -22,5 +22,9 @@ Rails.application.routes.draw do
         put 'mail/draft', to: 'templates#update_mail_draft', as: :mail_draft
       end
     end
+
+    # User Tag Management
+    resources :user_tags
+    resources :user_auto_taggings
   end
 end

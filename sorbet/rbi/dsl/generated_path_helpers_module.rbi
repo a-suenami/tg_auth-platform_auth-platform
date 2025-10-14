@@ -37,10 +37,22 @@ module GeneratedPathHelpersModule
   def admin_area_templates_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_auto_tagging_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_auto_taggings_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_user_contact_address_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def admin_area_user_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_tag_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_tags_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def admin_area_user_user_profile_path(*args); end
@@ -127,10 +139,16 @@ module GeneratedPathHelpersModule
   def cancel_api_v1_internal_memberships_contract_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_user_auto_tagging_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_contact_address_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_user_tag_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_user_profile_path(*args); end
@@ -187,7 +205,13 @@ module GeneratedPathHelpersModule
   def new_admin_area_template_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_user_auto_tagging_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_contact_address_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_user_tag_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_user_profile_path(*args); end

@@ -1,0 +1,21 @@
+.uk-margin-top.uk-container
+  / Breadcrumb
+  - breadcrumb_items = [{ text: 'ユーザー' }, { text: 'タグ管理', link: admin_area_user_tags_path }, { text: '新規作成' }]
+  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+
+  h2 タグ作成
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with url: admin_area_user_tags_path, method: :post, class: 'uk-form-stacked' do |f|
+      .uk-margin
+        = label_tag 'user_tag[name]', '名前', class: 'uk-form-label'
+        .uk-form-controls
+          = text_field_tag 'user_tag[name]', '', placeholder: 'ユーザータグ名を入力...', required: true, class: 'uk-input'
+
+      .uk-margin
+        = label_tag 'user_tag[description]', '説明', class: 'uk-form-label'
+        .uk-form-controls
+          = text_area_tag 'user_tag[description]', '', placeholder: 'ユーザータグの説明文を入力...', rows: 5, class: 'uk-textarea'
+
+      .uk-margin
+        = f.submit 'タグを作成する', class: 'uk-button uk-button-primary'
