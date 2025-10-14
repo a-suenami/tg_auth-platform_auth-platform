@@ -1,5 +1,3 @@
-\restrict OjpNesLF8hH6wspsBjzRJB1aVSqpM4YFHItXKjD1FnCSvvieFhD8lXiWggdiRy4
-
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
 
@@ -4273,8 +4271,6 @@ ALTER TABLE ONLY public.users
 --
 -- PostgreSQL database dump complete
 --
-
-\unrestrict OjpNesLF8hH6wspsBjzRJB1aVSqpM4YFHItXKjD1FnCSvvieFhD8lXiWggdiRy4
 
 SET search_path TO "$user", public;
 
