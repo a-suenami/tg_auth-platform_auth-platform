@@ -28,7 +28,7 @@ class Template < ApplicationRecord
     return :draft if latest.nil?
 
     # Check if draft has unpublished changes (different from latest version)
-    if mail_template.title.to_s != latest.title.to_s || mail_template.body.to_s != latest.body.to_s
+    if T.must(template_mail).title.to_s != latest.title.to_s || T.must(template_mail).body.to_s != latest.body.to_s
       return :draft
     end
 

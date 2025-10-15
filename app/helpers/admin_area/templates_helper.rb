@@ -7,8 +7,8 @@ module AdminArea
         {
           icon: event_icon(history.event_type),
           action: event_action(history.event_type),
-          user: history.payload['user_name'] || history.payload[:user_name] || 'Unknown',
-          timestamp: history.created_at
+          user: history.actor&.name || 'Unknown',
+          timestamp: history.created_at,
         }
       end
     end
@@ -17,8 +17,7 @@ module AdminArea
       case event_type
       when 'draft_updated' then '✏️'
       when 'published' then '🌐'
-      when 'scheduled' then '📅'
-      when 'rescheduled' then '📅'
+      when 'scheduled', 'rescheduled' then '📅'
       when 'canceled' then '❌'
       else '📝'
       end

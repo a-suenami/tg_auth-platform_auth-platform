@@ -15,7 +15,7 @@
 
   / Right content area
   .tg-template-content.uk-flex-1 style="position: relative; padding: 1rem;"
-    - if @has_mail_template
+    - if @has_template_mail
       / Two-column layout inside content area
       .uk-grid.uk-grid-medium uk-grid=""
         / Left: Mail template info
@@ -36,4 +36,5 @@
     - else
       / Empty state with create button
       .uk-position-center.uk-margin
-        button.uk-button.uk-button-primary uk-toggle="target: #mail-template-modal" メールテンプレートを新規作成する
+        = link_to edit_admin_area_template_mail_path(@template), class: 'uk-button uk-button-primary' do
+          | メールテンプレートを新規作成する

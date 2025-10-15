@@ -33,10 +33,9 @@ module AdminArea
         datetime: time.iso8601,
         data: {
           timestamp: timestamp,
-          format: format
+          format: format,
         },
-        class: 'js-local-time'
-      )
+        class: 'js-local-time',)
     end
 
     private

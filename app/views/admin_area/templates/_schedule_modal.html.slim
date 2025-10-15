@@ -5,7 +5,7 @@ div#schedule-modal uk-modal=""
     .uk-modal-header
       h2.uk-modal-title 公開設定
     .uk-modal-body
-      = form_with url: schedule_admin_area_template_mail_template_path(@template), method: :post, local: true, data: { controller: 'schedule-form' } do |f|
+      = form_with url: schedule_admin_area_template_mail_path(@template), method: :post, local: true, data: { controller: 'schedule-form' } do |f|
         .uk-margin
           label.uk-form-label 公開予定日時
           .uk-form-controls
