@@ -485,9 +485,6 @@ class StripeRecord::Subscription
   end
 
   module GeneratedAssociationMethods
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Transaction) }
-    def build_current_transaction(*args, &blk); end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SubscriptionSchedule) }
     def build_last_subscription_schedule(*args, &blk); end
 
@@ -500,17 +497,8 @@ class StripeRecord::Subscription
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Product) }
     def build_product(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Transaction) }
-    def build_upcoming_transaction(*args, &blk); end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Transaction) }
-    def create_current_transaction(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Transaction) }
-    def create_current_transaction!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SubscriptionSchedule) }
     def create_last_subscription_schedule(*args, &blk); end
@@ -536,23 +524,11 @@ class StripeRecord::Subscription
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Product) }
     def create_product!(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Transaction) }
-    def create_upcoming_transaction(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Transaction) }
-    def create_upcoming_transaction!(*args, &blk); end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user!(*args, &blk); end
-
-    sig { returns(T.nilable(::Payment::Transaction)) }
-    def current_transaction; end
-
-    sig { params(value: T.nilable(::Payment::Transaction)).void }
-    def current_transaction=(value); end
 
     sig { returns(T::Array[T.untyped]) }
     def invoice_ids; end
@@ -582,10 +558,10 @@ class StripeRecord::Subscription
 
     # This method is created by ActiveRecord on the `StripeRecord::Subscription` class because it declared `has_many :payment_subscriptions`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Payment::Transaction::PrivateCollectionProxy) }
+    sig { returns(::Payment::Subscription::PrivateCollectionProxy) }
     def payment_subscriptions; end
 
-    sig { params(value: T::Enumerable[::Payment::Transaction]).void }
+    sig { params(value: T::Enumerable[::Payment::Subscription]).void }
     def payment_subscriptions=(value); end
 
     sig { returns(T.nilable(::StripeRecord::SetupIntent)) }
@@ -624,9 +600,6 @@ class StripeRecord::Subscription
     sig { returns(T::Boolean) }
     def product_previously_changed?; end
 
-    sig { returns(T.nilable(::Payment::Transaction)) }
-    def reload_current_transaction; end
-
     sig { returns(T.nilable(::StripeRecord::SubscriptionSchedule)) }
     def reload_last_subscription_schedule; end
 
@@ -639,14 +612,8 @@ class StripeRecord::Subscription
     sig { returns(T.nilable(::StripeRecord::Product)) }
     def reload_product; end
 
-    sig { returns(T.nilable(::Payment::Transaction)) }
-    def reload_upcoming_transaction; end
-
     sig { returns(T.nilable(::User)) }
     def reload_user; end
-
-    sig { void }
-    def reset_current_transaction; end
 
     sig { void }
     def reset_last_subscription_schedule; end
@@ -659,9 +626,6 @@ class StripeRecord::Subscription
 
     sig { void }
     def reset_product; end
-
-    sig { void }
-    def reset_upcoming_transaction; end
 
     sig { void }
     def reset_user; end
@@ -693,12 +657,6 @@ class StripeRecord::Subscription
 
     sig { params(value: T::Enumerable[::StripeRecord::SubscriptionSchedule]).void }
     def subscription_schedules=(value); end
-
-    sig { returns(T.nilable(::Payment::Transaction)) }
-    def upcoming_transaction; end
-
-    sig { params(value: T.nilable(::Payment::Transaction)).void }
-    def upcoming_transaction=(value); end
 
     sig { returns(T.nilable(::User)) }
     def user; end

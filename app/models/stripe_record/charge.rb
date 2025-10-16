@@ -15,25 +15,31 @@ class StripeRecord
       self.amount_refunded = remote_charge.amount_refunded
       self.application_id = remote_charge.application
       self.application_fee_amount = remote_charge.application_fee_amount
-      self.balance_transaction_id = remote_charge.balance_transaction
+      self.balance_transaction_id = remote_charge.balance_transaction&.id
       self.billing_details = remote_charge.billing_details
       self.calculated_statement_descriptor = remote_charge.calculated_statement_descriptor
       self.captured = remote_charge.captured
       self.currency = remote_charge.currency
-      self.customer_id = remote_charge.customer
+      customer = remote_charge.customer
+      self.customer_id = case customer
+                         when String
+                           customer
+                         when Stripe::Customer
+                           customer.id
+      end
       self.description = remote_charge.description
-      self.destination = remote_charge.destination
+      # self.destination = remote_charge.destination&.id  # destination method does not exist on Stripe::Charge
       self.dispute = remote_charge.dispute
       self.disputed = remote_charge.disputed
       self.failure_balance_transaction_id = remote_charge.failure_balance_transaction
       self.failure_code = remote_charge.failure_code
       self.failure_message = remote_charge.failure_message
       self.fraud_details = remote_charge.try(:fraud_details)
-      self.invoice_id = remote_charge.invoice
+      # self.invoice_id = remote_charge.invoice&.id  # invoice method does not exist on Stripe::Charge
       self.livemode = remote_charge.livemode
       self.metadata = remote_charge.metadata
       self.on_behalf_of_id = remote_charge.on_behalf_of
-      self.order = remote_charge.order
+      # self.order = remote_charge.order&.id  # order method does not exist on Stripe::Charge
       self.outcome = remote_charge.try(:outcome)
       self.paid = remote_charge.paid
       # # self.payment_intent_id = remote_charge.payment_intent
@@ -46,7 +52,7 @@ class StripeRecord
       self.refunded = remote_charge.refunded
       self.review_id = remote_charge.review
       self.shipping = remote_charge.try(:shipping)
-      self.source = remote_charge.source
+      self.source = remote_charge.source&.id
       self.source_transfer_id = remote_charge.try(:source_transfer)
       self.statement_descriptor = remote_charge.statement_descriptor
       self.statement_descriptor_suffix = remote_charge.statement_descriptor_suffix

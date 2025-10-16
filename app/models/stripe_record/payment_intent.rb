@@ -333,7 +333,7 @@ class StripeRecord
     def api_refresh(auto_save: true)
       account = T.must(self.api_key_account)
       api_key = account.api_key
-      result = StripeRecord::Client::PaymentIntent.retrieve(remote_id, expand: ['latest_charge'], stripe_account_id: self.stripe_account_id_if_needed, api_key:)
+      result = StripeRecord::Client::PaymentIntent.retrieve(remote_id, expand: ['latest_charge'], stripe_account_id: self.stripe_account_id_if_needed, api_key: T.must(api_key))
 
       if result.is_a?(Mangrove::Result::Err)
         return Mangrove::Result.err(result.err_inner)
