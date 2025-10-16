@@ -37,7 +37,7 @@
 
     .uk-margin-small
       .uk-text-small.uk-text-muted 公開者
-      .uk-text-bold = scheduled_version.published_by || '-'
+      .uk-text-bold = scheduled_version.published_by&.name || '-'
 
 / Currently Published Version Card (only show if there's a published version)
 - published_version = @template.latest_published_version
@@ -61,4 +61,4 @@
 
     .uk-margin-small
       .uk-text-small.uk-text-muted 公開者
-      .uk-text-bold = published_version.published_by || '-'
+      .uk-text-bold = published_version.published_by&.name || '-'

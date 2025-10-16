@@ -55,7 +55,10 @@ module Templates
 
       def reschedule(scheduled_time)
         latest = @template.latest_version
-        latest.update!(public_started_at: scheduled_time)
+        latest.update!(
+          public_started_at: scheduled_time,
+          published_by: @actor,
+        )
 
         Template::Mail::History.log_event(
           template: @template,
@@ -82,6 +85,7 @@ module Templates
           title: mail_template.title,
           body: mail_template.body,
           public_started_at: scheduled_time,
+          published_by: @actor,
         )
 
         Template::Mail::History.log_event(

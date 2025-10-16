@@ -70,7 +70,10 @@ module Templates
           template: @template,
           event_type: 'draft_updated',
           actor: @actor,
-          payload: {},
+          payload: {
+            title: @title,
+            body: @body,
+          },
         )
       end
     end

@@ -10,7 +10,11 @@ module AdminArea
     end
 
     def show
-      @template = Template.includes(:template_mail, :template_mail_histories).find(params[:id])
+      @template = Template.includes(
+        :template_mail,
+        template_mail_histories: :actor,
+        template_mail_versions: :published_by,
+      ).find(params[:id])
       @mail_template = @template.template_mail
       @has_template_mail = @mail_template.present?
       @template_state = @template.state

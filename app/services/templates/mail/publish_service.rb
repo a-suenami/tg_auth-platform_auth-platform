@@ -41,6 +41,7 @@ module Templates
           title: mail_template.title,
           body: mail_template.body,
           public_started_at: Time.current,
+          published_by: @actor,
         )
       end
 
