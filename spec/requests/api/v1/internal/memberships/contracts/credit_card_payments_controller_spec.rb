@@ -139,11 +139,10 @@ RSpec.shared_context 'stripe api mocks' do
     )
 
     # payments のネスト構造
+    # rubocop:disable RSpec/VerifiedDoubles
     payments_item_payment = double('payment', payment_intent: mock_payment_intent)
     payments_item = double('invoice_payment', payment: payments_item_payment)
     payments_list = double('payments', data: [payments_item])
-
-    # rubocop:disable RSpec/VerifiedDoubles
     allow(mock_stripe_invoice).to receive_messages(
       id: 'in_test123',
       status: 'open',
@@ -681,15 +680,15 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
 
         # Mock Stripe API for Subscription refresh
         mock_stripe_subscription = instance_double(Stripe::Subscription)
-        allow(mock_stripe_subscription).to receive(:id).and_return('sub_test123')
-        allow(mock_stripe_subscription).to receive(:status).and_return('active')
 
         # Mock items.data.first.current_period_end
+        # rubocop:disable RSpec/VerifiedDoubles
         mock_subscription_item = double('Stripe::SubscriptionItem')
         allow(mock_subscription_item).to receive(:current_period_end).and_return(1.month.from_now.to_i)
         mock_items = double('Stripe::ListObject')
         allow(mock_items).to receive(:data).and_return([mock_subscription_item])
-        allow(mock_stripe_subscription).to receive(:items).and_return(mock_items)
+        # rubocop:enable RSpec/VerifiedDoubles
+        allow(mock_stripe_subscription).to receive_messages(id: 'sub_test123', status: 'active', items: mock_items)
 
         allow(Stripe::Subscription).to receive(:retrieve).and_return(mock_stripe_subscription)
       end
@@ -793,29 +792,6 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
         before do
           # 他の決済のchargeableが紐づいていた場合
           payment_transaction.update!(chargeable: nil)
-
-          # Mock Stripe API for SetupIntent refresh (even though it should not be called)
-          mock_stripe_setup_intent = Stripe::SetupIntent.construct_from({
-            id: 'seti_test123',
-            status: 'succeeded',
-            usage: 'off_session',
-            client_secret: 'seti_test123_secret',
-          })
-          allow(StripeRecord::Client::SetupIntent).to receive(:retrieve).and_return(Mangrove::Result.ok(mock_stripe_setup_intent))
-
-          # Mock Stripe API for Subscription refresh
-          mock_stripe_subscription = instance_double(Stripe::Subscription)
-          allow(mock_stripe_subscription).to receive(:id).and_return('sub_test123')
-          allow(mock_stripe_subscription).to receive(:status).and_return('active')
-
-          # Mock items.data.first.current_period_end
-          mock_subscription_item = double('Stripe::SubscriptionItem')
-          allow(mock_subscription_item).to receive(:current_period_end).and_return(1.month.from_now.to_i)
-          mock_items = double('Stripe::ListObject')
-          allow(mock_items).to receive(:data).and_return([mock_subscription_item])
-          allow(mock_stripe_subscription).to receive(:items).and_return(mock_items)
-
-          allow(Stripe::Subscription).to receive(:retrieve).and_return(mock_stripe_subscription)
         end
 
         it 'returns 400 Bad Request with unsupported_chargeable error' do
@@ -833,8 +809,16 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
 api_key_account: tenant_stripe_account.stripe_account,)
       }
       let(:payment_transaction_setup) {
-        create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'seti_test123',
-       chargeable: stripe_record_setup_intent, status: 'pending', recurrence: true,)
+        create(:payment__transaction,
+               tenant_id: current_tenant.id,
+               user: current_user,
+               membership_contract: contract,
+               payment_type: 'credit_card',
+               payment_provider: 'stripe',
+               external_id: 'seti_test123',
+               chargeable: stripe_record_setup_intent,
+               status: 'pending',
+               recurrence: true,)
       }
       let(:contract_id) { contract.id }
 
@@ -854,15 +838,15 @@ api_key_account: tenant_stripe_account.stripe_account,)
 
         # Mock Stripe API for Subscription refresh
         mock_stripe_subscription = instance_double(Stripe::Subscription)
-        allow(mock_stripe_subscription).to receive(:id).and_return('sub_test123')
-        allow(mock_stripe_subscription).to receive(:status).and_return('active')
 
         # Mock items.data.first.current_period_end
+        # rubocop:disable RSpec/VerifiedDoubles
         mock_subscription_item = double('Stripe::SubscriptionItem')
         allow(mock_subscription_item).to receive(:current_period_end).and_return(1.month.from_now.to_i)
         mock_items = double('Stripe::ListObject')
         allow(mock_items).to receive(:data).and_return([mock_subscription_item])
-        allow(mock_stripe_subscription).to receive(:items).and_return(mock_items)
+        # rubocop:enable RSpec/VerifiedDoubles
+        allow(mock_stripe_subscription).to receive_messages(id: 'sub_test123', status: 'active', items: mock_items)
 
         allow(Stripe::Subscription).to receive(:retrieve).and_return(mock_stripe_subscription)
       end

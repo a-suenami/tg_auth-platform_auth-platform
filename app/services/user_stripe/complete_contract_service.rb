@@ -21,7 +21,7 @@ module UserStripe
         )
 
         # Payment::Subscriptionのステータスをアクティブに変更
-        payment_subscription = contract.payment_subscription
+        contract.payment_subscription
 
         # Payment::Transactionのステータスをアクティブに変更
         payment_transaction = contract.payment_transactions.order(created_at: :desc).first

@@ -15,6 +15,12 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
   let!(:stripe_record_subscription) {
     create(:stripe_record_subscription, tenant_id: current_tenant.id, user: current_user, price: stripe_record_price, product: stripe_record_product, status: :active, remote_id: 'sub_test123')
   }
+  let!(:tenant_stripe_account) { create(:tenant_stripe_account, :with_account, tenant_id: current_tenant.id) }
+  let!(:stripe_record_invoice) { create(:stripe_record_invoice, tenant_id: current_tenant.id, user: current_user) }
+  let!(:stripe_record_payment_intent) {
+    create(:stripe_record_payment_intent, tenant_id: current_tenant.id, user: current_user, remote_id: 'pi_test123', status: 'succeeded', amount: 1000, currency: 'jpy',
+invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_account,)
+  }
 
   # メンバーシップ契約
   let!(:active_contract) { create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'active', expires_at: 1.year.from_now, cancel_at_period_end: false) }
@@ -25,7 +31,10 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
   # 支払い取引
   let!(:active_transaction) {
     create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: active_contract, payment_type: 'credit_card',
-   payment_provider: 'stripe', external_id: 'sub_test123', chargeable: stripe_record_subscription, status: 'active', recurrence: true,)
+   payment_provider: 'stripe', external_id: 'pi_test123', chargeable: stripe_record_payment_intent, status: 'active', recurrence: true,)
+  }
+  let(:active_payment_subscription) {
+    create(:payment__subscription, tenant_id: current_tenant.id, user: current_user, membership_contract: active_contract, subscribable: stripe_record_subscription)
   }
 
   let!(:expired_transaction) {
@@ -60,6 +69,7 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
     pending_membership_user
     expired_membership_user
     canceled_membership_user
+    active_payment_subscription
   end
 
   describe 'GET /api/v1/internal/memberships/contracts' do
@@ -90,10 +100,10 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
       is_expected.to eq 200
 
       active_contract_response = body_array.find { |contract| contract['id'] == active_contract.id }
-      expect(active_contract_response['transactions']).to be_present
-      expect(active_contract_response['transactions'].size).to eq 1
+      expect(active_contract_response['payment_transactions']).to be_present
+      expect(active_contract_response['payment_transactions'].size).to eq 1
 
-      transaction = active_contract_response['transactions'][0]
+      transaction = active_contract_response['payment_transactions'][0]
       expect(transaction['id']).to eq active_transaction.id
       expect(transaction['payment_type']).to eq active_transaction.payment_type
       expect(transaction['payment_provider']).to eq active_transaction.payment_provider
@@ -105,11 +115,11 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
       is_expected.to eq 200
 
       active_contract_response = body_array.find { |contract| contract['id'] == active_contract.id }
-      transaction = active_contract_response['transactions'][0]
+      transaction = active_contract_response['payment_transactions'][0]
 
       expect(transaction['chargeable']).to be_present
-      expect(transaction['chargeable']['id']).to eq stripe_record_subscription.id
-      expect(transaction['chargeable']['remote_id']).to eq stripe_record_subscription.remote_id
+      expect(transaction['chargeable']['id']).to eq stripe_record_payment_intent.id
+      expect(transaction['chargeable']['remote_id']).to eq stripe_record_payment_intent.remote_id
     end
 
     context 'when user has no contracts' do
@@ -147,6 +157,7 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
         is_expected.to eq 200
 
         expect(body_hash['payment_transactions']).to be_present
+
         expect(body_hash['payment_transactions'].size).to eq 1
 
         transaction = body_hash['payment_transactions'][0]
@@ -164,9 +175,9 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
 
         transaction = body_hash['payment_transactions'][0]
         expect(transaction['chargeable']).to be_present
-        expect(transaction['chargeable']['id']).to eq stripe_record_subscription.id
-        expect(transaction['chargeable']['remote_id']).to eq stripe_record_subscription.remote_id
-        expect(transaction['chargeable']['status']).to eq stripe_record_subscription.status
+        expect(transaction['chargeable']['id']).to eq stripe_record_payment_intent.id
+        expect(transaction['chargeable']['remote_id']).to eq stripe_record_payment_intent.remote_id
+        expect(transaction['chargeable']['status']).to eq stripe_record_payment_intent.status
       end
     end
 
@@ -189,37 +200,6 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
     end
   end
 
-  describe 'GET /api/v1/internal/memberships/contracts/:id/polling' do
-    include_context 'current user session is present'
-
-    context 'when contract exists' do
-      let(:id) { pending_contract.id }
-
-      it 'returns contract for polling' do
-        is_expected.to eq 200
-
-        expect(body_hash['id']).to eq pending_contract.id
-        expect(body_hash['status']).to eq pending_contract.status
-        expect(body_hash['payment_transactions']).to be_present
-      end
-
-      it 'includes transactions without includes' do
-        is_expected.to eq 200
-
-        # pollingエンドポイントはincludes(:transactions)を使わない
-        expect(body_hash['payment_transactions']).to be_present
-        expect(body_hash['payment_transactions'].size).to eq 1
-      end
-    end
-
-    context 'when contract does not exist' do
-      let(:id) { 99_999 }
-
-      it 'returns 404' do
-        is_expected.to eq 404
-      end
-    end
-  end
 
   describe 'POST /api/v1/internal/memberships/contracts/:id/cancel' do
     include_context 'current user session is present'

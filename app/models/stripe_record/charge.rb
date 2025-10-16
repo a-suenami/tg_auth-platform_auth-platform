@@ -1,4 +1,4 @@
-# typed: struct
+# typed: strict
 
 class StripeRecord
   class Charge < ApplicationRecord

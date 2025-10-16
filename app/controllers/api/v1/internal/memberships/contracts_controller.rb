@@ -8,7 +8,7 @@ module API::V1::Internal::Memberships
                                    .includes(:payment_transactions)
                                    .order(created_at: :desc)
 
-      render_blueprint_collection(Memberships::ContractBlueprint, contracts, view: :normal)
+      render_blueprint_collection(Memberships::ContractBlueprint, contracts, view: :detailed)
     end
 
     def show
@@ -30,9 +30,9 @@ module API::V1::Internal::Memberships
       contract = current_user.membership_contracts.find(params[:id])
 
       # 現在のTransactionを取得
-      current_transaction = contract.current_transaction
+      payment_subscription = contract.payment_subscription
 
-      raise Exceptions::Payment::NoStripeSubscription if current_transaction&.chargeable_type != 'StripeRecord::Subscription'
+      raise Exceptions::Payment::NoStripeSubscription if payment_subscription&.subscribable_type != 'StripeRecord::Subscription'
 
       contract = UserStripe::CancelSubscriptionService.new.execute(contract:)
 

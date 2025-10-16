@@ -17,10 +17,7 @@ class StripeRecord
     has_many :invoices, inverse_of: :chargeable
     has_many :subscription_items, class_name: 'StripeRecord::SubscriptionItem', dependent: :destroy
 
-    has_many :payment_subscriptions, inverse_of: :subscribable, dependent: :nullify, class_name: 'Payment::Transaction'
-    # transactionの中でもphaseがcurrentのものを取得する
-    has_one :current_transaction, -> { where(phase: :current) }, class_name: 'Payment::Transaction', inverse_of: :chargeable, dependent: :nullify
-    has_one :upcoming_transaction, -> { where(phase: :upcoming) }, class_name: 'Payment::Transaction', inverse_of: :chargeable, dependent: :nullify
+    has_many :payment_subscriptions, inverse_of: :subscribable, dependent: :nullify, class_name: 'Payment::Subscription'
     has_many :subscription_schedules, class_name: 'StripeRecord::SubscriptionSchedule', dependent: :nullify
     has_one :last_subscription_schedule, -> { order(created_at: :desc) }, class_name: 'StripeRecord::SubscriptionSchedule', dependent: :nullify, inverse_of: :subscription
 
@@ -50,10 +47,10 @@ class StripeRecord
         self.update!(status: stripe_subscription.status)
 
         if stripe_subscription.status == 'canceled'
-          self&.update(current_period_end: Time.zone.at(stripe_subscription.canceled_at))
+          self.update(current_period_end: Time.zone.at(stripe_subscription.canceled_at))
         else
           current_period_end = stripe_subscription.items.data.first.current_period_end
-          self&.update(current_period_end: Time.zone.at(current_period_end))
+          self.update(current_period_end: Time.zone.at(current_period_end))
         end
 
         stripe_subscription
