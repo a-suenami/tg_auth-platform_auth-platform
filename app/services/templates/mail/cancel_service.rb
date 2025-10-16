@@ -12,8 +12,12 @@ module Templates
         validate!
 
         ActiveRecord::Base.transaction do
-          version_number = @template.latest_version.version
-          @template.latest_version.destroy!
+          version = @template.latest_version
+          version_number = version.version
+
+          @template.template_mail_histories.where(version_id: version.id).update_all(version_id: nil)
+
+          version.destroy!
 
           log_history(version_number)
         end
