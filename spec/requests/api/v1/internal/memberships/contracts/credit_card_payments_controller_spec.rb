@@ -622,4 +622,260 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
       end
     end
   end
+
+  describe 'POST /api/v1/internal/memberships/contracts/credit_card_payments/:contract_id/complete' do
+    include_context 'membership and stripe setup'
+    include_context 'stripe api mocks'
+    let(:tenant_stripe_account) { create(:tenant_stripe_account, :with_account, tenant_id: current_tenant.id) }
+    let(:contract) { create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'pending') }
+    let(:stripe_record_subscription) { create(:stripe_record_subscription, tenant_id: current_tenant.id, user: current_user, price: stripe_record_price_platinum) }
+    let(:payment_subscription) { create(:payment__subscription, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, subscribable: stripe_record_subscription) }
+    let(:payment_transaction) {
+      create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'pi_test123',
+     chargeable: stripe_record_payment_intent, status: 'pending', recurrence: true,)
+    }
+    let(:stripe_record_invoice) { create(:stripe_record_invoice, tenant_id: current_tenant.id, user: current_user) }
+    let(:stripe_record_payment_intent) {
+      create(:stripe_record_payment_intent, tenant_id: current_tenant.id, user: current_user, remote_id: 'pi_test123', status: 'requires_confirmation', invoice: stripe_record_invoice,
+     api_key_account: tenant_stripe_account.stripe_account,)
+    }
+    let(:contract_term) { create(:memberships__contract_term, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, membership_plan: leveled_membership_plan_platinum) }
+
+    before do
+      tenant_stripe_account
+      contract_term
+      payment_subscription
+      payment_transaction
+      stripe_record_payment_intent
+    end
+
+    context 'when no session' do
+      let(:contract_id) { contract.id }
+
+      it 'returns 401 Unauthorized' do
+        is_expected.to eq 401
+      end
+    end
+
+    context 'when success case' do
+      include_context 'current user session is present'
+
+      let(:contract_id) { contract.id }
+
+      before do
+        # Mock Stripe API for PaymentIntent refresh
+        mock_stripe_payment_intent = Stripe::PaymentIntent.construct_from({
+          id: 'pi_test123',
+          status: 'succeeded',
+          amount: 500,
+          currency: 'jpy',
+          customer: 'cus_test123',
+          payment_method: 'pm_test123',
+          created: Time.current.to_i,
+          canceled_at: nil,
+          confirmation_method: 'automatic',
+          capture_method: 'automatic',
+          client_secret: 'pi_test123_secret',
+        })
+        allow(StripeRecord::Client::PaymentIntent).to receive(:retrieve).and_return(Mangrove::Result.ok(mock_stripe_payment_intent))
+
+        # Mock Stripe API for Subscription refresh
+        mock_stripe_subscription = instance_double(Stripe::Subscription)
+        allow(mock_stripe_subscription).to receive(:id).and_return('sub_test123')
+        allow(mock_stripe_subscription).to receive(:status).and_return('active')
+
+        # Mock items.data.first.current_period_end
+        mock_subscription_item = double('Stripe::SubscriptionItem')
+        allow(mock_subscription_item).to receive(:current_period_end).and_return(1.month.from_now.to_i)
+        mock_items = double('Stripe::ListObject')
+        allow(mock_items).to receive(:data).and_return([mock_subscription_item])
+        allow(mock_stripe_subscription).to receive(:items).and_return(mock_items)
+
+        allow(Stripe::Subscription).to receive(:retrieve).and_return(mock_stripe_subscription)
+      end
+
+      it 'completes the contract successfully' do
+        expect {
+          is_expected.to eq 200
+        }.to change { contract.reload.status }.from('pending').to('active')
+          .and change { payment_transaction.reload.status }.from('pending').to('active')
+          .and change { contract.reload.expires_at }.from(nil).to(be_within(1.second).of(1.month.from_now))
+
+        json_response = response.parsed_body
+        expect(json_response['id']).to eq(contract.id)
+        expect(json_response['status']).to eq('active')
+        expect(json_response['expires_at']).to be_present
+      end
+
+      it 'creates active membership users' do
+        is_expected.to eq 200
+
+        contract.reload
+        membership_users = contract.membership_users
+        expect(membership_users.count).to eq(leveled_membership_plan_platinum.memberships.count)
+        membership_users.each do |membership_user|
+          expect(membership_user.status).to eq('active')
+          expect(membership_user.expires_at).to be_present
+        end
+      end
+
+      it 'returns correct response format' do
+        is_expected.to eq 200
+        json_response = response.parsed_body
+        expect(json_response).to include('id', 'status', 'created_at', 'updated_at', 'expires_at')
+        expect(json_response['status']).to eq('active')
+      end
+    end
+
+    context 'when error case' do
+      include_context 'current user session is present'
+
+      let(:contract_id) { contract.id }
+
+      context 'contract not found' do
+        let(:contract_id) { 'invalid-id' }
+
+        it 'returns 404 Not Found' do
+          is_expected.to eq 404
+        end
+      end
+
+      context 'transaction not found' do
+        before do
+          payment_transaction.destroy!
+        end
+
+        it 'returns 400 Bad Request with transaction_not_found error' do
+          is_expected.to eq 400
+          expect(body_hash[:error][:code]).to eq('transaction_not_found')
+        end
+      end
+
+      context 'payment not succeeded' do
+        before do
+          stripe_record_payment_intent.update!(status: 'requires_action')
+
+          # Mock Stripe API for PaymentIntent refresh
+          mock_stripe_payment_intent = Stripe::PaymentIntent.construct_from({
+            id: 'pi_test123',
+            status: 'requires_action',
+            amount: 500,
+            currency: 'jpy',
+            customer: 'cus_test123',
+            payment_method: 'pm_test123',
+            created: Time.current.to_i,
+            canceled_at: nil,
+            confirmation_method: 'automatic',
+            capture_method: 'automatic',
+            client_secret: 'pi_test123_secret',
+          })
+          allow(StripeRecord::Client::PaymentIntent).to receive(:retrieve).and_return(Mangrove::Result.ok(mock_stripe_payment_intent))
+        end
+
+        it 'returns 400 Bad Request with payment_not_succeeded error' do
+          is_expected.to eq 400
+          expect(body_hash[:error][:code]).to eq('payment_not_succeeded')
+        end
+      end
+
+      context 'stripe API error' do
+        before do
+          allow(StripeRecord::Client::PaymentIntent).to receive(:retrieve).and_return(Mangrove::Result.err(Stripe::CardError.new('Card was declined', 'card_declined')))
+        end
+
+        it 'returns 400 Bad Request with stripe_error' do
+          is_expected.to eq 400
+          expect(body_hash[:error][:code]).to eq('stripe_error')
+        end
+      end
+
+      context 'unsupported chargeable type' do
+        before do
+          # 他の決済のchargeableが紐づいていた場合
+          payment_transaction.update!(chargeable: nil)
+
+          # Mock Stripe API for SetupIntent refresh (even though it should not be called)
+          mock_stripe_setup_intent = Stripe::SetupIntent.construct_from({
+            id: 'seti_test123',
+            status: 'succeeded',
+            usage: 'off_session',
+            client_secret: 'seti_test123_secret',
+          })
+          allow(StripeRecord::Client::SetupIntent).to receive(:retrieve).and_return(Mangrove::Result.ok(mock_stripe_setup_intent))
+
+          # Mock Stripe API for Subscription refresh
+          mock_stripe_subscription = instance_double(Stripe::Subscription)
+          allow(mock_stripe_subscription).to receive(:id).and_return('sub_test123')
+          allow(mock_stripe_subscription).to receive(:status).and_return('active')
+
+          # Mock items.data.first.current_period_end
+          mock_subscription_item = double('Stripe::SubscriptionItem')
+          allow(mock_subscription_item).to receive(:current_period_end).and_return(1.month.from_now.to_i)
+          mock_items = double('Stripe::ListObject')
+          allow(mock_items).to receive(:data).and_return([mock_subscription_item])
+          allow(mock_stripe_subscription).to receive(:items).and_return(mock_items)
+
+          allow(Stripe::Subscription).to receive(:retrieve).and_return(mock_stripe_subscription)
+        end
+
+        it 'returns 400 Bad Request with unsupported_chargeable error' do
+          is_expected.to eq 400
+          expect(body_hash[:error][:code]).to eq('unsupported_chargeable')
+        end
+      end
+    end
+
+    context 'with SetupIntent' do
+      include_context 'current user session is present'
+
+      let(:stripe_record_setup_intent) {
+        create(:stripe_record_setup_intent, tenant_id: current_tenant.id, user: current_user, remote_id: 'seti_test123', status: 'requires_action',
+api_key_account: tenant_stripe_account.stripe_account,)
+      }
+      let(:payment_transaction_setup) {
+        create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'seti_test123',
+       chargeable: stripe_record_setup_intent, status: 'pending', recurrence: true,)
+      }
+      let(:contract_id) { contract.id }
+
+      before do
+        payment_transaction.destroy!
+        payment_transaction_setup
+        stripe_record_setup_intent
+
+        # Mock Stripe API for SetupIntent refresh
+        mock_stripe_setup_intent = Stripe::SetupIntent.construct_from({
+          id: 'seti_test123',
+          status: 'succeeded',
+          usage: 'off_session',
+          client_secret: 'seti_test123_secret',
+        })
+        allow(StripeRecord::Client::SetupIntent).to receive(:retrieve).and_return(Mangrove::Result.ok(mock_stripe_setup_intent))
+
+        # Mock Stripe API for Subscription refresh
+        mock_stripe_subscription = instance_double(Stripe::Subscription)
+        allow(mock_stripe_subscription).to receive(:id).and_return('sub_test123')
+        allow(mock_stripe_subscription).to receive(:status).and_return('active')
+
+        # Mock items.data.first.current_period_end
+        mock_subscription_item = double('Stripe::SubscriptionItem')
+        allow(mock_subscription_item).to receive(:current_period_end).and_return(1.month.from_now.to_i)
+        mock_items = double('Stripe::ListObject')
+        allow(mock_items).to receive(:data).and_return([mock_subscription_item])
+        allow(mock_stripe_subscription).to receive(:items).and_return(mock_items)
+
+        allow(Stripe::Subscription).to receive(:retrieve).and_return(mock_stripe_subscription)
+      end
+
+      it 'completes the contract successfully with SetupIntent' do
+        expect {
+          is_expected.to eq 200
+        }.to change { contract.reload.status }.from('pending').to('active')
+          .and change { payment_transaction_setup.reload.status }.from('pending').to('active')
+
+        json_response = response.parsed_body
+        expect(json_response['status']).to eq('active')
+      end
+    end
+  end
 end

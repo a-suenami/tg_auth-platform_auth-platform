@@ -3,8 +3,8 @@
 FactoryBot.define do
   factory :payment__transaction, class: 'Payment::Transaction' do
     tenant_id { create(:tenant).id }
-    user { create(:user) }
-    membership_contract { create(:membership_contract) }
+    user { create(:user, tenant_id: self.tenant_id) }
+    membership_contract { create(:membership_contract, tenant_id: self.tenant_id) }
     payment_type { 'credit_card' }
     payment_provider { 'stripe' }
     external_id { nil }

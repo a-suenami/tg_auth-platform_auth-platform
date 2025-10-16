@@ -102,6 +102,7 @@ module UserStripe
         membership_user = Memberships::User.find_or_create_by!(
           tenant_id: contract.tenant_id,
           user: contract.user,
+          membership_contract: contract,
           membership:,
         )
         membership_user.update!(

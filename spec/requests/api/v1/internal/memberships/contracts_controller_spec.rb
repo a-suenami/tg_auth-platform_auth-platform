@@ -146,10 +146,10 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
       it 'includes transactions' do
         is_expected.to eq 200
 
-        expect(body_hash['transactions']).to be_present
-        expect(body_hash['transactions'].size).to eq 1
+        expect(body_hash['payment_transactions']).to be_present
+        expect(body_hash['payment_transactions'].size).to eq 1
 
-        transaction = body_hash['transactions'][0]
+        transaction = body_hash['payment_transactions'][0]
         expect(transaction['id']).to eq active_transaction.id
         expect(transaction['payment_type']).to eq active_transaction.payment_type
         expect(transaction['payment_provider']).to eq active_transaction.payment_provider
@@ -162,7 +162,7 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
       it 'includes chargeable subscription' do
         is_expected.to eq 200
 
-        transaction = body_hash['transactions'][0]
+        transaction = body_hash['payment_transactions'][0]
         expect(transaction['chargeable']).to be_present
         expect(transaction['chargeable']['id']).to eq stripe_record_subscription.id
         expect(transaction['chargeable']['remote_id']).to eq stripe_record_subscription.remote_id
@@ -200,15 +200,15 @@ RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
 
         expect(body_hash['id']).to eq pending_contract.id
         expect(body_hash['status']).to eq pending_contract.status
-        expect(body_hash['transactions']).to be_present
+        expect(body_hash['payment_transactions']).to be_present
       end
 
       it 'includes transactions without includes' do
         is_expected.to eq 200
 
         # pollingエンドポイントはincludes(:transactions)を使わない
-        expect(body_hash['transactions']).to be_present
-        expect(body_hash['transactions'].size).to eq 1
+        expect(body_hash['payment_transactions']).to be_present
+        expect(body_hash['payment_transactions'].size).to eq 1
       end
     end
 

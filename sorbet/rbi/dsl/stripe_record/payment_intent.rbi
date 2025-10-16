@@ -526,8 +526,23 @@ class StripeRecord::PaymentIntent
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Invoice) }
     def build_invoice(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Charge) }
+    def build_latest_charge(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
+
+    sig { returns(T.untyped) }
+    def chargeable; end
+
+    sig { params(value: T.untyped).void }
+    def chargeable=(value); end
+
+    sig { returns(T::Boolean) }
+    def chargeable_changed?; end
+
+    sig { returns(T::Boolean) }
+    def chargeable_previously_changed?; end
 
     sig { returns(T.nilable(::StripeRecord::Account)) }
     def connect_account; end
@@ -559,6 +574,12 @@ class StripeRecord::PaymentIntent
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Invoice) }
     def create_invoice!(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Charge) }
+    def create_latest_charge(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Charge) }
+    def create_latest_charge!(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user(*args, &blk); end
 
@@ -577,14 +598,32 @@ class StripeRecord::PaymentIntent
     sig { returns(T::Boolean) }
     def invoice_previously_changed?; end
 
+    sig { returns(T.nilable(::StripeRecord::Charge)) }
+    def latest_charge; end
+
+    sig { params(value: T.nilable(::StripeRecord::Charge)).void }
+    def latest_charge=(value); end
+
+    sig { returns(T::Boolean) }
+    def latest_charge_changed?; end
+
+    sig { returns(T::Boolean) }
+    def latest_charge_previously_changed?; end
+
     sig { returns(T.nilable(::StripeRecord::Account)) }
     def reload_api_key_account; end
+
+    sig { returns(T.untyped) }
+    def reload_chargeable; end
 
     sig { returns(T.nilable(::StripeRecord::Account)) }
     def reload_connect_account; end
 
     sig { returns(T.nilable(::StripeRecord::Invoice)) }
     def reload_invoice; end
+
+    sig { returns(T.nilable(::StripeRecord::Charge)) }
+    def reload_latest_charge; end
 
     sig { returns(T.nilable(::User)) }
     def reload_user; end
@@ -593,10 +632,16 @@ class StripeRecord::PaymentIntent
     def reset_api_key_account; end
 
     sig { void }
+    def reset_chargeable; end
+
+    sig { void }
     def reset_connect_account; end
 
     sig { void }
     def reset_invoice; end
+
+    sig { void }
+    def reset_latest_charge; end
 
     sig { void }
     def reset_user; end
@@ -813,7 +858,6 @@ class StripeRecord::PaymentIntent
         remote_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         invoice_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        invoice_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         currency: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         amount: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -840,10 +884,12 @@ class StripeRecord::PaymentIntent
         connect_account_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         charge_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         latest_charge_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        chargeable_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        chargeable_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateAssociationRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, remote_id: nil, user_id: nil, invoice_id: nil, invoice_type: nil, currency: nil, amount: nil, status: nil, customer_id: nil, client_secret: nil, confirmation_method: nil, capture_method: nil, payment_method_id: nil, payment_method_configuration_details: nil, payment_method_options: nil, cancellation_reason: nil, description: nil, metadata: nil, next_action: nil, on_behalf_of_id: nil, application_fee_amount: nil, transfer_data: nil, transfer_group: nil, created_at: nil, updated_at: nil, created: nil, canceled_at: nil, api_key_account_id: nil, connect_account_id: nil, charge_type: nil, latest_charge_id: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, remote_id: nil, user_id: nil, invoice_id: nil, currency: nil, amount: nil, status: nil, customer_id: nil, client_secret: nil, confirmation_method: nil, capture_method: nil, payment_method_id: nil, payment_method_configuration_details: nil, payment_method_options: nil, cancellation_reason: nil, description: nil, metadata: nil, next_action: nil, on_behalf_of_id: nil, application_fee_amount: nil, transfer_data: nil, transfer_group: nil, created_at: nil, updated_at: nil, created: nil, canceled_at: nil, api_key_account_id: nil, connect_account_id: nil, charge_type: nil, latest_charge_id: nil, chargeable_id: nil, chargeable_type: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -1167,6 +1213,96 @@ class StripeRecord::PaymentIntent
 
     sig { void }
     def charge_type_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_id; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def chargeable_id=(value); end
+
+    sig { returns(T::Boolean) }
+    def chargeable_id?; end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_id_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def chargeable_id_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def chargeable_id_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def chargeable_id_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def chargeable_id_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def chargeable_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_id_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def chargeable_id_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def chargeable_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_id_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_id_was; end
+
+    sig { void }
+    def chargeable_id_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_type; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def chargeable_type=(value); end
+
+    sig { returns(T::Boolean) }
+    def chargeable_type?; end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_type_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def chargeable_type_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def chargeable_type_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def chargeable_type_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def chargeable_type_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def chargeable_type_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_type_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def chargeable_type_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def chargeable_type_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_type_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def chargeable_type_was; end
+
+    sig { void }
+    def chargeable_type_will_change!; end
 
     sig { returns(T.nilable(::String)) }
     def client_secret; end
@@ -1664,51 +1800,6 @@ class StripeRecord::PaymentIntent
     def invoice_id_will_change!; end
 
     sig { returns(T.nilable(::String)) }
-    def invoice_type; end
-
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def invoice_type=(value); end
-
-    sig { returns(T::Boolean) }
-    def invoice_type?; end
-
-    sig { returns(T.nilable(::String)) }
-    def invoice_type_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def invoice_type_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def invoice_type_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def invoice_type_change; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def invoice_type_change_to_be_saved; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def invoice_type_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def invoice_type_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def invoice_type_previous_change; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def invoice_type_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def invoice_type_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def invoice_type_was; end
-
-    sig { void }
-    def invoice_type_will_change!; end
-
-    sig { returns(T.nilable(::String)) }
     def latest_charge_id; end
 
     sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
@@ -2090,6 +2181,12 @@ class StripeRecord::PaymentIntent
     def restore_charge_type!; end
 
     sig { void }
+    def restore_chargeable_id!; end
+
+    sig { void }
+    def restore_chargeable_type!; end
+
+    sig { void }
     def restore_client_secret!; end
 
     sig { void }
@@ -2121,9 +2218,6 @@ class StripeRecord::PaymentIntent
 
     sig { void }
     def restore_invoice_id!; end
-
-    sig { void }
-    def restore_invoice_type!; end
 
     sig { void }
     def restore_latest_charge_id!; end
@@ -2210,6 +2304,18 @@ class StripeRecord::PaymentIntent
     def saved_change_to_charge_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_chargeable_id; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_chargeable_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_chargeable_type; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_chargeable_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_client_secret; end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -2274,12 +2380,6 @@ class StripeRecord::PaymentIntent
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_invoice_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_invoice_type; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def saved_change_to_invoice_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_latest_charge_id; end
@@ -2657,6 +2757,12 @@ class StripeRecord::PaymentIntent
     def will_save_change_to_charge_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_chargeable_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_chargeable_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_client_secret?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -2688,9 +2794,6 @@ class StripeRecord::PaymentIntent
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_invoice_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def will_save_change_to_invoice_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_latest_charge_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
@@ -2882,7 +2985,6 @@ class StripeRecord::PaymentIntent
         remote_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         invoice_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        invoice_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         currency: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         amount: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -2909,10 +3011,12 @@ class StripeRecord::PaymentIntent
         connect_account_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         charge_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         latest_charge_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        chargeable_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        chargeable_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, remote_id: nil, user_id: nil, invoice_id: nil, invoice_type: nil, currency: nil, amount: nil, status: nil, customer_id: nil, client_secret: nil, confirmation_method: nil, capture_method: nil, payment_method_id: nil, payment_method_configuration_details: nil, payment_method_options: nil, cancellation_reason: nil, description: nil, metadata: nil, next_action: nil, on_behalf_of_id: nil, application_fee_amount: nil, transfer_data: nil, transfer_group: nil, created_at: nil, updated_at: nil, created: nil, canceled_at: nil, api_key_account_id: nil, connect_account_id: nil, charge_type: nil, latest_charge_id: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, remote_id: nil, user_id: nil, invoice_id: nil, currency: nil, amount: nil, status: nil, customer_id: nil, client_secret: nil, confirmation_method: nil, capture_method: nil, payment_method_id: nil, payment_method_configuration_details: nil, payment_method_options: nil, cancellation_reason: nil, description: nil, metadata: nil, next_action: nil, on_behalf_of_id: nil, application_fee_amount: nil, transfer_data: nil, transfer_group: nil, created_at: nil, updated_at: nil, created: nil, canceled_at: nil, api_key_account_id: nil, connect_account_id: nil, charge_type: nil, latest_charge_id: nil, chargeable_id: nil, chargeable_type: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

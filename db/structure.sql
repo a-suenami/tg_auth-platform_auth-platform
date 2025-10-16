@@ -1024,6 +1024,7 @@ CREATE TABLE public.stripe_record__charges (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     remote_id character varying NOT NULL,
+    payment_intent_id uuid NOT NULL,
     user_id uuid NOT NULL,
     amount integer,
     amount_captured integer,
@@ -1052,7 +1053,6 @@ CREATE TABLE public.stripe_record__charges (
     "order" character varying,
     outcome jsonb,
     paid boolean,
-    payment_intent_id character varying,
     payment_method character varying,
     payment_method_details jsonb,
     radar_options jsonb,
@@ -1171,7 +1171,8 @@ CREATE TABLE public.stripe_record__payment_intents (
     remote_id character varying NOT NULL,
     user_id uuid NOT NULL,
     invoice_id uuid,
-    invoice_type character varying,
+    chargeable_id uuid,
+    chargeable_type character varying,
     latest_charge_id uuid,
     currency character varying,
     amount integer,
@@ -1209,10 +1210,10 @@ COMMENT ON COLUMN public.stripe_record__payment_intents.remote_id IS 'Stripe の
 
 
 --
--- Name: COLUMN stripe_record__payment_intents.invoice_id; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN stripe_record__payment_intents.chargeable_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.stripe_record__payment_intents.invoice_id IS 'subscription or charge';
+COMMENT ON COLUMN public.stripe_record__payment_intents.chargeable_id IS 'subscription or charge';
 
 
 --
@@ -2336,17 +2337,17 @@ CREATE INDEX idx_on_chargeable_type_chargeable_id_12fd49ee92 ON public.stripe_re
 
 
 --
+-- Name: idx_on_chargeable_type_chargeable_id_31503b9e8f; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_chargeable_type_chargeable_id_31503b9e8f ON public.stripe_record__payment_intents USING btree (chargeable_type, chargeable_id);
+
+
+--
 -- Name: idx_on_chargeable_type_chargeable_id_8534730e7a; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_on_chargeable_type_chargeable_id_8534730e7a ON public.payment__transactions USING btree (chargeable_type, chargeable_id);
-
-
---
--- Name: idx_on_invoice_type_invoice_id_19d26676ac; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_on_invoice_type_invoice_id_19d26676ac ON public.stripe_record__payment_intents USING btree (invoice_type, invoice_id);
 
 
 --
@@ -2973,6 +2974,13 @@ CREATE INDEX index_stripe_record__charges_on_connect_account_id ON public.stripe
 
 
 --
+-- Name: index_stripe_record__charges_on_payment_intent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__charges_on_payment_intent_id ON public.stripe_record__charges USING btree (payment_intent_id);
+
+
+--
 -- Name: index_stripe_record__charges_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3012,6 +3020,13 @@ CREATE INDEX index_stripe_record__payment_intents_on_api_key_account_id ON publi
 --
 
 CREATE INDEX index_stripe_record__payment_intents_on_connect_account_id ON public.stripe_record__payment_intents USING btree (connect_account_id);
+
+
+--
+-- Name: index_stripe_record__payment_intents_on_invoice_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stripe_record__payment_intents_on_invoice_id ON public.stripe_record__payment_intents USING btree (invoice_id);
 
 
 --
@@ -3838,6 +3853,14 @@ ALTER TABLE ONLY public.stripe_record__api_keys
 
 
 --
+-- Name: stripe_record__charges fk_stripe_record_charges__payment_intents; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__charges
+    ADD CONSTRAINT fk_stripe_record_charges__payment_intents FOREIGN KEY (payment_intent_id) REFERENCES public.stripe_record__payment_intents(id);
+
+
+--
 -- Name: stripe_record__charges fk_stripe_record_charges__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3875,6 +3898,14 @@ ALTER TABLE ONLY public.stripe_record__charges
 
 ALTER TABLE ONLY public.stripe_record__invoices
     ADD CONSTRAINT fk_stripe_record_invoices__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: stripe_record__payment_intents fk_stripe_record_payment_intents__invoices; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.stripe_record__payment_intents
+    ADD CONSTRAINT fk_stripe_record_payment_intents__invoices FOREIGN KEY (invoice_id) REFERENCES public.stripe_record__invoices(id);
 
 
 --

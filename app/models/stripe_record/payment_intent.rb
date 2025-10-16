@@ -18,6 +18,7 @@ class StripeRecord
     belongs_to :invoice, class_name: 'StripeRecord::Invoice'
     belongs_to :latest_charge, class_name: 'StripeRecord::Charge', optional: true
     belongs_to :api_key_account, class_name: 'StripeRecord::Account'
+    belongs_to :chargeable, polymorphic: true, optional: true
 
     has_many :refunds, dependent: :restrict_with_exception
 

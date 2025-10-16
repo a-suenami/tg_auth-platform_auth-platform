@@ -12,6 +12,7 @@ class StripeRecord
     self.inheritance_column = :_type_disabled
 
     belongs_to :user
+    belongs_to :api_key_account, class_name: 'StripeRecord::Account'
 
     has_one :payment_method, class_name: 'StripeRecord::PaymentMethod'
     has_one :subscription, class_name: 'StripeRecord::Subscription', dependent: :nullify, inverse_of: :pending_setup_intent
@@ -196,6 +197,26 @@ class StripeRecord
       end
 
       CreateCardPaymentMethodResult::Succeeded.new(payment_method)
+    end
+
+    sig { params(auto_save: T::Boolean).returns(Mangrove::Result[StripeRecord::SetupIntent, Stripe::StripeError]) }
+    def api_refresh(auto_save: true)
+      account = T.must(self.api_key_account)
+      api_key = account.api_key
+      result = StripeRecord::Client::SetupIntent.retrieve(remote_id, stripe_account_id: self.stripe_account_id_if_needed, api_key:)
+
+      if result.is_a?(Mangrove::Result::Err)
+        return Mangrove::Result.err(result.err_inner)
+      end
+
+      T.assert_type!(result, Mangrove::Result[Stripe::SetupIntent, Stripe::StripeError])
+
+      self.assign_remote_attributes(result.ok_inner)
+      if auto_save
+        self.save!
+      end
+
+      Mangrove::Result.ok(self)
     end
   end
 end

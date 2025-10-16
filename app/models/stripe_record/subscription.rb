@@ -63,6 +63,7 @@ class StripeRecord
     def fetch_stripe_subscription
       return @stripe_subscription if @stripe_subscription.present?
 
+
       @stripe_subscription ||= Stripe::Subscription.retrieve(
         { id: self.remote_id, expand: ['latest_invoice.confirmation_secret', 'pending_setup_intent'] },
         AppStripe.configuration,

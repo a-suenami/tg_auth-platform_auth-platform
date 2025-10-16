@@ -5,6 +5,8 @@ create_table :stripe_record__charges, force: :cascade, id: :uuid, default: -> { 
   t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_charges__tenants }
 
   t.string :remote_id, null: false, index: { unique: true, name: 'idx_stripe_record_charge_remote_id_uniq' }, comment: 'Stripe の charge ID'
+  t.references :payment_intent, type: :uuid, null: false, index: true, foreign_key: { name: :fk_stripe_record_charges__payment_intents,
+    to_table: :stripe_record__payment_intents, column: :payment_intent_id,}
 
   t.references :user, type: :uuid, null: false, index: true, foreign_key: { name: :fk_stripe_record_charges__users }
 
@@ -35,7 +37,6 @@ create_table :stripe_record__charges, force: :cascade, id: :uuid, default: -> { 
   t.string   :order
   t.jsonb    :outcome
   t.boolean  :paid
-  t.string   :payment_intent_id
   t.string   :payment_method
   t.jsonb    :payment_method_details
   t.jsonb    :radar_options

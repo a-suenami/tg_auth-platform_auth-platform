@@ -85,7 +85,7 @@ class StripeRecord
 
         self.remote_id                           = remote_account.id if self.remote_id.blank?
         self.type                                = remote_account.type
-        self.display_name                        = remote_account.settings.dashboard.display_name
+        self.display_name                        = remote_account.settings.dashboard.display_name || remote_account.id
         self.business_profile_name               = remote_account.business_profile&.name
         self.payments_statement_descriptor       = remote_account.settings.payments.statement_descriptor
         self.payments_statement_descriptor_kana  = remote_account.settings.payments.statement_descriptor_kana

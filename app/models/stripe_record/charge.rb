@@ -36,7 +36,7 @@ class StripeRecord
       self.order = remote_charge.order
       self.outcome = remote_charge.try(:outcome)
       self.paid = remote_charge.paid
-      self.payment_intent_id = remote_charge.payment_intent
+      # # self.payment_intent_id = remote_charge.payment_intent
       self.payment_method = remote_charge.payment_method
       self.payment_method_details = remote_charge.try(:payment_method_details)
       self.radar_options = remote_charge.try(:radar_options)

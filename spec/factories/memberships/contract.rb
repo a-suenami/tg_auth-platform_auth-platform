@@ -3,8 +3,8 @@
 FactoryBot.define do
   factory :memberships__contract, class: 'Memberships::Contract' do
     tenant_id { create(:tenant).id }
-    user { create(:user) }
-    expires_at { 1.year.from_now }
+    user { create(:user, tenant_id: self.tenant_id) }
+    expires_at { nil }
     cancel_at_period_end { false }
     status { 'active' }
 
