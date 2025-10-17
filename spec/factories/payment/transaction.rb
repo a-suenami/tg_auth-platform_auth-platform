@@ -1,7 +1,7 @@
 # typed: false
 
 FactoryBot.define do
-  factory :payment__transaction, class: 'Payment::Transaction' do
+  factory :payment_transaction, class: 'Payment::Transaction' do
     tenant_id { create(:tenant).id }
     user { create(:user, tenant_id: self.tenant_id) }
     membership_contract { create(:membership_contract, tenant_id: self.tenant_id) }

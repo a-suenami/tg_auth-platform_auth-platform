@@ -30,15 +30,15 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
 
   # 支払い取引
   let!(:active_transaction) {
-    create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: active_contract, payment_type: 'credit_card',
+    create(:payment_transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: active_contract, payment_type: 'credit_card',
    payment_provider: 'stripe', external_id: 'pi_test123', chargeable: stripe_record_payment_intent, status: 'active', recurrence: true,)
   }
   let(:active_payment_subscription) {
-    create(:payment__subscription, tenant_id: current_tenant.id, user: current_user, membership_contract: active_contract, subscribable: stripe_record_subscription)
+    create(:payment_subscription, tenant_id: current_tenant.id, user: current_user, membership_contract: active_contract, subscribable: stripe_record_subscription)
   }
 
   let!(:expired_transaction) {
-    create(:payment__transaction, :closed, tenant_id: current_tenant.id, user: current_user, membership_contract: expired_contract, payment_type: 'credit_card',
+    create(:payment_transaction, :closed, tenant_id: current_tenant.id, user: current_user, membership_contract: expired_contract, payment_type: 'credit_card',
    payment_provider: 'stripe', external_id: 'sub_expired123', status: 'expired', recurrence: false,)
   }
 
@@ -230,7 +230,7 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
       let(:id) { contract_without_stripe.id }
 
       before do
-        create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: contract_without_stripe, payment_type: 'credit_card',
+        create(:payment_transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: contract_without_stripe, payment_type: 'credit_card',
          payment_provider: 'stripe', chargeable: nil, status: 'active',)
       end
 
@@ -245,7 +245,7 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
       let(:id) { contract_with_non_stripe.id }
 
       before do
-        create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: contract_with_non_stripe, payment_type: 'credit_card',
+        create(:payment_transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: contract_with_non_stripe, payment_type: 'credit_card',
          payment_provider: 'stripe', chargeable_type: 'SomeOtherModel', chargeable_id: 1, status: 'active',)
       end
 

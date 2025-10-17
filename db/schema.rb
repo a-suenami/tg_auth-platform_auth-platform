@@ -314,7 +314,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["access_grant_id"], name: "index_oauth_openid_requests_on_access_grant_id"
   end
 
-  create_table "payment__subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "支払い取引情報", force: :cascade do |t|
+  create_table "payment_subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "支払い取引情報", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.uuid "membership_contract_id", null: false, comment: "メンバーシップ契約ID"
@@ -322,14 +322,14 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "subscribable_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["membership_contract_id"], name: "index_payment__subscriptions_on_membership_contract_id"
-    t.index ["subscribable_type", "subscribable_id"], name: "idx_on_subscribable_type_subscribable_id_36fbd91894"
-    t.index ["tenant_id", "user_id"], name: "idx_payment__subscriptions_tenant_user"
-    t.index ["tenant_id"], name: "index_payment__subscriptions_on_tenant_id"
-    t.index ["user_id"], name: "index_payment__subscriptions_on_user_id"
+    t.index ["membership_contract_id"], name: "index_payment_subscriptions_on_membership_contract_id"
+    t.index ["subscribable_type", "subscribable_id"], name: "idx_on_subscribable_type_subscribable_id_023c9144d9"
+    t.index ["tenant_id", "user_id"], name: "idx_payment_subscriptions_tenant_user"
+    t.index ["tenant_id"], name: "index_payment_subscriptions_on_tenant_id"
+    t.index ["user_id"], name: "index_payment_subscriptions_on_user_id"
   end
 
-  create_table "payment__transactions", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "支払い取引情報", force: :cascade do |t|
+  create_table "payment_transactions", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "支払い取引情報", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.uuid "membership_contract_id", null: false, comment: "メンバーシップ契約ID"
@@ -347,13 +347,13 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "chargeable_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_8534730e7a"
-    t.index ["expires_at"], name: "idx_payment__transactions_expires_at"
-    t.index ["external_id"], name: "idx_payment__transactions_external_id"
-    t.index ["membership_contract_id"], name: "index_payment__transactions_on_membership_contract_id"
-    t.index ["tenant_id", "user_id"], name: "idx_payment__transactions_tenant_user"
-    t.index ["tenant_id"], name: "index_payment__transactions_on_tenant_id"
-    t.index ["user_id"], name: "index_payment__transactions_on_user_id"
+    t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_c87a4bad66"
+    t.index ["expires_at"], name: "idx_payment_transactions_expires_at"
+    t.index ["external_id"], name: "idx_payment_transactions_external_id"
+    t.index ["membership_contract_id"], name: "index_payment_transactions_on_membership_contract_id"
+    t.index ["tenant_id", "user_id"], name: "idx_payment_transactions_tenant_user"
+    t.index ["tenant_id"], name: "index_payment_transactions_on_tenant_id"
+    t.index ["user_id"], name: "index_payment_transactions_on_user_id"
   end
 
   create_table "rulers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -921,12 +921,12 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
   add_foreign_key "oauth_applications", "tenants", name: "fk_oauth_applications_tenants"
   add_foreign_key "oauth_openid_requests", "oauth_access_grants", column: "access_grant_id", name: "fk_oauth_openid_requests_oauth_access_grants"
-  add_foreign_key "payment__subscriptions", "membership_contracts", name: "fk_payment__transactions_contracts"
-  add_foreign_key "payment__subscriptions", "tenants", name: "fk_payment__subscriptions_tenants"
-  add_foreign_key "payment__subscriptions", "users", name: "fk_payment__transactions_users"
-  add_foreign_key "payment__transactions", "membership_contracts", name: "fk_payment__transactions_contracts"
-  add_foreign_key "payment__transactions", "tenants", name: "fk_payment__transactions_tenants"
-  add_foreign_key "payment__transactions", "users", name: "fk_payment__transactions_users"
+  add_foreign_key "payment_subscriptions", "membership_contracts", name: "fk_payment_subscriptions_contracts"
+  add_foreign_key "payment_subscriptions", "tenants", name: "fk_payment_subscriptions_tenants"
+  add_foreign_key "payment_subscriptions", "users", name: "fk_payment_subscriptions_users"
+  add_foreign_key "payment_transactions", "membership_contracts", name: "fk_payment_transactions_contracts"
+  add_foreign_key "payment_transactions", "tenants", name: "fk_payment_transactions_tenants"
+  add_foreign_key "payment_transactions", "users", name: "fk_payment_transactions_users"
   add_foreign_key "stripe_record__accounts", "stripe_record__accounts", column: "controlling_platform_id", name: "fk_stripe_record_accounts_controlling_platform_id"
   add_foreign_key "stripe_record__accounts", "stripe_record__api_keys", column: "api_key_id", name: "fk_stripe_record_accounts_api_key_id"
   add_foreign_key "stripe_record__accounts", "tenants", name: "fk_stripe_record_accounts__tenants"

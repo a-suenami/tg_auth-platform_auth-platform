@@ -456,7 +456,7 @@ is_active: true,)
           create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'pending')
         }
         let(:existing_transaction) {
-          create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: existing_contract,
+          create(:payment_transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: existing_contract,
 payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'dummy_external_id', chargeable: existing_stripe_record_subscription, status: 'pending', recurrence: true,)
         }
         let(:existing_stripe_record_subscription) {
@@ -490,7 +490,7 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
           create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'pending')
         }
         let(:existing_transaction) {
-          create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: existing_contract,
+          create(:payment_transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: existing_contract,
 payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'dummy_external_id', chargeable: existing_stripe_record_subscription, status: 'pending', recurrence: true,)
         }
         let(:existing_stripe_record_subscription) {
@@ -628,9 +628,9 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
     let(:tenant_stripe_account) { create(:tenant_stripe_account, :with_account, tenant_id: current_tenant.id) }
     let(:contract) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'pending') }
     let(:stripe_record_subscription) { create(:stripe_record_subscription, tenant_id: current_tenant.id, user: current_user, price: stripe_record_price_platinum) }
-    let(:payment_subscription) { create(:payment__subscription, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, subscribable: stripe_record_subscription) }
+    let(:payment_subscription) { create(:payment_subscription, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, subscribable: stripe_record_subscription) }
     let(:payment_transaction) {
-      create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'pi_test123',
+      create(:payment_transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'pi_test123',
      chargeable: stripe_record_payment_intent, status: 'pending', recurrence: true,)
     }
     let(:stripe_record_invoice) { create(:stripe_record_invoice, tenant_id: current_tenant.id, user: current_user) }
@@ -809,7 +809,7 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
 api_key_account: tenant_stripe_account.stripe_account,)
       }
       let(:payment_transaction_setup) {
-        create(:payment__transaction,
+        create(:payment_transaction,
                tenant_id: current_tenant.id,
                user: current_user,
                membership_contract: contract,

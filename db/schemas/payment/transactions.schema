@@ -1,4 +1,4 @@
-create_table :payment__transactions, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: '支払い取引情報' do |t|
+create_table :payment_transactions, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: '支払い取引情報' do |t|
   t.references :tenant, type: :citext, null: false
   t.references :user, type: :uuid, null: false
   t.references :membership_contract, type: :uuid, null: false, comment: 'メンバーシップ契約ID'
@@ -17,11 +17,11 @@ create_table :payment__transactions, force: :cascade, id: :uuid, default: -> { '
   t.references :chargeable, type: :uuid,   polymorphic: true, comment: '決済情報'
 
   t.timestamps null: false
-  t.index [:tenant_id, :user_id], name: :idx_payment__transactions_tenant_user, using: :btree
-  t.index :expires_at, name: :idx_payment__transactions_expires_at, using: :btree
-  t.index :external_id, name: :idx_payment__transactions_external_id, using: :btree
+  t.index [:tenant_id, :user_id], name: :idx_payment_transactions_tenant_user, using: :btree
+  t.index :expires_at, name: :idx_payment_transactions_expires_at, using: :btree
+  t.index :external_id, name: :idx_payment_transactions_external_id, using: :btree
 end
 
-add_foreign_key :payment__transactions, :tenants, name: :fk_payment__transactions_tenants
-add_foreign_key :payment__transactions, :users, name: :fk_payment__transactions_users
-add_foreign_key :payment__transactions, :membership_contracts, column: :membership_contract_id, name: :fk_payment__transactions_contracts
+add_foreign_key :payment_transactions, :tenants, name: :fk_payment_transactions_tenants
+add_foreign_key :payment_transactions, :users, name: :fk_payment_transactions_users
+add_foreign_key :payment_transactions, :membership_contracts, column: :membership_contract_id, name: :fk_payment_transactions_contracts

@@ -1,4 +1,4 @@
-create_table :payment__subscriptions, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: '支払い取引情報' do |t|
+create_table :payment_subscriptions, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: '支払い取引情報' do |t|
   t.references :tenant, type: :citext, null: false
   t.references :user, type: :uuid, null: false
   t.references :membership_contract, type: :uuid, null: false, comment: 'メンバーシップ契約ID'
@@ -7,9 +7,9 @@ create_table :payment__subscriptions, force: :cascade, id: :uuid, default: -> { 
   t.references :subscribable, type: :uuid,   polymorphic: true, comment: 'サブスクリプションオブジェクト'
 
   t.timestamps null: false
-  t.index [:tenant_id, :user_id], name: :idx_payment__subscriptions_tenant_user, using: :btree
+  t.index [:tenant_id, :user_id], name: :idx_payment_subscriptions_tenant_user, using: :btree
 end
 
-add_foreign_key :payment__subscriptions, :tenants, name: :fk_payment__subscriptions_tenants
-add_foreign_key :payment__subscriptions, :users, name: :fk_payment__transactions_users
-add_foreign_key :payment__subscriptions, :membership_contracts, column: :membership_contract_id, name: :fk_payment__transactions_contracts
+add_foreign_key :payment_subscriptions, :tenants, name: :fk_payment_subscriptions_tenants
+add_foreign_key :payment_subscriptions, :users, name: :fk_payment_subscriptions_users
+add_foreign_key :payment_subscriptions, :membership_contracts, column: :membership_contract_id, name: :fk_payment_subscriptions_contracts

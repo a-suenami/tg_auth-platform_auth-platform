@@ -6,7 +6,7 @@ module Payment
     extend T::Sig
     include Multitenancy
 
-    self.table_name = 'payment__subscriptions'
+    self.table_name = 'payment_subscriptions'
 
     belongs_to :tenant
     belongs_to :user, class_name: '::User'

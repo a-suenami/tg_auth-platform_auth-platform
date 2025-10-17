@@ -1,4 +1,4 @@
-\restrict 1EgMBrAZZaQHd6CgyfObOxx9cduScHz8RX9gNoq0bZStynd6dmny2ztsGhCbVDt
+\restrict U4strBj3PK077v8Vv0AtVQWCvrcyvTGvf8nEm5ND8flxU2YZPIxO7PqZO24k74Y
 
 -- Dumped from database version 15.5
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -752,10 +752,10 @@ CREATE TABLE public.oauth_openid_requests (
 
 
 --
--- Name: payment__subscriptions; Type: TABLE; Schema: public; Owner: -
+-- Name: payment_subscriptions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.payment__subscriptions (
+CREATE TABLE public.payment_subscriptions (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
@@ -768,31 +768,31 @@ CREATE TABLE public.payment__subscriptions (
 
 
 --
--- Name: TABLE payment__subscriptions; Type: COMMENT; Schema: public; Owner: -
+-- Name: TABLE payment_subscriptions; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.payment__subscriptions IS '支払い取引情報';
-
-
---
--- Name: COLUMN payment__subscriptions.membership_contract_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.payment__subscriptions.membership_contract_id IS 'メンバーシップ契約ID';
+COMMENT ON TABLE public.payment_subscriptions IS '支払い取引情報';
 
 
 --
--- Name: COLUMN payment__subscriptions.subscribable_id; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN payment_subscriptions.membership_contract_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.payment__subscriptions.subscribable_id IS 'サブスクリプションオブジェクト';
+COMMENT ON COLUMN public.payment_subscriptions.membership_contract_id IS 'メンバーシップ契約ID';
 
 
 --
--- Name: payment__transactions; Type: TABLE; Schema: public; Owner: -
+-- Name: COLUMN payment_subscriptions.subscribable_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-CREATE TABLE public.payment__transactions (
+COMMENT ON COLUMN public.payment_subscriptions.subscribable_id IS 'サブスクリプションオブジェクト';
+
+
+--
+-- Name: payment_transactions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.payment_transactions (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
@@ -815,94 +815,94 @@ CREATE TABLE public.payment__transactions (
 
 
 --
--- Name: TABLE payment__transactions; Type: COMMENT; Schema: public; Owner: -
+-- Name: TABLE payment_transactions; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON TABLE public.payment__transactions IS '支払い取引情報';
-
-
---
--- Name: COLUMN payment__transactions.membership_contract_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.payment__transactions.membership_contract_id IS 'メンバーシップ契約ID';
+COMMENT ON TABLE public.payment_transactions IS '支払い取引情報';
 
 
 --
--- Name: COLUMN payment__transactions.payment_type; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN payment_transactions.membership_contract_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.payment__transactions.payment_type IS '支払い方法: credit_card, convenience, campaign_code, external_linkage';
-
-
---
--- Name: COLUMN payment__transactions.payment_provider; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.payment__transactions.payment_provider IS '決済プロバイダ: stripe, komojuなど';
+COMMENT ON COLUMN public.payment_transactions.membership_contract_id IS 'メンバーシップ契約ID';
 
 
 --
--- Name: COLUMN payment__transactions.external_id; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN payment_transactions.payment_type; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.payment__transactions.external_id IS '外部システムのID';
-
-
---
--- Name: COLUMN payment__transactions.phase; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.payment__transactions.phase IS 'phase: transactionの利用状態。プラン変更予定時はupcoming。current, upcoming, closed';
+COMMENT ON COLUMN public.payment_transactions.payment_type IS '支払い方法: credit_card, convenience, campaign_code, external_linkage';
 
 
 --
--- Name: COLUMN payment__transactions.activated_at; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN payment_transactions.payment_provider; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.payment__transactions.activated_at IS '有効化日時';
-
-
---
--- Name: COLUMN payment__transactions.expires_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.payment__transactions.expires_at IS '有効期限';
+COMMENT ON COLUMN public.payment_transactions.payment_provider IS '決済プロバイダ: stripe, komojuなど';
 
 
 --
--- Name: COLUMN payment__transactions.status; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN payment_transactions.external_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.payment__transactions.status IS 'ステータス';
-
-
---
--- Name: COLUMN payment__transactions.recurrence; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.payment__transactions.recurrence IS '定期課金フラグ: true=サブスクリプション, false=買い切り';
+COMMENT ON COLUMN public.payment_transactions.external_id IS '外部システムのID';
 
 
 --
--- Name: COLUMN payment__transactions.revision; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN payment_transactions.phase; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.payment__transactions.revision IS 'バージョン管理用';
-
-
---
--- Name: COLUMN payment__transactions.paid_amount; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.payment__transactions.paid_amount IS '支払い済み金額';
+COMMENT ON COLUMN public.payment_transactions.phase IS 'phase: transactionの利用状態。プラン変更予定時はupcoming。current, upcoming, closed';
 
 
 --
--- Name: COLUMN payment__transactions.chargeable_id; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN payment_transactions.activated_at; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.payment__transactions.chargeable_id IS '決済情報';
+COMMENT ON COLUMN public.payment_transactions.activated_at IS '有効化日時';
+
+
+--
+-- Name: COLUMN payment_transactions.expires_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.payment_transactions.expires_at IS '有効期限';
+
+
+--
+-- Name: COLUMN payment_transactions.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.payment_transactions.status IS 'ステータス';
+
+
+--
+-- Name: COLUMN payment_transactions.recurrence; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.payment_transactions.recurrence IS '定期課金フラグ: true=サブスクリプション, false=買い切り';
+
+
+--
+-- Name: COLUMN payment_transactions.revision; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.payment_transactions.revision IS 'バージョン管理用';
+
+
+--
+-- Name: COLUMN payment_transactions.paid_amount; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.payment_transactions.paid_amount IS '支払い済み金額';
+
+
+--
+-- Name: COLUMN payment_transactions.chargeable_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.payment_transactions.chargeable_id IS '決済情報';
 
 
 --
@@ -2020,19 +2020,19 @@ ALTER TABLE ONLY public.oauth_openid_requests
 
 
 --
--- Name: payment__subscriptions payment__subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: payment_subscriptions payment_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.payment__subscriptions
-    ADD CONSTRAINT payment__subscriptions_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.payment_subscriptions
+    ADD CONSTRAINT payment_subscriptions_pkey PRIMARY KEY (id);
 
 
 --
--- Name: payment__transactions payment__transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: payment_transactions payment_transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.payment__transactions
-    ADD CONSTRAINT payment__transactions_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.payment_transactions
+    ADD CONSTRAINT payment_transactions_pkey PRIMARY KEY (id);
 
 
 --
@@ -2342,10 +2342,10 @@ CREATE INDEX idx_on_chargeable_type_chargeable_id_31503b9e8f ON public.stripe_re
 
 
 --
--- Name: idx_on_chargeable_type_chargeable_id_8534730e7a; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_on_chargeable_type_chargeable_id_c87a4bad66; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_on_chargeable_type_chargeable_id_8534730e7a ON public.payment__transactions USING btree (chargeable_type, chargeable_id);
+CREATE INDEX idx_on_chargeable_type_chargeable_id_c87a4bad66 ON public.payment_transactions USING btree (chargeable_type, chargeable_id);
 
 
 --
@@ -2391,38 +2391,38 @@ CREATE INDEX idx_on_stripe_record_subscription_id_9e35bed4eb ON public.stripe_re
 
 
 --
--- Name: idx_on_subscribable_type_subscribable_id_36fbd91894; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_on_subscribable_type_subscribable_id_023c9144d9; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_on_subscribable_type_subscribable_id_36fbd91894 ON public.payment__subscriptions USING btree (subscribable_type, subscribable_id);
-
-
---
--- Name: idx_payment__subscriptions_tenant_user; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_payment__subscriptions_tenant_user ON public.payment__subscriptions USING btree (tenant_id, user_id);
+CREATE INDEX idx_on_subscribable_type_subscribable_id_023c9144d9 ON public.payment_subscriptions USING btree (subscribable_type, subscribable_id);
 
 
 --
--- Name: idx_payment__transactions_expires_at; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_payment_subscriptions_tenant_user; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_payment__transactions_expires_at ON public.payment__transactions USING btree (expires_at);
-
-
---
--- Name: idx_payment__transactions_external_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_payment__transactions_external_id ON public.payment__transactions USING btree (external_id);
+CREATE INDEX idx_payment_subscriptions_tenant_user ON public.payment_subscriptions USING btree (tenant_id, user_id);
 
 
 --
--- Name: idx_payment__transactions_tenant_user; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_payment_transactions_expires_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_payment__transactions_tenant_user ON public.payment__transactions USING btree (tenant_id, user_id);
+CREATE INDEX idx_payment_transactions_expires_at ON public.payment_transactions USING btree (expires_at);
+
+
+--
+-- Name: idx_payment_transactions_external_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_payment_transactions_external_id ON public.payment_transactions USING btree (external_id);
+
+
+--
+-- Name: idx_payment_transactions_tenant_user; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_payment_transactions_tenant_user ON public.payment_transactions USING btree (tenant_id, user_id);
 
 
 --
@@ -2860,45 +2860,45 @@ CREATE INDEX index_oauth_openid_requests_on_access_grant_id ON public.oauth_open
 
 
 --
--- Name: index_payment__subscriptions_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_payment_subscriptions_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_payment__subscriptions_on_membership_contract_id ON public.payment__subscriptions USING btree (membership_contract_id);
-
-
---
--- Name: index_payment__subscriptions_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_payment__subscriptions_on_tenant_id ON public.payment__subscriptions USING btree (tenant_id);
+CREATE INDEX index_payment_subscriptions_on_membership_contract_id ON public.payment_subscriptions USING btree (membership_contract_id);
 
 
 --
--- Name: index_payment__subscriptions_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_payment_subscriptions_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_payment__subscriptions_on_user_id ON public.payment__subscriptions USING btree (user_id);
-
-
---
--- Name: index_payment__transactions_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_payment__transactions_on_membership_contract_id ON public.payment__transactions USING btree (membership_contract_id);
+CREATE INDEX index_payment_subscriptions_on_tenant_id ON public.payment_subscriptions USING btree (tenant_id);
 
 
 --
--- Name: index_payment__transactions_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_payment_subscriptions_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_payment__transactions_on_tenant_id ON public.payment__transactions USING btree (tenant_id);
+CREATE INDEX index_payment_subscriptions_on_user_id ON public.payment_subscriptions USING btree (user_id);
 
 
 --
--- Name: index_payment__transactions_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_payment_transactions_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_payment__transactions_on_user_id ON public.payment__transactions USING btree (user_id);
+CREATE INDEX index_payment_transactions_on_membership_contract_id ON public.payment_transactions USING btree (membership_contract_id);
+
+
+--
+-- Name: index_payment_transactions_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_payment_transactions_on_tenant_id ON public.payment_transactions USING btree (tenant_id);
+
+
+--
+-- Name: index_payment_transactions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_payment_transactions_on_user_id ON public.payment_transactions USING btree (user_id);
 
 
 --
@@ -3762,51 +3762,51 @@ ALTER TABLE ONLY public.oauth_openid_requests
 
 
 --
--- Name: payment__subscriptions fk_payment__subscriptions_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: payment_subscriptions fk_payment_subscriptions_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.payment__subscriptions
-    ADD CONSTRAINT fk_payment__subscriptions_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: payment__subscriptions fk_payment__transactions_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.payment__subscriptions
-    ADD CONSTRAINT fk_payment__transactions_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.membership_contracts(id);
+ALTER TABLE ONLY public.payment_subscriptions
+    ADD CONSTRAINT fk_payment_subscriptions_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.membership_contracts(id);
 
 
 --
--- Name: payment__transactions fk_payment__transactions_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: payment_subscriptions fk_payment_subscriptions_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.payment__transactions
-    ADD CONSTRAINT fk_payment__transactions_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.membership_contracts(id);
-
-
---
--- Name: payment__transactions fk_payment__transactions_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.payment__transactions
-    ADD CONSTRAINT fk_payment__transactions_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+ALTER TABLE ONLY public.payment_subscriptions
+    ADD CONSTRAINT fk_payment_subscriptions_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
--- Name: payment__subscriptions fk_payment__transactions_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: payment_subscriptions fk_payment_subscriptions_users; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.payment__subscriptions
-    ADD CONSTRAINT fk_payment__transactions_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.payment_subscriptions
+    ADD CONSTRAINT fk_payment_subscriptions_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
--- Name: payment__transactions fk_payment__transactions_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: payment_transactions fk_payment_transactions_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.payment__transactions
-    ADD CONSTRAINT fk_payment__transactions_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.payment_transactions
+    ADD CONSTRAINT fk_payment_transactions_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.membership_contracts(id);
+
+
+--
+-- Name: payment_transactions fk_payment_transactions_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_transactions
+    ADD CONSTRAINT fk_payment_transactions_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: payment_transactions fk_payment_transactions_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_transactions
+    ADD CONSTRAINT fk_payment_transactions_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -4237,7 +4237,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 1EgMBrAZZaQHd6CgyfObOxx9cduScHz8RX9gNoq0bZStynd6dmny2ztsGhCbVDt
+\unrestrict U4strBj3PK077v8Vv0AtVQWCvrcyvTGvf8nEm5ND8flxU2YZPIxO7PqZO24k74Y
 
 SET search_path TO "$user", public;
 
