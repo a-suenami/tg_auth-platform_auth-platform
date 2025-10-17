@@ -493,14 +493,14 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.citext "tenant_id", null: false
     t.string "remote_id", null: false, comment: "Stripe の invoices ID"
     t.uuid "user_id", null: false
-    t.uuid "chargeable_id", comment: "subscription or charge"
-    t.string "chargeable_type"
+    t.uuid "payment_source_id", comment: "subscription or charge"
+    t.string "payment_source_type"
     t.string "status", default: "draft", null: false, comment: "draft, open, paid, uncollectible, or void"
     t.string "confirmation_secret", comment: "confirmation_secret payment_intent.secret"
     t.string "confirmation_secret_type", comment: "基本的にはpayment_intentのみ"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_12fd49ee92"
+    t.index ["payment_source_type", "payment_source_id"], name: "idx_on_payment_source_type_payment_source_id_0313cc1522"
     t.index ["remote_id"], name: "idx_stripe_record_invoices_remote_id_uniq", unique: true
     t.index ["tenant_id", "remote_id"], name: "index_stripe_record_invoices_on_tenant_and_remote_id", unique: true
     t.index ["tenant_id"], name: "index_stripe_record__invoices_on_tenant_id"

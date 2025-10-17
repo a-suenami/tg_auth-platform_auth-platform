@@ -251,7 +251,7 @@ RSpec.describe '[ credit card payments API ]' do
           expect(contract.status).to eq('pending')
         end
 
-        it 'creates memberships_billing_profile with correct attributes' do
+        it 'creates memberships_contract_term with correct attributes' do
           is_expected.to eq 201
 
           contract = Memberships::Contract.find(body_hash['id'])

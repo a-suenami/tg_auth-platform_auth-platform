@@ -186,18 +186,6 @@ module Exceptions
       end
     end
 
-    class NoCurrentBillingProfile < BaseError
-      sig { returns(Symbol) }
-      def code
-        :no_current_billing_profile
-      end
-
-      sig { returns(String) }
-      def message
-        I18n.t 'exceptions.payment.no_current_billing_profile'
-      end
-    end
-
     class NoStripeSubscription < BaseError
       sig { returns(Symbol) }
       def code
@@ -207,6 +195,18 @@ module Exceptions
       sig { returns(String) }
       def message
         I18n.t 'exceptions.payment.no_stripe_subscription'
+      end
+    end
+
+    class NoCurrentContractTerm < BaseError
+      sig { returns(Symbol) }
+      def code
+        :no_current_contract_term
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.payment.no_current_contract_term'
       end
     end
 

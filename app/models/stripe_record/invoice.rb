@@ -9,7 +9,9 @@ class StripeRecord
     include Multitenancy
 
     belongs_to :user
-    belongs_to :chargeable, polymorphic: true, optional: true
+    # subscription or charge
+    belongs_to :payment_source, polymorphic: true, optional: true
+    has_many :payment_intents, class_name: 'StripeRecord::PaymentIntent'
 
     validates :remote_id, presence: true, uniqueness: true
 

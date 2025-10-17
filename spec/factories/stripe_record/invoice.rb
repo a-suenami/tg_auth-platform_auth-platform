@@ -9,7 +9,7 @@ FactoryBot.define do
     status { 'draft' }
     confirmation_secret { nil }
     confirmation_secret_type { nil }
-    chargeable { nil }
+    payment_source { nil }
 
     trait :draft do
       status { 'draft' }
@@ -37,11 +37,11 @@ FactoryBot.define do
     end
 
     trait :with_subscription do
-      chargeable { create(:stripe_record_subscription, tenant_id: self.tenant_id) }
+      payment_source { create(:stripe_record_subscription, tenant_id: self.tenant_id) }
     end
 
     trait :with_payment_intent do
-      chargeable { create(:stripe_record_payment_intent, tenant_id: self.tenant_id) }
+      payment_source { create(:stripe_record_payment_intent, tenant_id: self.tenant_id) }
     end
   end
 end

@@ -1,3 +1,8 @@
+\restrict Op2cJ1BMnbhrex9HwqdjMdLYbjXwBTnUJEJrWm1hNYxuyORosaFx3SThcaAn4rq
+
+-- Dumped from database version 15.5
+-- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -1116,8 +1121,8 @@ CREATE TABLE public.stripe_record__invoices (
     tenant_id public.citext NOT NULL,
     remote_id character varying NOT NULL,
     user_id uuid NOT NULL,
-    chargeable_id uuid,
-    chargeable_type character varying,
+    payment_source_id uuid,
+    payment_source_type character varying,
     status character varying DEFAULT 'draft'::character varying NOT NULL,
     confirmation_secret character varying,
     confirmation_secret_type character varying,
@@ -1134,10 +1139,10 @@ COMMENT ON COLUMN public.stripe_record__invoices.remote_id IS 'Stripe の invoic
 
 
 --
--- Name: COLUMN stripe_record__invoices.chargeable_id; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN stripe_record__invoices.payment_source_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.stripe_record__invoices.chargeable_id IS 'subscription or charge';
+COMMENT ON COLUMN public.stripe_record__invoices.payment_source_id IS 'subscription or charge';
 
 
 --
@@ -2330,13 +2335,6 @@ CREATE UNIQUE INDEX idx_memberships__users_tenant_user_membership_uniq ON public
 
 
 --
--- Name: idx_on_chargeable_type_chargeable_id_12fd49ee92; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_on_chargeable_type_chargeable_id_12fd49ee92 ON public.stripe_record__invoices USING btree (chargeable_type, chargeable_id);
-
-
---
 -- Name: idx_on_chargeable_type_chargeable_id_31503b9e8f; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2362,6 +2360,13 @@ CREATE INDEX idx_on_membership_plan_id_0fb74d17fc ON public.memberships__plan_pa
 --
 
 CREATE INDEX idx_on_membership_plan_payment_method_id_a85e09354e ON public.memberships__plan_payment_method_mappings USING btree (membership_plan_payment_method_id);
+
+
+--
+-- Name: idx_on_payment_source_type_payment_source_id_0313cc1522; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_payment_source_type_payment_source_id_0313cc1522 ON public.stripe_record__invoices USING btree (payment_source_type, payment_source_id);
 
 
 --
@@ -4231,6 +4236,8 @@ ALTER TABLE ONLY public.users
 --
 -- PostgreSQL database dump complete
 --
+
+\unrestrict Op2cJ1BMnbhrex9HwqdjMdLYbjXwBTnUJEJrWm1hNYxuyORosaFx3SThcaAn4rq
 
 SET search_path TO "$user", public;
 

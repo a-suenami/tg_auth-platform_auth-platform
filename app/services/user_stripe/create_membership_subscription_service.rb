@@ -103,7 +103,7 @@ module UserStripe
         record.tenant_id = user.tenant_id
         record.remote_id = latest_invoice.id
         record.status = latest_invoice.status
-        record.chargeable = stripe_record_subscription
+        record.payment_source = stripe_record_subscription
         record.confirmation_secret = latest_invoice&.confirmation_secret&.client_secret
         record.confirmation_secret_type = 'payment_intent' if latest_invoice&.confirmation_secret&.client_secret.present?
       end

@@ -17,7 +17,7 @@ class StripeRecord
     has_many :invoices, inverse_of: :chargeable
     has_many :subscription_items, class_name: 'StripeRecord::SubscriptionItem', dependent: :destroy
 
-    has_many :payment_subscriptions, inverse_of: :subscribable, dependent: :nullify, class_name: 'Payment::Subscription'
+    has_many :payment_subscription, inverse_of: :subscribable, dependent: :nullify, class_name: 'Payment::Subscription'
     has_many :subscription_schedules, class_name: 'StripeRecord::SubscriptionSchedule', dependent: :nullify
     has_one :last_subscription_schedule, -> { order(created_at: :desc) }, class_name: 'StripeRecord::SubscriptionSchedule', dependent: :nullify, inverse_of: :subscription
 

@@ -550,19 +550,19 @@ class StripeRecord::Subscription
     sig { params(value: T.nilable(::StripeRecord::SubscriptionSchedule)).void }
     def last_subscription_schedule=(value); end
 
+    # This method is created by ActiveRecord on the `StripeRecord::Subscription` class because it declared `has_many :payment_subscription`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Payment::Subscription::PrivateCollectionProxy) }
+    def payment_subscription; end
+
+    sig { params(value: T::Enumerable[::Payment::Subscription]).void }
+    def payment_subscription=(value); end
+
     sig { returns(T::Array[T.untyped]) }
     def payment_subscription_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def payment_subscription_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `StripeRecord::Subscription` class because it declared `has_many :payment_subscriptions`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Payment::Subscription::PrivateCollectionProxy) }
-    def payment_subscriptions; end
-
-    sig { params(value: T::Enumerable[::Payment::Subscription]).void }
-    def payment_subscriptions=(value); end
 
     sig { returns(T.nilable(::StripeRecord::SetupIntent)) }
     def pending_setup_intent; end
