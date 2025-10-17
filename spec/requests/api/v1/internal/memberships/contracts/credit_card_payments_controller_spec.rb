@@ -7,7 +7,7 @@ RSpec.shared_context 'membership and stripe setup' do
   let(:current_user) {
     create(:user, tenant_id: current_tenant.id, email: 'test-user1@example.com', password: 'Password1234!')
   }
-  let(:leveled_membership_group) { create(:memberships__group, :with_leveled_memberships, tenant_id: current_tenant.id, name: 'leveled_membership_group') }
+  let(:leveled_membership_group) { create(:membership_group, :with_leveled_memberships, tenant_id: current_tenant.id, name: 'leveled_membership_group') }
   let(:leveled_membership_platinum) { leveled_membership_group.memberships.find_by(name: 'platinum') }
   let(:leveled_membership_premium) { leveled_membership_group.memberships.find_by(name: 'premium') }
   let(:leveled_membership_basic) { leveled_membership_group.memberships.find_by(name: 'basic') }
@@ -15,13 +15,13 @@ RSpec.shared_context 'membership and stripe setup' do
   let(:stripe_record_product_premium) { create(:stripe_record_product, tenant_id: current_tenant.id, name: 'premium_product') }
   let(:stripe_record_product_basic) { create(:stripe_record_product, tenant_id: current_tenant.id, name: 'basic_product') }
   let(:leveled_membership_plan_platinum) {
-    create(:memberships__plan, tenant_id: current_tenant.id, name: 'platinum_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', position: 1, amount: 5000)
+    create(:membership_plan, tenant_id: current_tenant.id, name: 'platinum_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', position: 1, amount: 5000)
   }
   let(:leveled_membership_plan_premium) {
-    create(:memberships__plan, tenant_id: current_tenant.id, name: 'premium_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', position: 2, amount: 3000)
+    create(:membership_plan, tenant_id: current_tenant.id, name: 'premium_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', position: 2, amount: 3000)
   }
   let(:leveled_membership_plan_basic) {
-    create(:memberships__plan, tenant_id: current_tenant.id, name: 'basic_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', position: 3, amount: 1000)
+    create(:membership_plan, tenant_id: current_tenant.id, name: 'basic_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', position: 3, amount: 1000)
   }
   let(:stripe_record_price_platinum) {
     create(:stripe_record_price, tenant_id: current_tenant.id, product: stripe_record_product_platinum, amount: leveled_membership_plan_platinum.amount)
@@ -29,27 +29,27 @@ RSpec.shared_context 'membership and stripe setup' do
   let(:stripe_record_price_premium) { create(:stripe_record_price, tenant_id: current_tenant.id, product: stripe_record_product_premium, amount: leveled_membership_plan_premium.amount) }
   let(:stripe_record_price_basic) { create(:stripe_record_price, tenant_id: current_tenant.id, product: stripe_record_product_basic, amount: leveled_membership_plan_basic.amount) }
   let(:membership_plan_payment_method_platinum) {
-    create(:memberships__plan_payment_method, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_platinum, payment_type: 'credit_card',
+    create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_platinum, payment_type: 'credit_card',
 stripe_record_price: stripe_record_price_platinum, is_active: true,)
   }
   let(:membership_plan_payment_method_premium) {
-    create(:memberships__plan_payment_method, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_premium, payment_type: 'credit_card',
+    create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_premium, payment_type: 'credit_card',
 stripe_record_price: stripe_record_price_premium, is_active: true,)
   }
   let(:membership_plan_payment_method_basic) {
-    create(:memberships__plan_payment_method, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_basic, payment_type: 'credit_card',
+    create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_basic, payment_type: 'credit_card',
 stripe_record_price: stripe_record_price_basic, is_active: true,)
   }
   let(:membership_plan_component_platinum) {
-    create(:memberships__plan_component, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_platinum, membership: leveled_membership_platinum)
+    create(:membership_plan_component, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_platinum, membership: leveled_membership_platinum)
   }
   let(:membership_plan_component_premium) {
-    create(:memberships__plan_component, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_premium, membership: leveled_membership_premium)
+    create(:membership_plan_component, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_premium, membership: leveled_membership_premium)
   }
   let(:membership_plan_component_basic) {
-    create(:memberships__plan_component, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_basic, membership: leveled_membership_basic)
+    create(:membership_plan_component, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_basic, membership: leveled_membership_basic)
   }
-  let(:contract) { create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, membership_plan: leveled_membership_plan_platinum) }
+  let(:contract) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, membership_plan: leveled_membership_plan_platinum) }
   let(:stripe_subscription) { create(:stripe_record_subscription, tenant_id: current_tenant.id, user: current_user, price: stripe_record_price_platinum) }
   let(:current_user_stripe_payment_method) {
     create(:stripe_record_payment_method, tenant_id: current_tenant.id, user: current_user, type: 'card', api_key_account: tenant_stripe_account.stripe_account, remote_id: 'pm_test123')
@@ -191,12 +191,12 @@ RSpec.shared_examples 'returns error response' do |status, code|
 end
 
 RSpec.describe '[ credit card payments API ]' do
-  describe 'POST /api/v1/internal/memberships/contracts/credit_card_payments' do
+  describe 'POST /api/v1/internal/membership/contracts/credit_card_payments' do
     include_context 'membership and stripe setup'
     include_context 'stripe api mocks'
 
     context 'when no session' do
-      let(:params) { { memberships_contracts: { memberships_plan_id: leveled_membership_plan_platinum.id } } }
+      let(:params) { { memberships_contracts: { membership_plan_id: leveled_membership_plan_platinum.id } } }
 
       it 'returns 401 Unauthorized' do
         is_expected.to eq 401
@@ -213,14 +213,14 @@ RSpec.describe '[ credit card payments API ]' do
       end
 
       context 'valid credit card payment' do
-        let(:params) { { memberships_contracts: { memberships_plan_id: leveled_membership_plan_platinum.id } } }
+        let(:params) { { memberships_contracts: { membership_plan_id: leveled_membership_plan_platinum.id } } }
 
         it 'creates a new membership contract' do
           expect {
             is_expected.to eq 201
-          }.to change(Memberships::Contract, :count).by(1)
+          }.to change(Membership::Contract, :count).by(1)
             .and change(Payment::Transaction, :count).by(1)
-            .and change(Memberships::User, :count).by(leveled_membership_plan_platinum.memberships.count)
+            .and change(Membership::User, :count).by(leveled_membership_plan_platinum.memberships.count)
           json_response = response.parsed_body
           expect(json_response['id']).to be_present
           expect(json_response['status']).to eq('pending')
@@ -232,7 +232,7 @@ RSpec.describe '[ credit card payments API ]' do
         it 'creates memberships_user with correct status' do
           is_expected.to eq 201
 
-          contract = Memberships::Contract.find(body_hash['id'])
+          contract = Membership::Contract.find(body_hash['id'])
           memberships_users = contract.membership_users
 
           expect(memberships_users.count).to eq(leveled_membership_plan_platinum.memberships.count)
@@ -246,7 +246,7 @@ RSpec.describe '[ credit card payments API ]' do
         it 'creates memberships_contract with correct attributes' do
           is_expected.to eq 201
 
-          contract = Memberships::Contract.last
+          contract = Membership::Contract.last
           expect(contract.user).to eq(current_user)
           expect(contract.status).to eq('pending')
         end
@@ -254,7 +254,7 @@ RSpec.describe '[ credit card payments API ]' do
         it 'creates memberships_contract_term with correct attributes' do
           is_expected.to eq 201
 
-          contract = Memberships::Contract.find(body_hash['id'])
+          contract = Membership::Contract.find(body_hash['id'])
           contract_term = contract.current_contract_term
           expect(contract_term.user).to eq(current_user)
           expect(contract_term.membership_plan).to eq(leveled_membership_plan_platinum)
@@ -271,7 +271,7 @@ RSpec.describe '[ credit card payments API ]' do
 
       context 'payment with different plans' do
         context 'premium plan' do
-          let(:params) { { memberships_contracts: { memberships_plan_id: leveled_membership_plan_premium.id } } }
+          let(:params) { { memberships_contracts: { membership_plan_id: leveled_membership_plan_premium.id } } }
 
           it 'creates contract for premium plan' do
             is_expected.to eq 201
@@ -281,7 +281,7 @@ RSpec.describe '[ credit card payments API ]' do
         end
 
         context 'basic plan' do
-          let(:params) { { memberships_contracts: { memberships_plan_id: leveled_membership_plan_basic.id } } }
+          let(:params) { { memberships_contracts: { membership_plan_id: leveled_membership_plan_basic.id } } }
 
           it 'creates contract for basic plan' do
             is_expected.to eq 201
@@ -293,9 +293,9 @@ RSpec.describe '[ credit card payments API ]' do
 
       context 'plan with trial period' do
         let(:trial_plan) {
-          create(:memberships__plan, tenant_id: current_tenant.id, name: 'trial_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 7, position: 4)
+          create(:membership_plan, tenant_id: current_tenant.id, name: 'trial_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 7, position: 4)
         }
-        let(:params) { { memberships_contracts: { memberships_plan_id: trial_plan.id } } }
+        let(:params) { { memberships_contracts: { membership_plan_id: trial_plan.id } } }
         let(:confirmation_secret) { nil }
         # rubocop:disable RSpec/VerifiedDoubles
         let(:pending_setup_intent_double) { double('pending_setup_intent', client_secret: 'seti_trial_test123_secret', id: 'seti_trial_test123', status: 'requires_action', usage: 'off_session') }
@@ -303,7 +303,7 @@ RSpec.describe '[ credit card payments API ]' do
         # rubocop:enable RSpec/VerifiedDoubles
 
         before do
-          create(:memberships__plan_payment_method, tenant_id: current_tenant.id, membership_plan: trial_plan, payment_type: 'credit_card', stripe_record_price: stripe_record_price_platinum,
+          create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: trial_plan, payment_type: 'credit_card', stripe_record_price: stripe_record_price_platinum,
 is_active: true,)
           # Mock Stripe API for trial plan
           # rubocop:disable RSpec/VerifiedDoubles
@@ -347,7 +347,7 @@ is_active: true,)
           is_expected.to eq 201
 
 
-          contract = Memberships::Contract.find(body_hash['id'])
+          contract = Membership::Contract.find(body_hash['id'])
           contract.payment_transactions.first.chargeable
 
           expect(body_hash['payment_transactions'][0]['chargeable']['client_secret']).to be_present
@@ -356,12 +356,12 @@ is_active: true,)
 
       context 'trial history restriction' do
         let(:trial_plan) {
-          create(:memberships__plan, tenant_id: current_tenant.id, name: 'trial_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 7, position: 4)
+          create(:membership_plan, tenant_id: current_tenant.id, name: 'trial_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 7, position: 4)
         }
         let(:trial_plan_component) {
-          create(:memberships__plan_component, tenant_id: current_tenant.id, membership_plan: trial_plan, membership: leveled_membership_platinum)
+          create(:membership_plan_component, tenant_id: current_tenant.id, membership_plan: trial_plan, membership: leveled_membership_platinum)
         }
-        let(:params) { { memberships_contracts: { memberships_plan_id: trial_plan.id } } }
+        let(:params) { { memberships_contracts: { membership_plan_id: trial_plan.id } } }
 
         let(:trial_history) {
           create(:stripe_record_trial_history,
@@ -375,7 +375,7 @@ is_active: true,)
         before do
           trial_plan_component
           trial_history
-          create(:memberships__plan_payment_method, tenant_id: current_tenant.id, membership_plan: trial_plan, payment_type: 'credit_card', stripe_record_price: stripe_record_price_platinum,
+          create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: trial_plan, payment_type: 'credit_card', stripe_record_price: stripe_record_price_platinum,
 is_active: true,)
 
           # トライアルなしのsubscriptionをモック
@@ -433,7 +433,7 @@ is_active: true,)
       end
 
       context 'invalid parameter' do
-        context 'memberships_plan_id is not given' do
+        context 'membership_plan_id is not given' do
           let(:params) { { memberships_contracts: {} } }
 
           it 'returns 400 Bad Request' do
@@ -441,8 +441,8 @@ is_active: true,)
           end
         end
 
-        context 'memberships_plan_id is not found' do
-          let(:params) { { memberships_contracts: { memberships_plan_id: 'invalid' } } }
+        context 'membership_plan_id is not found' do
+          let(:params) { { memberships_contracts: { membership_plan_id: 'invalid' } } }
 
           it 'returns 404 Not Found' do
             is_expected.to eq 404
@@ -451,9 +451,9 @@ is_active: true,)
       end
 
       context 'already have membership contract' do
-        let(:params) { { memberships_contracts: { memberships_plan_id: leveled_membership_plan_platinum.id } } }
+        let(:params) { { memberships_contracts: { membership_plan_id: leveled_membership_plan_platinum.id } } }
         let(:existing_contract) {
-          create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'pending')
+          create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'pending')
         }
         let(:existing_transaction) {
           create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: existing_contract,
@@ -464,7 +464,7 @@ payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'dummy_ext
 remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, current_period_start: 1.month.ago, current_period_end: 1.month.from_now,)
         }
         let(:existing_membership_user) {
-          create(:memberships__user, tenant_id: current_tenant.id, user: current_user, status: 'pending', membership: leveled_membership_platinum, membership_contract: existing_contract)
+          create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'pending', membership: leveled_membership_platinum, membership_contract: existing_contract)
         }
 
         before do
@@ -480,14 +480,14 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
         it 'does not create new contract when already have membership' do
           expect {
             is_expected.to eq 400
-          }.not_to change(Memberships::Contract, :count)
+          }.not_to change(Membership::Contract, :count)
         end
       end
 
       context 'same membership group contract' do
-        let(:params) { { memberships_contracts: { memberships_plan_id: leveled_membership_plan_platinum.id } } }
+        let(:params) { { memberships_contracts: { membership_plan_id: leveled_membership_plan_platinum.id } } }
         let(:existing_contract) {
-          create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'pending')
+          create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'pending')
         }
         let(:existing_transaction) {
           create(:payment__transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: existing_contract,
@@ -498,7 +498,7 @@ payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'dummy_ext
 remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, current_period_start: 1.month.ago, current_period_end: 1.month.from_now,)
         }
         let(:existing_membership_user) {
-          create(:memberships__user, tenant_id: current_tenant.id, user: current_user, status: 'pending', membership: leveled_membership_platinum, membership_contract: existing_contract)
+          create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'pending', membership: leveled_membership_platinum, membership_contract: existing_contract)
         }
 
 
@@ -515,12 +515,12 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
         it 'does not create new contract for same membership group' do
           expect {
             is_expected.to eq 400
-          }.not_to change(Memberships::Contract, :count)
+          }.not_to change(Membership::Contract, :count)
         end
       end
 
       context 'no credit card registered' do
-        let(:params) { { memberships_contracts: { memberships_plan_id: leveled_membership_plan_platinum.id } } }
+        let(:params) { { memberships_contracts: { membership_plan_id: leveled_membership_plan_platinum.id } } }
         let(:current_user_stripe_payment_method) { nil }
 
         before do
@@ -535,13 +535,13 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
         it 'does not create contract when no credit card' do
           expect {
             is_expected.to eq 400
-          }.not_to change(Memberships::Contract, :count)
+          }.not_to change(Membership::Contract, :count)
         end
       end
 
       context 'plan does not support credit card payment' do
         let(:membership_plan_payment_method_platinum) { nil }
-        let(:params) { { memberships_contracts: { memberships_plan_id: leveled_membership_plan_platinum.id } } }
+        let(:params) { { memberships_contracts: { membership_plan_id: leveled_membership_plan_platinum.id } } }
 
         it 'returns 400 Bad Request with payment_method_not_available error' do
           is_expected.to eq 400
@@ -550,7 +550,7 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
       end
 
       context 'Stripe API error' do
-        let(:params) { { memberships_contracts: { memberships_plan_id: leveled_membership_plan_platinum.id } } }
+        let(:params) { { memberships_contracts: { membership_plan_id: leveled_membership_plan_platinum.id } } }
 
         before do
           allow(Stripe::Subscription).to receive(:create).and_raise(Stripe::CardError.new('Your card was declined.', 'card_declined'))
@@ -564,7 +564,7 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
         it 'does not create contract when Stripe API fails' do
           expect {
             is_expected.to eq 400
-          }.not_to change(Memberships::Contract, :count)
+          }.not_to change(Membership::Contract, :count)
         end
 
         it 'captures exception in Sentry when Stripe API fails' do
@@ -575,10 +575,10 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
       end
 
       context 'database error' do
-        let(:params) { { memberships_contracts: { memberships_plan_id: leveled_membership_plan_platinum.id } } }
+        let(:params) { { memberships_contracts: { membership_plan_id: leveled_membership_plan_platinum.id } } }
 
         before do
-          allow(Memberships::Contract).to receive(:create!).and_raise(ActiveRecord::RecordInvalid.new(Memberships::Contract.new))
+          allow(Membership::Contract).to receive(:create!).and_raise(ActiveRecord::RecordInvalid.new(Membership::Contract.new))
         end
 
         it 'returns 400 Bad Request with validation_error' do
@@ -598,9 +598,9 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
 
       context 'inactive plan' do
         let(:inactive_plan) {
-          create(:memberships__plan, tenant_id: current_tenant.id, name: 'inactive_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', is_active: false, position: 6)
+          create(:membership_plan, tenant_id: current_tenant.id, name: 'inactive_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', is_active: false, position: 6)
         }
-        let(:params) { { memberships_contracts: { memberships_plan_id: inactive_plan.id } } }
+        let(:params) { { memberships_contracts: { membership_plan_id: inactive_plan.id } } }
 
         it 'returns 400 Bad Request with payment_method_not_available error' do
           is_expected.to eq 400
@@ -611,9 +611,9 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
       context 'plan from another tenant' do
         let(:other_tenant) { create(:tenant, id: 'other', name: 'other_tenant') }
         let(:other_plan) {
-          create(:memberships__plan, tenant_id: other_tenant.id, name: 'other_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', position: 7)
+          create(:membership_plan, tenant_id: other_tenant.id, name: 'other_plan', recurring_interval_count: 1, recurring_interval_unit: 'month', position: 7)
         }
-        let(:params) { { memberships_contracts: { memberships_plan_id: other_plan.id } } }
+        let(:params) { { memberships_contracts: { membership_plan_id: other_plan.id } } }
 
         it 'cannot access plan from another tenant' do
           is_expected.to eq 404
@@ -622,11 +622,11 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
     end
   end
 
-  describe 'POST /api/v1/internal/memberships/contracts/credit_card_payments/:contract_id/complete' do
+  describe 'POST /api/v1/internal/membership/contracts/credit_card_payments/:contract_id/complete' do
     include_context 'membership and stripe setup'
     include_context 'stripe api mocks'
     let(:tenant_stripe_account) { create(:tenant_stripe_account, :with_account, tenant_id: current_tenant.id) }
-    let(:contract) { create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'pending') }
+    let(:contract) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'pending') }
     let(:stripe_record_subscription) { create(:stripe_record_subscription, tenant_id: current_tenant.id, user: current_user, price: stripe_record_price_platinum) }
     let(:payment_subscription) { create(:payment__subscription, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, subscribable: stripe_record_subscription) }
     let(:payment_transaction) {
@@ -638,7 +638,7 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
       create(:stripe_record_payment_intent, tenant_id: current_tenant.id, user: current_user, remote_id: 'pi_test123', status: 'requires_confirmation', invoice: stripe_record_invoice,
      api_key_account: tenant_stripe_account.stripe_account,)
     }
-    let(:contract_term) { create(:memberships__contract_term, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, membership_plan: leveled_membership_plan_platinum) }
+    let(:contract_term) { create(:membership_contract_term, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, membership_plan: leveled_membership_plan_platinum) }
 
     before do
       tenant_stripe_account

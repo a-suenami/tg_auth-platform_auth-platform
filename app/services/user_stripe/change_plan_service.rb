@@ -192,7 +192,7 @@ module UserStripe
         current_contract_term.update!(
           status: 'closed',
         )
-        Memberships::ContractTerm.create!(
+        Membership::ContractTerm.create!(
           status: 'active',
           phase: 'current',
           expires_at: next_period_end,

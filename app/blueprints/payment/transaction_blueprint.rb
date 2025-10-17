@@ -23,7 +23,7 @@ module Payment
            :created_at,
            :updated_at
 
-    association :membership_contract, blueprint: Memberships::ContractBlueprint
+    association :membership_contract, blueprint: Membership::ContractBlueprint
 
     # view :normal do
     # end

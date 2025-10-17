@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
         resources :memberships, only: [:index]
 
-        namespace :memberships do
+        namespace :membership do
           resources :contracts, only: [:index, :show] do
             member do
               get :polling, to: 'contracts#polling'

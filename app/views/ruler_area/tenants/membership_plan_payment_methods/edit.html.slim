@@ -1,0 +1,41 @@
+.uk-margin-top.uk-container
+  nav.uk-breadcrumb aria-label="Breadcrumb"
+    li
+      = link_to "テナント一覧", ruler_area_tenants_path
+    li
+      = link_to @tenant.name, ruler_area_tenant_root_path(@tenant)
+    li
+      = link_to "メンバーシップ管理", top_ruler_area_tenant_memberships_path(@tenant)
+    li
+      = link_to "メンバーシッププラン一覧", ruler_area_tenant_membership_plans_path(@tenant)
+    li
+      = link_to @membership_plan.name, ruler_area_tenant_membership_plan_path(@tenant, @membership_plan)
+    li
+      span 決済方法編集
+
+  h2 決済方法編集
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with model: [:ruler_area, @tenant, @membership_plan, @plan_payment_method], local: true do |f|
+      - if @plan_payment_method.errors.any?
+        .uk-alert.uk-alert-danger
+          h3 = "#{pluralize(@plan_payment_method.errors.count, "error")} prohibited this payment method from being saved:"
+          ul
+            - @plan_payment_method.errors.full_messages.each do |message|
+              li = message
+
+      .uk-margin
+        h3 基本情報
+        table.uk-table.uk-table-divider
+          tr
+            th 決済方法
+            td = @plan_payment_method.payment_type
+
+      .uk-margin
+        = f.label :stripe_record_price_id, "Stripe価格", class: "uk-form-label"
+        .uk-form-controls
+          = f.select :stripe_record_price_id, options_from_collection_for_select(StripeRecord::Price.where(tenant_id: @tenant_id, deleted: false), :id, :name, @plan_payment_method.stripe_record_price_id), { prompt: 'Stripe価格を選択してください' }, class: "uk-select"
+
+      .uk-margin-top
+        = f.submit "更新", class: "uk-button uk-button-primary"
+        = link_to "キャンセル", ruler_area_tenant_membership_plan_path(@tenant_id, @membership_plan), class: "uk-button uk-button-secondary uk-margin-left"

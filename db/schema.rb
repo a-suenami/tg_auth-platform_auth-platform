@@ -102,20 +102,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["uid"], name: "index_login_spa_applications_on_uid", unique: true
   end
 
-  create_table "memberships", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップ", force: :cascade do |t|
-    t.citext "tenant_id", null: false
-    t.uuid "membership_group_id", comment: "メンバーシップグループ"
-    t.string "name", comment: "メンバーシップ識別子"
-    t.string "display_name", comment: "メンバーシップ名称"
-    t.integer "position", comment: "表示順序"
-    t.integer "tier", comment: "階級"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["membership_group_id"], name: "index_memberships_on_membership_group_id"
-    t.index ["tenant_id"], name: "index_memberships_on_tenant_id"
-  end
-
-  create_table "memberships__contract_terms", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップ契約の詳細,変更履歴", force: :cascade do |t|
+  create_table "membership_contract_terms", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップ契約の詳細,変更履歴", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.uuid "membership_contract_id", null: false
@@ -125,13 +112,13 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "end_at", comment: "終了日時"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["membership_contract_id"], name: "index_memberships__contract_terms_on_membership_contract_id"
-    t.index ["membership_plan_id"], name: "index_memberships__contract_terms_on_membership_plan_id"
-    t.index ["tenant_id"], name: "index_memberships__contract_terms_on_tenant_id"
-    t.index ["user_id"], name: "index_memberships__contract_terms_on_user_id"
+    t.index ["membership_contract_id"], name: "index_membership_contract_terms_on_membership_contract_id"
+    t.index ["membership_plan_id"], name: "index_membership_contract_terms_on_membership_plan_id"
+    t.index ["tenant_id"], name: "index_membership_contract_terms_on_tenant_id"
+    t.index ["user_id"], name: "index_membership_contract_terms_on_user_id"
   end
 
-  create_table "memberships__contracts", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップ契約", force: :cascade do |t|
+  create_table "membership_contracts", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップ契約", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.datetime "expires_at", comment: "有効期限"
@@ -139,36 +126,36 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "status", default: "active", null: false, comment: "ステータス"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["expires_at"], name: "idx_memberships__contracts_expires_at"
-    t.index ["tenant_id"], name: "index_memberships__contracts_on_tenant_id"
-    t.index ["user_id"], name: "index_memberships__contracts_on_user_id"
+    t.index ["expires_at"], name: "idx_membership_contracts_expires_at"
+    t.index ["tenant_id"], name: "index_membership_contracts_on_tenant_id"
+    t.index ["user_id"], name: "index_membership_contracts_on_user_id"
   end
 
-  create_table "memberships__groups", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップグループ（段階的プラン用）", force: :cascade do |t|
+  create_table "membership_groups", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップグループ（段階的プラン用）", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "name", null: false, comment: "グループ名（英数字のみ）"
     t.string "display_name", null: false, comment: "表示名"
     t.integer "position", default: 0, comment: "表示順序（段階の順番）"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tenant_id", "name"], name: "idx_memberships__groups_tenant_id_name_uniq", unique: true
-    t.index ["tenant_id", "position"], name: "idx_memberships__groups_tenant_position"
-    t.index ["tenant_id"], name: "index_memberships__groups_on_tenant_id"
+    t.index ["tenant_id", "name"], name: "idx_membership_groups_tenant_id_name_uniq", unique: true
+    t.index ["tenant_id", "position"], name: "idx_membership_groups_tenant_position"
+    t.index ["tenant_id"], name: "index_membership_groups_on_tenant_id"
   end
 
-  create_table "memberships__plan_components", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシッププランの構成要素（バンドルプラン用）", force: :cascade do |t|
+  create_table "membership_plan_components", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシッププランの構成要素（バンドルプラン用）", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "membership_plan_id", null: false
     t.uuid "membership_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["membership_id"], name: "index_memberships__plan_components_on_membership_id"
-    t.index ["membership_plan_id", "membership_id"], name: "idx_memberships__plan_components_plan_membership_uniq", unique: true
-    t.index ["membership_plan_id"], name: "index_memberships__plan_components_on_membership_plan_id"
-    t.index ["tenant_id"], name: "index_memberships__plan_components_on_tenant_id"
+    t.index ["membership_id"], name: "index_membership_plan_components_on_membership_id"
+    t.index ["membership_plan_id", "membership_id"], name: "idx_membership_plan_components_plan_membership_uniq", unique: true
+    t.index ["membership_plan_id"], name: "index_membership_plan_components_on_membership_plan_id"
+    t.index ["tenant_id"], name: "index_membership_plan_components_on_tenant_id"
   end
 
-  create_table "memberships__plan_payment_method_mappings", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシッププランの支払い方法のマッピング", force: :cascade do |t|
+  create_table "membership_plan_payment_method_mappings", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシッププランの支払い方法のマッピング", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "membership_plan_id", null: false
     t.uuid "membership_plan_payment_method_id", null: false
@@ -179,13 +166,13 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.boolean "is_active", default: true, comment: "有効フラグ"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["membership_plan_id"], name: "idx_on_membership_plan_id_0fb74d17fc"
-    t.index ["membership_plan_payment_method_id"], name: "idx_on_membership_plan_payment_method_id_a85e09354e"
-    t.index ["priceable_type", "priceable_id"], name: "idx_on_priceable_type_priceable_id_dfb53324a7"
-    t.index ["tenant_id"], name: "index_memberships__plan_payment_method_mappings_on_tenant_id"
+    t.index ["membership_plan_id"], name: "idx_on_membership_plan_id_abf7e120d7"
+    t.index ["membership_plan_payment_method_id"], name: "idx_on_membership_plan_payment_method_id_45519b8566"
+    t.index ["priceable_type", "priceable_id"], name: "idx_on_priceable_type_priceable_id_bc1644aaac"
+    t.index ["tenant_id"], name: "index_membership_plan_payment_method_mappings_on_tenant_id"
   end
 
-  create_table "memberships__plan_payment_methods", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシッププランの支払い方法", force: :cascade do |t|
+  create_table "membership_plan_payment_methods", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシッププランの支払い方法", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "membership_plan_id", null: false
     t.string "payment_type", null: false, comment: "支払い方法: credit_card, convenience, campaign_code, external_linkage"
@@ -193,13 +180,13 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.boolean "is_active", default: true, comment: "有効フラグ"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["membership_plan_id", "payment_type"], name: "idx_memberships__plan_payment_methods_plan_type_uniq", unique: true
-    t.index ["membership_plan_id"], name: "index_memberships__plan_payment_methods_on_membership_plan_id"
-    t.index ["stripe_record_price_id"], name: "idx_on_stripe_record_price_id_912fae4a3b"
-    t.index ["tenant_id"], name: "index_memberships__plan_payment_methods_on_tenant_id"
+    t.index ["membership_plan_id", "payment_type"], name: "idx_membership_plan_payment_methods_plan_type_uniq", unique: true
+    t.index ["membership_plan_id"], name: "index_membership_plan_payment_methods_on_membership_plan_id"
+    t.index ["stripe_record_price_id"], name: "idx_on_stripe_record_price_id_ccd90274f4"
+    t.index ["tenant_id"], name: "index_membership_plan_payment_methods_on_tenant_id"
   end
 
-  create_table "memberships__plans", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップの契約プラン", force: :cascade do |t|
+  create_table "membership_plans", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップの契約プラン", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "name", null: false, comment: "プラン名"
     t.boolean "recurrence", default: false, null: false, comment: "定期課金フラグ: true=サブスクリプション, false=買い切り"
@@ -215,10 +202,10 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.integer "position", default: 0, null: false, comment: "表示順序"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tenant_id"], name: "index_memberships__plans_on_tenant_id"
+    t.index ["tenant_id"], name: "index_membership_plans_on_tenant_id"
   end
 
-  create_table "memberships__user_achievements", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップアチーブメント", force: :cascade do |t|
+  create_table "membership_user_achievements", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップアチーブメント", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.uuid "membership_id", null: false
@@ -228,15 +215,15 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.jsonb "achievement_data", default: {}, comment: "アチーブメント詳細データ"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["date"], name: "idx_memberships__user_achievements_date"
-    t.index ["membership_id"], name: "index_memberships__user_achievements_on_membership_id"
-    t.index ["membership_plan_id"], name: "index_memberships__user_achievements_on_membership_plan_id"
-    t.index ["tenant_id", "user_id", "membership_id", "date"], name: "idx_memberships__user_achievements_tenant_user_membership_date"
-    t.index ["tenant_id"], name: "index_memberships__user_achievements_on_tenant_id"
-    t.index ["user_id"], name: "index_memberships__user_achievements_on_user_id"
+    t.index ["date"], name: "idx_membership_user_achievements_date"
+    t.index ["membership_id"], name: "index_membership_user_achievements_on_membership_id"
+    t.index ["membership_plan_id"], name: "index_membership_user_achievements_on_membership_plan_id"
+    t.index ["tenant_id", "user_id", "membership_id", "date"], name: "idx_membership_user_achievements_tenant_user_membership_date"
+    t.index ["tenant_id"], name: "index_membership_user_achievements_on_tenant_id"
+    t.index ["user_id"], name: "index_membership_user_achievements_on_user_id"
   end
 
-  create_table "memberships__users", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップとUserの中間テーブル", force: :cascade do |t|
+  create_table "membership_users", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップとUserの中間テーブル", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.uuid "membership_id", null: false
@@ -246,12 +233,25 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "status", comment: "メンバーシップのステータス"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["membership_contract_id"], name: "index_memberships__users_on_membership_contract_id"
-    t.index ["membership_group_id"], name: "index_memberships__users_on_membership_group_id"
-    t.index ["membership_id"], name: "index_memberships__users_on_membership_id"
-    t.index ["tenant_id", "user_id", "membership_id"], name: "idx_memberships__users_tenant_user_membership_uniq", unique: true
-    t.index ["tenant_id"], name: "index_memberships__users_on_tenant_id"
-    t.index ["user_id"], name: "index_memberships__users_on_user_id"
+    t.index ["membership_contract_id"], name: "index_membership_users_on_membership_contract_id"
+    t.index ["membership_group_id"], name: "index_membership_users_on_membership_group_id"
+    t.index ["membership_id"], name: "index_membership_users_on_membership_id"
+    t.index ["tenant_id", "user_id", "membership_id"], name: "idx_membership_users_tenant_user_membership_uniq", unique: true
+    t.index ["tenant_id"], name: "index_membership_users_on_tenant_id"
+    t.index ["user_id"], name: "index_membership_users_on_user_id"
+  end
+
+  create_table "memberships", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップ", force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "membership_group_id", comment: "メンバーシップグループ"
+    t.string "name", comment: "メンバーシップ識別子"
+    t.string "display_name", comment: "メンバーシップ名称"
+    t.integer "position", comment: "表示順序"
+    t.integer "tier", comment: "階級"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["membership_group_id"], name: "index_memberships_on_membership_group_id"
+    t.index ["tenant_id"], name: "index_memberships_on_tenant_id"
   end
 
   create_table "oauth_access_grants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -886,33 +886,33 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "delivery_addresses", "users", name: "fk_delivery_addresses_users"
   add_foreign_key "email_templates", "tenants", name: "fk_email_templates_tenants"
   add_foreign_key "login_spa_applications", "tenants", name: "fk_login_spa_applications_tenants"
-  add_foreign_key "memberships", "memberships__groups", column: "membership_group_id", name: "fk_memberships_groups"
+  add_foreign_key "membership_contract_terms", "membership_contracts", name: "fk_membership_contract_terms_contracts"
+  add_foreign_key "membership_contract_terms", "membership_plans", name: "fk_membership_contract_terms_plans"
+  add_foreign_key "membership_contract_terms", "tenants", name: "fk_membership_contract_terms_tenants"
+  add_foreign_key "membership_contract_terms", "users", name: "fk_membership_contract_terms_users"
+  add_foreign_key "membership_contracts", "tenants", name: "fk_membership_contracts_tenants"
+  add_foreign_key "membership_contracts", "users", name: "fk_membership_contracts_users"
+  add_foreign_key "membership_groups", "tenants", name: "fk_membership_groups_tenants"
+  add_foreign_key "membership_plan_components", "membership_plans", name: "fk_membership_plan_components_plans"
+  add_foreign_key "membership_plan_components", "memberships", name: "fk_membership_plan_components_memberships"
+  add_foreign_key "membership_plan_components", "tenants", name: "fk_membership_plan_components_tenants"
+  add_foreign_key "membership_plan_payment_method_mappings", "membership_plans", name: "fk_membership_plan_payment_method_mappings_plans"
+  add_foreign_key "membership_plan_payment_method_mappings", "tenants", name: "fk_membership_plan_payment_method_mappings_tenants"
+  add_foreign_key "membership_plan_payment_methods", "membership_plans", name: "fk_membership_plan_payment_methods_plans"
+  add_foreign_key "membership_plan_payment_methods", "stripe_record__prices", column: "stripe_record_price_id", name: "fk_membership_plan_payment_methods_stripe_prices"
+  add_foreign_key "membership_plan_payment_methods", "tenants", name: "fk_membership_plan_payment_methods_tenants"
+  add_foreign_key "membership_plans", "tenants", name: "fk_membership_plans_tenants"
+  add_foreign_key "membership_user_achievements", "membership_plans", name: "fk_membership_user_achievements_plans"
+  add_foreign_key "membership_user_achievements", "memberships", name: "fk_membership_user_achievements_memberships"
+  add_foreign_key "membership_user_achievements", "tenants", name: "fk_membership_user_achievements_tenants"
+  add_foreign_key "membership_user_achievements", "users", name: "fk_membership_user_achievements_users"
+  add_foreign_key "membership_users", "membership_contracts", name: "fk_membership_users_contracts"
+  add_foreign_key "membership_users", "membership_groups", name: "fk_membership_users_groups"
+  add_foreign_key "membership_users", "memberships", name: "fk_membership_users_memberships"
+  add_foreign_key "membership_users", "tenants", name: "fk_membership_users_tenants"
+  add_foreign_key "membership_users", "users", name: "fk_membership_users_users"
+  add_foreign_key "memberships", "membership_groups", name: "fk_membership_groups"
   add_foreign_key "memberships", "tenants", name: "fk_memberships_tenants"
-  add_foreign_key "memberships__contract_terms", "memberships__contracts", column: "membership_contract_id", name: "fk_memberships__contract_terms_contracts"
-  add_foreign_key "memberships__contract_terms", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__contract_terms_plans"
-  add_foreign_key "memberships__contract_terms", "tenants", name: "fk_memberships__contract_terms_tenants"
-  add_foreign_key "memberships__contract_terms", "users", name: "fk_memberships__contract_terms_users"
-  add_foreign_key "memberships__contracts", "tenants", name: "fk_memberships__contracts_tenants"
-  add_foreign_key "memberships__contracts", "users", name: "fk_memberships__contracts_users"
-  add_foreign_key "memberships__groups", "tenants", name: "fk_memberships__groups_tenants"
-  add_foreign_key "memberships__plan_components", "memberships", name: "fk_memberships__plan_components_memberships"
-  add_foreign_key "memberships__plan_components", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__plan_components_plans"
-  add_foreign_key "memberships__plan_components", "tenants", name: "fk_memberships__plan_components_tenants"
-  add_foreign_key "memberships__plan_payment_method_mappings", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__plan_payment_method_mappings_plans"
-  add_foreign_key "memberships__plan_payment_method_mappings", "tenants", name: "fk_memberships__plan_payment_methods_tenants"
-  add_foreign_key "memberships__plan_payment_methods", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__plan_payment_methods_plans"
-  add_foreign_key "memberships__plan_payment_methods", "stripe_record__prices", column: "stripe_record_price_id", name: "fk_memberships__plan_payment_methods_stripe_prices"
-  add_foreign_key "memberships__plan_payment_methods", "tenants", name: "fk_memberships__plan_payment_methods_tenants"
-  add_foreign_key "memberships__plans", "tenants", name: "fk_memberships__plans_tenants"
-  add_foreign_key "memberships__user_achievements", "memberships", name: "fk_memberships__user_achievements_memberships"
-  add_foreign_key "memberships__user_achievements", "memberships__plans", column: "membership_plan_id", name: "fk_memberships__user_achievements_plans"
-  add_foreign_key "memberships__user_achievements", "tenants", name: "fk_memberships__user_achievements_tenants"
-  add_foreign_key "memberships__user_achievements", "users", name: "fk_memberships__user_achievements_users"
-  add_foreign_key "memberships__users", "memberships", name: "fk_memberships__users_memberships"
-  add_foreign_key "memberships__users", "memberships__contracts", column: "membership_contract_id", name: "fk_memberships__users_contracts"
-  add_foreign_key "memberships__users", "memberships__groups", column: "membership_group_id", name: "fk_memberships__users_groups"
-  add_foreign_key "memberships__users", "tenants", name: "fk_memberships__users_tenants"
-  add_foreign_key "memberships__users", "users", name: "fk_memberships__users_users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id", name: "fk_oauth_access_grants_oauth_applications"
   add_foreign_key "oauth_access_grants", "tenants", name: "fk_oauth_access_grants_tenants"
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id"
@@ -921,10 +921,10 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
   add_foreign_key "oauth_applications", "tenants", name: "fk_oauth_applications_tenants"
   add_foreign_key "oauth_openid_requests", "oauth_access_grants", column: "access_grant_id", name: "fk_oauth_openid_requests_oauth_access_grants"
-  add_foreign_key "payment__subscriptions", "memberships__contracts", column: "membership_contract_id", name: "fk_payment__transactions_contracts"
+  add_foreign_key "payment__subscriptions", "membership_contracts", name: "fk_payment__transactions_contracts"
   add_foreign_key "payment__subscriptions", "tenants", name: "fk_payment__subscriptions_tenants"
   add_foreign_key "payment__subscriptions", "users", name: "fk_payment__transactions_users"
-  add_foreign_key "payment__transactions", "memberships__contracts", column: "membership_contract_id", name: "fk_payment__transactions_contracts"
+  add_foreign_key "payment__transactions", "membership_contracts", name: "fk_payment__transactions_contracts"
   add_foreign_key "payment__transactions", "tenants", name: "fk_payment__transactions_tenants"
   add_foreign_key "payment__transactions", "users", name: "fk_payment__transactions_users"
   add_foreign_key "stripe_record__accounts", "stripe_record__accounts", column: "controlling_platform_id", name: "fk_stripe_record_accounts_controlling_platform_id"

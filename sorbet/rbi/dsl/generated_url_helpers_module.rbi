@@ -79,13 +79,13 @@ module GeneratedUrlHelpersModule
   def api_v1_internal_me_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_v1_internal_memberships_contract_url(*args); end
+  def api_v1_internal_membership_contract_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_v1_internal_memberships_contracts_credit_card_payments_url(*args); end
+  def api_v1_internal_membership_contracts_credit_card_payments_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def api_v1_internal_memberships_contracts_url(*args); end
+  def api_v1_internal_membership_contracts_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def api_v1_internal_memberships_url(*args); end
@@ -112,13 +112,13 @@ module GeneratedUrlHelpersModule
   def api_v1_public_memberships_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def assign_memberships_ruler_area_tenant_memberships_group_url(*args); end
+  def assign_memberships_ruler_area_tenant_membership_group_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def authenticate_api_v1_authentication_mfa_sms_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def cancel_api_v1_internal_memberships_contract_url(*args); end
+  def cancel_api_v1_internal_membership_contract_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_contact_address_url(*args); end
@@ -136,16 +136,16 @@ module GeneratedUrlHelpersModule
   def edit_ruler_area_tenant_login_spa_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_membership_group_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_membership_plan_membership_plan_payment_method_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_membership_plan_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_membership_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def edit_ruler_area_tenant_memberships_group_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def edit_ruler_area_tenant_memberships_plan_memberships_plan_payment_method_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def edit_ruler_area_tenant_memberships_plan_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_oauth_application_url(*args); end
@@ -193,13 +193,13 @@ module GeneratedUrlHelpersModule
   def new_ruler_area_tenant_login_spa_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_membership_group_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_membership_plan_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_membership_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def new_ruler_area_tenant_memberships_group_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def new_ruler_area_tenant_memberships_plan_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_oauth_application_url(*args); end
@@ -253,13 +253,13 @@ module GeneratedUrlHelpersModule
   def oauth_userinfo_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def plan_change_api_v1_internal_memberships_contract_url(*args); end
+  def plan_change_api_v1_internal_membership_contract_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def plan_change_preview_api_v1_internal_memberships_contract_url(*args); end
+  def plan_change_preview_api_v1_internal_membership_contract_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def polling_api_v1_internal_memberships_contract_url(*args); end
+  def polling_api_v1_internal_membership_contract_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def preview_ruler_area_tenant_stripe_records_products_url(*args); end
@@ -328,22 +328,22 @@ module GeneratedUrlHelpersModule
   def ruler_area_tenant_login_spa_applications_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_membership_group_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_membership_groups_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_membership_plan_membership_plan_payment_method_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_membership_plan_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_membership_plans_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_membership_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_memberships_group_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_memberships_groups_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_memberships_plan_memberships_plan_payment_method_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_memberships_plan_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_memberships_plans_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_memberships_url(*args); end
@@ -433,7 +433,7 @@ module GeneratedUrlHelpersModule
   def unlock_account_locks_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def update_memberships_ruler_area_tenant_memberships_group_url(*args); end
+  def update_memberships_ruler_area_tenant_membership_group_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def verify_email_api_v1_authentication_registrations_url(*args); end

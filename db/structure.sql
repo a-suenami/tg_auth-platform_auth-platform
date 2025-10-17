@@ -1,4 +1,4 @@
-\restrict Op2cJ1BMnbhrex9HwqdjMdLYbjXwBTnUJEJrWm1hNYxuyORosaFx3SThcaAn4rq
+\restrict 1EgMBrAZZaQHd6CgyfObOxx9cduScHz8RX9gNoq0bZStynd6dmny2ztsGhCbVDt
 
 -- Dumped from database version 15.5
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -155,6 +155,472 @@ CREATE TABLE public.login_spa_applications (
 
 
 --
+-- Name: membership_contract_terms; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.membership_contract_terms (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    membership_contract_id uuid NOT NULL,
+    membership_plan_id uuid NOT NULL,
+    status character varying NOT NULL,
+    start_at timestamp(6) without time zone,
+    end_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE membership_contract_terms; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.membership_contract_terms IS 'ユーザーのメンバーシップ契約の詳細,変更履歴';
+
+
+--
+-- Name: COLUMN membership_contract_terms.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_contract_terms.status IS 'ステータス';
+
+
+--
+-- Name: COLUMN membership_contract_terms.start_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_contract_terms.start_at IS '開始日時';
+
+
+--
+-- Name: COLUMN membership_contract_terms.end_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_contract_terms.end_at IS '終了日時';
+
+
+--
+-- Name: membership_contracts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.membership_contracts (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    expires_at timestamp(6) without time zone,
+    cancel_at_period_end boolean DEFAULT false,
+    status character varying DEFAULT 'active'::character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE membership_contracts; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.membership_contracts IS 'ユーザーのメンバーシップ契約';
+
+
+--
+-- Name: COLUMN membership_contracts.expires_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_contracts.expires_at IS '有効期限';
+
+
+--
+-- Name: COLUMN membership_contracts.cancel_at_period_end; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_contracts.cancel_at_period_end IS '次回更新時に解約フラグ';
+
+
+--
+-- Name: COLUMN membership_contracts.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_contracts.status IS 'ステータス';
+
+
+--
+-- Name: membership_groups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.membership_groups (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    name character varying NOT NULL,
+    display_name character varying NOT NULL,
+    "position" integer DEFAULT 0,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE membership_groups; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.membership_groups IS 'メンバーシップグループ（段階的プラン用）';
+
+
+--
+-- Name: COLUMN membership_groups.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_groups.name IS 'グループ名（英数字のみ）';
+
+
+--
+-- Name: COLUMN membership_groups.display_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_groups.display_name IS '表示名';
+
+
+--
+-- Name: COLUMN membership_groups."position"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_groups."position" IS '表示順序（段階の順番）';
+
+
+--
+-- Name: membership_plan_components; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.membership_plan_components (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    membership_plan_id uuid NOT NULL,
+    membership_id uuid NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE membership_plan_components; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.membership_plan_components IS 'メンバーシッププランの構成要素（バンドルプラン用）';
+
+
+--
+-- Name: membership_plan_payment_method_mappings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.membership_plan_payment_method_mappings (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    membership_plan_id uuid NOT NULL,
+    membership_plan_payment_method_id uuid NOT NULL,
+    priceable_id uuid,
+    priceable_type character varying,
+    amount integer NOT NULL,
+    currency character varying NOT NULL,
+    is_active boolean DEFAULT true,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE membership_plan_payment_method_mappings; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.membership_plan_payment_method_mappings IS 'メンバーシッププランの支払い方法のマッピング';
+
+
+--
+-- Name: COLUMN membership_plan_payment_method_mappings.priceable_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plan_payment_method_mappings.priceable_id IS 'Priceオブジェクト';
+
+
+--
+-- Name: COLUMN membership_plan_payment_method_mappings.amount; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plan_payment_method_mappings.amount IS '金額';
+
+
+--
+-- Name: COLUMN membership_plan_payment_method_mappings.currency; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plan_payment_method_mappings.currency IS '通貨';
+
+
+--
+-- Name: COLUMN membership_plan_payment_method_mappings.is_active; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plan_payment_method_mappings.is_active IS '有効フラグ';
+
+
+--
+-- Name: membership_plan_payment_methods; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.membership_plan_payment_methods (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    membership_plan_id uuid NOT NULL,
+    payment_type character varying NOT NULL,
+    stripe_record_price_id uuid,
+    is_active boolean DEFAULT true,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE membership_plan_payment_methods; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.membership_plan_payment_methods IS 'メンバーシッププランの支払い方法';
+
+
+--
+-- Name: COLUMN membership_plan_payment_methods.payment_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plan_payment_methods.payment_type IS '支払い方法: credit_card, convenience, campaign_code, external_linkage';
+
+
+--
+-- Name: COLUMN membership_plan_payment_methods.stripe_record_price_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plan_payment_methods.stripe_record_price_id IS 'Stripe価格ID';
+
+
+--
+-- Name: COLUMN membership_plan_payment_methods.is_active; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plan_payment_methods.is_active IS '有効フラグ';
+
+
+--
+-- Name: membership_plans; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.membership_plans (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    name character varying NOT NULL,
+    recurrence boolean DEFAULT false NOT NULL,
+    recurring_interval_count integer DEFAULT 1 NOT NULL,
+    recurring_interval_unit character varying DEFAULT 'month'::character varying NOT NULL,
+    amount integer NOT NULL,
+    is_active boolean DEFAULT true,
+    enabled_at timestamp(6) without time zone,
+    disabled_at timestamp(6) without time zone,
+    trial_period_days integer DEFAULT 0 NOT NULL,
+    billing_anchor character varying DEFAULT 'by_start_day'::character varying NOT NULL,
+    anchor_day_of_month integer,
+    "position" integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE membership_plans; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.membership_plans IS 'メンバーシップの契約プラン';
+
+
+--
+-- Name: COLUMN membership_plans.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plans.name IS 'プラン名';
+
+
+--
+-- Name: COLUMN membership_plans.recurrence; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plans.recurrence IS '定期課金フラグ: true=サブスクリプション, false=買い切り';
+
+
+--
+-- Name: COLUMN membership_plans.recurring_interval_count; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plans.recurring_interval_count IS '更新サイクルの数(1=1日/週/月/年, 2=2日/週/月/年)';
+
+
+--
+-- Name: COLUMN membership_plans.recurring_interval_unit; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plans.recurring_interval_unit IS '更新サイクルの単位 (day/week/month/year)';
+
+
+--
+-- Name: COLUMN membership_plans.amount; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plans.amount IS '請求金額';
+
+
+--
+-- Name: COLUMN membership_plans.is_active; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plans.is_active IS '有効フラグ';
+
+
+--
+-- Name: COLUMN membership_plans.enabled_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plans.enabled_at IS '有効化日時';
+
+
+--
+-- Name: COLUMN membership_plans.disabled_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plans.disabled_at IS '無効化日時';
+
+
+--
+-- Name: COLUMN membership_plans.trial_period_days; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plans.trial_period_days IS 'トライアル期間';
+
+
+--
+-- Name: COLUMN membership_plans.billing_anchor; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plans.billing_anchor IS '締めの基準: by_start_day(登録日基準), by_fixed_month_day(毎月の特定日)';
+
+
+--
+-- Name: COLUMN membership_plans.anchor_day_of_month; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plans.anchor_day_of_month IS 'fixed_month_day時の締め日(1-31 月末指定時は31)。by_fixed_month_day時のみ使用';
+
+
+--
+-- Name: COLUMN membership_plans."position"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_plans."position" IS '表示順序';
+
+
+--
+-- Name: membership_user_achievements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.membership_user_achievements (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    membership_id uuid NOT NULL,
+    membership_plan_id uuid NOT NULL,
+    date date NOT NULL,
+    achievement_type character varying NOT NULL,
+    achievement_data jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE membership_user_achievements; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.membership_user_achievements IS 'ユーザーのメンバーシップアチーブメント';
+
+
+--
+-- Name: COLUMN membership_user_achievements.date; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_user_achievements.date IS '達成日';
+
+
+--
+-- Name: COLUMN membership_user_achievements.achievement_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_user_achievements.achievement_type IS 'アチーブメントタイプ';
+
+
+--
+-- Name: COLUMN membership_user_achievements.achievement_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_user_achievements.achievement_data IS 'アチーブメント詳細データ';
+
+
+--
+-- Name: membership_users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.membership_users (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    membership_id uuid NOT NULL,
+    membership_group_id uuid,
+    membership_contract_id uuid,
+    expires_at timestamp(6) without time zone,
+    status character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE membership_users; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.membership_users IS 'メンバーシップとUserの中間テーブル';
+
+
+--
+-- Name: COLUMN membership_users.membership_group_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_users.membership_group_id IS '段階的プランの場合のグループ';
+
+
+--
+-- Name: COLUMN membership_users.membership_contract_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_users.membership_contract_id IS 'メンバーシップ契約';
+
+
+--
+-- Name: COLUMN membership_users.expires_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_users.expires_at IS 'メンバーシップの有効期限';
+
+
+--
+-- Name: COLUMN membership_users.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_users.status IS 'メンバーシップのステータス';
+
+
+--
 -- Name: memberships; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -211,472 +677,6 @@ COMMENT ON COLUMN public.memberships."position" IS '表示順序';
 --
 
 COMMENT ON COLUMN public.memberships.tier IS '階級';
-
-
---
--- Name: memberships__contract_terms; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.memberships__contract_terms (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    user_id uuid NOT NULL,
-    membership_contract_id uuid NOT NULL,
-    membership_plan_id uuid NOT NULL,
-    status character varying NOT NULL,
-    start_at timestamp(6) without time zone,
-    end_at timestamp(6) without time zone,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE memberships__contract_terms; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.memberships__contract_terms IS 'ユーザーのメンバーシップ契約の詳細,変更履歴';
-
-
---
--- Name: COLUMN memberships__contract_terms.status; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__contract_terms.status IS 'ステータス';
-
-
---
--- Name: COLUMN memberships__contract_terms.start_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__contract_terms.start_at IS '開始日時';
-
-
---
--- Name: COLUMN memberships__contract_terms.end_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__contract_terms.end_at IS '終了日時';
-
-
---
--- Name: memberships__contracts; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.memberships__contracts (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    user_id uuid NOT NULL,
-    expires_at timestamp(6) without time zone,
-    cancel_at_period_end boolean DEFAULT false,
-    status character varying DEFAULT 'active'::character varying NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE memberships__contracts; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.memberships__contracts IS 'ユーザーのメンバーシップ契約';
-
-
---
--- Name: COLUMN memberships__contracts.expires_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__contracts.expires_at IS '有効期限';
-
-
---
--- Name: COLUMN memberships__contracts.cancel_at_period_end; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__contracts.cancel_at_period_end IS '次回更新時に解約フラグ';
-
-
---
--- Name: COLUMN memberships__contracts.status; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__contracts.status IS 'ステータス';
-
-
---
--- Name: memberships__groups; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.memberships__groups (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    name character varying NOT NULL,
-    display_name character varying NOT NULL,
-    "position" integer DEFAULT 0,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE memberships__groups; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.memberships__groups IS 'メンバーシップグループ（段階的プラン用）';
-
-
---
--- Name: COLUMN memberships__groups.name; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__groups.name IS 'グループ名（英数字のみ）';
-
-
---
--- Name: COLUMN memberships__groups.display_name; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__groups.display_name IS '表示名';
-
-
---
--- Name: COLUMN memberships__groups."position"; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__groups."position" IS '表示順序（段階の順番）';
-
-
---
--- Name: memberships__plan_components; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.memberships__plan_components (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    membership_plan_id uuid NOT NULL,
-    membership_id uuid NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE memberships__plan_components; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.memberships__plan_components IS 'メンバーシッププランの構成要素（バンドルプラン用）';
-
-
---
--- Name: memberships__plan_payment_method_mappings; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.memberships__plan_payment_method_mappings (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    membership_plan_id uuid NOT NULL,
-    membership_plan_payment_method_id uuid NOT NULL,
-    priceable_id uuid,
-    priceable_type character varying,
-    amount integer NOT NULL,
-    currency character varying NOT NULL,
-    is_active boolean DEFAULT true,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE memberships__plan_payment_method_mappings; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.memberships__plan_payment_method_mappings IS 'メンバーシッププランの支払い方法のマッピング';
-
-
---
--- Name: COLUMN memberships__plan_payment_method_mappings.priceable_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plan_payment_method_mappings.priceable_id IS 'Priceオブジェクト';
-
-
---
--- Name: COLUMN memberships__plan_payment_method_mappings.amount; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plan_payment_method_mappings.amount IS '金額';
-
-
---
--- Name: COLUMN memberships__plan_payment_method_mappings.currency; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plan_payment_method_mappings.currency IS '通貨';
-
-
---
--- Name: COLUMN memberships__plan_payment_method_mappings.is_active; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plan_payment_method_mappings.is_active IS '有効フラグ';
-
-
---
--- Name: memberships__plan_payment_methods; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.memberships__plan_payment_methods (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    membership_plan_id uuid NOT NULL,
-    payment_type character varying NOT NULL,
-    stripe_record_price_id uuid,
-    is_active boolean DEFAULT true,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE memberships__plan_payment_methods; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.memberships__plan_payment_methods IS 'メンバーシッププランの支払い方法';
-
-
---
--- Name: COLUMN memberships__plan_payment_methods.payment_type; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plan_payment_methods.payment_type IS '支払い方法: credit_card, convenience, campaign_code, external_linkage';
-
-
---
--- Name: COLUMN memberships__plan_payment_methods.stripe_record_price_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plan_payment_methods.stripe_record_price_id IS 'Stripe価格ID';
-
-
---
--- Name: COLUMN memberships__plan_payment_methods.is_active; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plan_payment_methods.is_active IS '有効フラグ';
-
-
---
--- Name: memberships__plans; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.memberships__plans (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    name character varying NOT NULL,
-    recurrence boolean DEFAULT false NOT NULL,
-    recurring_interval_count integer DEFAULT 1 NOT NULL,
-    recurring_interval_unit character varying DEFAULT 'month'::character varying NOT NULL,
-    amount integer NOT NULL,
-    is_active boolean DEFAULT true,
-    enabled_at timestamp(6) without time zone,
-    disabled_at timestamp(6) without time zone,
-    trial_period_days integer DEFAULT 0 NOT NULL,
-    billing_anchor character varying DEFAULT 'by_start_day'::character varying NOT NULL,
-    anchor_day_of_month integer,
-    "position" integer DEFAULT 0 NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE memberships__plans; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.memberships__plans IS 'メンバーシップの契約プラン';
-
-
---
--- Name: COLUMN memberships__plans.name; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plans.name IS 'プラン名';
-
-
---
--- Name: COLUMN memberships__plans.recurrence; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plans.recurrence IS '定期課金フラグ: true=サブスクリプション, false=買い切り';
-
-
---
--- Name: COLUMN memberships__plans.recurring_interval_count; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plans.recurring_interval_count IS '更新サイクルの数(1=1日/週/月/年, 2=2日/週/月/年)';
-
-
---
--- Name: COLUMN memberships__plans.recurring_interval_unit; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plans.recurring_interval_unit IS '更新サイクルの単位 (day/week/month/year)';
-
-
---
--- Name: COLUMN memberships__plans.amount; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plans.amount IS '請求金額';
-
-
---
--- Name: COLUMN memberships__plans.is_active; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plans.is_active IS '有効フラグ';
-
-
---
--- Name: COLUMN memberships__plans.enabled_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plans.enabled_at IS '有効化日時';
-
-
---
--- Name: COLUMN memberships__plans.disabled_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plans.disabled_at IS '無効化日時';
-
-
---
--- Name: COLUMN memberships__plans.trial_period_days; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plans.trial_period_days IS 'トライアル期間';
-
-
---
--- Name: COLUMN memberships__plans.billing_anchor; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plans.billing_anchor IS '締めの基準: by_start_day(登録日基準), by_fixed_month_day(毎月の特定日)';
-
-
---
--- Name: COLUMN memberships__plans.anchor_day_of_month; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plans.anchor_day_of_month IS 'fixed_month_day時の締め日(1-31 月末指定時は31)。by_fixed_month_day時のみ使用';
-
-
---
--- Name: COLUMN memberships__plans."position"; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__plans."position" IS '表示順序';
-
-
---
--- Name: memberships__user_achievements; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.memberships__user_achievements (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    user_id uuid NOT NULL,
-    membership_id uuid NOT NULL,
-    membership_plan_id uuid NOT NULL,
-    date date NOT NULL,
-    achievement_type character varying NOT NULL,
-    achievement_data jsonb DEFAULT '{}'::jsonb,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE memberships__user_achievements; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.memberships__user_achievements IS 'ユーザーのメンバーシップアチーブメント';
-
-
---
--- Name: COLUMN memberships__user_achievements.date; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__user_achievements.date IS '達成日';
-
-
---
--- Name: COLUMN memberships__user_achievements.achievement_type; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__user_achievements.achievement_type IS 'アチーブメントタイプ';
-
-
---
--- Name: COLUMN memberships__user_achievements.achievement_data; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__user_achievements.achievement_data IS 'アチーブメント詳細データ';
-
-
---
--- Name: memberships__users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.memberships__users (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    user_id uuid NOT NULL,
-    membership_id uuid NOT NULL,
-    membership_group_id uuid,
-    membership_contract_id uuid,
-    expires_at timestamp(6) without time zone,
-    status character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE memberships__users; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.memberships__users IS 'メンバーシップとUserの中間テーブル';
-
-
---
--- Name: COLUMN memberships__users.membership_group_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__users.membership_group_id IS '段階的プランの場合のグループ';
-
-
---
--- Name: COLUMN memberships__users.membership_contract_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__users.membership_contract_id IS 'メンバーシップ契約';
-
-
---
--- Name: COLUMN memberships__users.expires_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__users.expires_at IS 'メンバーシップの有効期限';
-
-
---
--- Name: COLUMN memberships__users.status; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.memberships__users.status IS 'メンバーシップのステータス';
 
 
 --
@@ -1908,75 +1908,75 @@ ALTER TABLE ONLY public.login_spa_applications
 
 
 --
--- Name: memberships__contract_terms memberships__contract_terms_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: membership_contract_terms membership_contract_terms_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__contract_terms
-    ADD CONSTRAINT memberships__contract_terms_pkey PRIMARY KEY (id);
-
-
---
--- Name: memberships__contracts memberships__contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__contracts
-    ADD CONSTRAINT memberships__contracts_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.membership_contract_terms
+    ADD CONSTRAINT membership_contract_terms_pkey PRIMARY KEY (id);
 
 
 --
--- Name: memberships__groups memberships__groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: membership_contracts membership_contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__groups
-    ADD CONSTRAINT memberships__groups_pkey PRIMARY KEY (id);
-
-
---
--- Name: memberships__plan_components memberships__plan_components_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__plan_components
-    ADD CONSTRAINT memberships__plan_components_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.membership_contracts
+    ADD CONSTRAINT membership_contracts_pkey PRIMARY KEY (id);
 
 
 --
--- Name: memberships__plan_payment_method_mappings memberships__plan_payment_method_mappings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: membership_groups membership_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__plan_payment_method_mappings
-    ADD CONSTRAINT memberships__plan_payment_method_mappings_pkey PRIMARY KEY (id);
-
-
---
--- Name: memberships__plan_payment_methods memberships__plan_payment_methods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__plan_payment_methods
-    ADD CONSTRAINT memberships__plan_payment_methods_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.membership_groups
+    ADD CONSTRAINT membership_groups_pkey PRIMARY KEY (id);
 
 
 --
--- Name: memberships__plans memberships__plans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: membership_plan_components membership_plan_components_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__plans
-    ADD CONSTRAINT memberships__plans_pkey PRIMARY KEY (id);
-
-
---
--- Name: memberships__user_achievements memberships__user_achievements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__user_achievements
-    ADD CONSTRAINT memberships__user_achievements_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.membership_plan_components
+    ADD CONSTRAINT membership_plan_components_pkey PRIMARY KEY (id);
 
 
 --
--- Name: memberships__users memberships__users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: membership_plan_payment_method_mappings membership_plan_payment_method_mappings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__users
-    ADD CONSTRAINT memberships__users_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.membership_plan_payment_method_mappings
+    ADD CONSTRAINT membership_plan_payment_method_mappings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: membership_plan_payment_methods membership_plan_payment_methods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_plan_payment_methods
+    ADD CONSTRAINT membership_plan_payment_methods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: membership_plans membership_plans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_plans
+    ADD CONSTRAINT membership_plans_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: membership_user_achievements membership_user_achievements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_user_achievements
+    ADD CONSTRAINT membership_user_achievements_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: membership_users membership_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_users
+    ADD CONSTRAINT membership_users_pkey PRIMARY KEY (id);
 
 
 --
@@ -2279,59 +2279,59 @@ CREATE UNIQUE INDEX idx_linked_applications_tenant_user_oauth_application_uniq O
 
 
 --
--- Name: idx_memberships__contracts_expires_at; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_membership_contracts_expires_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_memberships__contracts_expires_at ON public.memberships__contracts USING btree (expires_at);
-
-
---
--- Name: idx_memberships__groups_tenant_id_name_uniq; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_memberships__groups_tenant_id_name_uniq ON public.memberships__groups USING btree (tenant_id, name);
+CREATE INDEX idx_membership_contracts_expires_at ON public.membership_contracts USING btree (expires_at);
 
 
 --
--- Name: idx_memberships__groups_tenant_position; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_membership_groups_tenant_id_name_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_memberships__groups_tenant_position ON public.memberships__groups USING btree (tenant_id, "position");
-
-
---
--- Name: idx_memberships__plan_components_plan_membership_uniq; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX idx_memberships__plan_components_plan_membership_uniq ON public.memberships__plan_components USING btree (membership_plan_id, membership_id);
+CREATE UNIQUE INDEX idx_membership_groups_tenant_id_name_uniq ON public.membership_groups USING btree (tenant_id, name);
 
 
 --
--- Name: idx_memberships__plan_payment_methods_plan_type_uniq; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_membership_groups_tenant_position; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_memberships__plan_payment_methods_plan_type_uniq ON public.memberships__plan_payment_methods USING btree (membership_plan_id, payment_type);
-
-
---
--- Name: idx_memberships__user_achievements_date; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_memberships__user_achievements_date ON public.memberships__user_achievements USING btree (date);
+CREATE INDEX idx_membership_groups_tenant_position ON public.membership_groups USING btree (tenant_id, "position");
 
 
 --
--- Name: idx_memberships__user_achievements_tenant_user_membership_date; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_membership_plan_components_plan_membership_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_memberships__user_achievements_tenant_user_membership_date ON public.memberships__user_achievements USING btree (tenant_id, user_id, membership_id, date);
+CREATE UNIQUE INDEX idx_membership_plan_components_plan_membership_uniq ON public.membership_plan_components USING btree (membership_plan_id, membership_id);
 
 
 --
--- Name: idx_memberships__users_tenant_user_membership_uniq; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_membership_plan_payment_methods_plan_type_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_memberships__users_tenant_user_membership_uniq ON public.memberships__users USING btree (tenant_id, user_id, membership_id);
+CREATE UNIQUE INDEX idx_membership_plan_payment_methods_plan_type_uniq ON public.membership_plan_payment_methods USING btree (membership_plan_id, payment_type);
+
+
+--
+-- Name: idx_membership_user_achievements_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_membership_user_achievements_date ON public.membership_user_achievements USING btree (date);
+
+
+--
+-- Name: idx_membership_user_achievements_tenant_user_membership_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_membership_user_achievements_tenant_user_membership_date ON public.membership_user_achievements USING btree (tenant_id, user_id, membership_id, date);
+
+
+--
+-- Name: idx_membership_users_tenant_user_membership_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_membership_users_tenant_user_membership_uniq ON public.membership_users USING btree (tenant_id, user_id, membership_id);
 
 
 --
@@ -2349,17 +2349,17 @@ CREATE INDEX idx_on_chargeable_type_chargeable_id_8534730e7a ON public.payment__
 
 
 --
--- Name: idx_on_membership_plan_id_0fb74d17fc; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_on_membership_plan_id_abf7e120d7; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_on_membership_plan_id_0fb74d17fc ON public.memberships__plan_payment_method_mappings USING btree (membership_plan_id);
+CREATE INDEX idx_on_membership_plan_id_abf7e120d7 ON public.membership_plan_payment_method_mappings USING btree (membership_plan_id);
 
 
 --
--- Name: idx_on_membership_plan_payment_method_id_a85e09354e; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_on_membership_plan_payment_method_id_45519b8566; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_on_membership_plan_payment_method_id_a85e09354e ON public.memberships__plan_payment_method_mappings USING btree (membership_plan_payment_method_id);
+CREATE INDEX idx_on_membership_plan_payment_method_id_45519b8566 ON public.membership_plan_payment_method_mappings USING btree (membership_plan_payment_method_id);
 
 
 --
@@ -2370,17 +2370,17 @@ CREATE INDEX idx_on_payment_source_type_payment_source_id_0313cc1522 ON public.s
 
 
 --
--- Name: idx_on_priceable_type_priceable_id_dfb53324a7; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_on_priceable_type_priceable_id_bc1644aaac; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_on_priceable_type_priceable_id_dfb53324a7 ON public.memberships__plan_payment_method_mappings USING btree (priceable_type, priceable_id);
+CREATE INDEX idx_on_priceable_type_priceable_id_bc1644aaac ON public.membership_plan_payment_method_mappings USING btree (priceable_type, priceable_id);
 
 
 --
--- Name: idx_on_stripe_record_price_id_912fae4a3b; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_on_stripe_record_price_id_ccd90274f4; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_on_stripe_record_price_id_912fae4a3b ON public.memberships__plan_payment_methods USING btree (stripe_record_price_id);
+CREATE INDEX idx_on_stripe_record_price_id_ccd90274f4 ON public.membership_plan_payment_methods USING btree (stripe_record_price_id);
 
 
 --
@@ -2601,164 +2601,164 @@ CREATE UNIQUE INDEX index_login_spa_applications_on_uid ON public.login_spa_appl
 
 
 --
--- Name: index_memberships__contract_terms_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_membership_contract_terms_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__contract_terms_on_membership_contract_id ON public.memberships__contract_terms USING btree (membership_contract_id);
-
-
---
--- Name: index_memberships__contract_terms_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__contract_terms_on_membership_plan_id ON public.memberships__contract_terms USING btree (membership_plan_id);
+CREATE INDEX index_membership_contract_terms_on_membership_contract_id ON public.membership_contract_terms USING btree (membership_contract_id);
 
 
 --
--- Name: index_memberships__contract_terms_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_membership_contract_terms_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__contract_terms_on_tenant_id ON public.memberships__contract_terms USING btree (tenant_id);
-
-
---
--- Name: index_memberships__contract_terms_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__contract_terms_on_user_id ON public.memberships__contract_terms USING btree (user_id);
+CREATE INDEX index_membership_contract_terms_on_membership_plan_id ON public.membership_contract_terms USING btree (membership_plan_id);
 
 
 --
--- Name: index_memberships__contracts_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_membership_contract_terms_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__contracts_on_tenant_id ON public.memberships__contracts USING btree (tenant_id);
-
-
---
--- Name: index_memberships__contracts_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__contracts_on_user_id ON public.memberships__contracts USING btree (user_id);
+CREATE INDEX index_membership_contract_terms_on_tenant_id ON public.membership_contract_terms USING btree (tenant_id);
 
 
 --
--- Name: index_memberships__groups_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_membership_contract_terms_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__groups_on_tenant_id ON public.memberships__groups USING btree (tenant_id);
-
-
---
--- Name: index_memberships__plan_components_on_membership_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__plan_components_on_membership_id ON public.memberships__plan_components USING btree (membership_id);
+CREATE INDEX index_membership_contract_terms_on_user_id ON public.membership_contract_terms USING btree (user_id);
 
 
 --
--- Name: index_memberships__plan_components_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_membership_contracts_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__plan_components_on_membership_plan_id ON public.memberships__plan_components USING btree (membership_plan_id);
-
-
---
--- Name: index_memberships__plan_components_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__plan_components_on_tenant_id ON public.memberships__plan_components USING btree (tenant_id);
+CREATE INDEX index_membership_contracts_on_tenant_id ON public.membership_contracts USING btree (tenant_id);
 
 
 --
--- Name: index_memberships__plan_payment_method_mappings_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_membership_contracts_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__plan_payment_method_mappings_on_tenant_id ON public.memberships__plan_payment_method_mappings USING btree (tenant_id);
-
-
---
--- Name: index_memberships__plan_payment_methods_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__plan_payment_methods_on_membership_plan_id ON public.memberships__plan_payment_methods USING btree (membership_plan_id);
+CREATE INDEX index_membership_contracts_on_user_id ON public.membership_contracts USING btree (user_id);
 
 
 --
--- Name: index_memberships__plan_payment_methods_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_membership_groups_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__plan_payment_methods_on_tenant_id ON public.memberships__plan_payment_methods USING btree (tenant_id);
-
-
---
--- Name: index_memberships__plans_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__plans_on_tenant_id ON public.memberships__plans USING btree (tenant_id);
+CREATE INDEX index_membership_groups_on_tenant_id ON public.membership_groups USING btree (tenant_id);
 
 
 --
--- Name: index_memberships__user_achievements_on_membership_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_membership_plan_components_on_membership_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__user_achievements_on_membership_id ON public.memberships__user_achievements USING btree (membership_id);
-
-
---
--- Name: index_memberships__user_achievements_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__user_achievements_on_membership_plan_id ON public.memberships__user_achievements USING btree (membership_plan_id);
+CREATE INDEX index_membership_plan_components_on_membership_id ON public.membership_plan_components USING btree (membership_id);
 
 
 --
--- Name: index_memberships__user_achievements_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_membership_plan_components_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__user_achievements_on_tenant_id ON public.memberships__user_achievements USING btree (tenant_id);
-
-
---
--- Name: index_memberships__user_achievements_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__user_achievements_on_user_id ON public.memberships__user_achievements USING btree (user_id);
+CREATE INDEX index_membership_plan_components_on_membership_plan_id ON public.membership_plan_components USING btree (membership_plan_id);
 
 
 --
--- Name: index_memberships__users_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_membership_plan_components_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__users_on_membership_contract_id ON public.memberships__users USING btree (membership_contract_id);
-
-
---
--- Name: index_memberships__users_on_membership_group_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__users_on_membership_group_id ON public.memberships__users USING btree (membership_group_id);
+CREATE INDEX index_membership_plan_components_on_tenant_id ON public.membership_plan_components USING btree (tenant_id);
 
 
 --
--- Name: index_memberships__users_on_membership_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_membership_plan_payment_method_mappings_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__users_on_membership_id ON public.memberships__users USING btree (membership_id);
-
-
---
--- Name: index_memberships__users_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_memberships__users_on_tenant_id ON public.memberships__users USING btree (tenant_id);
+CREATE INDEX index_membership_plan_payment_method_mappings_on_tenant_id ON public.membership_plan_payment_method_mappings USING btree (tenant_id);
 
 
 --
--- Name: index_memberships__users_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_membership_plan_payment_methods_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_memberships__users_on_user_id ON public.memberships__users USING btree (user_id);
+CREATE INDEX index_membership_plan_payment_methods_on_membership_plan_id ON public.membership_plan_payment_methods USING btree (membership_plan_id);
+
+
+--
+-- Name: index_membership_plan_payment_methods_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_membership_plan_payment_methods_on_tenant_id ON public.membership_plan_payment_methods USING btree (tenant_id);
+
+
+--
+-- Name: index_membership_plans_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_membership_plans_on_tenant_id ON public.membership_plans USING btree (tenant_id);
+
+
+--
+-- Name: index_membership_user_achievements_on_membership_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_membership_user_achievements_on_membership_id ON public.membership_user_achievements USING btree (membership_id);
+
+
+--
+-- Name: index_membership_user_achievements_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_membership_user_achievements_on_membership_plan_id ON public.membership_user_achievements USING btree (membership_plan_id);
+
+
+--
+-- Name: index_membership_user_achievements_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_membership_user_achievements_on_tenant_id ON public.membership_user_achievements USING btree (tenant_id);
+
+
+--
+-- Name: index_membership_user_achievements_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_membership_user_achievements_on_user_id ON public.membership_user_achievements USING btree (user_id);
+
+
+--
+-- Name: index_membership_users_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_membership_users_on_membership_contract_id ON public.membership_users USING btree (membership_contract_id);
+
+
+--
+-- Name: index_membership_users_on_membership_group_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_membership_users_on_membership_group_id ON public.membership_users USING btree (membership_group_id);
+
+
+--
+-- Name: index_membership_users_on_membership_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_membership_users_on_membership_id ON public.membership_users USING btree (membership_id);
+
+
+--
+-- Name: index_membership_users_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_membership_users_on_tenant_id ON public.membership_users USING btree (tenant_id);
+
+
+--
+-- Name: index_membership_users_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_membership_users_on_user_id ON public.membership_users USING btree (user_id);
 
 
 --
@@ -3498,211 +3498,211 @@ ALTER TABLE ONLY public.login_spa_applications
 
 
 --
--- Name: memberships__contract_terms fk_memberships__contract_terms_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: membership_contract_terms fk_membership_contract_terms_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__contract_terms
-    ADD CONSTRAINT fk_memberships__contract_terms_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.memberships__contracts(id);
-
-
---
--- Name: memberships__contract_terms fk_memberships__contract_terms_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__contract_terms
-    ADD CONSTRAINT fk_memberships__contract_terms_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
+ALTER TABLE ONLY public.membership_contract_terms
+    ADD CONSTRAINT fk_membership_contract_terms_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.membership_contracts(id);
 
 
 --
--- Name: memberships__contract_terms fk_memberships__contract_terms_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: membership_contract_terms fk_membership_contract_terms_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__contract_terms
-    ADD CONSTRAINT fk_memberships__contract_terms_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: memberships__contract_terms fk_memberships__contract_terms_users; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__contract_terms
-    ADD CONSTRAINT fk_memberships__contract_terms_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.membership_contract_terms
+    ADD CONSTRAINT fk_membership_contract_terms_plans FOREIGN KEY (membership_plan_id) REFERENCES public.membership_plans(id);
 
 
 --
--- Name: memberships__contracts fk_memberships__contracts_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: membership_contract_terms fk_membership_contract_terms_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__contracts
-    ADD CONSTRAINT fk_memberships__contracts_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: memberships__contracts fk_memberships__contracts_users; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__contracts
-    ADD CONSTRAINT fk_memberships__contracts_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+ALTER TABLE ONLY public.membership_contract_terms
+    ADD CONSTRAINT fk_membership_contract_terms_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
--- Name: memberships__groups fk_memberships__groups_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: membership_contract_terms fk_membership_contract_terms_users; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__groups
-    ADD CONSTRAINT fk_memberships__groups_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: memberships__plan_components fk_memberships__plan_components_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__plan_components
-    ADD CONSTRAINT fk_memberships__plan_components_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
+ALTER TABLE ONLY public.membership_contract_terms
+    ADD CONSTRAINT fk_membership_contract_terms_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
--- Name: memberships__plan_components fk_memberships__plan_components_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: membership_contracts fk_membership_contracts_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__plan_components
-    ADD CONSTRAINT fk_memberships__plan_components_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
-
-
---
--- Name: memberships__plan_components fk_memberships__plan_components_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__plan_components
-    ADD CONSTRAINT fk_memberships__plan_components_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+ALTER TABLE ONLY public.membership_contracts
+    ADD CONSTRAINT fk_membership_contracts_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
--- Name: memberships__plan_payment_method_mappings fk_memberships__plan_payment_method_mappings_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: membership_contracts fk_membership_contracts_users; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.memberships__plan_payment_method_mappings
-    ADD CONSTRAINT fk_memberships__plan_payment_method_mappings_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
-
-
---
--- Name: memberships__plan_payment_methods fk_memberships__plan_payment_methods_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__plan_payment_methods
-    ADD CONSTRAINT fk_memberships__plan_payment_methods_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
+ALTER TABLE ONLY public.membership_contracts
+    ADD CONSTRAINT fk_membership_contracts_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
--- Name: memberships__plan_payment_methods fk_memberships__plan_payment_methods_stripe_prices; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__plan_payment_methods
-    ADD CONSTRAINT fk_memberships__plan_payment_methods_stripe_prices FOREIGN KEY (stripe_record_price_id) REFERENCES public.stripe_record__prices(id);
-
-
---
--- Name: memberships__plan_payment_methods fk_memberships__plan_payment_methods_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__plan_payment_methods
-    ADD CONSTRAINT fk_memberships__plan_payment_methods_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: memberships__plan_payment_method_mappings fk_memberships__plan_payment_methods_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__plan_payment_method_mappings
-    ADD CONSTRAINT fk_memberships__plan_payment_methods_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: memberships__plans fk_memberships__plans_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__plans
-    ADD CONSTRAINT fk_memberships__plans_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: memberships__user_achievements fk_memberships__user_achievements_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__user_achievements
-    ADD CONSTRAINT fk_memberships__user_achievements_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
-
-
---
--- Name: memberships__user_achievements fk_memberships__user_achievements_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__user_achievements
-    ADD CONSTRAINT fk_memberships__user_achievements_plans FOREIGN KEY (membership_plan_id) REFERENCES public.memberships__plans(id);
-
-
---
--- Name: memberships__user_achievements fk_memberships__user_achievements_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__user_achievements
-    ADD CONSTRAINT fk_memberships__user_achievements_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: memberships__user_achievements fk_memberships__user_achievements_users; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__user_achievements
-    ADD CONSTRAINT fk_memberships__user_achievements_users FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
--- Name: memberships__users fk_memberships__users_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__users
-    ADD CONSTRAINT fk_memberships__users_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.memberships__contracts(id);
-
-
---
--- Name: memberships__users fk_memberships__users_groups; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__users
-    ADD CONSTRAINT fk_memberships__users_groups FOREIGN KEY (membership_group_id) REFERENCES public.memberships__groups(id);
-
-
---
--- Name: memberships__users fk_memberships__users_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__users
-    ADD CONSTRAINT fk_memberships__users_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
-
-
---
--- Name: memberships__users fk_memberships__users_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__users
-    ADD CONSTRAINT fk_memberships__users_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: memberships__users fk_memberships__users_users; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.memberships__users
-    ADD CONSTRAINT fk_memberships__users_users FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
--- Name: memberships fk_memberships_groups; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: memberships fk_membership_groups; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.memberships
-    ADD CONSTRAINT fk_memberships_groups FOREIGN KEY (membership_group_id) REFERENCES public.memberships__groups(id);
+    ADD CONSTRAINT fk_membership_groups FOREIGN KEY (membership_group_id) REFERENCES public.membership_groups(id);
+
+
+--
+-- Name: membership_groups fk_membership_groups_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_groups
+    ADD CONSTRAINT fk_membership_groups_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: membership_plan_components fk_membership_plan_components_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_plan_components
+    ADD CONSTRAINT fk_membership_plan_components_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
+
+
+--
+-- Name: membership_plan_components fk_membership_plan_components_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_plan_components
+    ADD CONSTRAINT fk_membership_plan_components_plans FOREIGN KEY (membership_plan_id) REFERENCES public.membership_plans(id);
+
+
+--
+-- Name: membership_plan_components fk_membership_plan_components_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_plan_components
+    ADD CONSTRAINT fk_membership_plan_components_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: membership_plan_payment_method_mappings fk_membership_plan_payment_method_mappings_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_plan_payment_method_mappings
+    ADD CONSTRAINT fk_membership_plan_payment_method_mappings_plans FOREIGN KEY (membership_plan_id) REFERENCES public.membership_plans(id);
+
+
+--
+-- Name: membership_plan_payment_method_mappings fk_membership_plan_payment_method_mappings_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_plan_payment_method_mappings
+    ADD CONSTRAINT fk_membership_plan_payment_method_mappings_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: membership_plan_payment_methods fk_membership_plan_payment_methods_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_plan_payment_methods
+    ADD CONSTRAINT fk_membership_plan_payment_methods_plans FOREIGN KEY (membership_plan_id) REFERENCES public.membership_plans(id);
+
+
+--
+-- Name: membership_plan_payment_methods fk_membership_plan_payment_methods_stripe_prices; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_plan_payment_methods
+    ADD CONSTRAINT fk_membership_plan_payment_methods_stripe_prices FOREIGN KEY (stripe_record_price_id) REFERENCES public.stripe_record__prices(id);
+
+
+--
+-- Name: membership_plan_payment_methods fk_membership_plan_payment_methods_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_plan_payment_methods
+    ADD CONSTRAINT fk_membership_plan_payment_methods_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: membership_plans fk_membership_plans_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_plans
+    ADD CONSTRAINT fk_membership_plans_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: membership_user_achievements fk_membership_user_achievements_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_user_achievements
+    ADD CONSTRAINT fk_membership_user_achievements_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
+
+
+--
+-- Name: membership_user_achievements fk_membership_user_achievements_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_user_achievements
+    ADD CONSTRAINT fk_membership_user_achievements_plans FOREIGN KEY (membership_plan_id) REFERENCES public.membership_plans(id);
+
+
+--
+-- Name: membership_user_achievements fk_membership_user_achievements_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_user_achievements
+    ADD CONSTRAINT fk_membership_user_achievements_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: membership_user_achievements fk_membership_user_achievements_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_user_achievements
+    ADD CONSTRAINT fk_membership_user_achievements_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: membership_users fk_membership_users_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_users
+    ADD CONSTRAINT fk_membership_users_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.membership_contracts(id);
+
+
+--
+-- Name: membership_users fk_membership_users_groups; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_users
+    ADD CONSTRAINT fk_membership_users_groups FOREIGN KEY (membership_group_id) REFERENCES public.membership_groups(id);
+
+
+--
+-- Name: membership_users fk_membership_users_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_users
+    ADD CONSTRAINT fk_membership_users_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
+
+
+--
+-- Name: membership_users fk_membership_users_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_users
+    ADD CONSTRAINT fk_membership_users_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: membership_users fk_membership_users_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.membership_users
+    ADD CONSTRAINT fk_membership_users_users FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -3774,7 +3774,7 @@ ALTER TABLE ONLY public.payment__subscriptions
 --
 
 ALTER TABLE ONLY public.payment__subscriptions
-    ADD CONSTRAINT fk_payment__transactions_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.memberships__contracts(id);
+    ADD CONSTRAINT fk_payment__transactions_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.membership_contracts(id);
 
 
 --
@@ -3782,7 +3782,7 @@ ALTER TABLE ONLY public.payment__subscriptions
 --
 
 ALTER TABLE ONLY public.payment__transactions
-    ADD CONSTRAINT fk_payment__transactions_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.memberships__contracts(id);
+    ADD CONSTRAINT fk_payment__transactions_contracts FOREIGN KEY (membership_contract_id) REFERENCES public.membership_contracts(id);
 
 
 --
@@ -4237,7 +4237,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict Op2cJ1BMnbhrex9HwqdjMdLYbjXwBTnUJEJrWm1hNYxuyORosaFx3SThcaAn4rq
+\unrestrict 1EgMBrAZZaQHd6CgyfObOxx9cduScHz8RX9gNoq0bZStynd6dmny2ztsGhCbVDt
 
 SET search_path TO "$user", public;
 

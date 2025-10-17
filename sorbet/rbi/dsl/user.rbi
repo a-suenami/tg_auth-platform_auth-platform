@@ -470,10 +470,10 @@ class User
 
     # This method is created by ActiveRecord on the `User` class because it declared `has_many :membership_contracts`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::Contract::PrivateCollectionProxy) }
+    sig { returns(::Membership::Contract::PrivateCollectionProxy) }
     def membership_contracts; end
 
-    sig { params(value: T::Enumerable[::Memberships::Contract]).void }
+    sig { params(value: T::Enumerable[::Membership::Contract]).void }
     def membership_contracts=(value); end
 
     sig { returns(T::Array[T.untyped]) }
@@ -490,10 +490,10 @@ class User
 
     # This method is created by ActiveRecord on the `User` class because it declared `has_many :membership_user_achievements`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::UserAchievement::PrivateCollectionProxy) }
+    sig { returns(::Membership::UserAchievement::PrivateCollectionProxy) }
     def membership_user_achievements; end
 
-    sig { params(value: T::Enumerable[::Memberships::UserAchievement]).void }
+    sig { params(value: T::Enumerable[::Membership::UserAchievement]).void }
     def membership_user_achievements=(value); end
 
     sig { returns(T::Array[T.untyped]) }
@@ -504,10 +504,10 @@ class User
 
     # This method is created by ActiveRecord on the `User` class because it declared `has_many :membership_users`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::User::PrivateCollectionProxy) }
+    sig { returns(::Membership::User::PrivateCollectionProxy) }
     def membership_users; end
 
-    sig { params(value: T::Enumerable[::Memberships::User]).void }
+    sig { params(value: T::Enumerable[::Membership::User]).void }
     def membership_users=(value); end
 
     # This method is created by ActiveRecord on the `User` class because it declared `has_many :memberships, through: :membership_users`.

@@ -37,7 +37,7 @@ module UserStripe
           expires_at: next_period_end,
         )
 
-        # Memberships::Userのステータスを有効に変更
+        # Membership::Userのステータスを有効に変更
         update_membership_user(contract, next_period_end)
 
         # トライアル履歴を作成
@@ -99,7 +99,7 @@ module UserStripe
       membership_plan = contract.current_contract_term.membership_plan
       memberships = membership_plan.memberships
       memberships.each do |membership|
-        membership_user = Memberships::User.find_or_create_by!(
+        membership_user = Membership::User.find_or_create_by!(
           tenant_id: contract.tenant_id,
           user: contract.user,
           membership_contract: contract,

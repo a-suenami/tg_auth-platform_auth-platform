@@ -1,13 +1,13 @@
 # typed: false
 # frozen_string_literal: true
 
-RSpec.describe '[ API::V1::Internal::Memberships::ContractsController API ]' do
+RSpec.describe '[ API::V1::Internal::Membership::ContractsController API ]' do
   # テスト用のメンバーシッププランとコンポーネント
-  let!(:membership_group) { create(:memberships__group, tenant_id: current_tenant.id, name: 'test_group', position: 1) }
+  let!(:membership_group) { create(:membership_group, tenant_id: current_tenant.id, name: 'test_group', position: 1) }
   let!(:membership) { create(:membership, tenant_id: current_tenant.id, membership_group:, name: 'test_membership', position: 1, tier: 1) }
-  let!(:membership_plan) { create(:memberships__plan, tenant_id: current_tenant.id, name: 'test_plan', amount: 1000, position: 1, recurring_interval_count: 1, recurring_interval_unit: 'month') }
-  let!(:membership_plan_component) { create(:memberships__plan_component, membership_plan:, membership:, tenant_id: current_tenant.id) }
-  let!(:membership_plan_payment_method) { create(:memberships__plan_payment_method, membership_plan:, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: true) }
+  let!(:membership_plan) { create(:membership_plan, tenant_id: current_tenant.id, name: 'test_plan', amount: 1000, position: 1, recurring_interval_count: 1, recurring_interval_unit: 'month') }
+  let!(:membership_plan_component) { create(:membership_plan_component, membership_plan:, membership:, tenant_id: current_tenant.id) }
+  let!(:membership_plan_payment_method) { create(:membership_plan_payment_method, membership_plan:, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: true) }
 
   # Stripe関連のレコード
   let!(:stripe_record_product) { create(:stripe_record_product, tenant_id: current_tenant.id, name: 'test_product') }
@@ -23,10 +23,10 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
   }
 
   # メンバーシップ契約
-  let!(:active_contract) { create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'active', expires_at: 1.year.from_now, cancel_at_period_end: false) }
-  let!(:pending_contract) { create(:memberships__contract, :pending, tenant_id: current_tenant.id, user: current_user, expires_at: 1.year.from_now) }
-  let!(:expired_contract) { create(:memberships__contract, :expired, tenant_id: current_tenant.id, user: current_user) }
-  let!(:canceled_contract) { create(:memberships__contract, :canceled, tenant_id: current_tenant.id, user: current_user) }
+  let!(:active_contract) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'active', expires_at: 1.year.from_now, cancel_at_period_end: false) }
+  let!(:pending_contract) { create(:membership_contract, :pending, tenant_id: current_tenant.id, user: current_user, expires_at: 1.year.from_now) }
+  let!(:expired_contract) { create(:membership_contract, :expired, tenant_id: current_tenant.id, user: current_user) }
+  let!(:canceled_contract) { create(:membership_contract, :canceled, tenant_id: current_tenant.id, user: current_user) }
 
   # 支払い取引
   let!(:active_transaction) {
@@ -43,20 +43,20 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
   }
 
   # メンバーシップユーザー（同じユーザー、テナント、メンバーシップの組み合わせは重複不可）
-  # 各契約に対応するmemberships__userを作成（異なるメンバーシップを使用）
+  # 各契約に対応するmembership_userを作成（異なるメンバーシップを使用）
   let!(:membership_for_pending) { create(:membership, tenant_id: current_tenant.id, membership_group:, name: 'pending_membership', position: 2, tier: 2) }
   let!(:membership_for_expired) { create(:membership, tenant_id: current_tenant.id, membership_group:, name: 'expired_membership', position: 3, tier: 3) }
   let!(:membership_for_canceled) { create(:membership, tenant_id: current_tenant.id, membership_group:, name: 'canceled_membership', position: 4, tier: 4) }
 
-  let!(:active_membership_user) { create(:memberships__user, tenant_id: current_tenant.id, user: current_user, status: 'active', membership:, membership_contract: active_contract) }
+  let!(:active_membership_user) { create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'active', membership:, membership_contract: active_contract) }
   let!(:pending_membership_user) {
-    create(:memberships__user, tenant_id: current_tenant.id, user: current_user, status: 'pending', membership: membership_for_pending, membership_contract: pending_contract)
+    create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'pending', membership: membership_for_pending, membership_contract: pending_contract)
   }
   let!(:expired_membership_user) {
-    create(:memberships__user, tenant_id: current_tenant.id, user: current_user, status: 'expired', membership: membership_for_expired, membership_contract: expired_contract)
+    create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'expired', membership: membership_for_expired, membership_contract: expired_contract)
   }
   let!(:canceled_membership_user) {
-    create(:memberships__user, tenant_id: current_tenant.id, user: current_user, status: 'canceled', membership: membership_for_canceled, membership_contract: canceled_contract)
+    create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'canceled', membership: membership_for_canceled, membership_contract: canceled_contract)
   }
 
   before do
@@ -72,7 +72,7 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
     active_payment_subscription
   end
 
-  describe 'GET /api/v1/internal/memberships/contracts' do
+  describe 'GET /api/v1/internal/membership/contracts' do
     include_context 'current user session is present'
 
     it 'returns all contracts for current user' do
@@ -136,7 +136,7 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
     end
   end
 
-  describe 'GET /api/v1/internal/memberships/contracts/:id' do
+  describe 'GET /api/v1/internal/membership/contracts/:id' do
     include_context 'current user session is present'
 
     context 'when contract exists' do
@@ -191,7 +191,7 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
 
     context 'when contract belongs to different user' do
       let!(:other_user) { create(:user, tenant_id: current_tenant.id, email: 'other@example.com', password: 'Password1234!') }
-      let!(:other_contract) { create(:memberships__contract, tenant_id: current_tenant.id, user: other_user, status: 'active') }
+      let!(:other_contract) { create(:membership_contract, tenant_id: current_tenant.id, user: other_user, status: 'active') }
       let(:id) { other_contract.id }
 
       it 'returns 404' do
@@ -201,7 +201,7 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
   end
 
 
-  describe 'POST /api/v1/internal/memberships/contracts/:id/cancel' do
+  describe 'POST /api/v1/internal/membership/contracts/:id/cancel' do
     include_context 'current user session is present'
 
     context 'when contract exists and has stripe subscription' do
@@ -226,7 +226,7 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
     end
 
     context 'when contract has no stripe subscription' do
-      let!(:contract_without_stripe) { create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'active') }
+      let!(:contract_without_stripe) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'active') }
       let(:id) { contract_without_stripe.id }
 
       before do
@@ -241,7 +241,7 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
     end
 
     context 'when contract has non-stripe chargeable' do
-      let!(:contract_with_non_stripe) { create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'active') }
+      let!(:contract_with_non_stripe) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'active') }
       let(:id) { contract_with_non_stripe.id }
 
       before do
@@ -265,7 +265,7 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
 
     context 'when contract belongs to different user' do
       let!(:other_user) { create(:user, tenant_id: current_tenant.id, email: 'other@example.com', password: 'Password1234!') }
-      let!(:other_contract) { create(:memberships__contract, tenant_id: current_tenant.id, user: other_user, status: 'active') }
+      let!(:other_contract) { create(:membership_contract, tenant_id: current_tenant.id, user: other_user, status: 'active') }
       let(:id) { other_contract.id }
 
       it 'returns 404' do
@@ -276,13 +276,13 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
 
   describe 'when no session' do
     # rubocop:disable RSpec/RepeatedExampleGroupBody
-    context 'GET /api/v1/internal/memberships/contracts' do
+    context 'GET /api/v1/internal/membership/contracts' do
       it 'returns 401 Unauthorized' do
         is_expected.to eq 401
       end
     end
 
-    context 'GET /api/v1/internal/memberships/contracts/:id' do
+    context 'GET /api/v1/internal/membership/contracts/:id' do
       let(:id) { active_contract.id }
 
       it 'returns 401 Unauthorized' do
@@ -290,7 +290,7 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
       end
     end
 
-    context 'GET /api/v1/internal/memberships/contracts/:id/polling' do
+    context 'GET /api/v1/internal/membership/contracts/:id/polling' do
       let(:id) { active_contract.id }
 
       it 'returns 401 Unauthorized' do
@@ -298,7 +298,7 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
       end
     end
 
-    context 'POST /api/v1/internal/memberships/contracts/:id/cancel' do
+    context 'POST /api/v1/internal/membership/contracts/:id/cancel' do
       let(:id) { active_contract.id }
 
       it 'returns 401 Unauthorized' do

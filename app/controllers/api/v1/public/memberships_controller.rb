@@ -15,7 +15,7 @@ module API::V1::Public
       # 支払い方法で絞り込み
       if params[:payment_type].present?
         memberships = memberships.joins(membership_plans: :plan_payment_methods)
-                                .where(memberships__plan_payment_methods: { payment_type: params[:payment_type] })
+                                .where(membership_plan_payment_methods: { payment_type: params[:payment_type] })
                                 .distinct
       end
 

@@ -509,7 +509,7 @@ class Payment::Transaction
   end
 
   module GeneratedAssociationMethods
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Contract) }
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership::Contract) }
     def build_membership_contract(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
@@ -530,10 +530,10 @@ class Payment::Transaction
     sig { returns(T::Boolean) }
     def chargeable_previously_changed?; end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Contract) }
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership::Contract) }
     def create_membership_contract(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Contract) }
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership::Contract) }
     def create_membership_contract!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
@@ -548,10 +548,10 @@ class Payment::Transaction
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user!(*args, &blk); end
 
-    sig { returns(T.nilable(::Memberships::Contract)) }
+    sig { returns(T.nilable(::Membership::Contract)) }
     def membership_contract; end
 
-    sig { params(value: T.nilable(::Memberships::Contract)).void }
+    sig { params(value: T.nilable(::Membership::Contract)).void }
     def membership_contract=(value); end
 
     sig { returns(T::Boolean) }
@@ -563,7 +563,7 @@ class Payment::Transaction
     sig { returns(T.untyped) }
     def reload_chargeable; end
 
-    sig { returns(T.nilable(::Memberships::Contract)) }
+    sig { returns(T.nilable(::Membership::Contract)) }
     def reload_membership_contract; end
 
     sig { returns(T.nilable(::Tenant)) }

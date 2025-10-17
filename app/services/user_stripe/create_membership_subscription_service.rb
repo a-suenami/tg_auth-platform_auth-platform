@@ -147,7 +147,7 @@ module UserStripe
     end
 
     def create_contract(user:, stripe_record_subscription:, membership_plan:, chargeable:)
-      contract = Memberships::Contract.create!(
+      contract = Membership::Contract.create!(
         user:,
         status: 'pending',
       )
@@ -167,7 +167,7 @@ module UserStripe
         membership_contract: contract,
         subscribable: stripe_record_subscription,
       )
-      Memberships::ContractTerm.create!(
+      Membership::ContractTerm.create!(
         user:,
         membership_contract: contract,
         membership_plan:,
@@ -179,7 +179,7 @@ module UserStripe
 
     def create_membership_users(user:, membership_plan:, contract:)
       membership_plan.memberships.each do |membership|
-        Memberships::User.create!(
+        Membership::User.create!(
           user:,
           membership:,
           status: 'pending',

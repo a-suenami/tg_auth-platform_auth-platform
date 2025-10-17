@@ -16,6 +16,9 @@ class StripeRecord
     has_many :connect_accounts, class_name: 'Account', foreign_key: :controlling_platform_id, inverse_of: :controlling_platform
     has_one :tenant_stripe_account, class_name: 'Tenant::StripeAccount', foreign_key: :stripe_account_id, inverse_of: :stripe_account
 
+
+    accepts_nested_attributes_for :api_key
+
     before_validation :set_attributes
 
     validate :validate_controlling_platform

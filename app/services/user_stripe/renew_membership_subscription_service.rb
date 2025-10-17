@@ -105,7 +105,7 @@ module UserStripe
       # TODO:期限をStripeの次回更新に合わせる
       memberships = membership_plan.memberships
       memberships.each do |membership|
-        membership_user = Memberships::User.find_or_create_by!(
+        membership_user = Membership::User.find_or_create_by!(
           tenant_id: contract.tenant_id,
           user: contract.user,
           membership:,
