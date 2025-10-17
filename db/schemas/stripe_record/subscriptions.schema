@@ -1,7 +1,7 @@
 # ==============================================================================
 # db/schemas/stripe_record/subscriptions.schema
 # ==============================================================================
-create_table :stripe_record__subscriptions, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+create_table :stripe_record_subscriptions, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_subscriptions__tenants }
   t.references :user,               type: :uuid,   null: false
   t.references :product, type: :uuid,   null: false
