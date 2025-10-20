@@ -176,13 +176,11 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.citext "tenant_id", null: false
     t.uuid "membership_plan_id", null: false
     t.string "payment_type", null: false, comment: "支払い方法: credit_card, convenience, campaign_code, external_linkage"
-    t.uuid "stripe_record_price_id", comment: "Stripe価格ID"
     t.boolean "is_active", default: true, comment: "有効フラグ"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["membership_plan_id", "payment_type"], name: "idx_membership_plan_payment_methods_plan_type_uniq", unique: true
     t.index ["membership_plan_id"], name: "index_membership_plan_payment_methods_on_membership_plan_id"
-    t.index ["stripe_record_price_id"], name: "idx_on_stripe_record_price_id_ccd90274f4"
     t.index ["tenant_id"], name: "index_membership_plan_payment_methods_on_tenant_id"
   end
 
@@ -395,7 +393,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_shopify_record__multipass_stores_on_tenant_id"
   end
 
-  create_table "stripe_record__accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "stripe_record_accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "remote_id", null: false, comment: "Stripe のアカウント ID"
     t.citext "tenant_id", null: false
     t.uuid "api_key_id"
@@ -408,13 +406,13 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "display_name", null: false, comment: "API キーがどのアカウントのものかを識別するための名前"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["api_key_id"], name: "index_stripe_record__accounts_on_api_key_id"
-    t.index ["controlling_platform_id"], name: "index_stripe_record__accounts_on_controlling_platform_id"
+    t.index ["api_key_id"], name: "index_stripe_record_accounts_on_api_key_id"
+    t.index ["controlling_platform_id"], name: "index_stripe_record_accounts_on_controlling_platform_id"
     t.index ["remote_id", "controlling_platform_id"], name: "index_stripe_record_accounts_remote_id_unique", unique: true, nulls_not_distinct: true
-    t.index ["tenant_id"], name: "index_stripe_record__accounts_on_tenant_id"
+    t.index ["tenant_id"], name: "index_stripe_record_accounts_on_tenant_id"
   end
 
-  create_table "stripe_record__api_keys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "stripe_record_api_keys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "remote_id", null: false, comment: "Stripe の API キー ID"
     t.string "display_name", null: false, comment: "API キーがどのアカウントのものかを識別するための名前"
@@ -423,10 +421,10 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["remote_id"], name: "idx_stripe_record_api_keys_remote_id_uniq", unique: true
-    t.index ["tenant_id"], name: "index_stripe_record__api_keys_on_tenant_id"
+    t.index ["tenant_id"], name: "index_stripe_record_api_keys_on_tenant_id"
   end
 
-  create_table "stripe_record__charges", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "stripe_record_charges", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "remote_id", null: false, comment: "Stripe の charge ID"
     t.uuid "payment_intent_id", null: false
@@ -481,15 +479,15 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "api_key_account_id", null: false, comment: "API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。"
     t.uuid "connect_account_id", comment: "Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。"
     t.string "charge_type", comment: "Connect のときだけ使用する。どの支払いタイプなのかを表す"
-    t.index ["api_key_account_id"], name: "index_stripe_record__charges_on_api_key_account_id"
-    t.index ["connect_account_id"], name: "index_stripe_record__charges_on_connect_account_id"
-    t.index ["payment_intent_id"], name: "index_stripe_record__charges_on_payment_intent_id"
+    t.index ["api_key_account_id"], name: "index_stripe_record_charges_on_api_key_account_id"
+    t.index ["connect_account_id"], name: "index_stripe_record_charges_on_connect_account_id"
+    t.index ["payment_intent_id"], name: "index_stripe_record_charges_on_payment_intent_id"
     t.index ["remote_id"], name: "idx_stripe_record_charge_remote_id_uniq", unique: true
-    t.index ["tenant_id"], name: "index_stripe_record__charges_on_tenant_id"
-    t.index ["user_id"], name: "index_stripe_record__charges_on_user_id"
+    t.index ["tenant_id"], name: "index_stripe_record_charges_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_charges_on_user_id"
   end
 
-  create_table "stripe_record__invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "stripe_record_invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "remote_id", null: false, comment: "Stripe の invoices ID"
     t.uuid "user_id", null: false
@@ -500,14 +498,14 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "confirmation_secret_type", comment: "基本的にはpayment_intentのみ"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["payment_source_type", "payment_source_id"], name: "idx_on_payment_source_type_payment_source_id_0313cc1522"
+    t.index ["payment_source_type", "payment_source_id"], name: "idx_on_payment_source_type_payment_source_id_3bc82c7377"
     t.index ["remote_id"], name: "idx_stripe_record_invoices_remote_id_uniq", unique: true
     t.index ["tenant_id", "remote_id"], name: "index_stripe_record_invoices_on_tenant_and_remote_id", unique: true
-    t.index ["tenant_id"], name: "index_stripe_record__invoices_on_tenant_id"
-    t.index ["user_id"], name: "index_stripe_record__invoices_on_user_id"
+    t.index ["tenant_id"], name: "index_stripe_record_invoices_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_invoices_on_user_id"
   end
 
-  create_table "stripe_record__payment_intents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "stripe_record_payment_intents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "remote_id", null: false, comment: "Stripe の payment intent ID"
     t.uuid "user_id", null: false
@@ -540,18 +538,18 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "api_key_account_id", null: false, comment: "API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。"
     t.uuid "connect_account_id", comment: "Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。"
     t.string "charge_type", comment: "Connect のときだけ使用する。どの支払いタイプなのかを表す"
-    t.index ["api_key_account_id"], name: "index_stripe_record__payment_intents_on_api_key_account_id"
-    t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_31503b9e8f"
-    t.index ["connect_account_id"], name: "index_stripe_record__payment_intents_on_connect_account_id"
-    t.index ["invoice_id"], name: "index_stripe_record__payment_intents_on_invoice_id"
-    t.index ["latest_charge_id"], name: "index_stripe_record__payment_intents_on_latest_charge_id"
+    t.index ["api_key_account_id"], name: "index_stripe_record_payment_intents_on_api_key_account_id"
+    t.index ["chargeable_type", "chargeable_id"], name: "idx_on_chargeable_type_chargeable_id_b73c319e28"
+    t.index ["connect_account_id"], name: "index_stripe_record_payment_intents_on_connect_account_id"
+    t.index ["invoice_id"], name: "index_stripe_record_payment_intents_on_invoice_id"
+    t.index ["latest_charge_id"], name: "index_stripe_record_payment_intents_on_latest_charge_id"
     t.index ["remote_id"], name: "idx_stripe_record_payment_intent_remote_id_uniq", unique: true
     t.index ["tenant_id", "remote_id"], name: "index_stripe_record_payment_intents_on_tenant_and_remote_id", unique: true
-    t.index ["tenant_id"], name: "index_stripe_record__payment_intents_on_tenant_id"
-    t.index ["user_id"], name: "index_stripe_record__payment_intents_on_user_id"
+    t.index ["tenant_id"], name: "index_stripe_record_payment_intents_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_payment_intents_on_user_id"
   end
 
-  create_table "stripe_record__payment_methods", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "stripe_record_payment_methods", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "remote_id", null: false, comment: "Stripe の payment method ID"
     t.uuid "user_id", null: false
@@ -566,15 +564,15 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "api_key_account_id", null: false, comment: "API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。"
     t.uuid "connect_account_id", comment: "Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。"
     t.string "charge_type", comment: "Connect のときだけ使用する。どの支払いタイプなのかを表す"
-    t.index ["api_key_account_id"], name: "index_stripe_record__payment_methods_on_api_key_account_id"
-    t.index ["connect_account_id"], name: "index_stripe_record__payment_methods_on_connect_account_id"
+    t.index ["api_key_account_id"], name: "index_stripe_record_payment_methods_on_api_key_account_id"
+    t.index ["connect_account_id"], name: "index_stripe_record_payment_methods_on_connect_account_id"
     t.index ["remote_id"], name: "idx_stripe_record_payment_methods_remote_id_uniq", unique: true
-    t.index ["setup_intent_id"], name: "index_stripe_record__payment_methods_on_setup_intent_id"
-    t.index ["tenant_id"], name: "index_stripe_record__payment_methods_on_tenant_id"
-    t.index ["user_id"], name: "index_stripe_record__payment_methods_on_user_id"
+    t.index ["setup_intent_id"], name: "index_stripe_record_payment_methods_on_setup_intent_id"
+    t.index ["tenant_id"], name: "index_stripe_record_payment_methods_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_payment_methods_on_user_id"
   end
 
-  create_table "stripe_record__prices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "stripe_record_prices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "product_id", null: false
     t.string "remote_id"
@@ -588,21 +586,21 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.boolean "displayed", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["product_id"], name: "index_stripe_record__prices_on_product_id"
-    t.index ["tenant_id"], name: "index_stripe_record__prices_on_tenant_id"
+    t.index ["product_id"], name: "index_stripe_record_prices_on_product_id"
+    t.index ["tenant_id"], name: "index_stripe_record_prices_on_tenant_id"
   end
 
-  create_table "stripe_record__products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "stripe_record_products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "remote_id"
     t.string "name"
     t.boolean "deleted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tenant_id"], name: "index_stripe_record__products_on_tenant_id"
+    t.index ["tenant_id"], name: "index_stripe_record_products_on_tenant_id"
   end
 
-  create_table "stripe_record__refunds", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "stripe_record_refunds", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "remote_id", null: false, comment: "Stripe の refund ID"
     t.uuid "user_id", null: false
@@ -623,15 +621,15 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "api_key_account_id", null: false, comment: "API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。"
     t.uuid "connect_account_id", comment: "Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。"
     t.string "charge_type", comment: "Connect のときだけ使用する。どの支払いタイプなのかを表す"
-    t.index ["api_key_account_id"], name: "index_stripe_record__refunds_on_api_key_account_id"
-    t.index ["connect_account_id"], name: "index_stripe_record__refunds_on_connect_account_id"
-    t.index ["payment_intent_id"], name: "index_stripe_record__refunds_on_payment_intent_id"
+    t.index ["api_key_account_id"], name: "index_stripe_record_refunds_on_api_key_account_id"
+    t.index ["connect_account_id"], name: "index_stripe_record_refunds_on_connect_account_id"
+    t.index ["payment_intent_id"], name: "index_stripe_record_refunds_on_payment_intent_id"
     t.index ["remote_id"], name: "idx_stripe_record_refund_remote_id_uniq", unique: true
-    t.index ["tenant_id"], name: "index_stripe_record__refunds_on_tenant_id"
-    t.index ["user_id"], name: "index_stripe_record__refunds_on_user_id"
+    t.index ["tenant_id"], name: "index_stripe_record_refunds_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_refunds_on_user_id"
   end
 
-  create_table "stripe_record__setup_intents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "stripe_record_setup_intents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "remote_id", null: false, comment: "Stripe の setup intent ID"
     t.uuid "user_id", null: false
@@ -647,14 +645,14 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "api_key_account_id", null: false, comment: "API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。"
     t.uuid "connect_account_id", comment: "Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。"
     t.string "charge_type", comment: "Connect のときだけ使用する。どの支払いタイプなのかを表す"
-    t.index ["api_key_account_id"], name: "index_stripe_record__setup_intents_on_api_key_account_id"
-    t.index ["connect_account_id"], name: "index_stripe_record__setup_intents_on_connect_account_id"
+    t.index ["api_key_account_id"], name: "index_stripe_record_setup_intents_on_api_key_account_id"
+    t.index ["connect_account_id"], name: "index_stripe_record_setup_intents_on_connect_account_id"
     t.index ["remote_id"], name: "idx_stripe_record_setup_intents_remote_id_uniq", unique: true
-    t.index ["tenant_id"], name: "index_stripe_record__setup_intents_on_tenant_id"
-    t.index ["user_id"], name: "index_stripe_record__setup_intents_on_user_id"
+    t.index ["tenant_id"], name: "index_stripe_record_setup_intents_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_setup_intents_on_user_id"
   end
 
-  create_table "stripe_record__subscription_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "stripe_record_subscription_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "subscription_id", null: false
     t.uuid "price_id", null: false
@@ -668,14 +666,14 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.jsonb "tax_rates", default: []
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["price_id"], name: "index_stripe_record__subscription_items_on_price_id"
-    t.index ["remote_id"], name: "index_stripe_record__subscription_items_on_remote_id", unique: true
+    t.index ["price_id"], name: "index_stripe_record_subscription_items_on_price_id"
+    t.index ["remote_id"], name: "index_stripe_record_subscription_items_on_remote_id", unique: true
     t.index ["subscription_id", "price_id"], name: "index_stripe_record_si_on_subscription_and_price", unique: true
-    t.index ["subscription_id"], name: "index_stripe_record__subscription_items_on_subscription_id"
-    t.index ["tenant_id"], name: "index_stripe_record__subscription_items_on_tenant_id"
+    t.index ["subscription_id"], name: "index_stripe_record_subscription_items_on_subscription_id"
+    t.index ["tenant_id"], name: "index_stripe_record_subscription_items_on_tenant_id"
   end
 
-  create_table "stripe_record__subscription_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "stripe_record_subscription_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.uuid "subscription_id", null: false
@@ -685,12 +683,12 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.jsonb "phases"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["subscription_id"], name: "index_stripe_record__subscription_schedules_on_subscription_id"
-    t.index ["tenant_id"], name: "index_stripe_record__subscription_schedules_on_tenant_id"
-    t.index ["user_id"], name: "index_stripe_record__subscription_schedules_on_user_id"
+    t.index ["subscription_id"], name: "index_stripe_record_subscription_schedules_on_subscription_id"
+    t.index ["tenant_id"], name: "index_stripe_record_subscription_schedules_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_subscription_schedules_on_user_id"
   end
 
-  create_table "stripe_record__subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "stripe_record_subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.uuid "product_id", null: false
@@ -710,14 +708,14 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["pending_setup_intent_id"], name: "index_stripe_record__subscriptions_on_pending_setup_intent_id"
-    t.index ["price_id"], name: "index_stripe_record__subscriptions_on_price_id"
-    t.index ["product_id"], name: "index_stripe_record__subscriptions_on_product_id"
-    t.index ["tenant_id"], name: "index_stripe_record__subscriptions_on_tenant_id"
-    t.index ["user_id"], name: "index_stripe_record__subscriptions_on_user_id"
+    t.index ["pending_setup_intent_id"], name: "index_stripe_record_subscriptions_on_pending_setup_intent_id"
+    t.index ["price_id"], name: "index_stripe_record_subscriptions_on_price_id"
+    t.index ["product_id"], name: "index_stripe_record_subscriptions_on_product_id"
+    t.index ["tenant_id"], name: "index_stripe_record_subscriptions_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_subscriptions_on_user_id"
   end
 
-  create_table "stripe_record__trial_histories", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Stripeのトライアル履歴", force: :cascade do |t|
+  create_table "stripe_record_trial_histories", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Stripeのトライアル履歴", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.uuid "membership_id", null: false
@@ -729,12 +727,12 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.integer "trial_period_days", null: false, comment: "トライアル日数"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["membership_id"], name: "index_stripe_record__trial_histories_on_membership_id"
-    t.index ["membership_plan_id"], name: "index_stripe_record__trial_histories_on_membership_plan_id"
-    t.index ["stripe_record_subscription_id"], name: "idx_on_stripe_record_subscription_id_9e35bed4eb"
-    t.index ["tenant_id", "membership_id", "fingerprint"], name: "idx_stripe_record__trial_histories_unique", unique: true
-    t.index ["tenant_id"], name: "index_stripe_record__trial_histories_on_tenant_id"
-    t.index ["user_id"], name: "index_stripe_record__trial_histories_on_user_id"
+    t.index ["membership_id"], name: "index_stripe_record_trial_histories_on_membership_id"
+    t.index ["membership_plan_id"], name: "index_stripe_record_trial_histories_on_membership_plan_id"
+    t.index ["stripe_record_subscription_id"], name: "idx_on_stripe_record_subscription_id_95f8fd9518"
+    t.index ["tenant_id", "membership_id", "fingerprint"], name: "idx_stripe_record_trial_histories_unique", unique: true
+    t.index ["tenant_id"], name: "index_stripe_record_trial_histories_on_tenant_id"
+    t.index ["user_id"], name: "index_stripe_record_trial_histories_on_user_id"
   end
 
   create_table "tenant_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -896,10 +894,10 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "membership_plan_components", "membership_plans", name: "fk_membership_plan_components_plans"
   add_foreign_key "membership_plan_components", "memberships", name: "fk_membership_plan_components_memberships"
   add_foreign_key "membership_plan_components", "tenants", name: "fk_membership_plan_components_tenants"
+  add_foreign_key "membership_plan_payment_method_mappings", "membership_plan_payment_methods", name: "fk_membership_plan_payment_method_mappings_payment_methods"
   add_foreign_key "membership_plan_payment_method_mappings", "membership_plans", name: "fk_membership_plan_payment_method_mappings_plans"
   add_foreign_key "membership_plan_payment_method_mappings", "tenants", name: "fk_membership_plan_payment_method_mappings_tenants"
   add_foreign_key "membership_plan_payment_methods", "membership_plans", name: "fk_membership_plan_payment_methods_plans"
-  add_foreign_key "membership_plan_payment_methods", "stripe_record__prices", column: "stripe_record_price_id", name: "fk_membership_plan_payment_methods_stripe_prices"
   add_foreign_key "membership_plan_payment_methods", "tenants", name: "fk_membership_plan_payment_methods_tenants"
   add_foreign_key "membership_plans", "tenants", name: "fk_membership_plans_tenants"
   add_foreign_key "membership_user_achievements", "membership_plans", name: "fk_membership_user_achievements_plans"
@@ -927,44 +925,44 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "payment_transactions", "membership_contracts", name: "fk_payment_transactions_contracts"
   add_foreign_key "payment_transactions", "tenants", name: "fk_payment_transactions_tenants"
   add_foreign_key "payment_transactions", "users", name: "fk_payment_transactions_users"
-  add_foreign_key "stripe_record__accounts", "stripe_record__accounts", column: "controlling_platform_id", name: "fk_stripe_record_accounts_controlling_platform_id"
-  add_foreign_key "stripe_record__accounts", "stripe_record__api_keys", column: "api_key_id", name: "fk_stripe_record_accounts_api_key_id"
-  add_foreign_key "stripe_record__accounts", "tenants", name: "fk_stripe_record_accounts__tenants"
-  add_foreign_key "stripe_record__api_keys", "tenants", name: "fk_stripe_record_api_keys__tenants"
-  add_foreign_key "stripe_record__charges", "stripe_record__accounts", column: "api_key_account_id", name: "fk_stripe_record_charges_api_key_account_id"
-  add_foreign_key "stripe_record__charges", "stripe_record__accounts", column: "connect_account_id", name: "fk_stripe_record_charges_connect_account_id"
-  add_foreign_key "stripe_record__charges", "stripe_record__payment_intents", column: "payment_intent_id", name: "fk_stripe_record_charges__payment_intents"
-  add_foreign_key "stripe_record__charges", "tenants", name: "fk_stripe_record_charges__tenants"
-  add_foreign_key "stripe_record__charges", "users", name: "fk_stripe_record_charges__users"
-  add_foreign_key "stripe_record__invoices", "tenants", name: "fk_stripe_record_invoices__tenants"
-  add_foreign_key "stripe_record__invoices", "users", name: "fk_stripe_record_payment_intents__users"
-  add_foreign_key "stripe_record__payment_intents", "stripe_record__accounts", column: "api_key_account_id", name: "fk_stripe_record_payment_intents_api_key_account_id"
-  add_foreign_key "stripe_record__payment_intents", "stripe_record__accounts", column: "connect_account_id", name: "fk_stripe_record_payment_intents_connect_account_id"
-  add_foreign_key "stripe_record__payment_intents", "stripe_record__invoices", column: "invoice_id", name: "fk_stripe_record_payment_intents__invoices"
-  add_foreign_key "stripe_record__payment_intents", "tenants", name: "fk_stripe_record_payment_intents__tenants"
-  add_foreign_key "stripe_record__payment_intents", "users", name: "fk_stripe_record_payment_intents__users"
-  add_foreign_key "stripe_record__payment_methods", "stripe_record__accounts", column: "api_key_account_id", name: "fk_stripe_record_payment_methods_api_key_account_id"
-  add_foreign_key "stripe_record__payment_methods", "stripe_record__accounts", column: "connect_account_id", name: "fk_stripe_record_payment_methods_connect_account_id"
-  add_foreign_key "stripe_record__payment_methods", "stripe_record__setup_intents", column: "setup_intent_id", name: "fk_stripe_record_payment_methods__setup_intents"
-  add_foreign_key "stripe_record__payment_methods", "tenants", name: "fk_stripe_record_payment_methods__tenants"
-  add_foreign_key "stripe_record__payment_methods", "users", name: "fk_stripe_record_payment_methods__users"
-  add_foreign_key "stripe_record__prices", "tenants", name: "fk_stripe_record_prices__tenants"
-  add_foreign_key "stripe_record__products", "tenants", name: "fk_stripe_record_products__tenants"
-  add_foreign_key "stripe_record__refunds", "stripe_record__accounts", column: "api_key_account_id", name: "fk_stripe_record_refunds_api_key_account_id"
-  add_foreign_key "stripe_record__refunds", "stripe_record__accounts", column: "connect_account_id", name: "fk_stripe_record_refunds_connect_account_id"
-  add_foreign_key "stripe_record__refunds", "stripe_record__payment_intents", column: "payment_intent_id", name: "fk_stripe_record_refunds_payment_intent_id"
-  add_foreign_key "stripe_record__refunds", "tenants", name: "fk_stripe_record_payment_intents__tenants"
-  add_foreign_key "stripe_record__refunds", "users", name: "fk_stripe_record_refunds__users"
-  add_foreign_key "stripe_record__setup_intents", "stripe_record__accounts", column: "api_key_account_id", name: "fk_stripe_record_setup_intents_api_key_account_id"
-  add_foreign_key "stripe_record__setup_intents", "stripe_record__accounts", column: "connect_account_id", name: "fk_stripe_record_setup_intents_connect_account_id"
-  add_foreign_key "stripe_record__setup_intents", "tenants", name: "fk_stripe_record_setup_intents__tenants"
-  add_foreign_key "stripe_record__setup_intents", "users", name: "fk_stripe_record_setup_intents__users"
-  add_foreign_key "stripe_record__subscription_items", "stripe_record__prices", column: "price_id", name: "fk_stripe_record_subscription_items__prices"
-  add_foreign_key "stripe_record__subscription_items", "stripe_record__subscriptions", column: "subscription_id", name: "fk_stripe_record_subscription_items__subscriptions"
-  add_foreign_key "stripe_record__subscription_items", "tenants", name: "fk_stripe_record_subscription_items__tenants"
-  add_foreign_key "stripe_record__subscription_schedules", "tenants", name: "fk_stripe_record_subscription_schedules__tenants"
-  add_foreign_key "stripe_record__subscriptions", "tenants", name: "fk_stripe_record_subscriptions__tenants"
-  add_foreign_key "tenant_stripe_accounts", "stripe_record__accounts", column: "stripe_account_id", name: "fk_tenant_stripe_accounts__stripe_accounts"
+  add_foreign_key "stripe_record_accounts", "stripe_record_accounts", column: "controlling_platform_id", name: "fk_stripe_record_accounts_controlling_platform_id"
+  add_foreign_key "stripe_record_accounts", "stripe_record_api_keys", column: "api_key_id", name: "fk_stripe_record_accounts_api_key_id"
+  add_foreign_key "stripe_record_accounts", "tenants", name: "fk_stripe_record_accounts_tenants"
+  add_foreign_key "stripe_record_api_keys", "tenants", name: "fk_stripe_record_api_keys_tenants"
+  add_foreign_key "stripe_record_charges", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_charges_api_key_account_id"
+  add_foreign_key "stripe_record_charges", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_charges_connect_account_id"
+  add_foreign_key "stripe_record_charges", "stripe_record_payment_intents", column: "payment_intent_id", name: "fk_stripe_record_charges_payment_intents"
+  add_foreign_key "stripe_record_charges", "tenants", name: "fk_stripe_record_charges_tenants"
+  add_foreign_key "stripe_record_charges", "users", name: "fk_stripe_record_charges_users"
+  add_foreign_key "stripe_record_invoices", "tenants", name: "fk_stripe_record_invoices__tenants"
+  add_foreign_key "stripe_record_invoices", "users", name: "fk_stripe_record_payment_intents__users"
+  add_foreign_key "stripe_record_payment_intents", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_payment_intents_api_key_account_id"
+  add_foreign_key "stripe_record_payment_intents", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_payment_intents_connect_account_id"
+  add_foreign_key "stripe_record_payment_intents", "stripe_record_invoices", column: "invoice_id", name: "fk_stripe_record_payment_intents__invoices"
+  add_foreign_key "stripe_record_payment_intents", "tenants", name: "fk_stripe_record_payment_intents__tenants"
+  add_foreign_key "stripe_record_payment_intents", "users", name: "fk_stripe_record_payment_intents__users"
+  add_foreign_key "stripe_record_payment_methods", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_payment_methods_api_key_account_id"
+  add_foreign_key "stripe_record_payment_methods", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_payment_methods_connect_account_id"
+  add_foreign_key "stripe_record_payment_methods", "stripe_record_setup_intents", column: "setup_intent_id", name: "fk_stripe_record_payment_methods__setup_intents"
+  add_foreign_key "stripe_record_payment_methods", "tenants", name: "fk_stripe_record_payment_methods__tenants"
+  add_foreign_key "stripe_record_payment_methods", "users", name: "fk_stripe_record_payment_methods__users"
+  add_foreign_key "stripe_record_prices", "tenants", name: "fk_stripe_record_prices__tenants"
+  add_foreign_key "stripe_record_products", "tenants", name: "fk_stripe_record_products__tenants"
+  add_foreign_key "stripe_record_refunds", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_refunds_api_key_account_id"
+  add_foreign_key "stripe_record_refunds", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_refunds_connect_account_id"
+  add_foreign_key "stripe_record_refunds", "stripe_record_payment_intents", column: "payment_intent_id", name: "fk_stripe_record_refunds_payment_intent_id"
+  add_foreign_key "stripe_record_refunds", "tenants", name: "fk_stripe_record_payment_intents__tenants"
+  add_foreign_key "stripe_record_refunds", "users", name: "fk_stripe_record_refunds__users"
+  add_foreign_key "stripe_record_setup_intents", "stripe_record_accounts", column: "api_key_account_id", name: "fk_stripe_record_setup_intents_api_key_account_id"
+  add_foreign_key "stripe_record_setup_intents", "stripe_record_accounts", column: "connect_account_id", name: "fk_stripe_record_setup_intents_connect_account_id"
+  add_foreign_key "stripe_record_setup_intents", "tenants", name: "fk_stripe_record_setup_intents__tenants"
+  add_foreign_key "stripe_record_setup_intents", "users", name: "fk_stripe_record_setup_intents__users"
+  add_foreign_key "stripe_record_subscription_items", "stripe_record_prices", column: "price_id", name: "fk_stripe_record_subscription_items__prices"
+  add_foreign_key "stripe_record_subscription_items", "stripe_record_subscriptions", column: "subscription_id", name: "fk_stripe_record_subscription_items__subscriptions"
+  add_foreign_key "stripe_record_subscription_items", "tenants", name: "fk_stripe_record_subscription_items__tenants"
+  add_foreign_key "stripe_record_subscription_schedules", "tenants", name: "fk_stripe_record_subscription_schedules__tenants"
+  add_foreign_key "stripe_record_subscriptions", "tenants", name: "fk_stripe_record_subscriptions__tenants"
+  add_foreign_key "tenant_stripe_accounts", "stripe_record_accounts", column: "stripe_account_id", name: "fk_tenant_stripe_accounts_stripe_accounts"
   add_foreign_key "tenant_stripe_accounts", "tenants", name: "fk_tenant_stripe_accounts__tenants"
   add_foreign_key "user_profiles", "tenants", name: "fk_user_profiles_tenants"
   add_foreign_key "user_profiles", "users", name: "fk_user_profiles_users"

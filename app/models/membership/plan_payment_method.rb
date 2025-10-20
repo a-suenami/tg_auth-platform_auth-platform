@@ -6,8 +6,15 @@ class Membership::PlanPaymentMethod < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :membership_plan, class_name: 'Membership::Plan', inverse_of: :plan_payment_methods
-  belongs_to :stripe_record_price, class_name: 'StripeRecord::Price', optional: true
+  has_many :plan_payment_method_mappings, class_name: 'Membership::PlanPaymentMethodMapping', foreign_key: 'membership_plan_payment_method_id', dependent: :destroy
 
   validates :payment_type, presence: true, inclusion: { in: %w[credit_card convenience campaign_code external_linkage] }
   validates :payment_type, uniqueness: { scope: :membership_plan_id }
+
+  def stripe_record_price
+    mapping = plan_payment_method_mappings.where(priceable_type: 'StripeRecord::Price').first
+    return nil unless mapping
+
+    StripeRecord::Price.find_by(id: mapping.priceable_id)
+  end
 end

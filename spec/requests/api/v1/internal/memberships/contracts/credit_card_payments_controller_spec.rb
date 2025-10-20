@@ -29,16 +29,25 @@ RSpec.shared_context 'membership and stripe setup' do
   let(:stripe_record_price_premium) { create(:stripe_record_price, tenant_id: current_tenant.id, product: stripe_record_product_premium, amount: leveled_membership_plan_premium.amount) }
   let(:stripe_record_price_basic) { create(:stripe_record_price, tenant_id: current_tenant.id, product: stripe_record_product_basic, amount: leveled_membership_plan_basic.amount) }
   let(:membership_plan_payment_method_platinum) {
-    create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_platinum, payment_type: 'credit_card',
-stripe_record_price: stripe_record_price_platinum, is_active: true,)
+    payment_method = create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_platinum, payment_type: 'credit_card',
+is_active: true,)
+    create(:membership_plan_payment_method_mapping, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_platinum, membership_plan_payment_method: payment_method,
+priceable: stripe_record_price_platinum, amount: leveled_membership_plan_platinum.amount, currency: 'JPY',)
+    payment_method
   }
   let(:membership_plan_payment_method_premium) {
-    create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_premium, payment_type: 'credit_card',
-stripe_record_price: stripe_record_price_premium, is_active: true,)
+    payment_method = create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_premium, payment_type: 'credit_card',
+is_active: true,)
+    create(:membership_plan_payment_method_mapping, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_premium, membership_plan_payment_method: payment_method,
+priceable: stripe_record_price_premium, amount: leveled_membership_plan_premium.amount, currency: 'JPY',)
+    payment_method
   }
   let(:membership_plan_payment_method_basic) {
-    create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_basic, payment_type: 'credit_card',
-stripe_record_price: stripe_record_price_basic, is_active: true,)
+    payment_method = create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_basic, payment_type: 'credit_card',
+is_active: true,)
+    create(:membership_plan_payment_method_mapping, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_basic, membership_plan_payment_method: payment_method,
+priceable: stripe_record_price_basic, amount: leveled_membership_plan_basic.amount, currency: 'JPY',)
+    payment_method
   }
   let(:membership_plan_component_platinum) {
     create(:membership_plan_component, tenant_id: current_tenant.id, membership_plan: leveled_membership_plan_platinum, membership: leveled_membership_platinum)
@@ -303,8 +312,10 @@ RSpec.describe '[ credit card payments API ]' do
         # rubocop:enable RSpec/VerifiedDoubles
 
         before do
-          create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: trial_plan, payment_type: 'credit_card', stripe_record_price: stripe_record_price_platinum,
+          payment_method = create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: trial_plan, payment_type: 'credit_card',
 is_active: true,)
+          create(:membership_plan_payment_method_mapping, tenant_id: current_tenant.id, membership_plan: trial_plan, membership_plan_payment_method: payment_method,
+priceable: stripe_record_price_platinum, amount: trial_plan.amount, currency: 'JPY',)
           # Mock Stripe API for trial plan
           # rubocop:disable RSpec/VerifiedDoubles
           allow(mock_trial_stripe_subscription).to receive_messages(
@@ -375,8 +386,10 @@ is_active: true,)
         before do
           trial_plan_component
           trial_history
-          create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: trial_plan, payment_type: 'credit_card', stripe_record_price: stripe_record_price_platinum,
+          payment_method = create(:membership_plan_payment_method, tenant_id: current_tenant.id, membership_plan: trial_plan, payment_type: 'credit_card',
 is_active: true,)
+          create(:membership_plan_payment_method_mapping, tenant_id: current_tenant.id, membership_plan: trial_plan, membership_plan_payment_method: payment_method,
+priceable: stripe_record_price_platinum, amount: trial_plan.amount, currency: 'JPY',)
 
           # トライアルなしのsubscriptionをモック
           # rubocop:disable RSpec/VerifiedDoubles
