@@ -14,5 +14,6 @@ create_table :membership_plan_payment_method_mappings, force: :cascade, id: :uui
 end
 
 add_foreign_key :membership_plan_payment_method_mappings, :membership_plans, column: :membership_plan_id, name: :fk_membership_plan_payment_method_mappings_plans
-add_foreign_key :membership_plan_payment_method_mappings, :membership_plan_payment_methods, column: :membership_plan_payment_method_id, name: :fk_membership_plan_payment_method_mappings_payment_methods
+add_foreign_key :membership_plan_payment_method_mappings, :membership_plan_payment_methods, column: :membership_plan_payment_method_id,
+name: :fk_membership_plan_payment_method_mappings_payment_methods
 add_foreign_key :membership_plan_payment_method_mappings, :tenants, name: :fk_membership_plan_payment_method_mappings_tenants

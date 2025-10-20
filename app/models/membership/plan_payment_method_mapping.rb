@@ -12,5 +12,4 @@ class Membership::PlanPaymentMethodMapping < ApplicationRecord
   validates :amount, presence: true, numericality: { greater_than: 0 }
   validates :currency, presence: true
   validates :priceable_type, presence: true
-  validates :priceable_id, presence: true
 end

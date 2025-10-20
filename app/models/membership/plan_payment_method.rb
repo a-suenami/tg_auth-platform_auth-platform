@@ -6,7 +6,8 @@ class Membership::PlanPaymentMethod < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :membership_plan, class_name: 'Membership::Plan', inverse_of: :plan_payment_methods
-  has_many :plan_payment_method_mappings, class_name: 'Membership::PlanPaymentMethodMapping', foreign_key: 'membership_plan_payment_method_id', dependent: :destroy
+  has_many :plan_payment_method_mappings, class_name: 'Membership::PlanPaymentMethodMapping', foreign_key: 'membership_plan_payment_method_id', inverse_of: :membership_plan_payment_method,
+dependent: :destroy
 
   validates :payment_type, presence: true, inclusion: { in: %w[credit_card convenience campaign_code external_linkage] }
   validates :payment_type, uniqueness: { scope: :membership_plan_id }
