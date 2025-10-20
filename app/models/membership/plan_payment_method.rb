@@ -12,6 +12,7 @@ dependent: :destroy
   validates :payment_type, presence: true, inclusion: { in: %w[credit_card convenience campaign_code external_linkage] }
   validates :payment_type, uniqueness: { scope: :membership_plan_id }
 
+  sig { returns(T.nilable(StripeRecord::Price)) }
   def stripe_record_price
     mapping = plan_payment_method_mappings.where(priceable_type: 'StripeRecord::Price').first
     return nil unless mapping
