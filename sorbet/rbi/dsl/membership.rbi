@@ -379,16 +379,16 @@ class Membership
   end
 
   module GeneratedAssociationMethods
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Group) }
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership::Group) }
     def build_membership_group(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Group) }
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership::Group) }
     def create_membership_group(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Group) }
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership::Group) }
     def create_membership_group!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
@@ -397,10 +397,10 @@ class Membership
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant!(*args, &blk); end
 
-    sig { returns(T.nilable(::Memberships::Group)) }
+    sig { returns(T.nilable(::Membership::Group)) }
     def membership_group; end
 
-    sig { params(value: T.nilable(::Memberships::Group)).void }
+    sig { params(value: T.nilable(::Membership::Group)).void }
     def membership_group=(value); end
 
     sig { returns(T::Boolean) }
@@ -417,10 +417,10 @@ class Membership
 
     # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :membership_plans, through: :plan_components`.
     # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
-    sig { returns(::Memberships::Plan::PrivateCollectionProxy) }
+    sig { returns(::Membership::Plan::PrivateCollectionProxy) }
     def membership_plans; end
 
-    sig { params(value: T::Enumerable[::Memberships::Plan]).void }
+    sig { params(value: T::Enumerable[::Membership::Plan]).void }
     def membership_plans=(value); end
 
     sig { returns(T::Array[T.untyped]) }
@@ -431,10 +431,10 @@ class Membership
 
     # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :membership_users`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::User::PrivateCollectionProxy) }
+    sig { returns(::Membership::User::PrivateCollectionProxy) }
     def membership_users; end
 
-    sig { params(value: T::Enumerable[::Memberships::User]).void }
+    sig { params(value: T::Enumerable[::Membership::User]).void }
     def membership_users=(value); end
 
     sig { returns(T::Array[T.untyped]) }
@@ -445,13 +445,13 @@ class Membership
 
     # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :plan_components`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::PlanComponent::PrivateCollectionProxy) }
+    sig { returns(::Membership::PlanComponent::PrivateCollectionProxy) }
     def plan_components; end
 
-    sig { params(value: T::Enumerable[::Memberships::PlanComponent]).void }
+    sig { params(value: T::Enumerable[::Membership::PlanComponent]).void }
     def plan_components=(value); end
 
-    sig { returns(T.nilable(::Memberships::Group)) }
+    sig { returns(T.nilable(::Membership::Group)) }
     def reload_membership_group; end
 
     sig { returns(T.nilable(::Tenant)) }
@@ -483,10 +483,10 @@ class Membership
 
     # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :user_achievements`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::UserAchievement::PrivateCollectionProxy) }
+    sig { returns(::Membership::UserAchievement::PrivateCollectionProxy) }
     def user_achievements; end
 
-    sig { params(value: T::Enumerable[::Memberships::UserAchievement]).void }
+    sig { params(value: T::Enumerable[::Membership::UserAchievement]).void }
     def user_achievements=(value); end
 
     sig { returns(T::Array[T.untyped]) }

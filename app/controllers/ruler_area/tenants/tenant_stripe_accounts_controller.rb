@@ -53,7 +53,7 @@ module RulerArea
       end
 
       def tenant_stripe_account_params
-        params.require(:tenant_stripe_account).permit(:stripe_account_id, :charge_type, :fee_rate, :tax_rate_id, :webhook_secret)
+        params.require(:tenant_stripe_account).permit(:stripe_account_id, :charge_type, :fee_rate_percentage, :tax_rate_id, :webhook_secret)
       end
     end
   end

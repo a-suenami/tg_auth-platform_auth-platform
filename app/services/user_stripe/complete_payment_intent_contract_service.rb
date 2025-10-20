@@ -16,14 +16,15 @@ module UserStripe
         status: invoice.status,
       )
 
-      # 関連するContractを取得（invoiceを通じて）
-      contract = stripe_record_invoice&.chargeable&.current_billing_profile&.membership_contract
+
+      payment_transaction = stripe_record_invoice&.payment_intents&.last&.chargeable
+      contract = payment_transaction&.membership_contract
       contract.update!(
         status: 'active',
       )
       return unless contract
 
-      stripe_record_subscription = stripe_record_invoice&.chargeable
+      stripe_record_subscription = stripe_record_invoice&.payment_source
 
       # 契約完了処理
       UserStripe::CompleteContractService.new.execute(contract, stripe_record_subscription)

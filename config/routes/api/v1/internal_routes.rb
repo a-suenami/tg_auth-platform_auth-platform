@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
         resources :memberships, only: [:index]
 
-        namespace :memberships do
+        namespace :membership do
           resources :contracts, only: [:index, :show] do
             member do
               get :polling, to: 'contracts#polling'
@@ -34,7 +34,11 @@ Rails.application.routes.draw do
             end
           end
           namespace :contracts do
-            resources :credit_card_payments, only: [:create]
+            resources :credit_card_payments, only: [:create] do
+              collection do
+                post '/:contract_id/complete', to: 'credit_card_payments#complete'
+              end
+            end
           end
         end
       end

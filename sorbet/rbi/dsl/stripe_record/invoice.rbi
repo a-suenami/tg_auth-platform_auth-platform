@@ -451,32 +451,46 @@ class StripeRecord::Invoice
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
 
-    sig { returns(T.untyped) }
-    def chargeable; end
-
-    sig { params(value: T.untyped).void }
-    def chargeable=(value); end
-
-    sig { returns(T::Boolean) }
-    def chargeable_changed?; end
-
-    sig { returns(T::Boolean) }
-    def chargeable_previously_changed?; end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user!(*args, &blk); end
 
+    sig { returns(T::Array[T.untyped]) }
+    def payment_intent_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def payment_intent_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `StripeRecord::Invoice` class because it declared `has_many :payment_intents`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::StripeRecord::PaymentIntent::PrivateCollectionProxy) }
+    def payment_intents; end
+
+    sig { params(value: T::Enumerable[::StripeRecord::PaymentIntent]).void }
+    def payment_intents=(value); end
+
     sig { returns(T.untyped) }
-    def reload_chargeable; end
+    def payment_source; end
+
+    sig { params(value: T.untyped).void }
+    def payment_source=(value); end
+
+    sig { returns(T::Boolean) }
+    def payment_source_changed?; end
+
+    sig { returns(T::Boolean) }
+    def payment_source_previously_changed?; end
+
+    sig { returns(T.untyped) }
+    def reload_payment_source; end
 
     sig { returns(T.nilable(::User)) }
     def reload_user; end
 
     sig { void }
-    def reset_chargeable; end
+    def reset_payment_source; end
 
     sig { void }
     def reset_user; end
@@ -686,8 +700,8 @@ class StripeRecord::Invoice
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         remote_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        chargeable_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        chargeable_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        payment_source_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        payment_source_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         confirmation_secret: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         confirmation_secret_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -696,7 +710,7 @@ class StripeRecord::Invoice
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateAssociationRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, remote_id: nil, user_id: nil, chargeable_id: nil, chargeable_type: nil, status: nil, confirmation_secret: nil, confirmation_secret_type: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, remote_id: nil, user_id: nil, payment_source_id: nil, payment_source_type: nil, status: nil, confirmation_secret: nil, confirmation_secret_type: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -706,96 +720,6 @@ class StripeRecord::Invoice
   end
 
   module GeneratedAttributeMethods
-    sig { returns(T.nilable(::String)) }
-    def chargeable_id; end
-
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def chargeable_id=(value); end
-
-    sig { returns(T::Boolean) }
-    def chargeable_id?; end
-
-    sig { returns(T.nilable(::String)) }
-    def chargeable_id_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def chargeable_id_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def chargeable_id_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def chargeable_id_change; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def chargeable_id_change_to_be_saved; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def chargeable_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def chargeable_id_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def chargeable_id_previous_change; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def chargeable_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def chargeable_id_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def chargeable_id_was; end
-
-    sig { void }
-    def chargeable_id_will_change!; end
-
-    sig { returns(T.nilable(::String)) }
-    def chargeable_type; end
-
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def chargeable_type=(value); end
-
-    sig { returns(T::Boolean) }
-    def chargeable_type?; end
-
-    sig { returns(T.nilable(::String)) }
-    def chargeable_type_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def chargeable_type_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def chargeable_type_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def chargeable_type_change; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def chargeable_type_change_to_be_saved; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def chargeable_type_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def chargeable_type_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def chargeable_type_previous_change; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def chargeable_type_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def chargeable_type_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def chargeable_type_was; end
-
-    sig { void }
-    def chargeable_type_will_change!; end
-
     sig { returns(T.nilable(::String)) }
     def confirmation_secret; end
 
@@ -1021,6 +945,96 @@ class StripeRecord::Invoice
     sig { void }
     def id_will_change!; end
 
+    sig { returns(T.nilable(::String)) }
+    def payment_source_id; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def payment_source_id=(value); end
+
+    sig { returns(T::Boolean) }
+    def payment_source_id?; end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_source_id_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def payment_source_id_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def payment_source_id_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def payment_source_id_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def payment_source_id_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def payment_source_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_source_id_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def payment_source_id_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def payment_source_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_source_id_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_source_id_was; end
+
+    sig { void }
+    def payment_source_id_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_source_type; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def payment_source_type=(value); end
+
+    sig { returns(T::Boolean) }
+    def payment_source_type?; end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_source_type_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def payment_source_type_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def payment_source_type_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def payment_source_type_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def payment_source_type_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def payment_source_type_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_source_type_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def payment_source_type_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def payment_source_type_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_source_type_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_source_type_was; end
+
+    sig { void }
+    def payment_source_type_will_change!; end
+
     sig { returns(::String) }
     def remote_id; end
 
@@ -1067,12 +1081,6 @@ class StripeRecord::Invoice
     def remote_id_will_change!; end
 
     sig { void }
-    def restore_chargeable_id!; end
-
-    sig { void }
-    def restore_chargeable_type!; end
-
-    sig { void }
     def restore_confirmation_secret!; end
 
     sig { void }
@@ -1088,6 +1096,12 @@ class StripeRecord::Invoice
     def restore_id_value!; end
 
     sig { void }
+    def restore_payment_source_id!; end
+
+    sig { void }
+    def restore_payment_source_type!; end
+
+    sig { void }
     def restore_remote_id!; end
 
     sig { void }
@@ -1101,18 +1115,6 @@ class StripeRecord::Invoice
 
     sig { void }
     def restore_user_id!; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_chargeable_id; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def saved_change_to_chargeable_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_chargeable_type; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def saved_change_to_chargeable_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
     def saved_change_to_confirmation_secret; end
@@ -1143,6 +1145,18 @@ class StripeRecord::Invoice
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_payment_source_id; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_payment_source_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_payment_source_type; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_payment_source_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_remote_id; end
@@ -1355,12 +1369,6 @@ class StripeRecord::Invoice
     def user_id_will_change!; end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def will_save_change_to_chargeable_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def will_save_change_to_chargeable_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_confirmation_secret?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -1374,6 +1382,12 @@ class StripeRecord::Invoice
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_payment_source_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_payment_source_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_remote_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
@@ -1531,8 +1545,8 @@ class StripeRecord::Invoice
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         remote_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        chargeable_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        chargeable_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        payment_source_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        payment_source_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         confirmation_secret: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         confirmation_secret_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -1541,7 +1555,7 @@ class StripeRecord::Invoice
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, remote_id: nil, user_id: nil, chargeable_id: nil, chargeable_type: nil, status: nil, confirmation_secret: nil, confirmation_secret_type: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, remote_id: nil, user_id: nil, payment_source_id: nil, payment_source_type: nil, status: nil, confirmation_secret: nil, confirmation_secret_type: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

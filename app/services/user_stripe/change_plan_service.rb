@@ -9,13 +9,14 @@ module UserStripe
       # プラン変更の検証
       validate_plan_change(contract:, new_membership_plan:)
 
-      # 現在のBillingProfileを取得
-      current_billing_profile = contract.current_billing_profile
-      raise Exceptions::Payment::NoCurrentBillingProfile unless current_billing_profile
+      # TODO: PaymentTransactionをチェック
+      # TODO: ContractTermをチェック
+      current_contract_term = contract.current_contract_term
+      raise Exceptions::Payment::NoCurrentContractTerm unless current_contract_term
 
       # Stripeのsubscriptionを取得
-      stripe_subscription = current_billing_profile.chargeable
-      raise Exceptions::Payment::NoStripeSubscription unless stripe_subscription
+      stripe_subscription = contract.payment_subscription.chargeable
+      raise Exceptions::Payment::NoStripeSubscription if stripe_subscription.blank? || !stripe_subscription.is_a?(StripeRecord::Subscription)
 
       # TODO: プラン変更中ならエラー
       # プラン変更キャンセルAPIも合わせて考える
@@ -24,7 +25,7 @@ module UserStripe
       change_stripe_plan(
         stripe_subscription:,
         new_membership_plan:,
-        current_billing_profile:,
+        current_contract_term:,
         contract:,
       )
 
@@ -39,18 +40,11 @@ module UserStripe
         raise Exceptions::Payment::ContractNotActive
       end
 
-      # 現在のBillingProfileを取得
-      current_billing_profile = contract.current_billing_profile
-      raise Exceptions::Payment::NoCurrentBillingProfile unless current_billing_profile
+      # TODO: PaymentSubscriptionをチェック
+      # TODO: ContractTermをチェック
 
-      # 支払い方法がクレジットカードでサブスクリプション契約かチェック
-      unless current_billing_profile.payment_type == 'credit_card' && current_billing_profile.recurrence?
-        raise Exceptions::Payment::NonRecurringSubscription
-      end
 
-      # 現在のプランを取得
-      current_membership_plan = current_billing_profile.membership_plan
-
+      current_membership_plan = contract.current_contract_term.membership_plan
 
 
       # 変更可能なプランかチェック
@@ -107,27 +101,8 @@ module UserStripe
         current_membership_plan.recurring_interval_count != new_membership_plan.recurring_interval_count
     end
 
-    def create_upcoming_billing_profile(contract:, new_membership_plan:, current_billing_profile:)
-      # 新しいBillingProfileを作成（phase: upcoming）
-      new_billing_profile = Memberships::BillingProfile.new(
-        tenant_id: contract.tenant_id,
-        user: contract.user,
-        membership_plan: new_membership_plan,
-        membership_contract: contract,
-        payment_type: current_billing_profile.payment_type,
-        payment_provider: current_billing_profile.payment_provider,
-        external_id: current_billing_profile.external_id, # 同じStripe subscriptionを使用
-        chargeable: current_billing_profile.chargeable, # 同じStripe subscriptionを使用
-        status: 'pending',
-        recurrence: true,
-        phase: 'upcoming',
-        revision: current_billing_profile.revision + 1,
-      )
 
-      new_billing_profile
-    end
-
-    def change_stripe_plan(stripe_subscription:, new_membership_plan:, current_billing_profile:, contract:)
+    def change_stripe_plan(stripe_subscription:, new_membership_plan:, current_contract_term:, contract:)
       # 新しいプランのStripe Priceを取得
       new_stripe_price = new_membership_plan.plan_payment_methods
         .where(payment_type: 'credit_card')
@@ -137,7 +112,7 @@ module UserStripe
 
       # プラン変更先が上位プランの場合はproration_behaviorをcreate_prorationsにする
       # プラン変更先が下位プランもしくは請求単位違いの場合はnoneにする
-      current_membership_plan = current_billing_profile.membership_plan
+      current_membership_plan = current_contract_term.membership_plan
 
       if hierarchical_plan_change?(current_membership_plan:, new_membership_plan:)
         current_tiers = current_membership_plan.memberships.pluck(:tier)
@@ -153,7 +128,7 @@ module UserStripe
     end
 
 
-    def change_plan_immediately(stripe_subscription:, new_stripe_price:, contract:, new_membership_plan:)
+    def change_plan_immediately(stripe_subscription:, new_stripe_price:, contract:, _new_membership_plan:)
       # # subscription schedule中の契約を即時プラン変更させてはいけない。現在のsubscriptionのみ即時変更されて、scheduleが残る
       # if stripe_subscription.last_subscription_schedule.present?
       #   # 更新がスケジュールされている場合は、スケジュールを破棄
@@ -213,16 +188,16 @@ module UserStripe
         # Contractの期限更新
         next_period_end = Time.zone.at(remote_subscription_schedule.phases.first.end_date)
         contract.update(expires_at: next_period_end)
-        # 現在のbilling_profileを取得
-        current_billing_profile = stripe_subscription.current_billing_profile
-        # 現在のbilling_profileをpastに変更
-        current_billing_profile.update!(
-          phase: 'closed',
+        current_contract_term = contract.current_contract_term
+        current_contract_term.update!(
+          status: 'closed',
         )
-
-        # 新しいbilling_profileを作成
-        create_new_billing_profile_for_plan_change(current_billing_profile, contract, stripe_subscription, new_membership_plan)
-
+        Membership::ContractTerm.create!(
+          status: 'active',
+          phase: 'current',
+          expires_at: next_period_end,
+          activated_at: Time.zone.now,
+        )
         # stripe_subscriptionの更新
         stripe_subscription.update!(
           current_period_start: Time.zone.now,
@@ -235,25 +210,7 @@ module UserStripe
       raise Exceptions::Payment::StripePlanChangeError, "Stripeでのプラン変更に失敗しました: #{e.message}"
     end
 
-    def create_new_billing_profile_for_plan_change(current_billing_profile, contract, stripe_subscription, new_membership_plan)
-      Memberships::BillingProfile.create!(
-        tenant_id: contract.tenant_id,
-        user: contract.user,
-        membership_plan: new_membership_plan,
-        membership_contract: contract,
-        chargeable: stripe_subscription,
-        payment_type: current_billing_profile.payment_type,
-        payment_provider: current_billing_profile.payment_provider,
-        phase: 'current',
-        activated_at: Time.zone.now,
-        expires_at: contract.expires_at,
-        status: 'active',
-        recurrence: current_billing_profile.recurrence,
-        revision: current_billing_profile.revision + 1,
-      )
-    end
-
-    def change_plan_schedule(stripe_subscription:, new_stripe_price:, contract:, new_membership_plan:)
+    def change_plan_schedule(stripe_subscription:, new_stripe_price:, _contract:, _new_membership_plan:)
       stripe_subscription_schedule = fetch_or_create_remote_subscription_schedule(stripe_subscription:)
 
       Stripe::SubscriptionSchedule.update(
@@ -276,15 +233,7 @@ module UserStripe
         }, stripe_api_key_config,
       )
 
-      current_billing_profile = stripe_subscription.current_billing_profile
-      # 新しいBillingProfileを作成（phase: upcoming）
-      new_billing_profile = create_upcoming_billing_profile(
-        membership_contract: contract,
-        new_membership_plan:,
-        current_billing_profile:,
-      )
-      # 新しいBillingProfileを保存
-      new_billing_profile.save!
+      # TODO: ContractTermの更新
     rescue Stripe::StripeError => e
       raise Exceptions::Payment::StripePlanChangeError, "Stripeでのプラン変更に失敗しました: #{e.message}"
     end
