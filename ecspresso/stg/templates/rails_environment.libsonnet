@@ -1,7 +1,7 @@
 [
   {
     "name": "ALLOW_ORIGINS",
-    "value": "['https://triple-ticket.netlify.app', 'https://web.account.stg.hikaruutada-tour-official.com', 'https://ticket.stg.hikaruutada-tour-official.com', 'https://autify.ticket.app-staging.t-riple.com', 'https://triple-multi.ticket.app-staging.t-riple.com', 'https://account.karvan.app-staging.id-platform.net', 'https://karvan.ticket.app-staging.t-riple.com', 'https://web.pass.stg.id-platform.net', 'https://stg.ticket.pass-store.jp', 'https://web.account.stg.famikura-store-pass.com', 'https://stg.famikura-store-pass.com', 'https://triple-qa-ticket.pages.dev', 'https://stg.extendticket.com', 'https://web.account.stg.haguruma.io']"
+    "value": "['https://triple-ticket.netlify.app', 'https://web.account.stg.hikaruutada-tour-official.com', 'https://ticket.stg.hikaruutada-tour-official.com', 'https://autify.ticket.app-staging.t-riple.com', 'https://triple-multi.ticket.app-staging.t-riple.com', 'https://account.karvan.app-staging.id-platform.net', 'https://karvan.ticket.app-staging.t-riple.com', 'https://web.pass.stg.id-platform.net', 'https://stg.ticket.pass-store.jp', 'https://web.account.stg.famikura-store-pass.com', 'https://stg.famikura-store-pass.com', 'https://triple-qa-ticket.pages.dev', 'https://stg.extendticket.com', 'https://web.account.stg.haguruma.io', 'https://dev.auth.account.stg.haguruma.io']"
   },
   {
     "name": "ADMIN_AUTH0_CLIENT_ID",
