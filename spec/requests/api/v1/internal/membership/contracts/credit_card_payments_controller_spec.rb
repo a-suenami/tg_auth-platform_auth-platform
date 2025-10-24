@@ -875,4 +875,134 @@ api_key_account: tenant_stripe_account.stripe_account,)
       end
     end
   end
+
+  describe 'POST /api/v1/internal/membership/contracts/credit_card_payments/bulk' do
+    include_context 'membership and stripe setup'
+    include_context 'current user session is present'
+
+    let(:params) do
+      {
+        memberships_contracts: {
+          membership_plan_ids: [leveled_membership_plan_platinum.id, leveled_membership_plan_premium.id],
+        },
+      }
+    end
+
+    before do
+      # Create required payment method mappings
+      create(:membership_plan_payment_method_mapping,
+             tenant_id: current_tenant.id,
+             membership_plan: leveled_membership_plan_platinum,
+             membership_plan_payment_method: membership_plan_payment_method_platinum,
+             priceable: stripe_record_price_platinum,
+             amount: leveled_membership_plan_platinum.amount,
+             currency: 'JPY',)
+      create(:membership_plan_payment_method_mapping,
+             tenant_id: current_tenant.id,
+             membership_plan: leveled_membership_plan_premium,
+             membership_plan_payment_method: membership_plan_payment_method_premium,
+             priceable: stripe_record_price_premium,
+             amount: leveled_membership_plan_premium.amount,
+             currency: 'JPY',)
+
+      # Mock Stripe API calls
+      mock_stripe_subscription_platinum = instance_double(Stripe::Subscription)
+      mock_stripe_subscription_premium = instance_double(Stripe::Subscription)
+
+      # Mock items.data.first.current_period_end for both subscriptions
+      # rubocop:disable RSpec/VerifiedDoubles
+      mock_subscription_item_platinum = double('Stripe::SubscriptionItem')
+      allow(mock_subscription_item_platinum).to receive(:current_period_end).and_return(1.month.from_now.to_i)
+      mock_items_platinum = double('Stripe::ListObject')
+      allow(mock_items_platinum).to receive(:data).and_return([mock_subscription_item_platinum])
+
+      mock_subscription_item_premium = double('Stripe::SubscriptionItem')
+      allow(mock_subscription_item_premium).to receive(:current_period_end).and_return(1.month.from_now.to_i)
+      mock_items_premium = double('Stripe::ListObject')
+      allow(mock_items_premium).to receive(:data).and_return([mock_subscription_item_premium])
+      # rubocop:enable RSpec/VerifiedDoubles
+
+      allow(mock_stripe_subscription_platinum).to receive_messages(id: 'sub_platinum_test123', status: 'active', items: mock_items_platinum)
+      allow(mock_stripe_subscription_premium).to receive_messages(id: 'sub_premium_test123', status: 'active', items: mock_items_premium)
+
+      allow(Stripe::Subscription).to receive(:create).and_return(mock_stripe_subscription_platinum, mock_stripe_subscription_premium)
+      allow(Stripe::Subscription).to receive(:retrieve).and_return(mock_stripe_subscription_platinum, mock_stripe_subscription_premium)
+
+      # Mock Invoice retrieval
+      mock_invoice_platinum = instance_double(Stripe::Invoice)
+      mock_invoice_premium = instance_double(Stripe::Invoice)
+      allow(mock_invoice_platinum).to receive_messages(id: 'inv_platinum_test123', status: 'paid', confirmation_secret: nil)
+      allow(mock_invoice_premium).to receive_messages(id: 'inv_premium_test123', status: 'paid', confirmation_secret: nil)
+      allow(Stripe::Invoice).to receive(:retrieve).and_return(mock_invoice_platinum, mock_invoice_premium)
+
+      # Mock the service to return mock contracts
+      mock_contract_platinum = create(:membership_contract, user: current_user, tenant_id: current_tenant.id, status: 'pending')
+      mock_contract_premium = create(:membership_contract, user: current_user, tenant_id: current_tenant.id, status: 'pending')
+      allow(UserStripe::CreateMembershipSubscriptionService).to receive(:new).and_return(
+        instance_double(UserStripe::CreateMembershipSubscriptionService, execute: mock_contract_platinum),
+        instance_double(UserStripe::CreateMembershipSubscriptionService, execute: mock_contract_premium),
+      )
+    end
+
+    context 'when successful' do
+      it 'creates multiple contracts successfully' do
+        is_expected.to eq 201
+
+        expect(body_hash).to be_an(Array)
+        expect(body_hash.size).to eq(2)
+        expect(body_hash.map { |c| c['status'] }).to all(eq('pending'))
+      end
+    end
+
+    context 'when plan IDs are empty' do
+      let(:params) do
+        {
+          memberships_contracts: {
+            membership_plan_ids: [],
+          },
+        }
+      end
+
+      it 'returns error for empty plan IDs' do
+        # Clear all mocks for this test
+        allow(UserStripe::CreateMembershipSubscriptionService).to receive(:new).and_call_original
+
+        is_expected.to eq 400
+
+        expect(body_hash['error']['code']).to eq('invalid_params')
+      end
+    end
+
+    context 'when some plans are not found' do
+      let(:params) do
+        {
+          memberships_contracts: {
+            membership_plan_ids: [leveled_membership_plan_platinum.id, 'non-existent-id'],
+          },
+        }
+      end
+
+      it 'returns error for not found plans' do
+        is_expected.to eq 404
+
+        expect(body_hash['error']['code']).to eq('not_found')
+      end
+    end
+
+    context 'when Stripe API fails' do
+      before do
+        # Mock the service to raise Stripe error
+        service_instance = instance_double(UserStripe::CreateMembershipSubscriptionService)
+        allow(service_instance).to receive(:execute).and_raise(Stripe::StripeError.new('API Error'))
+        allow(UserStripe::CreateMembershipSubscriptionService).to receive(:new).and_return(service_instance)
+      end
+
+      it 'returns Stripe error' do
+        is_expected.to eq 400
+
+        expect(body_hash['error']['code']).to eq('stripe_error')
+        expect(body_hash['error']['message']).to eq('API Error')
+      end
+    end
+  end
 end

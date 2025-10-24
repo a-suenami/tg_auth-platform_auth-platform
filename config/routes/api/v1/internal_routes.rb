@@ -14,6 +14,7 @@ Rails.application.routes.draw do
           resource :card, only: [:show, :update, :destroy] do
             member do
               post :setup_intent, action: :create_setup_intent
+              post :off_session_setup_intent, action: :create_off_session_setup_intent
             end
           end
         end
@@ -36,6 +37,7 @@ Rails.application.routes.draw do
           namespace :contracts do
             resources :credit_card_payments, only: [:create] do
               collection do
+                post :bulk, to: 'credit_card_payments#create_multiple'
                 post '/:contract_id/complete', to: 'credit_card_payments#complete'
               end
             end

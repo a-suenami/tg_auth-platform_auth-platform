@@ -118,6 +118,9 @@ module GeneratedPathHelpersModule
   def authenticate_api_v1_authentication_mfa_sms_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def bulk_api_v1_internal_membership_contracts_credit_card_payments_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def cancel_api_v1_internal_membership_contract_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -251,6 +254,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def oauth_userinfo_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def off_session_setup_intent_api_v1_internal_me_card_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def plan_change_api_v1_internal_membership_contract_path(*args); end

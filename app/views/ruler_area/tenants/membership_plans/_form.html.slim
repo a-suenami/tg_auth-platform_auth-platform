@@ -86,7 +86,11 @@ h3.uk-margin-top 決済方法
       = payment_method_form.select :payment_type, options_for_select([['クレジットカード', 'credit_card'], ['コンビニ決済', 'convenience'], ['キャンペーンコード', 'campaign_code'], ['外部連携', 'external_linkage']], payment_method_form.object.payment_type), { prompt: '決済方法を選択' }, class: "uk-select"
       - if payment_method_form.object.payment_type == 'credit_card'
         .uk-margin-small-top
-          = payment_method_form.select :stripe_record_price_id, options_from_collection_for_select(StripeRecord::Price.where(tenant_id: @tenant_id, deleted: false), :id, :name, payment_method_form.object.stripe_record_price_id), { prompt: 'Stripe価格を選択' }, class: "uk-select"
+          = payment_method_form.fields_for :plan_payment_method_mappings do |mapping_form|
+            = mapping_form.hidden_field :priceable_type, value: 'StripeRecord::Price'
+            = mapping_form.select :priceable_id, options_from_collection_for_select(StripeRecord::Price.where(tenant_id: @tenant_id, deleted: false), :id, :name), { prompt: 'Stripe価格を選択' }, class: "uk-select"
+            = mapping_form.number_field :amount, placeholder: '金額', class: "uk-input uk-margin-small-top"
+            = mapping_form.select :currency, options_for_select([['JPY', 'JPY'], ['USD', 'USD']]), {}, class: "uk-select uk-margin-small-top"
       = payment_method_form.hidden_field :_destroy
       = link_to "削除", "#", class: "uk-button uk-button-danger uk-button-small uk-margin-left", onclick: "this.previousElementSibling.value = '1'; this.parentElement.style.display = 'none'; return false;"
 
@@ -128,9 +132,15 @@ javascript:
         <option value="external_linkage">外部連携</option>
       </select>
       <div class="uk-margin-small-top" id="stripe_price_field" style="display: none;">
-        <select name="membership_plan[plan_payment_methods_attributes][][stripe_record_price_id]" class="uk-select">
+        <input type="hidden" name="membership_plan[plan_payment_methods_attributes][][plan_payment_method_mappings_attributes][][priceable_type]" value="StripeRecord::Price">
+        <select name="membership_plan[plan_payment_methods_attributes][][plan_payment_method_mappings_attributes][][priceable_id]" class="uk-select">
           <option value="">Stripe価格を選択</option>
           #{options_from_collection_for_select(StripeRecord::Price.where(tenant_id: @tenant_id, deleted: false), :id, :name)}
+        </select>
+        <input type="number" name="membership_plan[plan_payment_methods_attributes][][plan_payment_method_mappings_attributes][][amount]" placeholder="金額" class="uk-input uk-margin-small-top">
+        <select name="membership_plan[plan_payment_methods_attributes][][plan_payment_method_mappings_attributes][][currency]" class="uk-select uk-margin-small-top">
+          <option value="JPY">JPY</option>
+          <option value="USD">USD</option>
         </select>
       </div>
       <input type="hidden" name="membership_plan[plan_payment_methods_attributes][][_destroy]" value="0">

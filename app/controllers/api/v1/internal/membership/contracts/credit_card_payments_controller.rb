@@ -13,6 +13,36 @@ module API::V1::Internal::Membership::Contracts
       render json: Membership::ContractBlueprint.render(contract, view: :detailed), status: :created
     end
 
+    # 複数プランを同時契約（すべてオフセッション前提）
+    def create_multiple
+      ids = memberships_contracts_params[:membership_plan_ids]
+      # 空の配列や空文字列を含む配列をチェック
+      if ids.blank? || ids.empty? || ids.all?(&:blank?)
+        raise Exceptions::Payment::InvalidParams
+      end
+
+      membership_plans = Membership::Plan.where(id: ids)
+      if membership_plans.size != ids.size
+        raise Exceptions::Payment::InvalidParams
+      end
+
+      contracts = []
+      ActiveRecord::Base.transaction do
+        membership_plans.each do |plan|
+          contract = UserStripe::CreateMembershipSubscriptionService.new.execute(user: current_user, membership_plan: plan, off_session: true)
+          contracts << contract
+        end
+      end
+
+      render json: Membership::ContractBlueprint.render(contracts, view: :detailed), status: :created
+    rescue Stripe::StripeError => e
+      Sentry.capture_exception(e)
+      render json: { error: { code: 'stripe_error', message: e.message } }, status: :bad_request
+    rescue => e
+      Sentry.capture_exception(e)
+      render json: { error: { code: 'unknown_error', message: e.message } }, status: :internal_server_error
+    end
+
     # 決済後完了コールバック（フロントからの明示的呼び出し想定）
     # Params: { contract_id: UUID }
     def complete
@@ -62,7 +92,7 @@ module API::V1::Internal::Membership::Contracts
     private
 
     def memberships_contracts_params
-      params.require(:memberships_contracts).permit(:membership_plan_id)
+      params.require(:memberships_contracts).permit(:membership_plan_id, membership_plan_ids: [])
     end
   end
 end
