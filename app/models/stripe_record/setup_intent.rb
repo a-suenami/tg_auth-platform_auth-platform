@@ -256,7 +256,7 @@ class StripeRecord
     # off-sessionを取るようのSetupIntentの完了処理
     sig { returns(CompleteOffSessionCardResult) }
     def complete_off_session_card
-      user = T.must(self.user)
+      T.must(self.user)
       api_key_account = T.must(self.api_key_account)
       api_key = T.must(api_key_account.api_key)
 

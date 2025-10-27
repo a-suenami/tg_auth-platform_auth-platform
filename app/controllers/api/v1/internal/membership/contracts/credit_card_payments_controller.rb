@@ -35,12 +35,6 @@ module API::V1::Internal::Membership::Contracts
       end
 
       render json: Membership::ContractBlueprint.render(contracts, view: :detailed), status: :created
-    rescue Stripe::StripeError => e
-      Sentry.capture_exception(e)
-      render json: { error: { code: 'stripe_error', message: e.message } }, status: :bad_request
-    rescue => e
-      Sentry.capture_exception(e)
-      render json: { error: { code: 'unknown_error', message: e.message } }, status: :internal_server_error
     end
 
     # 決済後完了コールバック（フロントからの明示的呼び出し想定）

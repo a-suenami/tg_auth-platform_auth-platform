@@ -83,15 +83,15 @@ module API::V1::Internal
         raise Exceptions::Payment::CardMissing
       end
 
-      tenant_stripe_account = T.must(Tenant.current!).tenant_stripe_account
-      result = StripeRecord::SetupIntent.api_create_off_session_setup_intent(tenant_stripe_account:, user: current_user)
+      tenant_stripe_account = Tenant.current!.tenant_stripe_account
+      result = StripeRecord::SetupIntent.api_create_off_session_setup_intent(tenant_stripe_account: T.must(tenant_stripe_account), user: current_user)
 
       if result.is_a?(Mangrove::Result::Err)
         render json: { error: { code: 'stripe_error', message: result.err_inner.message } }, status: :bad_request
         return
       end
 
-      setup_intent = T.must(result.ok_inner)
+      setup_intent = result.ok_inner
       render json: StripeRecord::SetupIntentBlueprint.render(setup_intent, view: :normal), status: :created
     end
 
@@ -100,7 +100,11 @@ module API::V1::Internal
       stripe_setup_intent_id = params.require(:setup_intent_id)
       setup_intent = current_user.stripe_setup_intents.find_by!(remote_id: stripe_setup_intent_id)
 
-      result = setup_intent.complete_off_session_card
+      result = T.cast(setup_intent.complete_off_session_card, T.any(
+                                                                StripeRecord::SetupIntent::CompleteOffSessionCardResult::Succeeded,
+        StripeRecord::SetupIntent::CompleteOffSessionCardResult::InvalidStatus,
+        StripeRecord::SetupIntent::CompleteOffSessionCardResult::StripeError,
+                                                              ),)
 
       case result
       when StripeRecord::SetupIntent::CompleteOffSessionCardResult::Succeeded

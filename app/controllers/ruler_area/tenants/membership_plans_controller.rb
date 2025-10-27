@@ -17,7 +17,7 @@ class RulerArea::Tenants::MembershipPlansController < RulerArea::Tenants::Applic
 
   def edit
     # クレジットカードの決済方法にマッピングが存在しない場合は空のマッピングを作成
-    @membership_plan.plan_payment_methods.where(payment_type: 'credit_card').each do |payment_method|
+    @membership_plan.plan_payment_methods.where(payment_type: 'credit_card').find_each do |payment_method|
       next unless payment_method.plan_payment_method_mappings.empty?
 
       payment_method.plan_payment_method_mappings.build(

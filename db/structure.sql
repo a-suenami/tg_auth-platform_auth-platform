@@ -1,8 +1,3 @@
-\restrict zV0fUqRVy90y6AcNabOkWryQ7oaNceQwBGqjDGYZt9VSJ2d5Ildook0ho3HcaiL
-
--- Dumped from database version 15.5
--- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -4221,8 +4216,6 @@ ALTER TABLE ONLY public.users
 --
 -- PostgreSQL database dump complete
 --
-
-\unrestrict zV0fUqRVy90y6AcNabOkWryQ7oaNceQwBGqjDGYZt9VSJ2d5Ildook0ho3HcaiL
 
 SET search_path TO "$user", public;
 

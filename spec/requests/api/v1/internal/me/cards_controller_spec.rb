@@ -2,7 +2,7 @@
 
 require 'stripe'
 
-RSpec.describe 'API::V1::Internal::Me::CardsController', type: :request do
+RSpec.describe 'API::V1::Internal::Me::CardsController' do
   include RequestHelpers
 
   let(:tenant_stripe_account) { create(:tenant_stripe_account, :with_account, tenant_id: current_tenant.id) }

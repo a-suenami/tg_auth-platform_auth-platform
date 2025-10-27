@@ -170,7 +170,7 @@ module UserStripe
 
     def create_contract(user:, stripe_record_subscription:, membership_plan:, chargeable:, off_session:)
       # 即時契約なのでステータスはactiveにする
-      contract = if off_session
+      if off_session
         contract = Membership::Contract.create!(
           user:,
           status: 'active',
@@ -199,7 +199,6 @@ module UserStripe
           end_at: stripe_record_subscription.current_period_end,
           status: 'current',
         )
-        contract
       else
         contract = Membership::Contract.create!(
           user:,
@@ -229,9 +228,7 @@ module UserStripe
           start_at: Time.zone.now,
           end_at: stripe_record_subscription.current_period_end,
         )
-        contract
       end
-
 
       contract
     end

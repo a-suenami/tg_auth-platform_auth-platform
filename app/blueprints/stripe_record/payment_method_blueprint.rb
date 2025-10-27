@@ -12,4 +12,3 @@ class StripeRecord::PaymentMethodBlueprint < ApplicationBlueprint
     end
   end
 end
-

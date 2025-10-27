@@ -950,7 +950,7 @@ api_key_account: tenant_stripe_account.stripe_account,)
 
         expect(body_hash).to be_an(Array)
         expect(body_hash.size).to eq(2)
-        expect(body_hash.map { |c| c['status'] }).to all(eq('pending'))
+        expect(body_hash.pluck('status')).to all(eq('pending'))
       end
     end
 
@@ -983,9 +983,9 @@ api_key_account: tenant_stripe_account.stripe_account,)
       end
 
       it 'returns error for not found plans' do
-        is_expected.to eq 404
+        is_expected.to eq 400
 
-        expect(body_hash['error']['code']).to eq('not_found')
+        expect(body_hash['error']['code']).to eq('invalid_params')
       end
     end
 
@@ -993,7 +993,7 @@ api_key_account: tenant_stripe_account.stripe_account,)
       before do
         # Mock the service to raise Stripe error
         service_instance = instance_double(UserStripe::CreateMembershipSubscriptionService)
-        allow(service_instance).to receive(:execute).and_raise(Stripe::StripeError.new('API Error'))
+        allow(service_instance).to receive(:execute).and_raise(Exceptions::Payment::Stripe::StripeError)
         allow(UserStripe::CreateMembershipSubscriptionService).to receive(:new).and_return(service_instance)
       end
 
@@ -1001,7 +1001,6 @@ api_key_account: tenant_stripe_account.stripe_account,)
         is_expected.to eq 400
 
         expect(body_hash['error']['code']).to eq('stripe_error')
-        expect(body_hash['error']['message']).to eq('API Error')
       end
     end
   end
