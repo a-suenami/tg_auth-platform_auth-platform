@@ -15,7 +15,8 @@ class StripeRecord
       self.amount_refunded = remote_charge.amount_refunded
       self.application_id = remote_charge.application
       self.application_fee_amount = remote_charge.application_fee_amount
-      self.balance_transaction_id = remote_charge.balance_transaction&.id
+      balance_transaction = remote_charge.balance_transaction
+      self.balance_transaction_id = balance_transaction&.id
       self.billing_details = remote_charge.billing_details
       self.calculated_statement_descriptor = remote_charge.calculated_statement_descriptor
       self.captured = remote_charge.captured

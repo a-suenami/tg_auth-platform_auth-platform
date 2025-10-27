@@ -246,6 +246,18 @@ module Exceptions
       end
     end
 
+    class InvalidParams < BaseError
+      sig { returns(Symbol) }
+      def code
+        :invalid_params
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.payment.invalid_params'
+      end
+    end
+
     module Stripe
       class StripeError < BaseError
         sig { returns(String) }

@@ -5,20 +5,24 @@
 # ==============================================================================
 module UserStripe
   class CreateMembershipSubscriptionService < UserStripe::BaseService
-    def execute(user:, membership_plan:)
+    def execute(user:, membership_plan:, off_session: false)
       stripe_record_price = find_stripe_record_price(membership_plan)
       stripe_record_subscription = initialize_stripe_subscription(user, membership_plan, stripe_record_price)
 
       fetch_constants
 
-      stripe_subscription = create_stripe_subscription(user, membership_plan, stripe_record_subscription)
+      stripe_subscription = create_stripe_subscription(user, membership_plan, stripe_record_subscription, off_session)
+
+      if off_session && stripe_subscription.status != 'active'
+        raise Exceptions::Payment::Stripe::StripeError, "Stripeでの契約に失敗しました: #{stripe_subscription.status}"
+      end
 
       ActiveRecord::Base.transaction do
         update_stripe_record_subscription(stripe_record_subscription, stripe_subscription)
         chargeable = save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
 
-        contract = create_contract(user:, stripe_record_subscription:, membership_plan:, chargeable:)
-        create_membership_users(user:, membership_plan:, contract:)
+        contract = create_contract(user:, stripe_record_subscription:, membership_plan:, chargeable:, off_session:)
+        create_membership_users(user:, membership_plan:, contract:, off_session:)
 
         contract
       end
@@ -43,27 +47,45 @@ module UserStripe
       )
     end
 
-    def create_stripe_subscription(user, membership_plan, stripe_record_subscription)
+    def create_stripe_subscription(user, membership_plan, stripe_record_subscription, off_session)
       # TODO: payment_customer_idがpayjpユーザの場合、stripeには投げてはいけない 後で直す
-      stripe_subscription_params = build_stripe_subscription_params(user, membership_plan, stripe_record_subscription)
+      stripe_subscription_params = build_stripe_subscription_params(user, membership_plan, stripe_record_subscription, off_session)
 
       # Stripe の API を呼び subscription を作成する
       Stripe::Subscription.create(stripe_subscription_params, stripe_api_key_config)
     end
 
-    def build_stripe_subscription_params(user, membership_plan, stripe_record_subscription)
-      params = {
-        customer: user.payment_customer_id,
-        items: [{ price: stripe_record_subscription.price.remote_id }],
-        # default_tax_rates: [@tax_rate_id],
-        payment_behavior: 'default_incomplete',
-        collection_method: 'charge_automatically',
-        payment_settings: {
-          save_default_payment_method: 'on_subscription',
-          payment_method_types: ['card'],
-        },
-        expand: ['latest_invoice.confirmation_secret', 'pending_setup_intent'],
-      }
+    def build_stripe_subscription_params(user, membership_plan, stripe_record_subscription, off_session)
+      params = if off_session
+        {
+          customer: user.payment_customer_id,
+          items: [{ price: stripe_record_subscription.price.remote_id }],
+          # default_tax_rates: [@tax_rate_id],
+          payment_behavior: 'error_if_incomplete',
+          collection_method: 'charge_automatically',
+          payment_settings: {
+            save_default_payment_method: 'on_subscription',
+            payment_method_types: ['card'],
+            payment_method_options: {
+              card: { request_three_d_secure: 'automatic' },
+            },
+          },
+          expand: ['latest_invoice.confirmation_secret', 'pending_setup_intent'],
+        }
+      else
+        {
+          customer: user.payment_customer_id,
+          items: [{ price: stripe_record_subscription.price.remote_id }],
+          # default_tax_rates: [@tax_rate_id],
+          payment_behavior: 'default_incomplete',
+          collection_method: 'charge_automatically',
+          payment_settings: {
+            save_default_payment_method: 'on_subscription',
+            payment_method_types: ['card'],
+          },
+          expand: ['latest_invoice.confirmation_secret', 'pending_setup_intent'],
+        }
+      end
 
       if membership_plan.trial_period_days.positive? && check_trial_availability(user:, membership_plan:)
         params[:trial_period_days] = membership_plan.trial_period_days
@@ -146,45 +168,89 @@ module UserStripe
       end
     end
 
-    def create_contract(user:, stripe_record_subscription:, membership_plan:, chargeable:)
-      contract = Membership::Contract.create!(
-        user:,
-        status: 'pending',
-      )
-      # transactions作成
-      Payment::Transaction.create!(
-        user:,
-        membership_contract: contract,
-        payment_type: 'credit_card',
-        payment_provider: 'stripe',
-        external_id: chargeable.remote_id,
-        chargeable: chargeable,
-        status: 'pending',
-        recurrence: true,
-      )
-      Payment::Subscription.create!(
-        user:,
-        membership_contract: contract,
-        subscribable: stripe_record_subscription,
-      )
-      Membership::ContractTerm.create!(
-        user:,
-        membership_contract: contract,
-        membership_plan:,
-        status: 'current',
-      )
+    def create_contract(user:, stripe_record_subscription:, membership_plan:, chargeable:, off_session:)
+      # 即時契約なのでステータスはactiveにする
+      if off_session
+        contract = Membership::Contract.create!(
+          user:,
+          status: 'active',
+        )
+        # transactions作成
+        Payment::Transaction.create!(
+          user:,
+          membership_contract: contract,
+          payment_type: 'credit_card',
+          payment_provider: 'stripe',
+          external_id: chargeable.remote_id,
+          chargeable: chargeable,
+          status: 'active',
+          recurrence: true,
+        )
+        Payment::Subscription.create!(
+          user:,
+          membership_contract: contract,
+          subscribable: stripe_record_subscription,
+        )
+        Membership::ContractTerm.create!(
+          user:,
+          membership_contract: contract,
+          membership_plan:,
+          start_at: Time.zone.now,
+          end_at: stripe_record_subscription.current_period_end,
+          status: 'current',
+        )
+      else
+        contract = Membership::Contract.create!(
+          user:,
+          status: 'pending',
+        )
+        # transactions作成
+        Payment::Transaction.create!(
+          user:,
+          membership_contract: contract,
+          payment_type: 'credit_card',
+          payment_provider: 'stripe',
+          external_id: chargeable.remote_id,
+          chargeable: chargeable,
+          status: 'pending',
+          recurrence: true,
+        )
+        Payment::Subscription.create!(
+          user:,
+          membership_contract: contract,
+          subscribable: stripe_record_subscription,
+        )
+        Membership::ContractTerm.create!(
+          user:,
+          membership_contract: contract,
+          membership_plan:,
+          status: 'current',
+          start_at: Time.zone.now,
+          end_at: stripe_record_subscription.current_period_end,
+        )
+      end
 
       contract
     end
 
-    def create_membership_users(user:, membership_plan:, contract:)
+    def create_membership_users(user:, membership_plan:, contract:, off_session:)
       membership_plan.memberships.each do |membership|
-        Membership::User.create!(
-          user:,
-          membership:,
-          status: 'pending',
-          membership_contract: contract,
-        )
+        if off_session
+          Membership::User.create!(
+            user:,
+            membership:,
+            status: 'active',
+            expires_at: contract.current_contract_term.end_at,
+            membership_contract: contract,
+          )
+        else
+          Membership::User.create!(
+            user:,
+            membership:,
+            status: 'pending',
+            membership_contract: contract,
+          )
+        end
       end
     end
 

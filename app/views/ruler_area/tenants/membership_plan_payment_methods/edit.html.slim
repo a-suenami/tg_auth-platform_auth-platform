@@ -31,11 +31,31 @@
             th 決済方法
             td = @plan_payment_method.payment_type
 
-      .uk-margin
-        = f.label :stripe_record_price_id, "Stripe価格", class: "uk-form-label"
-        .uk-form-controls
-          = f.select :stripe_record_price_id, options_from_collection_for_select(StripeRecord::Price.where(tenant_id: @tenant_id, deleted: false), :id, :name, @plan_payment_method.stripe_record_price_id), { prompt: 'Stripe価格を選択してください' }, class: "uk-select"
+      - if @plan_payment_method.payment_type == 'credit_card'
+        .uk-margin
+          h3 Stripe価格設定
+          - mapping = @plan_payment_method.plan_payment_method_mappings.first
+          - if mapping.present?
+            = form_with url: ruler_area_tenant_membership_plan_membership_plan_payment_method_path(@tenant_id, @membership_plan, @plan_payment_method), method: :patch, local: true do |mapping_form|
+              = mapping_form.hidden_field :mapping_id, value: mapping.id
+              .uk-margin
+                = mapping_form.label :priceable_id, "Stripe価格", class: "uk-form-label"
+                .uk-form-controls
+                  = mapping_form.select :priceable_id, options_from_collection_for_select(StripeRecord::Price.where(tenant_id: @tenant_id, deleted: false), :id, :name, mapping.priceable_id), { prompt: 'Stripe価格を選択してください' }, class: "uk-select"
 
-      .uk-margin-top
-        = f.submit "更新", class: "uk-button uk-button-primary"
-        = link_to "キャンセル", ruler_area_tenant_membership_plan_path(@tenant_id, @membership_plan), class: "uk-button uk-button-secondary uk-margin-left"
+              .uk-margin
+                = mapping_form.label :amount, "金額", class: "uk-form-label"
+                .uk-form-controls
+                  = mapping_form.number_field :amount, value: mapping.amount, class: "uk-input"
+
+              .uk-margin
+                = mapping_form.label :currency, "通貨", class: "uk-form-label"
+                .uk-form-controls
+                  = mapping_form.select :currency, options_for_select([['JPY', 'JPY'], ['USD', 'USD']], mapping.currency), {}, class: "uk-select"
+
+              .uk-margin-top
+                = mapping_form.submit "更新", class: "uk-button uk-button-primary"
+                = link_to "キャンセル", ruler_area_tenant_membership_plan_path(@tenant_id, @membership_plan), class: "uk-button uk-button-secondary uk-margin-left"
+          - else
+            p.uk-text-muted マッピングが設定されていません。
+            = link_to "キャンセル", ruler_area_tenant_membership_plan_path(@tenant_id, @membership_plan), class: "uk-button uk-button-secondary"

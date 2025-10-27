@@ -79,6 +79,49 @@ class StripeRecord
 
         Mangrove::Result.ok(setup_intent)
       end
+
+      sig { params(tenant_stripe_account: Tenant::StripeAccount, user: User).returns(Mangrove::Result[StripeRecord::SetupIntent, Stripe::StripeError]) }
+      def api_create_off_session_setup_intent(tenant_stripe_account:, user:)
+        if user.valid_stripe_card_payment_method.blank?
+          return Mangrove::Result.err(Stripe::StripeError.new('Valid stripe card payment method is blank'))
+        end
+
+        result = StripeRecord::Client::SetupIntent.create(
+          {
+            customer: user.payment_customer_id,
+            payment_method: user.valid_stripe_card_payment_method!.remote_id,
+            payment_method_types: ['card'],
+            usage: :off_session,
+            payment_method_options: {
+              card: {
+                request_three_d_secure: :automatic,
+              },
+            },
+          },
+          stripe_account_id: tenant_stripe_account.stripe_account_id_if_needed,
+          api_key: tenant_stripe_account.api_key,
+        )
+
+        return Mangrove::Result.err(result.err_inner) if result.is_a?(Mangrove::Result::Err)
+
+        remote_setup_intent = result.ok_inner
+
+        setup_intent = self.new(
+          user:,
+          activated_at: nil,
+          api_key_account: tenant_stripe_account.api_key_account,
+        )
+        # Connect のときだけ connect_account と charge_type を設定する
+        if tenant_stripe_account.stripe_account&.connect_account?
+          setup_intent.connect_account = tenant_stripe_account.stripe_account
+          setup_intent.charge_type     = tenant_stripe_account.charge_type
+        end
+        setup_intent.assign_remote_attributes(remote_setup_intent)
+
+        setup_intent.save!
+
+        Mangrove::Result.ok(setup_intent)
+      end
     end
 
     sig { params(remote_setup_intent: Stripe::SetupIntent).returns(StripeRecord::SetupIntent) }
@@ -131,6 +174,7 @@ class StripeRecord
         status_enum = StatusEnum.deserialize(remote_status)
         return CreateCardPaymentMethodResult::InvalidStatus.new(status_enum)
       end
+      self.status = remote_status
 
       # 3. PaymentMethod (card) を引く
       result = StripeRecord::Client::PaymentMethod.retrieve(remote_setup_intent.payment_method, stripe_account_id: self.stripe_account_id_if_needed, api_key:)
@@ -197,6 +241,42 @@ class StripeRecord
       end
 
       CreateCardPaymentMethodResult::Succeeded.new(payment_method)
+    end
+
+    class CompleteOffSessionCardResult
+      extend Mangrove::Enum
+
+      variants do
+        variant Succeeded, StripeRecord::SetupIntent
+        variant InvalidStatus, StatusEnum
+        variant StripeError, Stripe::StripeError
+      end
+    end
+
+    # off-sessionを取るようのSetupIntentの完了処理
+    sig { returns(CompleteOffSessionCardResult) }
+    def complete_off_session_card
+      T.must(self.user)
+      api_key_account = T.must(self.api_key_account)
+      api_key = T.must(api_key_account.api_key)
+
+      # 1. 最新の SetupIntent を引く
+      result = StripeRecord::Client::SetupIntent.retrieve(self.remote_id, stripe_account_id: self.stripe_account_id_if_needed, api_key:)
+      return CompleteOffSessionCardResult::StripeError.new(result.err_inner) if result.is_a?(Mangrove::Result::Err)
+
+      remote_setup_intent = result.ok_inner
+
+      # 2. 登録が完了していなければエラー
+      remote_status = remote_setup_intent.status
+      if remote_status != StripeRecord::SetupIntent::StatusEnum::Succeeded.serialize
+        status_enum = StatusEnum.deserialize(remote_status)
+        CompleteOffSessionCardResult::InvalidStatus.new(status_enum)
+      end
+      self.status = remote_status
+
+      self.save!
+
+      CompleteOffSessionCardResult::Succeeded.new(self)
     end
 
     sig { params(auto_save: T::Boolean).returns(Mangrove::Result[StripeRecord::SetupIntent, Stripe::StripeError]) }

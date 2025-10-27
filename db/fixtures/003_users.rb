@@ -35,3 +35,22 @@ User.seed do |s|
   s.enabled = true
   s.email_verified = true
 end
+
+User.seed do |s|
+  s.id = '04df2296-8d2c-4d78-8e74-334ad06ac7cc'
+  s.tenant_id = 'sample'
+  s.email = 'sakata+1@twogate.com'
+  s.password_digest = '$2a$12$qoBvSEWhOGWY93QJfyMwtOTWWbYc8ISN1VskGt49Ib4jPEqYVJO26'
+  s.enabled = true
+  s.phone_number = nil
+  s.sms_verified = false
+  s.email_verified = true
+  s.suppress_sms_verification = false
+  s.deleted = false
+  s.deleted_at = nil
+  s.password_reset_code = nil
+  s.captcha_score = nil
+  s.payment_provider = 'stripe'
+  s.payment_customer_id = 'cus_TII7mZlaM5cUfS'
+  s.default_payment_method = nil
+end
