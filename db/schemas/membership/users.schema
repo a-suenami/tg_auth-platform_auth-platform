@@ -4,6 +4,7 @@ create_table :membership_users, force: :cascade, id: :uuid, default: -> { 'gen_r
   t.references :membership, type: :uuid, null: false
   t.references :membership_group, type: :uuid, comment: '段階的プランの場合のグループ'
   t.references :membership_contract, type: :uuid, comment: 'メンバーシップ契約'
+  t.datetime :activated_at, comment: 'メンバーシップ有効化日時'
   t.datetime :expired_at, comment: 'メンバーシップの失効日時'
   t.string :status, comment: 'メンバーシップのステータス'
 

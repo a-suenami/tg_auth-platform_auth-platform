@@ -1,4 +1,4 @@
-\restrict MfgosvnNt5t07YDIkpwcgHChxXDU7BFRSU7goa9efQX1HAnCOabJAKqtfPdVnok
+\restrict nHvG3VFlZG2kjL7ZYENMoHq1ciBIeLxajoBBOLfwfGaGVvpy1xhDwdy3ian2hjN
 
 -- Dumped from database version 15.5
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -164,6 +164,7 @@ CREATE TABLE public.membership_contract_terms (
     user_id uuid NOT NULL,
     membership_contract_id uuid NOT NULL,
     membership_plan_id uuid NOT NULL,
+    payment_type character varying NOT NULL,
     status character varying NOT NULL,
     start_at timestamp(6) without time zone,
     end_at timestamp(6) without time zone,
@@ -177,6 +178,13 @@ CREATE TABLE public.membership_contract_terms (
 --
 
 COMMENT ON TABLE public.membership_contract_terms IS 'ユーザーのメンバーシップ契約の詳細,変更履歴';
+
+
+--
+-- Name: COLUMN membership_contract_terms.payment_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_contract_terms.payment_type IS '支払い方法: stripe, convenience, campaign_code, external_linkageなど';
 
 
 --
@@ -514,52 +522,6 @@ COMMENT ON COLUMN public.membership_plans."position" IS '表示順序';
 
 
 --
--- Name: membership_user_achievements; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.membership_user_achievements (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    user_id uuid NOT NULL,
-    membership_id uuid NOT NULL,
-    membership_plan_id uuid NOT NULL,
-    date date NOT NULL,
-    achievement_type character varying NOT NULL,
-    achievement_data jsonb DEFAULT '{}'::jsonb,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE membership_user_achievements; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.membership_user_achievements IS 'ユーザーのメンバーシップアチーブメント';
-
-
---
--- Name: COLUMN membership_user_achievements.date; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.membership_user_achievements.date IS '達成日';
-
-
---
--- Name: COLUMN membership_user_achievements.achievement_type; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.membership_user_achievements.achievement_type IS 'アチーブメントタイプ';
-
-
---
--- Name: COLUMN membership_user_achievements.achievement_data; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.membership_user_achievements.achievement_data IS 'アチーブメント詳細データ';
-
-
---
 -- Name: membership_users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -570,6 +532,7 @@ CREATE TABLE public.membership_users (
     membership_id uuid NOT NULL,
     membership_group_id uuid,
     membership_contract_id uuid,
+    activated_at timestamp(6) without time zone,
     expired_at timestamp(6) without time zone,
     status character varying,
     created_at timestamp(6) without time zone NOT NULL,
@@ -596,6 +559,13 @@ COMMENT ON COLUMN public.membership_users.membership_group_id IS '段階的プ�
 --
 
 COMMENT ON COLUMN public.membership_users.membership_contract_id IS 'メンバーシップ契約';
+
+
+--
+-- Name: COLUMN membership_users.activated_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_users.activated_at IS 'メンバーシップ有効化日時';
 
 
 --
@@ -1645,6 +1615,7 @@ CREATE TABLE public.tenant_stripe_accounts (
     fee_rate numeric(6,5),
     tax_rate_id character varying,
     webhook_secret character varying,
+    membership_grace_period_minutes integer DEFAULT 60 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1676,6 +1647,13 @@ COMMENT ON COLUMN public.tenant_stripe_accounts.tax_rate_id IS 'stripe の税率
 --
 
 COMMENT ON COLUMN public.tenant_stripe_accounts.webhook_secret IS 'Stripe webhookの署名検証用シークレット';
+
+
+--
+-- Name: COLUMN tenant_stripe_accounts.membership_grace_period_minutes; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_stripe_accounts.membership_grace_period_minutes IS 'メンバーシップの有効期限の猶予期間（分）';
 
 
 --
@@ -1929,14 +1907,6 @@ ALTER TABLE ONLY public.membership_plan_payment_methods
 
 ALTER TABLE ONLY public.membership_plans
     ADD CONSTRAINT membership_plans_pkey PRIMARY KEY (id);
-
-
---
--- Name: membership_user_achievements membership_user_achievements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.membership_user_achievements
-    ADD CONSTRAINT membership_user_achievements_pkey PRIMARY KEY (id);
 
 
 --
@@ -2279,20 +2249,6 @@ CREATE UNIQUE INDEX idx_membership_plan_components_plan_membership_uniq ON publi
 --
 
 CREATE UNIQUE INDEX idx_membership_plan_payment_methods_plan_type_uniq ON public.membership_plan_payment_methods USING btree (membership_plan_id, payment_type);
-
-
---
--- Name: idx_membership_user_achievements_date; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_membership_user_achievements_date ON public.membership_user_achievements USING btree (date);
-
-
---
--- Name: idx_membership_user_achievements_tenant_user_membership_date; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_membership_user_achievements_tenant_user_membership_date ON public.membership_user_achievements USING btree (tenant_id, user_id, membership_id, date);
 
 
 --
@@ -2650,34 +2606,6 @@ CREATE INDEX index_membership_plan_payment_methods_on_tenant_id ON public.member
 --
 
 CREATE INDEX index_membership_plans_on_tenant_id ON public.membership_plans USING btree (tenant_id);
-
-
---
--- Name: index_membership_user_achievements_on_membership_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_membership_user_achievements_on_membership_id ON public.membership_user_achievements USING btree (membership_id);
-
-
---
--- Name: index_membership_user_achievements_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_membership_user_achievements_on_membership_plan_id ON public.membership_user_achievements USING btree (membership_plan_id);
-
-
---
--- Name: index_membership_user_achievements_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_membership_user_achievements_on_tenant_id ON public.membership_user_achievements USING btree (tenant_id);
-
-
---
--- Name: index_membership_user_achievements_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_membership_user_achievements_on_user_id ON public.membership_user_achievements USING btree (user_id);
 
 
 --
@@ -3588,38 +3516,6 @@ ALTER TABLE ONLY public.membership_plans
 
 
 --
--- Name: membership_user_achievements fk_membership_user_achievements_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.membership_user_achievements
-    ADD CONSTRAINT fk_membership_user_achievements_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
-
-
---
--- Name: membership_user_achievements fk_membership_user_achievements_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.membership_user_achievements
-    ADD CONSTRAINT fk_membership_user_achievements_plans FOREIGN KEY (membership_plan_id) REFERENCES public.membership_plans(id);
-
-
---
--- Name: membership_user_achievements fk_membership_user_achievements_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.membership_user_achievements
-    ADD CONSTRAINT fk_membership_user_achievements_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: membership_user_achievements fk_membership_user_achievements_users; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.membership_user_achievements
-    ADD CONSTRAINT fk_membership_user_achievements_users FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
 -- Name: membership_users fk_membership_users_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4191,7 +4087,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict MfgosvnNt5t07YDIkpwcgHChxXDU7BFRSU7goa9efQX1HAnCOabJAKqtfPdVnok
+\unrestrict nHvG3VFlZG2kjL7ZYENMoHq1ciBIeLxajoBBOLfwfGaGVvpy1xhDwdy3ian2hjN
 
 SET search_path TO "$user", public;
 

@@ -194,6 +194,7 @@ module UserStripe
           user:,
           membership_contract: contract,
           membership_plan:,
+          payment_type: 'credit_card',
           start_at: Time.zone.now,
           end_at: stripe_record_subscription.current_period_end,
           status: 'current',
@@ -222,6 +223,7 @@ module UserStripe
           user:,
           membership_contract: contract,
           membership_plan:,
+          payment_type: 'credit_card',
           status: 'current',
           start_at: Time.zone.now,
           end_at: stripe_record_subscription.current_period_end,
@@ -238,7 +240,8 @@ module UserStripe
             user:,
             membership:,
             status: 'active',
-          expired_at: contract.current_contract_term.end_at,
+            activated_at: Time.zone.now,
+            expired_at: contract.current_contract_term.end_at,
             membership_contract: contract,
           )
         else

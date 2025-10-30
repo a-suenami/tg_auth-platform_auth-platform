@@ -107,6 +107,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "user_id", null: false
     t.uuid "membership_contract_id", null: false
     t.uuid "membership_plan_id", null: false
+    t.string "payment_type", null: false, comment: "支払い方法: stripe, convenience, campaign_code, external_linkageなど"
     t.string "status", null: false, comment: "ステータス"
     t.datetime "start_at", comment: "開始日時"
     t.datetime "end_at", comment: "終了日時"
@@ -203,30 +204,13 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_membership_plans_on_tenant_id"
   end
 
-  create_table "membership_user_achievements", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップアチーブメント", force: :cascade do |t|
-    t.citext "tenant_id", null: false
-    t.uuid "user_id", null: false
-    t.uuid "membership_id", null: false
-    t.uuid "membership_plan_id", null: false
-    t.date "date", null: false, comment: "達成日"
-    t.string "achievement_type", null: false, comment: "アチーブメントタイプ"
-    t.jsonb "achievement_data", default: {}, comment: "アチーブメント詳細データ"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["date"], name: "idx_membership_user_achievements_date"
-    t.index ["membership_id"], name: "index_membership_user_achievements_on_membership_id"
-    t.index ["membership_plan_id"], name: "index_membership_user_achievements_on_membership_plan_id"
-    t.index ["tenant_id", "user_id", "membership_id", "date"], name: "idx_membership_user_achievements_tenant_user_membership_date"
-    t.index ["tenant_id"], name: "index_membership_user_achievements_on_tenant_id"
-    t.index ["user_id"], name: "index_membership_user_achievements_on_user_id"
-  end
-
   create_table "membership_users", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップとUserの中間テーブル", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
     t.uuid "membership_id", null: false
     t.uuid "membership_group_id", comment: "段階的プランの場合のグループ"
     t.uuid "membership_contract_id", comment: "メンバーシップ契約"
+    t.datetime "activated_at", comment: "メンバーシップ有効化日時"
     t.datetime "expired_at", comment: "メンバーシップの失効日時"
     t.string "status", comment: "メンバーシップのステータス"
     t.datetime "created_at", null: false
@@ -753,6 +737,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.decimal "fee_rate", precision: 6, scale: 5, comment: "手数料率（100% ~ 0.001%）。stripe_account.controlling_platform がいる場合のみ（Connect）利用する。"
     t.string "tax_rate_id", comment: "stripe の税率ID"
     t.string "webhook_secret", comment: "Stripe webhookの署名検証用シークレット"
+    t.integer "membership_grace_period_minutes", default: 60, null: false, comment: "メンバーシップの有効期限の猶予期間（分）"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["stripe_account_id"], name: "index_tenant_stripe_accounts_on_stripe_account_id"
@@ -896,10 +881,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "membership_plan_payment_methods", "membership_plans", name: "fk_membership_plan_payment_methods_plans"
   add_foreign_key "membership_plan_payment_methods", "tenants", name: "fk_membership_plan_payment_methods_tenants"
   add_foreign_key "membership_plans", "tenants", name: "fk_membership_plans_tenants"
-  add_foreign_key "membership_user_achievements", "membership_plans", name: "fk_membership_user_achievements_plans"
-  add_foreign_key "membership_user_achievements", "memberships", name: "fk_membership_user_achievements_memberships"
-  add_foreign_key "membership_user_achievements", "tenants", name: "fk_membership_user_achievements_tenants"
-  add_foreign_key "membership_user_achievements", "users", name: "fk_membership_user_achievements_users"
   add_foreign_key "membership_users", "membership_contracts", name: "fk_membership_users_contracts"
   add_foreign_key "membership_users", "membership_groups", name: "fk_membership_users_groups"
   add_foreign_key "membership_users", "memberships", name: "fk_membership_users_memberships"

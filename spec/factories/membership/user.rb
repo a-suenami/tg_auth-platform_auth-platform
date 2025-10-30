@@ -6,6 +6,7 @@ FactoryBot.define do
     user { create(:user, tenant_id: self.tenant_id) }
     membership { create(:membership, tenant_id: self.tenant_id) }
     membership_contract { create(:membership_contract, tenant_id: self.tenant_id) }
+    activated_at { Time.current }
     expired_at { 1.year.from_now }
     status { 'active' }
 

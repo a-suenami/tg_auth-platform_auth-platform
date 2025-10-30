@@ -68,9 +68,9 @@ api_key_account: tenant_stripe_account.stripe_account,)
   # ---------------------------------------------------------------------------
   describe 'GET /api/v1/internal/me/card' do
     before do
-      # card_payment_gateway を Stripe に
+      # card_payment_gateway を Stripe に（匿名Structでenumを持つオブジェクトを返す）
       allow(current_tenant).to receive(:card_payment_gateway).and_return(
-        instance_double(Enumerize::Value::Tenant::CardPaymentGateway, enum: Tenant::CardPaymentGatewayEnum::Stripe),
+        Struct.new(:enum).new(Tenant::CardPaymentGatewayEnum::Stripe),
       )
       current_user_stripe_payment_method
       allow_any_instance_of(User).to receive(:valid_stripe_card_payment_method!).and_return(current_user_stripe_payment_method)
@@ -176,7 +176,7 @@ api_key_account: tenant_stripe_account.stripe_account,)
   describe 'DELETE /api/v1/internal/me/card' do
     before do
       allow(current_tenant).to receive(:card_payment_gateway).and_return(
-        instance_double(Enumerize::Value::Tenant::CardPaymentGateway, enum: Tenant::CardPaymentGatewayEnum::Stripe),
+        Struct.new(:enum).new(Tenant::CardPaymentGatewayEnum::Stripe),
       )
       allow_any_instance_of(User).to receive(:detach_stripe_payment_methods).and_return(Mangrove::Result.ok(true))
     end

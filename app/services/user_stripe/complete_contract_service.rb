@@ -107,6 +107,7 @@ module UserStripe
         )
         membership_user.update!(
           status: 'active',
+          activated_at: membership_user.activated_at || Time.zone.now,
           expired_at: next_period_end,
         )
       end

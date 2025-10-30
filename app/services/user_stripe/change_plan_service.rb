@@ -195,6 +195,7 @@ module UserStripe
         Membership::ContractTerm.create!(
           status: 'active',
           phase: 'current',
+          payment_type: 'credit_card',
           expires_at: next_period_end,
           activated_at: Time.zone.now,
         )
