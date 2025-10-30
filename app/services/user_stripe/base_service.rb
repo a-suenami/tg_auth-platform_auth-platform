@@ -26,7 +26,7 @@ module UserStripe
     end
 
     def stripe_api_key_config
-      { api_key: Tenant.current&.tenant_stripe_account&.stripe_account&.api_key&.secret_key, stripe_version: '2025-08-27.basil' }
+      AppStripe.configuration
     end
 
 

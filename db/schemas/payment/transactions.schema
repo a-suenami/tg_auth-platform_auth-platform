@@ -4,13 +4,11 @@ create_table :payment_transactions, force: :cascade, id: :uuid, default: -> { 'g
   t.references :membership_contract, type: :uuid, null: false, comment: 'メンバーシップ契約ID'
   t.string :payment_type, null: false, comment: '支払い方法: credit_card, convenience, campaign_code, external_linkage'
   t.string :payment_provider, comment: '決済プロバイダ: stripe, komojuなど'
-  t.string :external_id, comment: '外部システムのID'
-  t.string :phase, comment: 'phase: transactionの利用状態。プラン変更予定時はupcoming。current, upcoming, closed', null: false, default: 'current'
+
   t.datetime :activated_at, comment: '有効化日時'
-  t.datetime :expires_at, comment: '有効期限'
+  t.datetime :expired_at, comment: '失効日時'
   t.string :status, null: false, comment: 'ステータス'
   t.boolean :recurrence, null: false, default: false, comment: '定期課金フラグ: true=サブスクリプション, false=買い切り'
-  t.integer :revision, null: false, default: 1, comment: 'バージョン管理用'
   t.integer :paid_amount, null: false, default: 0, comment: '支払い済み金額'
 
   # 決済情報
@@ -18,8 +16,8 @@ create_table :payment_transactions, force: :cascade, id: :uuid, default: -> { 'g
 
   t.timestamps null: false
   t.index [:tenant_id, :user_id], name: :idx_payment_transactions_tenant_user, using: :btree
-  t.index :expires_at, name: :idx_payment_transactions_expires_at, using: :btree
-  t.index :external_id, name: :idx_payment_transactions_external_id, using: :btree
+  t.index :expired_at, name: :idx_payment_transactions_expired_at, using: :btree
+
 end
 
 add_foreign_key :payment_transactions, :tenants, name: :fk_payment_transactions_tenants

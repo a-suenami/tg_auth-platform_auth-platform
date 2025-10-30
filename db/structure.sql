@@ -1,3 +1,8 @@
+\restrict MfgosvnNt5t07YDIkpwcgHChxXDU7BFRSU7goa9efQX1HAnCOabJAKqtfPdVnok
+
+-- Dumped from database version 15.5
+-- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -203,7 +208,7 @@ CREATE TABLE public.membership_contracts (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
-    expires_at timestamp(6) without time zone,
+    expired_at timestamp(6) without time zone,
     cancel_at_period_end boolean DEFAULT false,
     status character varying DEFAULT 'active'::character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
@@ -219,10 +224,10 @@ COMMENT ON TABLE public.membership_contracts IS 'ユーザーのメンバーシ�
 
 
 --
--- Name: COLUMN membership_contracts.expires_at; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN membership_contracts.expired_at; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.membership_contracts.expires_at IS '有効期限';
+COMMENT ON COLUMN public.membership_contracts.expired_at IS '失効日時';
 
 
 --
@@ -565,7 +570,7 @@ CREATE TABLE public.membership_users (
     membership_id uuid NOT NULL,
     membership_group_id uuid,
     membership_contract_id uuid,
-    expires_at timestamp(6) without time zone,
+    expired_at timestamp(6) without time zone,
     status character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -594,10 +599,10 @@ COMMENT ON COLUMN public.membership_users.membership_contract_id IS 'メンバ�
 
 
 --
--- Name: COLUMN membership_users.expires_at; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN membership_users.expired_at; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.membership_users.expires_at IS 'メンバーシップの有効期限';
+COMMENT ON COLUMN public.membership_users.expired_at IS 'メンバーシップの失効日時';
 
 
 --
@@ -786,13 +791,10 @@ CREATE TABLE public.payment_transactions (
     membership_contract_id uuid NOT NULL,
     payment_type character varying NOT NULL,
     payment_provider character varying,
-    external_id character varying,
-    phase character varying DEFAULT 'current'::character varying NOT NULL,
     activated_at timestamp(6) without time zone,
-    expires_at timestamp(6) without time zone,
+    expired_at timestamp(6) without time zone,
     status character varying NOT NULL,
     recurrence boolean DEFAULT false NOT NULL,
-    revision integer DEFAULT 1 NOT NULL,
     paid_amount integer DEFAULT 0 NOT NULL,
     chargeable_id uuid,
     chargeable_type character varying,
@@ -830,20 +832,6 @@ COMMENT ON COLUMN public.payment_transactions.payment_provider IS '決済プロ�
 
 
 --
--- Name: COLUMN payment_transactions.external_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.payment_transactions.external_id IS '外部システムのID';
-
-
---
--- Name: COLUMN payment_transactions.phase; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.payment_transactions.phase IS 'phase: transactionの利用状態。プラン変更予定時はupcoming。current, upcoming, closed';
-
-
---
 -- Name: COLUMN payment_transactions.activated_at; Type: COMMENT; Schema: public; Owner: -
 --
 
@@ -851,10 +839,10 @@ COMMENT ON COLUMN public.payment_transactions.activated_at IS '有効化日時';
 
 
 --
--- Name: COLUMN payment_transactions.expires_at; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN payment_transactions.expired_at; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.payment_transactions.expires_at IS '有効期限';
+COMMENT ON COLUMN public.payment_transactions.expired_at IS '失効日時';
 
 
 --
@@ -869,13 +857,6 @@ COMMENT ON COLUMN public.payment_transactions.status IS 'ステータス';
 --
 
 COMMENT ON COLUMN public.payment_transactions.recurrence IS '定期課金フラグ: true=サブスクリプション, false=買い切り';
-
-
---
--- Name: COLUMN payment_transactions.revision; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.payment_transactions.revision IS 'バージョン管理用';
 
 
 --
@@ -2266,10 +2247,10 @@ CREATE UNIQUE INDEX idx_linked_applications_tenant_user_oauth_application_uniq O
 
 
 --
--- Name: idx_membership_contracts_expires_at; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_membership_contracts_expired_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_membership_contracts_expires_at ON public.membership_contracts USING btree (expires_at);
+CREATE INDEX idx_membership_contracts_expired_at ON public.membership_contracts USING btree (expired_at);
 
 
 --
@@ -2385,17 +2366,10 @@ CREATE INDEX idx_payment_subscriptions_tenant_user ON public.payment_subscriptio
 
 
 --
--- Name: idx_payment_transactions_expires_at; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_payment_transactions_expired_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_payment_transactions_expires_at ON public.payment_transactions USING btree (expires_at);
-
-
---
--- Name: idx_payment_transactions_external_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_payment_transactions_external_id ON public.payment_transactions USING btree (external_id);
+CREATE INDEX idx_payment_transactions_expired_at ON public.payment_transactions USING btree (expired_at);
 
 
 --
@@ -4216,6 +4190,8 @@ ALTER TABLE ONLY public.users
 --
 -- PostgreSQL database dump complete
 --
+
+\unrestrict MfgosvnNt5t07YDIkpwcgHChxXDU7BFRSU7goa9efQX1HAnCOabJAKqtfPdVnok
 
 SET search_path TO "$user", public;
 

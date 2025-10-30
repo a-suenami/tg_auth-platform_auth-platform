@@ -34,7 +34,7 @@ module UserStripe
 
         # Contractの有効期限を設定
         contract.update!(
-          expires_at: next_period_end,
+          expired_at: next_period_end,
         )
 
         # Membership::Userのステータスを有効に変更
@@ -107,7 +107,7 @@ module UserStripe
         )
         membership_user.update!(
           status: 'active',
-          expires_at: next_period_end,
+          expired_at: next_period_end,
         )
       end
     end

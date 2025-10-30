@@ -23,9 +23,9 @@ RSpec.describe '[ API::V1::Internal::MembershipController API ]' do
   let!(:plan_component_inactive) { create(:membership_plan_component, membership_plan: membership_plan_inactive, membership: inactive_membership, tenant_id: current_tenant.id) }
 
   # メンバーシップ契約
-  let!(:active_contract_with_group) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'active', expires_at: 1.year.from_now) }
-  let!(:active_contract_without_group) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'active', expires_at: 1.year.from_now) }
-  let!(:inactive_contract) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'pending', expires_at: 1.year.from_now) }
+  let!(:active_contract_with_group) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'active', expired_at: 1.year.from_now) }
+  let!(:active_contract_without_group) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'active', expired_at: 1.year.from_now) }
+  let!(:inactive_contract) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'pending', expired_at: 1.year.from_now) }
 
   # メンバーシップユーザー（アクティブ）
   let!(:active_membership_user_with_group) {

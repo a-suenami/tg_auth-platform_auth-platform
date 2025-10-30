@@ -15,7 +15,7 @@ module Payment
 
     validates :payment_type, presence: true
     validates :status, presence: true
-    validates :phase, presence: true
+
     validates :paid_amount, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
     enum payment_type: {
@@ -30,11 +30,7 @@ module Payment
       komoju: 'komoju',
     }
 
-    enum phase: {
-      current: 'current',
-      upcoming: 'upcoming',
-      closed: 'closed',
-    }
+
 
     enum status: {
       pending: 'pending',
@@ -46,7 +42,6 @@ module Payment
     scope :active, -> { where(status: :active) }
     scope :recurrent, -> { where(recurrence: true) }
     scope :non_recurrent, -> { where(recurrence: false) }
-    scope :current_phase, -> { where(phase: :current) }
-    scope :upcoming_phase, -> { where(phase: :upcoming) }
+
   end
 end

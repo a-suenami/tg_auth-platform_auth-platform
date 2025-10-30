@@ -33,9 +33,6 @@ class Payment::Transaction
     def payment_types; end
 
     sig { returns(T::Hash[T.any(String, Symbol), String]) }
-    def phases; end
-
-    sig { returns(T::Hash[T.any(String, Symbol), String]) }
     def statuses; end
   end
 
@@ -448,12 +445,6 @@ class Payment::Transaction
     def canceled?; end
 
     sig { void }
-    def closed!; end
-
-    sig { returns(T::Boolean) }
-    def closed?; end
-
-    sig { void }
     def convenience!; end
 
     sig { returns(T::Boolean) }
@@ -464,12 +455,6 @@ class Payment::Transaction
 
     sig { returns(T::Boolean) }
     def credit_card?; end
-
-    sig { void }
-    def current!; end
-
-    sig { returns(T::Boolean) }
-    def current?; end
 
     sig { void }
     def expired!; end
@@ -500,12 +485,6 @@ class Payment::Transaction
 
     sig { returns(T::Boolean) }
     def stripe?; end
-
-    sig { void }
-    def upcoming!; end
-
-    sig { returns(T::Boolean) }
-    def upcoming?; end
   end
 
   module GeneratedAssociationMethods
@@ -629,9 +608,6 @@ class Payment::Transaction
     def canceled(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-    def closed(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def convenience(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
@@ -639,12 +615,6 @@ class Payment::Transaction
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def credit_card(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-    def current(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-    def current_phase(*args, &blk); end
 
     sig { params(value: T::Boolean).returns(PrivateAssociationRelation) }
     def distinct(value = true); end
@@ -759,16 +729,10 @@ class Payment::Transaction
     def not_canceled(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-    def not_closed(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def not_convenience(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def not_credit_card(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-    def not_current(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def not_expired(*args, &blk); end
@@ -784,9 +748,6 @@ class Payment::Transaction
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def not_stripe(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-    def not_upcoming(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def null_relation?(*args, &blk); end
@@ -859,12 +820,6 @@ class Payment::Transaction
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def unscope(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-    def upcoming(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-    def upcoming_phase(*args, &blk); end
-
     sig do
       params(
         attributes: Hash,
@@ -893,13 +848,10 @@ class Payment::Transaction
         membership_contract_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         payment_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         payment_provider: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        external_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        phase: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         activated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        expires_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        expired_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         recurrence: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        revision: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         paid_amount: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         chargeable_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         chargeable_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -908,7 +860,7 @@ class Payment::Transaction
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateAssociationRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_contract_id: nil, payment_type: nil, payment_provider: nil, external_id: nil, phase: nil, activated_at: nil, expires_at: nil, status: nil, recurrence: nil, revision: nil, paid_amount: nil, chargeable_id: nil, chargeable_type: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_contract_id: nil, payment_type: nil, payment_provider: nil, activated_at: nil, expired_at: nil, status: nil, recurrence: nil, paid_amount: nil, chargeable_id: nil, chargeable_type: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -1099,94 +1051,49 @@ class Payment::Transaction
     def created_at_will_change!; end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def expires_at; end
+    def expired_at; end
 
     sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def expires_at=(value); end
+    def expired_at=(value); end
 
     sig { returns(T::Boolean) }
-    def expires_at?; end
+    def expired_at?; end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def expires_at_before_last_save; end
+    def expired_at_before_last_save; end
 
     sig { returns(T.untyped) }
-    def expires_at_before_type_cast; end
+    def expired_at_before_type_cast; end
 
     sig { returns(T::Boolean) }
-    def expires_at_came_from_user?; end
+    def expired_at_came_from_user?; end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def expires_at_change; end
+    def expired_at_change; end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def expires_at_change_to_be_saved; end
+    def expired_at_change_to_be_saved; end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def expires_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+    def expired_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def expires_at_in_database; end
+    def expired_at_in_database; end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def expires_at_previous_change; end
+    def expired_at_previous_change; end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def expires_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+    def expired_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def expires_at_previously_was; end
+    def expired_at_previously_was; end
 
     sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def expires_at_was; end
+    def expired_at_was; end
 
     sig { void }
-    def expires_at_will_change!; end
-
-    sig { returns(T.nilable(::String)) }
-    def external_id; end
-
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def external_id=(value); end
-
-    sig { returns(T::Boolean) }
-    def external_id?; end
-
-    sig { returns(T.nilable(::String)) }
-    def external_id_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def external_id_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def external_id_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def external_id_change; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def external_id_change_to_be_saved; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def external_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def external_id_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def external_id_previous_change; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def external_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def external_id_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def external_id_was; end
-
-    sig { void }
-    def external_id_will_change!; end
+    def expired_at_will_change!; end
 
     sig { returns(::String) }
     def id; end
@@ -1458,51 +1365,6 @@ class Payment::Transaction
     sig { void }
     def payment_type_will_change!; end
 
-    sig { returns(::String) }
-    def phase; end
-
-    sig { params(value: T.any(::String, ::Symbol)).returns(T.any(::String, ::Symbol)) }
-    def phase=(value); end
-
-    sig { returns(T::Boolean) }
-    def phase?; end
-
-    sig { returns(T.nilable(::String)) }
-    def phase_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def phase_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def phase_came_from_user?; end
-
-    sig { returns(T.nilable([::String, ::String])) }
-    def phase_change; end
-
-    sig { returns(T.nilable([::String, ::String])) }
-    def phase_change_to_be_saved; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def phase_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def phase_in_database; end
-
-    sig { returns(T.nilable([::String, ::String])) }
-    def phase_previous_change; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def phase_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def phase_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def phase_was; end
-
-    sig { void }
-    def phase_will_change!; end
-
     sig { returns(T::Boolean) }
     def recurrence; end
 
@@ -1561,10 +1423,7 @@ class Payment::Transaction
     def restore_created_at!; end
 
     sig { void }
-    def restore_expires_at!; end
-
-    sig { void }
-    def restore_external_id!; end
+    def restore_expired_at!; end
 
     sig { void }
     def restore_id!; end
@@ -1585,13 +1444,7 @@ class Payment::Transaction
     def restore_payment_type!; end
 
     sig { void }
-    def restore_phase!; end
-
-    sig { void }
     def restore_recurrence!; end
-
-    sig { void }
-    def restore_revision!; end
 
     sig { void }
     def restore_status!; end
@@ -1604,51 +1457,6 @@ class Payment::Transaction
 
     sig { void }
     def restore_user_id!; end
-
-    sig { returns(::Integer) }
-    def revision; end
-
-    sig { params(value: ::Integer).returns(::Integer) }
-    def revision=(value); end
-
-    sig { returns(T::Boolean) }
-    def revision?; end
-
-    sig { returns(T.nilable(::Integer)) }
-    def revision_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def revision_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def revision_came_from_user?; end
-
-    sig { returns(T.nilable([::Integer, ::Integer])) }
-    def revision_change; end
-
-    sig { returns(T.nilable([::Integer, ::Integer])) }
-    def revision_change_to_be_saved; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def revision_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::Integer)) }
-    def revision_in_database; end
-
-    sig { returns(T.nilable([::Integer, ::Integer])) }
-    def revision_previous_change; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def revision_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::Integer)) }
-    def revision_previously_was; end
-
-    sig { returns(T.nilable(::Integer)) }
-    def revision_was; end
-
-    sig { void }
-    def revision_will_change!; end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_activated_at; end
@@ -1675,16 +1483,10 @@ class Payment::Transaction
     def saved_change_to_created_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def saved_change_to_expires_at; end
+    def saved_change_to_expired_at; end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def saved_change_to_expires_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_external_id; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def saved_change_to_external_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+    def saved_change_to_expired_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_id; end
@@ -1722,23 +1524,11 @@ class Payment::Transaction
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_payment_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-    sig { returns(T.nilable([::String, ::String])) }
-    def saved_change_to_phase; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def saved_change_to_phase?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
     sig { returns(T.nilable([T::Boolean, T::Boolean])) }
     def saved_change_to_recurrence; end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_recurrence?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable([::Integer, ::Integer])) }
-    def saved_change_to_revision; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def saved_change_to_revision?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_status; end
@@ -1957,10 +1747,7 @@ class Payment::Transaction
     def will_save_change_to_created_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def will_save_change_to_expires_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def will_save_change_to_external_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+    def will_save_change_to_expired_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
@@ -1981,13 +1768,7 @@ class Payment::Transaction
     def will_save_change_to_payment_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def will_save_change_to_phase?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_recurrence?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def will_save_change_to_revision?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_status?(from: T.unsafe(nil), to: T.unsafe(nil)); end
@@ -2022,9 +1803,6 @@ class Payment::Transaction
     def canceled(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-    def closed(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def convenience(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
@@ -2032,12 +1810,6 @@ class Payment::Transaction
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def credit_card(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-    def current(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-    def current_phase(*args, &blk); end
 
     sig { params(value: T::Boolean).returns(PrivateRelation) }
     def distinct(value = true); end
@@ -2118,16 +1890,10 @@ class Payment::Transaction
     def not_canceled(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-    def not_closed(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def not_convenience(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def not_credit_card(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-    def not_current(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def not_expired(*args, &blk); end
@@ -2143,9 +1909,6 @@ class Payment::Transaction
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def not_stripe(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-    def not_upcoming(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def null_relation?(*args, &blk); end
@@ -2218,12 +1981,6 @@ class Payment::Transaction
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def unscope(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-    def upcoming(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-    def upcoming_phase(*args, &blk); end
-
     sig { returns(PrivateRelationWhereChain) }
     sig do
       params(
@@ -2234,13 +1991,10 @@ class Payment::Transaction
         membership_contract_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         payment_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         payment_provider: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        external_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        phase: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         activated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        expires_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        expired_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         recurrence: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        revision: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         paid_amount: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         chargeable_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         chargeable_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -2249,7 +2003,7 @@ class Payment::Transaction
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_contract_id: nil, payment_type: nil, payment_provider: nil, external_id: nil, phase: nil, activated_at: nil, expires_at: nil, status: nil, recurrence: nil, revision: nil, paid_amount: nil, chargeable_id: nil, chargeable_type: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_contract_id: nil, payment_type: nil, payment_provider: nil, activated_at: nil, expired_at: nil, status: nil, recurrence: nil, paid_amount: nil, chargeable_id: nil, chargeable_type: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

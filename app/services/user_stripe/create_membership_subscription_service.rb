@@ -181,7 +181,6 @@ module UserStripe
           membership_contract: contract,
           payment_type: 'credit_card',
           payment_provider: 'stripe',
-          external_id: chargeable.remote_id,
           chargeable: chargeable,
           status: 'active',
           recurrence: true,
@@ -210,7 +209,6 @@ module UserStripe
           membership_contract: contract,
           payment_type: 'credit_card',
           payment_provider: 'stripe',
-          external_id: chargeable.remote_id,
           chargeable: chargeable,
           status: 'pending',
           recurrence: true,
@@ -240,7 +238,7 @@ module UserStripe
             user:,
             membership:,
             status: 'active',
-            expires_at: contract.current_contract_term.end_at,
+          expired_at: contract.current_contract_term.end_at,
             membership_contract: contract,
           )
         else
