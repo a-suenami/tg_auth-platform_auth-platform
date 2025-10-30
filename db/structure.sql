@@ -1,4 +1,4 @@
-\restrict nHvG3VFlZG2kjL7ZYENMoHq1ciBIeLxajoBBOLfwfGaGVvpy1xhDwdy3ian2hjN
+\restrict WAkJv1Wdu1fneOebsB8oqhjBUv7aEzGaBhqDi4QaDKHh6BOIVuy2Q3ApOSvSSOJ
 
 -- Dumped from database version 15.5
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -184,7 +184,7 @@ COMMENT ON TABLE public.membership_contract_terms IS 'ユーザーのメンバ�
 -- Name: COLUMN membership_contract_terms.payment_type; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.membership_contract_terms.payment_type IS '支払い方法: stripe, convenience, campaign_code, external_linkageなど';
+COMMENT ON COLUMN public.membership_contract_terms.payment_type IS '支払い方法: credit_card, convenience, campaign_code, external_linkageなど';
 
 
 --
@@ -4087,7 +4087,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict nHvG3VFlZG2kjL7ZYENMoHq1ciBIeLxajoBBOLfwfGaGVvpy1xhDwdy3ian2hjN
+\unrestrict WAkJv1Wdu1fneOebsB8oqhjBUv7aEzGaBhqDi4QaDKHh6BOIVuy2Q3ApOSvSSOJ
 
 SET search_path TO "$user", public;
 

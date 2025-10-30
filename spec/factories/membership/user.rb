@@ -16,7 +16,7 @@ FactoryBot.define do
 
     trait :expired do
       expired_at { 1.day.ago }
-      status { 'expired' }
+      status { 'closed' }
     end
   end
 end

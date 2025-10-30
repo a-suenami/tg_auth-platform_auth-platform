@@ -9,7 +9,6 @@ class Membership::Plan < ApplicationRecord
   has_many :plan_payment_methods, class_name: 'Membership::PlanPaymentMethod', dependent: :destroy, inverse_of: :membership_plan
   has_many :plan_components, class_name: 'Membership::PlanComponent', dependent: :destroy, inverse_of: :membership_plan
   has_many :memberships, through: :plan_components
-  has_many :user_achievements, class_name: 'Membership::UserAchievement', dependent: :destroy
   has_many :stripe_trial_histories, class_name: 'StripeRecord::TrialHistory', dependent: :destroy, inverse_of: :membership_plan
 
   accepts_nested_attributes_for :plan_payment_methods, allow_destroy: true, reject_if: :all_blank

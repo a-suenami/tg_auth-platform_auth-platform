@@ -44,7 +44,7 @@ module UserStripe
 
 
     def handle_invoice_paid_on_subscription_cycle(_type:)
-      UserStripe::UpdateMembershipSubscriptionService.new(event: @event).execute
+      UserStripe::RenewMembershipSubscriptionService.new(event: @event).execute
     end
 
 

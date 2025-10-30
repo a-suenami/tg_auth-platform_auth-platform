@@ -107,7 +107,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "user_id", null: false
     t.uuid "membership_contract_id", null: false
     t.uuid "membership_plan_id", null: false
-    t.string "payment_type", null: false, comment: "支払い方法: stripe, convenience, campaign_code, external_linkageなど"
+    t.string "payment_type", null: false, comment: "支払い方法: credit_card, convenience, campaign_code, external_linkageなど"
     t.string "status", null: false, comment: "ステータス"
     t.datetime "start_at", comment: "開始日時"
     t.datetime "end_at", comment: "終了日時"

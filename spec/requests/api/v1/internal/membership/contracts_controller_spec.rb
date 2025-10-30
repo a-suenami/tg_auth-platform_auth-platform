@@ -53,10 +53,10 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
     create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'pending', membership: membership_for_pending, membership_contract: pending_contract)
   }
   let!(:expired_membership_user) {
-    create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'expired', membership: membership_for_expired, membership_contract: expired_contract)
+    create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'closed', membership: membership_for_expired, membership_contract: expired_contract)
   }
   let!(:canceled_membership_user) {
-    create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'canceled', membership: membership_for_canceled, membership_contract: canceled_contract)
+    create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'closed', membership: membership_for_canceled, membership_contract: canceled_contract)
   }
 
   before do

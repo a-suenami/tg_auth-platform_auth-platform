@@ -476,20 +476,6 @@ class Membership
     def tenant_previously_changed?; end
 
     sig { returns(T::Array[T.untyped]) }
-    def user_achievement_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def user_achievement_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `Membership` class because it declared `has_many :user_achievements`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Membership::UserAchievement::PrivateCollectionProxy) }
-    def user_achievements; end
-
-    sig { params(value: T::Enumerable[::Membership::UserAchievement]).void }
-    def user_achievements=(value); end
-
-    sig { returns(T::Array[T.untyped]) }
     def user_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
