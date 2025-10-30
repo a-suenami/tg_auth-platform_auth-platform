@@ -124,6 +124,9 @@ module GeneratedPathHelpersModule
   def cancel_api_v1_internal_membership_contract_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def complete_off_session_card_api_v1_internal_me_card_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_contact_address_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }

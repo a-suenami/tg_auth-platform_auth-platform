@@ -15,6 +15,7 @@ Rails.application.routes.draw do
             member do
               post :setup_intent, action: :create_setup_intent
               post :off_session_setup_intent, action: :create_off_session_setup_intent
+              post :complete_off_session_card, action: :complete_off_session_card
             end
           end
         end

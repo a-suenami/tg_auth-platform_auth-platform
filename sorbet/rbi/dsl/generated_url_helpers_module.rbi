@@ -124,6 +124,9 @@ module GeneratedUrlHelpersModule
   def cancel_api_v1_internal_membership_contract_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def complete_off_session_card_api_v1_internal_me_card_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_contact_address_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
