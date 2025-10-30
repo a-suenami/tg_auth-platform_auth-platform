@@ -11,7 +11,6 @@ class Membership < ApplicationRecord
   has_many :membership_plans, through: :plan_components, source: :membership_plan
   has_many :membership_users, class_name: 'Membership::User', dependent: :destroy
   has_many :users, through: :membership_users
-  has_many :user_achievements, class_name: 'Membership::UserAchievement', dependent: :destroy
 
   validates :name, presence: true
   validates :display_name, presence: true

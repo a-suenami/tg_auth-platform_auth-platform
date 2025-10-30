@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :membership_contract, class: 'Membership::Contract' do
     tenant_id { create(:tenant).id }
     user { create(:user, tenant_id: self.tenant_id) }
-    expires_at { nil }
+    expired_at { nil }
     cancel_at_period_end { false }
     status { 'active' }
 
@@ -14,7 +14,7 @@ FactoryBot.define do
 
     trait :expired do
       status { 'expired' }
-      expires_at { 1.day.ago }
+      expired_at { 1.day.ago }
     end
 
     trait :canceled do

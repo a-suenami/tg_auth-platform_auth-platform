@@ -470,7 +470,7 @@ priceable: stripe_record_price_platinum, amount: trial_plan.amount, currency: 'J
         }
         let(:existing_transaction) {
           create(:payment_transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: existing_contract,
-payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'dummy_external_id', chargeable: existing_stripe_record_subscription, status: 'pending', recurrence: true,)
+payment_type: 'credit_card', payment_provider: 'stripe', chargeable: existing_stripe_record_subscription, status: 'pending', recurrence: true,)
         }
         let(:existing_stripe_record_subscription) {
           create(:stripe_record_subscription, tenant_id: current_tenant.id, user: current_user, price: stripe_record_price_platinum, product: stripe_record_product_platinum, status: :incomplete,
@@ -504,7 +504,7 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
         }
         let(:existing_transaction) {
           create(:payment_transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: existing_contract,
-payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'dummy_external_id', chargeable: existing_stripe_record_subscription, status: 'pending', recurrence: true,)
+payment_type: 'credit_card', payment_provider: 'stripe', chargeable: existing_stripe_record_subscription, status: 'pending', recurrence: true,)
         }
         let(:existing_stripe_record_subscription) {
           create(:stripe_record_subscription, tenant_id: current_tenant.id, user: current_user, price: stripe_record_price_platinum, product: stripe_record_product_platinum, status: :incomplete,
@@ -643,7 +643,7 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
     let(:stripe_record_subscription) { create(:stripe_record_subscription, tenant_id: current_tenant.id, user: current_user, price: stripe_record_price_platinum) }
     let(:payment_subscription) { create(:payment_subscription, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, subscribable: stripe_record_subscription) }
     let(:payment_transaction) {
-      create(:payment_transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, payment_type: 'credit_card', payment_provider: 'stripe', external_id: 'pi_test123',
+      create(:payment_transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: contract, payment_type: 'credit_card', payment_provider: 'stripe',
      chargeable: stripe_record_payment_intent, status: 'pending', recurrence: true,)
     }
     let(:stripe_record_invoice) { create(:stripe_record_invoice, tenant_id: current_tenant.id, user: current_user) }
@@ -711,12 +711,12 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
           is_expected.to eq 200
         }.to change { contract.reload.status }.from('pending').to('active')
           .and change { payment_transaction.reload.status }.from('pending').to('active')
-          .and change { contract.reload.expires_at }.from(nil).to(be_within(1.second).of(1.month.from_now))
+          .and change { contract.reload.expired_at }.from(nil).to(be_within(1.second).of(1.month.from_now))
 
         json_response = response.parsed_body
         expect(json_response['id']).to eq(contract.id)
         expect(json_response['status']).to eq('active')
-        expect(json_response['expires_at']).to be_present
+        expect(json_response['expired_at']).to be_present
       end
 
       it 'creates active membership users' do
@@ -727,14 +727,14 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
         expect(membership_users.count).to eq(leveled_membership_plan_platinum.memberships.count)
         membership_users.each do |membership_user|
           expect(membership_user.status).to eq('active')
-          expect(membership_user.expires_at).to be_present
+          expect(membership_user.expired_at).to be_present
         end
       end
 
       it 'returns correct response format' do
         is_expected.to eq 200
         json_response = response.parsed_body
-        expect(json_response).to include('id', 'status', 'created_at', 'updated_at', 'expires_at')
+        expect(json_response).to include('id', 'status', 'created_at', 'updated_at', 'expired_at')
         expect(json_response['status']).to eq('active')
       end
     end
@@ -828,7 +828,7 @@ api_key_account: tenant_stripe_account.stripe_account,)
                membership_contract: contract,
                payment_type: 'credit_card',
                payment_provider: 'stripe',
-               external_id: 'seti_test123',
+               # external id is carried by chargeable
                chargeable: stripe_record_setup_intent,
                status: 'pending',
                recurrence: true,)

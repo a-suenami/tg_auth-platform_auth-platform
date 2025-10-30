@@ -19,7 +19,6 @@ class Tenant < ApplicationRecord
   has_many :membership_plans, class_name: 'Membership::Plan', dependent: :destroy
   has_many :membership_contracts, class_name: 'Membership::Contract', dependent: :destroy
   has_many :payment_transactions, class_name: 'Payment::Transaction', dependent: :destroy
-  has_many :membership_user_achievements, class_name: 'Membership::UserAchievement', dependent: :destroy
 
   class CardPaymentGatewayEnum < T::Enum
     enums do

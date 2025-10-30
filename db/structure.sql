@@ -1,3 +1,8 @@
+\restrict WAkJv1Wdu1fneOebsB8oqhjBUv7aEzGaBhqDi4QaDKHh6BOIVuy2Q3ApOSvSSOJ
+
+-- Dumped from database version 15.5
+-- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -159,6 +164,7 @@ CREATE TABLE public.membership_contract_terms (
     user_id uuid NOT NULL,
     membership_contract_id uuid NOT NULL,
     membership_plan_id uuid NOT NULL,
+    payment_type character varying NOT NULL,
     status character varying NOT NULL,
     start_at timestamp(6) without time zone,
     end_at timestamp(6) without time zone,
@@ -172,6 +178,13 @@ CREATE TABLE public.membership_contract_terms (
 --
 
 COMMENT ON TABLE public.membership_contract_terms IS 'ユーザーのメンバーシップ契約の詳細,変更履歴';
+
+
+--
+-- Name: COLUMN membership_contract_terms.payment_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_contract_terms.payment_type IS '支払い方法: credit_card, convenience, campaign_code, external_linkageなど';
 
 
 --
@@ -203,7 +216,7 @@ CREATE TABLE public.membership_contracts (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
-    expires_at timestamp(6) without time zone,
+    expired_at timestamp(6) without time zone,
     cancel_at_period_end boolean DEFAULT false,
     status character varying DEFAULT 'active'::character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
@@ -219,10 +232,10 @@ COMMENT ON TABLE public.membership_contracts IS 'ユーザーのメンバーシ�
 
 
 --
--- Name: COLUMN membership_contracts.expires_at; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN membership_contracts.expired_at; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.membership_contracts.expires_at IS '有効期限';
+COMMENT ON COLUMN public.membership_contracts.expired_at IS '失効日時';
 
 
 --
@@ -509,52 +522,6 @@ COMMENT ON COLUMN public.membership_plans."position" IS '表示順序';
 
 
 --
--- Name: membership_user_achievements; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.membership_user_achievements (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    tenant_id public.citext NOT NULL,
-    user_id uuid NOT NULL,
-    membership_id uuid NOT NULL,
-    membership_plan_id uuid NOT NULL,
-    date date NOT NULL,
-    achievement_type character varying NOT NULL,
-    achievement_data jsonb DEFAULT '{}'::jsonb,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: TABLE membership_user_achievements; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.membership_user_achievements IS 'ユーザーのメンバーシップアチーブメント';
-
-
---
--- Name: COLUMN membership_user_achievements.date; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.membership_user_achievements.date IS '達成日';
-
-
---
--- Name: COLUMN membership_user_achievements.achievement_type; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.membership_user_achievements.achievement_type IS 'アチーブメントタイプ';
-
-
---
--- Name: COLUMN membership_user_achievements.achievement_data; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.membership_user_achievements.achievement_data IS 'アチーブメント詳細データ';
-
-
---
 -- Name: membership_users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -565,7 +532,8 @@ CREATE TABLE public.membership_users (
     membership_id uuid NOT NULL,
     membership_group_id uuid,
     membership_contract_id uuid,
-    expires_at timestamp(6) without time zone,
+    activated_at timestamp(6) without time zone,
+    expired_at timestamp(6) without time zone,
     status character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -594,10 +562,17 @@ COMMENT ON COLUMN public.membership_users.membership_contract_id IS 'メンバ�
 
 
 --
--- Name: COLUMN membership_users.expires_at; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN membership_users.activated_at; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.membership_users.expires_at IS 'メンバーシップの有効期限';
+COMMENT ON COLUMN public.membership_users.activated_at IS 'メンバーシップ有効化日時';
+
+
+--
+-- Name: COLUMN membership_users.expired_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.membership_users.expired_at IS 'メンバーシップの失効日時';
 
 
 --
@@ -786,13 +761,10 @@ CREATE TABLE public.payment_transactions (
     membership_contract_id uuid NOT NULL,
     payment_type character varying NOT NULL,
     payment_provider character varying,
-    external_id character varying,
-    phase character varying DEFAULT 'current'::character varying NOT NULL,
     activated_at timestamp(6) without time zone,
-    expires_at timestamp(6) without time zone,
+    expired_at timestamp(6) without time zone,
     status character varying NOT NULL,
     recurrence boolean DEFAULT false NOT NULL,
-    revision integer DEFAULT 1 NOT NULL,
     paid_amount integer DEFAULT 0 NOT NULL,
     chargeable_id uuid,
     chargeable_type character varying,
@@ -830,20 +802,6 @@ COMMENT ON COLUMN public.payment_transactions.payment_provider IS '決済プロ�
 
 
 --
--- Name: COLUMN payment_transactions.external_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.payment_transactions.external_id IS '外部システムのID';
-
-
---
--- Name: COLUMN payment_transactions.phase; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.payment_transactions.phase IS 'phase: transactionの利用状態。プラン変更予定時はupcoming。current, upcoming, closed';
-
-
---
 -- Name: COLUMN payment_transactions.activated_at; Type: COMMENT; Schema: public; Owner: -
 --
 
@@ -851,10 +809,10 @@ COMMENT ON COLUMN public.payment_transactions.activated_at IS '有効化日時';
 
 
 --
--- Name: COLUMN payment_transactions.expires_at; Type: COMMENT; Schema: public; Owner: -
+-- Name: COLUMN payment_transactions.expired_at; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.payment_transactions.expires_at IS '有効期限';
+COMMENT ON COLUMN public.payment_transactions.expired_at IS '失効日時';
 
 
 --
@@ -869,13 +827,6 @@ COMMENT ON COLUMN public.payment_transactions.status IS 'ステータス';
 --
 
 COMMENT ON COLUMN public.payment_transactions.recurrence IS '定期課金フラグ: true=サブスクリプション, false=買い切り';
-
-
---
--- Name: COLUMN payment_transactions.revision; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.payment_transactions.revision IS 'バージョン管理用';
 
 
 --
@@ -1664,6 +1615,7 @@ CREATE TABLE public.tenant_stripe_accounts (
     fee_rate numeric(6,5),
     tax_rate_id character varying,
     webhook_secret character varying,
+    membership_grace_period_minutes integer DEFAULT 60 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1695,6 +1647,13 @@ COMMENT ON COLUMN public.tenant_stripe_accounts.tax_rate_id IS 'stripe の税率
 --
 
 COMMENT ON COLUMN public.tenant_stripe_accounts.webhook_secret IS 'Stripe webhookの署名検証用シークレット';
+
+
+--
+-- Name: COLUMN tenant_stripe_accounts.membership_grace_period_minutes; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_stripe_accounts.membership_grace_period_minutes IS 'メンバーシップの有効期限の猶予期間（分）';
 
 
 --
@@ -1948,14 +1907,6 @@ ALTER TABLE ONLY public.membership_plan_payment_methods
 
 ALTER TABLE ONLY public.membership_plans
     ADD CONSTRAINT membership_plans_pkey PRIMARY KEY (id);
-
-
---
--- Name: membership_user_achievements membership_user_achievements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.membership_user_achievements
-    ADD CONSTRAINT membership_user_achievements_pkey PRIMARY KEY (id);
 
 
 --
@@ -2266,10 +2217,10 @@ CREATE UNIQUE INDEX idx_linked_applications_tenant_user_oauth_application_uniq O
 
 
 --
--- Name: idx_membership_contracts_expires_at; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_membership_contracts_expired_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_membership_contracts_expires_at ON public.membership_contracts USING btree (expires_at);
+CREATE INDEX idx_membership_contracts_expired_at ON public.membership_contracts USING btree (expired_at);
 
 
 --
@@ -2298,20 +2249,6 @@ CREATE UNIQUE INDEX idx_membership_plan_components_plan_membership_uniq ON publi
 --
 
 CREATE UNIQUE INDEX idx_membership_plan_payment_methods_plan_type_uniq ON public.membership_plan_payment_methods USING btree (membership_plan_id, payment_type);
-
-
---
--- Name: idx_membership_user_achievements_date; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_membership_user_achievements_date ON public.membership_user_achievements USING btree (date);
-
-
---
--- Name: idx_membership_user_achievements_tenant_user_membership_date; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_membership_user_achievements_tenant_user_membership_date ON public.membership_user_achievements USING btree (tenant_id, user_id, membership_id, date);
 
 
 --
@@ -2385,17 +2322,10 @@ CREATE INDEX idx_payment_subscriptions_tenant_user ON public.payment_subscriptio
 
 
 --
--- Name: idx_payment_transactions_expires_at; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_payment_transactions_expired_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_payment_transactions_expires_at ON public.payment_transactions USING btree (expires_at);
-
-
---
--- Name: idx_payment_transactions_external_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_payment_transactions_external_id ON public.payment_transactions USING btree (external_id);
+CREATE INDEX idx_payment_transactions_expired_at ON public.payment_transactions USING btree (expired_at);
 
 
 --
@@ -2676,34 +2606,6 @@ CREATE INDEX index_membership_plan_payment_methods_on_tenant_id ON public.member
 --
 
 CREATE INDEX index_membership_plans_on_tenant_id ON public.membership_plans USING btree (tenant_id);
-
-
---
--- Name: index_membership_user_achievements_on_membership_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_membership_user_achievements_on_membership_id ON public.membership_user_achievements USING btree (membership_id);
-
-
---
--- Name: index_membership_user_achievements_on_membership_plan_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_membership_user_achievements_on_membership_plan_id ON public.membership_user_achievements USING btree (membership_plan_id);
-
-
---
--- Name: index_membership_user_achievements_on_tenant_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_membership_user_achievements_on_tenant_id ON public.membership_user_achievements USING btree (tenant_id);
-
-
---
--- Name: index_membership_user_achievements_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_membership_user_achievements_on_user_id ON public.membership_user_achievements USING btree (user_id);
 
 
 --
@@ -3614,38 +3516,6 @@ ALTER TABLE ONLY public.membership_plans
 
 
 --
--- Name: membership_user_achievements fk_membership_user_achievements_memberships; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.membership_user_achievements
-    ADD CONSTRAINT fk_membership_user_achievements_memberships FOREIGN KEY (membership_id) REFERENCES public.memberships(id);
-
-
---
--- Name: membership_user_achievements fk_membership_user_achievements_plans; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.membership_user_achievements
-    ADD CONSTRAINT fk_membership_user_achievements_plans FOREIGN KEY (membership_plan_id) REFERENCES public.membership_plans(id);
-
-
---
--- Name: membership_user_achievements fk_membership_user_achievements_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.membership_user_achievements
-    ADD CONSTRAINT fk_membership_user_achievements_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: membership_user_achievements fk_membership_user_achievements_users; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.membership_user_achievements
-    ADD CONSTRAINT fk_membership_user_achievements_users FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-
---
 -- Name: membership_users fk_membership_users_contracts; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4216,6 +4086,8 @@ ALTER TABLE ONLY public.users
 --
 -- PostgreSQL database dump complete
 --
+
+\unrestrict WAkJv1Wdu1fneOebsB8oqhjBUv7aEzGaBhqDi4QaDKHh6BOIVuy2Q3ApOSvSSOJ
 
 SET search_path TO "$user", public;
 

@@ -692,12 +692,13 @@ class Tenant::StripeAccount
         fee_rate: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tax_rate_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         webhook_secret: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        membership_grace_period_minutes: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateAssociationRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, stripe_account_id: nil, charge_type: nil, fee_rate: nil, tax_rate_id: nil, webhook_secret: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, stripe_account_id: nil, charge_type: nil, fee_rate: nil, tax_rate_id: nil, webhook_secret: nil, membership_grace_period_minutes: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -932,6 +933,51 @@ class Tenant::StripeAccount
     sig { void }
     def id_will_change!; end
 
+    sig { returns(::Integer) }
+    def membership_grace_period_minutes; end
+
+    sig { params(value: ::Integer).returns(::Integer) }
+    def membership_grace_period_minutes=(value); end
+
+    sig { returns(T::Boolean) }
+    def membership_grace_period_minutes?; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def membership_grace_period_minutes_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def membership_grace_period_minutes_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def membership_grace_period_minutes_came_from_user?; end
+
+    sig { returns(T.nilable([::Integer, ::Integer])) }
+    def membership_grace_period_minutes_change; end
+
+    sig { returns(T.nilable([::Integer, ::Integer])) }
+    def membership_grace_period_minutes_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def membership_grace_period_minutes_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def membership_grace_period_minutes_in_database; end
+
+    sig { returns(T.nilable([::Integer, ::Integer])) }
+    def membership_grace_period_minutes_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def membership_grace_period_minutes_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def membership_grace_period_minutes_previously_was; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def membership_grace_period_minutes_was; end
+
+    sig { void }
+    def membership_grace_period_minutes_will_change!; end
+
     sig { void }
     def restore_charge_type!; end
 
@@ -946,6 +992,9 @@ class Tenant::StripeAccount
 
     sig { void }
     def restore_id_value!; end
+
+    sig { void }
+    def restore_membership_grace_period_minutes!; end
 
     sig { void }
     def restore_stripe_account_id!; end
@@ -991,6 +1040,12 @@ class Tenant::StripeAccount
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([::Integer, ::Integer])) }
+    def saved_change_to_membership_grace_period_minutes; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_membership_grace_period_minutes?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_stripe_account_id; end
@@ -1263,6 +1318,9 @@ class Tenant::StripeAccount
     def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_membership_grace_period_minutes?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_stripe_account_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -1421,12 +1479,13 @@ class Tenant::StripeAccount
         fee_rate: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tax_rate_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         webhook_secret: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        membership_grace_period_minutes: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, stripe_account_id: nil, charge_type: nil, fee_rate: nil, tax_rate_id: nil, webhook_secret: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, stripe_account_id: nil, charge_type: nil, fee_rate: nil, tax_rate_id: nil, webhook_secret: nil, membership_grace_period_minutes: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

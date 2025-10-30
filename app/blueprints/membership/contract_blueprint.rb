@@ -4,7 +4,7 @@
 class Membership::ContractBlueprint < ApplicationBlueprint
   identifier :id
 
-  fields :expires_at, :cancel_at_period_end, :status, :created_at, :updated_at
+  fields :expired_at, :cancel_at_period_end, :status, :created_at, :updated_at
 
   view :normal do
     association :contract_terms, blueprint: Membership::ContractTermBlueprint

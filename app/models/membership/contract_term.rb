@@ -14,4 +14,8 @@ class Membership::ContractTerm < ApplicationRecord
     upcoming: 'upcoming',
     closed: 'closed',
   }
+
+  enum payment_type: {
+    credit_card: 'credit_card',
+  }
 end

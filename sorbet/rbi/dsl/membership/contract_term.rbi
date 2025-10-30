@@ -27,6 +27,9 @@ class Membership::ContractTerm
     def new(attributes = nil, &block); end
 
     sig { returns(T::Hash[T.any(String, Symbol), String]) }
+    def payment_types; end
+
+    sig { returns(T::Hash[T.any(String, Symbol), String]) }
     def statuses; end
   end
 
@@ -432,6 +435,12 @@ class Membership::ContractTerm
     def closed?; end
 
     sig { void }
+    def credit_card!; end
+
+    sig { returns(T::Boolean) }
+    def credit_card?; end
+
+    sig { void }
     def current!; end
 
     sig { returns(T::Boolean) }
@@ -571,6 +580,9 @@ class Membership::ContractTerm
     def create_with(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+    def credit_card(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def current(*args, &blk); end
 
     sig { params(value: T::Boolean).returns(PrivateAssociationRelation) }
@@ -666,6 +678,9 @@ class Membership::ContractTerm
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def not_closed(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+    def not_credit_card(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def not_current(*args, &blk); end
@@ -765,6 +780,7 @@ class Membership::ContractTerm
         user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         membership_contract_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         membership_plan_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        payment_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         start_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         end_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -773,7 +789,7 @@ class Membership::ContractTerm
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateAssociationRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_contract_id: nil, membership_plan_id: nil, status: nil, start_at: nil, end_at: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_contract_id: nil, membership_plan_id: nil, payment_type: nil, status: nil, start_at: nil, end_at: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -1053,6 +1069,51 @@ class Membership::ContractTerm
     sig { void }
     def membership_plan_id_will_change!; end
 
+    sig { returns(::String) }
+    def payment_type; end
+
+    sig { params(value: T.any(::String, ::Symbol)).returns(T.any(::String, ::Symbol)) }
+    def payment_type=(value); end
+
+    sig { returns(T::Boolean) }
+    def payment_type?; end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_type_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def payment_type_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def payment_type_came_from_user?; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def payment_type_change; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def payment_type_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def payment_type_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_type_in_database; end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def payment_type_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def payment_type_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_type_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def payment_type_was; end
+
+    sig { void }
+    def payment_type_will_change!; end
+
     sig { void }
     def restore_created_at!; end
 
@@ -1070,6 +1131,9 @@ class Membership::ContractTerm
 
     sig { void }
     def restore_membership_plan_id!; end
+
+    sig { void }
+    def restore_payment_type!; end
 
     sig { void }
     def restore_start_at!; end
@@ -1121,6 +1185,12 @@ class Membership::ContractTerm
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_membership_plan_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([::String, ::String])) }
+    def saved_change_to_payment_type; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_payment_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
     def saved_change_to_start_at; end
@@ -1396,6 +1466,9 @@ class Membership::ContractTerm
     def will_save_change_to_membership_plan_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_payment_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_start_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -1426,6 +1499,9 @@ class Membership::ContractTerm
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def create_with(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+    def credit_card(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def current(*args, &blk); end
@@ -1489,6 +1565,9 @@ class Membership::ContractTerm
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def not_closed(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+    def not_credit_card(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def not_current(*args, &blk); end
@@ -1570,6 +1649,7 @@ class Membership::ContractTerm
         user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         membership_contract_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         membership_plan_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        payment_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         status: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         start_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         end_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -1578,7 +1658,7 @@ class Membership::ContractTerm
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_contract_id: nil, membership_plan_id: nil, status: nil, start_at: nil, end_at: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, membership_contract_id: nil, membership_plan_id: nil, payment_type: nil, status: nil, start_at: nil, end_at: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

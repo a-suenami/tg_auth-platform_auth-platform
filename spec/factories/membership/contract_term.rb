@@ -6,6 +6,7 @@ FactoryBot.define do
     user { create(:user, tenant_id: self.tenant_id) }
     membership_contract { create(:membership_contract, tenant_id: self.tenant_id) }
     membership_plan { create(:membership_plan, tenant_id: self.tenant_id) }
+    payment_type { 'credit_card' }
     status { 'current' }
 
     trait :upcoming do

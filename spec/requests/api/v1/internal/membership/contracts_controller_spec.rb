@@ -23,23 +23,23 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
   }
 
   # メンバーシップ契約
-  let!(:active_contract) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'active', expires_at: 1.year.from_now, cancel_at_period_end: false) }
-  let!(:pending_contract) { create(:membership_contract, :pending, tenant_id: current_tenant.id, user: current_user, expires_at: 1.year.from_now) }
+  let!(:active_contract) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'active', expired_at: 1.year.from_now, cancel_at_period_end: false) }
+  let!(:pending_contract) { create(:membership_contract, :pending, tenant_id: current_tenant.id, user: current_user, expired_at: 1.year.from_now) }
   let!(:expired_contract) { create(:membership_contract, :expired, tenant_id: current_tenant.id, user: current_user) }
   let!(:canceled_contract) { create(:membership_contract, :canceled, tenant_id: current_tenant.id, user: current_user) }
 
   # 支払い取引
   let!(:active_transaction) {
     create(:payment_transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: active_contract, payment_type: 'credit_card',
-   payment_provider: 'stripe', external_id: 'pi_test123', chargeable: stripe_record_payment_intent, status: 'active', recurrence: true,)
+   payment_provider: 'stripe', chargeable: stripe_record_payment_intent, status: 'active', recurrence: true,)
   }
   let(:active_payment_subscription) {
     create(:payment_subscription, tenant_id: current_tenant.id, user: current_user, membership_contract: active_contract, subscribable: stripe_record_subscription)
   }
 
   let!(:expired_transaction) {
-    create(:payment_transaction, :closed, tenant_id: current_tenant.id, user: current_user, membership_contract: expired_contract, payment_type: 'credit_card',
-   payment_provider: 'stripe', external_id: 'sub_expired123', status: 'expired', recurrence: false,)
+    create(:payment_transaction, tenant_id: current_tenant.id, user: current_user, membership_contract: expired_contract, payment_type: 'credit_card',
+   payment_provider: 'stripe', status: 'expired', recurrence: false,)
   }
 
   # メンバーシップユーザー（同じユーザー、テナント、メンバーシップの組み合わせは重複不可）
@@ -53,10 +53,10 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
     create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'pending', membership: membership_for_pending, membership_contract: pending_contract)
   }
   let!(:expired_membership_user) {
-    create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'expired', membership: membership_for_expired, membership_contract: expired_contract)
+    create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'closed', membership: membership_for_expired, membership_contract: expired_contract)
   }
   let!(:canceled_membership_user) {
-    create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'canceled', membership: membership_for_canceled, membership_contract: canceled_contract)
+    create(:membership_user, tenant_id: current_tenant.id, user: current_user, status: 'closed', membership: membership_for_canceled, membership_contract: canceled_contract)
   }
 
   before do
@@ -84,7 +84,7 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
       active_contract_response = body_array.find { |contract| contract['id'] == active_contract.id }
       expect(active_contract_response).to be_present
       expect(active_contract_response['status']).to eq active_contract.status
-      expect(active_contract_response['expires_at']).to eq active_contract.expires_at.iso8601
+      expect(active_contract_response['expired_at']).to eq active_contract.expired_at.iso8601
       expect(active_contract_response['cancel_at_period_end']).to eq active_contract.cancel_at_period_end
     end
 
@@ -107,7 +107,6 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
       expect(transaction['id']).to eq active_transaction.id
       expect(transaction['payment_type']).to eq active_transaction.payment_type
       expect(transaction['payment_provider']).to eq active_transaction.payment_provider
-      expect(transaction['external_id']).to eq active_transaction.external_id
       expect(transaction['membership_contract_id']).to eq active_transaction.membership_contract_id
     end
 
@@ -147,7 +146,7 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
 
         expect(body_hash['id']).to eq active_contract.id
         expect(body_hash['status']).to eq active_contract.status
-        expect(body_hash['expires_at']).to eq active_contract.expires_at.iso8601
+        expect(body_hash['expired_at']).to eq active_contract.expired_at.iso8601
         expect(body_hash['cancel_at_period_end']).to eq active_contract.cancel_at_period_end
         expect(body_hash['created_at']).to eq active_contract.created_at.iso8601
         expect(body_hash['updated_at']).to eq active_contract.updated_at.iso8601
@@ -164,10 +163,9 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
         expect(transaction['id']).to eq active_transaction.id
         expect(transaction['payment_type']).to eq active_transaction.payment_type
         expect(transaction['payment_provider']).to eq active_transaction.payment_provider
-        expect(transaction['external_id']).to eq active_transaction.external_id
         expect(transaction['membership_contract_id']).to eq active_transaction.membership_contract_id
         expect(transaction['activated_at']).to eq active_transaction.activated_at.iso8601
-        expect(transaction['expires_at']).to eq active_transaction.expires_at.iso8601
+        expect(transaction['expired_at']).to eq active_transaction.expired_at.iso8601
       end
 
       it 'includes chargeable subscription' do

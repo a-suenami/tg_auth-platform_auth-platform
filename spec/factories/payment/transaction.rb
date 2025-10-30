@@ -7,13 +7,12 @@ FactoryBot.define do
     membership_contract { create(:membership_contract, tenant_id: self.tenant_id) }
     payment_type { 'credit_card' }
     payment_provider { 'stripe' }
-    external_id { nil }
-    phase { 'current' }
+    # no direct external id field; identify via chargeable
+
     activated_at { Time.current }
-    expires_at { 1.year.from_now }
+    expired_at { 1.year.from_now }
     status { 'active' }
     recurrence { false }
-    revision { 1 }
     chargeable { nil }
 
     trait :credit_card do
@@ -36,20 +35,6 @@ FactoryBot.define do
       payment_provider { 'other' }
     end
 
-    trait :pending do
-      phase { 'pending' }
-      status { 'pending' }
-    end
-
-    trait :upcoming do
-      phase { 'upcoming' }
-      status { 'pending' }
-    end
-
-    trait :closed do
-      phase { 'closed' }
-      status { 'expired' }
-    end
 
     trait :recurring do
       recurrence { true }

@@ -6,7 +6,8 @@ FactoryBot.define do
     user { create(:user, tenant_id: self.tenant_id) }
     membership { create(:membership, tenant_id: self.tenant_id) }
     membership_contract { create(:membership_contract, tenant_id: self.tenant_id) }
-    expires_at { 1.year.from_now }
+    activated_at { Time.current }
+    expired_at { 1.year.from_now }
     status { 'active' }
 
     trait :with_group do
@@ -14,8 +15,8 @@ FactoryBot.define do
     end
 
     trait :expired do
-      expires_at { 1.day.ago }
-      status { 'expired' }
+      expired_at { 1.day.ago }
+      status { 'closed' }
     end
   end
 end

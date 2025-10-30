@@ -187,7 +187,7 @@ module UserStripe
 
         # Contractの期限更新
         next_period_end = Time.zone.at(remote_subscription_schedule.phases.first.end_date)
-        contract.update(expires_at: next_period_end)
+        contract.update(expired_at: next_period_end)
         current_contract_term = contract.current_contract_term
         current_contract_term.update!(
           status: 'closed',
@@ -195,6 +195,7 @@ module UserStripe
         Membership::ContractTerm.create!(
           status: 'active',
           phase: 'current',
+          payment_type: 'credit_card',
           expires_at: next_period_end,
           activated_at: Time.zone.now,
         )
