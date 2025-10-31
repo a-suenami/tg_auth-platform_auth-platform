@@ -118,6 +118,9 @@ module GeneratedPathHelpersModule
   def api_v1_public_memberships_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def api_v1_public_tenant_stripe_account_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def assign_memberships_ruler_area_tenant_membership_group_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
