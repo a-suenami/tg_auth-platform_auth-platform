@@ -174,6 +174,7 @@ module UserStripe
         contract = Membership::Contract.create!(
           user:,
           status: 'active',
+          expired_at: stripe_record_subscription.current_period_end,
         )
         # transactions作成
         Payment::Transaction.create!(
@@ -183,6 +184,8 @@ module UserStripe
           payment_provider: 'stripe',
           chargeable: chargeable,
           status: 'active',
+          activated_at: Time.zone.now,
+          expired_at: stripe_record_subscription.current_period_end,
           recurrence: true,
         )
         Payment::Subscription.create!(

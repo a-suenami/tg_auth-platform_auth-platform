@@ -497,6 +497,9 @@ class StripeRecord::Subscription
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Product) }
     def build_product(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
+    def build_tenant(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
 
@@ -523,6 +526,12 @@ class StripeRecord::Subscription
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Product) }
     def create_product!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
+    def create_tenant(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
+    def create_tenant!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user(*args, &blk); end
@@ -612,6 +621,9 @@ class StripeRecord::Subscription
     sig { returns(T.nilable(::StripeRecord::Product)) }
     def reload_product; end
 
+    sig { returns(T.nilable(::Tenant)) }
+    def reload_tenant; end
+
     sig { returns(T.nilable(::User)) }
     def reload_user; end
 
@@ -626,6 +638,9 @@ class StripeRecord::Subscription
 
     sig { void }
     def reset_product; end
+
+    sig { void }
+    def reset_tenant; end
 
     sig { void }
     def reset_user; end
@@ -657,6 +672,18 @@ class StripeRecord::Subscription
 
     sig { params(value: T::Enumerable[::StripeRecord::SubscriptionSchedule]).void }
     def subscription_schedules=(value); end
+
+    sig { returns(T.nilable(::Tenant)) }
+    def tenant; end
+
+    sig { params(value: T.nilable(::Tenant)).void }
+    def tenant=(value); end
+
+    sig { returns(T::Boolean) }
+    def tenant_changed?; end
+
+    sig { returns(T::Boolean) }
+    def tenant_previously_changed?; end
 
     sig { returns(T.nilable(::User)) }
     def user; end

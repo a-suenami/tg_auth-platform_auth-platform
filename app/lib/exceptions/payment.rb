@@ -258,6 +258,50 @@ module Exceptions
       end
     end
 
+    class UnintentionalResponseError < BaseError
+      sig { returns(Symbol) }
+      def code
+        :unintentional_response_error
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.payment.unintentional_response_error'
+      end
+
+      sig { returns(T.nilable(Stripe::StripeObject)) }
+      attr_accessor :response
+
+      sig { params(response: T.nilable(Stripe::StripeObject)).void }
+      def initialize(response: nil)
+        @response = T.let(response, T.nilable(Stripe::StripeObject))
+      end
+    end
+
+    class TenantNotSetError < BaseError
+      sig { returns(Symbol) }
+      def code
+        :tenant_not_set_error
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.payment.tenant_not_set_error'
+      end
+    end
+
+    class TenantNotMatchError < BaseError
+      sig { returns(Symbol) }
+      def code
+        :tenant_not_match_error
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.payment.tenant_not_match_error'
+      end
+    end
+
     module Stripe
       class StripeError < BaseError
         sig { returns(String) }
