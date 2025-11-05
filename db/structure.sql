@@ -1,6 +1,6 @@
-\restrict WAkJv1Wdu1fneOebsB8oqhjBUv7aEzGaBhqDi4QaDKHh6BOIVuy2Q3ApOSvSSOJ
+\restrict iB6Fqsgf4TFV8LSkfgaLgoXQIAI1LTf9M2UffhRAmAwmH7GtAVUu7JepFiDYUaG
 
--- Dumped from database version 15.5
+-- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
 
 SET statement_timeout = 0;
@@ -4363,14 +4363,6 @@ ALTER TABLE ONLY public.templates
 
 
 --
--- Name: tenant_stripe_accounts fk_tenant_stripe_accounts__stripe_accounts; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tenant_stripe_accounts
-    ADD CONSTRAINT fk_tenant_stripe_accounts__stripe_accounts FOREIGN KEY (stripe_account_id) REFERENCES public.stripe_record__accounts(id);
-
-
---
 -- Name: tenant_stripe_accounts fk_tenant_stripe_accounts__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4486,7 +4478,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict WAkJv1Wdu1fneOebsB8oqhjBUv7aEzGaBhqDi4QaDKHh6BOIVuy2Q3ApOSvSSOJ
+\unrestrict iB6Fqsgf4TFV8LSkfgaLgoXQIAI1LTf9M2UffhRAmAwmH7GtAVUu7JepFiDYUaG
 
 SET search_path TO "$user", public;
 
