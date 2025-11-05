@@ -1,10 +1,10 @@
 # typed: false
 # frozen_string_literal: true
 
-RSpec.describe '[ API::V1::Internal::MembershipsController API ]' do
+RSpec.describe '[ API::V1::Internal::MembershipController API ]' do
   # テスト用のメンバーシップグループ
-  let!(:membership_group) { create(:memberships__group, tenant_id: current_tenant.id, name: 'test_group', position: 1) }
-  let!(:another_membership_group) { create(:memberships__group, tenant_id: current_tenant.id, name: 'another_group', position: 2) }
+  let!(:membership_group) { create(:membership_group, tenant_id: current_tenant.id, name: 'test_group', position: 1) }
+  let!(:another_membership_group) { create(:membership_group, tenant_id: current_tenant.id, name: 'another_group', position: 2) }
 
   # テスト用のメンバーシップ
   let!(:active_membership_with_group) { create(:membership, tenant_id: current_tenant.id, membership_group:, name: 'active_membership_with_group', position: 1, tier: 1) }
@@ -12,32 +12,32 @@ RSpec.describe '[ API::V1::Internal::MembershipsController API ]' do
   let!(:inactive_membership) { create(:membership, tenant_id: current_tenant.id, membership_group: another_membership_group, name: 'inactive_membership', position: 3, tier: 3) }
 
   # メンバーシッププランとコンポーネント
-  let!(:membership_plan_with_group) { create(:memberships__plan, tenant_id: current_tenant.id, name: 'plan_with_group', amount: 1000, position: 1) }
-  let!(:membership_plan_without_group) { create(:memberships__plan, tenant_id: current_tenant.id, name: 'plan_without_group', amount: 2000, position: 1) }
-  let!(:membership_plan_inactive) { create(:memberships__plan, tenant_id: current_tenant.id, name: 'plan_inactive', amount: 3000, position: 1) }
+  let!(:membership_plan_with_group) { create(:membership_plan, tenant_id: current_tenant.id, name: 'plan_with_group', amount: 1000, position: 1) }
+  let!(:membership_plan_without_group) { create(:membership_plan, tenant_id: current_tenant.id, name: 'plan_without_group', amount: 2000, position: 1) }
+  let!(:membership_plan_inactive) { create(:membership_plan, tenant_id: current_tenant.id, name: 'plan_inactive', amount: 3000, position: 1) }
 
-  let!(:plan_component_with_group) { create(:memberships__plan_component, membership_plan: membership_plan_with_group, membership: active_membership_with_group, tenant_id: current_tenant.id) }
+  let!(:plan_component_with_group) { create(:membership_plan_component, membership_plan: membership_plan_with_group, membership: active_membership_with_group, tenant_id: current_tenant.id) }
   let!(:plan_component_without_group) {
-    create(:memberships__plan_component, membership_plan: membership_plan_without_group, membership: active_membership_without_group, tenant_id: current_tenant.id)
+    create(:membership_plan_component, membership_plan: membership_plan_without_group, membership: active_membership_without_group, tenant_id: current_tenant.id)
   }
-  let!(:plan_component_inactive) { create(:memberships__plan_component, membership_plan: membership_plan_inactive, membership: inactive_membership, tenant_id: current_tenant.id) }
+  let!(:plan_component_inactive) { create(:membership_plan_component, membership_plan: membership_plan_inactive, membership: inactive_membership, tenant_id: current_tenant.id) }
 
   # メンバーシップ契約
-  let!(:active_contract_with_group) { create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'active', expires_at: 1.year.from_now) }
-  let!(:active_contract_without_group) { create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'active', expires_at: 1.year.from_now) }
-  let!(:inactive_contract) { create(:memberships__contract, tenant_id: current_tenant.id, user: current_user, status: 'pending', expires_at: 1.year.from_now) }
+  let!(:active_contract_with_group) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'active', expired_at: 1.year.from_now) }
+  let!(:active_contract_without_group) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'active', expired_at: 1.year.from_now) }
+  let!(:inactive_contract) { create(:membership_contract, tenant_id: current_tenant.id, user: current_user, status: 'pending', expired_at: 1.year.from_now) }
 
   # メンバーシップユーザー（アクティブ）
   let!(:active_membership_user_with_group) {
-    create(:memberships__user, tenant_id: current_tenant.id, user: current_user, membership: active_membership_with_group, membership_contract: active_contract_with_group, status: 'active')
+    create(:membership_user, tenant_id: current_tenant.id, user: current_user, membership: active_membership_with_group, membership_contract: active_contract_with_group, status: 'active')
   }
   let!(:active_membership_user_without_group) {
-    create(:memberships__user, tenant_id: current_tenant.id, user: current_user, membership: active_membership_without_group, membership_contract: active_contract_without_group, status: 'active')
+    create(:membership_user, tenant_id: current_tenant.id, user: current_user, membership: active_membership_without_group, membership_contract: active_contract_without_group, status: 'active')
   }
 
   # メンバーシップユーザー（非アクティブ）
   let!(:inactive_membership_user) {
-    create(:memberships__user, tenant_id: current_tenant.id, user: current_user, membership: inactive_membership, membership_contract: inactive_contract, status: 'pending')
+    create(:membership_user, tenant_id: current_tenant.id, user: current_user, membership: inactive_membership, membership_contract: inactive_contract, status: 'pending')
   }
 
   before do

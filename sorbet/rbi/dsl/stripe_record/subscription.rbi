@@ -485,23 +485,6 @@ class StripeRecord::Subscription
   end
 
   module GeneratedAssociationMethods
-    sig { returns(T::Array[T.untyped]) }
-    def billing_profile_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def billing_profile_ids=(ids); end
-
-    # This method is created by ActiveRecord on the `StripeRecord::Subscription` class because it declared `has_many :billing_profiles`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::BillingProfile::PrivateCollectionProxy) }
-    def billing_profiles; end
-
-    sig { params(value: T::Enumerable[::Memberships::BillingProfile]).void }
-    def billing_profiles=(value); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
-    def build_current_billing_profile(*args, &blk); end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SubscriptionSchedule) }
     def build_last_subscription_schedule(*args, &blk); end
 
@@ -514,17 +497,8 @@ class StripeRecord::Subscription
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Product) }
     def build_product(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
-    def build_upcoming_billing_profile(*args, &blk); end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
-    def create_current_billing_profile(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
-    def create_current_billing_profile!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SubscriptionSchedule) }
     def create_last_subscription_schedule(*args, &blk); end
@@ -550,23 +524,11 @@ class StripeRecord::Subscription
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Product) }
     def create_product!(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
-    def create_upcoming_billing_profile(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::BillingProfile) }
-    def create_upcoming_billing_profile!(*args, &blk); end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user!(*args, &blk); end
-
-    sig { returns(T.nilable(::Memberships::BillingProfile)) }
-    def current_billing_profile; end
-
-    sig { params(value: T.nilable(::Memberships::BillingProfile)).void }
-    def current_billing_profile=(value); end
 
     sig { returns(T::Array[T.untyped]) }
     def invoice_ids; end
@@ -587,6 +549,20 @@ class StripeRecord::Subscription
 
     sig { params(value: T.nilable(::StripeRecord::SubscriptionSchedule)).void }
     def last_subscription_schedule=(value); end
+
+    # This method is created by ActiveRecord on the `StripeRecord::Subscription` class because it declared `has_many :payment_subscription`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::Payment::Subscription::PrivateCollectionProxy) }
+    def payment_subscription; end
+
+    sig { params(value: T::Enumerable[::Payment::Subscription]).void }
+    def payment_subscription=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def payment_subscription_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def payment_subscription_ids=(ids); end
 
     sig { returns(T.nilable(::StripeRecord::SetupIntent)) }
     def pending_setup_intent; end
@@ -624,9 +600,6 @@ class StripeRecord::Subscription
     sig { returns(T::Boolean) }
     def product_previously_changed?; end
 
-    sig { returns(T.nilable(::Memberships::BillingProfile)) }
-    def reload_current_billing_profile; end
-
     sig { returns(T.nilable(::StripeRecord::SubscriptionSchedule)) }
     def reload_last_subscription_schedule; end
 
@@ -639,14 +612,8 @@ class StripeRecord::Subscription
     sig { returns(T.nilable(::StripeRecord::Product)) }
     def reload_product; end
 
-    sig { returns(T.nilable(::Memberships::BillingProfile)) }
-    def reload_upcoming_billing_profile; end
-
     sig { returns(T.nilable(::User)) }
     def reload_user; end
-
-    sig { void }
-    def reset_current_billing_profile; end
 
     sig { void }
     def reset_last_subscription_schedule; end
@@ -659,9 +626,6 @@ class StripeRecord::Subscription
 
     sig { void }
     def reset_product; end
-
-    sig { void }
-    def reset_upcoming_billing_profile; end
 
     sig { void }
     def reset_user; end
@@ -693,12 +657,6 @@ class StripeRecord::Subscription
 
     sig { params(value: T::Enumerable[::StripeRecord::SubscriptionSchedule]).void }
     def subscription_schedules=(value); end
-
-    sig { returns(T.nilable(::Memberships::BillingProfile)) }
-    def upcoming_billing_profile; end
-
-    sig { params(value: T.nilable(::Memberships::BillingProfile)).void }
-    def upcoming_billing_profile=(value); end
 
     sig { returns(T.nilable(::User)) }
     def user; end

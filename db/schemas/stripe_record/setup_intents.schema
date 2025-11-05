@@ -1,7 +1,7 @@
 # ==============================================================================
 # db/schemas/stripe_record/setup_intents.schema
 # ==============================================================================
-create_table :stripe_record__setup_intents, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+create_table :stripe_record_setup_intents, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_setup_intents__tenants }
 
   t.string :remote_id, null: false, index: { unique: true, name: 'idx_stripe_record_setup_intents_remote_id_uniq' }, comment: 'Stripe の setup intent ID'
@@ -22,10 +22,10 @@ create_table :stripe_record__setup_intents, force: :cascade, id: :uuid, default:
 
   # 以下は Slash Gift 側での管理用
   t.references :api_key_account, type: :uuid, null: false, index: true, foreign_key: {
-    to_table: :stripe_record__accounts, column: :api_key_account_id, name: :fk_stripe_record_setup_intents_api_key_account_id,
+    to_table: :stripe_record_accounts, column: :api_key_account_id, name: :fk_stripe_record_setup_intents_api_key_account_id,
   }, comment: 'API Key を持っているアカウント。通常の決済であればその決済のアカウントとなる。Connect の場合はプラットフォームアカウントになる。'
   t.references :connect_account, type: :uuid, null: true, index: true, foreign_key: {
-    to_table: :stripe_record__accounts, column: :connect_account_id, name: :fk_stripe_record_setup_intents_connect_account_id,
+    to_table: :stripe_record_accounts, column: :connect_account_id, name: :fk_stripe_record_setup_intents_connect_account_id,
   }, comment: 'Connect のときだけ使用する。この決済がどの Connected アカウントに対する支払いなのかを表す。'
   t.string :charge_type, comment: 'Connect のときだけ使用する。どの支払いタイプなのかを表す'
 end

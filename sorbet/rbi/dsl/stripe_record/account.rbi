@@ -448,6 +448,9 @@ class StripeRecord::Account
     sig { params(value: T.nilable(::StripeRecord::APIKey)).void }
     def api_key=(value); end
 
+    sig { params(attributes: T.untyped).returns(T.untyped) }
+    def api_key_attributes=(attributes); end
+
     sig { returns(T::Boolean) }
     def api_key_changed?; end
 

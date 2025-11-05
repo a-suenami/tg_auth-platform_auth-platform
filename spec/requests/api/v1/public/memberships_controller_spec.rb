@@ -1,7 +1,7 @@
 # typed: false
 # frozen_string_literal: true
 
-RSpec.describe '[ API::V1::Public::MembershipsController API ]' do
+RSpec.describe '[ API::V1::Public::MembershipController API ]' do
   # パターン別メンバーシッププラン
   # 1. 段階的プラン
   # - メンバーシップに上下関係があり、上位のものが下位の完全な上位互換の権限を持つタイプ
@@ -10,19 +10,19 @@ RSpec.describe '[ API::V1::Public::MembershipsController API ]' do
   let!(:membership_basic) { create(:membership, tenant_id: current_tenant.id, membership_group: membership_group_for_level, position: 1) }
   let!(:membership_standard) { create(:membership, tenant_id: current_tenant.id, membership_group: membership_group_for_level, position: 2) }
   let!(:membership_premium) { create(:membership, tenant_id: current_tenant.id, membership_group: membership_group_for_level, position: 3) }
-  let!(:membership_group_for_level) { create(:memberships__group, tenant_id: current_tenant.id) }
-  let!(:membership_plan_basic) { create(:memberships__plan, tenant_id: current_tenant.id, position: 1) }
-  let!(:membership_plan_standard) { create(:memberships__plan, tenant_id: current_tenant.id, position: 1) }
-  let!(:membership_plan_premium) { create(:memberships__plan, tenant_id: current_tenant.id, position: 1) }
-  let!(:membership_plan_component_basic) { create(:memberships__plan_component, membership_plan: membership_plan_basic, membership: membership_basic, tenant_id: current_tenant.id) }
-  let!(:membership_plan_component_standard) { create(:memberships__plan_component, membership_plan: membership_plan_standard, membership: membership_standard, tenant_id: current_tenant.id) }
-  let!(:membership_plan_component_premium) { create(:memberships__plan_component, membership_plan: membership_plan_premium, membership: membership_premium, tenant_id: current_tenant.id) }
-  let!(:membership_plan_payment_method_basic) { create(:memberships__plan_payment_method, membership_plan: membership_plan_basic, tenant_id: current_tenant.id) }
+  let!(:membership_group_for_level) { create(:membership_group, tenant_id: current_tenant.id) }
+  let!(:membership_plan_basic) { create(:membership_plan, tenant_id: current_tenant.id, position: 1) }
+  let!(:membership_plan_standard) { create(:membership_plan, tenant_id: current_tenant.id, position: 1) }
+  let!(:membership_plan_premium) { create(:membership_plan, tenant_id: current_tenant.id, position: 1) }
+  let!(:membership_plan_component_basic) { create(:membership_plan_component, membership_plan: membership_plan_basic, membership: membership_basic, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_standard) { create(:membership_plan_component, membership_plan: membership_plan_standard, membership: membership_standard, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_premium) { create(:membership_plan_component, membership_plan: membership_plan_premium, membership: membership_premium, tenant_id: current_tenant.id) }
+  let!(:membership_plan_payment_method_basic) { create(:membership_plan_payment_method, membership_plan: membership_plan_basic, tenant_id: current_tenant.id) }
   let!(:membership_plan_payment_method_standard) {
-    create(:memberships__plan_payment_method, membership_plan: membership_plan_standard, tenant_id: current_tenant.id)
+    create(:membership_plan_payment_method, membership_plan: membership_plan_standard, tenant_id: current_tenant.id)
   }
   let!(:membership_plan_payment_method_premium) {
-    create(:memberships__plan_payment_method, membership_plan: membership_plan_premium, tenant_id: current_tenant.id)
+    create(:membership_plan_payment_method, membership_plan: membership_plan_premium, tenant_id: current_tenant.id)
   }
   # 2. 個別メンバーシッププラン
   # - 独立したプラン 各々同時契約可能
@@ -30,24 +30,24 @@ RSpec.describe '[ API::V1::Public::MembershipsController API ]' do
   let!(:membership_a) { create(:membership, tenant_id: current_tenant.id, position: 4) }
   let!(:membership_b) { create(:membership, tenant_id: current_tenant.id, position: 5) }
   let!(:membership_c) { create(:membership, tenant_id: current_tenant.id, position: 6) }
-  let!(:membership_plan_a) { create(:memberships__plan, tenant_id: current_tenant.id, position: 1) }
-  let!(:membership_plan_b) { create(:memberships__plan, tenant_id: current_tenant.id, position: 1) }
-  let!(:membership_plan_c) { create(:memberships__plan, tenant_id: current_tenant.id, position: 1) }
-  let!(:membership_plan_component_a) { create(:memberships__plan_component, membership_plan: membership_plan_a, membership: membership_a, tenant_id: current_tenant.id) }
-  let!(:membership_plan_component_b) { create(:memberships__plan_component, membership_plan: membership_plan_b, membership: membership_b, tenant_id: current_tenant.id) }
-  let!(:membership_plan_component_c) { create(:memberships__plan_component, membership_plan: membership_plan_c, membership: membership_c, tenant_id: current_tenant.id) }
-  let!(:membership_plan_payment_method_a) { create(:memberships__plan_payment_method, membership_plan: membership_plan_a, tenant_id: current_tenant.id) }
-  let!(:membership_plan_payment_method_b) { create(:memberships__plan_payment_method, membership_plan: membership_plan_b, tenant_id: current_tenant.id) }
-  let!(:membership_plan_payment_method_c) { create(:memberships__plan_payment_method, membership_plan: membership_plan_c, tenant_id: current_tenant.id) }
+  let!(:membership_plan_a) { create(:membership_plan, tenant_id: current_tenant.id, position: 1) }
+  let!(:membership_plan_b) { create(:membership_plan, tenant_id: current_tenant.id, position: 1) }
+  let!(:membership_plan_c) { create(:membership_plan, tenant_id: current_tenant.id, position: 1) }
+  let!(:membership_plan_component_a) { create(:membership_plan_component, membership_plan: membership_plan_a, membership: membership_a, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_b) { create(:membership_plan_component, membership_plan: membership_plan_b, membership: membership_b, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_c) { create(:membership_plan_component, membership_plan: membership_plan_c, membership: membership_c, tenant_id: current_tenant.id) }
+  let!(:membership_plan_payment_method_a) { create(:membership_plan_payment_method, membership_plan: membership_plan_a, tenant_id: current_tenant.id) }
+  let!(:membership_plan_payment_method_b) { create(:membership_plan_payment_method, membership_plan: membership_plan_b, tenant_id: current_tenant.id) }
+  let!(:membership_plan_payment_method_c) { create(:membership_plan_payment_method, membership_plan: membership_plan_c, tenant_id: current_tenant.id) }
 
   # 3. バンドルプラン
   # - 複数のメンバーシップを組み合わせたプラン
   # - ex) アイドルのメンバーごとのメンバーシップを組み合わせたプラン
-  let!(:membership_plan_bundle) { create(:memberships__plan, tenant_id: current_tenant.id, position: 7) }
-  let!(:membership_plan_component_bundle_a) { create(:memberships__plan_component, membership_plan: membership_plan_bundle, membership: membership_a, tenant_id: current_tenant.id) }
-  let!(:membership_plan_component_bundle_b) { create(:memberships__plan_component, membership_plan: membership_plan_bundle, membership: membership_b, tenant_id: current_tenant.id) }
-  let!(:membership_plan_component_bundle_c) { create(:memberships__plan_component, membership_plan: membership_plan_bundle, membership: membership_c, tenant_id: current_tenant.id) }
-  let!(:membership_plan_payment_method_bundle) { create(:memberships__plan_payment_method, membership_plan: membership_plan_bundle, tenant_id: current_tenant.id) }
+  let!(:membership_plan_bundle) { create(:membership_plan, tenant_id: current_tenant.id, position: 7) }
+  let!(:membership_plan_component_bundle_a) { create(:membership_plan_component, membership_plan: membership_plan_bundle, membership: membership_a, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_bundle_b) { create(:membership_plan_component, membership_plan: membership_plan_bundle, membership: membership_b, tenant_id: current_tenant.id) }
+  let!(:membership_plan_component_bundle_c) { create(:membership_plan_component, membership_plan: membership_plan_bundle, membership: membership_c, tenant_id: current_tenant.id) }
+  let!(:membership_plan_payment_method_bundle) { create(:membership_plan_payment_method, membership_plan: membership_plan_bundle, tenant_id: current_tenant.id) }
 
   before do
     membership_plan_component_basic

@@ -1,7 +1,7 @@
 # ==============================================================================
 # db/schemas/stripe_record/products.schema
 # ==============================================================================
-create_table :stripe_record__products, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+create_table :stripe_record_products, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_products__tenants }
 
   t.string :remote_id

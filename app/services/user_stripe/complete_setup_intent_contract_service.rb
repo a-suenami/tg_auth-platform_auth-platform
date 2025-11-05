@@ -15,7 +15,7 @@ module UserStripe
       stripe_record_subscription = stripe_record_setup_intent.subscription
       return unless stripe_record_subscription
 
-      contract = stripe_record_subscription.current_billing_profile.membership_contract
+      contract = stripe_record_subscription.payment_subscription.membership_contract
       return unless contract
 
       UserStripe::CompleteContractService.new(contract, stripe_record_subscription).execute

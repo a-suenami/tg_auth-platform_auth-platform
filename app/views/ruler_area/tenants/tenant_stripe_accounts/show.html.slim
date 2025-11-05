@@ -31,6 +31,11 @@ h1 Tenant Stripe Account
         = @tenant_stripe_account.webhook_secret.present? ? '***' : 'Not set'
 
       .uk-margin
+        strong Membership Grace Period (minutes):
+        br
+        = @tenant_stripe_account.membership_grace_period_minutes
+
+      .uk-margin
         strong Created at:
         br
         = @tenant_stripe_account.created_at

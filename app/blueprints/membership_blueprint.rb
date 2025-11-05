@@ -1,7 +1,7 @@
 # typed: false
 # frozen_string_literal: true
 
-class MembershipBlueprint < Blueprinter::Base
+class MembershipBlueprint < ApplicationBlueprint
   identifier :id
 
   fields :name, :display_name, :position, :tier
