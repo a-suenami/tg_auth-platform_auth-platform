@@ -269,12 +269,12 @@ module Exceptions
         I18n.t 'exceptions.payment.unintentional_response_error'
       end
 
-      sig { returns(T.nilable(Stripe::StripeObject)) }
+      sig { returns(T.untyped) }
       attr_accessor :response
 
-      sig { params(response: T.nilable(Stripe::StripeObject)).void }
+      sig { params(response: T.untyped).void }
       def initialize(response: nil)
-        @response = T.let(response, T.nilable(Stripe::StripeObject))
+        @response = response
       end
     end
 
@@ -304,14 +304,126 @@ module Exceptions
 
     module Stripe
       class StripeError < BaseError
-        sig { returns(String) }
-        def message
-          I18n.t 'exceptions.payment.stripe.stripe_error'
+        sig { params(message: T.nilable(String)).void }
+        def initialize(message = nil)
+          super(message)
+          @message = T.let(message || '', String)
         end
+
+        sig { returns(String) }
+        attr_reader :message
 
         sig { returns(Symbol) }
         def code
           :stripe_error
+        end
+      end
+
+      class CardError < StripeError
+        sig { params(message: T.nilable(String)).void }
+        def initialize(message = nil)
+          super(message)
+          @message = T.let(message || '', String)
+        end
+
+        sig { returns(String) }
+        def message
+          I18n.t('exceptions.payment.stripe.card_error')
+        end
+
+        sig { returns(Symbol) }
+        def code
+          :stripe_card_error
+        end
+      end
+
+      class RateLimitError < StripeError
+        sig { params(message: T.nilable(String)).void }
+        def initialize(message = nil)
+          super(message)
+          @message = T.let(message || '', String)
+        end
+
+        sig { returns(String) }
+        def message
+          I18n.t('exceptions.payment.stripe.rate_limit_error')
+        end
+
+        sig { returns(Symbol) }
+        def code
+          :stripe_rate_limit_error
+        end
+      end
+
+      class InvalidRequestError < StripeError
+        sig { params(message: T.nilable(String)).void }
+        def initialize(message = nil)
+          super(message)
+          @message = T.let(message || '', String)
+        end
+
+        sig { returns(String) }
+        def message
+          I18n.t('exceptions.payment.stripe.invalid_request_error')
+        end
+
+        sig { returns(Symbol) }
+        def code
+          :stripe_invalid_request_error
+        end
+      end
+
+      class AuthenticationError < StripeError
+        sig { params(message: T.nilable(String)).void }
+        def initialize(message = nil)
+          super(message)
+          @message = T.let(message || '', String)
+        end
+
+        sig { returns(String) }
+        def message
+          I18n.t('exceptions.payment.stripe.authentication_error')
+        end
+
+        sig { returns(Symbol) }
+        def code
+          :stripe_authentication_error
+        end
+      end
+
+      class APIConnectionError < StripeError
+        sig { params(message: T.nilable(String)).void }
+        def initialize(message = nil)
+          super(message)
+          @message = T.let(message || '', String)
+        end
+
+        sig { returns(String) }
+        def message
+          I18n.t('exceptions.payment.stripe.api_connection_error')
+        end
+
+        sig { returns(Symbol) }
+        def code
+          :stripe_api_connection_error
+        end
+      end
+
+      class APIError < StripeError
+        sig { params(message: T.nilable(String)).void }
+        def initialize(message = nil)
+          super(message)
+          @message = T.let(message || '', String)
+        end
+
+        sig { returns(String) }
+        def message
+          I18n.t('exceptions.payment.stripe.api_error')
+        end
+
+        sig { returns(Symbol) }
+        def code
+          :stripe_api_error
         end
       end
 

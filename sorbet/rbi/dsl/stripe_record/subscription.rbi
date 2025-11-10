@@ -488,6 +488,9 @@ class StripeRecord::Subscription
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SubscriptionSchedule) }
     def build_last_subscription_schedule(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Subscription) }
+    def build_payment_subscription(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SetupIntent) }
     def build_pending_setup_intent(*args, &blk); end
 
@@ -508,6 +511,12 @@ class StripeRecord::Subscription
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SubscriptionSchedule) }
     def create_last_subscription_schedule!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Subscription) }
+    def create_payment_subscription(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Subscription) }
+    def create_payment_subscription!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::SetupIntent) }
     def create_pending_setup_intent(*args, &blk); end
@@ -559,19 +568,11 @@ class StripeRecord::Subscription
     sig { params(value: T.nilable(::StripeRecord::SubscriptionSchedule)).void }
     def last_subscription_schedule=(value); end
 
-    # This method is created by ActiveRecord on the `StripeRecord::Subscription` class because it declared `has_many :payment_subscription`.
-    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Payment::Subscription::PrivateCollectionProxy) }
+    sig { returns(T.nilable(::Payment::Subscription)) }
     def payment_subscription; end
 
-    sig { params(value: T::Enumerable[::Payment::Subscription]).void }
+    sig { params(value: T.nilable(::Payment::Subscription)).void }
     def payment_subscription=(value); end
-
-    sig { returns(T::Array[T.untyped]) }
-    def payment_subscription_ids; end
-
-    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def payment_subscription_ids=(ids); end
 
     sig { returns(T.nilable(::StripeRecord::SetupIntent)) }
     def pending_setup_intent; end
@@ -612,6 +613,9 @@ class StripeRecord::Subscription
     sig { returns(T.nilable(::StripeRecord::SubscriptionSchedule)) }
     def reload_last_subscription_schedule; end
 
+    sig { returns(T.nilable(::Payment::Subscription)) }
+    def reload_payment_subscription; end
+
     sig { returns(T.nilable(::StripeRecord::SetupIntent)) }
     def reload_pending_setup_intent; end
 
@@ -629,6 +633,9 @@ class StripeRecord::Subscription
 
     sig { void }
     def reset_last_subscription_schedule; end
+
+    sig { void }
+    def reset_payment_subscription; end
 
     sig { void }
     def reset_pending_setup_intent; end
