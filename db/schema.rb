@@ -102,67 +102,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["uid"], name: "index_login_spa_applications_on_uid", unique: true
   end
 
-  create_table "mail_template_histories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.citext "tenant_id", null: false
-    t.uuid "template_id", null: false, comment: "Parent template"
-    t.uuid "version_id", comment: "Mail template version (nullable)"
-    t.string "event_type", null: false, comment: "Event type: published, scheduled, rescheduled, draft_created, draft_updated"
-    t.jsonb "payload", default: {}, null: false, comment: "Event metadata"
-    t.uuid "actor_id", comment: "Admin who performed action"
-    t.datetime "created_at", null: false
-    t.index ["actor_id"], name: "index_mail_template_histories_on_actor_id"
-    t.index ["created_at"], name: "idx_mail_template_histories_created_at"
-    t.index ["event_type"], name: "idx_mail_template_histories_event_type"
-    t.index ["template_id", "created_at"], name: "idx_mail_template_histories_template_created"
-    t.index ["template_id"], name: "index_mail_template_histories_on_template_id"
-    t.index ["tenant_id"], name: "index_mail_template_histories_on_tenant_id"
-    t.index ["version_id"], name: "idx_mail_template_histories_version_id"
-    t.index ["version_id"], name: "index_mail_template_histories_on_version_id"
-  end
-
-  create_table "mail_template_versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.citext "tenant_id", null: false
-    t.uuid "template_id", null: false, comment: "Parent template"
-    t.integer "version", null: false, comment: "バージョン番号"
-    t.string "title", null: false, comment: "メールタイトル（スナップショット）"
-    t.text "body", null: false, comment: "メール本文（スナップショット）"
-    t.datetime "public_started_at", null: false, comment: "公開開始日時"
-    t.uuid "published_by_id", comment: "公開者（Admin）"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["public_started_at"], name: "idx_mail_template_versions_public_started_at"
-    t.index ["published_by_id"], name: "index_mail_template_versions_on_published_by_id"
-    t.index ["template_id", "version"], name: "idx_mail_template_versions_template_version", unique: true
-    t.index ["template_id"], name: "idx_mail_template_versions_template_id"
-    t.index ["template_id"], name: "index_mail_template_versions_on_template_id"
-    t.index ["tenant_id"], name: "index_mail_template_versions_on_tenant_id"
-  end
-
-  create_table "mail_templates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.citext "tenant_id", null: false
-    t.uuid "template_id", null: false, comment: "Parent template"
-    t.string "title", comment: "メールタイトル（現在の下書き）"
-    t.text "body", comment: "メール本文（現在の下書き）"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["template_id"], name: "idx_mail_templates_template_id", unique: true
-    t.index ["template_id"], name: "index_mail_templates_on_template_id"
-    t.index ["tenant_id"], name: "index_mail_templates_on_tenant_id"
-  end
-
-  create_table "memberships", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバーシップ", force: :cascade do |t|
-    t.citext "tenant_id", null: false
-    t.uuid "membership_group_id", comment: "メンバーシップグループ"
-    t.string "name", comment: "メンバーシップ識別子"
-    t.string "display_name", comment: "メンバーシップ名称"
-    t.integer "position", comment: "表示順序"
-    t.integer "tier", comment: "階級"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["membership_group_id"], name: "index_memberships_on_membership_group_id"
-    t.index ["tenant_id"], name: "index_memberships_on_tenant_id"
-  end
-
   create_table "membership_contract_terms", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーのメンバーシップ契約の詳細,変更履歴", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
