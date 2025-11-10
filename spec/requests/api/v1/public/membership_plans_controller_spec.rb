@@ -3,7 +3,7 @@
 
 RSpec.describe '[ API::V1::Public::MembershipPlansController API ]' do
   # 段階的メンバーシップグループ
-  let!(:leveled_membership_group) { create(:memberships__group, tenant_id: current_tenant.id, name: 'leveled_membership_group', position: 1) }
+  let!(:leveled_membership_group) { create(:membership_group, tenant_id: current_tenant.id, name: 'leveled_membership_group', position: 1) }
   let!(:leveled_membership_platinum) { create(:membership, tenant_id: current_tenant.id, membership_group: leveled_membership_group, name: 'platinum', position: 1, tier: 1) }
   let!(:leveled_membership_premium) { create(:membership, tenant_id: current_tenant.id, membership_group: leveled_membership_group, name: 'premium', position: 2, tier: 2) }
   let!(:leveled_membership_basic) { create(:membership, tenant_id: current_tenant.id, membership_group: leveled_membership_group, name: 'basic', position: 3, tier: 3) }
@@ -14,40 +14,40 @@ RSpec.describe '[ API::V1::Public::MembershipPlansController API ]' do
 
   # メンバーシッププラン
   let!(:platinum_plan) {
-    create(:memberships__plan, tenant_id: current_tenant.id, name: 'platinum_plan', amount: 5000, position: 1, recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 7)
+    create(:membership_plan, tenant_id: current_tenant.id, name: 'platinum_plan', amount: 5000, position: 1, recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 7)
   }
   let!(:premium_plan) {
-    create(:memberships__plan, tenant_id: current_tenant.id, name: 'premium_plan', amount: 3000, position: 2, recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 0)
+    create(:membership_plan, tenant_id: current_tenant.id, name: 'premium_plan', amount: 3000, position: 2, recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 0)
   }
   let!(:basic_plan) {
-    create(:memberships__plan, tenant_id: current_tenant.id, name: 'basic_plan', amount: 1000, position: 3, recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 0)
+    create(:membership_plan, tenant_id: current_tenant.id, name: 'basic_plan', amount: 1000, position: 3, recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 0)
   }
   let!(:member_a_plan) {
-    create(:memberships__plan, tenant_id: current_tenant.id, name: 'member_a_plan', amount: 2000, position: 4, recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 0)
+    create(:membership_plan, tenant_id: current_tenant.id, name: 'member_a_plan', amount: 2000, position: 4, recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 0)
   }
   let!(:member_b_plan) {
-    create(:memberships__plan, tenant_id: current_tenant.id, name: 'member_b_plan', amount: 2500, position: 5, recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 0)
+    create(:membership_plan, tenant_id: current_tenant.id, name: 'member_b_plan', amount: 2500, position: 5, recurring_interval_count: 1, recurring_interval_unit: 'month', trial_period_days: 0)
   }
 
   # プランコンポーネント
-  let!(:platinum_plan_component) { create(:memberships__plan_component, membership_plan: platinum_plan, membership: leveled_membership_platinum, tenant_id: current_tenant.id) }
-  let!(:premium_plan_component) { create(:memberships__plan_component, membership_plan: premium_plan, membership: leveled_membership_premium, tenant_id: current_tenant.id) }
-  let!(:basic_plan_component) { create(:memberships__plan_component, membership_plan: basic_plan, membership: leveled_membership_basic, tenant_id: current_tenant.id) }
-  let!(:member_a_plan_component) { create(:memberships__plan_component, membership_plan: member_a_plan, membership: individual_membership_a, tenant_id: current_tenant.id) }
-  let!(:member_b_plan_component) { create(:memberships__plan_component, membership_plan: member_b_plan, membership: individual_membership_b, tenant_id: current_tenant.id) }
+  let!(:platinum_plan_component) { create(:membership_plan_component, membership_plan: platinum_plan, membership: leveled_membership_platinum, tenant_id: current_tenant.id) }
+  let!(:premium_plan_component) { create(:membership_plan_component, membership_plan: premium_plan, membership: leveled_membership_premium, tenant_id: current_tenant.id) }
+  let!(:basic_plan_component) { create(:membership_plan_component, membership_plan: basic_plan, membership: leveled_membership_basic, tenant_id: current_tenant.id) }
+  let!(:member_a_plan_component) { create(:membership_plan_component, membership_plan: member_a_plan, membership: individual_membership_a, tenant_id: current_tenant.id) }
+  let!(:member_b_plan_component) { create(:membership_plan_component, membership_plan: member_b_plan, membership: individual_membership_b, tenant_id: current_tenant.id) }
 
   # 支払い方法
-  let!(:platinum_payment_method) { create(:memberships__plan_payment_method, membership_plan: platinum_plan, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: true) }
-  let!(:premium_payment_method) { create(:memberships__plan_payment_method, membership_plan: premium_plan, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: true) }
-  let!(:basic_payment_method) { create(:memberships__plan_payment_method, membership_plan: basic_plan, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: true) }
-  let!(:member_a_payment_method) { create(:memberships__plan_payment_method, membership_plan: member_a_plan, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: true) }
-  let!(:member_b_payment_method) { create(:memberships__plan_payment_method, membership_plan: member_b_plan, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: true) }
+  let!(:platinum_payment_method) { create(:membership_plan_payment_method, membership_plan: platinum_plan, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: true) }
+  let!(:premium_payment_method) { create(:membership_plan_payment_method, membership_plan: premium_plan, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: true) }
+  let!(:basic_payment_method) { create(:membership_plan_payment_method, membership_plan: basic_plan, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: true) }
+  let!(:member_a_payment_method) { create(:membership_plan_payment_method, membership_plan: member_a_plan, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: true) }
+  let!(:member_b_payment_method) { create(:membership_plan_payment_method, membership_plan: member_b_plan, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: true) }
 
   # 非アクティブなプラン
-  let!(:inactive_plan) { create(:memberships__plan, tenant_id: current_tenant.id, name: 'inactive_plan', amount: 1000, position: 6, is_active: false) }
+  let!(:inactive_plan) { create(:membership_plan, tenant_id: current_tenant.id, name: 'inactive_plan', amount: 1000, position: 6, is_active: false) }
   let!(:inactive_membership) { create(:membership, tenant_id: current_tenant.id, name: 'inactive_membership', position: 6, tier: 1) }
-  let!(:inactive_plan_component) { create(:memberships__plan_component, membership_plan: inactive_plan, membership: inactive_membership, tenant_id: current_tenant.id) }
-  let!(:inactive_payment_method) { create(:memberships__plan_payment_method, membership_plan: inactive_plan, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: false) }
+  let!(:inactive_plan_component) { create(:membership_plan_component, membership_plan: inactive_plan, membership: inactive_membership, tenant_id: current_tenant.id) }
+  let!(:inactive_payment_method) { create(:membership_plan_payment_method, membership_plan: inactive_plan, tenant_id: current_tenant.id, payment_type: 'credit_card', is_active: false) }
 
   before do
     # すべてのレコードを確実に作成
@@ -226,7 +226,7 @@ RSpec.describe '[ API::V1::Public::MembershipPlansController API ]' do
 
     context 'when plan belongs to different tenant' do
       let(:other_tenant) { create(:tenant, id: 'other', name: 'other_tenant') }
-      let(:other_plan) { create(:memberships__plan, tenant_id: other_tenant.id, name: 'other_plan', amount: 1000) }
+      let(:other_plan) { create(:membership_plan, tenant_id: other_tenant.id, name: 'other_plan', amount: 1000) }
       let(:id) { other_plan.id }
 
       it 'returns 404' do

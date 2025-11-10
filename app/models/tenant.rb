@@ -15,11 +15,10 @@ class Tenant < ApplicationRecord
 
   # Membership
   has_many :memberships, dependent: :destroy
-  has_many :membership_groups, class_name: 'Memberships::Group', dependent: :destroy
-  has_many :membership_plans, class_name: 'Memberships::Plan', dependent: :destroy
-  has_many :membership_contracts, class_name: 'Memberships::Contract', dependent: :destroy
-  has_many :membership_billing_profiles, class_name: 'Memberships::BillingProfile', dependent: :destroy
-  has_many :membership_user_achievements, class_name: 'Memberships::UserAchievement', dependent: :destroy
+  has_many :membership_groups, class_name: 'Membership::Group', dependent: :destroy
+  has_many :membership_plans, class_name: 'Membership::Plan', dependent: :destroy
+  has_many :membership_contracts, class_name: 'Membership::Contract', dependent: :destroy
+  has_many :payment_transactions, class_name: 'Payment::Transaction', dependent: :destroy
 
   class CardPaymentGatewayEnum < T::Enum
     enums do

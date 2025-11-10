@@ -6,7 +6,7 @@ module API::V1::Internal
     def index
       active_memberships = current_user.memberships
                                        .joins(:membership_users)
-                                       .where(memberships__users: { status: 'active' })
+                                       .where(membership_users: { status: 'active' })
                                        .includes(:membership_group)
                                        .order(:position)
 

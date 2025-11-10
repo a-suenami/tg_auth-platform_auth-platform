@@ -45,3 +45,15 @@ UserProfile.seed do |s|
   s.birth_date = Date.parse('1990-04-01')
   s.gender = 'male'
 end
+
+UserProfile.seed do |s|
+  s.id = '538482da-b80f-403e-be70-e2420c8168ac'
+  s.tenant_id = 'sample'
+  s.user_id = '04df2296-8d2c-4d78-8e74-334ad06ac7cc'
+  s.first_name = '健太'
+  s.last_name = '霧島'
+  s.first_name_kana = 'ケンタ'
+  s.last_name_kana = 'キリシマ'
+  s.birth_date = Date.parse('2000-01-01')
+  s.gender = 'other'
+end

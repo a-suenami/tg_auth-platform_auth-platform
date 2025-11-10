@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :stripe_record_payment_method, class: 'StripeRecord::PaymentMethod' do
     tenant_id { create(:tenant).id }
-    user { create(:user) }
+    user { create(:user, tenant_id: self.tenant_id) }
     type { 'card' }
     billing_details { {} }
     card { {} }
@@ -11,7 +11,7 @@ FactoryBot.define do
     detached_at { nil }
     created_at { Time.current }
     updated_at { Time.current }
-    api_key_account { create(:stripe_record_account, :skip_validate, tenant_id: tenant_id) }
+    api_key_account { nil }
     connect_account { nil }
     charge_type { nil }
   end

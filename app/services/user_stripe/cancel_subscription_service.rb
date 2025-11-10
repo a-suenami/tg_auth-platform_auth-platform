@@ -11,12 +11,13 @@ module UserStripe
         raise Exceptions::Payment::AlreadyCanceled, 'すでに停止済みです'
       end
 
-      # 現在のBillingProfileを取得
-      current_billing_profile = contract.current_billing_profile
-      raise Exceptions::Payment::NoCurrentBillingProfile unless current_billing_profile
+      # TODO: PaymentTransactionをチェック
+      # TODO: PaymentSubscriptionをチェック
+      # TODO: ContractTermをチェック
+
 
       # Stripeのsubscriptionを取得
-      stripe_subscription = current_billing_profile.chargeable
+      stripe_subscription = contract.payment_subscription.subscribable
       raise Exceptions::Payment::NoStripeSubscription unless stripe_subscription
 
       # Stripe subscriptionの種類をチェック

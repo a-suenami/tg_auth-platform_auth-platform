@@ -10,4 +10,4 @@ create_table :memberships, force: :cascade, id: :uuid, default: -> { 'gen_random
 end
 
 add_foreign_key :memberships, :tenants, name: :fk_memberships_tenants
-add_foreign_key :memberships, :memberships__groups, column: :membership_group_id, name: :fk_memberships_groups
+add_foreign_key :memberships, :membership_groups, column: :membership_group_id, name: :fk_membership_groups

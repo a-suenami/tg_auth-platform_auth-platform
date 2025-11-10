@@ -3,9 +3,9 @@
 FactoryBot.define do
   factory :stripe_record_subscription, class: 'StripeRecord::Subscription' do
     tenant_id { create(:tenant).id }
-    user { create(:user) }
-    product { create(:stripe_record_product) }
-    price { create(:stripe_record_price, product: product) }
+    user { create(:user, tenant_id: self.tenant_id) }
+    product { create(:stripe_record_product, tenant_id: self.tenant_id) }
+    price { create(:stripe_record_price, product: product, tenant_id: self.tenant_id) }
     pending_setup_intent { nil }
 
     amount { 1000 }

@@ -475,10 +475,10 @@ class StripeRecord::Price
 
     # This method is created by ActiveRecord on the `StripeRecord::Price` class because it declared `has_many :plan_payment_methods`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::Memberships::PlanPaymentMethod::PrivateCollectionProxy) }
+    sig { returns(::Membership::PlanPaymentMethod::PrivateCollectionProxy) }
     def plan_payment_methods; end
 
-    sig { params(value: T::Enumerable[::Memberships::PlanPaymentMethod]).void }
+    sig { params(value: T::Enumerable[::Membership::PlanPaymentMethod]).void }
     def plan_payment_methods=(value); end
 
     sig { returns(T.nilable(::StripeRecord::Product)) }

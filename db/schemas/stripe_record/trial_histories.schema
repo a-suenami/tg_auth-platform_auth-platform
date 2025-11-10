@@ -1,4 +1,4 @@
-create_table :stripe_record__trial_histories, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Stripeのトライアル履歴' do |t|
+create_table :stripe_record_trial_histories, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Stripeのトライアル履歴' do |t|
   t.references :tenant, type: :citext, null: false
   t.references :user, type: :uuid, null: false
   t.references :membership, type: :uuid, null: false
@@ -11,5 +11,5 @@ create_table :stripe_record__trial_histories, force: :cascade, id: :uuid, defaul
 
   t.timestamps null: false
 
-  t.index [:tenant_id, :membership_id, :fingerprint], unique: true, name: :idx_stripe_record__trial_histories_unique
+  t.index [:tenant_id, :membership_id, :fingerprint], unique: true, name: :idx_stripe_record_trial_histories_unique
 end

@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :stripe_record_account, class: 'StripeRecord::Account' do
     tenant_id { create(:tenant).id }
-    api_key { create(:stripe_record_api_key, :skip_validate) }
+    api_key { nil }
     controlling_platform { nil }
 
     sequence(:remote_id) { |n| "acct_#{n}" }

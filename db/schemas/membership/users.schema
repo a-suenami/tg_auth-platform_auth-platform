@@ -1,0 +1,19 @@
+create_table :membership_users, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'メンバーシップとUserの中間テーブル' do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :user, type: :uuid, null: false
+  t.references :membership, type: :uuid, null: false
+  t.references :membership_group, type: :uuid, comment: '段階的プランの場合のグループ'
+  t.references :membership_contract, type: :uuid, comment: 'メンバーシップ契約'
+  t.datetime :activated_at, comment: 'メンバーシップ有効化日時'
+  t.datetime :expired_at, comment: 'メンバーシップの失効日時'
+  t.string :status, comment: 'メンバーシップのステータス'
+
+  t.timestamps null: false
+  t.index [:tenant_id, :user_id, :membership_id], name: :idx_membership_users_tenant_user_membership_uniq, using: :btree, unique: true
+end
+
+add_foreign_key :membership_users, :tenants, name: :fk_membership_users_tenants
+add_foreign_key :membership_users, :users, name: :fk_membership_users_users
+add_foreign_key :membership_users, :memberships, column: :membership_id, name: :fk_membership_users_memberships
+add_foreign_key :membership_users, :membership_groups, column: :membership_group_id, name: :fk_membership_users_groups
+add_foreign_key :membership_users, :membership_contracts, column: :membership_contract_id, name: :fk_membership_users_contracts

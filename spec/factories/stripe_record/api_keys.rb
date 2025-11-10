@@ -7,7 +7,6 @@ FactoryBot.define do
     sequence(:remote_id) { |n| "ak_#{n}" }
     sequence(:display_name) { |n| "API Key #{n}" }
     publishable_key { 'pk_test_1234567890' }
-    secret_key_encrypted { 'sk_test_1234567890' }
     secret_key { 'sk_test_1234567890' }
 
     trait :live do

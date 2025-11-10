@@ -424,7 +424,7 @@ class StripeRecord::TrialHistory
     sig { params(args: T.untyped, blk: T.untyped).returns(::Membership) }
     def build_membership(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Plan) }
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership::Plan) }
     def build_membership_plan(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Subscription) }
@@ -439,10 +439,10 @@ class StripeRecord::TrialHistory
     sig { params(args: T.untyped, blk: T.untyped).returns(::Membership) }
     def create_membership!(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Plan) }
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership::Plan) }
     def create_membership_plan(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Memberships::Plan) }
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Membership::Plan) }
     def create_membership_plan!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::StripeRecord::Subscription) }
@@ -466,10 +466,10 @@ class StripeRecord::TrialHistory
     sig { returns(T::Boolean) }
     def membership_changed?; end
 
-    sig { returns(T.nilable(::Memberships::Plan)) }
+    sig { returns(T.nilable(::Membership::Plan)) }
     def membership_plan; end
 
-    sig { params(value: T.nilable(::Memberships::Plan)).void }
+    sig { params(value: T.nilable(::Membership::Plan)).void }
     def membership_plan=(value); end
 
     sig { returns(T::Boolean) }
@@ -484,7 +484,7 @@ class StripeRecord::TrialHistory
     sig { returns(T.nilable(::Membership)) }
     def reload_membership; end
 
-    sig { returns(T.nilable(::Memberships::Plan)) }
+    sig { returns(T.nilable(::Membership::Plan)) }
     def reload_membership_plan; end
 
     sig { returns(T.nilable(::StripeRecord::Subscription)) }

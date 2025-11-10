@@ -14,7 +14,7 @@ module UserStripe
       stripe_subscription = user.stripe_subscriptions.new
       stripe_subscription.tenant_id = Tenant.current.id
       stripe_subscription.price = stripe_record_price
-      stripe_subscription.product = stripe_subscription.price.product
+      stripe_subscription.product = stripe_record_price.product
       default_payment_method_or_default_source = fetch_default_payment_method_or_default_source_of(user)
 
       raise Exceptions::Payment::InvalidPlan if stripe_subscription.product.deleted?
@@ -26,7 +26,7 @@ module UserStripe
     end
 
     def stripe_api_key_config
-      { api_key: Tenant.current&.tenant_stripe_account&.stripe_account&.api_key&.secret_key, stripe_version: '2025-08-27.basil' }
+      AppStripe.configuration
     end
 
 

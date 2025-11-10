@@ -4,13 +4,14 @@
 create_table :tenant_stripe_accounts, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant,         type: :citext, null: false, index: { unique: true }, foreign_key: { name: :fk_tenant_stripe_accounts__tenants }
   t.references :stripe_account, type: :uuid,   null: false, index: true,             foreign_key: {
-    name: :fk_tenant_stripe_accounts__stripe_accounts, to_table: :stripe_record__accounts, column: :stripe_account_id,
+    name: :fk_tenant_stripe_accounts_stripe_accounts, to_table: :stripe_record_accounts, column: :stripe_account_id,
   }
 
   t.string  :charge_type, null: true, comment: 'Connect の場合にどの支払いタイプを利用するか'
   t.decimal :fee_rate, precision: 6, scale: 5, comment: '手数料率（100% ~ 0.001%）。stripe_account.controlling_platform がいる場合のみ（Connect）利用する。'
   t.string  :tax_rate_id, null: true, comment: 'stripe の税率ID'
   t.string  :webhook_secret, null: true, comment: 'Stripe webhookの署名検証用シークレット'
+  t.integer :membership_grace_period_minutes, null: false, default: 60, comment: 'メンバーシップの有効期限の猶予期間（分）'
 
   t.timestamps null: false
 

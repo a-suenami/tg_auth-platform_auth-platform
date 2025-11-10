@@ -2,47 +2,64 @@
 
 module UserStripe
   class CompleteContractService < UserStripe::BaseService
-    def execute(contract, stripe_record_subscription)
+    def execute(contract)
+      # TODO: 完了済みの場合も2重リクエスト対策として冪等に処理。ただし、明らかに新規登録でない場合はエラーとする
+
       ActiveRecord::Base.transaction do
+        # StripeRecord::Subscriptionを取得
+        stripe_record_subscription = contract.payment_subscription&.subscribable
+        unless stripe_record_subscription
+          raise Exceptions::Payment::InvalidPlan, "StripeRecord::Subscription not found for contract #{contract.id}"
+        end
+
+        # Stripe APIから最新のsubscription情報を取得
+        stripe_record_subscription.refresh!
+
         # Contractのステータスをアクティブに変更
         contract.update!(
           status: 'active',
         )
 
-        current_billing_profile = stripe_record_subscription&.current_billing_profile
-        plan = current_billing_profile.membership_plan
-        next_period_end = if stripe_record_subscription.trial_period_days.present?
-          calculate_trial_recurring_expiry_date(Time.zone.now, stripe_record_subscription)
-        else
-          calculate_recurring_expiry_date(Time.zone.now, plan)
-        end
-        current_billing_profile.update!(
+        # Payment::Subscriptionのステータスをアクティブに変更
+        contract.payment_subscription
+
+        # Payment::Transactionのステータスをアクティブに変更
+        payment_transaction = contract.payment_transactions.order(created_at: :desc).first
+        payment_transaction.update!(
           status: 'active',
-          activated_at: Time.zone.now,
-          expires_at: next_period_end,
         )
-        next unless plan
 
-        # プラン内容に従って有効期限を設定
-        if plan.recurrence
-          # 定期契約の場合
-          # 一回払いの場合
-        end
+        # Stripeから次回更新時間を取得
+        next_period_end = get_next_period_end_from_stripe(stripe_record_subscription, contract)
+
+        # Contractの有効期限を設定
         contract.update!(
-          expires_at: next_period_end,
+          expired_at: next_period_end,
         )
 
-        # Memberships::Userのステータスを有効に変更
-        update_membership_user(contract)
+        # Membership::Userのステータスを有効に変更
+        update_membership_user(contract, next_period_end)
+
         # トライアル履歴を作成
         if stripe_record_subscription.trial_start.present?
           create_trial_history(contract:, stripe_record_subscription:)
         end
+
         Rails.logger.info "User contract #{contract.id} completed successfully"
       end
     end
 
     private
+
+    def get_next_period_end_from_stripe(stripe_record_subscription, contract)
+      if stripe_record_subscription.current_period_end.present?
+        Time.zone.at(stripe_record_subscription.current_period_end)
+      else
+        # フォールバック: プラン情報から計算
+        membership_plan = contract.current_contract_term.membership_plan
+        calculate_recurring_expiry_date(Time.zone.now, membership_plan)
+      end
+    end
 
     def calculate_recurring_expiry_date(activated_at, plan)
       # recurring_interval_unitとrecurring_interval_countを使用して契約期間を計算
@@ -60,12 +77,8 @@ module UserStripe
       end
     end
 
-    def calculate_trial_recurring_expiry_date(activated_at, stripe_record_subscription)
-      activated_at + stripe_record_subscription.trial_period_days.days
-    end
-
     def create_trial_history(contract:, stripe_record_subscription:)
-      membership_plan = contract.current_billing_profile.membership_plan
+      membership_plan = contract.current_contract_term.membership_plan
       memberships = membership_plan.memberships
       memberships.each do |membership|
         StripeRecord::TrialHistory.create!(
@@ -82,19 +95,20 @@ module UserStripe
       end
     end
 
-    def update_membership_user(contract)
-      membership_plan = contract.current_billing_profile.membership_plan
+    def update_membership_user(contract, next_period_end)
+      membership_plan = contract.current_contract_term.membership_plan
       memberships = membership_plan.memberships
       memberships.each do |membership|
-        membership_user = Memberships::User.find_or_create_by!(
+        membership_user = Membership::User.find_or_create_by!(
           tenant_id: contract.tenant_id,
           user: contract.user,
+          membership_contract: contract,
           membership:,
         )
-        # TODO: トライアルの場合、トライアル期限までに設定
         membership_user.update!(
           status: 'active',
-          expires_at: calculate_recurring_expiry_date(Time.zone.now, membership_plan),
+          activated_at: membership_user.activated_at || Time.zone.now,
+          expired_at: next_period_end,
         )
       end
     end
