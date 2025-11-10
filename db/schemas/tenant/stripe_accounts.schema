@@ -12,6 +12,7 @@ create_table :tenant_stripe_accounts, force: :cascade, id: :uuid, default: -> { 
   t.string  :tax_rate_id, null: true, comment: 'stripe の税率ID'
   t.string  :webhook_secret, null: true, comment: 'Stripe webhookの署名検証用シークレット'
   t.integer :membership_grace_period_minutes, null: false, default: 60, comment: 'メンバーシップの有効期限の猶予期間（分）'
+  t.boolean :send_subscription_update_succeeded_email_for_all_intervals, null: false, default: false, comment: 'すべてのインターバルでサブスクリプション更新成功メールを送信するかどうか'
 
   t.timestamps null: false
 

@@ -9,14 +9,12 @@ class StripeRecord
     belongs_to :api_key_account, class_name: 'StripeRecord::Account'
 
     sig { params(remote_charge: Stripe::Charge).returns(StripeRecord::Charge) }
-    def assign_remote_attributes(remote_charge) # rubocop:disable Metrics/AbcSize
+    def assign_remote_attributes(remote_charge)
       self.amount = remote_charge.amount
       self.amount_captured = remote_charge.amount_captured
       self.amount_refunded = remote_charge.amount_refunded
       self.application_id = remote_charge.application
       self.application_fee_amount = remote_charge.application_fee_amount
-      balance_transaction = remote_charge.balance_transaction
-      self.balance_transaction_id = balance_transaction&.id
       self.billing_details = remote_charge.billing_details
       self.calculated_statement_descriptor = remote_charge.calculated_statement_descriptor
       self.captured = remote_charge.captured

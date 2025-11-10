@@ -11,13 +11,14 @@ class StripeRecord
     belongs_to :product, class_name: 'StripeRecord::Product'
     belongs_to :price, class_name: 'StripeRecord::Price'
     belongs_to :pending_setup_intent, class_name: 'StripeRecord::SetupIntent', optional: true, inverse_of: :subscription
+    belongs_to :tenant, class_name: 'Tenant'
 
     # has_one :subscription, as: :chargeable
 
     has_many :invoices, inverse_of: :chargeable
     has_many :subscription_items, class_name: 'StripeRecord::SubscriptionItem', dependent: :destroy
 
-    has_many :payment_subscription, inverse_of: :subscribable, dependent: :nullify, class_name: 'Payment::Subscription'
+    has_one :payment_subscription, inverse_of: :subscribable, dependent: :nullify, class_name: 'Payment::Subscription'
     has_many :subscription_schedules, class_name: 'StripeRecord::SubscriptionSchedule', dependent: :nullify
     has_one :last_subscription_schedule, -> { order(created_at: :desc) }, class_name: 'StripeRecord::SubscriptionSchedule', dependent: :nullify, inverse_of: :subscription
 
@@ -99,6 +100,16 @@ class StripeRecord
       when :payment_intent
         stripe_subscription.latest_invoice.confirmation_secret.client_secret
       end
+    end
+
+    def membership_grace_period
+      self_tenant = self.tenant
+      tenant_stripe_account = self_tenant.tenant_stripe_account
+      if tenant_stripe_account.membership_grace_period_minutes.nil?
+        return 60.minutes
+      end
+
+      tenant_stripe_account.membership_grace_period_minutes.minutes
     end
   end
 end

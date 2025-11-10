@@ -26,7 +26,7 @@ class StripeRecord
     secret_key = T.must(Tenant.current!.tenant_stripe_account).api_key.secret_key
     _opts = {
       api_key: secret_key,
-      stripe_version: '2024-04-10', # default
+      stripe_version: '2025-08-27.basil', # default
     }
 
     _opts[:stripe_account] = stripe_account if stripe_account.present?
