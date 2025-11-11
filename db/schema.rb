@@ -87,6 +87,27 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_email_templates_on_tenant_id"
   end
 
+  create_table "komoju_record_payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.string "remote_id", null: false, comment: "Komoju payment ID"
+    t.string "status", null: false, comment: "authorized/captured/expired/cancelled"
+    t.integer "amount", null: false, comment: "Amount in JPY"
+    t.string "confirmation_code", comment: "Payment code for user lookup"
+    t.datetime "payment_deadline", comment: "Payment expiration (for background jobs)"
+    t.datetime "authorized_at", comment: "When payment created"
+    t.datetime "captured_at", comment: "When payment completed"
+    t.datetime "expired_at", comment: "When payment expired"
+    t.jsonb "komoju_data", default: {}, comment: "Full API response"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["payment_deadline"], name: "idx_komoju_payments_payment_deadline"
+    t.index ["status"], name: "idx_komoju_payments_status"
+    t.index ["tenant_id", "remote_id"], name: "idx_komoju_payments_tenant_remote_id_uniq", unique: true
+    t.index ["tenant_id"], name: "index_komoju_record_payments_on_tenant_id"
+    t.index ["user_id"], name: "index_komoju_record_payments_on_user_id"
+  end
+
   create_table "login_spa_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "name", null: false
@@ -919,6 +940,8 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "delivery_addresses", "tenants", name: "fk_delivery_addresses_tenants"
   add_foreign_key "delivery_addresses", "users", name: "fk_delivery_addresses_users"
   add_foreign_key "email_templates", "tenants", name: "fk_email_templates_tenants"
+  add_foreign_key "komoju_record_payments", "tenants", name: "fk_komoju_payments_tenants"
+  add_foreign_key "komoju_record_payments", "users", name: "fk_komoju_payments_users"
   add_foreign_key "login_spa_applications", "tenants", name: "fk_login_spa_applications_tenants"
   add_foreign_key "membership_contract_terms", "membership_contracts", name: "fk_membership_contract_terms_contracts"
   add_foreign_key "membership_contract_terms", "membership_plans", name: "fk_membership_contract_terms_plans"

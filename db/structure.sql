@@ -1,4 +1,4 @@
-\restrict exdmWjTdhiXLjphCpgCz6cGakHW1Sjd51U5vjqrqYPy3q8BhxTEdxhjR5FnBeo1
+\restrict 1eFjndy6kgzKwfozRa6FpbxSIBlSDbaydpczmi1px9baSlpDp5pdrFKq2h0szgV
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -133,6 +133,91 @@ CREATE TABLE public.email_templates (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: komoju_record_payments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.komoju_record_payments (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    remote_id character varying NOT NULL,
+    status character varying NOT NULL,
+    amount integer NOT NULL,
+    confirmation_code character varying,
+    payment_deadline timestamp(6) without time zone,
+    authorized_at timestamp(6) without time zone,
+    captured_at timestamp(6) without time zone,
+    expired_at timestamp(6) without time zone,
+    komoju_data jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN komoju_record_payments.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.komoju_record_payments.remote_id IS 'Komoju payment ID';
+
+
+--
+-- Name: COLUMN komoju_record_payments.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.komoju_record_payments.status IS 'authorized/captured/expired/cancelled';
+
+
+--
+-- Name: COLUMN komoju_record_payments.amount; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.komoju_record_payments.amount IS 'Amount in JPY';
+
+
+--
+-- Name: COLUMN komoju_record_payments.confirmation_code; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.komoju_record_payments.confirmation_code IS 'Payment code for user lookup';
+
+
+--
+-- Name: COLUMN komoju_record_payments.payment_deadline; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.komoju_record_payments.payment_deadline IS 'Payment expiration (for background jobs)';
+
+
+--
+-- Name: COLUMN komoju_record_payments.authorized_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.komoju_record_payments.authorized_at IS 'When payment created';
+
+
+--
+-- Name: COLUMN komoju_record_payments.captured_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.komoju_record_payments.captured_at IS 'When payment completed';
+
+
+--
+-- Name: COLUMN komoju_record_payments.expired_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.komoju_record_payments.expired_at IS 'When payment expired';
+
+
+--
+-- Name: COLUMN komoju_record_payments.komoju_data; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.komoju_record_payments.komoju_data IS 'Full API response';
 
 
 --
@@ -2021,6 +2106,14 @@ ALTER TABLE ONLY public.email_templates
 
 
 --
+-- Name: komoju_record_payments komoju_record_payments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.komoju_record_payments
+    ADD CONSTRAINT komoju_record_payments_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: login_spa_applications login_spa_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2417,6 +2510,27 @@ CREATE UNIQUE INDEX idx_contact_addresses_tenant_id_user_id_uniq ON public.conta
 
 
 --
+-- Name: idx_komoju_payments_payment_deadline; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_komoju_payments_payment_deadline ON public.komoju_record_payments USING btree (payment_deadline);
+
+
+--
+-- Name: idx_komoju_payments_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_komoju_payments_status ON public.komoju_record_payments USING btree (status);
+
+
+--
+-- Name: idx_komoju_payments_tenant_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_komoju_payments_tenant_remote_id_uniq ON public.komoju_record_payments USING btree (tenant_id, remote_id);
+
+
+--
 -- Name: idx_linked_applications_tenant_user_oauth_application_uniq; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2750,6 +2864,20 @@ CREATE INDEX index_email_templates_on_tenant_id ON public.email_templates USING 
 --
 
 CREATE UNIQUE INDEX index_email_templates_on_tenant_id_template_type ON public.email_templates USING btree (tenant_id, template_type);
+
+
+--
+-- Name: index_komoju_record_payments_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_komoju_record_payments_on_tenant_id ON public.komoju_record_payments USING btree (tenant_id);
+
+
+--
+-- Name: index_komoju_record_payments_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_komoju_record_payments_on_user_id ON public.komoju_record_payments USING btree (user_id);
 
 
 --
@@ -3691,6 +3819,22 @@ ALTER TABLE ONLY public.email_templates
 
 
 --
+-- Name: komoju_record_payments fk_komoju_payments_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.komoju_record_payments
+    ADD CONSTRAINT fk_komoju_payments_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: komoju_record_payments fk_komoju_payments_users; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.komoju_record_payments
+    ADD CONSTRAINT fk_komoju_payments_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: login_spa_applications fk_login_spa_applications_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4486,7 +4630,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict exdmWjTdhiXLjphCpgCz6cGakHW1Sjd51U5vjqrqYPy3q8BhxTEdxhjR5FnBeo1
+\unrestrict 1eFjndy6kgzKwfozRa6FpbxSIBlSDbaydpczmi1px9baSlpDp5pdrFKq2h0szgV
 
 SET search_path TO "$user", public;
 
