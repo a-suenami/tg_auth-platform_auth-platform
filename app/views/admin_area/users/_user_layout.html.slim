@@ -1,0 +1,24 @@
+.l-page-content
+  .l-page-content__navigation
+    = link_to admin_area_users_path, class: "l-page-content__navigation__item #{'is-active' if controller_name == 'users'}" do
+      span.l-page-content__navigation__item__text すべてのユーザー
+      span.l-page-content__navigation__item__count 999
+    - unless Rails.env.production?
+      = link_to '#', class: "l-page-content__navigation__item" do
+        span.l-page-content__navigation__item__text 分析
+    - unless Rails.env.production?
+      = link_to '#', class: "l-page-content__navigation__item" do
+        span.l-page-content__navigation__item__text タグ
+    - unless Rails.env.production?
+      input#auto-tagging-is-open.l-page-content__navigation__checkbox type="checkbox"
+      label.l-page-content__navigation__item for="auto-tagging-is-open"
+        span.l-page-content__navigation__item__text オートタギング
+        span.l-page-content__navigation__item__chevron
+          = render 'shared/icons/icon-chevron-down'
+      .l-page-content__navigation__children
+        = link_to '#', class: "l-page-content__navigation__children__item" do
+          | 三ヶ月以内にMembership Aを購読したユーザー
+        = link_to '#', class: "l-page-content__navigation__children__item" do
+          | 2025/10/01 00:00 ~ 2025/10/31 23:59に何かのプランを購読したユーザー
+  .l-page-content__main
+    = yield
