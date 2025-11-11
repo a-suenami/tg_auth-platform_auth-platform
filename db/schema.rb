@@ -813,6 +813,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "tax_rate_id", comment: "stripe の税率ID"
     t.string "webhook_secret", comment: "Stripe webhookの署名検証用シークレット"
     t.integer "membership_grace_period_minutes", default: 60, null: false, comment: "メンバーシップの有効期限の猶予期間（分）"
+    t.boolean "send_subscription_update_succeeded_email_for_all_intervals", default: false, null: false, comment: "すべてのインターバルでサブスクリプション更新成功メールを送信するかどうか"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["stripe_account_id"], name: "index_tenant_stripe_accounts_on_stripe_account_id"

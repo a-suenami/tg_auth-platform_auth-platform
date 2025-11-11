@@ -1868,6 +1868,7 @@ CREATE TABLE public.tenant_stripe_accounts (
     tax_rate_id character varying,
     webhook_secret character varying,
     membership_grace_period_minutes integer DEFAULT 60 NOT NULL,
+    send_subscription_update_succeeded_email_for_all_intervals boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1906,6 +1907,13 @@ COMMENT ON COLUMN public.tenant_stripe_accounts.webhook_secret IS 'Stripe webhoo
 --
 
 COMMENT ON COLUMN public.tenant_stripe_accounts.membership_grace_period_minutes IS 'メンバーシップの有効期限の猶予期間（分）';
+
+
+--
+-- Name: COLUMN tenant_stripe_accounts.send_subscription_update_succeeded_email_for_all_intervals; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_stripe_accounts.send_subscription_update_succeeded_email_for_all_intervals IS 'すべてのインターバルでサブスクリプション更新成功メールを送信するかどうか';
 
 
 --

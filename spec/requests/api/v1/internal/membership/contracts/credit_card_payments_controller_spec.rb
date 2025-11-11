@@ -571,7 +571,7 @@ remote_id: 'dummy_subscription_remote_id', trial_end: nil, trial_start: nil, cur
 
         it 'returns 400 Bad Request with stripe_error' do
           is_expected.to eq 400
-          expect(body_hash[:error][:code]).to eq('stripe_error')
+          expect(body_hash[:error][:code]).to eq('stripe_card_error')
         end
 
         it 'does not create contract when Stripe API fails' do
