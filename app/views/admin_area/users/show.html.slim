@@ -46,7 +46,7 @@
       dd = @user.deleted_at
     .uk-margin
       dt.uk-text-bold アカウント作成日
-      dd = @user.created_at.strftime("%Y年%m月%d日")
+      dd = local_time(@user.created_at)
 
     hr.uk-divider-icon
     .uk-flex.uk-flex-right

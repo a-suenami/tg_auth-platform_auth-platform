@@ -27,6 +27,11 @@ class Template < ApplicationRecord
     latest = latest_version
     return :draft if latest.nil?
 
+    # Check if draft has unpublished changes (different from latest version)
+    if T.must(template_mail).title.to_s != latest.title.to_s || T.must(template_mail).body.to_s != latest.body.to_s
+      return :draft
+    end
+
     if latest.public_started_at > Time.current
       :scheduled
     else
@@ -45,11 +50,5 @@ class Template < ApplicationRecord
       .where('public_started_at <= :time', time: Time.current)
       .order(version: :desc)
       .first
-  end
-
-  sig { returns(T.nilable(Template::Mail::Version)) }
-  def active_version
-    # Get the version that is currently active (published, not scheduled)
-    latest_published_version
   end
 end
