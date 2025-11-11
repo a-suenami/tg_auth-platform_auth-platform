@@ -1,0 +1,13 @@
+.c-tag-list {
+  display: flex;
+  gap: 8px;
+}
+.c-tag {
+  padding: 6px;
+  font-size: 13px;
+  border-radius: 6px;
+  background-color: var(--color-tag-background);
+  &.is-auto-tag {
+    background-color: var(--color-auto-tag-background);
+  }
+}

@@ -1,0 +1,83 @@
+.c-table {
+  overflow-x: auto;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  td,
+  th {
+    text-align: left;
+    padding: 8px 16px;
+    white-space: nowrap;
+    font-size: 13px;
+    vertical-align: middle;
+    width: 16px;
+    &.text-small {
+      font-size: 12px;
+    }
+  }
+  th {
+    padding: 22px 16px 14px;
+    background-color: var(--color-accent);
+    color: var(--color-text-body);
+    font-size: 12px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  td {
+    border-bottom: 1px solid var(--color-border);
+  }
+  &.has-checkbox {
+    td,
+    th {
+      --border-padding: 4px;
+      &:first-child {
+        position: sticky;
+        left: 0;
+        background-color: var(--color-background);
+        min-width: 16px;
+        &::before {
+          content: '';
+          position: absolute;
+          right: 0;
+          top: var(--border-padding);
+          bottom: var(--border-padding);
+          width: 1px;
+          background-color: var(--color-border);
+        }
+      }
+    }
+    th {
+      --border-padding: 0;
+      &:first-child {
+        background-color: var(--color-accent);
+      }
+    }
+  }
+  &.has-action {
+    td,
+    th {
+      --border-padding: 4px;
+      &:last-child {
+        position: sticky;
+        right: 0;
+        background-color: var(--color-background);
+        min-width: 16px;
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: var(--border-padding);
+          bottom: var(--border-padding);
+          width: 1px;
+          background-color: var(--color-border);
+        }
+      }
+    }
+    th {
+      --border-padding: 0;
+      &:last-child {
+        background-color: var(--color-accent);
+      }
+    }
+  }
+}

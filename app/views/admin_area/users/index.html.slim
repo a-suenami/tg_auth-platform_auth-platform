@@ -1,5 +1,85 @@
 = render 'admin_area/users/user_layout' do
-  | コンテンツ
+  .c-breadcrumb
+    .c-breadcrumb__sidenav
+      a.c-breadcrumb__sidenav__toggle href='#'
+        = render 'shared/icons/icon-sidenav'
+    .c-breadcrumb__content
+      span.c-breadcrumb__content__item.is-active すべてのユーザー
+  .c-table-header
+    .c-table-header__content
+      a.c-table-header__content__filter href='#'
+        = render 'shared/icons/icon-filter'
+        span.c-table-header__content__filter__text 絞り込み
+      .c-table-header__content__search
+        input.c-table-header__content__search__input type='text' placeholder='検索'
+        = render 'shared/icons/icon-search'
+      a.c-table-header__content__more href='#'
+        = render 'shared/icons/icon-more'
+    .c-table-header__pager
+      - if @pagy.prev
+        = link_to pagy_url_for(@pagy, @pagy.prev), class: 'c-table-header__pager__item'
+          = render 'shared/icons/icon-chevron-left'
+          span.c-table-header__pager__item__text 前へ
+      - else
+        span.c-table-header__pager__item.is-disabled
+          = render 'shared/icons/icon-chevron-left'
+          span.c-table-header__pager__item__text 前へ
+      - if @pagy.next
+        = link_to pagy_url_for(@pagy, @pagy.next), class: 'c-table-header__pager__item'
+          span.c-table-header__pager__item__text 次へ
+          = render 'shared/icons/icon-chevron-right'
+      - else
+        span.c-table-header__pager__item.is-disabled
+          span.c-table-header__pager__item__text 次へ
+          = render 'shared/icons/icon-chevron-right'
+  .c-table.has-checkbox.has-action
+    - if @users.empty?
+      .c-table__empty ユーザーが見つかりません
+    - else
+      table
+        tr
+          th
+            label.c-checkbox
+              input.c-checkbox__input type='checkbox'
+              .c-checkbox__checkbox
+          th
+            | ID
+          th
+            | 氏名
+          th
+            | メールアドレス
+          - unless Rails.env.production?
+            th
+              | 会員番号
+            th
+              | タグ
+          th
+            = render 'shared/icons/icon-config'
+        - @users.each do |user|
+          tr
+            td
+              label.c-checkbox
+                input.c-checkbox__input type='checkbox'
+                .c-checkbox__checkbox
+            td.text-small
+              = user.id
+            td
+              = user&.user_profile&.name
+            td
+              = user.email
+            - unless Rails.env.production?
+              td 1234-5678-0000
+              td
+                .c-tag-list
+                  - 1..5.times do |i|
+                    .c-tag.c-tag--primary
+                      | ユーザタグ#{i + 1}
+            td
+              a.c-table-row-action href='#'
+                = render 'shared/icons/icon-more-vertical'
+  .c-table-footer
+    == pagy_nav(@pagy)
+
 / .uk-margin-top.uk-container
   h2 会員ID一覧
 
