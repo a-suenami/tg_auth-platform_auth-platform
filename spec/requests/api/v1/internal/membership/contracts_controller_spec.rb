@@ -182,6 +182,8 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
     context 'when contract does not exist' do
       let(:id) { 99_999 }
 
+      include_context 'current user session is present'
+
       it 'returns 404' do
         is_expected.to eq 404
       end

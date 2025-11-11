@@ -13,10 +13,6 @@ module UserStripe
 
       stripe_subscription = create_stripe_subscription(user, membership_plan, stripe_record_subscription, off_session)
 
-      if off_session && stripe_subscription.status != 'active'
-        raise Exceptions::Payment::Stripe::StripeError, "Stripeでの契約に失敗しました: #{stripe_subscription.status}"
-      end
-
       ActiveRecord::Base.transaction do
         update_stripe_record_subscription(stripe_record_subscription, stripe_subscription)
         chargeable = save_payment_intent_or_setup_intent(stripe_subscription, user, stripe_record_subscription)
@@ -26,6 +22,24 @@ module UserStripe
 
         contract
       end
+    rescue Stripe::CardError => e
+      Sentry.capture_exception(e)
+      raise Exceptions::Payment::Stripe::CardError
+    rescue Stripe::RateLimitError => e
+      Sentry.capture_exception(e)
+      raise Exceptions::Payment::Stripe::RateLimitError
+    rescue Stripe::InvalidRequestError => e
+      Sentry.capture_exception(e)
+      raise Exceptions::Payment::Stripe::InvalidRequestError
+    rescue Stripe::AuthenticationError => e
+      Sentry.capture_exception(e)
+      raise Exceptions::Payment::Stripe::AuthenticationError
+    rescue Stripe::APIConnectionError => e
+      Sentry.capture_exception(e)
+      raise Exceptions::Payment::Stripe::APIConnectionError
+    rescue Stripe::APIError => e
+      Sentry.capture_exception(e)
+      raise Exceptions::Payment::Stripe::APIError
     rescue Stripe::StripeError => e
       Sentry.capture_exception(e)
       raise Exceptions::Payment::Stripe::StripeError, "Stripeでの契約に失敗しました: #{e.message}"
@@ -56,12 +70,12 @@ module UserStripe
     end
 
     def build_stripe_subscription_params(user, membership_plan, stripe_record_subscription, off_session)
-      params = if off_session
+      params = if off_session && stripe_record_subscription.status == 'active'
         {
           customer: user.payment_customer_id,
           items: [{ price: stripe_record_subscription.price.remote_id }],
           # default_tax_rates: [@tax_rate_id],
-          payment_behavior: 'error_if_incomplete',
+          payment_behavior: 'allow_incomplete',
           collection_method: 'charge_automatically',
           payment_settings: {
             save_default_payment_method: 'on_subscription',
@@ -170,10 +184,11 @@ module UserStripe
 
     def create_contract(user:, stripe_record_subscription:, membership_plan:, chargeable:, off_session:)
       # 即時契約なのでステータスはactiveにする
-      if off_session
+      if off_session && stripe_record_subscription.status == 'active'
         contract = Membership::Contract.create!(
           user:,
           status: 'active',
+          expired_at: stripe_record_subscription.current_period_end,
         )
         # transactions作成
         Payment::Transaction.create!(
@@ -183,6 +198,8 @@ module UserStripe
           payment_provider: 'stripe',
           chargeable: chargeable,
           status: 'active',
+          activated_at: Time.zone.now,
+          expired_at: stripe_record_subscription.current_period_end,
           recurrence: true,
         )
         Payment::Subscription.create!(
