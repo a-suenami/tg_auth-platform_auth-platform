@@ -32,6 +32,8 @@ module Payment
           StripeRecord::PaymentIntentBlueprint.render_as_hash(transaction.chargeable, view: :normal)
         when StripeRecord::SetupIntent
           StripeRecord::SetupIntentBlueprint.render_as_hash(transaction.chargeable, view: :normal)
+        when KomojuRecord::Payment
+          KomojuRecord::PaymentBlueprint.render_as_hash(transaction.chargeable, view: :normal)
         end
       end
     end

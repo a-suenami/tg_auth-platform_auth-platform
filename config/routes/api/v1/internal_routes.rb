@@ -42,6 +42,7 @@ Rails.application.routes.draw do
                 post '/:contract_id/complete', to: 'credit_card_payments#complete'
               end
             end
+            resources :konbini_payments, only: [:create]
           end
         end
       end
