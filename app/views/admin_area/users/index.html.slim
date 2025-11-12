@@ -62,7 +62,8 @@
                 input.c-checkbox__input type='checkbox'
                 .c-checkbox__checkbox
             td.text-small
-              = user.id
+              = link_to admin_area_user_path(user), data: { turbo_frame: 'detail' } do
+                = user.id
             td
               = user&.user_profile&.name
             td

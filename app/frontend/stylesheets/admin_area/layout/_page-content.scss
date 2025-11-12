@@ -1,6 +1,6 @@
 .l-page-content {
   display: grid;
-  grid-template-columns: 296px 1fr;
+  grid-template-columns: 296px 1fr auto;
   &__navigation {
     padding: 24px;
     background-color: var(--color-background-gray-light);
