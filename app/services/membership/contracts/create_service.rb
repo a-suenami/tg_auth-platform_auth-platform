@@ -39,7 +39,7 @@ module Membership::Contracts
 
     def process_konbini_payment(user:, membership_plan:, store:)
       # コンビニ決済の実装
-      unless store.present?
+      if store.blank?
         raise Exceptions::Payment::StoreMissing
       end
 

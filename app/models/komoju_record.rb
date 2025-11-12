@@ -11,6 +11,8 @@ class KomojuRecord
 
   class KomojuError < StandardError
     extend T::Sig
+
+    sig { returns(T.nilable(Exception)) }
     attr_reader :raw_exception
 
     sig { params(exception: T.nilable(Exception)).void }
@@ -31,7 +33,7 @@ class KomojuRecord
   sig { returns(Client) }
   def self.client
     @client ||= T.let(Client.new, T.nilable(Client))
-    T.must(@client)
+    @client
   end
 
   class Client
@@ -46,26 +48,26 @@ class KomojuRecord
     sig { returns(Payments) }
     def payments
       @payments ||= T.let(Payments.new(@komoju_client), T.nilable(Payments))
-      T.must(@payments)
+      @payments
     end
 
     sig { type_parameters(:T).params(block: T.proc.returns(T.type_parameter(:T))).returns(T.type_parameter(:T)) }
     def self.handle_exception(&block)
       block.call
     rescue Excon::Error::BadRequest, Excon::Error::UnprocessableEntity => e
-      raise InvalidRequestError.new(e)
+      raise InvalidRequestError, e
     rescue Excon::Error::Unauthorized => e
-      raise UnauthorizedError.new(e)
+      raise UnauthorizedError, e
     rescue Excon::Error::TooManyRequests => e
-      raise RateLimitError.new(e)
+      raise RateLimitError, e
     rescue Excon::Error::GatewayTimeout => e
-      raise APIConnectionError.new(e)
+      raise APIConnectionError, e
     rescue Excon::Error::InternalServerError, Excon::Error::BadGateway, Excon::Error::ServiceUnavailable => e
-      raise APIError.new(e)
+      raise APIError, e
     rescue Excon::Error => e
-      raise ConnectionError.new(e)
+      raise ConnectionError, e
     rescue StandardError => e
-      raise UnknownError.new(e)
+      raise UnknownError, e
     end
 
     # Nested Payments class
@@ -74,7 +76,7 @@ class KomojuRecord
 
       sig { params(komoju_client: Komoju::Client).void }
       def initialize(komoju_client)
-        @komoju_client_payments = komoju_client.payments
+        @komoju_client_payments = T.let(komoju_client.payments, Komoju::Payments)
       end
 
       # Konbini store enum

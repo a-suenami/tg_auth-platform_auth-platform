@@ -17,11 +17,11 @@ module UserKomoju
         end
 
         unless komoju_payment
-          raise StandardError, "Komoju payment was not created"
+          raise StandardError, 'Komoju payment was not created'
         end
 
         # Create contract with pending status
-        contract = create_contract(user:, membership_plan:)
+        contract = create_contract(user:)
 
         # Create payment transaction
         create_payment_transaction(user:, contract:, komoju_payment:)
@@ -52,19 +52,14 @@ module UserKomoju
     end
 
     def validate_membership_plan(membership_plan)
-      # Check if plan supports konbini payment
-      unless membership_plan.plan_payment_methods.exists?(payment_type: 'convenience')
-        raise StandardError, "This plan does not support konbini payment"
-      end
-
       # Konbini only supports non-recurring plans (one-time payment)
       if membership_plan.recurrence
-        raise StandardError, "Konbini payment only supports non-recurring plans (manual renewal required)"
+        raise StandardError, 'Konbini payment only supports non-recurring plans (manual renewal required)'
       end
 
       # Konbini only supports plans with >= 1 year duration
       unless membership_plan.recurring_interval_unit == 'year' && membership_plan.recurring_interval_count >= 1
-        raise StandardError, "Konbini payment only supports plans with 1 year or longer duration"
+        raise StandardError, 'Konbini payment only supports plans with 1 year or longer duration'
       end
     end
 
@@ -81,15 +76,15 @@ module UserKomoju
         currency: 'JPY',
         store: store_enum,
         user: user,
-        expiry_days: 3
+        expiry_days: 30,
       )
     end
 
-    def create_contract(user:, membership_plan:)
+    def create_contract(user:)
       Membership::Contract.create!(
         user: user,
         tenant: user.tenant,
-        status: :pending
+        status: :pending,
       )
     end
 
@@ -103,7 +98,7 @@ module UserKomoju
         chargeable: komoju_payment,
         paid_amount: komoju_payment.amount,
         status: :pending,
-        recurrence: false
+        recurrence: false,
       )
     end
 
@@ -117,7 +112,7 @@ module UserKomoju
         payment_type: :convenience,
         start_at: nil, # Will be set when payment is captured
         end_at: nil,   # Will be set when payment is captured
-        status: :current
+        status: :current,
       )
     end
 
@@ -127,7 +122,7 @@ module UserKomoju
           user: user,
           membership: membership,
           status: :pending,
-          membership_contract: contract
+          membership_contract: contract,
         )
       end
     end

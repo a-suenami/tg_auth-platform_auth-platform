@@ -35,7 +35,7 @@ class KomojuRecord::Payment < ApplicationRecord
       currency: currency,
       payment_details: KomojuRecord::Client::Payments::KonbiniParams.new(
         store: store.serialize,
-        email: user.email,
+        email: T.must(user.email),
         phone: user.phone_number,
         expiry_days: expiry_days || 3,
         given_name: user.user_profile&.first_name,
@@ -135,7 +135,7 @@ class KomojuRecord::Payment < ApplicationRecord
 
   sig { returns(T::Boolean) }
   def expired?
-    status == 'expired' || (payment_deadline.present? && payment_deadline < Time.zone.now)
+    status == 'expired' || (payment_deadline.present? && T.must(payment_deadline) < Time.zone.now)
   end
 
   sig { returns(T::Boolean) }

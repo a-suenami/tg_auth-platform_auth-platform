@@ -10,5 +10,13 @@ class KomojuRecord::PaymentBlueprint < ApplicationBlueprint
     field :type do |obj, _options|
       obj.class.name
     end
+
+    field :total do |payment, _options|
+      payment.komoju_data&.dig('total')
+    end
+
+    field :payment_method_fee do |payment, _options|
+      payment.komoju_data&.dig('payment_method_fee')
+    end
   end
 end

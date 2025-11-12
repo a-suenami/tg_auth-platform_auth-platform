@@ -11,7 +11,7 @@ module API::V1::Internal::Membership::Contracts
         user: current_user,
         membership_plan: @membership_plan,
         payment_method: 'convenience',
-        store: store
+        store: store,
       )
 
       # ContractをBlueprintでシリアライズ
