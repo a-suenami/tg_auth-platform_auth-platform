@@ -435,6 +435,12 @@ class Membership::ContractTerm
     def closed?; end
 
     sig { void }
+    def convenience!; end
+
+    sig { returns(T::Boolean) }
+    def convenience?; end
+
+    sig { void }
     def credit_card!; end
 
     sig { returns(T::Boolean) }
@@ -577,6 +583,9 @@ class Membership::ContractTerm
     def closed(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+    def convenience(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def create_with(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
@@ -678,6 +687,9 @@ class Membership::ContractTerm
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def not_closed(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+    def not_convenience(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def not_credit_card(*args, &blk); end
@@ -1498,6 +1510,9 @@ class Membership::ContractTerm
     def closed(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+    def convenience(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def create_with(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
@@ -1565,6 +1580,9 @@ class Membership::ContractTerm
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def not_closed(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+    def not_convenience(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def not_credit_card(*args, &blk); end

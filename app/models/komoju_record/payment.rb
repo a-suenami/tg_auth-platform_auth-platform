@@ -99,9 +99,9 @@ class KomojuRecord::Payment < ApplicationRecord
     if payment_details
       self.confirmation_code = T.let(payment_details['confirmation_code'], T.nilable(String))
 
-      # Parse payment_deadline if exists
-      expires_at = T.let(payment_details['expires_at'], T.nilable(String))
-      self.payment_deadline = Time.zone.parse(expires_at) if expires_at.present?
+      # Parse payment_deadline if exists (from response root level)
+      payment_deadline_str = T.let(response['payment_deadline'], T.nilable(String))
+      self.payment_deadline = Time.zone.parse(payment_deadline_str) if payment_deadline_str.present?
     end
 
     # Set state tracking timestamps

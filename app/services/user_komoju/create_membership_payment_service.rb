@@ -1,8 +1,5 @@
 # typed: false
 
-# ==============================================================================
-# app - services - user komoju - create membership payment service
-# ==============================================================================
 module UserKomoju
   class CreateMembershipPaymentService < BaseService
     def execute(user:, membership_plan:, store:)
@@ -59,6 +56,16 @@ module UserKomoju
       unless membership_plan.plan_payment_methods.exists?(payment_type: 'convenience')
         raise StandardError, "This plan does not support konbini payment"
       end
+
+      # Konbini only supports non-recurring plans (one-time payment)
+      if membership_plan.recurrence
+        raise StandardError, "Konbini payment only supports non-recurring plans (manual renewal required)"
+      end
+
+      # Konbini only supports plans with >= 1 year duration
+      unless membership_plan.recurring_interval_unit == 'year' && membership_plan.recurring_interval_count >= 1
+        raise StandardError, "Konbini payment only supports plans with 1 year or longer duration"
+      end
     end
 
     def create_komoju_payment(user:, membership_plan:, store:)
@@ -101,15 +108,15 @@ module UserKomoju
     end
 
     def create_contract_term(user:, contract:, membership_plan:)
-      # For konbini, we don't know end_at until payment is captured
-      # Will be updated by webhook when payment is captured
+      # For konbini, start_at and end_at will be set by webhook after payment is captured
+      # This allows proper calculation from payment date, not contract creation date
       Membership::ContractTerm.create!(
         user: user,
         membership_contract: contract,
         membership_plan: membership_plan,
         payment_type: :convenience,
-        start_at: Time.zone.now,
-        end_at: nil, # Will be set after payment capture
+        start_at: nil, # Will be set when payment is captured
+        end_at: nil,   # Will be set when payment is captured
         status: :current
       )
     end

@@ -115,16 +115,36 @@ module WebhookArea
         raise "Contract not found for transaction: #{transaction.id}"
       end
 
-      # Activate transaction
-      transaction.update!(status: :active)
+      # Calculate membership period from payment captured time
+      current_contract_term = membership_contract.current_contract_term
+      membership_plan = current_contract_term.membership_plan
+      start_at = Time.zone.now
+      end_at = membership_plan.calculate_expiry_date(from: start_at)
 
-      # Activate membership contract
-      membership_contract.update!(status: :active)
+      # Update contract with expiry date
+      membership_contract.update!(status: :active, expired_at: end_at)
 
-      # Activate membership users
-      membership_contract.membership_users.update_all(status: :active)
+      # Update transaction with activation and expiry dates
+      transaction.update!(
+        status: :active,
+        activated_at: start_at,
+        expired_at: end_at
+      )
 
-      Rails.logger.info "Activated contract: #{membership_contract.id}, transaction: #{transaction.id}"
+      # Update contract term with start and end dates
+      current_contract_term.update!(
+        start_at: start_at,
+        end_at: end_at
+      )
+
+      # Activate membership users with expiry dates
+      membership_contract.membership_users.update_all(
+        status: :active,
+        activated_at: start_at,
+        expired_at: end_at
+      )
+
+      Rails.logger.info "Activated contract: #{membership_contract.id}, transaction: #{transaction.id}, period: #{start_at} to #{end_at}"
     end
 
     def handle_payment_expired(data)

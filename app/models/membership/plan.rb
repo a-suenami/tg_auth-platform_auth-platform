@@ -22,4 +22,12 @@ class Membership::Plan < ApplicationRecord
   validates :amount, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
   scope :active, -> { where(is_active: true) }
+
+  # Calculate expiry date based on plan's recurring interval
+  # @param from [Time] Starting time (default: current time)
+  # @return [Time] Expiry date
+  def calculate_expiry_date(from: Time.zone.now)
+    interval_unit = recurring_interval_unit.pluralize.to_sym
+    from.advance(interval_unit => recurring_interval_count)
+  end
 end
