@@ -1,0 +1,19 @@
+create_table :membership_plans, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'メンバーシップの契約プラン' do |t|
+  t.references :tenant, type: :citext, null: false
+  t.string :name, null: false, comment: 'プラン名'
+  t.boolean :recurrence, null: false, default: false, comment: '定期課金フラグ: true=サブスクリプション, false=買い切り'
+  t.integer :recurring_interval_count, null: false, default: 1, comment: '更新サイクルの数(1=1日/週/月/年, 2=2日/週/月/年)'
+  t.string :recurring_interval_unit, null: false, default: 'month', comment: '更新サイクルの単位 (day/week/month/year)'
+  t.integer :amount, null: false, comment: '請求金額'
+  t.boolean :is_active, default: true, comment: '有効フラグ'
+  t.datetime :enabled_at, comment: '有効化日時'
+  t.datetime :disabled_at, comment: '無効化日時'
+  t.integer :trial_period_days, null: false, default: 0, comment: 'トライアル期間'
+  t.string :billing_anchor, null: false, default: 'by_start_day', comment: '締めの基準: by_start_day(登録日基準), by_fixed_month_day(毎月の特定日)'
+  t.integer :anchor_day_of_month, comment: 'fixed_month_day時の締め日(1-31 月末指定時は31)。by_fixed_month_day時のみ使用'
+  t.integer :position, null: false, default: 0, comment: '表示順序'
+
+  t.timestamps null: false
+end
+
+add_foreign_key :membership_plans, :tenants, name: :fk_membership_plans_tenants

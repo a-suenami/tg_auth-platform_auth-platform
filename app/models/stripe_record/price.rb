@@ -11,7 +11,7 @@ class StripeRecord
     after_initialize :set_interval_unit
 
     belongs_to :product, class_name: 'StripeRecord::Product'
-    has_many :plan_payment_methods, class_name: 'Memberships::PlanPaymentMethod'
+    has_many :plan_payment_methods, class_name: 'Membership::PlanPaymentMethod'
     has_many :subscription_items, class_name: 'StripeRecord::SubscriptionItem'
 
     attribute :interval_unit

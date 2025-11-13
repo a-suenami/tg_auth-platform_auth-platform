@@ -1,0 +1,12 @@
+create_table :membership_plan_components, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'メンバーシッププランの構成要素（バンドルプラン用）' do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :membership_plan, type: :uuid, null: false
+  t.references :membership, type: :uuid, null: false
+
+  t.timestamps null: false
+  t.index [:membership_plan_id, :membership_id], name: :idx_membership_plan_components_plan_membership_uniq, using: :btree, unique: true
+end
+
+add_foreign_key :membership_plan_components, :tenants, name: :fk_membership_plan_components_tenants
+add_foreign_key :membership_plan_components, :membership_plans, column: :membership_plan_id, name: :fk_membership_plan_components_plans
+add_foreign_key :membership_plan_components, :memberships, column: :membership_id, name: :fk_membership_plan_components_memberships

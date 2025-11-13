@@ -11,16 +11,14 @@ class StripeRecord
     belongs_to :product, class_name: 'StripeRecord::Product'
     belongs_to :price, class_name: 'StripeRecord::Price'
     belongs_to :pending_setup_intent, class_name: 'StripeRecord::SetupIntent', optional: true, inverse_of: :subscription
+    belongs_to :tenant, class_name: 'Tenant'
 
     # has_one :subscription, as: :chargeable
 
     has_many :invoices, inverse_of: :chargeable
     has_many :subscription_items, class_name: 'StripeRecord::SubscriptionItem', dependent: :destroy
 
-    has_many :billing_profiles, inverse_of: :chargeable, dependent: :nullify, class_name: 'Memberships::BillingProfile'
-    # billing_profileの中でもphaseがcurrentのものを取得する
-    has_one :current_billing_profile, -> { where(phase: :current) }, class_name: 'Memberships::BillingProfile', inverse_of: :chargeable, dependent: :nullify
-    has_one :upcoming_billing_profile, -> { where(phase: :upcoming) }, class_name: 'Memberships::BillingProfile', inverse_of: :chargeable, dependent: :nullify
+    has_one :payment_subscription, inverse_of: :subscribable, dependent: :nullify, class_name: 'Payment::Subscription'
     has_many :subscription_schedules, class_name: 'StripeRecord::SubscriptionSchedule', dependent: :nullify
     has_one :last_subscription_schedule, -> { order(created_at: :desc) }, class_name: 'StripeRecord::SubscriptionSchedule', dependent: :nullify, inverse_of: :subscription
 
@@ -30,7 +28,7 @@ class StripeRecord
     # 23時間以上経過した incomplete は stripe 上では incomplete_expired になる
     scope :action_may_be_required, lambda { |now = Time.zone.now|
       where(status: :trialing).or(
-        where(status: :incomplete).where('stripe_record__subscriptions.created_at > ?', now - 23.hours),
+        where(status: :incomplete).where('stripe_record_subscriptions.created_at > ?', now - 23.hours),
       ).order(created_at: :desc)
     }
 
@@ -50,9 +48,10 @@ class StripeRecord
         self.update!(status: stripe_subscription.status)
 
         if stripe_subscription.status == 'canceled'
-          subscription&.update(expires_at: Time.zone.at(stripe_subscription.canceled_at))
+          self.update(current_period_end: Time.zone.at(stripe_subscription.canceled_at))
         else
-          subscription&.update(expires_at: Time.zone.at(stripe_subscription.current_period_end))
+          current_period_end = stripe_subscription.items.data.first.current_period_end
+          self.update(current_period_end: Time.zone.at(current_period_end))
         end
 
         stripe_subscription
@@ -62,8 +61,9 @@ class StripeRecord
     def fetch_stripe_subscription
       return @stripe_subscription if @stripe_subscription.present?
 
+
       @stripe_subscription ||= Stripe::Subscription.retrieve(
-        { id: self.stripe_subscription_id, expand: ['latest_invoice.confirmation_secret', 'pending_setup_intent'] },
+        { id: self.remote_id, expand: ['latest_invoice.confirmation_secret', 'pending_setup_intent'] },
         AppStripe.configuration,
       )
 
@@ -100,6 +100,16 @@ class StripeRecord
       when :payment_intent
         stripe_subscription.latest_invoice.confirmation_secret.client_secret
       end
+    end
+
+    def membership_grace_period
+      self_tenant = self.tenant
+      tenant_stripe_account = self_tenant.tenant_stripe_account
+      if tenant_stripe_account.membership_grace_period_minutes.nil?
+        return 60.minutes
+      end
+
+      tenant_stripe_account.membership_grace_period_minutes.minutes
     end
   end
 end

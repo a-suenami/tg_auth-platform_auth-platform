@@ -10,7 +10,7 @@ FactoryBot.define do
     membership_group { nil }
 
     trait :with_group do
-      memberships_group
+      membership_group
     end
   end
 end

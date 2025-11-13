@@ -32,4 +32,14 @@
       = form.text_field :webhook_secret, placeholder: "whsec_...", class: 'uk-input'
 
   .uk-margin
+    = form.label :membership_grace_period_minutes, 'Membership grace period (minutes)', class: 'uk-form-label'
+    .uk-form-controls
+      = form.number_field :membership_grace_period_minutes, step: 1, min: 0, class: 'uk-input'
+
+  .uk-margin
+    = form.label :send_subscription_update_succeeded_email_for_all_intervals, 'Send succeeded email for all intervals', class: 'uk-form-label'
+    .uk-form-controls
+      = form.check_box :send_subscription_update_succeeded_email_for_all_intervals, class: 'uk-checkbox'
+
+  .uk-margin
     = form.submit class: 'uk-button uk-button-primary'

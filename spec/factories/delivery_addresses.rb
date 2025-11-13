@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :delivery_address do
     tenant_id { create(:tenant).id }
-    user { create(:user) }
+    user { create(:user, tenant_id: self.tenant_id) }
     is_default { false }
     zip_code { '155-0033' }
     prefecture_code { '13' }

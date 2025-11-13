@@ -1,0 +1,38 @@
+/ Edit Tab Content
+= form_with url: admin_area_template_mail_path(@template), method: :put, class: 'uk-form-stacked', id: 'mail-template-form' do |f|
+  .uk-card.uk-card-default.uk-card-body
+    / Email Title
+    .uk-margin
+      = f.label :title, 'メールタイトル', class: 'uk-form-label'
+      .uk-form-controls
+        = f.text_field :title, value: @mail_template.title, placeholder: 'メールのタイトルを入力...', required: true, class: 'uk-input', name: 'title'
+
+    / Email Body Template
+    .uk-margin
+      = f.label :body, 'メール本文テンプレート', class: 'uk-form-label'
+
+      / Mock Toolbar (non-functional)
+      .uk-background-muted.uk-padding-small style="border: 1px solid #e5e5e5; border-bottom: none;"
+        .uk-button-group
+          select.uk-select.uk-form-small style="width: auto; opacity: 0.6;" disabled=true
+            option Normal Text
+          button.uk-button.uk-button-small type="button" disabled=true title="Undo" ↶
+          button.uk-button.uk-button-small type="button" disabled=true title="Redo" ↷
+          button.uk-button.uk-button-small type="button" disabled=true title="Bold"
+            strong B
+          button.uk-button.uk-button-small type="button" disabled=true title="Italic"
+            em I
+          button.uk-button.uk-button-small type="button" disabled=true title="Underline"
+            u U
+          button.uk-button.uk-button-small type="button" disabled=true title="List" ≡
+          button.uk-button.uk-button-small type="button" disabled=true title="Link" 🔗
+          button.uk-button.uk-button-small type="button" disabled=true title="Image" 🖼
+
+      / Simple Textarea
+      .uk-form-controls
+        = f.text_area :body, value: @mail_template.body, placeholder: '本文のテンプレートを入力...', required: true, rows: 15, class: 'uk-textarea', style: 'border-top: none; font-family: monospace;', name: 'body'
+
+    / Action Buttons
+    .uk-margin.uk-text-right
+      a.uk-button.uk-button-default href=admin_area_template_path(@template) キャンセル
+      = f.submit(@mail_template.new_record? ? '作成する' : '保存する', class: 'uk-button uk-button-primary uk-margin-small-left')

@@ -18,8 +18,10 @@ Rails.application.routes.draw do
     end
 
     resources :templates, only: [:index, :new, :create, :show] do
-      member do
-        put 'mail/draft', to: 'templates#update_mail_draft', as: :mail_draft
+      resource :mail, only: [:edit, :update], controller: 'templates/mail' do
+        post :publish, on: :member
+        post :schedule, on: :member
+        post :cancel, on: :member
       end
     end
 

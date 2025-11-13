@@ -1,27 +1,64 @@
-.uk-card.uk-card-default.uk-card-body
-  / Status Badge
-  - case @template_state
-  - when :draft
-    span.uk-label.uk-label-primary 下書き
-  - when :scheduled
-    span.uk-label.uk-label-warning 公開予約中
-  - when :published
-    span.uk-label.uk-label-success 公開中
-
-  / Metadata Fields
-  .uk-margin-top.uk-margin-small-top
+/ Draft Card (show only if no version yet OR different from latest version)
+- show_draft = @mail_template && (!@template.latest_version || @template_state == :draft)
+- if show_draft
+  .uk-card.uk-card-default.uk-card-body
     .uk-margin-small
-      .uk-text-small.uk-text-muted 公開日時
-      .uk-text-bold = @mail_template.public_started_at&.strftime('%Y/%m/%d %H:%M') || '未設定'
+      .uk-text-small.uk-text-muted 状態
+      span.uk-label.uk-label-primary style="width: fit-content" 下書き
 
     .uk-margin-small
-      .uk-text-small.uk-text-muted 公開者
-      .uk-text-bold = @mail_template.created_by || '-'
+      .uk-text-small.uk-text-muted タイトル
+      .uk-text-bold = @mail_template.title.present? ? @mail_template.title : '-'
 
     .uk-margin-small
       .uk-text-small.uk-text-muted 最終更新日時
-      .uk-text-bold = @mail_template.updated_at
+      .uk-text-bold = local_time(@mail_template.updated_at)
+
+/ Scheduled Version Card (only show if there's a scheduled version)
+- scheduled_version = @template.latest_version
+- has_scheduled = scheduled_version && scheduled_version.public_started_at > Time.current
+- if has_scheduled
+  .uk-card.uk-card-default.uk-card-body class=(show_draft ? 'uk-margin-top' : '')
+    .uk-margin-small
+      .uk-text-small.uk-text-muted 状態
+      span.uk-label.uk-label-warning style="width: fit-content" 公開予定中
 
     .uk-margin-small
-      .uk-text-small.uk-text-muted 最終更新者
-      .uk-text-bold = @mail_template.updated_by
+      .uk-text-small.uk-text-muted バージョン
+      .uk-text-bold v#{scheduled_version.version}
+
+    .uk-margin-small
+      .uk-text-small.uk-text-muted タイトル
+      .uk-text-bold = scheduled_version.title.present? ? scheduled_version.title : '-'
+
+    .uk-margin-small
+      .uk-text-small.uk-text-muted 公開予定日時
+      .uk-text-bold = local_time(scheduled_version.public_started_at)
+
+    .uk-margin-small
+      .uk-text-small.uk-text-muted 公開者
+      .uk-text-bold = scheduled_version.published_by&.name || '-'
+
+/ Currently Published Version Card (only show if there's a published version)
+- published_version = @template.latest_published_version
+- if published_version
+  .uk-card.uk-card-default.uk-card-body class=((show_draft || has_scheduled) ? 'uk-margin-top' : '')
+    .uk-margin-small
+      .uk-text-small.uk-text-muted 状態
+      span.uk-label.uk-label-success style="width: fit-content" 公開中
+
+    .uk-margin-small
+      .uk-text-small.uk-text-muted バージョン
+      .uk-text-bold v#{published_version.version}
+
+    .uk-margin-small
+      .uk-text-small.uk-text-muted タイトル
+      .uk-text-bold = published_version.title.present? ? published_version.title : '-'
+
+    .uk-margin-small
+      .uk-text-small.uk-text-muted 公開日時
+      .uk-text-bold = local_time(published_version.public_started_at)
+
+    .uk-margin-small
+      .uk-text-small.uk-text-muted 公開者
+      .uk-text-bold = published_version.published_by&.name || '-'

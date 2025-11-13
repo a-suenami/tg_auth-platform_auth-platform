@@ -51,11 +51,10 @@ class User < ApplicationRecord
   has_many :stripe_payment_methods, class_name: 'StripeRecord::PaymentMethod'
 
   # Membership
-  has_many :membership_users, class_name: 'Memberships::User', dependent: :destroy
+  has_many :membership_users, class_name: 'Membership::User', dependent: :destroy
   has_many :memberships, through: :membership_users
-  has_many :membership_contracts, class_name: 'Memberships::Contract', dependent: :destroy
-  has_many :membership_billing_profiles, class_name: 'Memberships::BillingProfile', dependent: :destroy
-  has_many :membership_user_achievements, class_name: 'Memberships::UserAchievement', dependent: :destroy
+  has_many :membership_contracts, class_name: 'Membership::Contract', dependent: :destroy
+  has_many :payment_transactions, class_name: 'Payment::Transaction', dependent: :destroy
   has_many :stripe_trial_histories, class_name: 'StripeRecord::TrialHistory', dependent: :destroy
   # stripe
   has_many :stripe_subscriptions, class_name: 'StripeRecord::Subscription'
@@ -128,6 +127,12 @@ class User < ApplicationRecord
           stripe_account_id: payment_method.stripe_account_id_if_needed,
           api_key: T.must(T.must(payment_method.api_key_account).api_key),
         )
+
+
+        if detached_result.is_a?(Mangrove::Result::Err) && detached_result.err_inner.present? && detached_result.err_inner.is_a?(Stripe::InvalidRequestError)
+          # カードがすでに削除されている場合は無視する
+          next
+        end
         # rollback のため Stripe::StripeError を raise するが必ず method 内で rescue すること
         raise detached_result.err_inner if detached_result.is_a?(Mangrove::Result::Err)
       end

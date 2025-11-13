@@ -55,6 +55,9 @@ class EmailTemplate
 
     sig { returns(T::Boolean) }
     def registered?; end
+
+    sig { returns(T::Boolean) }
+    def renew_subscription?; end
   end
 
   module CommonRelationMethods

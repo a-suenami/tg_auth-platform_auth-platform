@@ -16,6 +16,9 @@ class StripeRecord
     has_many :connect_accounts, class_name: 'Account', foreign_key: :controlling_platform_id, inverse_of: :controlling_platform
     has_one :tenant_stripe_account, class_name: 'Tenant::StripeAccount', foreign_key: :stripe_account_id, inverse_of: :stripe_account
 
+
+    accepts_nested_attributes_for :api_key
+
     before_validation :set_attributes
 
     validate :validate_controlling_platform
@@ -85,7 +88,7 @@ class StripeRecord
 
         self.remote_id                           = remote_account.id if self.remote_id.blank?
         self.type                                = remote_account.type
-        self.display_name                        = remote_account.settings.dashboard.display_name
+        self.display_name                        = remote_account.settings.dashboard.display_name || remote_account.id
         self.business_profile_name               = remote_account.business_profile&.name
         self.payments_statement_descriptor       = remote_account.settings.payments.statement_descriptor
         self.payments_statement_descriptor_kana  = remote_account.settings.payments.statement_descriptor_kana

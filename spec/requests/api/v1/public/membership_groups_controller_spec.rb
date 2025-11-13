@@ -3,13 +3,13 @@
 
 RSpec.describe '[ API::V1::Public::MembershipGroupsController API ]' do
   # 段階的メンバーシップグループ
-  let!(:leveled_membership_group) { create(:memberships__group, tenant_id: current_tenant.id, name: 'leveled_membership_group', position: 1) }
+  let!(:leveled_membership_group) { create(:membership_group, tenant_id: current_tenant.id, name: 'leveled_membership_group', position: 1) }
   let!(:leveled_membership_platinum) { create(:membership, tenant_id: current_tenant.id, membership_group: leveled_membership_group, name: 'platinum', position: 1, tier: 1) }
   let!(:leveled_membership_premium) { create(:membership, tenant_id: current_tenant.id, membership_group: leveled_membership_group, name: 'premium', position: 2, tier: 2) }
   let!(:leveled_membership_basic) { create(:membership, tenant_id: current_tenant.id, membership_group: leveled_membership_group, name: 'basic', position: 3, tier: 3) }
 
   # 独立したメンバーシップグループ
-  let!(:individual_membership_group) { create(:memberships__group, tenant_id: current_tenant.id, name: 'individual_membership_group', position: 2) }
+  let!(:individual_membership_group) { create(:membership_group, tenant_id: current_tenant.id, name: 'individual_membership_group', position: 2) }
   let!(:individual_membership_a) { create(:membership, tenant_id: current_tenant.id, membership_group: individual_membership_group, name: 'member_a', position: 1, tier: 1) }
   let!(:individual_membership_b) { create(:membership, tenant_id: current_tenant.id, membership_group: individual_membership_group, name: 'member_b', position: 2, tier: 1) }
 
@@ -25,16 +25,16 @@ RSpec.describe '[ API::V1::Public::MembershipGroupsController API ]' do
 
   def create_membership_plans_for_group(_group, memberships)
     memberships.each do |membership|
-      plan = create(:memberships__plan, tenant_id: current_tenant.id, name: "#{membership.name}_plan", amount: 1000 + (membership.position * 1000))
-      create(:memberships__plan_component, membership_plan: plan, membership:, tenant_id: current_tenant.id)
-      create(:memberships__plan_payment_method, membership_plan: plan, tenant_id: current_tenant.id, payment_type: 'credit_card')
+      plan = create(:membership_plan, tenant_id: current_tenant.id, name: "#{membership.name}_plan", amount: 1000 + (membership.position * 1000))
+      create(:membership_plan_component, membership_plan: plan, membership:, tenant_id: current_tenant.id)
+      create(:membership_plan_payment_method, membership_plan: plan, tenant_id: current_tenant.id, payment_type: 'credit_card')
     end
   end
 
   def create_membership_plan_for_membership(membership)
-    plan = create(:memberships__plan, tenant_id: current_tenant.id, name: "#{membership.name}_plan", amount: 2000)
-    create(:memberships__plan_component, membership_plan: plan, membership:, tenant_id: current_tenant.id)
-    create(:memberships__plan_payment_method, membership_plan: plan, tenant_id: current_tenant.id, payment_type: 'credit_card')
+    plan = create(:membership_plan, tenant_id: current_tenant.id, name: "#{membership.name}_plan", amount: 2000)
+    create(:membership_plan_component, membership_plan: plan, membership:, tenant_id: current_tenant.id)
+    create(:membership_plan_payment_method, membership_plan: plan, tenant_id: current_tenant.id, payment_type: 'credit_card')
   end
 
   describe 'GET /api/v1/public/membership_groups' do
@@ -120,7 +120,7 @@ RSpec.describe '[ API::V1::Public::MembershipGroupsController API ]' do
 
     context 'when group belongs to different tenant' do
       let(:other_tenant) { create(:tenant, id: 'other', name: 'other_tenant') }
-      let(:other_group) { create(:memberships__group, tenant_id: other_tenant.id, name: 'other_group') }
+      let(:other_group) { create(:membership_group, tenant_id: other_tenant.id, name: 'other_group') }
       let(:id) { other_group.id }
 
       it 'returns 404' do

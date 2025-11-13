@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :tenant_stripe_account, class: 'Tenant::StripeAccount' do
+    id { SecureRandom.uuid }
     tenant_id { create(:tenant).id }
     stripe_account { nil }
 
@@ -12,10 +13,20 @@ FactoryBot.define do
 
     trait :with_account do
       stripe_account {
+        # secret_key_encryptedはidをsaltにしてencryptする
+        api_key_id = SecureRandom.uuid
+        api_key = create(:stripe_record_api_key, :skip_validate,
+          id: api_key_id,
+          tenant_id: tenant_id,
+          remote_id: 'sk_test_1234567890',
+          display_name: 'auth-platform-local-test',
+          publishable_key: 'pk_test_1234567890',
+          secret_key_encrypted: AppEncryptor.encrypt('sk_test_1234567890', salt: api_key_id),)
         create(:stripe_record_account, :skip_validate,
           tenant_id: tenant_id,
           remote_id: 'acct_test123',
           type: 'standard',
+          api_key: api_key,
           display_name: 'auth-platform-local-test',
           business_profile_name: nil,
           payments_statement_descriptor: 'LOCALTESTHOGEHOGE',

@@ -10,6 +10,8 @@ Rails.application.routes.draw do
         resources :membership_plans, only: [:index, :show]
 
         resources :membership_groups, only: [:index, :show]
+
+        resource :tenant_stripe_account, only: [:show], controller: 'tenant_stripe_accounts'
       end
     end
   end

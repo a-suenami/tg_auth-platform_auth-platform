@@ -13,7 +13,7 @@
 
   .uk-margin-top.uk-card.uk-card-default.uk-card-body
     .uk-flex.uk-flex-right.uk-margin-bottom
-      = link_to "メンバーシップグループ", ruler_area_tenant_memberships_groups_path(@tenant_id), class: "uk-button uk-button-secondary uk-margin-right"
+      = link_to "メンバーシップグループ", ruler_area_tenant_membership_groups_path(@tenant_id), class: "uk-button uk-button-secondary uk-margin-right"
       = link_to "新規登録", new_ruler_area_tenant_membership_path(@tenant_id), class: "uk-button uk-button-primary"
 
     - if @memberships.empty?
