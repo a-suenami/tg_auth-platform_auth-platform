@@ -14,11 +14,11 @@ module AdminArea
     end
 
     def new
-      @user_auto_tagging = OpenStruct.new(name: '', description: '')
+      @user_auto_tagging = MockUserAutoTagging.new(name: '', description: '')
     end
 
     def edit
-      @user_auto_tagging = OpenStruct.new(
+      @user_auto_tagging = MockUserAutoTagging.new(
         id: params[:id],
         name: "オートタグルール#{params[:id]}",
         description: 'Mock description',
