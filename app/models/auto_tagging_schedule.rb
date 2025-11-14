@@ -7,8 +7,7 @@ class AutoTaggingSchedule < ApplicationRecord
   belongs_to :tenant
   belongs_to :user_auto_tagging
 
-  validates :start_at, presence: { if: -> { end_at.present? } }
-  validates :end_at, presence: { if: -> { start_at.present? } }
+  validate :both_dates_present_or_both_null
   validate :start_before_end
 
   sig { returns(T::Boolean) }
@@ -23,10 +22,19 @@ class AutoTaggingSchedule < ApplicationRecord
   private
 
   sig { void }
+  def both_dates_present_or_both_null
+    if start_at.present? && end_at.blank?
+      errors.add(:end_at, 'must be present if start_at is present')
+    elsif end_at.present? && start_at.blank?
+      errors.add(:start_at, 'must be present if end_at is present')
+    end
+  end
+
+  sig { void }
   def start_before_end
     return if start_at.nil? || end_at.nil?
 
-    if start_at >= end_at
+    if T.must(start_at) >= end_at
       errors.add(:end_at, 'must be after start_at')
     end
   end
