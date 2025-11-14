@@ -5,7 +5,7 @@ class UserTag < ApplicationRecord
   include Multitenancy
 
   belongs_to :tenant
-  belongs_to :created_by, class_name: 'Admin', optional: true
+  belongs_to :created_by, class_name: 'Admin'
   belongs_to :updated_by, class_name: 'Admin', optional: true
 
   validates :name, presence: true
