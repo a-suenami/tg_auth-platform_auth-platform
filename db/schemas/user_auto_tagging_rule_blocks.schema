@@ -1,0 +1,12 @@
+create_table :user_auto_tagging_rule_blocks, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Rule blocks (OR logic between blocks)' do |t|
+  t.references :tenant, type: :citext, null: false, comment: 'Tenant reference'
+  t.references :user_auto_tagging, type: :uuid, null: false, comment: 'Auto-tagging rule reference'
+  t.integer :position, null: false, comment: 'Display order'
+
+  t.timestamps null: false
+
+  t.index [:user_auto_tagging_id, :position]
+end
+
+add_foreign_key :user_auto_tagging_rule_blocks, :tenants
+add_foreign_key :user_auto_tagging_rule_blocks, :user_auto_taggings

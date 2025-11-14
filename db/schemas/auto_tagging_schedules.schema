@@ -1,0 +1,11 @@
+create_table :auto_tagging_schedules, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Time-based schedules for auto-tagging rules' do |t|
+  t.references :tenant, type: :citext, null: false, comment: 'Tenant reference'
+  t.references :user_auto_tagging, type: :uuid, null: false, index: { unique: true }, comment: 'Auto-tagging rule reference (1:1)'
+  t.datetime :start_at, comment: 'Schedule start time (both null or both not null)'
+  t.datetime :end_at, comment: 'Schedule end time (both null or both not null)'
+
+  t.timestamps null: false
+end
+
+add_foreign_key :auto_tagging_schedules, :tenants
+add_foreign_key :auto_tagging_schedules, :user_auto_taggings
