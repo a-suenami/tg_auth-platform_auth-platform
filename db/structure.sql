@@ -1,4 +1,4 @@
-\restrict 1eFjndy6kgzKwfozRa6FpbxSIBlSDbaydpczmi1px9baSlpDp5pdrFKq2h0szgV
+\restrict YHtxcIwlux3zaf37k8a8IPkrhgHY4pv8I5z4JHFDfuT2eDnnROnFOGauaHOrOBH
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -1958,6 +1958,64 @@ CREATE TABLE public.user_profiles (
 
 
 --
+-- Name: user_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_tags (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    name character varying NOT NULL,
+    description text,
+    created_by_id uuid,
+    updated_by_id uuid,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE user_tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.user_tags IS 'User tags for manual tagging';
+
+
+--
+-- Name: COLUMN user_tags.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tags.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN user_tags.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tags.name IS 'Tag name';
+
+
+--
+-- Name: COLUMN user_tags.description; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tags.description IS 'Tag description';
+
+
+--
+-- Name: COLUMN user_tags.created_by_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tags.created_by_id IS 'Admin who created this tag';
+
+
+--
+-- Name: COLUMN user_tags.updated_by_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tags.updated_by_id IS 'Admin who last updated this tag';
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2439,6 +2497,14 @@ ALTER TABLE ONLY public.tenants
 
 ALTER TABLE ONLY public.user_profiles
     ADD CONSTRAINT user_profiles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_tags user_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_tags
+    ADD CONSTRAINT user_tags_pkey PRIMARY KEY (id);
 
 
 --
@@ -3679,6 +3745,34 @@ CREATE INDEX index_user_profiles_on_user_id ON public.user_profiles USING btree 
 
 
 --
+-- Name: index_user_tags_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_tags_on_created_by_id ON public.user_tags USING btree (created_by_id);
+
+
+--
+-- Name: index_user_tags_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_tags_on_tenant_id ON public.user_tags USING btree (tenant_id);
+
+
+--
+-- Name: index_user_tags_on_tenant_id_and_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_user_tags_on_tenant_id_and_name ON public.user_tags USING btree (tenant_id, name);
+
+
+--
+-- Name: index_user_tags_on_updated_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_tags_on_updated_by_id ON public.user_tags USING btree (updated_by_id);
+
+
+--
 -- Name: index_users__email_verifiers_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4123,11 +4217,35 @@ ALTER TABLE ONLY public.payment_transactions
 
 
 --
+-- Name: user_tags fk_rails_2f428c3efb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_tags
+    ADD CONSTRAINT fk_rails_2f428c3efb FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: oauth_access_grants fk_rails_330c32d8d9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.oauth_access_grants
     ADD CONSTRAINT fk_rails_330c32d8d9 FOREIGN KEY (resource_owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: user_tags fk_rails_512adfb444; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_tags
+    ADD CONSTRAINT fk_rails_512adfb444 FOREIGN KEY (updated_by_id) REFERENCES public.admins(id);
+
+
+--
+-- Name: user_tags fk_rails_8f244f8e18; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_tags
+    ADD CONSTRAINT fk_rails_8f244f8e18 FOREIGN KEY (created_by_id) REFERENCES public.admins(id);
 
 
 --
@@ -4630,7 +4748,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 1eFjndy6kgzKwfozRa6FpbxSIBlSDbaydpczmi1px9baSlpDp5pdrFKq2h0szgV
+\unrestrict YHtxcIwlux3zaf37k8a8IPkrhgHY4pv8I5z4JHFDfuT2eDnnROnFOGauaHOrOBH
 
 SET search_path TO "$user", public;
 
