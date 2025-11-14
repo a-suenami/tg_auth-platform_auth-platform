@@ -33,11 +33,4 @@
               td
                 = truncate(tag.description, length: 100)
 
-    .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-top
-      .uk-text-small.uk-text-muted
-        | #{@pagy.from}-#{@pagy.to} / #{@pagy.total_count}
-      .uk-flex.uk-flex-middle
-        button.uk-button.uk-button-default.uk-button-small disabled=(@pagy.prev.nil?)
-          | < 前のページ
-        button.uk-button.uk-button-default.uk-button-small.uk-margin-left disabled=(@pagy.next.nil?)
-          | 次のページ >
+    == pagy_nav(@pagy)
