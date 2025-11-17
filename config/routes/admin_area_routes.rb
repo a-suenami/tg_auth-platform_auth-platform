@@ -24,5 +24,9 @@ Rails.application.routes.draw do
         post :cancel, on: :member
       end
     end
+
+    # User Tag Management
+    resources :user_tags
+    resources :user_auto_taggings
   end
 end
