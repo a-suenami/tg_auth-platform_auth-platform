@@ -1,3 +1,6 @@
-h2.uk-text-large.uk-margin-remove-top
-  | 管理画面ログイン
-= button_to 'ログインはこちら', '/admin/auth/auth0', method: :post, data: { turbo: false }
+.p-auth-login
+  .p-auth-login__title
+    = vite_image_tag 'images/idp-logo.svg', alt: 'IDP', class: 'p-auth-login__title__logo'
+    span.p-auth-login__title__tenant = Tenant.current.name
+  = button_to '管理画面にログイン', '/admin/auth/auth0', method: :post, class: 'p-auth-login__button', form: { class: 'p-auth-login__form' }, data: { turbo: false }
+

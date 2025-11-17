@@ -9,6 +9,7 @@
 @use './layout/page.scss';
 @use './layout/header.scss';
 @use './layout/page-content.scss';
+@use './layout/auth-page.scss';
 
 @use './object/component/breadcrumb.scss';
 @use './object/component/table.scss';
@@ -19,3 +20,4 @@
 @use './object/component/table-row-action.scss';
 
 @use './object/project/user-detail.scss';
+@use './object/project/auth-login.scss';

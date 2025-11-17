@@ -4,6 +4,7 @@
 
 module AdminArea
   class Auth0Controller < ApplicationController
+    layout 'admin_area/auth0'
     skip_before_action :authenticate!, only: [:login, :callback, :failure]
 
     def login
