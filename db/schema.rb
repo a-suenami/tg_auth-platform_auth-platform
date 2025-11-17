@@ -846,6 +846,20 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["user_id"], name: "index_user_profiles_on_user_id"
   end
 
+  create_table "user_tags", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "User tags for manual tagging", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.string "name", null: false, comment: "Tag name"
+    t.text "description", comment: "Tag description"
+    t.uuid "created_by_id", comment: "Admin who created this tag"
+    t.uuid "updated_by_id", comment: "Admin who last updated this tag"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_user_tags_on_created_by_id"
+    t.index ["tenant_id", "name"], name: "index_user_tags_on_tenant_id_and_name", unique: true
+    t.index ["tenant_id"], name: "index_user_tags_on_tenant_id"
+    t.index ["updated_by_id"], name: "index_user_tags_on_updated_by_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "email"
@@ -1031,6 +1045,9 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "tenant_stripe_accounts", "tenants", name: "fk_tenant_stripe_accounts__tenants"
   add_foreign_key "user_profiles", "tenants", name: "fk_user_profiles_tenants"
   add_foreign_key "user_profiles", "users", name: "fk_user_profiles_users"
+  add_foreign_key "user_tags", "admins", column: "created_by_id"
+  add_foreign_key "user_tags", "admins", column: "updated_by_id"
+  add_foreign_key "user_tags", "tenants"
   add_foreign_key "users", "tenants", name: "fk_users_tenants"
   add_foreign_key "users__email_verifiers", "tenants", name: "fk_users__email_verifiers_tenants"
   add_foreign_key "users__email_verifiers", "users", name: "fk_users__email_verifiers_users"
