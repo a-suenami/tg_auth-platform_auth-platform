@@ -1,4 +1,4 @@
-\restrict 0RagOimvgSfFChwaQMIc8YO48XnOSl5htLK7mu0Ix3YeDGHVUYRtMg2gkFxFqKC
+\restrict NCn6VxCcAq5EWCprv2cwG1Ywy2ZA1gRDoPO2NPPwSORyIJgFN3R7GnFueMjKq4u
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -4579,16 +4579,19 @@ ALTER TABLE ONLY public.user_auto_tagging_rule_blocks
 
 
 --
--- Name: user_auto_taggings fk_rails_30074fd50a; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_auto_taggings
-    ADD CONSTRAINT fk_rails_30074fd50a FOREIGN KEY (updated_by_id) REFERENCES public.admins(id);
 -- Name: user_tags fk_rails_2f428c3efb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_tags
     ADD CONSTRAINT fk_rails_2f428c3efb FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: user_auto_taggings fk_rails_30074fd50a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_taggings
+    ADD CONSTRAINT fk_rails_30074fd50a FOREIGN KEY (updated_by_id) REFERENCES public.admins(id);
 
 
 --
@@ -4608,11 +4611,27 @@ ALTER TABLE ONLY public.auto_tagging_schedules
 
 
 --
+-- Name: user_tags fk_rails_512adfb444; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_tags
+    ADD CONSTRAINT fk_rails_512adfb444 FOREIGN KEY (updated_by_id) REFERENCES public.admins(id);
+
+
+--
 -- Name: user_auto_tagging_rule_blocks fk_rails_8d695c0558; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_auto_tagging_rule_blocks
     ADD CONSTRAINT fk_rails_8d695c0558 FOREIGN KEY (user_auto_tagging_id) REFERENCES public.user_auto_taggings(id);
+
+
+--
+-- Name: user_tags fk_rails_8f244f8e18; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_tags
+    ADD CONSTRAINT fk_rails_8f244f8e18 FOREIGN KEY (created_by_id) REFERENCES public.admins(id);
 
 
 --
@@ -4653,19 +4672,6 @@ ALTER TABLE ONLY public.auto_tagging_schedules
 
 ALTER TABLE ONLY public.user_auto_tagging_rules
     ADD CONSTRAINT fk_rails_e2fdd588cf FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
--- Name: user_tags fk_rails_512adfb444; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_tags
-    ADD CONSTRAINT fk_rails_512adfb444 FOREIGN KEY (updated_by_id) REFERENCES public.admins(id);
-
-
---
--- Name: user_tags fk_rails_8f244f8e18; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_tags
-    ADD CONSTRAINT fk_rails_8f244f8e18 FOREIGN KEY (created_by_id) REFERENCES public.admins(id);
 
 
 --
@@ -5168,8 +5174,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 0RagOimvgSfFChwaQMIc8YO48XnOSl5htLK7mu0Ix3YeDGHVUYRtMg2gkFxFqKC
-\unrestrict YHtxcIwlux3zaf37k8a8IPkrhgHY4pv8I5z4JHFDfuT2eDnnROnFOGauaHOrOBH
+\unrestrict NCn6VxCcAq5EWCprv2cwG1Ywy2ZA1gRDoPO2NPPwSORyIJgFN3R7GnFueMjKq4u
 
 SET search_path TO "$user", public;
 
