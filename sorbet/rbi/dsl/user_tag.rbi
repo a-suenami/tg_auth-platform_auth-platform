@@ -560,6 +560,9 @@ class UserTag
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def rewhere(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+    def search_by_name(*args, &blk); end
+
     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
     sig { params(blk: T.proc.params(record: ::UserTag).returns(BasicObject)).returns(T::Array[::UserTag]) }
     def select(*args, &blk); end
@@ -1247,6 +1250,9 @@ class UserTag
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def rewhere(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+    def search_by_name(*args, &blk); end
 
     sig { params(args: T.untyped).returns(PrivateRelation) }
     sig { params(blk: T.proc.params(record: ::UserTag).returns(BasicObject)).returns(T::Array[::UserTag]) }

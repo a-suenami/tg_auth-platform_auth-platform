@@ -32,16 +32,16 @@
       .uk-card.uk-card-default.uk-card-body
         .uk-margin-small
           .uk-text-meta.uk-text-small 作成者
-          .uk-text-bold = @user_tag.created_by
+          .uk-text-bold = @user_tag.created_by_name
 
         .uk-margin-small
           .uk-text-meta.uk-text-small 作成日時
-          div = @user_tag.created_at
+          div = @user_tag.created_at.strftime('%Y/%m/%d %H:%M')
 
         .uk-margin-small
           .uk-text-meta.uk-text-small 最終更新者
-          .uk-text-bold = @user_tag.updated_by
+          .uk-text-bold = @user_tag.updated_by_name || '-'
 
         .uk-margin-small
           .uk-text-meta.uk-text-small 最終更新日時
-          div = @user_tag.updated_at
+          div = @user_tag.updated_at.strftime('%Y/%m/%d %H:%M')
