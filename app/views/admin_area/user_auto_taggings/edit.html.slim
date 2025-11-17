@@ -1,0 +1,191 @@
+.uk-margin-top.uk-container
+  / Breadcrumb
+  - breadcrumb_items = [{ text: 'ユーザー' }, { text: 'オートタギング', link: admin_area_user_auto_taggings_path }, { text: @user_auto_tagging.name }]
+  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+
+  .uk-grid data-uk-grid=""
+    .uk-width-expand
+      h2 = @user_auto_tagging.name
+
+      .uk-margin-top.uk-card.uk-card-default.uk-card-body
+        = form_with url: admin_area_user_auto_tagging_path(@user_auto_tagging.id), method: :patch, class: 'uk-form-stacked' do |f|
+          / Section 1: 基本情報
+          h3.uk-margin-bottom 基本情報
+
+          .uk-margin
+            = label_tag 'user_auto_tagging[name]', '名前', class: 'uk-form-label'
+            .uk-form-controls
+              = text_field_tag 'user_auto_tagging[name]', @user_auto_tagging.name, placeholder: 'オートタグ名を入力...', required: true, class: 'uk-input'
+
+          .uk-margin
+            = label_tag 'user_auto_tagging[description]', '説明', class: 'uk-form-label'
+            .uk-form-controls
+              = text_area_tag 'user_auto_tagging[description]', @user_auto_tagging.description, placeholder: 'オートタグの説明を入力...', rows: 3, class: 'uk-textarea'
+
+          hr.uk-margin-medium-top.uk-margin-medium-bottom
+
+          / Section 2: 期間設定
+          h3.uk-margin-bottom 期間設定
+
+          .uk-margin
+            = label_tag 'user_auto_tagging[period_type]', '期間タイプ', class: 'uk-form-label'
+            .uk-form-controls
+              = select_tag 'user_auto_tagging[period_type]', options_for_select(['期間設定なし', '相対的に期間を指定する', '固定の期間を指定する'], '相対的に期間を指定する'), class: 'uk-select', data: { 'period-selector': true }
+
+          / Relative period fields
+          .uk-margin data-period-target="relative" style="display: block;"
+            = label_tag 'relative_period', '相対期間', class: 'uk-form-label'
+            .uk-form-controls.uk-grid-small data-uk-grid=""
+              .uk-width-auto
+                = number_field_tag 'user_auto_tagging[relative_value]', 3, min: 1, class: 'uk-input', style: 'width: 80px;'
+              .uk-width-auto
+                = select_tag 'user_auto_tagging[relative_unit]', options_for_select(['日', '週間', 'ヶ月', '年'], 'ヶ月'), class: 'uk-select', style: 'width: 100px;'
+              .uk-width-auto
+                = select_tag 'user_auto_tagging[relative_direction]', options_for_select(['以内', '以前', '以降'], '以内'), class: 'uk-select', style: 'width: 100px;'
+
+          / Fixed period fields
+          .uk-margin data-period-target="fixed" style="display: none;"
+            .uk-grid-small data-uk-grid=""
+              .uk-width-1-2
+                = label_tag 'start_datetime', '開始日時', class: 'uk-form-label'
+                = datetime_local_field_tag 'user_auto_tagging[start_datetime]', '', class: 'uk-input'
+              .uk-width-1-2
+                = label_tag 'end_datetime', '終了日時', class: 'uk-form-label'
+                = datetime_local_field_tag 'user_auto_tagging[end_datetime]', '', class: 'uk-input'
+
+          hr.uk-margin-medium-top.uk-margin-medium-bottom
+
+          / Section 3: 条件設定
+          h3.uk-margin-bottom 条件設定
+
+          / Condition Block 1
+          .uk-card.uk-card-default.uk-card-body.uk-margin-bottom
+            .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-small-bottom
+              h4.uk-margin-remove 条件ブロック 1
+              button.uk-button.uk-button-danger.uk-button-small type="button" 条件ブロックを削除する
+
+            / Condition 1
+            .uk-margin
+              = label_tag 'condition_1_1', '条件 1', class: 'uk-form-label'
+              .uk-grid-small data-uk-grid=""
+                .uk-width-1-3
+                  = select_tag 'user_auto_tagging[conditions][0][0][type]', options_for_select(['購読中のメンバーシップ', '購読中のプラン', 'アカウント連携'], '購読中のメンバーシップ'), class: 'uk-select'
+                .uk-width-1-2
+                  = select_tag 'user_auto_tagging[conditions][0][0][value]', options_for_select(['Membership A', 'Membership B', 'Membership C'], 'Membership A'), class: 'uk-select'
+                .uk-width-auto
+                  button.uk-button.uk-button-danger.uk-button-small type="button"
+                    span uk-icon="close"
+
+            / Condition 2
+            .uk-margin
+              = label_tag 'condition_1_2', '条件 2', class: 'uk-form-label'
+              .uk-grid-small data-uk-grid=""
+                .uk-width-1-3
+                  = select_tag 'user_auto_tagging[conditions][0][1][type]', options_for_select(['購読中のメンバーシップ', '購読中のプラン', 'アカウント連携'], '購読中のプラン'), class: 'uk-select'
+                .uk-width-1-2
+                  = select_tag 'user_auto_tagging[conditions][0][1][value]', options_for_select(['Plan A', 'Plan B', 'Plan C'], 'Plan A'), class: 'uk-select'
+                .uk-width-auto
+                  button.uk-button.uk-button-danger.uk-button-small type="button"
+                    span uk-icon="close"
+
+            / Condition 3
+            .uk-margin
+              = label_tag 'condition_1_3', '条件 3', class: 'uk-form-label'
+              .uk-grid-small data-uk-grid=""
+                .uk-width-1-3
+                  = select_tag 'user_auto_tagging[conditions][0][2][type]', options_for_select(['購読中のメンバーシップ', '購読中のプラン', 'アカウント連携'], 'アカウント連携'), class: 'uk-select'
+                .uk-width-1-2
+                  = select_tag 'user_auto_tagging[conditions][0][2][value]', options_for_select(['Line', 'Twitter', 'Facebook'], 'Line'), class: 'uk-select'
+                .uk-width-auto
+                  button.uk-button.uk-button-danger.uk-button-small type="button"
+                    span uk-icon="close"
+
+            .uk-margin-top
+              button.uk-button.uk-button-default.uk-button-small type="button"
+                span uk-icon="plus"
+                |  条件を追加する
+
+          / Condition Block 2
+          .uk-card.uk-card-default.uk-card-body.uk-margin-bottom
+            .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-small-bottom
+              h4.uk-margin-remove 条件ブロック 2
+              button.uk-button.uk-button-danger.uk-button-small type="button" 条件ブロックを削除する
+
+            / Condition 1
+            .uk-margin
+              = label_tag 'condition_2_1', '条件 1', class: 'uk-form-label'
+              .uk-grid-small data-uk-grid=""
+                .uk-width-1-3
+                  = select_tag 'user_auto_tagging[conditions][1][0][type]', options_for_select(['購読中のメンバーシップ', '購読中のプラン', 'アカウント連携'], '購読中のメンバーシップ'), class: 'uk-select'
+                .uk-width-1-2
+                  = select_tag 'user_auto_tagging[conditions][1][0][value]', options_for_select(['Membership A', 'Membership B', 'Membership C'], 'Membership A'), class: 'uk-select'
+                .uk-width-auto
+                  button.uk-button.uk-button-danger.uk-button-small type="button"
+                    span uk-icon="close"
+
+            / Condition 2
+            .uk-margin
+              = label_tag 'condition_2_2', '条件 2', class: 'uk-form-label'
+              .uk-grid-small data-uk-grid=""
+                .uk-width-1-3
+                  = select_tag 'user_auto_tagging[conditions][1][1][type]', options_for_select(['購読中のメンバーシップ', '購読中のプラン', 'アカウント連携'], '購読中のプラン'), class: 'uk-select'
+                .uk-width-1-2
+                  = select_tag 'user_auto_tagging[conditions][1][1][value]', options_for_select(['Plan A', 'Plan B', 'Plan C'], 'Plan A'), class: 'uk-select'
+                .uk-width-auto
+                  button.uk-button.uk-button-danger.uk-button-small type="button"
+                    span uk-icon="close"
+
+            / Condition 3
+            .uk-margin
+              = label_tag 'condition_2_3', '条件 3', class: 'uk-form-label'
+              .uk-grid-small data-uk-grid=""
+                .uk-width-1-3
+                  = select_tag 'user_auto_tagging[conditions][1][2][type]', options_for_select(['購読中のメンバーシップ', '購読中のプラン', 'アカウント連携'], 'アカウント連携'), class: 'uk-select'
+                .uk-width-1-2
+                  = select_tag 'user_auto_tagging[conditions][1][2][value]', options_for_select(['Line', 'Twitter', 'Facebook'], 'Line'), class: 'uk-select'
+                .uk-width-auto
+                  button.uk-button.uk-button-danger.uk-button-small type="button"
+                    span uk-icon="close"
+
+            .uk-margin-top
+              button.uk-button.uk-button-default.uk-button-small type="button"
+                span uk-icon="plus"
+                |  条件を追加する
+
+          / Add Condition Block Button
+          .uk-margin-top
+            button.uk-button.uk-button-primary.uk-button-small type="button"
+              span uk-icon="plus"
+              |  条件ブロックを追加する
+
+          hr.uk-margin-medium-top.uk-margin-medium-bottom
+
+          / Submit Button
+          .uk-margin
+            = f.submit '保存する', class: 'uk-button uk-button-primary'
+
+    .uk-width-1-3
+      .uk-card.uk-card-default.uk-card-body
+        = button_to '削除する', admin_area_user_auto_tagging_path(@user_auto_tagging.id), method: :delete, class: 'uk-button uk-button-danger uk-width-1-1', data: { turbo_confirm: '本当に削除しますか？' }
+
+  / Simple JavaScript for period type switching
+  javascript:
+    document.addEventListener('DOMContentLoaded', function() {
+      const periodSelector = document.querySelector('[data-period-selector]');
+      const relativeFields = document.querySelector('[data-period-target="relative"]');
+      const fixedFields = document.querySelector('[data-period-target="fixed"]');
+
+      if (periodSelector) {
+        periodSelector.addEventListener('change', function() {
+          const value = this.value;
+          relativeFields.style.display = 'none';
+          fixedFields.style.display = 'none';
+
+          if (value === '相対的に期間を指定する') {
+            relativeFields.style.display = 'block';
+          } else if (value === '固定の期間を指定する') {
+            fixedFields.style.display = 'block';
+          }
+        });
+      }
+    });
