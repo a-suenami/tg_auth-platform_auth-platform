@@ -1,13 +1,15 @@
 # typed: strict
 
-class UserAutoTaggingRuleBlock < ApplicationRecord
+class UserAutoTagging::RuleBlock < ApplicationRecord
   extend T::Sig
   include Multitenancy
+
+  self.table_name = 'user_auto_tagging_rule_blocks'
 
   belongs_to :tenant
   belongs_to :user_auto_tagging
 
-  has_many :rules, class_name: 'UserAutoTaggingRule', foreign_key: :rule_block_id, dependent: :destroy, inverse_of: :rule_block
+  has_many :rules, class_name: 'UserAutoTagging::Rule', dependent: :destroy, inverse_of: :rule_block
 
   accepts_nested_attributes_for :rules, allow_destroy: true
 

@@ -1,4 +1,4 @@
-\restrict KYt9BgvCbxO0ruiKWhEatMOtOyuqGysLrswpQ5ajMXdeEsXyomBjWr5FovgEh2h
+\restrict 0RagOimvgSfFChwaQMIc8YO48XnOSl5htLK7mu0Ix3YeDGHVUYRtMg2gkFxFqKC
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -2098,6 +2098,7 @@ CREATE TABLE public.user_auto_taggings (
     name character varying NOT NULL,
     description text,
     enabled boolean DEFAULT true NOT NULL,
+    shareable boolean DEFAULT false NOT NULL,
     created_by_id uuid,
     updated_by_id uuid,
     created_at timestamp(6) without time zone NOT NULL,
@@ -2138,6 +2139,13 @@ COMMENT ON COLUMN public.user_auto_taggings.description IS 'Rule description';
 --
 
 COMMENT ON COLUMN public.user_auto_taggings.enabled IS 'Whether rule is active';
+
+
+--
+-- Name: COLUMN user_auto_taggings.shareable; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_taggings.shareable IS 'Tag shareable with linked apps (連携タグ設定)';
 
 
 --
@@ -5048,7 +5056,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict KYt9BgvCbxO0ruiKWhEatMOtOyuqGysLrswpQ5ajMXdeEsXyomBjWr5FovgEh2h
+\unrestrict 0RagOimvgSfFChwaQMIc8YO48XnOSl5htLK7mu0Ix3YeDGHVUYRtMg2gkFxFqKC
 
 SET search_path TO "$user", public;
 

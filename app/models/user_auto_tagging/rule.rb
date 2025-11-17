@@ -1,8 +1,10 @@
 # typed: strict
 
-class UserAutoTaggingRule < ApplicationRecord
+class UserAutoTagging::Rule < ApplicationRecord
   extend T::Sig
   include Multitenancy
+
+  self.table_name = 'user_auto_tagging_rules'
 
   CONDITION_TYPES = T.let(
     %w[membership plan prefecture gender age account_link].freeze,
@@ -10,7 +12,7 @@ class UserAutoTaggingRule < ApplicationRecord
   )
 
   belongs_to :tenant
-  belongs_to :rule_block, class_name: 'UserAutoTaggingRuleBlock'
+  belongs_to :rule_block, class_name: 'UserAutoTagging::RuleBlock'
 
   validates :condition_type, presence: true
   validates :condition_type, inclusion: { in: CONDITION_TYPES }
