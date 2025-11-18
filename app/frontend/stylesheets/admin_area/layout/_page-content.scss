@@ -1,6 +1,6 @@
 .l-page-content {
   display: grid;
-  grid-template-columns: 296px 1fr auto;
+  grid-template-columns: 296px 1fr;
   &__navigation {
     padding: 24px;
     background-color: var(--color-background-gray-light);
@@ -64,8 +64,20 @@
       }
     }
   }
-  &__main {
+  &__content {
     border-left: 1px solid var(--color-border);
     overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    &__main {
+      overflow: hidden;
+    }
+    &__sub {
+      max-width: 320px;
+      border-left: 1px solid var(--color-border);
+      &:empty {
+        display: none;
+      }
+    }
   }
 }

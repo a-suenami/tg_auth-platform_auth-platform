@@ -4,19 +4,10 @@
 @use './user-show/onetime-plan.scss';
 
 .p-user-show {
-  display: grid;
-  gap: 24px;
-  padding: 24px;
-
-  &__breadcrumb {
-    margin-bottom: 8px;
-  }
+  display: contents;
 
   &__content {
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 24px;
-    align-items: start;
+    padding: 24px;
 
     &__left {
       display: grid;

@@ -4,7 +4,7 @@
       a.p-user-detail__header__close href='#'
         = render 'shared/icons/icon-close'
       .p-user-detail__header__title = @user.user_profile&.name || '1234-5678-0000'
-      = link_to edit_admin_area_user_path(@user), class: "p-user-detail__header__link", data: { turbo_frame: '_top' } do
+      = link_to admin_area_user_path(@user), class: "p-user-detail__header__link", data: { turbo_frame: 'content' } do
         = render 'shared/icons/icon-external-link'
     .p-user-detail__content
       .p-user-detail__content__section

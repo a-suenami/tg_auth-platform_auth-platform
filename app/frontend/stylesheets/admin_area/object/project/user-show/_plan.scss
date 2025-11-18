@@ -1,11 +1,12 @@
 .p-user-show__content__section__plan,
 .p-user-detail__content__section__plan {
+  --inline-padding: 16px;
   display: flex;
   align-items: stretch;
   overflow-x: auto;
   gap: 16px;
-  margin-inline: -16px;
-  padding-inline: 16px;
+  margin-inline: calc(var(--inline-padding) * -1);
+  padding-inline: var(--inline-padding);
 
   &__item {
     display: grid;
@@ -83,7 +84,6 @@
 }
 
 .p-user-show__content__section__plan {
-  margin-inline: -24px;
-  padding-inline: 24px;
+  --inline-padding: 24px;
 }
 

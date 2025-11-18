@@ -20,6 +20,5 @@
           | 三ヶ月以内にMembership Aを購読したユーザー
         = link_to '#', class: "l-page-content__navigation__children__item" do
           | 2025/10/01 00:00 ~ 2025/10/31 23:59に何かのプランを購読したユーザー
-  .l-page-content__main
+  = turbo_frame_tag "content", class: "l-page-content__content" do
     = yield
-  = turbo_frame_tag "detail", class: "l-page-content__detail"

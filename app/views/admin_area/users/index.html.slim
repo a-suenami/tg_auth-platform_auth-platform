@@ -1,140 +1,80 @@
 = render 'admin_area/users/user_layout' do
-  = render 'admin_area/shared/breadcrumb', items: [{ text: 'すべてのユーザー' }]
-  .c-table-header
-    .c-table-header__content
-      a.c-table-header__content__filter href='#'
-        = render 'shared/icons/icon-filter'
-        span.c-table-header__content__filter__text 絞り込み
-      .c-table-header__content__search
-        input.c-table-header__content__search__input type='text' placeholder='検索'
-        = render 'shared/icons/icon-search'
-      a.c-table-header__content__more href='#'
-        = render 'shared/icons/icon-more'
-    .c-table-header__pager
-      - if @pagy.prev
-        = link_to pagy_url_for(@pagy, @pagy.prev), class: 'c-table-header__pager__item'
-          = render 'shared/icons/icon-chevron-left'
-          span.c-table-header__pager__item__text 前へ
+  .l-page-content__content__main
+    = render 'admin_area/shared/breadcrumb', items: [{ text: 'すべてのユーザー' }]
+    .c-table-header
+      .c-table-header__content
+        a.c-table-header__content__filter href='#'
+          = render 'shared/icons/icon-filter'
+          span.c-table-header__content__filter__text 絞り込み
+        .c-table-header__content__search
+          input.c-table-header__content__search__input type='text' placeholder='検索'
+          = render 'shared/icons/icon-search'
+        a.c-table-header__content__more href='#'
+          = render 'shared/icons/icon-more'
+      .c-table-header__pager
+        - if @pagy.prev
+          = link_to pagy_url_for(@pagy, @pagy.prev), class: 'c-table-header__pager__item'
+            = render 'shared/icons/icon-chevron-left'
+            span.c-table-header__pager__item__text 前へ
+        - else
+          span.c-table-header__pager__item.is-disabled
+            = render 'shared/icons/icon-chevron-left'
+            span.c-table-header__pager__item__text 前へ
+        - if @pagy.next
+          = link_to pagy_url_for(@pagy, @pagy.next), class: 'c-table-header__pager__item'
+            span.c-table-header__pager__item__text 次へ
+            = render 'shared/icons/icon-chevron-right'
+        - else
+          span.c-table-header__pager__item.is-disabled
+            span.c-table-header__pager__item__text 次へ
+            = render 'shared/icons/icon-chevron-right'
+    .c-table.has-checkbox.has-action
+      - if @users.empty?
+        .c-table__empty ユーザーが見つかりません
       - else
-        span.c-table-header__pager__item.is-disabled
-          = render 'shared/icons/icon-chevron-left'
-          span.c-table-header__pager__item__text 前へ
-      - if @pagy.next
-        = link_to pagy_url_for(@pagy, @pagy.next), class: 'c-table-header__pager__item'
-          span.c-table-header__pager__item__text 次へ
-          = render 'shared/icons/icon-chevron-right'
-      - else
-        span.c-table-header__pager__item.is-disabled
-          span.c-table-header__pager__item__text 次へ
-          = render 'shared/icons/icon-chevron-right'
-  .c-table.has-checkbox.has-action
-    - if @users.empty?
-      .c-table__empty ユーザーが見つかりません
-    - else
-      table
-        tr
-          th
-            label.c-checkbox
-              input.c-checkbox__input type='checkbox'
-              .c-checkbox__checkbox
-          th
-            | ID
-          th
-            | 氏名
-          th
-            | メールアドレス
-          - unless Rails.env.production?
-            th
-              | 会員番号
-            th
-              | タグ
-          th
-            = render 'shared/icons/icon-config'
-        - @users.each do |user|
+        table
           tr
-            td
+            th
               label.c-checkbox
                 input.c-checkbox__input type='checkbox'
                 .c-checkbox__checkbox
-            td.text-small
-              = link_to admin_area_user_path(user), data: { turbo_frame: 'detail' } do
-                = user.id
-            td
-              = user&.user_profile&.name
-            td
-              = user.email
+            th
+              | ID
+            th
+              | 氏名
+            th
+              | メールアドレス
             - unless Rails.env.production?
-              td 1234-5678-0000
+              th
+                | 会員番号
+              th
+                | タグ
+            th
+              = render 'shared/icons/icon-config'
+          - @users.each do |user|
+            tr
               td
-                .c-tag-list
-                  - 1..5.times do |i|
-                    .c-tag.c-tag--primary
-                      | ユーザタグ#{i + 1}
-            td
-              a.c-table-row-action href='#'
-                = render 'shared/icons/icon-more-vertical'
-  .c-table-footer
-    == pagy_nav(@pagy)
+                label.c-checkbox
+                  input.c-checkbox__input type='checkbox'
+                  .c-checkbox__checkbox
+              td.text-small
+                = link_to admin_area_user_path(user), data: { turbo_frame: 'detail' } do
+                  = user.id
+              td
+                = user&.user_profile&.name
+              td
+                = user.email
+              - unless Rails.env.production?
+                td 1234-5678-0000
+                td
+                  .c-tag-list
+                    - 1..5.times do |i|
+                      .c-tag.c-tag--primary
+                        | ユーザタグ#{i + 1}
+              td
+                a.c-table-row-action href='#'
+                  = render 'shared/icons/icon-more-vertical'
+    .c-table-footer
+      == pagy_nav(@pagy)
 
-/ .uk-margin-top.uk-container
-  h2 会員ID一覧
-
-  .uk-card.uk-card-default.uk-card-body
-    p 検索条件
-    = form_with url: admin_area_users_path, method: :get do |f|
-      .uk-margin
-        = f.label :id, "ID"
-        = f.text_field :id, placeholder: "539dde46-68a2-4619-9866-63b7478ae36e", value: params[:id], class: "uk-input"
-      .uk-margin
-        = f.label :email, "メールアドレス"
-        = f.text_field :email, placeholder: "mail@example.com", value: params[:email], class: "uk-input"
-      .uk-margin
-        = f.label :phone_number, "電話番号"
-        = f.text_field :phone_number, placeholder: "+818012345678 (国際電話番号フォーマット)", value: params[:phone_number], class: "uk-input"
-      = submit_tag "Search", class: "uk-button uk-button-secondary"
-      = link_to "検索初期化", admin_area_users_path, class: "uk-button uk-button-default uk-margin-left"
-    br
-
-  .uk-margin-top.uk-card.uk-card-default.uk-card-body
-    - if @users.empty?
-      p.uk-text-lead
-        | No users found
-    - else
-      table.uk-table.uk-table-divider
-        tr
-          th
-            | ID
-          th
-            | メールアドレス
-          th
-            | 氏名
-          th
-            | 性別
-          th
-            | 年代
-          th
-            | 都道府県
-          th
-            | 操作
-        - @users.each do |user|
-          tr
-            td
-              = user.id
-            td
-              = user.email
-            td
-              = user&.user_profile&.name
-            td
-              = user&.user_profile&.gender
-            td
-              - if user&.user_profile&.age_range.present?
-                = user&.user_profile&.age_range
-                | 代
-              - else
-                | -
-            td
-              = user&.contact_address&.prefecture&.name
-            td
-              = link_to "詳細", admin_area_user_path(user), class: "uk-button uk-button-secondary"
-
-    == pagy_nav(@pagy)
+  = turbo_frame_tag "detail", class: "l-page-content__content__sub"
