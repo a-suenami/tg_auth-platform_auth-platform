@@ -51,7 +51,7 @@ local memory = 2048 - 256 - 50;
       "environment": [
         {
           "name": "RULER_ALLOW_IPS",
-          "value": "allow 167.179.95.236/32; allow 219.104.123.178/32; allow 217.178.59.190/32; allow 240d:1b:5c:9600::/56; allow 240d:1b:ad::/56; allow 2409:10:2500:3700::/56;"
+          "value": "allow 167.179.95.236/32; allow 219.104.123.178/32; allow 217.178.59.190/32; allow 240d:1b:5c:9600::/56; allow 240d:1b:ad::/56; allow 2409:10:2500:3700::/56; allow 104.30.178.3/32; allow 2a09:bac0:1001:4c8::/64; allow 104.30.166.116/32; allow 2a09:bac0:1000:b44::/64;"
         },
         {
           "name": "HEALTH_CHECK_ALLOW_IPS",
