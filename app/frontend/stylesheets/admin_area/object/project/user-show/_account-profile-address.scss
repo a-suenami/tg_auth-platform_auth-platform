@@ -2,7 +2,10 @@
 .p-user-show__content__section__account,
 .p-user-show__content__section__profile,
 .p-user-show__content__section__address,
-.p-user-show__content__section__billing__address {
+.p-user-show__content__section__billing__address,
+.p-user-detail__content__section__account,
+.p-user-detail__content__section__profile,
+.p-user-detail__content__section__address {
   background-color: var(--color-background-gray);
   border-radius: 8px;
   border: 1px solid var(--color-border);
@@ -48,7 +51,8 @@
 }
 
 // プロフィールの行レイアウト
-.p-user-show__content__section__profile__item--row {
+.p-user-show__content__section__profile__item--row,
+.p-user-detail__content__section__profile__item--row {
   display: flex;
   padding: 0;
 

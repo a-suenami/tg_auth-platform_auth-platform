@@ -1,5 +1,6 @@
 // 内部メモ
-.p-user-show__content__section__memo {
+.p-user-show__content__section__memo,
+.p-user-detail__content__section__memo {
   display: grid;
   gap: 8px;
 
@@ -67,7 +68,8 @@
 }
 
 // タグ
-.p-user-show__content__section__tag {
+.p-user-show__content__section__tag,
+.p-user-detail__content__section__tag {
   display: grid;
   gap: 8px;
 
@@ -147,7 +149,8 @@
 }
 
 // アクティビティ
-.p-user-show__content__section__activity {
+.p-user-show__content__section__activity,
+.p-user-detail__content__section__activity {
   display: grid;
   gap: 24px 8px;
   grid-template-columns: 24px 70px 1fr;

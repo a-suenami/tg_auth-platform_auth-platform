@@ -1,10 +1,11 @@
-.p-user-show__content__section__plan {
+.p-user-show__content__section__plan,
+.p-user-detail__content__section__plan {
   display: flex;
   align-items: stretch;
   overflow-x: auto;
   gap: 16px;
-  margin-inline: -24px;
-  padding-inline: 24px;
+  margin-inline: -16px;
+  padding-inline: 16px;
 
   &__item {
     display: grid;
@@ -16,6 +17,7 @@
     border: 1px solid var(--color-border);
     min-width: 168px;
 
+    &__plan-header,
     &__header {
       display: flex;
       align-items: center;
@@ -23,12 +25,14 @@
       gap: 8px;
     }
 
+    &__plan-name,
     &__name {
       font-size: 14px;
       font-weight: 500;
       color: var(--color-text-heading);
     }
 
+    &__plan-status,
     &__status {
       padding: 6px 12px;
       border-radius: 12px;
@@ -54,6 +58,7 @@
       }
     }
 
+    &__plan-content,
     &__content {
       display: flex;
       align-items: baseline;
@@ -62,16 +67,23 @@
       flex-wrap: wrap;
     }
 
+    &__plan-duration,
     &__duration {
       font-size: 18px;
       font-weight: 500;
       color: var(--color-text-heading);
     }
 
+    &__plan-total,
     &__total {
       font-size: 12px;
       color: var(--color-text-inactive);
     }
   }
+}
+
+.p-user-show__content__section__plan {
+  margin-inline: -24px;
+  padding-inline: 24px;
 }
 
