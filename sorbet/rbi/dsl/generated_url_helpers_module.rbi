@@ -106,6 +106,9 @@ module GeneratedUrlHelpersModule
   def api_v1_internal_membership_contracts_credit_card_payments_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def api_v1_internal_membership_contracts_konbini_payments_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def api_v1_internal_membership_contracts_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -500,6 +503,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def verify_sms_api_v1_authentication_sms_verify_index_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def webhook_area_komoju_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def webhook_area_stripe_url(*args); end

@@ -17,5 +17,6 @@ class Membership::ContractTerm < ApplicationRecord
 
   enum payment_type: {
     credit_card: 'credit_card',
+    convenience: 'convenience',
   }
 end
