@@ -54,11 +54,11 @@ module AdminArea
 
     def class_of(key)
       # primary, success, warning or a danger
-      case key
-      when 'notice'
-        'primary'
+      case key.to_s
       when 'alert'
         'danger'
+      when 'success'
+        'success'
       else
         ''
       end
