@@ -1,0 +1,95 @@
+// アカウント、プロフィール、住所の共通スタイル
+.p-user-show__content__section__account,
+.p-user-show__content__section__profile,
+.p-user-show__content__section__address,
+.p-user-show__content__section__billing__address {
+  background-color: var(--color-background-gray);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+
+  &__item {
+    display: grid;
+    gap: 8px;
+    padding: 8px 12px;
+
+    &:not(:first-child) {
+      border-top: 1px solid var(--color-border);
+    }
+
+    &__label {
+      font-size: 12px;
+      color: var(--color-text-inactive);
+    }
+
+    &__value {
+      font-size: 14px;
+      color: var(--color-text-active);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+
+      &__status {
+        color: var(--color-success-text);
+        display: flex;
+        align-items: center;
+
+        &.is-error {
+          color: var(--color-attention-icon);
+        }
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+}
+
+// プロフィールの行レイアウト
+.p-user-show__content__section__profile__item--row {
+  display: flex;
+  padding: 0;
+
+  &__item {
+    flex: 1;
+    display: grid;
+    gap: 8px;
+    padding: 8px 12px;
+
+    &:not(:first-child) {
+      border-left: 1px solid var(--color-border);
+    }
+  }
+}
+
+// 請求先住所のラジオボタン
+.p-user-show__content__section__billing {
+  display: grid;
+  gap: 16px;
+
+  &__radio {
+    display: flex;
+    gap: 16px;
+    padding: 12px;
+    background-color: var(--color-background-gray);
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+
+    &__item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--color-text-body);
+      cursor: pointer;
+
+      input[type='radio'] {
+        margin: 0;
+        cursor: pointer;
+      }
+    }
+  }
+}
+

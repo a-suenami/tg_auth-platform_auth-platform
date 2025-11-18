@@ -1,0 +1,150 @@
+= turbo_frame_tag "detail" do
+  .p-user-detail
+    .p-user-detail__header
+      a.p-user-detail__header__close href='#'
+        = render 'shared/icons/icon-close'
+      .p-user-detail__header__title = @user.user_profile&.name || '1234-5678-0000'
+      = link_to edit_admin_area_user_path(@user), class: "p-user-detail__header__link", data: { turbo_frame: '_top' } do
+        = render 'shared/icons/icon-external-link'
+    .p-user-detail__content
+      .p-user-detail__content__section
+        .p-user-detail__content__section__plan
+          - 1..3.times do |i|
+            .p-user-detail__content__section__plan__item
+              .p-user-detail__content__section__plan__item__plan-header
+                .p-user-detail__content__section__plan__item__plan-name Plan #{i}
+                .p-user-detail__content__section__plan__item__plan-status.is-success 継続中
+              .p-user-detail__content__section__plan__item__plan-content
+                .p-user-detail__content__section__plan__item__plan-duration 3ヶ月継続
+                .p-user-detail__content__section__plan__item__plan-total 累計8ヶ月
+      .p-user-detail__content__section
+        .p-user-detail__content__section__memo
+          label.p-user-detail__content__section__memo__label 内部メモ
+          textarea.p-user-detail__content__section__memo__textarea
+      .p-user-detail__content__section
+        .p-user-detail__content__section__tag
+          label.p-user-detail__content__section__tag__label タグ
+          .p-user-detail__content__section__tag__list
+            - 1..3.times do |i|
+              .p-user-detail__content__section__tag__item
+                .p-user-detail__content__section__tag__item__text Tag #{i}
+                a.p-user-detail__content__section__tag__item__remove href='#'
+                  = render 'shared/icons/icon-close'
+            - 1..3.times do |i|
+              .p-user-detail__content__section__tag__item.is-auto-tag
+                .p-user-detail__content__section__tag__item__text Tag #{i}
+                a.p-user-detail__content__section__tag__item__lock href='#'
+                  = render 'shared/icons/icon-lock'
+            a.p-user-detail__content__section__tag__add href='#'
+              = render 'shared/icons/icon-plus'
+              span.p-user-detail__content__section__tag__add__text タグを追加
+      .p-user-detail__content__section
+        .p-user-detail__content__section__label
+          | アカウント
+          a.p-user-detail__content__section__label__edit href='#'
+            = render 'shared/icons/icon-edit'
+            | 編集する
+        .p-user-detail__content__section__account
+          .p-user-detail__content__section__account__item
+            .p-user-detail__content__section__account__item__label ID
+            .p-user-detail__content__section__account__item__value = @user.id
+          .p-user-detail__content__section__account__item
+            .p-user-detail__content__section__account__item__label 会員番号
+            .p-user-detail__content__section__account__item__value 1234-5678-0000
+          .p-user-detail__content__section__account__item
+            .p-user-detail__content__section__account__item__label 名前
+            .p-user-detail__content__section__account__item__value = @user.user_profile&.name
+          .p-user-detail__content__section__account__item
+            .p-user-detail__content__section__account__item__label メールアドレス
+            .p-user-detail__content__section__account__item__value
+              = @user.email
+              .p-user-detail__content__section__account__item__value__status
+                = render 'shared/icons/icon-check-circle-fill'
+          .p-user-detail__content__section__account__item
+            .p-user-detail__content__section__account__item__label 電話番号
+            .p-user-detail__content__section__account__item__value
+              = @user.phone_number
+              .p-user-detail__content__section__account__item__value__status
+                = render 'shared/icons/icon-attention-circle-fill'
+          .p-user-detail__content__section__account__item
+            .p-user-detail__content__section__account__item__label 年代
+            .p-user-detail__content__section__account__item__value
+              - if @user&.user_profile&.age_range.present?
+                = @user&.user_profile&.age_range
+                | 代
+              - else
+                | -
+          .p-user-detail__content__section__account__item
+            .p-user-detail__content__section__account__item__label アカウント作成日
+            .p-user-detail__content__section__account__item__value = local_time(@user.created_at)
+          .p-user-detail__content__section__account__item
+            .p-user-detail__content__section__account__item__label アカウント削除日
+            .p-user-detail__content__section__account__item__value
+              | -
+      .p-user-detail__content__section
+        .p-user-detail__content__section__label
+          | プロフィール
+          a.p-user-detail__content__section__label__edit href='#'
+            = render 'shared/icons/icon-edit'
+            | 編集する
+        .p-user-detail__content__section__profile
+          .p-user-detail__content__section__profile__item.p-user-detail__content__section__profile__item--row
+            .p-user-detail__content__section__profile__item--row__item
+              .p-user-detail__content__section__profile__item__label = UserProfile.human_attribute_name(:last_name)
+              .p-user-detail__content__section__profile__item__value = @user&.user_profile&.last_name
+            .p-user-detail__content__section__profile__item--row__item
+              .p-user-detail__content__section__profile__item__label = UserProfile.human_attribute_name(:first_name)
+              .p-user-detail__content__section__profile__item__value = @user&.user_profile&.first_name
+          .p-user-detail__content__section__profile__item.p-user-detail__content__section__profile__item--row
+            .p-user-detail__content__section__profile__item--row__item
+              .p-user-detail__content__section__profile__item__label = UserProfile.human_attribute_name(:last_name_kana)
+              .p-user-detail__content__section__profile__item__value = @user&.user_profile&.last_name_kana
+            .p-user-detail__content__section__profile__item--row__item
+              .p-user-detail__content__section__profile__item__label = UserProfile.human_attribute_name(:first_name_kana)
+              .p-user-detail__content__section__profile__item__value = @user&.user_profile&.first_name_kana
+          .p-user-detail__content__section__profile__item
+            .p-user-detail__content__section__profile__item__label = UserProfile.human_attribute_name(:birth_date)
+            .p-user-detail__content__section__profile__item__value = @user&.user_profile&.birth_date
+          .p-user-detail__content__section__profile__item
+            .p-user-detail__content__section__profile__item__label = UserProfile.human_attribute_name(:gender)
+            .p-user-detail__content__section__profile__item__value = @user&.user_profile&.gender
+
+      .p-user-detail__content__section
+        .p-user-detail__content__section__label
+          | 住所
+          a.p-user-detail__content__section__label__edit href='#'
+            = render 'shared/icons/icon-edit'
+            | 編集する
+        .p-user-detail__content__section__address
+          .p-user-detail__content__section__address__item
+            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:zip_code)
+            .p-user-detail__content__section__address__item__value = @user&.contact_address&.zip_code
+          .p-user-detail__content__section__address__item
+            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:prefecture)
+            .p-user-detail__content__section__address__item__value = @user&.contact_address&.prefecture&.name
+          .p-user-detail__content__section__address__item
+            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:city)
+            .p-user-detail__content__section__address__item__value = @user&.contact_address&.city
+          .p-user-detail__content__section__address__item
+            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:street)
+            .p-user-detail__content__section__address__item__value = @user&.contact_address&.street
+          .p-user-detail__content__section__address__item
+            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:building)
+            .p-user-detail__content__section__address__item__value = @user&.contact_address&.building
+          .p-user-detail__content__section__address__item
+            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:phone_number)
+            .p-user-detail__content__section__address__item__value = @user&.contact_address&.phone_number
+          .p-user-detail__content__section__address__item
+            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:country_code)
+            .p-user-detail__content__section__address__item__value = @user&.contact_address&.country_code
+      .p-user-detail__content__section
+        .p-user-detail__content__section__label
+          | アクティビティ
+        .p-user-detail__content__section__activity
+          - 1..3.times do |i|
+            .p-user-detail__content__section__activity__item
+              .p-user-detail__content__section__activity__item__icon
+                = render 'shared/icons/icon-activity-purchase'
+              .p-user-detail__content__section__activity__item__date 2025-11-12 10:00:00
+              .p-user-detail__content__section__activity__item__text ゴールド会員に昇格しました
+

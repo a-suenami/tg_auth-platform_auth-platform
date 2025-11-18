@@ -1,0 +1,226 @@
+// 内部メモ
+.p-user-show__content__section__memo {
+  display: grid;
+  gap: 8px;
+
+  &__label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-heading);
+  }
+
+  &__textarea {
+    padding: 12px 16px;
+    appearance: none;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-background);
+    width: 100%;
+    height: 96px;
+    box-sizing: border-box;
+    font-size: 14px;
+    resize: vertical;
+    font-family: var(--font-family);
+    color: var(--color-text-body);
+
+    &::placeholder {
+      color: var(--color-text-inactive);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+
+    &__cancel,
+    &__save {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      border: 1px solid var(--color-border);
+      background-color: var(--color-background);
+      color: var(--color-text-body);
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: var(--color-background-gray);
+      }
+    }
+
+    &__save {
+      background-color: var(--color-primary);
+      color: var(--color-primary-contrast);
+      border-color: var(--color-primary);
+
+      &:hover {
+        background-color: var(--color-text-heading);
+      }
+    }
+  }
+}
+
+// タグ
+.p-user-show__content__section__tag {
+  display: grid;
+  gap: 8px;
+
+  &__label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-heading);
+  }
+
+  &__list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__item {
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 14px;
+    background-color: var(--color-tag-background);
+    min-width: 97px;
+
+    &__text {
+      color: var(--color-text-body);
+    }
+
+    &__remove,
+    &__lock {
+      svg {
+        display: block;
+        object-fit: cover;
+        aspect-ratio: 1;
+        width: 10px;
+        height: auto;
+        color: var(--color-text-inactive);
+      }
+    }
+
+    &.is-auto-tag {
+      background-color: var(--color-auto-tag-background);
+    }
+  }
+
+  &__add {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 14px;
+    padding: 6px 12px;
+    border: 1px dashed currentColor;
+    border-radius: 6px;
+    color: var(--color-text-inactive);
+    text-decoration: none;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--color-text-body);
+    }
+
+    svg {
+      object-fit: cover;
+      aspect-ratio: 1;
+      width: 10px;
+      height: auto;
+    }
+
+    &__text {
+      color: inherit;
+    }
+  }
+}
+
+// アクティビティ
+.p-user-show__content__section__activity {
+  display: grid;
+  gap: 24px 8px;
+  grid-template-columns: 24px 70px 1fr;
+
+  &__item {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -24px;
+      bottom: 0;
+      left: 11px;
+      width: 2px;
+      z-index: 0;
+      background-color: var(--color-background-gray-dark);
+    }
+
+    &:first-child {
+      &::before {
+        top: 0;
+      }
+    }
+
+    &:last-child {
+      &::before {
+        bottom: calc(100% - 24px);
+      }
+    }
+
+    &__icon {
+      position: relative;
+      z-index: 5;
+      width: 24px;
+      aspect-ratio: 1;
+      background-color: var(--color-background-gray-dark);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: var(--color-background-gray-alpha);
+
+      svg {
+        width: 16px;
+        aspect-ratio: 1;
+        object-fit: contain;
+      }
+    }
+
+    &__date {
+      font-size: 12px;
+      color: var(--color-text-inactive);
+    }
+
+    &__text {
+      font-size: 13px;
+      color: var(--color-text-active);
+    }
+  }
+
+  &__more {
+    grid-column: 1 / -1;
+    font-size: 14px;
+    color: var(--color-text-body);
+    text-decoration: none;
+    padding-top: 8px;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+}
+

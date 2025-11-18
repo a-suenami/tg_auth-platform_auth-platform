@@ -1,272 +1,257 @@
-= turbo_frame_tag "detail" do
-  .p-user-detail
-    .p-user-detail__header
-      a.p-user-detail__header__close href='#'
-        = render 'shared/icons/icon-close'
-      .p-user-detail__header__title = @user.user_profile&.name || '1234-5678-0000'
-      = link_to edit_admin_area_user_path(@user), class: "p-user-detail__header__link", data: { turbo_frame: '_top' } do
-        = render 'shared/icons/icon-external-link'
-    .p-user-detail__content
-      .p-user-detail__content__section
-        .p-user-detail__content__section__plan
-          - 1..3.times do |i|
-            .p-user-detail__content__section__plan__item
-              .p-user-detail__content__section__plan__item__plan-header
-                .p-user-detail__content__section__plan__item__plan-name Plan #{i}
-                .p-user-detail__content__section__plan__item__plan-status.is-success 継続中
-              .p-user-detail__content__section__plan__item__plan-content
-                .p-user-detail__content__section__plan__item__plan-duration 3ヶ月継続
-                .p-user-detail__content__section__plan__item__plan-total 累計8ヶ月
-      .p-user-detail__content__section
-        .p-user-detail__content__section__memo
-          label.p-user-detail__content__section__memo__label 内部メモ
-          textarea.p-user-detail__content__section__memo__textarea
-      .p-user-detail__content__section
-        .p-user-detail__content__section__tag
-          label.p-user-detail__content__section__tag__label タグ
-          .p-user-detail__content__section__tag__list
-            - 1..3.times do |i|
-              .p-user-detail__content__section__tag__item
-                .p-user-detail__content__section__tag__item__text Tag #{i}
-                a.p-user-detail__content__section__tag__item__remove href='#'
-                  = render 'shared/icons/icon-close'
-            - 1..3.times do |i|
-              .p-user-detail__content__section__tag__item.is-auto-tag
-                .p-user-detail__content__section__tag__item__text Tag #{i}
-                a.p-user-detail__content__section__tag__item__lock href='#'
-                  = render 'shared/icons/icon-lock'
-            a.p-user-detail__content__section__tag__add href='#'
-              = render 'shared/icons/icon-plus'
-              span.p-user-detail__content__section__tag__add__text タグを追加
-      .p-user-detail__content__section
-        .p-user-detail__content__section__label
-          | アカウント
-          a.p-user-detail__content__section__label__edit href='#'
-            = render 'shared/icons/icon-edit'
-            | 編集する
-        .p-user-detail__content__section__account
-          .p-user-detail__content__section__account__item
-            .p-user-detail__content__section__account__item__label ID
-            .p-user-detail__content__section__account__item__value = @user.id
-          .p-user-detail__content__section__account__item
-            .p-user-detail__content__section__account__item__label 会員番号
-            .p-user-detail__content__section__account__item__value 1234-5678-0000
-          .p-user-detail__content__section__account__item
-            .p-user-detail__content__section__account__item__label 名前
-            .p-user-detail__content__section__account__item__value = @user.user_profile&.name
-          .p-user-detail__content__section__account__item
-            .p-user-detail__content__section__account__item__label メールアドレス
-            .p-user-detail__content__section__account__item__value
-              = @user.email
-              .p-user-detail__content__section__account__item__value__status
-                = render 'shared/icons/icon-check-circle-fill'
-          .p-user-detail__content__section__account__item
-            .p-user-detail__content__section__account__item__label 電話番号
-            .p-user-detail__content__section__account__item__value
-              = @user.phone_number
-              .p-user-detail__content__section__account__item__value__status
-                = render 'shared/icons/icon-attention-circle-fill'
-          .p-user-detail__content__section__account__item
-            .p-user-detail__content__section__account__item__label 年代
-            .p-user-detail__content__section__account__item__value
-              - if @user&.user_profile&.age_range.present?
-                = @user&.user_profile&.age_range
-                | 代
+= render 'admin_area/users/user_layout' do
+  .p-user-show
+    .p-user-show__breadcrumb
+      = render 'admin_area/shared/breadcrumb', items: [{ text: 'すべてのユーザー', link: admin_area_users_path, data: { turbo_frame: 'content' } }, { text: @user.user_profile&.name || @user.id }]
+
+    .p-user-show__content
+      .p-user-show__content__left
+        .p-user-show__content__section
+          .p-user-show__content__section__label
+            | プラン
+            a.p-user-show__content__section__label__edit href='#'
+              = render 'shared/icons/icon-edit'
+              | 編集する
+          .p-user-show__content__section__plan
+            - # TODO: 実際のプランデータに置き換え（実データがあれば差し替え）
+            - plans = [{ name: 'Plan A', status: '継続中', status_class: 'is-success', duration: '3ヶ月継続', total: '累計8ヶ月' }, { name: 'Plan B', status: '支払い失敗', status_class: 'is-error', duration: '3ヶ月継続', total: '累計8ヶ月' }, { name: 'Plan C', status: '継続なし', status_class: 'is-inactive', duration: nil, total: '累計8ヶ月' }]
+            - plans.each do |plan|
+              .p-user-show__content__section__plan__item
+                .p-user-show__content__section__plan__item__header
+                  .p-user-show__content__section__plan__item__name = plan[:name]
+                  .p-user-show__content__section__plan__item__status class="#{plan[:status_class]}" = plan[:status]
+                .p-user-show__content__section__plan__item__content
+                  - if plan[:duration]
+                    .p-user-show__content__section__plan__item__duration = plan[:duration]
+                  .p-user-show__content__section__plan__item__total = plan[:total]
+
+        .p-user-show__content__section
+          .p-user-show__content__section__label
+            | アカウント
+            = link_to edit_admin_area_user_path(@user), class: "p-user-show__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
+              = render 'shared/icons/icon-edit'
+              | 編集する
+          .p-user-show__content__section__account
+            .p-user-show__content__section__account__item
+              .p-user-show__content__section__account__item__label ID
+              .p-user-show__content__section__account__item__value = @user.id
+            .p-user-show__content__section__account__item
+              .p-user-show__content__section__account__item__label 会員番号
+              .p-user-show__content__section__account__item__value 1234-5678-9000
+            .p-user-show__content__section__account__item
+              .p-user-show__content__section__account__item__label 名前
+              .p-user-show__content__section__account__item__value = @user.user_profile&.name
+            .p-user-show__content__section__account__item
+              .p-user-show__content__section__account__item__label メールアドレス
+              .p-user-show__content__section__account__item__value
+                = @user.email
+                .p-user-show__content__section__account__item__value__status
+                  = render 'shared/icons/icon-check-circle-fill'
+            .p-user-show__content__section__account__item
+              .p-user-show__content__section__account__item__label 電話番号
+              .p-user-show__content__section__account__item__value
+                = @user.phone_number
+                .p-user-show__content__section__account__item__value__status.is-error
+                  = render 'shared/icons/icon-attention-circle-fill'
+            .p-user-show__content__section__account__item
+              .p-user-show__content__section__account__item__label 年代
+              .p-user-show__content__section__account__item__value
+                - if @user&.user_profile&.age_range.present?
+                  = @user&.user_profile&.age_range
+                  | 代
+                - else
+                  | -
+            .p-user-show__content__section__account__item
+              .p-user-show__content__section__account__item__label アカウント作成日
+              .p-user-show__content__section__account__item__value = local_time(@user.created_at)
+            .p-user-show__content__section__account__item
+              .p-user-show__content__section__account__item__label アカウント削除日
+              .p-user-show__content__section__account__item__value
+                = @user.deleted_at || '-'
+            .p-user-show__content__section__account__item
+              .p-user-show__content__section__account__item__label = User.human_attribute_name(:enabled)
+              .p-user-show__content__section__account__item__value = @user.enabled
+            .p-user-show__content__section__account__item
+              .p-user-show__content__section__account__item__label = User.human_attribute_name(:sms_verified)
+              .p-user-show__content__section__account__item__value = @user.sms_verified
+            .p-user-show__content__section__account__item
+              .p-user-show__content__section__account__item__label = User.human_attribute_name(:suppress_sms_verification)
+              .p-user-show__content__section__account__item__value = @user.suppress_sms_verification
+            .p-user-show__content__section__account__item
+              .p-user-show__content__section__account__item__label = User.human_attribute_name(:email_verified)
+              .p-user-show__content__section__account__item__value = @user.email_verified
+
+        .p-user-show__content__section
+          .p-user-show__content__section__label
+            | プロフィール
+            = link_to edit_admin_area_user_user_profile_path(@user), class: "p-user-show__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
+              = render 'shared/icons/icon-edit'
+              | 編集する
+          .p-user-show__content__section__profile
+            .p-user-show__content__section__profile__item.p-user-show__content__section__profile__item--row
+              .p-user-show__content__section__profile__item--row__item
+                .p-user-show__content__section__profile__item__label = UserProfile.human_attribute_name(:last_name)
+                .p-user-show__content__section__profile__item__value = @user&.user_profile&.last_name
+              .p-user-show__content__section__profile__item--row__item
+                .p-user-show__content__section__profile__item__label = UserProfile.human_attribute_name(:first_name)
+                .p-user-show__content__section__profile__item__value = @user&.user_profile&.first_name
+            .p-user-show__content__section__profile__item.p-user-show__content__section__profile__item--row
+              .p-user-show__content__section__profile__item--row__item
+                .p-user-show__content__section__profile__item__label = UserProfile.human_attribute_name(:last_name_kana)
+                .p-user-show__content__section__profile__item__value = @user&.user_profile&.last_name_kana
+              .p-user-show__content__section__profile__item--row__item
+                .p-user-show__content__section__profile__item__label = UserProfile.human_attribute_name(:first_name_kana)
+                .p-user-show__content__section__profile__item__value = @user&.user_profile&.first_name_kana
+            .p-user-show__content__section__profile__item
+              .p-user-show__content__section__profile__item__label = UserProfile.human_attribute_name(:birth_date)
+              .p-user-show__content__section__profile__item__value = @user&.user_profile&.birth_date
+            .p-user-show__content__section__profile__item
+              .p-user-show__content__section__profile__item__label = UserProfile.human_attribute_name(:gender)
+              .p-user-show__content__section__profile__item__value = @user&.user_profile&.gender
+
+        .p-user-show__content__section
+          .p-user-show__content__section__label
+            | 配送先住所
+            - contact_address_link = @user.contact_address.present? ? edit_admin_area_user_contact_address_path(@user) : new_admin_area_user_contact_address_path(@user)
+            = link_to contact_address_link, class: "p-user-show__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
+              = render 'shared/icons/icon-edit'
+              | 編集する
+          .p-user-show__content__section__address
+            .p-user-show__content__section__address__item
+              .p-user-show__content__section__address__item__label = ContactAddress.human_attribute_name(:zip_code)
+              .p-user-show__content__section__address__item__value
+                - if @user&.contact_address&.zip_code.present?
+                  | 〒#{@user&.contact_address&.zip_code}
+                - else
+                  | -
+            .p-user-show__content__section__address__item
+              .p-user-show__content__section__address__item__label = ContactAddress.human_attribute_name(:prefecture)
+              .p-user-show__content__section__address__item__value = @user&.contact_address&.prefecture&.name || '-'
+            .p-user-show__content__section__address__item
+              .p-user-show__content__section__address__item__label = ContactAddress.human_attribute_name(:city)
+              .p-user-show__content__section__address__item__value = @user&.contact_address&.city || '-'
+            .p-user-show__content__section__address__item
+              .p-user-show__content__section__address__item__label = ContactAddress.human_attribute_name(:street)
+              .p-user-show__content__section__address__item__value = @user&.contact_address&.street || '-'
+            .p-user-show__content__section__address__item
+              .p-user-show__content__section__address__item__label = ContactAddress.human_attribute_name(:building)
+              .p-user-show__content__section__address__item__value = @user&.contact_address&.building || '-'
+            .p-user-show__content__section__address__item
+              .p-user-show__content__section__address__item__label = ContactAddress.human_attribute_name(:country_code)
+              .p-user-show__content__section__address__item__value = @user&.contact_address&.country_code || '-'
+            .p-user-show__content__section__address__item
+              .p-user-show__content__section__address__item__label = ContactAddress.human_attribute_name(:phone_number)
+              .p-user-show__content__section__address__item__value = @user&.contact_address&.phone_number || '-'
+
+        .p-user-show__content__section
+          .p-user-show__content__section__label
+            | 請求先住所
+            - billing_address_link = @user.billing_address.present? ? edit_admin_area_user_billing_address_path(@user) : new_admin_area_user_billing_address_path(@user)
+            = link_to billing_address_link, class: "p-user-show__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
+              = render 'shared/icons/icon-edit'
+              | 編集する
+          .p-user-show__content__section__billing
+            .p-user-show__content__section__billing__radio
+              label.p-user-show__content__section__billing__radio__item
+                input type='radio' name='billing_address' checked='checked'
+                | 配送先住所と請求先住所
+              label.p-user-show__content__section__billing__radio__item
+                input type='radio' name='billing_address'
+                | 配送先住所と異なる
+            .p-user-show__content__section__billing__address
+              .p-user-show__content__section__billing__address__item
+                .p-user-show__content__section__billing__address__item__label = ContactAddress.human_attribute_name(:zip_code)
+                .p-user-show__content__section__billing__address__item__value
+                  - if @user&.contact_address&.zip_code.present?
+                    | 〒#{@user&.contact_address&.zip_code}
+                  - else
+                    | -
+              .p-user-show__content__section__billing__address__item
+                .p-user-show__content__section__billing__address__item__label = ContactAddress.human_attribute_name(:prefecture)
+                .p-user-show__content__section__billing__address__item__value = @user&.contact_address&.prefecture&.name || '-'
+              .p-user-show__content__section__billing__address__item
+                .p-user-show__content__section__billing__address__item__label = ContactAddress.human_attribute_name(:city)
+                .p-user-show__content__section__billing__address__item__value = @user&.contact_address&.city || '-'
+              .p-user-show__content__section__billing__address__item
+                .p-user-show__content__section__billing__address__item__label = ContactAddress.human_attribute_name(:street)
+                .p-user-show__content__section__billing__address__item__value = @user&.contact_address&.street || '-'
+              .p-user-show__content__section__billing__address__item
+                .p-user-show__content__section__billing__address__item__label = ContactAddress.human_attribute_name(:building)
+                .p-user-show__content__section__billing__address__item__value = @user&.contact_address&.building || '-'
+              .p-user-show__content__section__billing__address__item
+                .p-user-show__content__section__billing__address__item__label = ContactAddress.human_attribute_name(:country_code)
+                .p-user-show__content__section__billing__address__item__value = @user&.contact_address&.country_code || '-'
+
+        .p-user-show__content__section
+          .p-user-show__content__section__label 買い切りプラン
+          .p-user-show__content__section__onetime-plan
+            .c-table
+              table
+                thead
+                  tr
+                    th プラン名
+                    th 価格
+                    th 決済方法
+                    th ステータス
+                    th 作成日時
+                    th 入金日時
+                tbody
+                  - # TODO: 実際の買い切りプランデータに置き換え（実データがあれば差し替え）
+                  - onetime_plans = [{ name: 'Onetime Plan A', price: '¥2,000', method: 'クレジットカード', status: '入金済み', status_class: 'is-success', created_at: '2025-12-31 23:59', paid_at: '2025-12-31 23:59' }, { name: 'Onetime Plan A', price: '¥2,000', method: 'クレジットカード', status: '期限切れ', status_class: 'is-inactive', created_at: '2025-12-31 23:59', paid_at: '2025-12-31 23:59' }, { name: 'Onetime Plan A', price: '¥2,000', method: 'クレジットカード', status: '入金待ち', status_class: 'is-warning', created_at: '2025-12-31 23:59', paid_at: '2025-12-31 23:59' }, { name: 'Onetime Plan A', price: '¥2,000', method: 'クレジットカード', status: '入金済み', status_class: 'is-success', created_at: '2025-12-31', paid_at: '2025-12-31' }]
+                  - onetime_plans.each do |plan|
+                    tr
+                      td = plan[:name]
+                      td = plan[:price]
+                      td = plan[:method]
+                      td
+                        .p-user-show__content__section__onetime-plan__status class="#{plan[:status_class]}" = plan[:status]
+                      td = plan[:created_at]
+                      td = plan[:paid_at]
+
+      .p-user-show__content__right
+        .p-user-show__content__section
+          .p-user-show__content__section__sms-reset
+            = form_with url: reset_sms_ratelimit_admin_area_user_path(@user), method: :put, local: true, class: 'p-user-show__content__section__sms-reset__form' do |f|
+              = f.submit 'SMS送信制限解除', class: 'p-user-show__content__section__sms-reset__form__button'
+
+        .p-user-show__content__section
+          .p-user-show__content__section__memo
+            label.p-user-show__content__section__memo__label 内部メモ
+            textarea.p-user-show__content__section__memo__textarea placeholder='このユーザーには注意してくださいこのユーザーには注意してください'
+            .p-user-show__content__section__memo__actions
+              button.p-user-show__content__section__memo__actions__cancel キャンセル
+              button.p-user-show__content__section__memo__actions__save 保存 (⌘+S)
+
+        .p-user-show__content__section
+          .p-user-show__content__section__label
+            | タグ
+            = link_to admin_area_user_user_tag_assignments_path(@user), class: "p-user-show__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
+              = render 'shared/icons/icon-edit'
+              | 編集する
+          .p-user-show__content__section__tag
+            .p-user-show__content__section__tag__list
+              - if @user.tag_assignments.any?
+                - @user.tag_assignments.includes(:user_tag, :user_auto_tagging).each do |assignment|
+                  - is_auto = !assignment.manual?
+                  .p-user-show__content__section__tag__item class=(is_auto ? 'is-auto-tag' : nil)
+                    .p-user-show__content__section__tag__item__text = assignment.user_tag&.name || '-'
+                    - if is_auto
+                      a.p-user-show__content__section__tag__item__lock href='#' aria-label='auto tag' title="オートタギング: #{assignment.user_auto_tagging&.name}"
+                        = render 'shared/icons/icon-lock'
               - else
-                | -
-          .p-user-detail__content__section__account__item
-            .p-user-detail__content__section__account__item__label アカウント作成日
-            .p-user-detail__content__section__account__item__value = local_time(@user.created_at)
-          .p-user-detail__content__section__account__item
-            .p-user-detail__content__section__account__item__label アカウント削除日
-            .p-user-detail__content__section__account__item__value
-              | -
-      .p-user-detail__content__section
-        .p-user-detail__content__section__label
-          | プロフィール
-          a.p-user-detail__content__section__label__edit href='#'
-            = render 'shared/icons/icon-edit'
-            | 編集する
-        .p-user-detail__content__section__profile
-          .p-user-detail__content__section__profile__item.p-user-detail__content__section__profile__item--row
-            .p-user-detail__content__section__profile__item--row__item
-              .p-user-detail__content__section__profile__item__label = UserProfile.human_attribute_name(:last_name)
-              .p-user-detail__content__section__profile__item__value = @user&.user_profile&.last_name
-            .p-user-detail__content__section__profile__item--row__item
-              .p-user-detail__content__section__profile__item__label = UserProfile.human_attribute_name(:first_name)
-              .p-user-detail__content__section__profile__item__value = @user&.user_profile&.first_name
-          .p-user-detail__content__section__profile__item.p-user-detail__content__section__profile__item--row
-            .p-user-detail__content__section__profile__item--row__item
-              .p-user-detail__content__section__profile__item__label = UserProfile.human_attribute_name(:last_name_kana)
-              .p-user-detail__content__section__profile__item__value = @user&.user_profile&.last_name_kana
-            .p-user-detail__content__section__profile__item--row__item
-              .p-user-detail__content__section__profile__item__label = UserProfile.human_attribute_name(:first_name_kana)
-              .p-user-detail__content__section__profile__item__value = @user&.user_profile&.first_name_kana
-          .p-user-detail__content__section__profile__item
-            .p-user-detail__content__section__profile__item__label = UserProfile.human_attribute_name(:birth_date)
-            .p-user-detail__content__section__profile__item__value = @user&.user_profile&.birth_date
-          .p-user-detail__content__section__profile__item
-            .p-user-detail__content__section__profile__item__label = UserProfile.human_attribute_name(:gender)
-            .p-user-detail__content__section__profile__item__value = @user&.user_profile&.gender
+                .p-user-show__content__section__tag__empty タグが設定されていません
+            = link_to admin_area_user_user_tag_assignments_path(@user), class: "p-user-show__content__section__tag__add", data: { turbo_frame: 'modal-frame' } do
+              = render 'shared/icons/icon-plus'
+              span.p-user-show__content__section__tag__add__text タグを追加
 
-      .p-user-detail__content__section
-        .p-user-detail__content__section__label
-          | 住所
-          a.p-user-detail__content__section__label__edit href='#'
-            = render 'shared/icons/icon-edit'
-            | 編集する
-        .p-user-detail__content__section__address
-          .p-user-detail__content__section__address__item
-            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:zip_code)
-            .p-user-detail__content__section__address__item__value = @user&.contact_address&.zip_code
-          .p-user-detail__content__section__address__item
-            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:prefecture)
-            .p-user-detail__content__section__address__item__value = @user&.contact_address&.prefecture&.name
-          .p-user-detail__content__section__address__item
-            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:city)
-            .p-user-detail__content__section__address__item__value = @user&.contact_address&.city
-          .p-user-detail__content__section__address__item
-            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:street)
-            .p-user-detail__content__section__address__item__value = @user&.contact_address&.street
-          .p-user-detail__content__section__address__item
-            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:building)
-            .p-user-detail__content__section__address__item__value = @user&.contact_address&.building
-          .p-user-detail__content__section__address__item
-            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:phone_number)
-            .p-user-detail__content__section__address__item__value = @user&.contact_address&.phone_number
-          .p-user-detail__content__section__address__item
-            .p-user-detail__content__section__address__item__label = ContactAddress.human_attribute_name(:country_code)
-            .p-user-detail__content__section__address__item__value = @user&.contact_address&.country_code
-      .p-user-detail__content__section
-        .p-user-detail__content__section__label
-          | アクティビティ
-        .p-user-detail__content__section__activity
-          - 1..3.times do |i|
-            .p-user-detail__content__section__activity__item
-              .p-user-detail__content__section__activity__item__icon
-                = render 'shared/icons/icon-activity-purchase'
-              .p-user-detail__content__section__activity__item__date 2025-11-12 10:00:00
-              .p-user-detail__content__section__activity__item__text ゴールド会員に昇格しました
-/ show user profile
-- content_for :head do
-  meta name="turbo-cache-control" content="no-cache"
-
-.uk-margin-top.uk-container
-  .uk-card.uk-card-default.uk-card-body
-    .uk-flex.uk-flex-right
-      // SMS送信制限解除
-      = form_with url: reset_sms_ratelimit_admin_area_user_path(@user), method: :put, local: true do |f|
-        = f.submit 'SMS送信制限解除', class: 'uk-button uk-button-secondary'
-      = link_to "編集", edit_admin_area_user_path(@user), class: "uk-button uk-button-primary uk-margin-left"
-    h3.uk-card-title ユーザ詳細
-
-
-    .uk-margin
-      dt.uk-text-bold ID
-      dd = @user.id
-    .uk-margin
-      dt.uk-text-bold メールアドレス
-      dd = @user.email
-    .uk-margin
-      dt.uk-text-bold 電話番号
-      dd = @user.phone_number
-    .uk-margin
-      dt.uk-text-bold 氏名
-      dd = @user.user_profile&.name
-    .uk-margin
-      dt.uk-text-bold 年代
-      dd
-        - if @user&.user_profile&.age_range.present?
-          = @user&.user_profile&.age_range
-          | 代
-        - else
-          | -
-    .uk-margin
-      dt.uk-text-bold = User.human_attribute_name(:enabled)
-      dd = @user.enabled
-    .uk-margin
-      dt.uk-text-bold = User.human_attribute_name(:sms_verified)
-      dd = @user.sms_verified
-    .uk-margin
-      dt.uk-text-bold = User.human_attribute_name(:suppress_sms_verification)
-      dd = @user.suppress_sms_verification
-    .uk-margin
-      dt.uk-text-bold = User.human_attribute_name(:email_verified)
-      dd = @user.email_verified
-    .uk-margin
-      dt.uk-text-bold = User.human_attribute_name(:deleted_at)
-      dd = @user.deleted_at
-    .uk-margin
-      dt.uk-text-bold アカウント作成日
-      dd = local_time(@user.created_at)
-
-    hr.uk-divider-icon
-    .uk-flex.uk-flex-right
-      - if @user.user_profile.present?
-        = link_to "プロフィール編集", edit_admin_area_user_user_profile_path(@user), class: "uk-button uk-button-primary"
-      - else
-        = link_to "プロフィール新規作成", new_admin_area_user_user_profile_path(@user), class: "uk-button uk-button-primary"
-    h2.uk-card-title プロフィール情報
-    .uk-margin
-      dt.uk-text-bold = UserProfile.human_attribute_name(:last_name)
-      dd = @user&.user_profile&.last_name
-    .uk-margin
-      dt.uk-text-bold = UserProfile.human_attribute_name(:first_name)
-      dd = @user&.user_profile&.first_name
-    .uk-margin
-      dt.uk-text-bold = UserProfile.human_attribute_name(:last_name_kana)
-      dd = @user&.user_profile&.last_name_kana
-    .uk-margin
-      dt.uk-text-bold = UserProfile.human_attribute_name(:first_name_kana)
-      dd = @user&.user_profile&.first_name_kana
-    .uk-margin
-      dt.uk-text-bold = UserProfile.human_attribute_name(:birth_date)
-      dd = @user&.user_profile&.birth_date
-    .uk-margin
-      dt.uk-text-bold = UserProfile.human_attribute_name(:gender)
-      dd = @user&.user_profile&.gender
-
-    hr.uk-divider-icon
-    .uk-flex.uk-flex-right
-      - if @user.contact_address.present?
-        = link_to "連絡先住所編集", edit_admin_area_user_contact_address_path(@user), class: "uk-button uk-button-primary"
-      - else
-        = link_to "連絡先住所新規作成", new_admin_area_user_contact_address_path(@user), class: "uk-button uk-button-primary"
-    h2.uk-card-title 連絡先住所
-    .uk-margin
-      dt.uk-text-bold = ContactAddress.human_attribute_name(:zip_code)
-      dd = @user&.contact_address&.zip_code
-    .uk-margin
-      dt.uk-text-bold = ContactAddress.human_attribute_name(:prefecture)
-      dd = @user&.contact_address&.prefecture&.name
-    .uk-margin
-      dt.uk-text-bold = ContactAddress.human_attribute_name(:city)
-      dd = @user&.contact_address&.city
-    .uk-margin
-      dt.uk-text-bold = ContactAddress.human_attribute_name(:street)
-      dd = @user&.contact_address&.street
-    .uk-margin
-      dt.uk-text-bold = ContactAddress.human_attribute_name(:building)
-      dd = @user&.contact_address&.building
-    .uk-margin
-      dt.uk-text-bold = ContactAddress.human_attribute_name(:phone_number)
-      dd = @user&.contact_address&.phone_number
-    .uk-margin
-      dt.uk-text-bold = ContactAddress.human_attribute_name(:country_code)
-      dd = @user&.contact_address&.country_code
-
-    hr.uk-divider-icon
-    .uk-flex.uk-flex-right
-      = link_to "編集", admin_area_user_user_tag_assignments_path(@user), class: "uk-button uk-button-primary"
-    h2.uk-card-title ユーザタグ
-    .uk-margin
-      - if @user.tag_assignments.any?
-        - @user.tag_assignments.includes(:user_tag, :user_auto_tagging).each do |assignment|
-          - if assignment.manual?
-            span.uk-label.uk-margin-small-right = assignment.user_tag&.name
-          - else
-            span.uk-label.uk-label-success.uk-margin-small-right title="オートタギング: #{assignment.user_auto_tagging&.name}"
-              = assignment.user_tag&.name
-              span.uk-margin-small-left style="font-size: 0.75em; opacity: 0.9;" 🤖
-      - else
-        | タグが設定されていません
+        .p-user-show__content__section
+          .p-user-show__content__section__label アクティビティ
+          .p-user-show__content__section__activity
+            - # TODO: 実データが揃い次第置き換え
+            - activities = [{ icon: 'icon-activity-award', date: '2025-12-31 23:59', text: 'ゴールド会員に昇格しました' }, { icon: 'icon-activity-birthday', date: '2025-12-31 23:59', text: 'Plan Aを購読して1年が経ちました' }, { icon: 'icon-activity-update', date: '2025-12-31 23:59', text: 'Membership Aの更新に成功しました' }, { icon: 'icon-activity-purchase', date: '2025-12-31 23:59', text: 'Plan Aの購読を開始しました' }, { icon: 'icon-activity-purchase', date: '2025-12-31 23:59', text: '買い切り Plan Aを購入申込しました' }]
+            - activities.each do |activity|
+              .p-user-show__content__section__activity__item
+                .p-user-show__content__section__activity__item__icon
+                  = render "shared/icons/#{activity[:icon]}"
+                .p-user-show__content__section__activity__item__date = activity[:date]
+                .p-user-show__content__section__activity__item__text = activity[:text]
+            a.p-user-show__content__section__activity__more href='#' 過去のアクティビティを確認

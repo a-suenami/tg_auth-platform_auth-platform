@@ -16,6 +16,11 @@ module AdminArea
     end
 
     def show
+      if turbo_frame_request? && turbo_frame_request_id == 'detail'
+        render partial: 'admin_area/users/user_detail'
+      else
+        render :show
+      end
     end
 
     def edit

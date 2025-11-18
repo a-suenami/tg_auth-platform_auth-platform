@@ -1,0 +1,73 @@
+@use './user-show/plan.scss';
+@use './user-show/memo-tag-activity.scss';
+@use './user-show/account-profile-address.scss';
+@use './user-show/onetime-plan.scss';
+
+.p-user-show {
+  display: grid;
+  gap: 24px;
+  padding: 24px;
+
+  &__breadcrumb {
+    margin-bottom: 8px;
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+    align-items: start;
+
+    &__left {
+      display: grid;
+      gap: 24px;
+    }
+
+    &__right {
+      display: grid;
+      gap: 24px;
+    }
+
+    &__section {
+      display: grid;
+      gap: 16px;
+
+      &__label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--color-text-heading);
+
+        &__edit {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 4px;
+          font-size: 14px;
+          padding: 8px;
+          border-radius: 8px;
+          border: 1px solid var(--color-border);
+          line-height: 1;
+          color: var(--color-text-body);
+          text-decoration: none;
+          transition: background-color 0.2s;
+
+          &:hover {
+            background-color: var(--color-background-gray);
+          }
+
+          svg {
+            object-fit: contain;
+            width: 14px;
+            height: auto;
+            display: block;
+            aspect-ratio: 1;
+          }
+        }
+      }
+    }
+  }
+}
+
