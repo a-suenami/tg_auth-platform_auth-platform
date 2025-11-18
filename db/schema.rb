@@ -41,6 +41,17 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_admins_on_tenant_id"
   end
 
+  create_table "auto_tagging_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Time-based schedules for auto-tagging rules", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "user_auto_tagging_id", null: false, comment: "Auto-tagging rule reference (1:1)"
+    t.datetime "start_at", comment: "Schedule start time (both null or both not null)"
+    t.datetime "end_at", comment: "Schedule end time (both null or both not null)"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_auto_tagging_schedules_on_tenant_id"
+    t.index ["user_auto_tagging_id"], name: "index_auto_tagging_schedules_on_user_auto_tagging_id", unique: true
+  end
+
   create_table "contact_addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
@@ -830,6 +841,48 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "user_auto_tagging_rule_blocks", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Rule blocks (OR logic between blocks)", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "user_auto_tagging_id", null: false, comment: "Auto-tagging rule reference"
+    t.integer "position", null: false, comment: "Display order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_user_auto_tagging_rule_blocks_on_tenant_id"
+    t.index ["user_auto_tagging_id", "position"], name: "idx_on_user_auto_tagging_id_position_b71f663284"
+    t.index ["user_auto_tagging_id"], name: "index_user_auto_tagging_rule_blocks_on_user_auto_tagging_id"
+  end
+
+  create_table "user_auto_tagging_rules", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Individual rules within blocks (AND logic within block)", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "rule_block_id", null: false, comment: "Rule block reference"
+    t.string "condition_type", null: false, comment: "Type: membership, plan, prefecture, gender, age, account_link"
+    t.jsonb "config", default: {}, null: false, comment: "Condition configuration (varies by type)"
+    t.integer "position", null: false, comment: "Display order within block"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["condition_type"], name: "index_user_auto_tagging_rules_on_condition_type"
+    t.index ["rule_block_id", "position"], name: "index_user_auto_tagging_rules_on_rule_block_id_and_position"
+    t.index ["rule_block_id"], name: "index_user_auto_tagging_rules_on_rule_block_id"
+    t.index ["tenant_id"], name: "index_user_auto_tagging_rules_on_tenant_id"
+  end
+
+  create_table "user_auto_taggings", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Auto-tagging rules for users", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.string "name", null: false, comment: "Rule name (CMS display)"
+    t.text "description", comment: "Rule description"
+    t.boolean "enabled", default: true, null: false, comment: "Whether rule is active"
+    t.boolean "shareable", default: false, null: false, comment: "Tag shareable with linked apps (連携タグ設定)"
+    t.uuid "created_by_id", comment: "Admin who created this rule"
+    t.uuid "updated_by_id", comment: "Admin who last updated this rule"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_user_auto_taggings_on_created_by_id"
+    t.index ["enabled"], name: "index_user_auto_taggings_on_enabled"
+    t.index ["tenant_id", "name"], name: "index_user_auto_taggings_on_tenant_id_and_name", unique: true
+    t.index ["tenant_id"], name: "index_user_auto_taggings_on_tenant_id"
+    t.index ["updated_by_id"], name: "index_user_auto_taggings_on_updated_by_id"
+  end
+
   create_table "user_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
@@ -949,6 +1002,8 @@ ActiveRecord::Schema[7.1].define(version: 0) do
 
   add_foreign_key "account_locks", "tenants", name: "fk_account_locks_tenants"
   add_foreign_key "admins", "tenants", name: "fk_admins_tenants"
+  add_foreign_key "auto_tagging_schedules", "tenants"
+  add_foreign_key "auto_tagging_schedules", "user_auto_taggings"
   add_foreign_key "contact_addresses", "tenants", name: "fk_contact_addresses_tenants"
   add_foreign_key "contact_addresses", "users", name: "fk_contact_addresses_users"
   add_foreign_key "delivery_addresses", "tenants", name: "fk_delivery_addresses_tenants"
@@ -1043,6 +1098,13 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "templates", "tenants", name: "fk_templates_tenants"
   add_foreign_key "tenant_stripe_accounts", "stripe_record_accounts", column: "stripe_account_id", name: "fk_tenant_stripe_accounts_stripe_accounts"
   add_foreign_key "tenant_stripe_accounts", "tenants", name: "fk_tenant_stripe_accounts__tenants"
+  add_foreign_key "user_auto_tagging_rule_blocks", "tenants"
+  add_foreign_key "user_auto_tagging_rule_blocks", "user_auto_taggings"
+  add_foreign_key "user_auto_tagging_rules", "tenants"
+  add_foreign_key "user_auto_tagging_rules", "user_auto_tagging_rule_blocks", column: "rule_block_id"
+  add_foreign_key "user_auto_taggings", "admins", column: "created_by_id"
+  add_foreign_key "user_auto_taggings", "admins", column: "updated_by_id"
+  add_foreign_key "user_auto_taggings", "tenants"
   add_foreign_key "user_profiles", "tenants", name: "fk_user_profiles_tenants"
   add_foreign_key "user_profiles", "users", name: "fk_user_profiles_users"
   add_foreign_key "user_tags", "admins", column: "created_by_id"

@@ -1,0 +1,18 @@
+create_table :user_auto_taggings, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Auto-tagging rules for users' do |t|
+  t.references :tenant, type: :citext, null: false, comment: 'Tenant reference'
+  t.string :name, null: false, comment: 'Rule name (CMS display)'
+  t.text :description, comment: 'Rule description'
+  t.boolean :enabled, default: true, null: false, comment: 'Whether rule is active'
+  t.boolean :shareable, default: false, null: false, comment: 'Tag shareable with linked apps (連携タグ設定)'
+  t.references :created_by, type: :uuid, comment: 'Admin who created this rule'
+  t.references :updated_by, type: :uuid, comment: 'Admin who last updated this rule'
+
+  t.timestamps null: false
+
+  t.index [:tenant_id, :name], unique: true
+  t.index :enabled
+end
+
+add_foreign_key :user_auto_taggings, :tenants
+add_foreign_key :user_auto_taggings, :admins, column: :created_by_id
+add_foreign_key :user_auto_taggings, :admins, column: :updated_by_id

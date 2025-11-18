@@ -1,4 +1,4 @@
-\restrict YHtxcIwlux3zaf37k8a8IPkrhgHY4pv8I5z4JHFDfuT2eDnnROnFOGauaHOrOBH
+\restrict NCn6VxCcAq5EWCprv2cwG1Ywy2ZA1gRDoPO2NPPwSORyIJgFN3R7GnFueMjKq4u
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -76,6 +76,56 @@ CREATE TABLE public.admins (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: auto_tagging_schedules; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.auto_tagging_schedules (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_auto_tagging_id uuid NOT NULL,
+    start_at timestamp(6) without time zone,
+    end_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE auto_tagging_schedules; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.auto_tagging_schedules IS 'Time-based schedules for auto-tagging rules';
+
+
+--
+-- Name: COLUMN auto_tagging_schedules.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.auto_tagging_schedules.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN auto_tagging_schedules.user_auto_tagging_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.auto_tagging_schedules.user_auto_tagging_id IS 'Auto-tagging rule reference (1:1)';
+
+
+--
+-- Name: COLUMN auto_tagging_schedules.start_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.auto_tagging_schedules.start_at IS 'Schedule start time (both null or both not null)';
+
+
+--
+-- Name: COLUMN auto_tagging_schedules.end_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.auto_tagging_schedules.end_at IS 'Schedule end time (both null or both not null)';
 
 
 --
@@ -1939,6 +1989,180 @@ COMMENT ON COLUMN public.tenants.card_payment_gateway IS 'カード決済で使�
 
 
 --
+-- Name: user_auto_tagging_rule_blocks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_auto_tagging_rule_blocks (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_auto_tagging_id uuid NOT NULL,
+    "position" integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE user_auto_tagging_rule_blocks; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.user_auto_tagging_rule_blocks IS 'Rule blocks (OR logic between blocks)';
+
+
+--
+-- Name: COLUMN user_auto_tagging_rule_blocks.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_tagging_rule_blocks.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN user_auto_tagging_rule_blocks.user_auto_tagging_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_tagging_rule_blocks.user_auto_tagging_id IS 'Auto-tagging rule reference';
+
+
+--
+-- Name: COLUMN user_auto_tagging_rule_blocks."position"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_tagging_rule_blocks."position" IS 'Display order';
+
+
+--
+-- Name: user_auto_tagging_rules; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_auto_tagging_rules (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    rule_block_id uuid NOT NULL,
+    condition_type character varying NOT NULL,
+    config jsonb DEFAULT '{}'::jsonb NOT NULL,
+    "position" integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE user_auto_tagging_rules; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.user_auto_tagging_rules IS 'Individual rules within blocks (AND logic within block)';
+
+
+--
+-- Name: COLUMN user_auto_tagging_rules.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_tagging_rules.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN user_auto_tagging_rules.rule_block_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_tagging_rules.rule_block_id IS 'Rule block reference';
+
+
+--
+-- Name: COLUMN user_auto_tagging_rules.condition_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_tagging_rules.condition_type IS 'Type: membership, plan, prefecture, gender, age, account_link';
+
+
+--
+-- Name: COLUMN user_auto_tagging_rules.config; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_tagging_rules.config IS 'Condition configuration (varies by type)';
+
+
+--
+-- Name: COLUMN user_auto_tagging_rules."position"; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_tagging_rules."position" IS 'Display order within block';
+
+
+--
+-- Name: user_auto_taggings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_auto_taggings (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    name character varying NOT NULL,
+    description text,
+    enabled boolean DEFAULT true NOT NULL,
+    shareable boolean DEFAULT false NOT NULL,
+    created_by_id uuid,
+    updated_by_id uuid,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE user_auto_taggings; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.user_auto_taggings IS 'Auto-tagging rules for users';
+
+
+--
+-- Name: COLUMN user_auto_taggings.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_taggings.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN user_auto_taggings.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_taggings.name IS 'Rule name (CMS display)';
+
+
+--
+-- Name: COLUMN user_auto_taggings.description; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_taggings.description IS 'Rule description';
+
+
+--
+-- Name: COLUMN user_auto_taggings.enabled; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_taggings.enabled IS 'Whether rule is active';
+
+
+--
+-- Name: COLUMN user_auto_taggings.shareable; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_taggings.shareable IS 'Tag shareable with linked apps (連携タグ設定)';
+
+
+--
+-- Name: COLUMN user_auto_taggings.created_by_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_taggings.created_by_id IS 'Admin who created this rule';
+
+
+--
+-- Name: COLUMN user_auto_taggings.updated_by_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_taggings.updated_by_id IS 'Admin who last updated this rule';
+
+
+--
 -- Name: user_profiles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2137,6 +2361,14 @@ ALTER TABLE ONLY public.account_locks
 
 ALTER TABLE ONLY public.admins
     ADD CONSTRAINT admins_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auto_tagging_schedules auto_tagging_schedules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.auto_tagging_schedules
+    ADD CONSTRAINT auto_tagging_schedules_pkey PRIMARY KEY (id);
 
 
 --
@@ -2492,6 +2724,30 @@ ALTER TABLE ONLY public.tenants
 
 
 --
+-- Name: user_auto_tagging_rule_blocks user_auto_tagging_rule_blocks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_tagging_rule_blocks
+    ADD CONSTRAINT user_auto_tagging_rule_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_auto_tagging_rules user_auto_tagging_rules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_tagging_rules
+    ADD CONSTRAINT user_auto_tagging_rules_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_auto_taggings user_auto_taggings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_taggings
+    ADD CONSTRAINT user_auto_taggings_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_profiles user_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2702,6 +2958,13 @@ CREATE INDEX idx_on_subscribable_type_subscribable_id_023c9144d9 ON public.payme
 
 
 --
+-- Name: idx_on_user_auto_tagging_id_position_b71f663284; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_on_user_auto_tagging_id_position_b71f663284 ON public.user_auto_tagging_rule_blocks USING btree (user_auto_tagging_id, "position");
+
+
+--
 -- Name: idx_payment_subscriptions_tenant_user; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2888,6 +3151,20 @@ CREATE INDEX index_account_locks_on_tenant_id ON public.account_locks USING btre
 --
 
 CREATE INDEX index_admins_on_tenant_id ON public.admins USING btree (tenant_id);
+
+
+--
+-- Name: index_auto_tagging_schedules_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_auto_tagging_schedules_on_tenant_id ON public.auto_tagging_schedules USING btree (tenant_id);
+
+
+--
+-- Name: index_auto_tagging_schedules_on_user_auto_tagging_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_auto_tagging_schedules_on_user_auto_tagging_id ON public.auto_tagging_schedules USING btree (user_auto_tagging_id);
 
 
 --
@@ -3731,6 +4008,83 @@ CREATE UNIQUE INDEX index_tenant_stripe_accounts_on_tenant_id ON public.tenant_s
 
 
 --
+-- Name: index_user_auto_tagging_rule_blocks_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auto_tagging_rule_blocks_on_tenant_id ON public.user_auto_tagging_rule_blocks USING btree (tenant_id);
+
+
+--
+-- Name: index_user_auto_tagging_rule_blocks_on_user_auto_tagging_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auto_tagging_rule_blocks_on_user_auto_tagging_id ON public.user_auto_tagging_rule_blocks USING btree (user_auto_tagging_id);
+
+
+--
+-- Name: index_user_auto_tagging_rules_on_condition_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auto_tagging_rules_on_condition_type ON public.user_auto_tagging_rules USING btree (condition_type);
+
+
+--
+-- Name: index_user_auto_tagging_rules_on_rule_block_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auto_tagging_rules_on_rule_block_id ON public.user_auto_tagging_rules USING btree (rule_block_id);
+
+
+--
+-- Name: index_user_auto_tagging_rules_on_rule_block_id_and_position; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auto_tagging_rules_on_rule_block_id_and_position ON public.user_auto_tagging_rules USING btree (rule_block_id, "position");
+
+
+--
+-- Name: index_user_auto_tagging_rules_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auto_tagging_rules_on_tenant_id ON public.user_auto_tagging_rules USING btree (tenant_id);
+
+
+--
+-- Name: index_user_auto_taggings_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auto_taggings_on_created_by_id ON public.user_auto_taggings USING btree (created_by_id);
+
+
+--
+-- Name: index_user_auto_taggings_on_enabled; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auto_taggings_on_enabled ON public.user_auto_taggings USING btree (enabled);
+
+
+--
+-- Name: index_user_auto_taggings_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auto_taggings_on_tenant_id ON public.user_auto_taggings USING btree (tenant_id);
+
+
+--
+-- Name: index_user_auto_taggings_on_tenant_id_and_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_user_auto_taggings_on_tenant_id_and_name ON public.user_auto_taggings USING btree (tenant_id, name);
+
+
+--
+-- Name: index_user_auto_taggings_on_updated_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auto_taggings_on_updated_by_id ON public.user_auto_taggings USING btree (updated_by_id);
+
+
+--
 -- Name: index_user_profiles_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4217,11 +4571,27 @@ ALTER TABLE ONLY public.payment_transactions
 
 
 --
+-- Name: user_auto_tagging_rule_blocks fk_rails_2cdd36d912; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_tagging_rule_blocks
+    ADD CONSTRAINT fk_rails_2cdd36d912 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: user_tags fk_rails_2f428c3efb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_tags
     ADD CONSTRAINT fk_rails_2f428c3efb FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: user_auto_taggings fk_rails_30074fd50a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_taggings
+    ADD CONSTRAINT fk_rails_30074fd50a FOREIGN KEY (updated_by_id) REFERENCES public.admins(id);
 
 
 --
@@ -4233,6 +4603,14 @@ ALTER TABLE ONLY public.oauth_access_grants
 
 
 --
+-- Name: auto_tagging_schedules fk_rails_489a995725; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.auto_tagging_schedules
+    ADD CONSTRAINT fk_rails_489a995725 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: user_tags fk_rails_512adfb444; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4241,11 +4619,59 @@ ALTER TABLE ONLY public.user_tags
 
 
 --
+-- Name: user_auto_tagging_rule_blocks fk_rails_8d695c0558; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_tagging_rule_blocks
+    ADD CONSTRAINT fk_rails_8d695c0558 FOREIGN KEY (user_auto_tagging_id) REFERENCES public.user_auto_taggings(id);
+
+
+--
 -- Name: user_tags fk_rails_8f244f8e18; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_tags
     ADD CONSTRAINT fk_rails_8f244f8e18 FOREIGN KEY (created_by_id) REFERENCES public.admins(id);
+
+
+--
+-- Name: user_auto_taggings fk_rails_8f64c0265a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_taggings
+    ADD CONSTRAINT fk_rails_8f64c0265a FOREIGN KEY (created_by_id) REFERENCES public.admins(id);
+
+
+--
+-- Name: user_auto_taggings fk_rails_9a3d6ddc76; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_taggings
+    ADD CONSTRAINT fk_rails_9a3d6ddc76 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: user_auto_tagging_rules fk_rails_a323828ab8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_tagging_rules
+    ADD CONSTRAINT fk_rails_a323828ab8 FOREIGN KEY (rule_block_id) REFERENCES public.user_auto_tagging_rule_blocks(id);
+
+
+--
+-- Name: auto_tagging_schedules fk_rails_a9d46bdb5d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.auto_tagging_schedules
+    ADD CONSTRAINT fk_rails_a9d46bdb5d FOREIGN KEY (user_auto_tagging_id) REFERENCES public.user_auto_taggings(id);
+
+
+--
+-- Name: user_auto_tagging_rules fk_rails_e2fdd588cf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_tagging_rules
+    ADD CONSTRAINT fk_rails_e2fdd588cf FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
@@ -4748,7 +5174,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict YHtxcIwlux3zaf37k8a8IPkrhgHY4pv8I5z4JHFDfuT2eDnnROnFOGauaHOrOBH
+\unrestrict NCn6VxCcAq5EWCprv2cwG1Ywy2ZA1gRDoPO2NPPwSORyIJgFN3R7GnFueMjKq4u
 
 SET search_path TO "$user", public;
 
