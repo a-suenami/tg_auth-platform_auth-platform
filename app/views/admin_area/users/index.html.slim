@@ -1,10 +1,5 @@
 = render 'admin_area/users/user_layout' do
-  .c-breadcrumb
-    .c-breadcrumb__sidenav
-      a.c-breadcrumb__sidenav__toggle href='#'
-        = render 'shared/icons/icon-sidenav'
-    .c-breadcrumb__content
-      span.c-breadcrumb__content__item.is-active すべてのユーザー
+  = render 'admin_area/shared/breadcrumb', items: [{ text: 'すべてのユーザー' }]
   .c-table-header
     .c-table-header__content
       a.c-table-header__content__filter href='#'

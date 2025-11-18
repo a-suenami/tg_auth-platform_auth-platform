@@ -2,10 +2,15 @@
 / Usage: = render 'admin_area/shared/breadcrumb', items: [{ text: 'Home' }, { text: 'Users', link: users_path }, { text: 'Edit' }]
 / Last item auto becomes non-link (current page)
 
-ul.uk-breadcrumb
-  - items.each_with_index do |item, index|
-    li
+.c-breadcrumb
+  .c-breadcrumb__sidenav
+    a.c-breadcrumb__sidenav__toggle href='#'
+      = render 'shared/icons/icon-sidenav'
+  .c-breadcrumb__content
+    - items.each_with_index do |item, index|
+      - if index > 0
+        = render 'shared/icons/icon-chevron-right'
       - if index == items.length - 1 || item[:link].blank?
-        span = item[:text]
+        span.c-breadcrumb__content__item.is-active = item[:text]
       - else
-        = link_to item[:text], item[:link]
+        = link_to item[:text], item[:link], class: 'c-breadcrumb__content__item'

@@ -1,7 +1,6 @@
 .c-breadcrumb {
   display: flex;
   align-items: center;
-  gap: 8px;
   padding: 8px 24px;
   border-bottom: 1px solid var(--color-border);
   height: 48px;
@@ -31,6 +30,11 @@
       &.is-active {
         color: var(--color-text-active);
       }
+    }
+    svg {
+      width: 8px;
+      height: auto;
+      display: block;
     }
   }
 }
