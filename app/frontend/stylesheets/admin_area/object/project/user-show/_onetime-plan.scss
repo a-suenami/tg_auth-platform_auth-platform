@@ -1,50 +1,33 @@
 .p-user-show__content__section__onetime-plan {
-  .c-table {
-    table {
-      tbody {
-        td {
-          .p-user-show__content__section__onetime-plan__status {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
+  .p-user-show__content__section__onetime-plan__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
 
-            &::before {
-              content: '●';
-              font-size: 8px;
-            }
+    &::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      display: block;
+      border-radius: 50%;
+    }
 
-            &.is-success {
-              color: var(--color-success-text);
-              background-color: var(--color-success-background);
+    &.is-success {
+      &::before {
+        background-color: var(--color-success-status);
+      }
+    }
 
-              &::before {
-                color: var(--color-success-text);
-              }
-            }
+    &.is-warning {
+      &::before {
+        background-color: var(--color-warning-status);
+      }
+    }
 
-            &.is-warning {
-              color: #b8860b;
-              background-color: #fff5d6;
-
-              &::before {
-                color: #b8860b;
-              }
-            }
-
-            &.is-inactive {
-              color: var(--color-text-inactive);
-              background-color: var(--color-background-gray-dark);
-
-              &::before {
-                color: var(--color-text-inactive);
-              }
-            }
-          }
-        }
+    &.is-inactive {
+      &::before {
+        background-color: var(--color-muted-status);
       }
     }
   }
