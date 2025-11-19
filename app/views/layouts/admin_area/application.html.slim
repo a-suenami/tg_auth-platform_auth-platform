@@ -80,3 +80,6 @@ html lang='ja'
     = render 'layouts/admin_area/flash'
     .l-page__container
       = yield
+
+    / 共通モーダル
+    = render 'admin_area/shared/modal', modal_id: 'common-modal'
