@@ -18,26 +18,26 @@
                 .p-user-detail__content__section__plan__item__plan-duration 3ヶ月継続
                 .p-user-detail__content__section__plan__item__plan-total 累計8ヶ月
       .p-user-detail__content__section
-        .p-user-detail__content__section__memo
-          label.p-user-detail__content__section__memo__label 内部メモ
-          textarea.p-user-detail__content__section__memo__textarea
+        .c-user-detail-memo
+          .c-user-detail-memo__label 内部メモ
+          .c-user-detail-memo__textarea このユーザーには注意してくださいこのユーザーには注意してください
       .p-user-detail__content__section
-        .p-user-detail__content__section__tag
-          label.p-user-detail__content__section__tag__label タグ
-          .p-user-detail__content__section__tag__list
+        .c-user-detail-tag
+          label.c-user-detail-tag__label タグ
+          .c-user-detail-tag__list
             - 1..3.times do |i|
-              .p-user-detail__content__section__tag__item
-                .p-user-detail__content__section__tag__item__text Tag #{i}
-                a.p-user-detail__content__section__tag__item__remove href='#'
+              .c-user-detail-tag__item
+                .c-user-detail-tag__item__text Tag #{i}
+                a.c-user-detail-tag__item__remove href='#'
                   = render 'shared/icons/icon-close'
             - 1..3.times do |i|
-              .p-user-detail__content__section__tag__item.is-auto-tag
-                .p-user-detail__content__section__tag__item__text Tag #{i}
-                a.p-user-detail__content__section__tag__item__lock href='#'
+              .c-user-detail-tag__item.is-auto-tag
+                .c-user-detail-tag__item__text Tag #{i}
+                a.c-user-detail-tag__item__lock href='#'
                   = render 'shared/icons/icon-lock'
-            a.p-user-detail__content__section__tag__add href='#'
+            a.c-user-detail-tag__add href='#'
               = render 'shared/icons/icon-plus'
-              span.p-user-detail__content__section__tag__add__text タグを追加
+              span.c-user-detail-tag__add__text タグを追加
       .p-user-detail__content__section
         .p-user-detail__content__section__label
           | アカウント
@@ -140,11 +140,11 @@
       .p-user-detail__content__section
         .p-user-detail__content__section__label
           | アクティビティ
-        .p-user-detail__content__section__activity
+        .c-user-detail-activity
           - 1..3.times do |i|
-            .p-user-detail__content__section__activity__item
-              .p-user-detail__content__section__activity__item__icon
+            .c-user-detail-activity__item
+              .c-user-detail-activity__item__icon
                 = render 'shared/icons/icon-activity-purchase'
-              .p-user-detail__content__section__activity__item__date 2025-11-12 10:00:00
-              .p-user-detail__content__section__activity__item__text ゴールド会員に昇格しました
+              .c-user-detail-activity__item__date 2025-11-12 10:00:00
+              .c-user-detail-activity__item__text ゴールド会員に昇格しました
 

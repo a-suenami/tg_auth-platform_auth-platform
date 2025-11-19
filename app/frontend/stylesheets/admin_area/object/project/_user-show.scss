@@ -1,6 +1,8 @@
 @use '../component/detail-section.scss' as detail-section;
+@use '../component/user-detail-memo.scss';
+@use '../component/user-detail-tag.scss';
+@use '../component/user-detail-activity.scss';
 @use './user-show/plan.scss';
-@use './user-show/memo-tag-activity.scss';
 @use './user-show/onetime-plan.scss';
 
 .p-user-show {

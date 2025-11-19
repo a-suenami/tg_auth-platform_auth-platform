@@ -211,12 +211,12 @@
             = f.submit 'SMS送信制限解除', class: 'p-user-show__content__section__sms-reset__form__button'
 
       .p-user-show__content__section
-        .p-user-show__content__section__memo
-          label.p-user-show__content__section__memo__label 内部メモ
-          textarea.p-user-show__content__section__memo__textarea placeholder='このユーザーには注意してくださいこのユーザーには注意してください'
-          .p-user-show__content__section__memo__actions
-            button.p-user-show__content__section__memo__actions__cancel キャンセル
-            button.p-user-show__content__section__memo__actions__save 保存 (⌘+S)
+        .c-user-detail-memo
+          label.c-user-detail-memo__label 内部メモ
+          textarea.c-user-detail-memo__textarea placeholder='このユーザーには注意してくださいこのユーザーには注意してください'
+          .c-user-detail-memo__actions
+            button.c-user-detail-memo__actions__cancel キャンセル
+            button.c-user-detail-memo__actions__save 保存 (⌘+S)
 
       .p-user-show__content__section
         .p-user-show__content__section__label
@@ -224,31 +224,31 @@
           = link_to admin_area_user_user_tag_assignments_path(@user), class: "p-user-show__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
             = render 'shared/icons/icon-edit'
             | 編集する
-        .p-user-show__content__section__tag
-          .p-user-show__content__section__tag__list
+        .c-user-detail-tag
+          .c-user-detail-tag__list
             - if @user.tag_assignments.any?
               - @user.tag_assignments.includes(:user_tag, :user_auto_tagging).each do |assignment|
                 - is_auto = !assignment.manual?
-                .p-user-show__content__section__tag__item class=(is_auto ? 'is-auto-tag' : nil)
-                  .p-user-show__content__section__tag__item__text = assignment.user_tag&.name || '-'
+                .c-user-detail-tag__item class=(is_auto ? 'is-auto-tag' : nil)
+                  .c-user-detail-tag__item__text = assignment.user_tag&.name || '-'
                   - if is_auto
-                    a.p-user-show__content__section__tag__item__lock href='#' aria-label='auto tag' title="オートタギング: #{assignment.user_auto_tagging&.name}"
+                    a.c-user-detail-tag__item__lock href='#' aria-label='auto tag' title="オートタギング: #{assignment.user_auto_tagging&.name}"
                       = render 'shared/icons/icon-lock'
             - else
-              .p-user-show__content__section__tag__empty タグが設定されていません
-          = link_to admin_area_user_user_tag_assignments_path(@user), class: "p-user-show__content__section__tag__add", data: { turbo_frame: 'modal-frame' } do
+              .c-user-detail-tag__empty タグが設定されていません
+          = link_to admin_area_user_user_tag_assignments_path(@user), class: "c-user-detail-tag__add", data: { turbo_frame: 'modal-frame' } do
             = render 'shared/icons/icon-plus'
-            span.p-user-show__content__section__tag__add__text タグを追加
+            span.c-user-detail-tag__add__text タグを追加
 
       .p-user-show__content__section
         .p-user-show__content__section__label アクティビティ
-        .p-user-show__content__section__activity
+        .c-user-detail-activity
           - # TODO: 実際のアクティビティデータに置き換え
           - activities = [{ icon: 'icon-activity-award', date: '2025-12-31 23:59', text: 'ゴールド会員に昇格しました' }, { icon: 'icon-activity-birthday', date: '2025-12-31 23:59', text: 'Plan Aを購読して1年が経ちました' }, { icon: 'icon-activity-update', date: '2025-12-31 23:59', text: 'Membership Aの更新に成功しました' }, { icon: 'icon-activity-purchase', date: '2025-12-31 23:59', text: 'Plan Aの購読を開始しました' }, { icon: 'icon-activity-purchase', date: '2025-12-31 23:59', text: '買い切り Plan Aを購入申込しました' }]
           - activities.each do |activity|
-            .p-user-show__content__section__activity__item
-              .p-user-show__content__section__activity__item__icon
+            .c-user-detail-activity__item
+              .c-user-detail-activity__item__icon
                 = render "shared/icons/#{activity[:icon]}"
-              .p-user-show__content__section__activity__item__date = activity[:date]
-              .p-user-show__content__section__activity__item__text = activity[:text]
-          a.p-user-show__content__section__activity__more href='#' 過去のアクティビティを確認
+              .c-user-detail-activity__item__date = activity[:date]
+              .c-user-detail-activity__item__text = activity[:text]
+          a.c-user-detail-activity__more href='#' 過去のアクティビティを確認
