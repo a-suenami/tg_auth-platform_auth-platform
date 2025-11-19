@@ -29,7 +29,7 @@ class KomojuRecord::Payment < ApplicationRecord
     ).returns([T.nilable(KomojuRecord::Payment), T.nilable(KomojuRecord::KomojuError)])
   }
   def self.create_with_konbini!(amount:, currency:, store:, user:, expiry_days: nil)
-    tenant = T.must(user.tenant)
+    tenant = Tenant.current
 
     params = KomojuRecord::Client::Payments::CreateParams.new(
       external_order_num: SecureRandom.uuid,
