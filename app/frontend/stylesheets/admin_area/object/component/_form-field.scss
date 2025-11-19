@@ -120,15 +120,20 @@
 
     &__calendar {
       position: absolute;
-      right: 12px;
-      display: flex;
-      align-items: center;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: grid;
+      place-items: center;
       pointer-events: none;
       color: var(--color-text-inactive);
+      border-left: 1px solid var(--color-border);
+      min-width: 48px;
+      aspect-ratio: 1;
 
       svg {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 13px;
       }
     }
   }
@@ -145,6 +150,15 @@
     appearance: none;
     box-sizing: border-box;
     transition: border-color 0.2s, box-shadow 0.2s;
+
+    // datetime-localのデフォルトアイコンを非表示
+    &[type="datetime-local"] {
+      padding-right: 60px;
+
+      &::-webkit-calendar-picker-indicator {
+        display: none;
+      }
+    }
 
     &::placeholder {
       color: var(--color-text-inactive);

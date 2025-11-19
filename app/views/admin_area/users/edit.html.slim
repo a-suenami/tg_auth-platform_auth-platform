@@ -50,7 +50,7 @@
           .c-form-field__input-wrapper
             = f.datetime_local_field :deleted_at, value: @user.deleted_at&.strftime('%Y-%m-%dT%H:%M'), placeholder: 'YYYY/MM/DD hh:dd', class: 'c-form-field__input'
             .c-form-field__input-wrapper__calendar
-              = render 'shared/icons/icon-chevron-down'
+              = render 'shared/icons/icon-calendar'
   .c-modal__dialog__footer
     button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--cancel type="button" data-action="close-modal" キャンセル
     button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--save type="submit" form="edit_user_#{@user.id}" data-shortcut="⌘+S" 保存
