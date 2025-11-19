@@ -4,58 +4,68 @@
 .c-user-detail-memo {
   @include common.c-user-detail-common;
 
-  &__textarea {
-    padding: 12px 16px;
-    appearance: none;
+  &__edit {
     border: 1px solid var(--color-border);
     border-radius: 8px;
     background-color: var(--color-background);
-    width: 100%;
-    height: 96px;
-    box-sizing: border-box;
-    font-size: 14px;
-    resize: vertical;
-    font-family: var(--font-family);
-    color: var(--color-text-body);
-
-    &::placeholder {
-      color: var(--color-text-inactive);
-    }
-
-    &:focus {
-      outline: none;
-      border-color: var(--color-primary);
-    }
-  }
-
-  &__actions {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-
-    &__cancel,
-    &__save {
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 14px;
-      border: 1px solid var(--color-border);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    &__textarea {
+      padding: 12px 16px;
+      appearance: none;
       background-color: var(--color-background);
+      width: 100%;
+      height: 96px;
+      box-sizing: border-box;
+      font-size: 14px;
+      resize: vertical;
+      font-family: var(--font-family);
       color: var(--color-text-body);
-      cursor: pointer;
-      transition: background-color 0.2s;
+      border: none;
+      display: block;
 
-      &:hover {
-        background-color: var(--color-background-gray);
+      &::placeholder {
+        color: var(--color-text-inactive);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: var(--color-primary);
       }
     }
 
-    &__save {
-      background-color: var(--color-primary);
-      color: var(--color-primary-contrast);
-      border-color: var(--color-primary);
+    &__actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      border-top: 1px solid var(--color-border);
+      padding: 8px;
 
-      &:hover {
-        background-color: var(--color-text-heading);
+      &__cancel,
+      &__save {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        border: 1px solid var(--color-border);
+        background-color: var(--color-background);
+        color: var(--color-text-body);
+        cursor: pointer;
+        transition: background-color 0.2s;
+        box-shadow: var(--box-shadow);
+
+        &:hover {
+          background-color: var(--color-background-gray);
+        }
+      }
+
+      &__save {
+        background-color: var(--color-primary);
+        color: var(--color-primary-contrast);
+        border-color: var(--color-primary);
+
+        &:hover {
+          background-color: var(--color-text-heading);
+        }
       }
     }
   }
