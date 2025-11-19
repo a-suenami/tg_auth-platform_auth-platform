@@ -5,20 +5,17 @@
 
 .p-user-show {
   display: contents;
-
+  &__breadcrumb {
+    grid-column: 1 / -1;
+  }
   &__content {
-    padding: 24px;
-
-    &__left {
+    &__main,
+    &__sub {
+      padding: 16px;
       display: grid;
-      gap: 24px;
+      gap: 16px;
+      align-content: start;
     }
-
-    &__right {
-      display: grid;
-      gap: 24px;
-    }
-
     &__section {
       @include detail-section.c-detail-section;
     }
