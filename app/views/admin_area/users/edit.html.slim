@@ -17,20 +17,22 @@
             = f.text_field 'membership_number', value: '1234-5678-9000', class: 'c-form-field__input'
         .c-form-field
           label.c-form-field__label メールアドレス
-          .c-form-field__input-wrapper
-            = f.email_field :email, value: @user.email, class: 'c-form-field__input'
-            .c-form-field__input-wrapper__status.is-success
-              = render 'shared/icons/icon-check-circle-fill'
-            .c-form-field__input-wrapper__dropdown
-              = render 'shared/icons/icon-chevron-down'
+          .c-form-field__input-group
+            .c-form-field__input-group__input
+              = f.email_field :email, value: @user.email, class: 'c-form-field__input'
+            .c-form-field__input-group__status
+              = f.select 'email_verified_status', [['確認済み', 'confirmed'], ['未確認', 'unconfirmed']], { selected: (@user.email_verified ? 'confirmed' : 'unconfirmed') }, { class: 'c-form-field__input c-form-field__input--select' }
+              .c-form-field__input-group__status__dropdown
+                = render 'shared/icons/icon-chevron-down'
         .c-form-field
           label.c-form-field__label 電話番号
-          .c-form-field__input-wrapper
-            = f.telephone_field :phone_number, value: @user.phone_number, class: 'c-form-field__input'
-            .c-form-field__input-wrapper__status.is-error
-              = render 'shared/icons/icon-attention-circle-fill'
-            .c-form-field__input-wrapper__dropdown
-              = render 'shared/icons/icon-chevron-down'
+          .c-form-field__input-group
+            .c-form-field__input-group__input
+              = f.telephone_field :phone_number, value: @user.phone_number, class: 'c-form-field__input'
+            .c-form-field__input-group__status
+              = f.select 'phone_verified_status', [['確認済み', 'confirmed'], ['未確認', 'unconfirmed']], { selected: (@user.sms_verified ? 'confirmed' : 'unconfirmed') }, { class: 'c-form-field__input c-form-field__input--select' }
+              .c-form-field__input-group__status__dropdown
+                = render 'shared/icons/icon-chevron-down'
         .c-form-field
           label.c-form-field__label プロフィール登録状況
           .c-form-field__input-wrapper
