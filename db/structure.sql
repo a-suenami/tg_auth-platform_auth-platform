@@ -1,4 +1,4 @@
-\restrict NCn6VxCcAq5EWCprv2cwG1Ywy2ZA1gRDoPO2NPPwSORyIJgFN3R7GnFueMjKq4u
+\restrict gt8YyTkKSc9Fl8Bkd2mFsivLSeDmAurvct0XJJsYurtfdHyafXXK3LiioKbyaZk
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -183,6 +183,50 @@ CREATE TABLE public.email_templates (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: komoju_record_accounts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.komoju_record_accounts (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    remote_id character varying NOT NULL,
+    display_name character varying NOT NULL,
+    secret_key_encrypted character varying NOT NULL,
+    webhook_secret_encrypted character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN komoju_record_accounts.remote_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.komoju_record_accounts.remote_id IS 'Komoju merchant ID';
+
+
+--
+-- Name: COLUMN komoju_record_accounts.display_name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.komoju_record_accounts.display_name IS 'Account identification name for admin';
+
+
+--
+-- Name: COLUMN komoju_record_accounts.secret_key_encrypted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.komoju_record_accounts.secret_key_encrypted IS 'Encrypted Komoju secret key';
+
+
+--
+-- Name: COLUMN komoju_record_accounts.webhook_secret_encrypted; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.komoju_record_accounts.webhook_secret_encrypted IS 'Encrypted webhook signature secret';
 
 
 --
@@ -1887,6 +1931,35 @@ COMMENT ON COLUMN public.templates.name IS 'テンプレート名';
 
 
 --
+-- Name: tenant_komoju_accounts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_komoju_accounts (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    komoju_account_id uuid NOT NULL,
+    enabled boolean DEFAULT true NOT NULL,
+    default_expiry_days integer DEFAULT 7 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: COLUMN tenant_komoju_accounts.enabled; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_komoju_accounts.enabled IS 'Whether Komoju payment is enabled for this tenant';
+
+
+--
+-- Name: COLUMN tenant_komoju_accounts.default_expiry_days; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.tenant_komoju_accounts.default_expiry_days IS 'Default payment expiration in days for konbini';
+
+
+--
 -- Name: tenant_settings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2396,6 +2469,14 @@ ALTER TABLE ONLY public.email_templates
 
 
 --
+-- Name: komoju_record_accounts komoju_record_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.komoju_record_accounts
+    ADD CONSTRAINT komoju_record_accounts_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: komoju_record_payments komoju_record_payments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2700,6 +2781,14 @@ ALTER TABLE ONLY public.templates
 
 
 --
+-- Name: tenant_komoju_accounts tenant_komoju_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_komoju_accounts
+    ADD CONSTRAINT tenant_komoju_accounts_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: tenant_settings tenant_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2850,6 +2939,13 @@ CREATE INDEX idx_komoju_payments_status ON public.komoju_record_payments USING b
 --
 
 CREATE UNIQUE INDEX idx_komoju_payments_tenant_remote_id_uniq ON public.komoju_record_payments USING btree (tenant_id, remote_id);
+
+
+--
+-- Name: idx_komoju_record_accounts_remote_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_komoju_record_accounts_remote_id_uniq ON public.komoju_record_accounts USING btree (remote_id);
 
 
 --
@@ -3207,6 +3303,20 @@ CREATE INDEX index_email_templates_on_tenant_id ON public.email_templates USING 
 --
 
 CREATE UNIQUE INDEX index_email_templates_on_tenant_id_template_type ON public.email_templates USING btree (tenant_id, template_type);
+
+
+--
+-- Name: index_komoju_account_per_tenant_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_komoju_account_per_tenant_unique ON public.tenant_komoju_accounts USING btree (tenant_id, komoju_account_id);
+
+
+--
+-- Name: index_komoju_record_accounts_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_komoju_record_accounts_on_tenant_id ON public.komoju_record_accounts USING btree (tenant_id);
 
 
 --
@@ -3987,6 +4097,20 @@ CREATE INDEX index_templates_on_tenant_id ON public.templates USING btree (tenan
 
 
 --
+-- Name: index_tenant_komoju_accounts_on_komoju_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tenant_komoju_accounts_on_komoju_account_id ON public.tenant_komoju_accounts USING btree (komoju_account_id);
+
+
+--
+-- Name: index_tenant_komoju_accounts_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_tenant_komoju_accounts_on_tenant_id ON public.tenant_komoju_accounts USING btree (tenant_id);
+
+
+--
 -- Name: index_tenant_settings_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4280,6 +4404,14 @@ ALTER TABLE ONLY public.komoju_record_payments
 
 ALTER TABLE ONLY public.komoju_record_payments
     ADD CONSTRAINT fk_komoju_payments_users FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: komoju_record_accounts fk_komoju_record_accounts_tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.komoju_record_accounts
+    ADD CONSTRAINT fk_komoju_record_accounts_tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
@@ -5059,6 +5191,22 @@ ALTER TABLE ONLY public.templates
 
 
 --
+-- Name: tenant_komoju_accounts fk_tenant_komoju_accounts__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_komoju_accounts
+    ADD CONSTRAINT fk_tenant_komoju_accounts__tenants FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: tenant_komoju_accounts fk_tenant_komoju_accounts_komoju_accounts; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_komoju_accounts
+    ADD CONSTRAINT fk_tenant_komoju_accounts_komoju_accounts FOREIGN KEY (komoju_account_id) REFERENCES public.komoju_record_accounts(id);
+
+
+--
 -- Name: tenant_stripe_accounts fk_tenant_stripe_accounts__tenants; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5174,7 +5322,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict NCn6VxCcAq5EWCprv2cwG1Ywy2ZA1gRDoPO2NPPwSORyIJgFN3R7GnFueMjKq4u
+\unrestrict gt8YyTkKSc9Fl8Bkd2mFsivLSeDmAurvct0XJJsYurtfdHyafXXK3LiioKbyaZk
 
 SET search_path TO "$user", public;
 
