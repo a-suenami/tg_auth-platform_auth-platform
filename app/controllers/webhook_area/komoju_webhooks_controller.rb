@@ -3,7 +3,6 @@
 
 module WebhookArea
   class KomojuWebhooksController < WebhookArea::ApplicationController
-    skip_before_action :set_tenant
     before_action :verify_komoju_signature
 
     def create
@@ -21,7 +20,7 @@ module WebhookArea
         Webhook::Komoju::PaymentCancelledService.new.execute(event_data: event_data)
       when 'ping'
         # Komoju sends ping event for webhook testing
-        Rails.logger.info 'Received Komoju ping event'
+        Rails.logger.info "Received Komoju ping event for tenant: #{Tenant.current.id}"
       else
         Rails.logger.info "Unhandled Komoju event type: #{event_type}"
       end
@@ -29,6 +28,7 @@ module WebhookArea
       head :ok
     rescue => e
       Sentry.capture_exception(e, extra: {
+        tenant_id: Tenant.current&.id,
         event_type: event_type,
         event_data: event_data,
       },)
@@ -40,13 +40,16 @@ module WebhookArea
     def verify_komoju_signature
       payload = request.body.read
       signature_header = request.env['HTTP_X_KOMOJU_SIGNATURE']
-      webhook_secret = Settings.komoju.webhook_secret
 
-      unless webhook_secret
-        Rails.logger.error 'Komoju webhook secret not configured'
+      # Get tenant-specific webhook secret
+      tenant = Tenant.current
+      unless tenant&.tenant_komoju_account&.enabled?
+        Rails.logger.error "Komoju account not configured or disabled for tenant: #{tenant&.id}"
         head :bad_request
         return
       end
+
+      webhook_secret = tenant.tenant_komoju_account.webhook_secret
 
       unless signature_header
         Rails.logger.error 'Missing X-Komoju-Signature header'
@@ -59,7 +62,7 @@ module WebhookArea
 
       # Secure comparison to prevent timing attacks
       unless ActiveSupport::SecurityUtils.secure_compare(computed_signature, signature_header)
-        Rails.logger.error 'Invalid Komoju webhook signature'
+        Rails.logger.error "Invalid Komoju webhook signature for tenant: #{tenant&.id}"
         head :unauthorized
         return
       end

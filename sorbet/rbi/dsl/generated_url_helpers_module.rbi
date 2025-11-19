@@ -178,6 +178,9 @@ module GeneratedUrlHelpersModule
   def edit_ruler_area_tenant_email_template_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_komoju_records_account_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_login_spa_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -200,6 +203,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_stripe_records_account_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_tenant_komoju_account_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_tenant_setting_url(*args); end
@@ -244,6 +250,9 @@ module GeneratedUrlHelpersModule
   def new_ruler_area_tenant_email_template_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_komoju_records_account_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_login_spa_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -263,6 +272,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_stripe_records_account_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_tenant_komoju_account_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_tenant_setting_url(*args); end
@@ -382,6 +394,12 @@ module GeneratedUrlHelpersModule
   def ruler_area_tenant_email_templates_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_komoju_records_account_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_komoju_records_accounts_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_login_spa_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -434,6 +452,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_stripe_records_products_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_tenant_komoju_account_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_tenant_setting_url(*args); end
