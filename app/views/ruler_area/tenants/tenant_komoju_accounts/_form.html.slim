@@ -1,0 +1,36 @@
+= form_with(model: [:ruler_area, @tenant, @tenant_komoju_account], url: @tenant_komoju_account.persisted? ? ruler_area_tenant_tenant_komoju_account_path(@tenant) : ruler_area_tenant_tenant_komoju_account_path(@tenant), method: @tenant_komoju_account.persisted? ? :patch : :post, local: true) do |form|
+  - if @tenant_komoju_account.errors.any?
+    #error_explanation.uk-alert.uk-alert-danger
+      h2 = pluralize(@tenant_komoju_account.errors.count, "error") + " prohibited this tenant komoju account from being saved:"
+      ul
+        - @tenant_komoju_account.errors.full_messages.each do |message|
+          li = message
+
+  .uk-margin
+    = form.label :komoju_account_id, 'Komoju Account', class: 'uk-form-label'
+    .uk-form-controls
+      - if @komoju_accounts.any?
+        = form.collection_select :komoju_account_id, @komoju_accounts, :id, :display_name, { prompt: "Select a komoju account" }, class: 'uk-select'
+      - else
+        .uk-alert.uk-alert-warning
+          p
+            | No Komoju accounts found for this tenant.
+            br
+            = link_to 'Create one first', new_ruler_area_tenant_komoju_records_account_path(@tenant), class: 'uk-link'
+        = form.hidden_field :komoju_account_id
+
+  .uk-margin
+    = form.label :enabled, class: 'uk-form-label'
+    .uk-form-controls
+      label.uk-flex.uk-flex-middle
+        = form.check_box :enabled, class: 'uk-checkbox uk-margin-small-right'
+        | Enable Komoju payment for this tenant
+
+  .uk-margin
+    = form.label :default_expiry_days, 'Default Payment Expiry (days)', class: 'uk-form-label'
+    .uk-form-controls
+      = form.number_field :default_expiry_days, step: 1, min: 1, max: 30, class: 'uk-input', placeholder: '7'
+      .uk-text-meta Konbini payment expiration period (1-30 days). Default: 7 days
+
+  .uk-margin
+    = form.submit class: 'uk-button uk-button-primary'

@@ -1,0 +1,24 @@
+h1 Komoju Records Accounts
+
+.uk-margin
+  = link_to 'New Komoju Account', new_ruler_area_tenant_komoju_records_account_path(@tenant), class: 'uk-button uk-button-primary'
+
+.uk-overflow-auto
+  table.uk-table.uk-table-hover.uk-table-striped
+    thead
+      tr
+        th Display Name
+        th Merchant ID
+        th Actions
+    tbody
+      - @komoju_accounts.each do |account|
+        tr
+          td = account.display_name
+          td = account.remote_id
+          td
+            = link_to 'Show', ruler_area_tenant_komoju_records_account_path(@tenant, account), class: 'uk-button uk-button-small uk-button-secondary uk-margin-small-right'
+            = link_to 'Edit', edit_ruler_area_tenant_komoju_records_account_path(@tenant, account), class: 'uk-button uk-button-small uk-button-secondary uk-margin-small-right'
+            = link_to 'Delete', ruler_area_tenant_komoju_records_account_path(@tenant, account), data: { "turbo-method": "delete", "turbo-confirm": 'Are you sure?' }, class: 'uk-button uk-button-small uk-button-danger'
+
+.uk-margin
+  == pagy_nav(@pagy) if @pagy
