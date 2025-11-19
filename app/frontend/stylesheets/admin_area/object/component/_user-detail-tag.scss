@@ -5,9 +5,8 @@
   @include common.c-user-detail-common;
 
   &__list {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(97px, 1fr));
     gap: 8px;
   }
 
@@ -20,10 +19,11 @@
     gap: 8px;
     font-size: 14px;
     background-color: var(--color-tag-background);
+    color: var(--color-tag-text);
     min-width: 97px;
 
     &__text {
-      color: var(--color-text-body);
+      color: inherit;
     }
 
     &__remove,
@@ -32,7 +32,7 @@
         display: block;
         object-fit: cover;
         aspect-ratio: 1;
-        width: 10px;
+        width: 12px;
         height: auto;
         color: var(--color-text-inactive);
       }
@@ -40,6 +40,7 @@
 
     &.is-auto-tag {
       background-color: var(--color-auto-tag-background);
+      color: var(--color-auto-tag-text);
     }
   }
 
@@ -50,15 +51,11 @@
     gap: 8px;
     font-size: 14px;
     padding: 6px 12px;
-    border: 1px dashed currentColor;
+    border: 1px dashed rgba(black, .1);
     border-radius: 6px;
-    color: var(--color-text-inactive);
+    color: rgba(black, .3);
     text-decoration: none;
-    transition: color 0.2s;
-
-    &:hover {
-      color: var(--color-text-body);
-    }
+    justify-self: start;
 
     svg {
       object-fit: cover;

@@ -30,8 +30,10 @@
 
   --color-muted-status: #D1D5DC;
 
-  --color-tag-background: #EEF4FF;
-  --color-auto-tag-background: #FFF5D6;
+  --color-tag-background: #ECFEFF;
+  --color-tag-text: #{rgba(black, .6)};
+  --color-auto-tag-background: #FEFCE8;
+  --color-auto-tag-text: #{rgba(black, .6)};
 
   --color-a: rgba(black, .5);
 
