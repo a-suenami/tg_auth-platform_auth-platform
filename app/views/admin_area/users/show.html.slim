@@ -214,7 +214,7 @@
         .c-user-detail-memo
           label.c-user-detail-memo__label 内部メモ
           .c-user-detail-memo__edit
-            textarea.c-user-detail-memo__edit__textarea placeholder=''
+            textarea.c-user-detail-memo__edit__textarea placeholder='内部メモ'
             .c-user-detail-memo__edit__actions
               button.c-user-detail-memo__edit__actions__cancel キャンセル
               button.c-user-detail-memo__edit__actions__save 保存
@@ -242,14 +242,16 @@
             span.c-user-detail-tag__add__text タグを追加
 
       .p-user-show__content__section
-        .p-user-show__content__section__label アクティビティ
         .c-user-detail-activity
-          - # TODO: 実際のアクティビティデータに置き換え
-          - activities = [{ icon: 'icon-activity-award', date: '2025-12-31 23:59', text: 'ゴールド会員に昇格しました' }, { icon: 'icon-activity-birthday', date: '2025-12-31 23:59', text: 'Plan Aを購読して1年が経ちました' }, { icon: 'icon-activity-update', date: '2025-12-31 23:59', text: 'Membership Aの更新に成功しました' }, { icon: 'icon-activity-purchase', date: '2025-12-31 23:59', text: 'Plan Aの購読を開始しました' }, { icon: 'icon-activity-purchase', date: '2025-12-31 23:59', text: '買い切り Plan Aを購入申込しました' }]
-          - activities.each do |activity|
-            .c-user-detail-activity__item
-              .c-user-detail-activity__item__icon
-                = render "shared/icons/#{activity[:icon]}"
-              .c-user-detail-activity__item__date = activity[:date]
-              .c-user-detail-activity__item__text = activity[:text]
-          a.c-user-detail-activity__more href='#' 過去のアクティビティを確認
+          .c-user-detail-activity__label アクティビティ
+          .c-user-detail-activity__list
+            - # TODO: 実際のアクティビティデータに置き換え
+            - activities = [{ icon: 'icon-activity-award', kind: 'success', date: '2025-12-31 23:59', text: 'ゴールド会員に昇格しました' }, { icon: 'icon-activity-birthday', kind: 'notice', date: '2025-12-31 23:59', text: 'Plan Aを購読して1年が経ちました' }, { icon: 'icon-activity-update', kind: 'success', date: '2025-12-31 23:59', text: 'Membership Aの更新に成功しました' }, { icon: 'icon-activity-purchase', kind: 'default', date: '2025-12-31 23:59', text: 'Plan Aの購読を開始しました' }, { icon: 'icon-activity-purchase', kind: 'default', date: '2025-12-31 23:59', text: '買い切り Plan Aを購入申込しました' }]
+            - activities.each do |activity|
+              .c-user-detail-activity__item
+                .c-user-detail-activity__item__icon data-kind="#{activity[:kind]}"
+                  = render "shared/icons/#{activity[:icon]}"
+                .c-user-detail-activity__item__date = activity[:date]
+                .c-user-detail-activity__item__text = activity[:text]
+            a.c-user-detail-activity__more href='#'
+              span.c-user-detail-activity__more__text 過去のアクティビティを確認

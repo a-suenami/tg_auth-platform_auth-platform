@@ -1,8 +1,14 @@
+@use 'user-detail-common.scss' as common;
+
 // アクティビティコンポーネント
 .c-user-detail-activity {
-  display: grid;
-  gap: 24px 8px;
-  grid-template-columns: 24px 70px 1fr;
+  @include common.c-user-detail-common;
+
+  &__list {
+    display: grid;
+    gap: 24px 8px;
+    grid-template-columns: 24px 70px 1fr;
+  }
 
   &__item {
     display: grid;
@@ -13,8 +19,8 @@
     &::before {
       content: '';
       position: absolute;
-      top: -24px;
-      bottom: 0;
+      top: 0;
+      bottom: -24px;
       left: 11px;
       width: 2px;
       z-index: 0;
@@ -44,6 +50,14 @@
       place-items: center;
       color: var(--color-background-gray-alpha);
 
+      &[data-kind='success'] {
+        background-color: var(--color-success-background);
+      }
+
+      &[data-kind='notice'] {
+        background-color: var(--color-notice-background);
+      }
+
       svg {
         width: 16px;
         aspect-ratio: 1;
@@ -63,15 +77,31 @@
   }
 
   &__more {
+    display: grid;
+    grid-template-columns: subgrid;
     grid-column: 1 / -1;
-    font-size: 14px;
-    color: var(--color-text-body);
-    text-decoration: none;
-    padding-top: 8px;
-    transition: color 0.2s;
+    position: relative;
+    line-height: 24px;
+    color: var(--color-text-heading);
 
-    &:hover {
-      color: var(--color-primary);
+    &::before {
+      content: '';
+      position: absolute;
+      top: -24px;
+      bottom: 0;
+      left: 11px;
+      width: 2px;
+      z-index: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 4px,
+        var(--color-background-gray-dark) 4px,
+        var(--color-background-gray-dark) 8px
+      );
+    }
+    &__text {
+      grid-column: 2 / -1;
     }
   }
 }

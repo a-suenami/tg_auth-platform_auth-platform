@@ -139,13 +139,15 @@
             .c-info__item__label = ContactAddress.human_attribute_name(:country_code)
             .c-info__item__value = @user&.contact_address&.country_code
       .p-user-detail__content__section
-        .p-user-detail__content__section__label
-          | アクティビティ
         .c-user-detail-activity
-          - 1..3.times do |i|
-            .c-user-detail-activity__item
-              .c-user-detail-activity__item__icon
-                = render 'shared/icons/icon-activity-purchase'
-              .c-user-detail-activity__item__date 2025-11-12 10:00:00
-              .c-user-detail-activity__item__text ゴールド会員に昇格しました
+          .c-user-detail-activity__label アクティビティ
+          .c-user-detail-activity__list
+            - # TODO: 実際のアクティビティデータに置き換え
+            - activities = [{ icon: 'icon-activity-award', kind: 'success', date: '2025-12-31 23:59', text: 'ゴールド会員に昇格しました' }, { icon: 'icon-activity-birthday', kind: 'notice', date: '2025-12-31 23:59', text: 'Plan Aを購読して1年が経ちました' }, { icon: 'icon-activity-update', kind: 'success', date: '2025-12-31 23:59', text: 'Membership Aの更新に成功しました' }, { icon: 'icon-activity-purchase', kind: 'default', date: '2025-12-31 23:59', text: 'Plan Aの購読を開始しました' }, { icon: 'icon-activity-purchase', kind: 'default', date: '2025-12-31 23:59', text: '買い切り Plan Aを購入申込しました' }]
+            - activities.each do |activity|
+              .c-user-detail-activity__item
+                .c-user-detail-activity__item__icon data-kind="#{activity[:kind]}"
+                  = render 'shared/icons/icon-activity-purchase'
+                .c-user-detail-activity__item__date = activity[:date]
+                .c-user-detail-activity__item__text = activity[:text]
 
