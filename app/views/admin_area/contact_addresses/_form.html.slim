@@ -1,8 +1,8 @@
 .c-form
   .c-form-field
-    label.c-form-field__label = ContactAddress.human_attribute_name(:country_code)
+    label.c-form-field__label 国
     .c-form-field__input-wrapper
-      = f.select :country_code, ISO3166::Country.all.map { |c| [c.alpha2, c.alpha2] }, { selected: f.object.country_code || 'JP' }, { class: 'c-form-field__input c-form-field__input--select' }
+      = f.select :country_code, ISO3166::Country.all.map { |c| [c.translations['ja'] || c.name, c.alpha2] }, { selected: f.object.country_code || 'JP' }, { class: 'c-form-field__input c-form-field__input--select' }
       .c-form-field__input-wrapper__dropdown
         = render 'shared/icons/icon-chevron-down'
 
