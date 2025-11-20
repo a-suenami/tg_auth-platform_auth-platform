@@ -23,6 +23,7 @@
 16. [フォームの構造](#フォームの構造)
 17. [ナビゲーションのアイコン](#ナビゲーションのアイコン)
 18. [国際化対応](#国際化対応)
+19. [未実装機能の非表示](#未実装機能の非表示)
 
 ## 命名規則
 
@@ -353,6 +354,7 @@ JavaScriptでの状態管理や、CSSでの条件付きスタイリングにデ�
 - [ ] モーダルを使用する場合はTurbo Frameと連携しているか
 - [ ] モーダルの開閉は`data-modal-open`属性で制御しているか
 - [ ] モーダルを閉じる際にTurbo Frameの内容をクリアしているか
+- [ ] 導線が機能しているが本番非表示の場合は`unless Rails.env.production?`で非表示にしているか（導線が塞がれている場合は非表示不要）
 
 ## フォームフィールドの入力グループパターン
 
@@ -928,6 +930,56 @@ ja:
 - `ISO3166::Country`の`translations['ja']`で日本語の国名を取得する
 - 翻訳が存在しない場合は`name`をフォールバックとして使用する
 - それも存在しない場合は国コードを表示する
+
+## 未実装機能の非表示
+
+### 実装済みでないセクションおよび導線の非表示
+
+実装済みでないセクションや導線（リンク、ボタンなど）は、`unless Rails.env.production?`という条件分岐を使用して本番環境では非表示にします。これにより、開発環境やステージング環境では表示されるが、本番環境では非表示になります。
+
+**重要な原則:**
+- **導線が塞がれている場合**（`href='#'`などで機能しない）: 未実装であっても非表示にする必要はない。そのまま表示してよい。
+- **導線が機能している場合**（実際にページ遷移やアクションが動作する）: まだ本番環境に出すべきでない場合は、`unless Rails.env.production?`で非表示にする。
+
+**マークアップ例（導線が機能しているが本番非表示）:**
+```slim
+- unless Rails.env.production?
+  = link_to admin_area_dashboard_path, class: 'l-header__container__link' do
+    = render 'shared/icons/icon-dashboard'
+    span.l-header__container__link__text ダッシュボード
+```
+
+**マークアップ例（導線が塞がれている場合）:**
+```slim
+/ 導線が塞がれている場合は条件分岐不要
+= link_to '#', class: 'l-header__container__link' do
+  = render 'shared/icons/icon-dashboard'
+  span.l-header__container__link__text ダッシュボード
+```
+
+**ポイント:**
+- 導線が塞がれている（`href='#'`など）場合は、未実装でも表示してよい
+- 導線が機能しているが、まだ本番環境に出すべきでない場合は`- unless Rails.env.production?`で囲む
+- 本番環境では非表示になり、開発環境やステージング環境では表示される
+- 実装が完了したら条件分岐を削除する
+
+**使用例（ナビゲーション）:**
+```slim
+.l-header__container
+  / 導線が機能しているが本番非表示
+  - unless Rails.env.production?
+    = link_to admin_area_dashboard_path, class: 'l-header__container__link' do
+      = render 'shared/icons/icon-dashboard'
+      span.l-header__container__link__text ダッシュボード
+  / 実装済みの機能（常に表示）
+  = link_to admin_area_users_path, class: "l-header__container__link #{'is-active' if controller_name == 'users'}" do
+    = render 'shared/icons/icon-user'
+    span.l-header__container__link__text ユーザー
+  / 導線が塞がれている場合は条件分岐不要（未実装でも表示）
+  = link_to '#', class: 'l-header__container__link' do
+    = render 'shared/icons/icon-transaction'
+    span.l-header__container__link__text 取引
+```
 
 ## 参考
 
