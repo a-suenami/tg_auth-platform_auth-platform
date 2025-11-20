@@ -3,24 +3,25 @@
     .p-user-show__breadcrumb
       = render 'admin_area/shared/breadcrumb', items: [{ text: 'すべてのユーザー', link: admin_area_users_path, data: { turbo_frame: 'content' } }, { text: @user.user_profile&.name || @user.id }]
     .l-page-content__content__main.p-user-show__content__main
-      .p-user-show__content__section
-        .p-user-show__content__section__label
-          | プラン
-          a.p-user-show__content__section__label__edit href='#'
-            = render 'shared/icons/icon-edit'
-            | 編集する
-        .p-user-show__content__section__plan
-          - # TODO: 実際のプランデータに置き換え
-          - plans = [{ name: 'Plan A', status: '継続中', status_class: 'is-success', duration: '3ヶ月継続', total: '累計8ヶ月' }, { name: 'Plan B', status: '支払い失敗', status_class: 'is-error', duration: '3ヶ月継続', total: '累計8ヶ月' }, { name: 'Plan C', status: '継続なし', status_class: 'is-inactive', duration: nil, total: '累計8ヶ月' }]
-          - plans.each do |plan|
-            .p-user-show__content__section__plan__item
-              .p-user-show__content__section__plan__item__header
-                .p-user-show__content__section__plan__item__name = plan[:name]
-                .p-user-show__content__section__plan__item__status class="#{plan[:status_class]}" = plan[:status]
-              .p-user-show__content__section__plan__item__content
-                - if plan[:duration]
-                  .p-user-show__content__section__plan__item__duration = plan[:duration]
-                .p-user-show__content__section__plan__item__total = plan[:total]
+      - unless Rails.env.production?
+        .p-user-show__content__section
+          .p-user-show__content__section__label
+            | プラン
+            a.p-user-show__content__section__label__edit href='#'
+              = render 'shared/icons/icon-edit'
+              | 編集する
+          .p-user-show__content__section__plan
+            - # TODO: 実際のプランデータに置き換え
+            - plans = [{ name: 'Plan A', status: '継続中', status_class: 'is-success', duration: '3ヶ月継続', total: '累計8ヶ月' }, { name: 'Plan B', status: '支払い失敗', status_class: 'is-error', duration: '3ヶ月継続', total: '累計8ヶ月' }, { name: 'Plan C', status: '継続なし', status_class: 'is-inactive', duration: nil, total: '累計8ヶ月' }]
+            - plans.each do |plan|
+              .p-user-show__content__section__plan__item
+                .p-user-show__content__section__plan__item__header
+                  .p-user-show__content__section__plan__item__name = plan[:name]
+                  .p-user-show__content__section__plan__item__status class="#{plan[:status_class]}" = plan[:status]
+                .p-user-show__content__section__plan__item__content
+                  - if plan[:duration]
+                    .p-user-show__content__section__plan__item__duration = plan[:duration]
+                  .p-user-show__content__section__plan__item__total = plan[:total]
 
       .p-user-show__content__section
         .p-user-show__content__section__label
@@ -222,6 +223,7 @@
                     td = plan[:paid_at]
 
     .l-page-content__content__sub.p-user-show__content__sub
+<<<<<<< HEAD
       .p-user-show__content__section
         .p-user-show__content__section__sms-reset
           = form_with url: reset_sms_ratelimit_admin_area_user_path(@user), method: :put, local: true, class: 'p-user-show__content__section__sms-reset__form' do |f|
@@ -235,6 +237,17 @@
             .c-user-detail-memo__edit__actions
               button.c-user-detail-memo__edit__actions__cancel キャンセル
               button.c-user-detail-memo__edit__actions__save 保存
+=======
+      - unless Rails.env.production?
+        .p-user-show__content__section
+          .c-user-detail-memo
+            label.c-user-detail-memo__label 内部メモ
+            .c-user-detail-memo__edit
+              textarea.c-user-detail-memo__edit__textarea placeholder='内部メモ'
+              .c-user-detail-memo__edit__actions
+                button.c-user-detail-memo__edit__actions__cancel キャンセル
+                button.c-user-detail-memo__edit__actions__save 保存
+>>>>>>> 84061b0 (未実装の部分を非表示にする)
 
       .p-user-show__content__section
         .p-user-show__content__section__label
