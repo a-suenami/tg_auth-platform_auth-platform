@@ -25,6 +25,7 @@
         font-weight: 700;
       }
       &__chevron {
+        transform: rotate(180deg);
         svg {
           display: block;
           aspect-ratio: 1;
@@ -37,7 +38,7 @@
       display: none;
       &:checked + .l-page-content__navigation__item {
         .l-page-content__navigation__item__chevron {
-          transform: rotate(180deg);
+          transform: none;
         }
         & + .l-page-content__navigation__children {
           display: grid;
