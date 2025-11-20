@@ -12,18 +12,19 @@
 5. [データ属性の活用](#データ属性の活用)
 6. [パーシャルの活用](#パーシャルの活用)
 7. [実装例](#実装例)
-8. [フォームフィールドの入力グループパターン](#フォームフィールドの入力グループパターン)
-9. [アイコンの配置とスタイリング](#アイコンの配置とスタイリング)
-10. [ネイティブUI要素のカスタマイズ](#ネイティブui要素のカスタマイズ)
-11. [readonly属性の使用](#readonly属性の使用)
-12. [モーダルの実装方法](#モーダルの実装方法)
-13. [モーダルのタイトルセクション](#モーダルのタイトルセクション)
-14. [Enumerizeの表示方法](#enumerizeの表示方法)
-15. [空状態の表示](#空状態の表示)
-16. [フォームの構造](#フォームの構造)
-17. [ナビゲーションのアイコン](#ナビゲーションのアイコン)
-18. [国際化対応](#国際化対応)
-19. [未実装機能の非表示](#未実装機能の非表示)
+8. [ラジオボタングループ](#ラジオボタングループ)
+9. [フォームフィールドの入力グループパターン](#フォームフィールドの入力グループパターン)
+10. [アイコンの配置とスタイリング](#アイコンの配置とスタイリング)
+11. [ネイティブUI要素のカスタマイズ](#ネイティブui要素のカスタマイズ)
+12. [readonly属性の使用](#readonly属性の使用)
+13. [モーダルの実装方法](#モーダルの実装方法)
+14. [モーダルのタイトルセクション](#モーダルのタイトルセクション)
+15. [Enumerizeの表示方法](#enumerizeの表示方法)
+16. [空状態の表示](#空状態の表示)
+17. [フォームの構造](#フォームの構造)
+18. [ナビゲーションのアイコン](#ナビゲーションのアイコン)
+19. [国際化対応](#国際化対応)
+20. [未実装機能の非表示](#未実装機能の非表示)
 
 ## 命名規則
 
@@ -348,6 +349,8 @@ JavaScriptでの状態管理や、CSSでの条件付きスタイリングにデ�
 - [ ] フォームパーシャル内で`.c-form`を定義しているか
 - [ ] ナビゲーションのアイコンの向きを状態に応じて変更しているか
 - [ ] 国際化が必要な場合は適切な翻訳を使用しているか
+- [ ] ラジオボタンはカスタムUIを実装し、ネイティブのラジオボタンは非表示にしているか
+- [ ] ラジオボタングループは独立したコンポーネントファイルに分離しているか
 - [ ] アイコンの配置は`display: grid; place-items: center;`を使用しているか
 - [ ] ネイティブUI要素（datetime-local等）のカスタマイズが必要な場合は適切に対応しているか
 - [ ] `readonly`属性と`disabled`属性の使い分けが適切か
@@ -355,6 +358,110 @@ JavaScriptでの状態管理や、CSSでの条件付きスタイリングにデ�
 - [ ] モーダルの開閉は`data-modal-open`属性で制御しているか
 - [ ] モーダルを閉じる際にTurbo Frameの内容をクリアしているか
 - [ ] 導線が機能しているが本番非表示の場合は`unless Rails.env.production?`で非表示にしているか（導線が塞がれている場合は非表示不要）
+
+## ラジオボタングループ
+
+### カスタムラジオボタンの実装
+
+ラジオボタンは、ネイティブのラジオボタンを非表示にして、カスタムのラジオボタンUIを実装します。
+
+**マークアップ:**
+```slim
+.c-form-field
+  label.c-form-field__label 配送先住所と請求先住所
+  .c-form-field__radio-group
+    label.c-form-field__radio-group__item
+      = f.radio_button :billing_address_type, "same", checked: false, class: 'c-form-field__radio-group__input'
+      span.c-form-field__radio-group__radio
+      span.c-form-field__radio-group__label 配送先住所と同じ
+    label.c-form-field__radio-group__item
+      = f.radio_button :billing_address_type, "different", checked: true, class: 'c-form-field__radio-group__input'
+      span.c-form-field__radio-group__radio
+      span.c-form-field__radio-group__label 配送先住所と異なる
+```
+
+**スタイル:**
+```scss
+.c-form-field__radio-group {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background-color: var(--color-background);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+
+  &__item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    position: relative;
+
+    &:not(:first-child) {
+      border-left: 1px solid var(--color-border);
+    }
+  }
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+
+    &:checked + .c-form-field__radio-group__radio {
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    &:checked ~ .c-form-field__radio-group__label {
+      color: var(--color-text-heading);
+      font-weight: 500;
+    }
+  }
+
+  &__radio {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #99A1AF;
+    border-radius: 50%;
+    background-color: var(--color-background);
+    display: inline-grid;
+    place-items: center;
+    flex-shrink: 0;
+    position: relative;
+
+    &::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      opacity: 0;
+      border: 1px solid rgba(black, 0.8);
+      background-color: var(--color-text-heading);
+      border-radius: 50%;
+      transition: opacity 0.1s ease-in-out;
+    }
+  }
+
+  &__label {
+    font-size: 14px;
+    color: var(--color-text-body);
+    cursor: pointer;
+    user-select: none;
+  }
+}
+```
+
+**ポイント:**
+- ネイティブのラジオボタンは`opacity: 0`と`pointer-events: none`で非表示にするが、DOMには残してフォーム送信に使用する
+- カスタムのラジオボタンUIは`span.c-form-field__radio-group__radio`で実装する
+- `:checked`状態では、`::before`疑似要素の`opacity`を`1`にして内側の円を表示する
+- 選択されたラジオボタンのラベルは`color: var(--color-text-heading)`と`font-weight: 500`で強調する
+- `label`要素でラップすることで、ラジオボタン全体がクリック可能になる
+- コンポーネントとして独立したファイル（`_radio-group.scss`）に分離する
 
 ## フォームフィールドの入力グループパターン
 
