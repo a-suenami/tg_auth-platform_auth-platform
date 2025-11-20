@@ -19,6 +19,10 @@
 12. [モーダルの実装方法](#モーダルの実装方法)
 13. [モーダルのタイトルセクション](#モーダルのタイトルセクション)
 14. [Enumerizeの表示方法](#enumerizeの表示方法)
+15. [空状態の表示](#空状態の表示)
+16. [フォームの構造](#フォームの構造)
+17. [ナビゲーションのアイコン](#ナビゲーションのアイコン)
+18. [国際化対応](#国際化対応)
 
 ## 命名規則
 
@@ -338,6 +342,11 @@ JavaScriptでの状態管理や、CSSでの条件付きスタイリングにデ�
 - [ ] enumerizeの値を表示する場合は`.text`メソッドを使用しているか
 - [ ] Turbo Frame内の動的に追加された要素にも対応するため、イベント委譲を使用しているか
 - [ ] キャンセルボタンには`--color-text-inactive`を使用しているか
+- [ ] データが存在しない場合は`c-empty`コンポーネントを使用して空状態を表示しているか
+- [ ] データの有無に応じてボタンのラベルを適切に変更しているか
+- [ ] フォームパーシャル内で`.c-form`を定義しているか
+- [ ] ナビゲーションのアイコンの向きを状態に応じて変更しているか
+- [ ] 国際化が必要な場合は適切な翻訳を使用しているか
 - [ ] アイコンの配置は`display: grid; place-items: center;`を使用しているか
 - [ ] ネイティブUI要素（datetime-local等）のカスタマイズが必要な場合は適切に対応しているか
 - [ ] `readonly`属性と`disabled`属性の使い分けが適切か
@@ -776,6 +785,149 @@ ja:
 - enumerizeの値は`.text`メソッドで翻訳された値を取得できる
 - ロケールファイルで`enumerize.[model_name].[attribute].[value]`の形式で翻訳を定義する
 - 属性名の翻訳は`activerecord.attributes.[model_name].[attribute]`で定義する
+
+## 空状態の表示
+
+### データが存在しない場合の表示
+
+データが存在しない場合、`c-empty`コンポーネントを使用して空状態を表示します。
+
+**マークアップ:**
+```slim
+- if @user.contact_address.present?
+  .c-info
+    / データ表示
+- else
+  .c-empty
+    .c-empty__text 配送先住所が設定されていません
+```
+
+**スタイル:**
+```scss
+.c-empty {
+  background-color: var(--color-background-gray);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  padding: 24px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__text {
+    font-size: 14px;
+    color: var(--color-text-inactive);
+    text-align: center;
+  }
+}
+```
+
+**ポイント:**
+- データが存在しない場合にユーザーに分かりやすいメッセージを表示する
+- `c-info`コンポーネントと同じスタイル（背景色、ボーダー、角丸）を使用して統一感を保つ
+- テキストは`--color-text-inactive`を使用して控えめに表示する
+
+### 条件分岐によるボタンラベルの変更
+
+データの有無に応じて、ボタンのラベルを「編集する」/「作成する」と切り替えます。
+
+**マークアップ:**
+```slim
+.p-user-detail__content__section__label
+  | 配送先住所
+  - if @user.contact_address.present?
+    = link_to edit_admin_area_user_contact_address_path(@user), class: "p-user-detail__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
+      = render 'shared/icons/icon-edit'
+      | 編集する
+  - else
+    = link_to new_admin_area_user_contact_address_path(@user), class: "p-user-detail__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
+      = render 'shared/icons/icon-edit'
+      | 作成する
+```
+
+**ポイント:**
+- データの有無に応じて適切なアクションを提供する
+- 同じクラス名を使用してスタイルを統一する
+- Turbo Frameを使用してモーダルを開く
+
+## フォームの構造
+
+### フォームパーシャル内での`.c-form`の配置
+
+フォームパーシャル内で`.c-form`を定義することで、モーダル内でもフォームのスタイルが適用されます。
+
+**マークアップ（フォームパーシャル）:**
+```slim
+.c-form
+  .c-form-field
+    label.c-form-field__label ラベル
+    = f.text_field :field, class: 'c-form-field__input'
+```
+
+**マークアップ（モーダル内）:**
+```slim
+.c-modal__dialog__body
+  = form_with model: @model, url: path, method: :put, local: true, data: { turbo_frame: '_top' }, html: { id: "form_id" } do |f|
+    = render 'admin_area/shared/form_error', target: f.object
+    = render 'form', f: f
+```
+
+**ポイント:**
+- フォームパーシャル内で`.c-form`を定義することで、モーダル内でもフォームのスタイルが適用される
+- モーダル内では`.c-form`を重複して定義しない（パーシャル内で定義済み）
+
+## ナビゲーションのアイコン
+
+### チェブロンアイコンの向きの制御
+
+ナビゲーションのチェブロンアイコンは、開閉状態に応じて向きを変更します。
+
+**スタイル:**
+```scss
+.l-page-content__navigation__item {
+  &__chevron {
+    transform: rotate(180deg); // デフォルトで下向き
+
+    &:checked + .l-page-content__navigation__item {
+      .l-page-content__navigation__item__chevron {
+        transform: none; // 開いたときに上向き
+      }
+    }
+  }
+}
+```
+
+**ポイント:**
+- デフォルトでチェブロンアイコンを下向き（`rotate(180deg)`）に設定
+- 開いた状態では`transform: none`で上向きに戻す
+- CSSの`:checked`セレクタを使用して状態を制御する
+
+## 国際化対応
+
+### ISO3166::Countryの翻訳
+
+国名を表示する際は、ISO3166::Countryの翻訳を使用して日本語で表示します。
+
+**マークアップ:**
+```slim
+.c-info__item
+  .c-info__item__label 国
+  .c-info__item__value
+    - if @user&.contact_address&.country_code.present?
+      - country = ISO3166::Country[@user.contact_address.country_code]
+      = country&.translations&.dig('ja') || country&.name || @user.contact_address.country_code
+    - else
+      | -
+```
+
+**セレクトボックスでの使用:**
+```slim
+= f.select :country_code, ISO3166::Country.all.map { |c| [c.translations['ja'] || c.name, c.alpha2] }, { selected: f.object.country_code || 'JP' }, { class: 'c-form-field__input c-form-field__input--select' }
+```
+
+**ポイント:**
+- `ISO3166::Country`の`translations['ja']`で日本語の国名を取得する
+- 翻訳が存在しない場合は`name`をフォールバックとして使用する
+- それも存在しない場合は国コードを表示する
 
 ## 参考
 
