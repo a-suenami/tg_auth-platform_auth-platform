@@ -12,6 +12,11 @@
 5. [データ属性の活用](#データ属性の活用)
 6. [パーシャルの活用](#パーシャルの活用)
 7. [実装例](#実装例)
+8. [フォームフィールドの入力グループパターン](#フォームフィールドの入力グループパターン)
+9. [アイコンの配置とスタイリング](#アイコンの配置とスタイリング)
+10. [ネイティブUI要素のカスタマイズ](#ネイティブui要素のカスタマイズ)
+11. [readonly属性の使用](#readonly属性の使用)
+12. [モーダルのタイトルセクション](#モーダルのタイトルセクション)
 
 ## 命名規則
 
@@ -326,6 +331,162 @@ JavaScriptでの状態管理や、CSSでの条件付きスタイリングにデ�
 - [ ] データ属性を適切に使用しているか
 - [ ] パーシャル化できる部分は分離されているか
 - [ ] レイアウトとコンポーネントが適切に分離されているか
+- [ ] 複数の入力フィールドを統合する場合は`input-group`パターンを使用しているか
+- [ ] アイコンの配置は`display: grid; place-items: center;`を使用しているか
+- [ ] ネイティブUI要素（datetime-local等）のカスタマイズが必要な場合は適切に対応しているか
+- [ ] `readonly`属性と`disabled`属性の使い分けが適切か
+
+## フォームフィールドの入力グループパターン
+
+### 複数入力の統合デザイン
+
+メイン入力とステータス選択など、複数の入力フィールドを1つのグループとして統合する場合、`c-form-field__input-group`を使用します。
+
+**マークアップ:**
+```slim
+.c-form-field
+  label.c-form-field__label メールアドレス
+  .c-form-field__input-group
+    .c-form-field__input-group__input
+      = f.email_field :email, class: 'c-form-field__input'
+    .c-form-field__input-group__status
+      = f.select 'email_verified_status', [['確認済み', 'confirmed'], ['未確認', 'unconfirmed']], {}, { class: 'c-form-field__input c-form-field__input--select' }
+      .c-form-field__input-group__status__dropdown
+        = render 'shared/icons/icon-chevron-down'
+```
+
+**スタイルのポイント:**
+- 外側のコンテナでボーダーとボックスシャドウを設定し、視覚的に統合
+- 内部の各入力フィールドは`border: none`でボーダーを削除
+- `overflow: hidden`で角丸を維持
+- 区切り線は`border-left`で表現
+
+## アイコンの配置とスタイリング
+
+### 中央配置の方法
+
+アイコンを要素の中央に配置する場合、`display: grid`と`place-items: center`を使用します。
+
+**例: カレンダーアイコンの配置**
+```scss
+&__calendar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  border-left: 1px solid var(--color-border);
+  min-width: 48px;
+  aspect-ratio: 1;
+}
+```
+
+**ポイント:**
+- `display: grid; place-items: center;`で完全な中央配置を実現
+- `aspect-ratio: 1`で正方形を確保
+- `pointer-events: none`でクリックイベントを無効化
+- ボーダーで区切りを表現
+
+### ドロップダウンアイコンの配置
+
+セレクトボックスなどのドロップダウンアイコンは、絶対配置で右側に配置します。
+
+```scss
+&__dropdown {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+```
+
+## ネイティブUI要素のカスタマイズ
+
+### datetime-localのカスタマイズ
+
+`datetime-local`入力フィールドのデフォルトカレンダーアイコンを非表示にし、カスタムアイコンで置き換えます。
+
+**スタイル:**
+```scss
+&[type="datetime-local"] {
+  padding-right: 60px;
+
+  &::-webkit-calendar-picker-indicator {
+    display: none;
+  }
+}
+```
+
+**マークアップ:**
+```slim
+.c-form-field__input-wrapper
+  = f.datetime_local_field :deleted_at, class: 'c-form-field__input'
+  .c-form-field__input-wrapper__calendar
+    = render 'shared/icons/icon-calendar'
+```
+
+**ポイント:**
+- `::-webkit-calendar-picker-indicator`でデフォルトアイコンを非表示
+- カスタムアイコンを`input-wrapper`内に配置
+- 適切な`padding-right`でアイコン分のスペースを確保
+
+## readonly属性の使用
+
+フォームヘルパーではなく、直接HTMLで`readonly`属性を指定する場合があります。
+
+**例:**
+```slim
+input.c-form-field__input type="text" value="1234-5678-9000" readonly="readonly"
+```
+
+**スタイル:**
+```scss
+&[readonly] {
+  background-color: var(--color-background-gray);
+  color: var(--color-text-inactive);
+  cursor: not-allowed;
+}
+```
+
+**ポイント:**
+- `readonly`属性は値の編集を防ぐが、フォーム送信には含まれる
+- `disabled`とは異なり、フォーム送信時に値が送信される
+- 視覚的には`disabled`と同様のスタイルを適用
+
+## モーダルのタイトルセクション
+
+### タイトルとサブタイトルの配置
+
+モーダルのヘッダー部分では、タイトルとサブタイトルの間隔とスタイリングに注意します。
+
+**スタイル:**
+```scss
+&__header {
+  gap: 12px; // 8pxから12pxに調整
+
+  &__subtitle {
+    font-size: 14px;
+    color: var(--color-text-heading); // var(--color-text-body)から変更
+    font-weight: 500;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 600;
+    // color指定を削除（デフォルトの色を使用）
+  }
+}
+```
+
+**ポイント:**
+- `gap`を適切に調整して視覚的な階層を明確化
+- サブタイトルも`color-text-heading`を使用して重要性を表現
+- タイトルはデフォルトの色を使用し、過度な色指定を避ける
 
 ## 参考
 
