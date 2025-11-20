@@ -104,7 +104,7 @@
             .c-info__item__value = @user&.user_profile&.birth_date
           .c-info__item
             .c-info__item__label = UserProfile.human_attribute_name(:gender)
-            .c-info__item__value = @user&.user_profile&.gender
+            .c-info__item__value = @user&.user_profile&.gender&.text
 
       .p-user-show__content__section
         .p-user-show__content__section__label
