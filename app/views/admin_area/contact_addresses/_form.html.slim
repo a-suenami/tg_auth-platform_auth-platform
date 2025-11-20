@@ -1,31 +1,32 @@
-.c-form-field
-  label.c-form-field__label = ContactAddress.human_attribute_name(:country_code)
-  .c-form-field__input-wrapper
-    = f.select :country_code, ISO3166::Country.all.map { |c| [c.alpha2, c.alpha2] }, { selected: f.object.country_code || 'JP' }, { class: 'c-form-field__input c-form-field__input--select' }
-    .c-form-field__input-wrapper__dropdown
-      = render 'shared/icons/icon-chevron-down'
+.c-form
+  .c-form-field
+    label.c-form-field__label = ContactAddress.human_attribute_name(:country_code)
+    .c-form-field__input-wrapper
+      = f.select :country_code, ISO3166::Country.all.map { |c| [c.alpha2, c.alpha2] }, { selected: f.object.country_code || 'JP' }, { class: 'c-form-field__input c-form-field__input--select' }
+      .c-form-field__input-wrapper__dropdown
+        = render 'shared/icons/icon-chevron-down'
 
-.c-form-field
-  .c-form-field__label-group
-    label.c-form-field__label = ContactAddress.human_attribute_name(:zip_code)
-    label.c-form-field__label = ContactAddress.human_attribute_name(:prefecture_code)
-  .c-form-field__input-group
-    .c-form-field__input-group__input
-      = f.text_field :zip_code, class: 'c-form-field__input', placeholder: '〒100-1234'
-    .c-form-field__input-group__input
-      .c-form-field__input-wrapper
-        = f.select :prefecture_code, JpPrefecture::Prefecture.all.map { |p| [p.name, p.code] }, { include_blank: true, selected: f.object.prefecture_code }, { class: 'c-form-field__input c-form-field__input--select' }
-        .c-form-field__input-wrapper__dropdown
-          = render 'shared/icons/icon-chevron-down'
+  .c-form-field
+    .c-form-field__label-group
+      label.c-form-field__label = ContactAddress.human_attribute_name(:zip_code)
+      label.c-form-field__label = ContactAddress.human_attribute_name(:prefecture_code)
+    .c-form-field__input-group
+      .c-form-field__input-group__input
+        = f.text_field :zip_code, class: 'c-form-field__input', placeholder: '〒100-1234'
+      .c-form-field__input-group__input
+        .c-form-field__input-wrapper
+          = f.select :prefecture_code, JpPrefecture::Prefecture.all.map { |p| [p.name, p.code] }, { include_blank: true, selected: f.object.prefecture_code }, { class: 'c-form-field__input c-form-field__input--select' }
+          .c-form-field__input-wrapper__dropdown
+            = render 'shared/icons/icon-chevron-down'
 
-.c-form-field
-  label.c-form-field__label = ContactAddress.human_attribute_name(:city)
-  = f.text_field :city, class: 'c-form-field__input'
+  .c-form-field
+    label.c-form-field__label = ContactAddress.human_attribute_name(:city)
+    = f.text_field :city, class: 'c-form-field__input'
 
-.c-form-field
-  label.c-form-field__label = ContactAddress.human_attribute_name(:street)
-  = f.text_field :street, class: 'c-form-field__input'
+  .c-form-field
+    label.c-form-field__label = ContactAddress.human_attribute_name(:street)
+    = f.text_field :street, class: 'c-form-field__input'
 
-.c-form-field
-  label.c-form-field__label = ContactAddress.human_attribute_name(:building)
-  = f.text_field :building, class: 'c-form-field__input'
+  .c-form-field
+    label.c-form-field__label = ContactAddress.human_attribute_name(:building)
+    = f.text_field :building, class: 'c-form-field__input'
