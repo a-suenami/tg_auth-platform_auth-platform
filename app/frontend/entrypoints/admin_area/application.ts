@@ -99,9 +99,11 @@ function closeModal(modalId: string) {
 
 // モーダルのイベントハンドラーを初期化
 function initModalHandlers() {
-  // 閉じるボタン
-  document.querySelectorAll("[data-action='close-modal']").forEach((button) => {
-    button.addEventListener("click", (e) => {
+  // 閉じるボタン（イベント委譲を使用してTurbo Frame内のボタンにも対応）
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    const button = target.closest("[data-action='close-modal']") as HTMLElement;
+    if (button) {
       e.preventDefault();
       const modal = button.closest(".c-modal") as HTMLElement;
       if (modal) {
@@ -110,7 +112,7 @@ function initModalHandlers() {
           closeModal(modalId);
         }
       }
-    });
+    }
   });
 
   // オーバーレイクリックで閉じる
