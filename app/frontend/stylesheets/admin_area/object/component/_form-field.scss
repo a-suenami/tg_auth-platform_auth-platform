@@ -160,6 +160,15 @@
       }
     }
 
+    // dateのデフォルトアイコンを非表示
+    &[type="date"] {
+      padding-right: 60px;
+
+      &::-webkit-calendar-picker-indicator {
+        display: none;
+      }
+    }
+
     &::placeholder {
       color: var(--color-text-inactive);
     }

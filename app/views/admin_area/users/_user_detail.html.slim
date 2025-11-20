@@ -85,7 +85,7 @@
       .p-user-detail__content__section
         .p-user-detail__content__section__label
           | プロフィール
-          a.p-user-detail__content__section__label__edit href='#'
+          = link_to edit_admin_area_user_user_profile_path(@user), class: "p-user-detail__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
             = render 'shared/icons/icon-edit'
             | 編集する
         .c-info
