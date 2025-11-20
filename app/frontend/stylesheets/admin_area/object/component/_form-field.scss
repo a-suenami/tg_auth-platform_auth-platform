@@ -17,6 +17,12 @@
     }
   }
 
+  &__label-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
   &__input-group {
     display: flex;
     gap: 0;
@@ -39,6 +45,10 @@
           box-shadow: none;
           border-color: transparent;
         }
+      }
+
+      &:not(:first-child) {
+        border-left: 1px solid var(--color-border);
       }
     }
 

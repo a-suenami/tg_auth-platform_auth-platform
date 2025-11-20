@@ -9,21 +9,23 @@
       = render 'admin_area/shared/form_error', target: f.object
       .c-form
         .c-form-field
-          label.c-form-field__label = UserProfile.human_attribute_name(:last_name)
-          .c-form-field__input-wrapper
-            = f.text_field :last_name, class: 'c-form-field__input'
+          .c-form-field__label-group
+            label.c-form-field__label = UserProfile.human_attribute_name(:last_name)
+            label.c-form-field__label = UserProfile.human_attribute_name(:first_name)
+          .c-form-field__input-group
+            .c-form-field__input-group__input
+              = f.text_field :last_name, class: 'c-form-field__input'
+            .c-form-field__input-group__input
+              = f.text_field :first_name, class: 'c-form-field__input'
         .c-form-field
-          label.c-form-field__label = UserProfile.human_attribute_name(:first_name)
-          .c-form-field__input-wrapper
-            = f.text_field :first_name, class: 'c-form-field__input'
-        .c-form-field
-          label.c-form-field__label = UserProfile.human_attribute_name(:last_name_kana)
-          .c-form-field__input-wrapper
-            = f.text_field :last_name_kana, class: 'c-form-field__input'
-        .c-form-field
-          label.c-form-field__label = UserProfile.human_attribute_name(:first_name_kana)
-          .c-form-field__input-wrapper
-            = f.text_field :first_name_kana, class: 'c-form-field__input'
+          .c-form-field__label-group
+            label.c-form-field__label = UserProfile.human_attribute_name(:last_name_kana)
+            label.c-form-field__label = UserProfile.human_attribute_name(:first_name_kana)
+          .c-form-field__input-group
+            .c-form-field__input-group__input
+              = f.text_field :last_name_kana, class: 'c-form-field__input'
+            .c-form-field__input-group__input
+              = f.text_field :first_name_kana, class: 'c-form-field__input'
         .c-form-field
           label.c-form-field__label = UserProfile.human_attribute_name(:birth_date)
           .c-form-field__input-wrapper
