@@ -153,13 +153,13 @@
           .c-empty
             .c-empty__text 配送先住所が設定されていません
 
-        .p-user-show__content__section
-          .p-user-show__content__section__label
-            | 請求先住所
-            - billing_address_link = @user.billing_address.present? ? edit_admin_area_user_billing_address_path(@user) : new_admin_area_user_billing_address_path(@user)
-            = link_to billing_address_link, class: "p-user-show__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
-              = render 'shared/icons/icon-edit'
-              | 編集する
+      .p-user-show__content__section
+        .p-user-show__content__section__label
+          | 請求先住所
+          - billing_address_link = @user.billing_address.present? ? edit_admin_area_user_billing_address_path(@user) : new_admin_area_user_billing_address_path(@user)
+          = link_to billing_address_link, class: "p-user-show__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
+            = render 'shared/icons/icon-edit'
+            | 編集する
         .p-user-show__content__section__billing
           .p-user-show__content__section__billing__radio
             label.p-user-show__content__section__billing__radio__item
@@ -168,6 +168,7 @@
             label.p-user-show__content__section__billing__radio__item
               input type='radio' name='billing_address'
               | 配送先住所と異なる
+>>>>>>> 2734f69 (請求先住所の作成ページの対応)
         .c-info
           .c-info__item
             .c-info__item__label = ContactAddress.human_attribute_name(:zip_code)
