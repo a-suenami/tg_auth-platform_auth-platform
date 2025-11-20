@@ -1,0 +1,43 @@
+.c-form
+  .c-form-field
+    label.c-form-field__label 配送先住所と請求先住所
+    .c-form-field__radio-group
+      label.c-form-field__radio-group__item
+        = f.radio_button :billing_address_type, "same", checked: false, class: 'c-form-field__radio-group__input'
+        span.c-form-field__radio-group__label 配送先住所と同じ
+      label.c-form-field__radio-group__item
+        = f.radio_button :billing_address_type, "different", checked: true, class: 'c-form-field__radio-group__input'
+        span.c-form-field__radio-group__label 配送先住所と異なる
+
+  .c-form-field
+    label.c-form-field__label 国
+    .c-form-field__input-wrapper
+      = f.select :country_code, ISO3166::Country.all.map { |c| [c.translations['ja'] || c.name, c.alpha2] }, { selected: 'JP' }, { class: 'c-form-field__input c-form-field__input--select' }
+      .c-form-field__input-wrapper__dropdown
+        = render 'shared/icons/icon-chevron-down'
+
+  .c-form-field
+    .c-form-field__label-group
+      label.c-form-field__label = ContactAddress.human_attribute_name(:zip_code)
+      label.c-form-field__label = ContactAddress.human_attribute_name(:prefecture)
+    .c-form-field__input-group
+      .c-form-field__input-group__input
+        = f.text_field :zip_code, class: 'c-form-field__input', placeholder: '〒100-1234', value: '〒1001234'
+      .c-form-field__input-group__input
+        .c-form-field__input-wrapper
+          = f.select :prefecture_code, JpPrefecture::Prefecture.all.map { |p| [p.name, p.code] }, { selected: '13' }, { class: 'c-form-field__input c-form-field__input--select' }
+          .c-form-field__input-wrapper__dropdown
+            = render 'shared/icons/icon-chevron-down'
+
+  .c-form-field
+    label.c-form-field__label = ContactAddress.human_attribute_name(:city)
+    = f.text_field :city, class: 'c-form-field__input', value: '世田谷区'
+
+  .c-form-field
+    label.c-form-field__label = ContactAddress.human_attribute_name(:street)
+    = f.text_field :street, class: 'c-form-field__input', value: '北沢 1-20-17'
+
+  .c-form-field
+    label.c-form-field__label = ContactAddress.human_attribute_name(:building)
+    = f.text_field :building, class: 'c-form-field__input', value: 'マガザン石井パート2 201'
+

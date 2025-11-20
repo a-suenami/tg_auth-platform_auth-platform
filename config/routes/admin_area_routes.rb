@@ -8,12 +8,14 @@ Rails.application.routes.draw do
     get '/auth/failure' => 'auth0#failure'
     get '/auth/logout' => 'auth0#logout'
 
-    resources :users, only: %i[index show edit update] do
+    resources :users, only: %i[index show edit update destroy] do
       member do
         put :reset_sms_ratelimit
+        get :activities
       end
       resource :user_profile, only: [:new, :create, :edit, :update]
       resource :contact_address, only: [:new, :create, :edit, :update]
+      resource :billing_address, only: [:new, :edit]
       resources :user_tag_assignments, only: [:edit, :create, :destroy], path: 'tags', param: :tag_id do
         collection do
           get '', action: :edit, as: ''
@@ -33,6 +35,11 @@ Rails.application.routes.draw do
 
     # User Tag Management
     resources :user_tags
-    resources :user_auto_taggings
+    resources :user_auto_taggings do
+      collection do
+        get :tag_picker
+        get :datepicker
+      end
+    end
   end
 end

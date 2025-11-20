@@ -23,6 +23,32 @@
     gap: 0;
   }
 
+  &__radio-group {
+    display: flex;
+    gap: 16px;
+
+    &__item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    &__input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      cursor: pointer;
+      accent-color: var(--color-primary);
+    }
+
+    &__label {
+      font-size: 14px;
+      color: var(--color-text-body);
+      cursor: pointer;
+    }
+  }
+
   &__input-group {
     display: flex;
     gap: 0;
