@@ -106,13 +106,18 @@
             .c-info__item__label = UserProfile.human_attribute_name(:gender)
             .c-info__item__value = @user&.user_profile&.gender&.text
 
-        .p-user-show__content__section
-          .p-user-show__content__section__label
-            | 配送先住所
-            - contact_address_link = @user.contact_address.present? ? edit_admin_area_user_contact_address_path(@user) : new_admin_area_user_contact_address_path(@user)
-            = link_to contact_address_link, class: "p-user-show__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
+<<<<<<< HEAD
+      .p-user-show__content__section
+        .p-user-show__content__section__label
+          | 配送先住所
+          - if @user.contact_address.present?
+            = link_to edit_admin_area_user_contact_address_path(@user), class: "p-user-show__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
               = render 'shared/icons/icon-edit'
               | 編集する
+          - else
+            = link_to new_admin_area_user_contact_address_path(@user), class: "p-user-show__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
+              = render 'shared/icons/icon-edit'
+              | 作成する
         .c-info
           .c-info__item
             .c-info__item__label = ContactAddress.human_attribute_name(:zip_code)

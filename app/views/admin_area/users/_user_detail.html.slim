@@ -118,9 +118,9 @@
               = render 'shared/icons/icon-edit'
               | 編集する
           - else
-            a.p-user-detail__content__section__label__edit href='#'
+            = link_to new_admin_area_user_contact_address_path(@user), class: "p-user-detail__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
               = render 'shared/icons/icon-edit'
-              | 編集する
+              | 作成する
         .c-info
           .c-info__item
             .c-info__item__label = ContactAddress.human_attribute_name(:zip_code)
