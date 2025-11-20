@@ -6,9 +6,8 @@
     - unless Rails.env.production?
       = link_to '#', class: "l-page-content__navigation__item" do
         span.l-page-content__navigation__item__text 分析
-    - unless Rails.env.production?
-      = link_to '#', class: "l-page-content__navigation__item" do
-        span.l-page-content__navigation__item__text タグ
+    = link_to admin_area_user_tags_path, class: "l-page-content__navigation__item #{'is-active' if controller_name == 'user_tags'}" do
+      span.l-page-content__navigation__item__text タグ
     - unless Rails.env.production?
       input#auto-tagging-is-open.l-page-content__navigation__checkbox type="checkbox"
       label.l-page-content__navigation__item for="auto-tagging-is-open"
