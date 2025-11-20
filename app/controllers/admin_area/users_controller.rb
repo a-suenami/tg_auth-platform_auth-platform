@@ -2,7 +2,7 @@
 
 module AdminArea
   class UsersController < ApplicationController
-    before_action :set_user, only: %i[show edit update reset_sms_ratelimit]
+    before_action :set_user, only: %i[show edit update reset_sms_ratelimit activities]
     def index
       @users = User.all
       @users = @users.where(id: params[:id]) if params[:id].present?
@@ -39,6 +39,9 @@ module AdminArea
     def reset_sms_ratelimit
       @user.sms_verifiers.where('created_at > ?', 24.hours.ago).update_all(ignore_in_rate_limit: true)
       redirect_to admin_area_user_path(@user), notice: 'SMS送信制限をリセットしました。'
+    end
+
+    def activities
     end
 
     private

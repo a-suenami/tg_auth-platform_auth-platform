@@ -283,5 +283,5 @@
                   = render "shared/icons/#{activity[:icon]}"
                 .c-user-detail-activity__item__date = activity[:date]
                 .c-user-detail-activity__item__text = activity[:text]
-            a.c-user-detail-activity__more href='#'
+            = link_to activities_admin_area_user_path(@user), class: 'c-user-detail-activity__more', data: { turbo_frame: 'modal-frame' } do
               span.c-user-detail-activity__more__text 過去のアクティビティを確認

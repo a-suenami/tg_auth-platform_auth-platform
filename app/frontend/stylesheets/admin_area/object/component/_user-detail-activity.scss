@@ -106,3 +106,10 @@
   }
 }
 
+// モーダル内でのみ日付カラムの幅制限を無しにする
+.c-modal__dialog__body {
+  .c-user-detail-activity__list {
+    grid-template-columns: 24px auto 1fr;
+  }
+}
+
