@@ -4,9 +4,11 @@
     .c-form-field__radio-group
       label.c-form-field__radio-group__item
         = f.radio_button :billing_address_type, "same", checked: false, class: 'c-form-field__radio-group__input'
+        span.c-form-field__radio-group__radio
         span.c-form-field__radio-group__label 配送先住所と同じ
       label.c-form-field__radio-group__item
         = f.radio_button :billing_address_type, "different", checked: true, class: 'c-form-field__radio-group__input'
+        span.c-form-field__radio-group__radio
         span.c-form-field__radio-group__label 配送先住所と異なる
 
   .c-form-field
