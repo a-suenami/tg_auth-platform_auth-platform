@@ -16,7 +16,8 @@
 9. [アイコンの配置とスタイリング](#アイコンの配置とスタイリング)
 10. [ネイティブUI要素のカスタマイズ](#ネイティブui要素のカスタマイズ)
 11. [readonly属性の使用](#readonly属性の使用)
-12. [モーダルのタイトルセクション](#モーダルのタイトルセクション)
+12. [モーダルの実装方法](#モーダルの実装方法)
+13. [モーダルのタイトルセクション](#モーダルのタイトルセクション)
 
 ## 命名規則
 
@@ -335,6 +336,9 @@ JavaScriptでの状態管理や、CSSでの条件付きスタイリングにデ�
 - [ ] アイコンの配置は`display: grid; place-items: center;`を使用しているか
 - [ ] ネイティブUI要素（datetime-local等）のカスタマイズが必要な場合は適切に対応しているか
 - [ ] `readonly`属性と`disabled`属性の使い分けが適切か
+- [ ] モーダルを使用する場合はTurbo Frameと連携しているか
+- [ ] モーダルの開閉は`data-modal-open`属性で制御しているか
+- [ ] モーダルを閉じる際にTurbo Frameの内容をクリアしているか
 
 ## フォームフィールドの入力グループパターン
 
@@ -458,7 +462,164 @@ input.c-form-field__input type="text" value="1234-5678-9000" readonly="readonly"
 - `disabled`とは異なり、フォーム送信時に値が送信される
 - 視覚的には`disabled`と同様のスタイルを適用
 
-## モーダルのタイトルセクション
+## モーダルの実装方法
+
+### モーダルの基本構造
+
+モーダルは`c-modal`コンポーネントを使用し、Turbo Frameと連携して動作します。
+
+**共通モーダルパーシャル（`app/views/admin_area/shared/_modal.html.slim`）:**
+```slim
+.c-modal data-modal-id="#{modal_id}"
+  .c-modal__overlay
+  .c-modal__dialog
+    = turbo_frame_tag "modal-frame", class: "c-modal__dialog__frame" do
+      .c-modal__dialog__body
+        | 読み込み中...
+```
+
+**レイアウトへの組み込み:**
+```slim
+/ 共通モーダル
+= render 'admin_area/shared/modal', modal_id: 'common-modal'
+```
+
+**ポイント:**
+- `data-modal-id`でモーダルを識別
+- `data-modal-open`属性で開閉状態を管理（JavaScriptで制御）
+- Turbo Frameを使用してコンテンツを動的に読み込む
+
+### モーダルを開く方法
+
+リンクに`data: { turbo_frame: 'modal-frame' }`を指定することで、Turbo Frame経由でモーダルを開きます。
+
+**マークアップ:**
+```slim
+= link_to edit_admin_area_user_path(@user), class: "p-user-detail__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
+  = render 'shared/icons/icon-edit'
+  | 編集する
+```
+
+**モーダルコンテンツ（`edit.html.slim`）:**
+```slim
+= turbo_frame_tag "modal-frame" do
+  .c-modal__dialog__header
+    .c-modal__dialog__header__subtitle = @user.user_profile&.name
+    .c-modal__dialog__header__title アカウントの編集
+    = link_to "#", class: "c-modal__dialog__header__close", data: { action: "close-modal" } do
+      = render 'shared/icons/icon-close'
+  .c-modal__dialog__body
+    = form_with model: [:admin_area, @user], url: admin_area_user_path(@user), method: :patch, local: true, data: { turbo_frame: '_top' }, html: { id: "edit_user_#{@user.id}" } do |f|
+      / フォーム内容
+  .c-modal__dialog__footer
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--cancel type="button" data-action="close-modal" キャンセル
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--save type="submit" form="edit_user_#{@user.id}" data-shortcut="⌘+S" 保存
+```
+
+**ポイント:**
+- Turbo FrameのIDは`modal-frame`で統一
+- フォーム送信時は`data: { turbo_frame: '_top' }`でページ全体を更新
+- 閉じるボタンには`data-action="close-modal"`を指定
+
+### モーダルのスタイル
+
+**基本構造:**
+```scss
+.c-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: none;
+
+  &[data-modal-open="true"] {
+    display: grid;
+  }
+}
+```
+
+**オーバーレイ:**
+```scss
+&__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+```
+
+**ダイアログ:**
+```scss
+&__dialog {
+  position: relative;
+  z-index: 1;
+  margin: auto;
+  background-color: var(--color-background);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+}
+```
+
+**ポイント:**
+- `display: none`と`display: grid`で開閉を制御
+- オーバーレイは`backdrop-filter`でぼかし効果を追加
+- ダイアログは`grid-template-rows: auto 1fr auto`でヘッダー、ボディ、フッターを配置
+- レスポンシブ対応（`width: 90%`、`max-width: 600px`）
+
+### JavaScriptの実装
+
+モーダルの開閉はJavaScriptで制御します。
+
+**開く処理:**
+```typescript
+function openModal(modalId: string) {
+  const modal = document.querySelector(`[data-modal-id="${modalId}"]`) as HTMLElement;
+  if (modal) {
+    modal.setAttribute("data-modal-open", "true");
+    document.body.style.overflow = "hidden";
+  }
+}
+```
+
+**閉じる処理:**
+```typescript
+function closeModal(modalId: string) {
+  const modal = document.querySelector(`[data-modal-id="${modalId}"]`) as HTMLElement;
+  if (modal) {
+    modal.setAttribute("data-modal-open", "false");
+    document.body.style.overflow = "";
+    // Turbo Frameをクリア
+    const frame = modal.querySelector("turbo-frame#modal-frame") as HTMLElement;
+    if (frame) {
+      frame.innerHTML = "";
+    }
+  }
+}
+```
+
+**イベントハンドラー:**
+- 閉じるボタン: `[data-action='close-modal']`
+- オーバーレイクリック: `.c-modal__overlay`
+- キーボードショートカット（⌘+S）: `button[data-shortcut="⌘+S"]`
+- Turbo Frameロード時: `turbo:frame-load`イベントで自動的に開く
+
+**ポイント:**
+- モーダル開閉時に`body`の`overflow`を制御してスクロールを無効化
+- 閉じる際にTurbo Frameの内容をクリア
+- Turbo Frameがロードされたときに自動的にモーダルを開く
+
+### モーダルのタイトルセクション
 
 ### タイトルとサブタイトルの配置
 
