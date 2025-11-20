@@ -121,33 +121,37 @@
             = link_to new_admin_area_user_contact_address_path(@user), class: "p-user-detail__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
               = render 'shared/icons/icon-edit'
               | 作成する
-        .c-info
-          .c-info__item
-            .c-info__item__label = ContactAddress.human_attribute_name(:zip_code)
-            .c-info__item__value = @user&.contact_address&.zip_code
-          .c-info__item
-            .c-info__item__label = ContactAddress.human_attribute_name(:prefecture)
-            .c-info__item__value = @user&.contact_address&.prefecture&.name
-          .c-info__item
-            .c-info__item__label = ContactAddress.human_attribute_name(:city)
-            .c-info__item__value = @user&.contact_address&.city
-          .c-info__item
-            .c-info__item__label = ContactAddress.human_attribute_name(:street)
-            .c-info__item__value = @user&.contact_address&.street
-          .c-info__item
-            .c-info__item__label = ContactAddress.human_attribute_name(:building)
-            .c-info__item__value = @user&.contact_address&.building
-          .c-info__item
-            .c-info__item__label = ContactAddress.human_attribute_name(:phone_number)
-            .c-info__item__value = @user&.contact_address&.phone_number
-          .c-info__item
-            .c-info__item__label 国
-            .c-info__item__value
-              - if @user&.contact_address&.country_code.present?
-                - country = ISO3166::Country[@user.contact_address.country_code]
-                = country&.translations&.dig('ja') || country&.name || @user.contact_address.country_code
-              - else
-                | -
+        - if @user.contact_address.present?
+          .c-info
+            .c-info__item
+              .c-info__item__label = ContactAddress.human_attribute_name(:zip_code)
+              .c-info__item__value = @user&.contact_address&.zip_code
+            .c-info__item
+              .c-info__item__label = ContactAddress.human_attribute_name(:prefecture)
+              .c-info__item__value = @user&.contact_address&.prefecture&.name
+            .c-info__item
+              .c-info__item__label = ContactAddress.human_attribute_name(:city)
+              .c-info__item__value = @user&.contact_address&.city
+            .c-info__item
+              .c-info__item__label = ContactAddress.human_attribute_name(:street)
+              .c-info__item__value = @user&.contact_address&.street
+            .c-info__item
+              .c-info__item__label = ContactAddress.human_attribute_name(:building)
+              .c-info__item__value = @user&.contact_address&.building
+            .c-info__item
+              .c-info__item__label = ContactAddress.human_attribute_name(:phone_number)
+              .c-info__item__value = @user&.contact_address&.phone_number
+            .c-info__item
+              .c-info__item__label 国
+              .c-info__item__value
+                - if @user&.contact_address&.country_code.present?
+                  - country = ISO3166::Country[@user.contact_address.country_code]
+                  = country&.translations&.dig('ja') || country&.name || @user.contact_address.country_code
+                - else
+                  | -
+        - else
+          .c-empty
+            .c-empty__text 配送先住所が設定されていません
       .p-user-detail__content__section
         .c-user-detail-activity
           .c-user-detail-activity__label アクティビティ

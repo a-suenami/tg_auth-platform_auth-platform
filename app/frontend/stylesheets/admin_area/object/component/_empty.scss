@@ -1,0 +1,17 @@
+// 空状態表示コンポーネント
+.c-empty {
+  background-color: var(--color-background-gray);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  padding: 24px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__text {
+    font-size: 14px;
+    color: var(--color-text-inactive);
+    text-align: center;
+  }
+}
+
