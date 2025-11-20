@@ -18,6 +18,7 @@
 11. [readonly属性の使用](#readonly属性の使用)
 12. [モーダルの実装方法](#モーダルの実装方法)
 13. [モーダルのタイトルセクション](#モーダルのタイトルセクション)
+14. [Enumerizeの表示方法](#enumerizeの表示方法)
 
 ## 命名規則
 
@@ -333,6 +334,10 @@ JavaScriptでの状態管理や、CSSでの条件付きスタイリングにデ�
 - [ ] パーシャル化できる部分は分離されているか
 - [ ] レイアウトとコンポーネントが適切に分離されているか
 - [ ] 複数の入力フィールドを統合する場合は`input-group`パターンを使用しているか
+- [ ] 関連する2つのフィールドを横並びに配置する場合は`label-group`と`input-group`を使用しているか
+- [ ] enumerizeの値を表示する場合は`.text`メソッドを使用しているか
+- [ ] Turbo Frame内の動的に追加された要素にも対応するため、イベント委譲を使用しているか
+- [ ] キャンセルボタンには`--color-text-inactive`を使用しているか
 - [ ] アイコンの配置は`display: grid; place-items: center;`を使用しているか
 - [ ] ネイティブUI要素（datetime-local等）のカスタマイズが必要な場合は適切に対応しているか
 - [ ] `readonly`属性と`disabled`属性の使い分けが適切か
@@ -364,6 +369,48 @@ JavaScriptでの状態管理や、CSSでの条件付きスタイリングにデ�
 - 内部の各入力フィールドは`border: none`でボーダーを削除
 - `overflow: hidden`で角丸を維持
 - 区切り線は`border-left`で表現
+
+### 関連フィールドの横並び配置
+
+姓と名、セイとメイのように、関連する2つのフィールドを横並びに配置する場合、`c-form-field__label-group`と`c-form-field__input-group`を使用します。
+
+**マークアップ:**
+```slim
+.c-form-field
+  .c-form-field__label-group
+    label.c-form-field__label = UserProfile.human_attribute_name(:last_name)
+    label.c-form-field__label = UserProfile.human_attribute_name(:first_name)
+  .c-form-field__input-group
+    .c-form-field__input-group__input
+      = f.text_field :last_name, class: 'c-form-field__input'
+    .c-form-field__input-group__input
+      = f.text_field :first_name, class: 'c-form-field__input'
+```
+
+**スタイル:**
+```scss
+.c-form-field {
+  &__label-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  &__input-group {
+    &__input {
+      &:not(:first-child) {
+        border-left: 1px solid var(--color-border);
+      }
+    }
+  }
+}
+```
+
+**ポイント:**
+- `label-group`でラベルを2列のグリッドで横並びに配置
+- `input-group`で入力フィールドを横並びに配置
+- 2つ目以降の入力フィールドに`border-left`で分割線を追加
+- 各入力フィールドは`flex: 1`で均等に配置される
 
 ## アイコンの配置とスタイリング
 
@@ -614,10 +661,32 @@ function closeModal(modalId: string) {
 - キーボードショートカット（⌘+S）: `button[data-shortcut="⌘+S"]`
 - Turbo Frameロード時: `turbo:frame-load`イベントで自動的に開く
 
+**イベント委譲の使用:**
+Turbo Frame内で動的に追加された要素にも対応するため、イベント委譲を使用します。
+
+```typescript
+// 閉じるボタン（イベント委譲を使用してTurbo Frame内のボタンにも対応）
+document.addEventListener("click", (e) => {
+  const target = e.target as HTMLElement;
+  const button = target.closest("[data-action='close-modal']") as HTMLElement;
+  if (button) {
+    e.preventDefault();
+    const modal = button.closest(".c-modal") as HTMLElement;
+    if (modal) {
+      const modalId = modal.getAttribute("data-modal-id");
+      if (modalId) {
+        closeModal(modalId);
+      }
+    }
+  }
+});
+```
+
 **ポイント:**
 - モーダル開閉時に`body`の`overflow`を制御してスクロールを無効化
 - 閉じる際にTurbo Frameの内容をクリア
 - Turbo Frameがロードされたときに自動的にモーダルを開く
+- Turbo Frame内の動的に追加された要素にも対応するため、イベント委譲を使用する
 
 ### モーダルのタイトルセクション
 
@@ -648,6 +717,65 @@ function closeModal(modalId: string) {
 - `gap`を適切に調整して視覚的な階層を明確化
 - サブタイトルも`color-text-heading`を使用して重要性を表現
 - タイトルはデフォルトの色を使用し、過度な色指定を避ける
+
+### モーダルのフッターボタン
+
+モーダルのフッターには、キャンセルボタンと保存ボタンが配置されます。
+
+**スタイル:**
+```scss
+&__footer {
+  &__button {
+    &--cancel {
+      background-color: var(--color-background);
+      color: var(--color-text-inactive);
+      border-color: var(--color-border);
+
+      &:hover {
+        background-color: var(--color-background-gray);
+      }
+    }
+
+    &--save {
+      background-color: var(--color-primary);
+      color: var(--color-primary-contrast);
+      border-color: var(--color-primary);
+    }
+  }
+}
+```
+
+**ポイント:**
+- キャンセルボタンには`--color-text-inactive`を使用して視覚的に控えめにする
+- 保存ボタンは`--color-primary`を使用して主要なアクションであることを示す
+- 両方のボタンに適切なホバー効果を追加
+
+## Enumerizeの表示方法
+
+### 翻訳された値の表示
+
+enumerizeを使用している場合、`.text`メソッドを使用して翻訳された値を表示します。
+
+**マークアップ:**
+```slim
+.c-info__item__value = @user&.user_profile&.gender&.text
+```
+
+**ロケールファイルの設定:**
+```yaml
+ja:
+  enumerize:
+    user_profile:
+      gender:
+        male: 男性
+        female: 女性
+        other: その他
+```
+
+**ポイント:**
+- enumerizeの値は`.text`メソッドで翻訳された値を取得できる
+- ロケールファイルで`enumerize.[model_name].[attribute].[value]`の形式で翻訳を定義する
+- 属性名の翻訳は`activerecord.attributes.[model_name].[attribute]`で定義する
 
 ## 参考
 
