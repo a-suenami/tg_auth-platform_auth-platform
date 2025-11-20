@@ -2,7 +2,7 @@
   .l-page-content__navigation
     = link_to admin_area_users_path, class: "l-page-content__navigation__item #{'is-active' if controller_name == 'users'}" do
       span.l-page-content__navigation__item__text すべてのユーザー
-      span.l-page-content__navigation__item__count 999
+      span.l-page-content__navigation__item__count = User.count
     - unless Rails.env.production?
       = link_to '#', class: "l-page-content__navigation__item" do
         span.l-page-content__navigation__item__text 分析
