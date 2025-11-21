@@ -98,6 +98,18 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_email_templates_on_tenant_id"
   end
 
+  create_table "komoju_record_accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "remote_id", null: false, comment: "Komoju merchant ID"
+    t.string "display_name", null: false, comment: "Account identification name for admin"
+    t.string "secret_key_encrypted", null: false, comment: "Encrypted Komoju secret key"
+    t.string "webhook_secret_encrypted", null: false, comment: "Encrypted webhook signature secret"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["remote_id"], name: "idx_komoju_record_accounts_remote_id_uniq", unique: true
+    t.index ["tenant_id"], name: "index_komoju_record_accounts_on_tenant_id"
+  end
+
   create_table "komoju_record_payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
@@ -801,6 +813,18 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_templates_on_tenant_id"
   end
 
+  create_table "tenant_komoju_accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "komoju_account_id", null: false
+    t.boolean "enabled", default: true, null: false, comment: "Whether Komoju payment is enabled for this tenant"
+    t.integer "default_expiry_days", default: 7, null: false, comment: "Default payment expiration in days for konbini"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["komoju_account_id"], name: "index_tenant_komoju_accounts_on_komoju_account_id"
+    t.index ["tenant_id", "komoju_account_id"], name: "index_komoju_account_per_tenant_unique", unique: true
+    t.index ["tenant_id"], name: "index_tenant_komoju_accounts_on_tenant_id", unique: true
+  end
+
   create_table "tenant_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "google_cloud_service_account"
@@ -1009,6 +1033,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "delivery_addresses", "tenants", name: "fk_delivery_addresses_tenants"
   add_foreign_key "delivery_addresses", "users", name: "fk_delivery_addresses_users"
   add_foreign_key "email_templates", "tenants", name: "fk_email_templates_tenants"
+  add_foreign_key "komoju_record_accounts", "tenants", name: "fk_komoju_record_accounts_tenants"
   add_foreign_key "komoju_record_payments", "tenants", name: "fk_komoju_payments_tenants"
   add_foreign_key "komoju_record_payments", "users", name: "fk_komoju_payments_users"
   add_foreign_key "login_spa_applications", "tenants", name: "fk_login_spa_applications_tenants"
@@ -1096,6 +1121,8 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "template_mails", "templates", name: "fk_template_mails_templates"
   add_foreign_key "template_mails", "tenants", name: "fk_template_mails_tenants"
   add_foreign_key "templates", "tenants", name: "fk_templates_tenants"
+  add_foreign_key "tenant_komoju_accounts", "komoju_record_accounts", column: "komoju_account_id", name: "fk_tenant_komoju_accounts_komoju_accounts"
+  add_foreign_key "tenant_komoju_accounts", "tenants", name: "fk_tenant_komoju_accounts__tenants"
   add_foreign_key "tenant_stripe_accounts", "stripe_record_accounts", column: "stripe_account_id", name: "fk_tenant_stripe_accounts_stripe_accounts"
   add_foreign_key "tenant_stripe_accounts", "tenants", name: "fk_tenant_stripe_accounts__tenants"
   add_foreign_key "user_auto_tagging_rule_blocks", "tenants"
