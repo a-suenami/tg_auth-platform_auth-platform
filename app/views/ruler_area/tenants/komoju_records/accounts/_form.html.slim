@@ -1,0 +1,36 @@
+= form_with(model: [:ruler_area, @tenant, :komoju_records, @komoju_account], url: @komoju_account.persisted? ? ruler_area_tenant_komoju_records_account_path(@tenant, @komoju_account) : ruler_area_tenant_komoju_records_accounts_path(@tenant), local: true) do |form|
+  - if @komoju_account.errors.any?
+    #error_explanation.uk-alert.uk-alert-danger
+      h2 = "#{pluralize(@komoju_account.errors.count, 'error')} prohibited this komoju account from being saved:"
+      ul
+        - @komoju_account.errors.full_messages.each do |message|
+          li = message
+
+  h3 Komoju Account Information
+
+  .uk-margin
+    = form.label :display_name, 'Display Name', class: 'uk-form-label'
+    .uk-form-controls
+      = form.text_field :display_name, class: 'uk-input', placeholder: 'My Komoju Account', required: true
+      .uk-text-meta A friendly name to identify this Komoju account
+
+  .uk-margin
+    = form.label :remote_id, 'Merchant ID', class: 'uk-form-label'
+    .uk-form-controls
+      = form.text_field :remote_id, class: 'uk-input', placeholder: 'merchant_abc123', required: true
+      .uk-text-meta The Komoju merchant ID from your Komoju dashboard
+
+  .uk-margin
+    = form.label :secret_key, 'Secret Key', class: 'uk-form-label'
+    .uk-form-controls
+      = form.password_field :secret_key, class: 'uk-input', placeholder: 'sk_test_...', required: !@komoju_account.persisted?
+      .uk-text-meta The secret API key from Komoju (starts with sk_). Leave blank to keep existing key.
+
+  .uk-margin
+    = form.label :webhook_secret, 'Webhook Secret', class: 'uk-form-label'
+    .uk-form-controls
+      = form.password_field :webhook_secret, class: 'uk-input', placeholder: 'wh_secret_...', required: !@komoju_account.persisted?
+      .uk-text-meta The webhook signature secret from Komoju. Leave blank to keep existing secret.
+
+  .uk-margin
+    = form.submit class: 'uk-button uk-button-primary'

@@ -1,0 +1,25 @@
+h1 Komoju Record Account Details
+
+.uk-card.uk-card-default.uk-card-body
+  h3 Account Information
+  dl.uk-description-list.uk-description-list-divider
+    dt Display Name
+    dd = @komoju_account.display_name
+    dt Merchant ID (Remote ID)
+    dd = @komoju_account.remote_id
+    dt Secret Key
+    dd
+      code = '*' * 20 + @komoju_account.secret_key[-8..-1]
+      .uk-text-meta Encrypted in database, showing last 8 characters only
+    dt Webhook Secret
+    dd
+      code = '*' * 20 + @komoju_account.webhook_secret[-8..-1]
+      .uk-text-meta Encrypted in database, showing last 8 characters only
+    dt Created At
+    dd = @komoju_account.created_at.strftime('%Y-%m-%d %H:%M:%S')
+    dt Updated At
+    dd = @komoju_account.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+
+.uk-margin
+  = link_to 'Edit', edit_ruler_area_tenant_komoju_records_account_path(@tenant, @komoju_account), class: 'uk-button uk-button-secondary uk-margin-small-right'
+  = link_to 'Back', ruler_area_tenant_komoju_records_accounts_path(@tenant), class: 'uk-button uk-button-secondary'

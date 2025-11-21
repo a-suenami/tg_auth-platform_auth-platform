@@ -77,6 +77,18 @@ module Exceptions
       end
     end
 
+    class StoreMissing < BaseError
+      sig { returns(Symbol) }
+      def code
+        :store_missing
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.payment.store_missing'
+      end
+    end
+
     class CardFingerprintMissing < BaseError
       sig { returns(Symbol) }
       def code

@@ -55,6 +55,12 @@ class SettingsConfigOptions < ::Config::Options
   def encryptor=(value); end
 
   sig { returns(T.untyped) }
+  def komoju; end
+
+  sig { params(value: T.untyped).returns(T.untyped) }
+  def komoju=(value); end
+
+  sig { returns(T.untyped) }
   def redis; end
 
   sig { params(value: T.untyped).returns(T.untyped) }

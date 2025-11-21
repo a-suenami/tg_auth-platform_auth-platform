@@ -352,6 +352,9 @@ class Tenant
     sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
     def build_login_spa_application(*args, &blk); end
 
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::KomojuAccount) }
+    def build_tenant_komoju_account(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::TenantSetting) }
     def build_tenant_setting(*args, &blk); end
 
@@ -363,6 +366,12 @@ class Tenant
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
     def create_login_spa_application!(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::KomojuAccount) }
+    def create_tenant_komoju_account(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::KomojuAccount) }
+    def create_tenant_komoju_account!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::TenantSetting) }
     def create_tenant_setting(*args, &blk); end
@@ -469,6 +478,9 @@ class Tenant
     sig { returns(T.nilable(::LoginSpaApplication)) }
     def reload_login_spa_application; end
 
+    sig { returns(T.nilable(::Tenant::KomojuAccount)) }
+    def reload_tenant_komoju_account; end
+
     sig { returns(T.nilable(::TenantSetting)) }
     def reload_tenant_setting; end
 
@@ -477,6 +489,9 @@ class Tenant
 
     sig { void }
     def reset_login_spa_application; end
+
+    sig { void }
+    def reset_tenant_komoju_account; end
 
     sig { void }
     def reset_tenant_setting; end
@@ -497,6 +512,12 @@ class Tenant
 
     sig { params(value: T::Enumerable[::ShopifyRecord::MultipassStore]).void }
     def shopify_record_multipass_stores=(value); end
+
+    sig { returns(T.nilable(::Tenant::KomojuAccount)) }
+    def tenant_komoju_account; end
+
+    sig { params(value: T.nilable(::Tenant::KomojuAccount)).void }
+    def tenant_komoju_account=(value); end
 
     sig { returns(T.nilable(::TenantSetting)) }
     def tenant_setting; end

@@ -12,6 +12,7 @@ class Tenant < ApplicationRecord
   has_one :tenant_setting, dependent: :destroy
   has_many :shopify_record_multipass_stores, class_name: 'ShopifyRecord::MultipassStore', dependent: :destroy
   has_one :tenant_stripe_account, class_name: 'Tenant::StripeAccount'
+  has_one :tenant_komoju_account, class_name: 'Tenant::KomojuAccount'
 
   # Membership
   has_many :memberships, dependent: :destroy

@@ -170,6 +170,8 @@ gem 'sorbet-runtime', '~> 0.6.12466'
 gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.17.3'
 # Stripe Client
 gem 'stripe', '~> 15.4.0'
+# Komoju Client (Japanese payment gateway)
+gem 'komoju'
 # Mangrove provides type utility to use with Sorbet
 gem 'mangrove', '~> 0.37.3'
 

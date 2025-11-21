@@ -416,8 +416,17 @@ class KomojuRecord::Payment
   end
 
   module GeneratedAssociationMethods
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Transaction) }
+    def build_payment_transaction(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def build_user(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Transaction) }
+    def create_payment_transaction(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Payment::Transaction) }
+    def create_payment_transaction!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user(*args, &blk); end
@@ -425,8 +434,20 @@ class KomojuRecord::Payment
     sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
     def create_user!(*args, &blk); end
 
+    sig { returns(T.nilable(::Payment::Transaction)) }
+    def payment_transaction; end
+
+    sig { params(value: T.nilable(::Payment::Transaction)).void }
+    def payment_transaction=(value); end
+
+    sig { returns(T.nilable(::Payment::Transaction)) }
+    def reload_payment_transaction; end
+
     sig { returns(T.nilable(::User)) }
     def reload_user; end
+
+    sig { void }
+    def reset_payment_transaction; end
 
     sig { void }
     def reset_user; end

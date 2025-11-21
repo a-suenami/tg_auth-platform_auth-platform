@@ -1,0 +1,41 @@
+h1 Tenant Komoju Account
+
+.uk-grid.uk-grid-small
+  .uk-width-1-2
+    .uk-card.uk-card-default.uk-card-body
+      h3.uk-card-title Account Information
+
+      .uk-margin
+        strong Komoju Account:
+        br
+        = @tenant_komoju_account.display_name
+        br
+        .uk-text-meta
+          | Merchant ID:
+          = @tenant_komoju_account.merchant_id
+
+      .uk-margin
+        strong Status:
+        br
+        = @tenant_komoju_account.enabled? ? 'Enabled ✓' : 'Disabled ✗'
+
+      .uk-margin
+        strong Default Payment Expiry:
+        br
+        = "#{@tenant_komoju_account.default_expiry_days} days"
+        br
+        .uk-text-meta For konbini payment expiration
+
+      .uk-margin
+        strong Created at:
+        br
+        = @tenant_komoju_account.created_at.strftime('%Y-%m-%d %H:%M:%S')
+
+      .uk-margin
+        strong Updated at:
+        br
+        = @tenant_komoju_account.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+
+.uk-margin
+  = link_to 'Edit', edit_ruler_area_tenant_tenant_komoju_account_path(@tenant), class: 'uk-button uk-button-primary uk-margin-small-right'
+  = link_to 'Back', ruler_area_tenant_path(@tenant), class: 'uk-button uk-button-secondary'

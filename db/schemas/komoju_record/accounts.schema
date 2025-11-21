@@ -1,0 +1,17 @@
+# ==============================================================================
+# db/schemas/komoju_record/accounts.schema
+# ==============================================================================
+create_table :komoju_record_accounts, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_komoju_record_accounts_tenants }
+
+  t.string :remote_id, null: false, comment: 'Komoju merchant ID'
+  t.string :display_name, null: false, comment: 'Account identification name for admin'
+
+  # Encrypted credentials
+  t.string :secret_key_encrypted, null: false, comment: 'Encrypted Komoju secret key'
+  t.string :webhook_secret_encrypted, null: false, comment: 'Encrypted webhook signature secret'
+
+  t.timestamps null: false
+
+  t.index :remote_id, name: :idx_komoju_record_accounts_remote_id_uniq, using: :btree, unique: true
+end
