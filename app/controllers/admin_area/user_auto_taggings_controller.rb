@@ -60,22 +60,20 @@ module AdminArea
           :id,
           :position,
           :_destroy,
-          rules_attributes: [:id, :condition_type, :position, :_destroy, :config]
-        ]
+          rules_attributes: [:id, :condition_type, :position, :_destroy, :config],
+        ],
       ).tap do |whitelisted|
         # Parse config JSON strings to hashes
-        if whitelisted[:rule_blocks_attributes]
-          whitelisted[:rule_blocks_attributes].each do |_idx, block_attrs|
-            next unless block_attrs[:rules_attributes]
+        whitelisted[:rule_blocks_attributes]&.each_value do |block_attrs|
+          next unless block_attrs[:rules_attributes]
 
-            block_attrs[:rules_attributes].each do |_rule_idx, rule_attrs|
-              next unless rule_attrs[:config].is_a?(String)
+          block_attrs[:rules_attributes].each_value do |rule_attrs|
+            next unless rule_attrs[:config].is_a?(String)
 
-              begin
-                rule_attrs[:config] = JSON.parse(rule_attrs[:config])
-              rescue JSON::ParserError => e
-                rule_attrs[:config] = nil
-              end
+            begin
+              rule_attrs[:config] = JSON.parse(rule_attrs[:config])
+            rescue JSON::ParserError
+              rule_attrs[:config] = nil
             end
           end
         end
