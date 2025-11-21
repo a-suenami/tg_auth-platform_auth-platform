@@ -30,18 +30,23 @@ class KomojuRecord
   class UnauthorizedError < KomojuError; end
   class UnknownError < KomojuError; end
 
-  sig { returns(Client) }
-  def self.client
-    @client ||= T.let(Client.new, T.nilable(Client))
-    @client
+  sig { params(tenant: Tenant).returns(Client) }
+  def self.client(tenant:)
+    # 別テナントの API Key がセットされるのを防ぐために都度初期化する
+    @client = T.let(Client.new(tenant: tenant), T.nilable(Client))
+    T.must(@client)
   end
 
   class Client
     extend T::Sig
 
-    sig { void }
-    def initialize
-      api_key = Settings.komoju.secret_key
+    sig { params(tenant: Tenant).void }
+    def initialize(tenant:)
+      unless tenant.tenant_komoju_account&.enabled?
+        raise KomojuError.new, "Komoju account not configured or disabled for tenant: #{tenant.id}"
+      end
+
+      api_key = T.must(tenant.tenant_komoju_account).secret_key
       @komoju_client = T.let(Komoju.connect(api_key), Komoju::Client)
     end
 

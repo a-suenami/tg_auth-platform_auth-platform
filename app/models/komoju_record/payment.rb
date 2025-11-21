@@ -29,6 +29,8 @@ class KomojuRecord::Payment < ApplicationRecord
     ).returns([T.nilable(KomojuRecord::Payment), T.nilable(KomojuRecord::KomojuError)])
   }
   def self.create_with_konbini!(amount:, currency:, store:, user:, expiry_days: nil)
+    tenant = Tenant.current
+
     params = KomojuRecord::Client::Payments::CreateParams.new(
       external_order_num: SecureRandom.uuid,
       amount: amount,
@@ -37,33 +39,34 @@ class KomojuRecord::Payment < ApplicationRecord
         store: store.serialize,
         email: T.must(user.email),
         phone: user.phone_number,
-        expiry_days: expiry_days || 3,
+        expiry_days: expiry_days || T.must(T.must(tenant).tenant_komoju_account).default_expiry_days,
         given_name: user.user_profile&.first_name,
         family_name: user.user_profile&.last_name,
       ),
       capture: false,
     )
 
-    settle(params, user: user)
+    settle(params, user: user, tenant: T.must(tenant))
   end
 
   sig {
     params(
       params: KomojuRecord::Client::Payments::CreateParams,
       user: User,
+      tenant: Tenant,
     ).returns([T.nilable(KomojuRecord::Payment), T.nilable(KomojuRecord::KomojuError)])
   }
-  def self.settle(params, user:)
+  def self.settle(params, user:, tenant:)
     komoju_error = T.let(nil, T.nilable(KomojuRecord::KomojuError))
 
     response = begin
-      KomojuRecord.client.payments.create(params)
+      KomojuRecord.client(tenant: tenant).payments.create(params)
     rescue KomojuRecord::KomojuError => e
       komoju_error = e
 
       # Try to fetch by external_order_num
       begin
-        list_response = KomojuRecord.client.payments.list(external_order_num: params.external_order_num)
+        list_response = KomojuRecord.client(tenant: tenant).payments.list(external_order_num: params.external_order_num)
         list_response['data']&.first || {}
       rescue StandardError
         {}

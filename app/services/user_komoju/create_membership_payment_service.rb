@@ -70,13 +70,12 @@ module UserKomoju
       # Convert store string to KonbiniStore enum
       store_enum = KomojuRecord::Client::Payments::KonbiniStore.deserialize(store)
 
-      # Create payment via Komoju API
+      # Create payment via Komoju API (uses tenant's default_expiry_days)
       KomojuRecord::Payment.create_with_konbini!(
         amount: amount,
         currency: 'JPY',
         store: store_enum,
         user: user,
-        expiry_days: 30,
       )
     end
 
@@ -129,10 +128,11 @@ module UserKomoju
 
     def cancel_komoju_payment(remote_id)
       # Best effort cancellation - don't fail if Komoju API is down
-      KomojuRecord.client.payments.cancel(remote_id)
-      Rails.logger.info "Cancelled Komoju payment: #{remote_id}"
+      tenant = Tenant.current
+      KomojuRecord.client(tenant: tenant).payments.cancel(remote_id)
+      Rails.logger.info "Cancelled Komoju payment: #{remote_id} for tenant: #{tenant.id}"
     rescue => e
-      Rails.logger.error "Failed to cancel Komoju payment: #{remote_id}, error: #{e.message}"
+      Rails.logger.error "Failed to cancel Komoju payment: #{remote_id} for tenant: #{tenant&.id}, error: #{e.message}"
       # Don't re-raise - service already failed, this is just cleanup
     end
   end

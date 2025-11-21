@@ -50,6 +50,3 @@ encryptor:
     secret:
     iterations:
     cipher:
-komoju:
-  secret_key: <%= ENV['KOMOJU_SECRET_KEY'] %>
-  webhook_secret: <%= ENV['KOMOJU_WEBHOOK_SECRET'] %>
