@@ -39,14 +39,14 @@ class KomojuRecord::Payment < ApplicationRecord
         store: store.serialize,
         email: T.must(user.email),
         phone: user.phone_number,
-        expiry_days: expiry_days || T.must(tenant.tenant_komoju_account).default_expiry_days,
+        expiry_days: expiry_days || T.must(T.must(tenant).tenant_komoju_account).default_expiry_days,
         given_name: user.user_profile&.first_name,
         family_name: user.user_profile&.last_name,
       ),
       capture: false,
     )
 
-    settle(params, user: user, tenant: tenant)
+    settle(params, user: user, tenant: T.must(tenant))
   end
 
   sig {
