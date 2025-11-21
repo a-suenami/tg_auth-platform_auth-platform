@@ -24,20 +24,19 @@
         thead
           tr
             th 名前
-            th 作成者
+            th 連携設定
+            th 説明
         tbody
           - @user_auto_taggings.each do |rule|
             tr
               td
                 = link_to rule.name, edit_admin_area_user_auto_tagging_path(rule.id)
               td
-                = rule.created_by
+                - if rule.shareable
+                  span.uk-label 連携タグとして設定中
+                - else
+                  | -
+              td
+                = rule.description.present? ? truncate(rule.description, length: 100) : '-'
 
-    .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-top
-      .uk-text-small.uk-text-muted
-        | #{@pagy.from}-#{@pagy.to} / #{@pagy.total_count}
-      .uk-flex.uk-flex-middle
-        button.uk-button.uk-button-default.uk-button-small disabled=(@pagy.prev.nil?)
-          | < 前のページ
-        button.uk-button.uk-button-default.uk-button-small.uk-margin-left disabled=(@pagy.next.nil?)
-          | 次のページ >
+    == pagy_nav(@pagy)

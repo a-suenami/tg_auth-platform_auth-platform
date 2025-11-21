@@ -1,0 +1,79 @@
+= form_with model: [:admin_area, user_auto_tagging], class: 'uk-form-stacked', data: { controller: 'user-auto-tagging-form', 'initial-block-count': user_auto_tagging.rule_blocks.size } do |f|
+  / Section 1: 基本情報
+  h3.uk-margin-bottom 基本情報
+
+  .uk-margin
+    = f.label :name, '名前', class: 'uk-form-label'
+    .uk-form-controls
+      = f.text_field :name, placeholder: 'ルール名を入力...', required: true, class: 'uk-input'
+      - if user_auto_tagging.errors[:name].any?
+        .uk-text-danger.uk-text-small = user_auto_tagging.errors[:name].first
+
+  .uk-margin
+    = f.label :description, '説明', class: 'uk-form-label'
+    .uk-form-controls
+      = f.text_area :description, placeholder: 'ルールの説明を入力...', rows: 3, class: 'uk-textarea'
+
+  .uk-margin
+    label.uk-form-label
+      = f.check_box :enabled, class: 'uk-checkbox'
+      | &nbsp;有効にする
+
+  .uk-margin
+    label.uk-form-label
+      = f.check_box :shareable, class: 'uk-checkbox'
+      | &nbsp;連携タグ設定
+
+  hr.uk-margin-medium-top.uk-margin-medium-bottom
+
+  / Section 2: 期間設定
+  h3.uk-margin-bottom 期間設定
+
+  = f.fields_for :schedule, (user_auto_tagging.schedule || user_auto_tagging.build_schedule) do |schedule_form|
+    .uk-margin
+      .uk-text-small.uk-text-muted 開始日時と終了日時を両方指定するか、両方とも空にしてください（無期限）
+
+    .uk-grid-small data-uk-grid=""
+      .uk-width-1-2
+        = schedule_form.label :start_at, '開始日時', class: 'uk-form-label'
+        = schedule_form.datetime_local_field :start_at, class: 'uk-input'
+      .uk-width-1-2
+        = schedule_form.label :end_at, '終了日時', class: 'uk-form-label'
+        = schedule_form.datetime_local_field :end_at, class: 'uk-input'
+
+  hr.uk-margin-medium-top.uk-margin-medium-bottom
+
+  / Section 3: 条件設定
+  .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-bottom
+    h3.uk-margin-remove 条件設定
+    button.uk-button.uk-button-primary.uk-button-small type="button" data-action="click->user-auto-tagging-form#addRuleBlock"
+      span uk-icon="plus"
+      | &nbsp;条件ブロックを追加
+
+  .uk-text-small.uk-text-muted.uk-margin-bottom
+    | 条件ブロック内の条件はAND条件、ブロック間はOR条件として評価されます
+
+  div data-user-auto-tagging-form-target="ruleBlocksContainer"
+    = f.fields_for :rule_blocks do |block_form|
+      = render 'admin_area/user_auto_taggings/rule_block_fields', f: block_form
+
+  / Add block button at bottom
+  .uk-margin-top
+    button.uk-button.uk-button-primary.uk-button-small type="button" data-action="click->user-auto-tagging-form#addRuleBlock"
+      span uk-icon="plus"
+      | &nbsp;条件ブロックを追加
+
+  hr.uk-margin-medium-top.uk-margin-medium-bottom
+
+  / Submit Button
+  .uk-margin
+    = f.submit class: 'uk-button uk-button-primary'
+    = link_to 'キャンセル', admin_area_user_auto_taggings_path, class: 'uk-button uk-button-default uk-margin-left'
+
+  / Rule block template (hidden, used by JavaScript)
+  template data-user-auto-tagging-form-target="ruleBlockTemplate"
+    = render 'admin_area/user_auto_taggings/rule_block_fields', f: nil, template: true
+
+  / Rule template (hidden, used by JavaScript)
+  template data-user-auto-tagging-form-target="ruleTemplate"
+    = render 'admin_area/user_auto_taggings/rule_fields', f: nil, template: true

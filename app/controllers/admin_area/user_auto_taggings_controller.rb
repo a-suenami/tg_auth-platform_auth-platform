@@ -1,70 +1,83 @@
-# typed: false
+# typed: true
 
 module AdminArea
   class UserAutoTaggingsController < ApplicationController
-    MockPagination = Struct.new(:page, :total_count, :pages, :items, :from, :to, :prev, :next, keyword_init: true)
-    MockUserAutoTagging = Struct.new(:id, :name, :description, :created_by, :created_at, :updated_by, :updated_at, keyword_init: true)
+    before_action :set_user_auto_tagging, only: [:edit, :update, :destroy]
 
     def index
-      @user_auto_taggings = mock_user_auto_taggings
-      @pagy = mock_pagination
-    end
-
-    def show
+      query = UserAutoTagging.ordered.search_by_name(params[:q])
+      @pagy, @user_auto_taggings = pagy(query, items: 10)
     end
 
     def new
-      @user_auto_tagging = MockUserAutoTagging.new(name: '', description: '')
+      @user_auto_tagging = UserAutoTagging.new
+      @user_auto_tagging.build_schedule
     end
 
     def edit
-      @user_auto_tagging = MockUserAutoTagging.new(
-        id: params[:id],
-        name: "オートタグルール#{params[:id]}",
-        description: 'Mock description',
-      )
     end
 
     def create
-      redirect_to admin_area_user_auto_taggings_path, notice: 'オートタグ設定を保存しました'
+      @user_auto_tagging = UserAutoTagging.new(user_auto_tagging_params)
+      @user_auto_tagging.created_by = current_admin
+
+      if @user_auto_tagging.save
+        redirect_to admin_area_user_auto_taggings_path, notice: 'オートタグ設定を保存しました'
+      else
+        render :new, status: :unprocessable_entity
+      end
     end
 
-
     def update
-      redirect_to admin_area_user_auto_taggings_path, notice: 'オートタグ設定を更新しました'
+      @user_auto_tagging.updated_by = current_admin
+
+      if @user_auto_tagging.update(user_auto_tagging_params)
+        redirect_to admin_area_user_auto_taggings_path, notice: 'オートタグ設定を更新しました'
+      else
+        render :edit, status: :unprocessable_entity
+      end
     end
 
     def destroy
+      @user_auto_tagging.destroy!
       redirect_to admin_area_user_auto_taggings_path, notice: 'オートタグ設定を削除しました', status: :see_other
     end
 
     private
 
-    def mock_user_auto_taggings
-      [
-        { id: 1, name: '三ヶ月以内に Membership Aを購読したユーザー', created_by: 'Yamada TARO' },
-        { id: 2, name: '2025/10/01 00:00 - 2025/10/31 23:59に何かのプランを購読したユーザー', created_by: 'Yamada TARO' },
-        { id: 3, name: '一年間 Membership Aか上を購読しているユーザー', created_by: 'Yamada TARO' },
-        { id: 4, name: 'Membership AかつMembershipB購読しているユーザー', created_by: 'Yamada TARO' },
-        { id: 5, name: 'Membership AもしくはMembership B購読しているユーザー', created_by: 'Yamada TARO' },
-        { id: 6, name: 'e.g. キャンペーンA期間登録', created_by: 'Yamada TARO' },
-        { id: 7, name: 'e.g. Line連携済み', created_by: 'Yamada TARO' },
-        { id: 8, name: 'e.g. Membership A購読 + Line連携済み', created_by: 'Yamada TARO' },
-        { id: 9, name: 'e.g. Annual MembershipA', created_by: 'Yamada TARO' },
-      ].map  { |tag| MockUserAutoTagging.new(**tag) }
+    def set_user_auto_tagging
+      @user_auto_tagging = UserAutoTagging.find(params[:id])
     end
 
-    def mock_pagination
-      MockPagination.new(
-        page: 1,
-        total_count: 999,
-        pages: 20,
-        items: 50,
-        from: 1,
-        to: 50,
-        prev: nil,
-        next: 2,
-      )
+    def user_auto_tagging_params
+      params.require(:user_auto_tagging).permit(
+        :name,
+        :description,
+        :enabled,
+        :shareable,
+        schedule_attributes: [:id, :start_at, :end_at, :_destroy],
+        rule_blocks_attributes: [
+          :id,
+          :position,
+          :_destroy,
+          rules_attributes: [:id, :condition_type, :position, :_destroy, :config],
+        ],
+      ).tap do |whitelisted|
+        # Parse config JSON strings to hashes
+        whitelisted[:rule_blocks_attributes]&.each_value do |block_attrs|
+          next unless block_attrs[:rules_attributes]
+
+          block_attrs[:rules_attributes].each_value do |rule_attrs|
+            next unless rule_attrs[:config].is_a?(String)
+
+            begin
+              rule_attrs[:config] = JSON.parse(rule_attrs[:config])
+            rescue JSON::ParserError
+              rule_attrs[:config] = nil
+            end
+          end
+        end
+      end
     end
   end
 end
