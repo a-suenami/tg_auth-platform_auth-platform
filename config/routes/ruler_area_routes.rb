@@ -31,11 +31,15 @@ Rails.application.routes.draw do
         resources :email_templates, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :oauth_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resource :tenant_stripe_account, only: [:show, :new, :create, :edit, :update, :destroy]
+        resource :tenant_komoju_account, only: [:show, :new, :create, :edit, :update, :destroy]
         namespace :stripe_records do
           resources :products, only: [:index, :show, :destroy] do
             post :preview, on: :collection
             put :sync, on: :collection
           end
+          resources :accounts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        end
+        namespace :komoju_records do
           resources :accounts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         end
       end
