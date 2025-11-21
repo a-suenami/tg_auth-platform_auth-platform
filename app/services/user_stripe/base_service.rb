@@ -26,7 +26,7 @@ module UserStripe
     end
 
     def stripe_api_key_config
-      AppStripe.configuration
+      AppStripe.request_options
     end
 
 
