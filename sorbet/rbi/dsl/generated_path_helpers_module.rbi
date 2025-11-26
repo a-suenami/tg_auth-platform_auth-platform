@@ -61,6 +61,9 @@ module GeneratedPathHelpersModule
   def admin_area_user_user_profile_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_user_tag_assignment_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_users_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -173,6 +176,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_user_profile_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_user_user_tag_assignment_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_email_template_path(*args); end
