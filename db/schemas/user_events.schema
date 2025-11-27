@@ -1,0 +1,12 @@
+create_table :user_events, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'ユーザーイベント履歴' do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :user, type: :uuid, null: false
+  t.datetime :transaction_time, null: false, comment: 'イベント発生日時'
+  t.string :event_type, null: false, comment: 'イベント種別: created, manually_tagged, auto_tagged など'
+  t.jsonb :payload, null: false, default: {}, comment: 'イベント詳細データ'
+  t.datetime :created_at, null: false
+
+  t.index [:tenant_id, :user_id, :transaction_time], name: :idx_user_events_tenant_user_time
+  t.index [:tenant_id, :transaction_time], name: :idx_user_events_tenant_time
+  t.foreign_key :users, column: [:tenant_id, :user_id], primary_key: [:tenant_id, :id]
+end
