@@ -26,7 +26,7 @@ module UserTagRules
         membership_ids: T::Array[String],
         subscription_type: String,
         duration_value: T.nilable(Integer),
-        duration_unit: T.nilable(String)
+        duration_unit: T.nilable(String),
       ).void
     end
     def initialize(membership_ids:, subscription_type:, duration_value: nil, duration_unit: nil)
