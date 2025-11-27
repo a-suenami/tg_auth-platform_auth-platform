@@ -17,7 +17,7 @@ class UserEvent < ApplicationRecord
       user: user,
       event_type: event.event_type_name,
       payload: event.to_payload,
-      transaction_time: transaction_time
+      transaction_time: transaction_time,
     )
   end
 end

@@ -22,7 +22,7 @@ RSpec.describe UserEvent do
       end
 
       it 'records correct attributes' do
-        time = Time.now.round(6)
+        time = Time.zone.now.round(6)
         record = described_class.record!(user: user, event: event, transaction_time: time)
 
         expect(record.tenant_id).to eq(tenant.id)
