@@ -156,10 +156,52 @@ function initModalHandlers() {
   });
 }
 
+// ドロップダウンの開閉を制御
+function initDropdownHandlers() {
+  // ドロップダウンのトグルボタンクリック
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    const toggle = target.closest("[data-dropdown-toggle]") as HTMLElement;
+    const dropdown = target.closest(".c-tag-card__dropdown") as HTMLElement;
+
+    if (toggle) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const dropdownId = toggle.getAttribute("data-dropdown-toggle");
+      if (!dropdownId) return;
+
+      const targetDropdown = document.getElementById(dropdownId) as HTMLElement;
+      if (!targetDropdown) return;
+
+      const isOpen = targetDropdown.getAttribute("data-dropdown-open") === "true";
+
+      // すべてのドロップダウンを閉じる
+      document.querySelectorAll("[data-dropdown-open='true']").forEach((d) => {
+        d.setAttribute("data-dropdown-open", "false");
+      });
+
+      // クリックされたドロップダウンを開閉
+      if (!isOpen) {
+        targetDropdown.setAttribute("data-dropdown-open", "true");
+      }
+    } else if (dropdown) {
+      // ドロップダウン内のリンククリック時は閉じない（リンクの処理を優先）
+      e.stopPropagation();
+    } else {
+      // ドロップダウン外をクリックした場合は閉じる
+      document.querySelectorAll("[data-dropdown-open='true']").forEach((d) => {
+        d.setAttribute("data-dropdown-open", "false");
+      });
+    }
+  });
+}
+
 document.addEventListener("turbo:load", async () => {
   formatLocalTimes();
   initModalObserver();
   initModalHandlers();
+  initDropdownHandlers();
 
   Array.from(document.getElementsByClassName("rl-clickable-tab")).forEach(
     (tab) => {
