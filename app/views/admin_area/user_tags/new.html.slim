@@ -1,21 +1,20 @@
-.uk-margin-top.uk-container
-  / Breadcrumb
-  - breadcrumb_items = [{ text: '会員ID管理' }, { text: 'タグ管理', link: admin_area_user_tags_path }, { text: '新規作成' }]
-  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+= render 'admin_area/users/user_layout' do
+  .l-page-content__content__main
+    = render 'admin_area/shared/breadcrumb', items: [{ text: 'すべてのタグ', link: admin_area_user_tags_path }, { text: '新規タグ' }]
 
-  h2 タグ作成
-
-  .uk-margin-top.uk-card.uk-card-default.uk-card-body
-    = form_with url: admin_area_user_tags_path, method: :post, class: 'uk-form-stacked' do |f|
-      .uk-margin
-        = label_tag 'user_tag[name]', '名前', class: 'uk-form-label'
-        .uk-form-controls
-          = text_field_tag 'user_tag[name]', '', placeholder: 'ユーザータグ名を入力...', required: true, class: 'uk-input'
-
-      .uk-margin
-        = label_tag 'user_tag[description]', '説明', class: 'uk-form-label'
-        .uk-form-controls
-          = text_area_tag 'user_tag[description]', '', placeholder: 'ユーザータグの説明文を入力...', rows: 5, class: 'uk-textarea'
-
-      .uk-margin
-        = f.submit 'タグを作成する', class: 'uk-button uk-button-primary'
+    .p-user-tag-form
+      = form_with model: @user_tag, url: admin_area_user_tags_path, method: :post, local: true, data: { turbo_frame: '_top' }, html: { id: 'new_user_tag_form' } do |f|
+        = render 'admin_area/shared/form_error', target: f.object
+        .p-user-tag-form__content
+          .p-user-tag-form__content__form
+            .c-form
+              .c-form-field
+                label.c-form-field__label タグ名
+                = f.text_field :name, placeholder: 'タグ名を入力', class: 'c-form-field__input'
+              .c-form-field
+                label.c-form-field__label 説明
+                = f.text_area :description, placeholder: '説明文を入力', rows: 5, class: 'c-form-field__input'
+          .p-user-tag-form__content__actions
+            = f.submit '新規作成', class: 'p-user-tag-form__content__actions__button p-user-tag-form__content__actions__button--submit'
+            = link_to admin_area_user_tags_path, class: 'p-user-tag-form__content__actions__button p-user-tag-form__content__actions__button--cancel', data: { turbo_frame: '_top' } do
+              | キャンセル
