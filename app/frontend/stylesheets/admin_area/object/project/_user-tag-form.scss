@@ -1,22 +1,25 @@
 // ユーザータグフォーム（新規作成・編集）
 .p-user-tag-form {
-  padding: 24px;
+  display: contents;
+
+  &__breadcrumb {
+    grid-column: 1 / -1;
+  }
 
   &__content {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 24px;
-    align-items: start;
-
-    &__form {
-      min-width: 0; // グリッドアイテムのオーバーフローを防ぐ
+    &__main {
+      padding: 16px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
     }
 
-    &__actions {
+    &__sub {
+      padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 8px;
-      min-width: 120px;
+      align-content: start;
 
       &__button {
         padding: 8px 16px;

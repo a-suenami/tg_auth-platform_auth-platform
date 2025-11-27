@@ -22,8 +22,8 @@
     align-items: center;
     gap: 24px;
     padding-left: 24px;
+    color: var(--color-text-inactive);
     &__item {
-      color: var(--color-text-inactive);
       font-size: 14px;
       font-weight: 500;
       line-height: 100%;
@@ -32,7 +32,7 @@
       }
     }
     svg {
-      width: 8px;
+      width: 6px;
       height: auto;
       display: block;
     }
