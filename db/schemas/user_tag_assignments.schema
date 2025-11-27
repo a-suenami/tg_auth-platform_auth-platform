@@ -1,0 +1,35 @@
+create_table :user_tag_assignments, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'User tag assignments (manual and auto)' do |t|
+  # Core references
+  t.references :tenant, type: :citext, null: false, comment: 'Tenant reference'
+  t.references :user, type: :uuid, null: false, comment: 'User being tagged'
+  t.references :user_tag, type: :uuid, null: false, comment: 'Tag being assigned'
+
+  # Assignment type and source
+  t.string :assignment_type, null: false, comment: 'Type: manual or auto'
+
+  # Manual tagging fields (nullable)
+  t.references :assigned_by, type: :uuid, null: true, comment: 'Admin who manually assigned (for manual only)'
+
+  # Auto tagging fields (nullable)
+  t.references :user_auto_tagging, type: :uuid, null: true, comment: 'Auto-tagging rule that assigned (for auto only)'
+
+  # Metadata
+  t.datetime :assigned_at, null: false, comment: 'When tag was assigned'
+  t.datetime :removed_at, comment: 'When tag was removed (soft delete)'
+  t.references :removed_by, type: :uuid, null: true, comment: 'Admin who removed tag'
+
+  t.timestamps null: false
+
+  # Indexes
+  t.index [:tenant_id, :user_id, :user_tag_id], unique: true, where: 'removed_at IS NULL',
+    name: 'index_user_tag_assignments_unique_active'
+  t.index :assignment_type
+  t.index :removed_at
+end
+
+add_foreign_key :user_tag_assignments, :tenants
+add_foreign_key :user_tag_assignments, :users
+add_foreign_key :user_tag_assignments, :user_tags
+add_foreign_key :user_tag_assignments, :admins, column: :assigned_by_id
+add_foreign_key :user_tag_assignments, :admins, column: :removed_by_id
+add_foreign_key :user_tag_assignments, :user_auto_taggings

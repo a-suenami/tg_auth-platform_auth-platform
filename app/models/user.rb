@@ -59,6 +59,10 @@ class User < ApplicationRecord
   # stripe
   has_many :stripe_subscriptions, class_name: 'StripeRecord::Subscription'
 
+  # Tags
+  has_many :tag_assignments, class_name: 'UserTagAssignment', dependent: :destroy
+  has_many :user_tags, through: :tag_assignments
+
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :email, uniqueness: { scope: :tenant_id, conditions: -> { where(deleted_at: nil) } }
   validates :phone_number, phony_plausible: true

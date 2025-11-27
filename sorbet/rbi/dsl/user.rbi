@@ -634,6 +634,20 @@ class User
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
     def stripe_trial_history_ids=(ids); end
 
+    sig { returns(T::Array[T.untyped]) }
+    def tag_assignment_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def tag_assignment_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :tag_assignments`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::UserTagAssignment::PrivateCollectionProxy) }
+    def tag_assignments; end
+
+    sig { params(value: T::Enumerable[::UserTagAssignment]).void }
+    def tag_assignments=(value); end
+
     sig { returns(T.nilable(::Tenant)) }
     def tenant; end
 
@@ -654,6 +668,20 @@ class User
 
     sig { params(attributes: T.untyped).returns(T.untyped) }
     def user_profile_attributes=(attributes); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def user_tag_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def user_tag_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :user_tags, through: :tag_assignments`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
+    sig { returns(::UserTag::PrivateCollectionProxy) }
+    def user_tags; end
+
+    sig { params(value: T::Enumerable[::UserTag]).void }
+    def user_tags=(value); end
   end
 
   module GeneratedAssociationRelationMethods
