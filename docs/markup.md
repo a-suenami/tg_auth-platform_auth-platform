@@ -27,6 +27,7 @@
 20. [未実装機能の非表示](#未実装機能の非表示)
 21. [リンクのhover時の色指定](#リンクのhover時の色指定)
 22. [ドロップダウンの実装](#ドロップダウンの実装)
+23. [フォームバリデーション](#フォームバリデーション)
 
 ## 命名規則
 
@@ -367,6 +368,11 @@ JavaScriptでの状態管理や、CSSでの条件付きスタイリングにデ�
 - [ ] ナビゲーションの表示方法を現在のページに応じて切り替えているか
 - [ ] チェックボックスの初期状態を現在のページに応じて設定しているか
 - [ ] 親と子のアクティブ状態を適切に管理しているか
+- [ ] プレースホルダーの色は`--color-text-placeholder`を使用しているか
+- [ ] ボタンの無効化スタイル（`:disabled`）を適切に定義しているか
+- [ ] `display: contents`を使用してグリッドレイアウトに統合しているか
+- [ ] フォームバリデーションはStimulusコントローラーを使用して実装しているか
+- [ ] 送信ボタンは初期状態で`disabled`にしておくか
 
 ## ラジオボタングループ
 
@@ -635,6 +641,53 @@ input.c-form-field__input type="text" value="1234-5678-9000" readonly="readonly"
 - `readonly`属性は値の編集を防ぐが、フォーム送信には含まれる
 - `disabled`とは異なり、フォーム送信時に値が送信される
 - 視覚的には`disabled`と同様のスタイルを適用
+
+### プレースホルダーの色
+
+プレースホルダーの色は、専用のCSS変数（`--color-text-placeholder`）を使用します。
+
+**スタイル:**
+```scss
+&::placeholder {
+  color: var(--color-text-placeholder);
+}
+```
+
+**ポイント:**
+- プレースホルダーの色は`--color-text-placeholder`を使用する
+- 入力フィールドのテキスト色（`--color-text-body`）や非アクティブなテキスト色（`--color-text-inactive`）とは区別する
+- これにより、プレースホルダーと入力済みテキストを視覚的に区別できる
+
+### ボタンの無効化スタイル
+
+送信ボタンが無効化された場合のスタイルを適切に定義します。
+
+**スタイル:**
+```scss
+&--submit {
+  background-color: var(--color-primary);
+  color: var(--color-primary-contrast);
+  border-color: var(--color-primary);
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-text-heading);
+    border-color: var(--color-text-heading);
+  }
+
+  &:disabled {
+    background-color: var(--color-border);
+    color: var(--color-text-inactive);
+    border-color: transparent;
+    cursor: not-allowed;
+  }
+}
+```
+
+**ポイント:**
+- `:disabled`状態のスタイルを明示的に定義する
+- 無効化時は`cursor: not-allowed`でカーソルを変更する
+- `:hover:not(:disabled)`で、無効化時はホバー効果を適用しない
+- 無効化時は控えめな色（`--color-border`、`--color-text-inactive`）を使用する
 
 ## モーダルの実装方法
 
@@ -992,6 +1045,97 @@ ja:
 **ポイント:**
 - フォームパーシャル内で`.c-form`を定義することで、モーダル内でもフォームのスタイルが適用される
 - モーダル内では`.c-form`を重複して定義しない（パーシャル内で定義済み）
+
+### display: contentsの使用
+
+グリッドレイアウトに統合するために、`display: contents`を使用します。
+
+**マークアップ:**
+```slim
+.p-user-tag-form data-controller="form-validation"
+  .p-user-tag-form__breadcrumb
+    = render 'admin_area/shared/breadcrumb', items: [...]
+  .l-page-content__content__main.p-user-tag-form__content__main
+    / フォーム内容
+  .l-page-content__content__sub.p-user-tag-form__content__sub
+    / サイドバー内容
+```
+
+**スタイル:**
+```scss
+.p-user-tag-form {
+  display: contents;
+
+  &__breadcrumb {
+    grid-column: 1 / -1;
+  }
+}
+```
+
+**ポイント:**
+- `display: contents`を使用することで、要素自体はレンダリングされず、子要素が親のグリッドレイアウトに直接参加する
+- これにより、既存のレイアウト（`.l-page-content__content`）に統合できる
+- `grid-column: 1 / -1`で、パンくずリストなどの要素を全列にまたがらせることができる
+
+## フォームバリデーション
+
+### Stimulusコントローラーによるバリデーション
+
+フォームのバリデーションは、Stimulusコントローラーを使用して実装します。
+
+**マークアップ:**
+```slim
+.p-user-tag-form data-controller="form-validation"
+  = form_with model: @user_tag, url: admin_area_user_tags_path, method: :post, local: true, data: { turbo_frame: '_top', form_validation_target: 'form' }, html: { id: 'new_user_tag_form' } do |f|
+    .c-form
+      .c-form-field
+        label.c-form-field__label タグ名
+        = f.text_field :name, placeholder: 'タグ名を入力', class: 'c-form-field__input', required: true
+  button.p-user-tag-form__content__sub__button type="submit" form="new_user_tag_form" data-form-validation-target="submit" disabled="disabled" 新規作成
+```
+
+**JavaScript（Stimulusコントローラー）:**
+```typescript
+import { Controller } from '@hotwired/stimulus';
+
+export default class extends Controller<HTMLElement> {
+  static targets = ['form', 'submit'];
+
+  declare readonly formTarget: HTMLFormElement;
+  declare readonly submitTarget: HTMLButtonElement;
+
+  connect() {
+    this.validate();
+    this.formTarget.addEventListener('input', this.validate.bind(this));
+    this.formTarget.addEventListener('change', this.validate.bind(this));
+  }
+
+  disconnect() {
+    this.formTarget.removeEventListener('input', this.validate.bind(this));
+    this.formTarget.removeEventListener('change', this.validate.bind(this));
+  }
+
+  validate() {
+    const form = this.formTarget;
+    if (!form) return;
+
+    const isValid = form.checkValidity();
+    if (this.submitTarget) {
+      this.submitTarget.disabled = !isValid;
+    }
+  }
+}
+```
+
+**ポイント:**
+- `data-controller="form-validation"`でStimulusコントローラーを有効化する
+- `data-form-validation-target="form"`でフォーム要素を指定する
+- `data-form-validation-target="submit"`で送信ボタンを指定する
+- `connect()`で初期バリデーションとイベントリスナーの登録を行う
+- `disconnect()`でイベントリスナーを削除する
+- `form.checkValidity()`でネイティブのバリデーションAPIを使用する
+- 送信ボタンは初期状態で`disabled="disabled"`にしておく
+- 入力フィールドに`required`属性を指定して必須項目を定義する
 
 ## ナビゲーションのアイコン
 
