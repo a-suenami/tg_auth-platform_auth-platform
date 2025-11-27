@@ -59,6 +59,7 @@
 
           &:hover {
             background-color: var(--color-background-gray);
+            color: var(--color-text-inactive); // UIKitとの競合回避のため明示的に指定
           }
         }
       }
