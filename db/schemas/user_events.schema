@@ -8,5 +8,6 @@ create_table :user_events, force: :cascade, id: :uuid, default: -> { 'gen_random
 
   t.index [:tenant_id, :user_id, :transaction_time], name: :idx_user_events_tenant_user_time
   t.index [:tenant_id, :transaction_time], name: :idx_user_events_tenant_time
-  t.foreign_key :users, column: [:tenant_id, :user_id], primary_key: [:tenant_id, :id]
 end
+
+add_foreign_key :user_events, :users, column: [:tenant_id, :user_id], primary_key: [:tenant_id, :id]

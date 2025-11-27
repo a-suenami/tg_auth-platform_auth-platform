@@ -1,4 +1,4 @@
-\restrict gt8YyTkKSc9Fl8Bkd2mFsivLSeDmAurvct0XJJsYurtfdHyafXXK3LiioKbyaZk
+\restrict 5vCzAPlTo0kaLF6bUIEbviQ8UqVHo1pZQW6rTHEOcRgmuOGkPMX5G9jpzAO6oE2
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -2236,6 +2236,49 @@ COMMENT ON COLUMN public.user_auto_taggings.updated_by_id IS 'Admin who last upd
 
 
 --
+-- Name: user_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_events (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    transaction_time timestamp(6) without time zone NOT NULL,
+    event_type character varying NOT NULL,
+    payload jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE user_events; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.user_events IS 'ユーザーイベント履歴';
+
+
+--
+-- Name: COLUMN user_events.transaction_time; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_events.transaction_time IS 'イベント発生日時';
+
+
+--
+-- Name: COLUMN user_events.event_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_events.event_type IS 'イベント種別: created, manually_tagged, auto_tagged など';
+
+
+--
+-- Name: COLUMN user_events.payload; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_events.payload IS 'イベント詳細データ';
+
+
+--
 -- Name: user_profiles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2837,6 +2880,14 @@ ALTER TABLE ONLY public.user_auto_taggings
 
 
 --
+-- Name: user_events user_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_events
+    ADD CONSTRAINT user_events_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_profiles user_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3205,6 +3256,20 @@ CREATE INDEX idx_templates_tenant_name ON public.templates USING btree (tenant_i
 --
 
 CREATE UNIQUE INDEX idx_tenant_settings_tenant_id_uniq ON public.tenant_settings USING btree (tenant_id);
+
+
+--
+-- Name: idx_user_events_tenant_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_user_events_tenant_time ON public.user_events USING btree (tenant_id, transaction_time);
+
+
+--
+-- Name: idx_user_events_tenant_user_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_user_events_tenant_user_time ON public.user_events USING btree (tenant_id, user_id, transaction_time);
 
 
 --
@@ -4209,6 +4274,20 @@ CREATE INDEX index_user_auto_taggings_on_updated_by_id ON public.user_auto_taggi
 
 
 --
+-- Name: index_user_events_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_events_on_tenant_id ON public.user_events USING btree (tenant_id);
+
+
+--
+-- Name: index_user_events_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_events_on_user_id ON public.user_events USING btree (user_id);
+
+
+--
 -- Name: index_user_profiles_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4318,6 +4397,13 @@ CREATE INDEX index_users__sms_verifiers_on_user_id ON public.users__sms_verifier
 --
 
 CREATE INDEX index_users_on_tenant_id ON public.users USING btree (tenant_id);
+
+
+--
+-- Name: index_users_on_tenant_id_and_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_tenant_id_and_id ON public.users USING btree (tenant_id, id);
 
 
 --
@@ -4732,6 +4818,14 @@ ALTER TABLE ONLY public.user_auto_taggings
 
 ALTER TABLE ONLY public.oauth_access_grants
     ADD CONSTRAINT fk_rails_330c32d8d9 FOREIGN KEY (resource_owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: user_events fk_rails_405c96056c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_events
+    ADD CONSTRAINT fk_rails_405c96056c FOREIGN KEY (tenant_id, user_id) REFERENCES public.users(tenant_id, id);
 
 
 --
@@ -5322,7 +5416,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict gt8YyTkKSc9Fl8Bkd2mFsivLSeDmAurvct0XJJsYurtfdHyafXXK3LiioKbyaZk
+\unrestrict 5vCzAPlTo0kaLF6bUIEbviQ8UqVHo1pZQW6rTHEOcRgmuOGkPMX5G9jpzAO6oE2
 
 SET search_path TO "$user", public;
 
