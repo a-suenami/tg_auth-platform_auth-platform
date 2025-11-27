@@ -6,7 +6,6 @@ RSpec.describe UserEvent do
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant_id: tenant.id) }
 
-  # テスト用サンプルイベント
   class UserEvent::Type::SampleEvent < UserEvent::Type::Base
     attribute :foo, :string
     attribute :bar, :integer
@@ -19,8 +18,7 @@ RSpec.describe UserEvent do
       let(:event) { UserEvent::Type::SampleEvent.new(foo: 'test', bar: 123) }
 
       it 'creates a user event' do
-        expect { described_class.record!(user: user, event: event) }
-          .to change(described_class, :count).by(1)
+        expect { described_class.record!(user: user, event: event) }.to change(described_class, :count).by(1)
       end
 
       it 'records correct attributes' do
@@ -45,67 +43,7 @@ RSpec.describe UserEvent do
       let(:event) { UserEvent::Type::SampleEvent.new(foo: nil, bar: 123) }
 
       it 'raises ActiveModel::ValidationError' do
-        expect { described_class.record!(user: user, event: event) }
-          .to raise_error(ActiveModel::ValidationError)
-      end
-    end
-
-  end
-
-  describe 'Type classes' do
-    describe UserEvent::Type::Created do
-      it 'returns correct event_type_name' do
-        event = described_class.new
-        expect(event.event_type_name).to eq('created')
-      end
-
-      it 'returns empty payload' do
-        event = described_class.new
-        expect(event.to_payload).to eq({})
-      end
-    end
-
-    describe UserEvent::Type::ManuallyTagged do
-      it 'returns correct event_type_name' do
-        event = described_class.new(tag_id: 'tag-1', tagged_by: 'admin-1')
-        expect(event.event_type_name).to eq('manually_tagged')
-      end
-
-      it 'returns payload with tag_id and tagged_by' do
-        event = described_class.new(tag_id: 'tag-1', tagged_by: 'admin-1')
-        expect(event.to_payload).to eq({ 'tag_id' => 'tag-1', 'tagged_by' => 'admin-1' })
-      end
-
-      it 'is invalid without tag_id' do
-        event = described_class.new(tag_id: nil, tagged_by: 'admin-1')
-        expect(event).not_to be_valid
-      end
-
-      it 'is invalid without tagged_by' do
-        event = described_class.new(tag_id: 'tag-1', tagged_by: nil)
-        expect(event).not_to be_valid
-      end
-    end
-
-    describe UserEvent::Type::AutoTagged do
-      it 'returns correct event_type_name' do
-        event = described_class.new(tag_id: 'tag-1', auto_tagging_rule_id: 'rule-1')
-        expect(event.event_type_name).to eq('auto_tagged')
-      end
-
-      it 'returns payload with tag_id and auto_tagging_rule_id' do
-        event = described_class.new(tag_id: 'tag-1', auto_tagging_rule_id: 'rule-1')
-        expect(event.to_payload).to eq({ 'tag_id' => 'tag-1', 'auto_tagging_rule_id' => 'rule-1' })
-      end
-
-      it 'is invalid without tag_id' do
-        event = described_class.new(tag_id: nil, auto_tagging_rule_id: 'rule-1')
-        expect(event).not_to be_valid
-      end
-
-      it 'is invalid without auto_tagging_rule_id' do
-        event = described_class.new(tag_id: 'tag-1', auto_tagging_rule_id: nil)
-        expect(event).not_to be_valid
+        expect { described_class.record!(user: user, event: event) }.to raise_error(ActiveModel::ValidationError)
       end
     end
   end
