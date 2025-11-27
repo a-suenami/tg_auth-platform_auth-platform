@@ -22,20 +22,14 @@ RSpec.describe UserEvent do
       end
 
       it 'records correct attributes' do
-        record = described_class.record!(user: user, event: event)
+        time = Time.now.round(6)
+        record = described_class.record!(user: user, event: event, transaction_time: time)
 
         expect(record.tenant_id).to eq(tenant.id)
         expect(record.user_id).to eq(user.id)
         expect(record.event_type).to eq('sample_event')
         expect(record.payload).to eq({ 'foo' => 'test', 'bar' => 123 })
-        expect(record.transaction_time).to be_present
-      end
-
-      it 'allows custom transaction_time' do
-        custom_time = 1.day.ago
-        record = described_class.record!(user: user, event: event, transaction_time: custom_time)
-
-        expect(record.transaction_time).to be_within(1.second).of(custom_time)
+        expect(record.transaction_time).to eq(time)
       end
     end
 
