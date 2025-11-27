@@ -8,8 +8,8 @@ class UserEvent < ApplicationRecord
   belongs_to :tenant
   belongs_to :user
 
-  sig { params(user: User, event: Type::Base, transaction_time: Time).returns(UserEvent) }
-  def self.record!(user:, event:, transaction_time: Time.current)
+  sig { params(user: User, event: Type::Base, transaction_time: T.any(Time, ActiveSupport::TimeWithZone)).returns(UserEvent) }
+  def self.record!(user:, event:, transaction_time: Time.zone.now)
     raise ActiveModel::ValidationError, event unless event.valid?
 
     create!(

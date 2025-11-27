@@ -9,7 +9,7 @@ class UserEvent::Type::Base
   # イベント種別名（クラス名から自動生成: ManuallyTagged -> 'manually_tagged'）
   sig { returns(String) }
   def event_type_name
-    self.class.name.demodulize.underscore
+    T.must(self.class.name).demodulize.underscore
   end
 
   # payload として保存する Hash を返す

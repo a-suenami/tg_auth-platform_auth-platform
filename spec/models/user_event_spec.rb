@@ -6,18 +6,18 @@ RSpec.describe UserEvent do
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant_id: tenant.id) }
 
-  before do
-    stub_const('UserEvent::Type::SampleEvent', Class.new(UserEvent::Type::Base) do
-      attribute :foo, :string
-      attribute :bar, :integer
+  # rubocop:disable RSpec/LeakyConstantDeclaration, Lint/ConstantDefinitionInBlock
+  class self::SampleEvent < UserEvent::Type::Base
+    attribute :foo, :string
+    attribute :bar, :integer
 
-      validates :foo, presence: true
-    end,)
+    validates :foo, presence: true
   end
+  # rubocop:enable RSpec/LeakyConstantDeclaration, Lint/ConstantDefinitionInBlock
 
   describe '.record!' do
     context 'with valid event' do
-      let(:event) { UserEvent::Type::SampleEvent.new(foo: 'test', bar: 123) }
+      let(:event) { self.class::SampleEvent.new(foo: 'test', bar: 123) }
 
       it 'creates a user event' do
         expect { described_class.record!(user: user, event: event) }.to change(described_class, :count).by(1)
@@ -36,7 +36,7 @@ RSpec.describe UserEvent do
     end
 
     context 'with invalid event' do
-      let(:event) { UserEvent::Type::SampleEvent.new(foo: nil, bar: 123) }
+      let(:event) { self.class::SampleEvent.new(foo: nil, bar: 123) }
 
       it 'raises ActiveModel::ValidationError' do
         expect { described_class.record!(user: user, event: event) }.to raise_error(ActiveModel::ValidationError)
