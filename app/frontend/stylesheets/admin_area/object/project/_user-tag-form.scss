@@ -82,6 +82,33 @@
           }
         }
       }
+      &__metadata {
+        gap: 24px;
+      }
+
+      &__auto-tags {
+        display: grid;
+        gap: 8px;
+
+        &__label {
+          font-size: 14px;
+          color: var(--color-text-inactive);
+        }
+
+        &__list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        &__item {
+          padding: 6px 12px;
+          border-radius: 6px;
+          font-size: 14px;
+          background-color: var(--color-auto-tag-background);
+          color: var(--color-auto-tag-text);
+        }
+      }
     }
   }
 }
