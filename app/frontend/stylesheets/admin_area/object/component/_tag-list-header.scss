@@ -6,95 +6,58 @@
   padding: 16px 24px;
   border-bottom: 1px solid var(--color-border);
 
-  &__tabs {
+  &__search {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 8px;
 
-    &__item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 8px;
+    &__input {
+      width: 105px;
+      padding: 7px 7px 7px 31px;
+      line-height: 14px;
       font-size: 14px;
-      color: var(--color-text-inactive);
-      text-decoration: none;
+      height: 14px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      box-shadow: var(--box-shadow);
+    }
 
-      &.is-active {
-        background-color: var(--color-background-gray);
-        color: var(--color-text-active);
-      }
-
-      svg {
-        display: block;
-        aspect-ratio: 1;
-        width: 16px;
-        height: auto;
-      }
-
-      &__text {
-        font-size: 14px;
-      }
+    svg {
+      position: absolute;
+      top: 50%;
+      left: 16px;
+      transform: translate(-50%, -50%);
+      display: block;
+      aspect-ratio: 1;
+      width: 14px;
+      height: auto;
+      color: var(--color-text-heading);
+      pointer-events: none;
     }
   }
 
-  &__actions {
+  &__button {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    padding: 8px 12px;
+    background-color: var(--color-primary);
+    color: var(--color-primary-contrast);
+    border-radius: 8px;
+    font-size: 14px;
+    text-decoration: none;
+    box-shadow: var(--box-shadow);
+    line-height: 14px;
 
-    &__search {
-      position: relative;
-      display: flex;
-      align-items: center;
-
-      &__input {
-        width: 200px;
-        padding: 8px 8px 8px 32px;
-        line-height: 14px;
-        font-size: 14px;
-        border: 1px solid var(--color-border);
-        border-radius: 8px;
-        box-shadow: var(--box-shadow);
-      }
-
-      svg {
-        position: absolute;
-        top: 50%;
-        left: 16px;
-        transform: translate(-50%, -50%);
-        display: block;
-        aspect-ratio: 1;
-        width: 14px;
-        height: auto;
-        color: var(--color-text-inactive);
-        pointer-events: none;
-      }
+    svg {
+      display: block;
+      aspect-ratio: 1;
+      width: 14px;
+      height: auto;
     }
 
-    &__button {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
-      background-color: var(--color-primary);
-      color: var(--color-primary-contrast);
-      border-radius: 8px;
+    &__text {
       font-size: 14px;
-      text-decoration: none;
-      box-shadow: var(--box-shadow);
-
-      svg {
-        display: block;
-        aspect-ratio: 1;
-        width: 14px;
-        height: auto;
-      }
-
-      &__text {
-        font-size: 14px;
-      }
     }
   }
 }
