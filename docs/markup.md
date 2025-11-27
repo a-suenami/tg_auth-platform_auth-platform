@@ -26,6 +26,7 @@
 19. [国際化対応](#国際化対応)
 20. [未実装機能の非表示](#未実装機能の非表示)
 21. [リンクのhover時の色指定](#リンクのhover時の色指定)
+22. [ドロップダウンの実装](#ドロップダウンの実装)
 
 ## 命名規則
 
@@ -360,6 +361,9 @@ JavaScriptでの状態管理や、CSSでの条件付きスタイリングにデ�
 - [ ] モーダルを閉じる際にTurbo Frameの内容をクリアしているか
 - [ ] 導線が機能しているが本番非表示の場合は`unless Rails.env.production?`で非表示にしているか（導線が塞がれている場合は非表示不要）
 - [ ] リンク要素を使用するコンポーネントでは、hover時に明示的に色を指定してUIKitとの競合を回避しているか
+- [ ] ドロップダウンはデータ属性（`data-dropdown-toggle`、`data-dropdown-open`）を使用して開閉を制御しているか
+- [ ] ドロップダウンの開閉はイベント委譲を使用して実装しているか
+- [ ] カード全体をリンクにする場合、アクションボタンは絶対配置で配置しているか
 
 ## ラジオボタングループ
 
@@ -1112,6 +1116,160 @@ ja:
 - リンク要素を使用するコンポーネントでは、必ず`:hover`時に色を明示的に指定する
 - 色変更がない場合でも、デフォルトの色を`:hover`で再指定することでUIKitのスタイルを上書きする
 - これにより、意図しない色変更を防ぐことができる
+
+## ドロップダウンの実装
+
+### データ属性による開閉制御
+
+ドロップダウンは、データ属性（`data-dropdown-toggle`、`data-dropdown-open`）を使用して開閉を制御します。
+
+**マークアップ:**
+```slim
+.c-tag-card-wrapper
+  = link_to edit_admin_area_user_tag_path(tag), class: 'c-tag-card', data: { turbo_frame: '_top' } do
+    / カードの内容
+  .c-tag-card__action-wrapper
+    .c-tag-card__action data-dropdown-toggle="dropdown-#{tag.id}"
+      = render 'shared/icons/icon-more-vertical'
+    .c-tag-card__dropdown id="dropdown-#{tag.id}"
+      = link_to admin_area_user_tag_path(tag), data: { turbo_method: :delete, turbo_confirm: '本当に削除しますか？' }, class: 'c-tag-card__dropdown__item'
+        | 削除
+```
+
+**スタイル:**
+```scss
+.c-tag-card {
+  &__action-wrapper {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    z-index: 10;
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+    min-width: 120px;
+    display: none;
+    overflow: hidden;
+    z-index: 1000;
+
+    &[data-dropdown-open="true"] {
+      display: block;
+    }
+
+    &__item {
+      display: block;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--color-text-body);
+      text-decoration: none;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: var(--color-background-gray);
+        color: var(--color-text-body);
+      }
+    }
+  }
+}
+```
+
+**JavaScript:**
+```typescript
+function initDropdownHandlers() {
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    const toggle = target.closest("[data-dropdown-toggle]") as HTMLElement;
+    const dropdown = target.closest(".c-tag-card__dropdown") as HTMLElement;
+
+    if (toggle) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const dropdownId = toggle.getAttribute("data-dropdown-toggle");
+      if (!dropdownId) return;
+
+      const targetDropdown = document.getElementById(dropdownId) as HTMLElement;
+      if (!targetDropdown) return;
+
+      const isOpen = targetDropdown.getAttribute("data-dropdown-open") === "true";
+
+      // すべてのドロップダウンを閉じる
+      document.querySelectorAll("[data-dropdown-open='true']").forEach((d) => {
+        d.setAttribute("data-dropdown-open", "false");
+      });
+
+      // クリックされたドロップダウンを開閉
+      if (!isOpen) {
+        targetDropdown.setAttribute("data-dropdown-open", "true");
+      }
+    } else if (dropdown) {
+      // ドロップダウン内のリンククリック時は閉じない（リンクの処理を優先）
+      e.stopPropagation();
+    } else {
+      // ドロップダウン外をクリックした場合は閉じる
+      document.querySelectorAll("[data-dropdown-open='true']").forEach((d) => {
+        d.setAttribute("data-dropdown-open", "false");
+      });
+    }
+  });
+}
+```
+
+**ポイント:**
+- `data-dropdown-toggle`でドロップダウンのIDを指定し、トグルボタンを識別する
+- `data-dropdown-open`で開閉状態を管理する（`"true"`で開く、`"false"`で閉じる）
+- イベント委譲を使用して、動的に追加された要素にも対応する
+- トグルボタンクリック時は`preventDefault()`と`stopPropagation()`でイベントを制御する
+- ドロップダウン内のリンククリック時は`stopPropagation()`で閉じる処理を防ぐ
+- ドロップダウン外をクリックした場合はすべてのドロップダウンを閉じる
+- アクションボタンは絶対配置でカードの右上に配置する
+- ドロップダウンは`z-index: 1000`で他の要素の上に表示する
+
+### カード全体をリンクにする
+
+カード全体をリンクにする場合、アクションボタンは絶対配置で配置し、リンクのクリックと区別します。
+
+**マークアップ:**
+```slim
+.c-tag-card-wrapper
+  = link_to edit_admin_area_user_tag_path(tag), class: 'c-tag-card', data: { turbo_frame: '_top' } do
+    .c-tag-card__header
+      .c-tag-card__header__title = tag.name
+  .c-tag-card__action-wrapper
+    .c-tag-card__action data-dropdown-toggle="dropdown-#{tag.id}"
+      = render 'shared/icons/icon-more-vertical'
+```
+
+**スタイル:**
+```scss
+.c-tag-card-wrapper {
+  position: relative;
+}
+
+.c-tag-card {
+  // カード全体のスタイル
+}
+
+.c-tag-card__action-wrapper {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 10;
+}
+```
+
+**ポイント:**
+- カード全体をリンクにする場合、`wrapper`要素を`position: relative`にする
+- アクションボタンは`position: absolute`で右上に配置する
+- `z-index`でアクションボタンをカードのリンクより上に配置する
+- アクションボタンクリック時は`stopPropagation()`でカードのリンク処理を防ぐ
 
 ## 参考
 
