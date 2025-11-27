@@ -6,11 +6,13 @@ RSpec.describe UserEvent do
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant_id: tenant.id) }
 
-  class UserEvent::Type::SampleEvent < UserEvent::Type::Base
-    attribute :foo, :string
-    attribute :bar, :integer
+  before do
+    stub_const('UserEvent::Type::SampleEvent', Class.new(UserEvent::Type::Base) do
+      attribute :foo, :string
+      attribute :bar, :integer
 
-    validates :foo, presence: true
+      validates :foo, presence: true
+    end,)
   end
 
   describe '.record!' do
