@@ -46,9 +46,16 @@
           color: var(--color-primary-contrast);
           border-color: var(--color-primary);
 
-          &:hover {
+          &:hover:not(:disabled) {
             background-color: var(--color-text-heading);
             border-color: var(--color-text-heading);
+          }
+
+          &:disabled {
+            background-color: var(--color-border);
+            color: var(--color-text-inactive);
+            border-color: transparent;
+            cursor: not-allowed;
           }
         }
 

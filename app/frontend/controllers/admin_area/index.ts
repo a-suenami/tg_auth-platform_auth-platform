@@ -4,6 +4,7 @@ import AutoTaggingTagSelectorController from "./auto_tagging_tag_selector_contro
 import UserAutoTaggingFormController from "./user_auto_tagging_form_controller";
 import UserTagAssignmentFormController from "./user_tag_assignment_form_controller";
 import TemplatePreviewController from "./template_preview_controller";
+import FormValidationController from "./form_validation_controller";
 
 application.register("schedule-form", ScheduleFormController);
 application.register(
@@ -16,5 +17,6 @@ application.register(
   UserTagAssignmentFormController
 );
 application.register("template-preview", TemplatePreviewController);
+application.register("form-validation", FormValidationController);
 
 console.log("this is frontend/controllers/admin_area/index.ts");
