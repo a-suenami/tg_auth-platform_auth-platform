@@ -28,6 +28,10 @@
 21. [リンクのhover時の色指定](#リンクのhover時の色指定)
 22. [ドロップダウンの実装](#ドロップダウンの実装)
 23. [フォームバリデーション](#フォームバリデーション)
+24. [テーブルフィルター](#テーブルフィルター)
+25. [空状態のモディファイア](#空状態のモディファイア)
+26. [ボタン内のドロップダウン](#ボタン内のドロップダウン)
+27. [セクション分割パターン](#セクション分割パターン)
 
 ## 命名規則
 
@@ -373,6 +377,16 @@ JavaScriptでの状態管理や、CSSでの条件付きスタイリングにデ�
 - [ ] `display: contents`を使用してグリッドレイアウトに統合しているか
 - [ ] フォームバリデーションはStimulusコントローラーを使用して実装しているか
 - [ ] 送信ボタンは初期状態で`disabled`にしておくか
+- [ ] 複数の送信ボタンがある場合は`submitTargets`（複数形）を使用しているか
+- [ ] `type="button"`の場合は`disabled`属性を設定し、`pointer-events`で制御しているか
+- [ ] テーブルフィルターはデータ属性（`data-filter-toggle`、`data-filter-open`）で開閉を制御しているか
+- [ ] フィルター条件が存在する場合は、初期状態で`data-filter-open="true"`に設定しているか
+- [ ] 空状態にマージンが必要な場合は`c-empty--has-margin`モディファイアを使用しているか
+- [ ] テーブル内の空状態は`c-table__empty`を使用しているか
+- [ ] ボタン内のドロップダウンはチェブロンアイコンと組み合わせて実装しているか
+- [ ] 送信ボタンが無効化されている場合、チェブロンアイコンも視覚的に無効化しているか
+- [ ] サイドバーのセクション分割は`__section`を使用しているか
+- [ ] セクション間は`border-bottom`で区切っているか
 
 ## ラジオボタングループ
 
@@ -1136,6 +1150,391 @@ export default class extends Controller<HTMLElement> {
 - `form.checkValidity()`でネイティブのバリデーションAPIを使用する
 - 送信ボタンは初期状態で`disabled="disabled"`にしておく
 - 入力フィールドに`required`属性を指定して必須項目を定義する
+
+### 複数の送信ボタンへの対応
+
+フォームに複数の送信ボタンがある場合、`submitTarget`を`submitTargets`（複数形）に変更します。
+
+**JavaScript（Stimulusコントローラー）:**
+```typescript
+export default class extends Controller<HTMLElement> {
+  static targets = ['form', 'submit'];
+
+  declare readonly formTarget: HTMLFormElement;
+  declare readonly submitTargets: HTMLButtonElement[]; // 複数形
+
+  validate() {
+    const form = this.formTarget;
+    if (!form) return;
+
+    const isValid = form.checkValidity();
+    this.submitTargets.forEach((target) => {
+      if (target.type === 'submit') {
+        target.disabled = !isValid;
+      } else {
+        // type="button"の場合は、disabled属性を設定し、pointer-eventsで制御
+        if (!isValid) {
+          target.setAttribute('disabled', 'disabled');
+        } else {
+          target.removeAttribute('disabled');
+        }
+      }
+    });
+  }
+}
+```
+
+**ポイント:**
+- `submitTarget`を`submitTargets`（複数形）に変更することで、複数の送信ボタンに対応できる
+- `type="submit"`の場合は`disabled`プロパティを使用する
+- `type="button"`の場合は`disabled`属性を設定し、CSSの`pointer-events`で制御する
+- ドロップダウンメニュー内の送信ボタンなど、複数の送信ボタンがある場合に有効
+
+## テーブルフィルター
+
+### データ属性による開閉制御
+
+テーブルの絞り込みセクションは、データ属性（`data-filter-toggle`、`data-filter-open`）を使用して開閉を制御します。
+
+**マークアップ:**
+```slim
+.c-table-header
+  .c-table-header__content
+    a.c-table-header__content__filter href='#' data-filter-toggle="user-filter-section"
+      = render 'shared/icons/icon-filter'
+      span.c-table-header__content__filter__text 絞り込み
+- filter_active = params[:id].present? || params[:email].present? || params[:phone_number].present?
+.c-table-filter id="user-filter-section" data-filter-open="#{filter_active}"
+  = form_with url: admin_area_users_path, method: :get, local: true, class: 'c-table-filter__form' do |f|
+    .c-table-filter__fields
+      .c-form-field
+        = f.label :id, "ID", class: 'c-form-field__label'
+        = f.text_field :id, placeholder: "539dde46-68a2-4619-9866-63b7478ae36e", value: params[:id], class: 'c-form-field__input'
+    .c-table-filter__actions
+      = f.submit "検索", class: 'c-table-filter__actions__button c-table-filter__actions__button--submit'
+      = link_to "検索初期化", admin_area_users_path, class: 'c-table-filter__actions__button c-table-filter__actions__button--reset'
+```
+
+**スタイル:**
+```scss
+.c-table-filter {
+  display: none;
+  padding: 24px;
+  background-color: var(--color-background-gray);
+  border-bottom: 1px solid var(--color-border);
+
+  &[data-filter-open="true"] {
+    display: block;
+  }
+
+  &__form {
+    display: grid;
+    gap: 24px;
+    max-width: 320px;
+  }
+
+  &__fields {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+}
+```
+
+**JavaScript:**
+```typescript
+function initFilterHandlers() {
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    const toggle = target.closest("[data-filter-toggle]") as HTMLElement;
+    const filterSection = target.closest(".c-table-filter") as HTMLElement;
+
+    if (toggle) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const filterId = toggle.getAttribute("data-filter-toggle");
+      if (!filterId) return;
+
+      const targetFilter = document.getElementById(filterId) as HTMLElement;
+      if (!targetFilter) return;
+
+      const isOpen = targetFilter.getAttribute("data-filter-open") === "true";
+
+      // クリックされた絞り込みセクションを開閉
+      targetFilter.setAttribute("data-filter-open", isOpen ? "false" : "true");
+    } else if (filterSection) {
+      // 絞り込みセクション内のクリック時は閉じない（フォームの処理を優先）
+      e.stopPropagation();
+    }
+  });
+}
+```
+
+**ポイント:**
+- `data-filter-toggle`でトグルボタンを指定し、対象のフィルターセクションのIDを指定する
+- `data-filter-open`でフィルターセクションの開閉状態を管理する
+- サーバーサイドでフィルター条件が存在する場合は、初期状態で`data-filter-open="true"`に設定する
+- フィルターセクション内のクリック時は`stopPropagation()`で閉じないようにする
+- `display: none`と`display: block`で開閉を制御する
+
+## 空状態のモディファイア
+
+### マージン付き空状態
+
+空状態コンポーネントにマージンを追加する場合は、`c-empty--has-margin`モディファイアを使用します。
+
+**マークアップ:**
+```slim
+- if @users.empty?
+  .c-empty.c-empty--has-margin
+    .c-empty__text ユーザーが見つかりません
+```
+
+**スタイル:**
+```scss
+.c-empty {
+  // ... 既存のスタイル ...
+
+  &--has-margin {
+    margin: 24px;
+  }
+}
+```
+
+**ポイント:**
+- テーブルやリストの空状態など、周囲にマージンが必要な場合に使用する
+- モディファイアを使用することで、デフォルトのスタイルを変更せずに済む
+
+### テーブルの空状態
+
+テーブル内で空状態を表示する場合は、`c-table__empty`を使用します。
+
+**マークアップ:**
+```slim
+.c-table.has-checkbox.has-action
+  - if @users.empty?
+    .c-table__empty ユーザーが見つかりません
+  - else
+    table
+      / ... テーブル内容 ...
+```
+
+**スタイル:**
+```scss
+.c-table {
+  &__empty {
+    padding: 48px 24px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--color-text-inactive);
+    background-color: var(--color-background-gray);
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+  }
+}
+```
+
+**ポイント:**
+- テーブル内で空状態を表示する場合は、`c-table__empty`を使用する
+- テーブルのスタイル（背景色、ボーダー、角丸）に合わせてデザインする
+- 条件分岐でテーブルと空状態を切り替える
+
+## ボタン内のドロップダウン
+
+### チェブロンアイコンとドロップダウンメニューの組み合わせ
+
+送信ボタンにチェブロンアイコンを追加し、クリックでドロップダウンメニューを表示します。
+
+**マークアップ:**
+```slim
+.p-user-tag-form__content__sub__button-wrapper
+  button.p-user-tag-form__content__sub__button.p-user-tag-form__content__sub__button--submit type="submit" form="edit_user_tag_form" data-form-validation-target="submit" 変更を保存
+  button.p-user-tag-form__content__sub__button__chevron type="button" data-dropdown-toggle="dropdown-save-actions"
+    = render 'shared/icons/icon-chevron-down'
+  .p-user-tag-form__content__sub__button__dropdown id="dropdown-save-actions"
+    button.p-user-tag-form__content__sub__button__dropdown__item type="submit" form="edit_user_tag_form" data-form-validation-target="submit" 変更を保存
+    = link_to admin_area_user_tag_path(@user_tag), data: { turbo_method: :delete, turbo_confirm: '本当に削除しますか？', turbo_frame: '_top' }, class: 'p-user-tag-form__content__sub__button__dropdown__item' do
+      | タグを削除
+```
+
+**スタイル:**
+```scss
+&__button-wrapper {
+  position: relative;
+
+  // submitボタンが無効化されている場合、矢印部分も視覚的に無効化
+  .p-user-tag-form__content__sub__button--submit[disabled] ~ .p-user-tag-form__content__sub__button__chevron {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    &:hover::before {
+      background-color: transparent;
+    }
+  }
+}
+
+&__button {
+  &--submit {
+    padding-right: 40px; // 矢印部分のスペースを確保
+  }
+
+  &__chevron {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    z-index: 1;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: transparent;
+      transition: background-color 0.2s;
+    }
+
+    &:hover::before {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    svg {
+      display: block;
+      aspect-ratio: 1;
+      width: 8px;
+      height: auto;
+      color: var(--color-primary-contrast);
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+    display: none;
+    overflow: hidden;
+    z-index: 1000;
+
+    &[data-dropdown-open="true"] {
+      display: block;
+    }
+
+    &__item {
+      display: block;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--color-text-body);
+      text-decoration: none;
+      transition: background-color 0.2s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      font-family: var(--font-family);
+
+      &:hover {
+        background-color: var(--color-background-gray);
+        color: var(--color-text-body);
+      }
+
+      &:not(:first-child) {
+        border-top: 1px solid var(--color-border);
+      }
+    }
+  }
+}
+```
+
+**ポイント:**
+- ボタンとチェブロンアイコンを`position: relative`のラッパーで囲む
+- チェブロンアイコンは`position: absolute`でボタン内の右側に配置する
+- ボタンに`padding-right`を追加して、チェブロンアイコンのスペースを確保する
+- チェブロンアイコンは`type="button"`で、ドロップダウンの開閉のみを担当する
+- ドロップダウンメニューは`position: absolute`でボタンの下に配置する
+- 送信ボタンが無効化されている場合、チェブロンアイコンも視覚的に無効化する（`opacity: 0.5`、`cursor: not-allowed`）
+- チェブロンアイコンのホバー時は、`::before`疑似要素で背景色を変更する
+
+## セクション分割パターン
+
+### サイドバーのセクション分割
+
+サイドバーのコンテンツを複数のセクションに分割する場合は、`__section`を使用します。
+
+**マークアップ:**
+```slim
+.l-page-content__content__sub.p-user-tag-form__content__sub
+  .p-user-tag-form__content__sub__section
+    .p-user-tag-form__content__sub__button-wrapper
+      button.p-user-tag-form__content__sub__button.p-user-tag-form__content__sub__button--submit type="submit" form="edit_user_tag_form" 変更を保存
+    = link_to admin_area_user_tags_path, class: 'p-user-tag-form__content__sub__button p-user-tag-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
+      | キャンセル
+  .p-user-tag-form__content__sub__section
+    = link_to admin_area_users_path, class: 'p-user-tag-form__content__sub__button p-user-tag-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
+      | ユーザー一覧
+  .p-user-tag-form__content__sub__section.p-user-tag-form__content__sub__metadata
+    .c-info
+      / ... メタデータ ...
+```
+
+**スタイル:**
+```scss
+&__sub {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-content: start;
+
+  &__section {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-bottom: 1px solid var(--color-border);
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+}
+```
+
+**ポイント:**
+- セクション間は`border-bottom`で区切る
+- 最後のセクションは`border-bottom: none`で区切り線を削除する
+- 各セクションに`padding: 24px`を設定して、適切な余白を確保する
+- 親要素の`gap`は`0`に設定し、セクション間の余白は`border-bottom`で視覚的に区切る
+- セクション内の要素間の余白は、セクション内の`gap`で制御する
 
 ## ナビゲーションのアイコン
 
