@@ -15,11 +15,23 @@
     }
 
     &__sub {
-      padding: 24px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 0;
       align-content: start;
+
+      &__section {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        border-bottom: 1px solid var(--color-border);
+
+        &:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
+      }
 
       &__button {
         padding: 8px 16px;
@@ -69,10 +81,6 @@
             color: var(--color-text-inactive); // UIKitとの競合回避のため明示的に指定
           }
         }
-      }
-
-      &__metadata {
-        margin-top: 8px;
       }
     }
   }
