@@ -6,8 +6,19 @@
     - unless Rails.env.production?
       = link_to '#', class: "l-page-content__navigation__item" do
         span.l-page-content__navigation__item__text 分析
-    = link_to admin_area_user_tags_path, class: "l-page-content__navigation__item #{'is-active' if controller_name == 'user_tags'}" do
-      span.l-page-content__navigation__item__text タグ
+    - if controller_name == 'user_tags'
+      input#tags-is-open.l-page-content__navigation__checkbox type="checkbox" checked="checked"
+      label.l-page-content__navigation__item for="tags-is-open" class="#{'is-active' if controller_name == 'user_tags' && !params[:id]}"
+        span.l-page-content__navigation__item__text タグ
+        span.l-page-content__navigation__item__chevron
+          = render 'shared/icons/icon-chevron-down'
+      .l-page-content__navigation__children
+        - UserTag.ordered.limit(20).each do |tag|
+          = link_to edit_admin_area_user_tag_path(tag), class: "l-page-content__navigation__children__item #{'is-active' if params[:id].to_s == tag.id.to_s}", data: { turbo_frame: '_top' } do
+            = tag.name
+    - else
+      = link_to admin_area_user_tags_path, class: "l-page-content__navigation__item #{'is-active' if controller_name == 'user_tags'}" do
+        span.l-page-content__navigation__item__text タグ
     - unless Rails.env.production?
       input#auto-tagging-is-open.l-page-content__navigation__checkbox type="checkbox"
       label.l-page-content__navigation__item for="auto-tagging-is-open"
