@@ -9,7 +9,7 @@ export default class extends Controller<HTMLElement> {
   static targets = ['form', 'submit'];
 
   declare readonly formTarget: HTMLFormElement;
-  declare readonly submitTarget: HTMLButtonElement;
+  declare readonly submitTargets: HTMLButtonElement[];
 
   connect() {
     this.validate();
@@ -28,9 +28,18 @@ export default class extends Controller<HTMLElement> {
     if (!form) return;
 
     const isValid = form.checkValidity();
-    if (this.submitTarget) {
-      this.submitTarget.disabled = !isValid;
-    }
+    this.submitTargets.forEach((target) => {
+      if (target.type === 'submit') {
+        target.disabled = !isValid;
+      } else {
+        // type="button"の場合は、disabled属性を設定し、pointer-eventsで制御
+        if (!isValid) {
+          target.setAttribute('disabled', 'disabled');
+        } else {
+          target.removeAttribute('disabled');
+        }
+      }
+    });
   }
 }
 
