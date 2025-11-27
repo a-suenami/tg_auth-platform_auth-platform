@@ -18,6 +18,11 @@
   padding: 24px;
   gap: 16px;
   color: var(--color-text-inactive);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-text-inactive);
+  }
 
   &__header {
     display: grid;
@@ -41,7 +46,7 @@
       place-items: center;
       padding: 4px;
       border-radius: 4px;
-      text-decoration: none;
+      cursor: pointer;
 
       &:hover {
         background-color: var(--color-background-gray);
