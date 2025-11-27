@@ -11,27 +11,29 @@
           = render 'shared/icons/icon-search'
         a.c-table-header__content__more href='#'
           = render 'shared/icons/icon-more'
-      .c-table-header__pager
-        - if @pagy.prev
-          = link_to pagy_url_for(@pagy, @pagy.prev), class: 'c-table-header__pager__item'
-            = render 'shared/icons/icon-chevron-left'
-            span.c-table-header__pager__item__text 前へ
-        - else
-          span.c-table-header__pager__item.is-disabled
-            = render 'shared/icons/icon-chevron-left'
-            span.c-table-header__pager__item__text 前へ
-        - if @pagy.next
-          = link_to pagy_url_for(@pagy, @pagy.next), class: 'c-table-header__pager__item'
-            span.c-table-header__pager__item__text 次へ
-            = render 'shared/icons/icon-chevron-right'
-        - else
-          span.c-table-header__pager__item.is-disabled
-            span.c-table-header__pager__item__text 次へ
-            = render 'shared/icons/icon-chevron-right'
-    .c-table.has-checkbox.has-action
-      - if @users.empty?
-        .c-table__empty ユーザーが見つかりません
-      - else
+      - unless @users.empty?
+        .c-table-header__pager
+          - if @pagy.prev
+            = link_to pagy_url_for(@pagy, @pagy.prev), class: 'c-table-header__pager__item'
+              = render 'shared/icons/icon-chevron-left'
+              span.c-table-header__pager__item__text 前へ
+          - else
+            span.c-table-header__pager__item.is-disabled
+              = render 'shared/icons/icon-chevron-left'
+              span.c-table-header__pager__item__text 前へ
+          - if @pagy.next
+            = link_to pagy_url_for(@pagy, @pagy.next), class: 'c-table-header__pager__item'
+              span.c-table-header__pager__item__text 次へ
+              = render 'shared/icons/icon-chevron-right'
+          - else
+            span.c-table-header__pager__item.is-disabled
+              span.c-table-header__pager__item__text 次へ
+              = render 'shared/icons/icon-chevron-right'
+    - if @users.empty?
+      .c-empty.c-empty--has-margin
+        .c-empty__text ユーザーが見つかりません
+    - else
+      .c-table.has-checkbox.has-action
         table
           tr
             th
@@ -74,7 +76,7 @@
               td
                 a.c-table-row-action href='#'
                   = render 'shared/icons/icon-more-vertical'
-    .c-table-footer
-      == pagy_nav(@pagy)
+      .c-table-footer
+        == pagy_nav(@pagy)
 
   = turbo_frame_tag "detail", class: "l-page-content__content__sub"

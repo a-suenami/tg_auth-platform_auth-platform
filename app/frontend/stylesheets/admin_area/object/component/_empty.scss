@@ -13,5 +13,9 @@
     color: var(--color-text-inactive);
     text-align: center;
   }
+
+  &--has-margin {
+    margin: 24px;
+  }
 }
 
