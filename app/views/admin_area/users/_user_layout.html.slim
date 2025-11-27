@@ -3,9 +3,6 @@
     = link_to admin_area_users_path, class: "l-page-content__navigation__item #{'is-active' if controller_name == 'users'}" do
       span.l-page-content__navigation__item__text すべてのユーザー
       span.l-page-content__navigation__item__count = User.count
-    - unless Rails.env.production?
-      = link_to '#', class: "l-page-content__navigation__item" do
-        span.l-page-content__navigation__item__text 分析
     - if controller_name == 'user_tags'
       input#tags-is-open.l-page-content__navigation__checkbox type="checkbox" checked="checked"
       label.l-page-content__navigation__item for="tags-is-open" class="#{'is-active' if controller_name == 'user_tags' && !params[:id]}"

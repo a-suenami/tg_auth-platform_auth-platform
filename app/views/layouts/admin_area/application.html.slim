@@ -25,7 +25,7 @@ html lang='ja'
           = link_to '#', class: 'l-header__container__link' do
             = render 'shared/icons/icon-dashboard'
             span.l-header__container__link__text ダッシュボード
-        = link_to admin_area_users_path, class: "l-header__container__link #{'is-active' if controller_name == 'users'}" do
+        = link_to admin_area_users_path, class: "l-header__container__link #{'is-active' if ['users', 'user_tags', 'user_auto_taggings'].include?(controller_name)}" do
           = render 'shared/icons/icon-user'
           span.l-header__container__link__text ユーザー
         - unless Rails.env.production?
@@ -64,7 +64,7 @@ html lang='ja'
                         = link_to 'タグ', admin_area_user_tags_path
                       li
                         = link_to 'オートタギング', admin_area_user_auto_taggings_path
-                      
+
                 - unless Rails.env.production?
                   ul.uk-parent
                     li.uk-parent 配信
