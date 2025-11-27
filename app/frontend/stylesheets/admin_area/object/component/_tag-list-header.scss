@@ -48,6 +48,10 @@
     box-shadow: var(--box-shadow);
     line-height: 14px;
 
+    &:hover {
+      color: var(--color-primary-contrast);
+    }
+
     svg {
       display: block;
       aspect-ratio: 1;
