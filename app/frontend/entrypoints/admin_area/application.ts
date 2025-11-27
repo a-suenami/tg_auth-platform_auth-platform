@@ -197,11 +197,40 @@ function initDropdownHandlers() {
   });
 }
 
+// 絞り込みセクションの開閉を制御
+function initFilterHandlers() {
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    const toggle = target.closest("[data-filter-toggle]") as HTMLElement;
+    const filterSection = target.closest(".c-table-filter") as HTMLElement;
+
+    if (toggle) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const filterId = toggle.getAttribute("data-filter-toggle");
+      if (!filterId) return;
+
+      const targetFilter = document.getElementById(filterId) as HTMLElement;
+      if (!targetFilter) return;
+
+      const isOpen = targetFilter.getAttribute("data-filter-open") === "true";
+
+      // クリックされた絞り込みセクションを開閉
+      targetFilter.setAttribute("data-filter-open", isOpen ? "false" : "true");
+    } else if (filterSection) {
+      // 絞り込みセクション内のクリック時は閉じない（フォームの処理を優先）
+      e.stopPropagation();
+    }
+  });
+}
+
 document.addEventListener("turbo:load", async () => {
   formatLocalTimes();
   initModalObserver();
   initModalHandlers();
   initDropdownHandlers();
+  initFilterHandlers();
 
   Array.from(document.getElementsByClassName("rl-clickable-tab")).forEach(
     (tab) => {
