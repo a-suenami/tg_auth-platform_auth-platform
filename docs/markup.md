@@ -364,6 +364,9 @@ JavaScriptでの状態管理や、CSSでの条件付きスタイリングにデ�
 - [ ] ドロップダウンはデータ属性（`data-dropdown-toggle`、`data-dropdown-open`）を使用して開閉を制御しているか
 - [ ] ドロップダウンの開閉はイベント委譲を使用して実装しているか
 - [ ] カード全体をリンクにする場合、アクションボタンは絶対配置で配置しているか
+- [ ] ナビゲーションの表示方法を現在のページに応じて切り替えているか
+- [ ] チェックボックスの初期状態を現在のページに応じて設定しているか
+- [ ] 親と子のアクティブ状態を適切に管理しているか
 
 ## ラジオボタングループ
 
@@ -1015,6 +1018,35 @@ ja:
 - デフォルトでチェブロンアイコンを下向き（`rotate(180deg)`）に設定
 - 開いた状態では`transform: none`で上向きに戻す
 - CSSの`:checked`セレクタを使用して状態を制御する
+
+### ナビゲーションの条件分岐による表示切り替え
+
+現在のページに応じて、ナビゲーション項目をリンクとして表示するか、開閉可能なチェックボックス付きの項目として表示するかを切り替えます。
+
+**マークアップ:**
+```slim
+- if controller_name == 'user_tags'
+  input#tags-is-open.l-page-content__navigation__checkbox type="checkbox" checked="checked"
+  label.l-page-content__navigation__item for="tags-is-open" class="#{'is-active' if controller_name == 'user_tags' && !params[:id]}"
+    span.l-page-content__navigation__item__text タグ
+    span.l-page-content__navigation__item__chevron
+      = render 'shared/icons/icon-chevron-down'
+  .l-page-content__navigation__children
+    - UserTag.ordered.limit(20).each do |tag|
+      = link_to edit_admin_area_user_tag_path(tag), class: "l-page-content__navigation__children__item #{'is-active' if params[:id].to_s == tag.id.to_s}", data: { turbo_frame: '_top' } do
+        = tag.name
+- else
+  = link_to admin_area_user_tags_path, class: "l-page-content__navigation__item #{'is-active' if controller_name == 'user_tags'}" do
+    span.l-page-content__navigation__item__text タグ
+```
+
+**ポイント:**
+- 現在のコントローラーに応じて、ナビゲーション項目の表示方法を切り替える
+- 該当するコントローラーの場合は、チェックボックス付きの開閉可能な項目として表示する
+- それ以外の場合は、通常のリンクとして表示する
+- チェックボックスの`checked="checked"`属性で、現在のページに応じて初期状態を開いた状態にする
+- 親項目のアクティブ状態は、子項目がアクティブでない場合のみ適用する（`controller_name == 'user_tags' && !params[:id]`）
+- 子項目のアクティブ状態は、パラメータ（`params[:id]`）で判定する
 
 ## 国際化対応
 
