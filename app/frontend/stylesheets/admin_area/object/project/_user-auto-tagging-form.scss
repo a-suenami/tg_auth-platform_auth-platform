@@ -109,6 +109,17 @@
     gap: 16px;
   }
 
+  &__sub-section {
+    display: grid;
+    gap: 8px;
+
+    &__title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-heading);
+    }
+  }
+
   &__add-block {
     display: flex;
     align-items: center;

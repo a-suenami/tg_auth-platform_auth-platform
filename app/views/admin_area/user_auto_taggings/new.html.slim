@@ -16,43 +16,45 @@
               label.c-form-field__label 説明
               = f.text_area :description, placeholder: '説明文を入力', rows: 5, class: 'c-form-field__input'
 
-          / 条件セクション（モック）
+          / 条件セクション（大セクション）
           .c-form-section
             .c-form-section__title 条件
-            .c-form-field
-              label.c-form-field__label 一致した時に設定するタグ
-              .c-user-detail-tag__list data-tag-picker-selected=""
-                / 選択されたタグがここに表示されます（モック）
-                = link_to tag_picker_admin_area_user_auto_taggings_path, class: 'c-user-detail-tag__add', data: { turbo_frame: 'modal-frame' } do
-                  = render 'shared/icons/icon-plus'
-                  span.c-user-detail-tag__add__text タグを追加
-
-          / 期間設定セクション（モック）
-          .c-form-section
-            .c-form-section__title 期間設定
-            .c-form-field
-              label.c-form-field__label
-              .c-form-field__input-wrapper
-                select.c-form-field__input.c-form-field__input--select
-                  option 期間を設定しない
-                .c-form-field__input-wrapper__dropdown
-                  = render 'shared/icons/icon-chevron-down'
-
-          / 条件設定セクション（モック）
-          .c-form-section
-            .c-form-section__header
-              .c-form-section__title 条件設定
             .c-form-section__content
-              .c-condition-block
-                .c-condition-block__header
-                  .c-condition-block__title 条件ブロック1
-                .c-condition-block__content
-                  button.c-condition-block__add-condition type="button"
+              / 一致した時に設定するタグ（小セクション）
+              .c-form-section__sub-section
+                .c-form-section__sub-section__title 一致した時に設定するタグ
+                .c-form-field
+                  .c-user-detail-tag__list data-tag-picker-selected=""
+                    / 選択されたタグがここに表示されます（モック）
+                    = link_to tag_picker_admin_area_user_auto_taggings_path, class: 'c-user-detail-tag__add', data: { turbo_frame: 'modal-frame' } do
+                      = render 'shared/icons/icon-plus'
+                      span.c-user-detail-tag__add__text タグを追加
+
+              / 期間設定（小セクション）
+              .c-form-section__sub-section
+                .c-form-section__sub-section__title 期間設定
+                .c-form-field
+                  label.c-form-field__label
+                  .c-form-field__input-wrapper
+                    select.c-form-field__input.c-form-field__input--select
+                      option 期間を設定しない
+                    .c-form-field__input-wrapper__dropdown
+                      = render 'shared/icons/icon-chevron-down'
+
+              / 条件設定（小セクション）
+              .c-form-section__sub-section
+                .c-form-section__sub-section__title 条件設定
+                .c-form-section__content
+                  .c-condition-block
+                    .c-condition-block__header
+                      .c-condition-block__title 条件ブロック1
+                    .c-condition-block__content
+                      button.c-condition-block__add-condition type="button"
+                        = render 'shared/icons/icon-plus'
+                        span.c-condition-block__add-condition__text 条件を追加
+                  button.c-form-section__add-block type="button"
                     = render 'shared/icons/icon-plus'
-                    span.c-condition-block__add-condition__text 条件を追加
-              button.c-form-section__add-block type="button"
-                = render 'shared/icons/icon-plus'
-                span.c-form-section__add-block__text 条件ブロックを追加
+                    span.c-form-section__add-block__text 条件ブロックを追加
 
     .l-page-content__content__sub.p-user-auto-tagging-form__content__sub
       .p-user-auto-tagging-form__content__sub__section
