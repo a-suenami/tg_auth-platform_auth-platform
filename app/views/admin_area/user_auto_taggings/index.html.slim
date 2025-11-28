@@ -1,41 +1,41 @@
-.uk-margin-top.uk-container
-  / Breadcrumb
-  - breadcrumb_items = [{ text: '会員ID管理' }, { text: 'オートタギング' }]
-  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+= render 'admin_area/users/user_layout' do
+  .l-page-content__content__main
+    = render 'admin_area/shared/breadcrumb', items: [{ text: 'オートタギング' }]
 
-  .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-bottom.uk-margin-top
-    h2 オートタギング
+    .c-tag-list-header
+      = form_with url: admin_area_user_auto_taggings_path, method: :get, local: true, class: 'c-tag-list-header__search' do |f|
+        = f.text_field :q, placeholder: 'オートタギング名で検索', value: params[:q], class: 'c-tag-list-header__search__input'
+        = render 'shared/icons/icon-search'
+      = link_to admin_area_user_auto_taggings_path, class: 'c-tag-list-header__clear' do
+        | クリア
+      = link_to new_admin_area_user_auto_tagging_path, class: 'c-tag-list-header__button', data: { turbo_frame: '_top' } do
+        = render 'shared/icons/icon-plus'
+        span.c-tag-list-header__button__text 新規オートタギング
 
-  .uk-card.uk-card-default.uk-card-body.uk-margin-bottom
-    .uk-flex.uk-flex-middle
-      = form_with url: admin_area_user_auto_taggings_path, method: :get, class: "uk-search uk-search-default uk-width-expand" do |f|
-        = f.text_field :q, placeholder: "ルール名を入力...", value: params[:q], class: "uk-search-input"
-      = link_to 'クリア', admin_area_user_auto_taggings_path, class: "uk-button uk-button-default uk-margin-small-left"
-      = link_to new_admin_area_user_auto_tagging_path, class: "uk-button uk-button-primary uk-margin-small-left" do
-        span uk-icon="plus"
-        |  新規作成
-
-  .uk-card.uk-card-default.uk-card-body
-    - if @user_auto_taggings.empty?
-      p.uk-text-lead オートタグ設定が見つかりません
-    - else
-      table.uk-table.uk-table-divider.uk-table-hover
-        thead
-          tr
-            th 名前
-            th 連携設定
-            th 説明
-        tbody
-          - @user_auto_taggings.each do |rule|
-            tr
-              td
-                = link_to rule.name, edit_admin_area_user_auto_tagging_path(rule.id)
-              td
-                - if rule.shareable
-                  span.uk-label 連携タグとして設定中
-                - else
-                  | -
-              td
-                = rule.description.present? ? truncate(rule.description, length: 100) : '-'
-
-    == pagy_nav(@pagy)
+    .c-tag-list-content
+      - if @user_auto_taggings.empty?
+        .c-empty オートタグが見つかりません
+      - else
+        .c-tag-card-list
+          - @user_auto_taggings.each do |auto_tagging|
+            .c-tag-card-wrapper
+              = link_to edit_admin_area_user_auto_tagging_path(auto_tagging), class: 'c-tag-card', data: { turbo_frame: '_top' } do
+                .c-tag-card__header
+                  .c-tag-card__header__title = auto_tagging.name
+                  .c-tag-card__header__description = auto_tagging.description.presence || '-'
+                .c-tag-card__footer
+                  .c-tag-card__footer__author
+                    .c-tag-card__footer__author__avatar
+                      = render 'shared/icons/icon-user'
+                    .c-tag-card__footer__author__name 作成者 #{auto_tagging.created_by_name || '-'}
+                  .c-tag-card__footer__tag
+                    - status_label = auto_tagging.shareable ? '連携タグ設定中' : 'ローカル'
+                    .c-tag-card__footer__tag__item = status_label
+              .c-tag-card__action-wrapper
+                .c-tag-card__action data-dropdown-toggle="dropdown-#{auto_tagging.id}"
+                  = render 'shared/icons/icon-more-vertical'
+                .c-tag-card__dropdown id="dropdown-#{auto_tagging.id}"
+                  = link_to admin_area_user_auto_tagging_path(auto_tagging), data: { turbo_method: :delete, turbo_confirm: '本当に削除しますか？', turbo_frame: '_top' }, class: 'c-tag-card__dropdown__item' do
+                    | 削除
+        .c-table-footer
+          == pagy_nav(@pagy)

@@ -65,6 +65,7 @@
   &__footer {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 8px;
     padding-top: 8px;
 
@@ -73,9 +74,31 @@
       align-items: center;
       gap: 8px;
 
+      &__avatar {
+        display: grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background-color: var(--color-background-gray);
+        flex-shrink: 0;
+
+        svg {
+          display: block;
+          aspect-ratio: 1;
+          width: 14px;
+          height: auto;
+          color: var(--color-text-inactive);
+        }
+      }
+
       &__name {
         font-size: 13px;
       }
+    }
+
+    &__tag {
+      flex-shrink: 0;
     }
   }
 
