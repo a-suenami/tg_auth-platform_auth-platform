@@ -22,6 +22,9 @@ module AdminArea
       @user_auto_tagging.created_by = current_admin
 
       if @user_auto_tagging.save
+        # Apply auto-tagging rules to all matching users
+        apply_tagging_rules(@user_auto_tagging)
+
         redirect_to admin_area_user_auto_taggings_path, notice: 'オートタグ設定を保存しました'
       else
         render :new, status: :unprocessable_entity
@@ -32,6 +35,9 @@ module AdminArea
       @user_auto_tagging.updated_by = current_admin
 
       if @user_auto_tagging.update(user_auto_tagging_params)
+        # Apply auto-tagging rules to all matching users
+        apply_tagging_rules(@user_auto_tagging)
+
         redirect_to admin_area_user_auto_taggings_path, notice: 'オートタグ設定を更新しました'
       else
         render :edit, status: :unprocessable_entity
@@ -39,6 +45,7 @@ module AdminArea
     end
 
     def destroy
+      # Assignments will be automatically deleted via dependent: :destroy in model
       @user_auto_tagging.destroy!
       redirect_to admin_area_user_auto_taggings_path, notice: 'オートタグ設定を削除しました', status: :see_other
     end
@@ -47,6 +54,10 @@ module AdminArea
 
     def set_user_auto_tagging
       @user_auto_tagging = UserAutoTagging.find(params[:id])
+    end
+
+    def apply_tagging_rules(user_auto_tagging)
+      UserAutoTagging::ApplyWorker.perform_async(user_auto_tagging.id)
     end
 
     def user_auto_tagging_params

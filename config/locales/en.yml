@@ -73,7 +73,7 @@ en:
       # Prefecture errors
       prefecture_codes_invalid: values must be valid prefecture codes
       # Gender errors
-      gender_values_invalid: gender values must be "male" or "female"
+      gender_values_invalid: gender values must be "male", "female", or "other"
       # Account link errors
       account_link_value_empty: value must be a non-empty string
       account_link_value_invalid: value must be "LINE"

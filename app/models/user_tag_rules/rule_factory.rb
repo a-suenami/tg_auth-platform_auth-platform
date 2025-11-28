@@ -50,10 +50,35 @@ module UserTagRules
         end
       end
 
-      # TODO: Rule execution
-      # def build(condition_type, config)
-      #   Build rule instance for execution
-      # end
+      # Build rule instance from condition type and config
+      #
+      # @param condition_type [String] Type of condition
+      # @param config [Hash] Configuration hash
+      # @return [AbstractRule] Rule instance ready for execution
+      # @raise [ArgumentError] If condition_type is unknown
+      # @example
+      #   config = {"subscription_type" => "current", "values" => ["1", "2"]}
+      #   rule = RuleFactory.build("membership", config)
+      #   rule.events #=> [:membership_joined, :membership_left]
+      sig { params(condition_type: String, config: T::Hash[String, T.untyped]).returns(AbstractRule) }
+      def build(condition_type, config)
+        case condition_type
+        when 'membership'
+          MembershipRule.from_config(config)
+        when 'plan'
+          PlanRule.from_config(config)
+        when 'age'
+          AgeRule.from_config(config)
+        when 'prefecture'
+          PrefectureRule.from_config(config)
+        when 'gender'
+          GenderRule.from_config(config)
+        when 'account_link'
+          AccountLinkRule.from_config(config)
+        else
+          raise ArgumentError, "Unknown condition_type: #{condition_type}"
+        end
+      end
     end
   end
 end

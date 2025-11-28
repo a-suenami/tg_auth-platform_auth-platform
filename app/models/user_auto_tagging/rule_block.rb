@@ -17,4 +17,40 @@ class UserAutoTagging::RuleBlock < ApplicationRecord
   validates :position, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   scope :ordered, -> { order(position: :asc) }
+
+  # MR 2.2: Execution methods
+
+  # Build composite rule combining all rules with AND logic
+  #
+  # @return [UserTagRules::CompositeRule] Composite rule instance
+  # @example
+  #   block = RuleBlock.find(123)
+  #   block.to_composite_rule #=> CompositeRule([rule1, rule2, ...])
+  sig { returns(UserTagRules::CompositeRule) }
+  def to_composite_rule
+    rule_instances = rules.ordered.map(&:to_rule)
+    UserTagRules::CompositeRule.new(rule_instances)
+  end
+
+  # Check if a specific user matches ALL rules in this block (AND logic)
+  #
+  # @param user_id [String] User UUID
+  # @return [Boolean] True if user matches all rules
+  # @example
+  #   block.match?('user-uuid-123') #=> true
+  sig { params(user_id: String).returns(T::Boolean) }
+  def match?(user_id)
+    to_composite_rule.match?(user_id)
+  end
+
+  # Find all users matching ALL rules in this block
+  #
+  # @param relation [ActiveRecord::Relation] Base user relation
+  # @return [ActiveRecord::Relation] Filtered relation
+  # @example
+  #   block.apply(User.all) #=> User.where(...)
+  sig { params(relation: T.untyped).returns(T.untyped) }
+  def apply(relation)
+    to_composite_rule.apply(relation)
+  end
 end

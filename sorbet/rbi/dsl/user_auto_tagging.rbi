@@ -482,6 +482,20 @@ class UserAutoTagging
     sig { params(attributes: T.untyped).returns(T.untyped) }
     def schedule_attributes=(attributes); end
 
+    sig { returns(T::Array[T.untyped]) }
+    def tag_assignment_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def tag_assignment_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `UserAutoTagging` class because it declared `has_many :tag_assignments`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::UserTagAssignment::PrivateCollectionProxy) }
+    def tag_assignments; end
+
+    sig { params(value: T::Enumerable[::UserTagAssignment]).void }
+    def tag_assignments=(value); end
+
     sig { returns(T.nilable(::Tenant)) }
     def tenant; end
 

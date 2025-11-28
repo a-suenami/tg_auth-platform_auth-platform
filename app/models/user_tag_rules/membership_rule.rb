@@ -36,10 +36,43 @@ module UserTagRules
       @duration_unit = T.let(duration_unit, T.nilable(String))
     end
 
-    # TODO: Execution methods
-    # - events(): [:membership_joined, :membership_left] (current)
-    #            [:membership_joined, :membership_left, :new_day_arrived] (duration)
-    # - apply(relation): Filter users based on subscription_type
+    # MR 2.1: Execution methods
+
+    # Build rule from config hash
+    #
+    # @param config [Hash] Configuration hash
+    # @return [MembershipRule] Rule instance
+    sig { params(config: T::Hash[String, T.untyped]).returns(MembershipRule) }
+    def self.from_config(config)
+      new(
+        membership_ids: config['values'],
+        subscription_type: config['subscription_type'],
+        duration_value: config['duration_value']&.to_i,
+        duration_unit: config['duration_unit'],
+      )
+    end
+
+    # Events that trigger this rule
+    #
+    # @return [Array<Symbol>] Event names
+    sig { override.returns(T::Array[Symbol]) }
+    def events
+      base_events = [:membership_joined, :membership_left]
+      @subscription_type == 'duration' ? base_events + [:new_day_arrived] : base_events
+    end
+
+    # Filter users matching membership criteria
+    #
+    # @param relation [ActiveRecord::Relation] Base user relation
+    # @return [ActiveRecord::Relation] Filtered relation
+    sig { override.params(relation: T.untyped).returns(T.untyped) }
+    def apply(relation)
+      if @subscription_type == 'current'
+        apply_current(relation)
+      else
+        apply_duration(relation)
+      end
+    end
 
     # Validate config format
     #
@@ -80,6 +113,43 @@ module UserTagRules
       errors
     end
 
-    # TODO: Build rule from config
+    private
+
+    # Filter users with current active membership
+    sig { params(relation: T.untyped).returns(T.untyped) }
+    def apply_current(relation)
+      relation
+        .joins('INNER JOIN membership_users ON membership_users.user_id = users.id AND membership_users.tenant_id = users.tenant_id')
+        .where('membership_users.status = ? AND membership_users.membership_id IN (?)', 'active', @membership_ids)
+        .distinct
+    end
+
+    # Filter users with membership duration
+    sig { params(relation: T.untyped).returns(T.untyped) }
+    def apply_duration(relation)
+      return relation.none if @duration_value.nil? || @duration_unit.nil?
+
+      threshold_date = calculate_threshold_date(@duration_value, @duration_unit)
+
+      relation
+        .joins('INNER JOIN membership_users ON membership_users.user_id = users.id AND membership_users.tenant_id = users.tenant_id')
+        .where('membership_users.membership_id IN (?) AND membership_users.created_at <= ?', @membership_ids, threshold_date)
+        .distinct
+    end
+
+    # Calculate threshold date for duration check
+    sig { params(value: Integer, unit: String).returns(Time) }
+    def calculate_threshold_date(value, unit)
+      case unit
+      when 'days'
+        value.days.ago
+      when 'months'
+        value.months.ago
+      when 'years'
+        value.years.ago
+      else
+        raise ArgumentError, "Invalid duration_unit: #{unit}"
+      end
+    end
   end
 end

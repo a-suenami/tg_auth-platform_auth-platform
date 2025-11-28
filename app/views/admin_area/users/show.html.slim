@@ -109,9 +109,13 @@
     h2.uk-card-title ユーザタグ
     .uk-margin
       - if @user.tag_assignments.any?
-        - @user.tag_assignments.includes(:user_tag).each do |assignment|
-          span.uk-label.uk-margin-small-right = assignment.user_tag.name
-          - if assignment.auto?
-            span.uk-label.uk-label-success.uk-margin-small-right (auto)
+        - @user.tag_assignments.includes(:user_tag, :user_auto_tagging).each do |assignment|
+          - tag_name = assignment.manual? ? assignment.user_tag&.name : assignment.user_auto_tagging&.name
+          - if assignment.manual?
+            span.uk-label.uk-margin-small-right = tag_name
+          - else
+            span.uk-label.uk-label-success.uk-margin-small-right
+              = tag_name
+              span.uk-margin-small-left style="font-size: 0.75em; opacity: 0.9;" Ⓜ️
       - else
         | タグが設定されていません

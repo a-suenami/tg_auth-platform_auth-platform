@@ -19,9 +19,38 @@ module UserTagRules
       @prefecture_codes = T.let(prefecture_codes, T::Array[Integer])
     end
 
-    # TODO: MR 2 - Execution methods
-    # - events(): [:address_changed]
-    # - apply(relation): Filter users by prefecture
+    # MR 2.1: Execution methods
+
+    # Build rule from config hash
+    #
+    # @param config [Hash] Configuration hash
+    # @return [PrefectureRule] Rule instance
+    sig { params(config: T::Hash[String, T.untyped]).returns(PrefectureRule) }
+    def self.from_config(config)
+      new(
+        prefecture_codes: config['values'].map(&:to_i),
+      )
+    end
+
+    # Events that trigger this rule
+    #
+    # @return [Array<Symbol>] Event names
+    sig { override.returns(T::Array[Symbol]) }
+    def events
+      [:address_changed]
+    end
+
+    # Filter users matching prefecture criteria
+    #
+    # @param relation [ActiveRecord::Relation] Base user relation
+    # @return [ActiveRecord::Relation] Filtered relation
+    sig { override.params(relation: T.untyped).returns(T.untyped) }
+    def apply(relation)
+      relation
+        .joins('INNER JOIN contact_addresses ON contact_addresses.user_id = users.id AND contact_addresses.tenant_id = users.tenant_id')
+        .where(contact_addresses: { prefecture_code: @prefecture_codes })
+        .distinct
+    end
 
     # Validate config format
     #
@@ -42,7 +71,5 @@ module UserTagRules
 
       errors
     end
-
-    # TODO: MR 2 - Build rule from config
   end
 end
