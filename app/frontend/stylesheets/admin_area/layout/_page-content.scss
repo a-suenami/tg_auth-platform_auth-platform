@@ -95,6 +95,14 @@
           }
         }
       }
+      &__empty {
+        padding: 8px;
+        &__text {
+          font-size: 14px;
+          color: var(--color-text-inactive);
+          text-align: left;
+        }
+      }
     }
   }
   &__content {

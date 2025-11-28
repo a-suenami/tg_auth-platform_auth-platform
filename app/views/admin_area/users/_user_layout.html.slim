@@ -11,9 +11,13 @@
         label.l-page-content__navigation__item__chevron for="tags-is-open"
           = render 'shared/icons/icon-chevron-down'
       .l-page-content__navigation__children
-        - UserTag.ordered.limit(20).each do |tag|
-          = link_to edit_admin_area_user_tag_path(tag), class: "l-page-content__navigation__children__item #{'is-active' if params[:id].to_s == tag.id.to_s}", data: { turbo_frame: '_top' } do
-            = tag.name
+        - if UserTag.any?
+          - UserTag.ordered.limit(20).each do |tag|
+            = link_to edit_admin_area_user_tag_path(tag), class: "l-page-content__navigation__children__item #{'is-active' if params[:id].to_s == tag.id.to_s}", data: { turbo_frame: '_top' } do
+              = tag.name
+        - else
+          .l-page-content__navigation__children__empty
+            .l-page-content__navigation__children__empty__text タグがありません
     - else
       = link_to admin_area_user_tags_path, class: "l-page-content__navigation__item #{'is-active' if controller_name == 'user_tags'}" do
         span.l-page-content__navigation__item__text タグ
