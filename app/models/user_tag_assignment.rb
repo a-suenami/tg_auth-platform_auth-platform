@@ -13,7 +13,6 @@ class UserTagAssignment < ApplicationRecord
   belongs_to :user_tag
   belongs_to :assigned_by, class_name: 'Admin', optional: true
   belongs_to :user_auto_tagging, optional: true
-  belongs_to :removed_by, class_name: 'Admin', optional: true
 
   # Validations
   validates :assignment_type, presence: true
@@ -23,11 +22,8 @@ class UserTagAssignment < ApplicationRecord
   # Custom validations
   validate :manual_assignment_has_admin
   validate :auto_assignment_has_rule
-  validate :unique_active_assignment
 
   # Scopes
-  scope :active, -> { where(removed_at: nil) }
-  scope :removed, -> { where.not(removed_at: nil) }
   scope :manual, -> { where(assignment_type: 'manual') }
   scope :auto, -> { where(assignment_type: 'auto') }
   scope :for_user, ->(user_id) { where(user_id: user_id) }
@@ -46,21 +42,6 @@ class UserTagAssignment < ApplicationRecord
     assignment_type == 'auto'
   end
 
-  # Check if assignment is active (not removed)
-  sig { returns(T::Boolean) }
-  def active?
-    removed_at.nil?
-  end
-
-  # Remove this assignment
-  sig { params(admin: Admin).void }
-  def remove!(admin)
-    update!(
-      removed_at: Time.current,
-      removed_by: admin,
-    )
-  end
-
   private
 
   sig { void }
@@ -75,18 +56,5 @@ class UserTagAssignment < ApplicationRecord
     return unless assignment_type == 'auto' && user_auto_tagging_id.blank?
 
     errors.add(:user_auto_tagging, 'must be present for auto assignments')
-  end
-
-  sig { void }
-  def unique_active_assignment
-    return if removed_at.present?
-
-    existing = UserTagAssignment
-      .active
-      .where(user_id: user_id, user_tag_id: user_tag_id)
-      .where.not(id: id)
-      .exists?
-
-    errors.add(:base, 'User already has this tag assigned') if existing
   end
 end
