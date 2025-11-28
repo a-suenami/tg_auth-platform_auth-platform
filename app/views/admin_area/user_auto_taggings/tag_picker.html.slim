@@ -3,7 +3,7 @@
     .c-modal__dialog__header__title タグを選択
     = link_to "#", class: "c-modal__dialog__header__close", data: { action: "close-modal" } do
       = render 'shared/icons/icon-close'
-  .c-modal__dialog__body
+  .c-modal__dialog__body.c-modal__dialog__body--no-padding
     .c-tag-picker
       - if @user_tags.empty?
         .c-empty タグがありません
