@@ -19,13 +19,13 @@ module AdminArea::ExceptionRescuable
 
   sig { params(exception: ActiveRecord::RecordInvalid).void }
   def handle_validation_error(exception)
-    redirect_back fallback_location: admin_area_root_path,
+    redirect_back fallback_location: T.unsafe(self).admin_area_root_path,
                   alert: I18n.t('errors.messages.error_occurred', message: exception.message)
   end
 
-  sig { params(exception: ActiveRecord::RecordNotFound).void }
+  sig { params(_exception: ActiveRecord::RecordNotFound).void }
   def handle_not_found(_exception)
-    redirect_to admin_area_root_path,
+    redirect_to T.unsafe(self).admin_area_root_path,
                 alert: I18n.t('errors.messages.not_found')
   end
 end

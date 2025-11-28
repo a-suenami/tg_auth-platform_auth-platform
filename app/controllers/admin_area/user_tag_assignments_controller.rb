@@ -48,7 +48,7 @@ module AdminArea
             user: @user,
             event: UserEvent::Type::ManuallyTagged.new(
               tag_id: tag_id,
-              tagged_by: current_admin.id,
+              tagged_by: T.must(current_admin).id,
             ),
             transaction_time: transaction_time,
           )
@@ -57,19 +57,19 @@ module AdminArea
         # Remove unchecked tags (only manual ones)
         tags_to_remove.each do |tag_id|
           assignment = current_assignments.find { |a| a.user_tag_id.to_s == tag_id }
-          if assignment
-            assignment.destroy!
+          next unless assignment
 
-            # Record event
-            UserEvent.record!(
-              user: @user,
-              event: UserEvent::Type::ManuallyUntagged.new(
-                tag_id: tag_id,
-                untagged_by: current_admin.id,
-              ),
-              transaction_time: transaction_time,
-            )
-          end
+          assignment.destroy!
+
+          # Record event
+          UserEvent.record!(
+            user: @user,
+            event: UserEvent::Type::ManuallyUntagged.new(
+              tag_id: tag_id,
+              untagged_by: T.must(current_admin).id,
+            ),
+            transaction_time: transaction_time,
+          )
         end
       end
 
