@@ -5,6 +5,7 @@ module AdminArea
   class ApplicationController < ActionController::Base
     extend T::Sig
     include Pagy::Backend
+    include AdminArea::ExceptionRescuable
 
     before_action :authenticate!
     before_action :set_tenant

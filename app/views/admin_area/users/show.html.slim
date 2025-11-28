@@ -102,3 +102,16 @@
     .uk-margin
       dt.uk-text-bold = ContactAddress.human_attribute_name(:country_code)
       dd = @user&.contact_address&.country_code
+
+    hr.uk-divider-icon
+    .uk-flex.uk-flex-right
+      = link_to "編集", edit_admin_area_user_user_tag_assignment_path(@user), class: "uk-button uk-button-primary"
+    h2.uk-card-title ユーザタグ
+    .uk-margin
+      - if @user.tag_assignments.any?
+        - @user.tag_assignments.includes(:user_tag).each do |assignment|
+          span.uk-label.uk-margin-small-right = assignment.user_tag.name
+          - if assignment.auto?
+            span.uk-label.uk-label-success.uk-margin-small-right (auto)
+      - else
+        | タグが設定されていません
