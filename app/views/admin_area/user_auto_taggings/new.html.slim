@@ -1,9 +1,59 @@
-.uk-margin-top.uk-container
-  / Breadcrumb
-  - breadcrumb_items = [{ text: '会員ID管理' }, { text: 'オートタギング', link: admin_area_user_auto_taggings_path }, { text: '新規作成' }]
-  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+= render 'admin_area/users/user_layout' do
+  .p-user-auto-tagging-form data-controller="form-validation"
+    .p-user-auto-tagging-form__breadcrumb
+      = render 'admin_area/shared/breadcrumb', items: [{ text: 'オートタギング', link: admin_area_user_auto_taggings_path }, { text: '新規オートタギング' }]
+    .l-page-content__content__main.p-user-auto-tagging-form__content__main
+      = form_with model: @user_auto_tagging, url: admin_area_user_auto_taggings_path, method: :post, local: true, data: { turbo_frame: '_top', form_validation_target: 'form' }, html: { id: 'new_user_auto_tagging_form' } do |f|
+        = render 'admin_area/shared/form_error', target: f.object
+        .c-form
+          / 基本情報セクション
+          .c-form-section
+            .c-form-section__title 基本情報
+            .c-form-field
+              label.c-form-field__label オートタギング名
+              = f.text_field :name, placeholder: 'オートタギング名を入力', class: 'c-form-field__input', required: true
+            .c-form-field
+              label.c-form-field__label 説明
+              = f.text_area :description, placeholder: '説明文を入力', rows: 5, class: 'c-form-field__input'
 
-  h2 オートタグ設定を作成
+          / 条件セクション（モック）
+          .c-form-section
+            .c-form-section__title 条件
+            .c-form-field
+              label.c-form-field__label 一致した時に設定するタグ
+              button.c-form-field__button type="button"
+                = render 'shared/icons/icon-plus'
+                span.c-form-field__button__text タグを追加
 
-  .uk-margin-top.uk-card.uk-card-default.uk-card-body
-    = render 'form', user_auto_tagging: @user_auto_tagging
+          / 期間設定セクション（モック）
+          .c-form-section
+            .c-form-section__title 期間設定
+            .c-form-field
+              label.c-form-field__label
+              .c-form-field__input-wrapper
+                select.c-form-field__input.c-form-field__input--select
+                  option 期間を設定しない
+                .c-form-field__input-wrapper__dropdown
+                  = render 'shared/icons/icon-chevron-down'
+
+          / 条件設定セクション（モック）
+          .c-form-section
+            .c-form-section__header
+              .c-form-section__title 条件設定
+            .c-form-section__content
+              .c-condition-block
+                .c-condition-block__header
+                  .c-condition-block__title 条件ブロック1
+                .c-condition-block__content
+                  button.c-condition-block__add-condition type="button"
+                    = render 'shared/icons/icon-plus'
+                    span.c-condition-block__add-condition__text 条件を追加
+              button.c-form-section__add-block type="button"
+                = render 'shared/icons/icon-plus'
+                span.c-form-section__add-block__text 条件ブロックを追加
+
+    .l-page-content__content__sub.p-user-auto-tagging-form__content__sub
+      .p-user-auto-tagging-form__content__sub__section
+        button.p-user-auto-tagging-form__content__sub__button.p-user-auto-tagging-form__content__sub__button--submit type="submit" form="new_user_auto_tagging_form" data-form_validation_target="submit" data-form-validation-target="submit" disabled="disabled" 新規作成
+        = link_to admin_area_user_auto_taggings_path, class: 'p-user-auto-tagging-form__content__sub__button p-user-auto-tagging-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
+          | キャンセル

@@ -1,0 +1,232 @@
+// オートタギングフォーム（新規作成・編集）
+.p-user-auto-tagging-form {
+  display: contents;
+
+  &__breadcrumb {
+    grid-column: 1 / -1;
+  }
+
+  &__content {
+    &__main {
+      padding: 24px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    &__sub {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      align-content: start;
+
+      &__section {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        border-bottom: 1px solid var(--color-border);
+
+        &:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
+      }
+
+      &__button {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        border: 1px solid var(--color-border);
+        background-color: var(--color-background);
+        color: var(--color-text-body);
+        cursor: pointer;
+        transition: background-color 0.2s, border-color 0.2s;
+        box-shadow: var(--box-shadow);
+        text-decoration: none;
+        text-align: center;
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+
+        &:hover {
+          background-color: var(--color-background-gray);
+        }
+
+        &--submit {
+          background-color: var(--color-primary);
+          color: var(--color-primary-contrast);
+          border-color: var(--color-primary);
+
+          &:hover:not(:disabled) {
+            background-color: var(--color-text-heading);
+            border-color: var(--color-text-heading);
+          }
+
+          &[disabled] {
+            background-color: var(--color-background-gray);
+            color: var(--color-text-inactive);
+            border-color: var(--color-border);
+            cursor: not-allowed;
+            pointer-events: none;
+          }
+        }
+
+        &--cancel {
+          background-color: var(--color-background);
+          color: var(--color-text-inactive);
+          border-color: var(--color-border);
+
+          &:hover {
+            background-color: var(--color-background-gray);
+            color: var(--color-text-inactive);
+          }
+        }
+      }
+    }
+  }
+}
+
+// フォームセクションコンポーネント
+.c-form-section {
+  display: grid;
+  gap: 16px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-text-heading);
+  }
+
+  &__content {
+    display: grid;
+    gap: 16px;
+  }
+
+  &__add-block {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-background);
+    color: var(--color-text-body);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: var(--box-shadow);
+
+    &:hover {
+      background-color: var(--color-background-gray);
+    }
+
+    svg {
+      display: block;
+      aspect-ratio: 1;
+      width: 14px;
+      height: auto;
+    }
+
+    &__text {
+      font-size: 14px;
+    }
+  }
+}
+
+// フォームフィールドボタン
+.c-form-field__button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background-color: var(--color-background);
+  color: var(--color-text-body);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: var(--box-shadow);
+  width: fit-content;
+
+  &:hover {
+    background-color: var(--color-background-gray);
+  }
+
+  svg {
+    display: block;
+    aspect-ratio: 1;
+    width: 14px;
+    height: auto;
+  }
+
+  &__text {
+    font-size: 14px;
+  }
+}
+
+// 条件ブロックコンポーネント
+.c-condition-block {
+  background-color: var(--color-background-gray);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 16px;
+  display: grid;
+  gap: 16px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-heading);
+  }
+
+  &__content {
+    display: grid;
+    gap: 16px;
+  }
+
+  &__add-condition {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-background);
+    color: var(--color-text-body);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: var(--box-shadow);
+    width: fit-content;
+
+    &:hover {
+      background-color: var(--color-background-gray);
+    }
+
+    svg {
+      display: block;
+      aspect-ratio: 1;
+      width: 14px;
+      height: auto;
+    }
+
+    &__text {
+      font-size: 14px;
+    }
+  }
+}
+
