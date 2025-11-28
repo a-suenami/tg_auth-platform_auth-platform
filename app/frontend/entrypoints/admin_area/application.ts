@@ -257,19 +257,29 @@ function initTagPickerHandlers() {
       "[data-tag-picker-selected]"
     ) as HTMLElement;
     if (displayArea) {
-      displayArea.innerHTML = "";
+      // 既存のタグ要素だけを削除（ボタンは保持）
+      const existingTags = displayArea.querySelectorAll(".c-user-detail-tag__item");
+      existingTags.forEach((tag) => tag.remove());
+
+      // 選択されたタグを追加
       selectedTags.forEach((tag) => {
         const tagElement = document.createElement("div");
-        tagElement.className = "c-tag-picker-selected__tag";
+        tagElement.className = "c-user-detail-tag__item";
         tagElement.setAttribute("data-tag-id", tag.id);
-        const closeIcon = `<svg width="10" height="10" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.283203 15.2539C0.166016 15.1432 0.0878906 15.013 0.0488281 14.8633C0.016276 14.7135 0.0195312 14.5638 0.0585938 14.4141C0.0976562 14.2643 0.172526 14.1341 0.283203 14.0234L6.5332 7.76367L0.283203 1.51367C0.172526 1.40299 0.0976562 1.27279 0.0585938 1.12305C0.0260417 0.973307 0.0260417 0.823568 0.0585938 0.673828C0.0976562 0.524089 0.172526 0.39388 0.283203 0.283203C0.39388 0.166016 0.524089 0.0911458 0.673828 0.0585938C0.823568 0.0195312 0.973307 0.0195312 1.12305 0.0585938C1.2793 0.0911458 1.41276 0.166016 1.52344 0.283203L7.77344 6.5332L14.0234 0.283203C14.1341 0.166016 14.2643 0.0911458 14.4141 0.0585938C14.5638 0.0195312 14.7135 0.0195312 14.8633 0.0585938C15.013 0.0911458 15.1465 0.166016 15.2637 0.283203C15.3743 0.39388 15.4492 0.524089 15.4883 0.673828C15.5273 0.823568 15.5273 0.973307 15.4883 1.12305C15.4492 1.27279 15.3743 1.40299 15.2637 1.51367L9.01367 7.76367L15.2637 14.0234C15.3743 14.1341 15.446 14.2643 15.4785 14.4141C15.5176 14.5638 15.5176 14.7135 15.4785 14.8633C15.446 15.013 15.3743 15.1432 15.2637 15.2539C15.153 15.3711 15.0195 15.446 14.8633 15.4785C14.7135 15.5176 14.5638 15.5176 14.4141 15.4785C14.2643 15.4395 14.1341 15.3646 14.0234 15.2539L7.77344 9.00391L1.52344 15.2539C1.41276 15.3646 1.28255 15.4395 1.13281 15.4785C0.983073 15.5176 0.833333 15.5176 0.683594 15.4785C0.533854 15.4395 0.400391 15.3646 0.283203 15.2539Z" fill="currentColor"/></svg>`;
+        const closeIcon = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.283203 15.2539C0.166016 15.1432 0.0878906 15.013 0.0488281 14.8633C0.016276 14.7135 0.0195312 14.5638 0.0585938 14.4141C0.0976562 14.2643 0.172526 14.1341 0.283203 14.0234L6.5332 7.76367L0.283203 1.51367C0.172526 1.40299 0.0976562 1.27279 0.0585938 1.12305C0.0260417 0.973307 0.0260417 0.823568 0.0585938 0.673828C0.0976562 0.524089 0.172526 0.39388 0.283203 0.283203C0.39388 0.166016 0.524089 0.0911458 0.673828 0.0585938C0.823568 0.0195312 0.973307 0.0195312 1.12305 0.0585938C1.2793 0.0911458 1.41276 0.166016 1.52344 0.283203L7.77344 6.5332L14.0234 0.283203C14.1341 0.166016 14.2643 0.0911458 14.4141 0.0585938C14.5638 0.0195312 14.7135 0.0195312 14.8633 0.0585938C15.013 0.0911458 15.1465 0.166016 15.2637 0.283203C15.3743 0.39388 15.4492 0.524089 15.4883 0.673828C15.5273 0.823568 15.5273 0.973307 15.4883 1.12305C15.4492 1.27279 15.3743 1.40299 15.2637 1.51367L9.01367 7.76367L15.2637 14.0234C15.3743 14.1341 15.446 14.2643 15.4785 14.4141C15.5176 14.5638 15.5176 14.7135 15.4785 14.8633C15.446 15.013 15.3743 15.1432 15.2637 15.2539C15.153 15.3711 15.0195 15.446 14.8633 15.4785C14.7135 15.5176 14.5638 15.5176 14.4141 15.4785C14.2643 15.4395 14.1341 15.3646 14.0234 15.2539L7.77344 9.00391L1.52344 15.2539C1.41276 15.3646 1.28255 15.4395 1.13281 15.4785C0.983073 15.5176 0.833333 15.5176 0.683594 15.4785C0.533854 15.4395 0.400391 15.3646 0.283203 15.2539Z" fill="currentColor"/></svg>`;
         tagElement.innerHTML = `
-          <span>${tag.name}</span>
-          <button type="button" class="c-tag-picker-selected__tag__remove" data-action="remove-tag" data-tag-id="${tag.id}">
+          <span class="c-user-detail-tag__item__text">${tag.name}</span>
+          <a href="#" class="c-user-detail-tag__item__remove" data-action="remove-tag" data-tag-id="${tag.id}">
             ${closeIcon}
-          </button>
+          </a>
         `;
-        displayArea.appendChild(tagElement);
+        // ボタンの前にタグを追加
+        const addButton = displayArea.querySelector(".c-user-detail-tag__add");
+        if (addButton) {
+          displayArea.insertBefore(tagElement, addButton);
+        } else {
+          displayArea.appendChild(tagElement);
+        }
       });
     }
 
@@ -291,7 +301,7 @@ function initTagPickerHandlers() {
     const tagId = removeButton.getAttribute("data-tag-id");
     if (!tagId) return;
 
-    const tagElement = removeButton.closest(".c-tag-picker-selected__tag") as HTMLElement;
+    const tagElement = removeButton.closest(".c-user-detail-tag__item") as HTMLElement;
     if (tagElement) {
       tagElement.remove();
     }

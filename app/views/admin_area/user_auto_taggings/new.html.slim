@@ -21,11 +21,11 @@
             .c-form-section__title 条件
             .c-form-field
               label.c-form-field__label 一致した時に設定するタグ
-              = link_to tag_picker_admin_area_user_auto_taggings_path, class: 'c-form-field__button', data: { turbo_frame: 'modal-frame' } do
-                = render 'shared/icons/icon-plus'
-                span.c-form-field__button__text タグを追加
-              .c-tag-picker-selected data-tag-picker-selected=""
+              .c-user-detail-tag__list data-tag-picker-selected=""
                 / 選択されたタグがここに表示されます（モック）
+                = link_to tag_picker_admin_area_user_auto_taggings_path, class: 'c-user-detail-tag__add', data: { turbo_frame: 'modal-frame' } do
+                  = render 'shared/icons/icon-plus'
+                  span.c-user-detail-tag__add__text タグを追加
 
           / 期間設定セクション（モック）
           .c-form-section
