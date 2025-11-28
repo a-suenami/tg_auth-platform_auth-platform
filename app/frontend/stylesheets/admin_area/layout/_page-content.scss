@@ -24,8 +24,21 @@
         font-size: 8px;
         font-weight: 700;
       }
+      &__text {
+        flex: 1;
+        text-decoration: none;
+        color: inherit;
+        &:hover {
+          text-decoration: none;
+        }
+      }
       &__chevron {
         transform: rotate(180deg);
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        margin: 0 -8px;
+        padding: 8px;
         svg {
           display: block;
           aspect-ratio: 1;

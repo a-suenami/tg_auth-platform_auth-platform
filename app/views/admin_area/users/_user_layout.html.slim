@@ -5,9 +5,10 @@
       span.l-page-content__navigation__item__count = User.count
     - if controller_name == 'user_tags'
       input#tags-is-open.l-page-content__navigation__checkbox type="checkbox" checked="checked"
-      label.l-page-content__navigation__item for="tags-is-open" class="#{'is-active' if controller_name == 'user_tags' && !params[:id]}"
-        span.l-page-content__navigation__item__text タグ
-        span.l-page-content__navigation__item__chevron
+      .l-page-content__navigation__item class="#{'is-active' if controller_name == 'user_tags' && !params[:id]}"
+        = link_to admin_area_user_tags_path, class: "l-page-content__navigation__item__text", data: { turbo_frame: '_top' } do
+          | タグ
+        label.l-page-content__navigation__item__chevron for="tags-is-open"
           = render 'shared/icons/icon-chevron-down'
       .l-page-content__navigation__children
         - UserTag.ordered.limit(20).each do |tag|
