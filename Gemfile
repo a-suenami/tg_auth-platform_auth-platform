@@ -27,7 +27,7 @@ gem 'rack-cors', '~> 2.0', '>= 2.0.1'
 # # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '~> 1.17', '>= 1.17.1', require: false
 # Use ridgepole for schema management
-gem 'ridgepole', '~> 2.0', '>= 2.0.1'
+gem 'ridgepole'
 # Simple, efficient background processing for Ruby
 gem 'sidekiq', '~> 7.2.4'
 source 'https://enterprise.contribsys.com/' do
