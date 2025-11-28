@@ -7,7 +7,12 @@ module AdminArea
 
     def edit
       @available_tags = UserTag.order(:name)
-      @current_tag_ids = @user.tag_assignments.pluck(:user_tag_id)
+
+      # Load all assignments once and cache for view
+      assignments = @user.tag_assignments.to_a
+      @all_tag_ids = assignments.map(&:user_tag_id)
+      @auto_tag_ids = assignments.select(&:auto?).map(&:user_tag_id)
+      @manual_tag_ids = @all_tag_ids - @auto_tag_ids
     end
 
     def update
