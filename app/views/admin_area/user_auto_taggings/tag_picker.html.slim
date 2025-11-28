@@ -1,0 +1,23 @@
+= turbo_frame_tag "modal-frame" do
+  .c-modal__dialog__header
+    .c-modal__dialog__header__title タグを選択
+    = link_to "#", class: "c-modal__dialog__header__close", data: { action: "close-modal" } do
+      = render 'shared/icons/icon-close'
+  .c-modal__dialog__body
+    .c-tag-picker
+      - if @user_tags.empty?
+        .c-empty タグがありません
+      - else
+        .c-tag-picker__list
+          - @user_tags.each do |tag|
+            label.c-tag-picker__item
+              input.c-checkbox__input type="checkbox" name="selected_tags[]" value="#{tag.id}" data-tag-id="#{tag.id}" data-tag-name="#{tag.name}"
+              .c-checkbox__checkbox
+              .c-tag-picker__item__content
+                span.c-tag-picker__item__name = tag.name
+                - if tag.description.present?
+                  span.c-tag-picker__item__description = tag.description
+  .c-modal__dialog__footer
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--cancel type="button" data-action="close-modal" キャンセル
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--save type="button" data-action="select-tags" 選択
+

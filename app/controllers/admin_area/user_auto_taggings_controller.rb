@@ -15,6 +15,10 @@ module AdminArea
       @user_tags = available_tags_for_selection
     end
 
+    def tag_picker
+      @user_tags = UserTag.ordered
+    end
+
     def edit
       @user_tags = available_tags_for_selection(exclude_rule: @user_auto_tagging)
     end
