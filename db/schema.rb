@@ -907,6 +907,19 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["updated_by_id"], name: "index_user_auto_taggings_on_updated_by_id"
   end
 
+  create_table "user_events", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "ユーザーイベント履歴", force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.uuid "user_id", null: false
+    t.datetime "transaction_time", null: false, comment: "イベント発生日時"
+    t.string "event_type", null: false, comment: "イベント種別: created, manually_tagged, auto_tagged など"
+    t.jsonb "payload", default: {}, null: false, comment: "イベント詳細データ"
+    t.datetime "created_at", null: false
+    t.index ["tenant_id", "transaction_time"], name: "idx_user_events_tenant_time"
+    t.index ["tenant_id", "user_id", "transaction_time"], name: "idx_user_events_tenant_user_time"
+    t.index ["tenant_id"], name: "index_user_events_on_tenant_id"
+    t.index ["user_id"], name: "index_user_events_on_user_id"
+  end
+
   create_table "user_profiles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
@@ -931,15 +944,11 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "assigned_by_id", comment: "Admin who manually assigned (for manual only)"
     t.uuid "user_auto_tagging_id", comment: "Auto-tagging rule that assigned (for auto only)"
     t.datetime "assigned_at", null: false, comment: "When tag was assigned"
-    t.datetime "removed_at", comment: "When tag was removed (soft delete)"
-    t.uuid "removed_by_id", comment: "Admin who removed tag"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["assigned_by_id"], name: "index_user_tag_assignments_on_assigned_by_id"
     t.index ["assignment_type"], name: "index_user_tag_assignments_on_assignment_type"
-    t.index ["removed_at"], name: "index_user_tag_assignments_on_removed_at"
-    t.index ["removed_by_id"], name: "index_user_tag_assignments_on_removed_by_id"
-    t.index ["tenant_id", "user_id", "user_tag_id"], name: "index_user_tag_assignments_unique_active", unique: true, where: "(removed_at IS NULL)"
+    t.index ["tenant_id", "user_id", "user_tag_id"], name: "index_user_tag_assignments_unique", unique: true
     t.index ["tenant_id"], name: "index_user_tag_assignments_on_tenant_id"
     t.index ["user_auto_tagging_id"], name: "index_user_tag_assignments_on_user_auto_tagging_id"
     t.index ["user_id"], name: "index_user_tag_assignments_on_user_id"
@@ -979,6 +988,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tenant_id", "email"], name: "index_users_on_tenant_id_email", unique: true, where: "(deleted_at IS NULL)"
+    t.index ["tenant_id", "id"], name: "index_users_on_tenant_id_and_id", unique: true
     t.index ["tenant_id", "phone_number"], name: "index_users_on_tenant_id_phone_number", unique: true, where: "(deleted_at IS NULL)"
     t.index ["tenant_id"], name: "index_users_on_tenant_id"
   end
@@ -1155,10 +1165,10 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "user_auto_taggings", "admins", column: "created_by_id"
   add_foreign_key "user_auto_taggings", "admins", column: "updated_by_id"
   add_foreign_key "user_auto_taggings", "tenants"
+  add_foreign_key "user_events", "users", column: ["tenant_id", "user_id"], primary_key: ["tenant_id", "id"]
   add_foreign_key "user_profiles", "tenants", name: "fk_user_profiles_tenants"
   add_foreign_key "user_profiles", "users", name: "fk_user_profiles_users"
   add_foreign_key "user_tag_assignments", "admins", column: "assigned_by_id"
-  add_foreign_key "user_tag_assignments", "admins", column: "removed_by_id"
   add_foreign_key "user_tag_assignments", "tenants"
   add_foreign_key "user_tag_assignments", "user_auto_taggings"
   add_foreign_key "user_tag_assignments", "user_tags"

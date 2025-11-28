@@ -15,21 +15,17 @@ create_table :user_tag_assignments, force: :cascade, id: :uuid, default: -> { 'g
 
   # Metadata
   t.datetime :assigned_at, null: false, comment: 'When tag was assigned'
-  t.datetime :removed_at, comment: 'When tag was removed (soft delete)'
-  t.references :removed_by, type: :uuid, null: true, comment: 'Admin who removed tag'
 
   t.timestamps null: false
 
   # Indexes
-  t.index [:tenant_id, :user_id, :user_tag_id], unique: true, where: 'removed_at IS NULL',
-    name: 'index_user_tag_assignments_unique_active'
+  t.index [:tenant_id, :user_id, :user_tag_id], unique: true,
+    name: 'index_user_tag_assignments_unique'
   t.index :assignment_type
-  t.index :removed_at
 end
 
 add_foreign_key :user_tag_assignments, :tenants
 add_foreign_key :user_tag_assignments, :users
 add_foreign_key :user_tag_assignments, :user_tags
 add_foreign_key :user_tag_assignments, :admins, column: :assigned_by_id
-add_foreign_key :user_tag_assignments, :admins, column: :removed_by_id
 add_foreign_key :user_tag_assignments, :user_auto_taggings
