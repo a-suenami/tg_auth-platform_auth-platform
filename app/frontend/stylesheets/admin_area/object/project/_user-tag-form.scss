@@ -71,7 +71,11 @@
           background-color: var(--color-primary);
           color: var(--color-primary-contrast);
           border-color: var(--color-primary);
-          padding-right: 40px; // 矢印部分のスペースを確保
+
+          // button-wrapper内にある場合のみ、矢印部分のスペースを確保
+          .p-user-tag-form__content__sub__button-wrapper & {
+            padding-right: 40px;
+          }
 
           &:hover:not(:disabled) {
             background-color: var(--color-text-heading);
