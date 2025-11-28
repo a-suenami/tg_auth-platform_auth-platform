@@ -1,4 +1,4 @@
-\restrict iQm6MOXyjDRp9qkHaBvkdLTpW6xSxckF2Q7glFStMOkd8dtrRmMrOfnl4TRhKcG
+\restrict 8XHkuQfj2f2BlcvYflqHzdg7Q2uqP51XRu6735QoCrtM0j2c35g2OoRRkoELkNe
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -2310,8 +2310,6 @@ CREATE TABLE public.user_tag_assignments (
     assigned_by_id uuid,
     user_auto_tagging_id uuid,
     assigned_at timestamp(6) without time zone NOT NULL,
-    removed_at timestamp(6) without time zone,
-    removed_by_id uuid,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -2371,20 +2369,6 @@ COMMENT ON COLUMN public.user_tag_assignments.user_auto_tagging_id IS 'Auto-tagg
 --
 
 COMMENT ON COLUMN public.user_tag_assignments.assigned_at IS 'When tag was assigned';
-
-
---
--- Name: COLUMN user_tag_assignments.removed_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.user_tag_assignments.removed_at IS 'When tag was removed (soft delete)';
-
-
---
--- Name: COLUMN user_tag_assignments.removed_by_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.user_tag_assignments.removed_by_id IS 'Admin who removed tag';
 
 
 --
@@ -4414,20 +4398,6 @@ CREATE INDEX index_user_tag_assignments_on_assignment_type ON public.user_tag_as
 
 
 --
--- Name: index_user_tag_assignments_on_removed_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_tag_assignments_on_removed_at ON public.user_tag_assignments USING btree (removed_at);
-
-
---
--- Name: index_user_tag_assignments_on_removed_by_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_user_tag_assignments_on_removed_by_id ON public.user_tag_assignments USING btree (removed_by_id);
-
-
---
 -- Name: index_user_tag_assignments_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4456,10 +4426,10 @@ CREATE INDEX index_user_tag_assignments_on_user_tag_id ON public.user_tag_assign
 
 
 --
--- Name: index_user_tag_assignments_unique_active; Type: INDEX; Schema: public; Owner: -
+-- Name: index_user_tag_assignments_unique; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_user_tag_assignments_unique_active ON public.user_tag_assignments USING btree (tenant_id, user_id, user_tag_id) WHERE (removed_at IS NULL);
+CREATE UNIQUE INDEX index_user_tag_assignments_unique ON public.user_tag_assignments USING btree (tenant_id, user_id, user_tag_id);
 
 
 --
@@ -5019,14 +4989,6 @@ ALTER TABLE ONLY public.user_events
 
 ALTER TABLE ONLY public.auto_tagging_schedules
     ADD CONSTRAINT fk_rails_489a995725 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
-
-
---
--- Name: user_tag_assignments fk_rails_5063cb0b35; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.user_tag_assignments
-    ADD CONSTRAINT fk_rails_5063cb0b35 FOREIGN KEY (removed_by_id) REFERENCES public.admins(id);
 
 
 --
@@ -5625,7 +5587,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict iQm6MOXyjDRp9qkHaBvkdLTpW6xSxckF2Q7glFStMOkd8dtrRmMrOfnl4TRhKcG
+\unrestrict 8XHkuQfj2f2BlcvYflqHzdg7Q2uqP51XRu6735QoCrtM0j2c35g2OoRRkoELkNe
 
 SET search_path TO "$user", public;
 

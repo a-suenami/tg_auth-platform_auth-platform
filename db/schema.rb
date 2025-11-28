@@ -944,15 +944,11 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "assigned_by_id", comment: "Admin who manually assigned (for manual only)"
     t.uuid "user_auto_tagging_id", comment: "Auto-tagging rule that assigned (for auto only)"
     t.datetime "assigned_at", null: false, comment: "When tag was assigned"
-    t.datetime "removed_at", comment: "When tag was removed (soft delete)"
-    t.uuid "removed_by_id", comment: "Admin who removed tag"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["assigned_by_id"], name: "index_user_tag_assignments_on_assigned_by_id"
     t.index ["assignment_type"], name: "index_user_tag_assignments_on_assignment_type"
-    t.index ["removed_at"], name: "index_user_tag_assignments_on_removed_at"
-    t.index ["removed_by_id"], name: "index_user_tag_assignments_on_removed_by_id"
-    t.index ["tenant_id", "user_id", "user_tag_id"], name: "index_user_tag_assignments_unique_active", unique: true, where: "(removed_at IS NULL)"
+    t.index ["tenant_id", "user_id", "user_tag_id"], name: "index_user_tag_assignments_unique", unique: true
     t.index ["tenant_id"], name: "index_user_tag_assignments_on_tenant_id"
     t.index ["user_auto_tagging_id"], name: "index_user_tag_assignments_on_user_auto_tagging_id"
     t.index ["user_id"], name: "index_user_tag_assignments_on_user_id"
@@ -1173,7 +1169,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "user_profiles", "tenants", name: "fk_user_profiles_tenants"
   add_foreign_key "user_profiles", "users", name: "fk_user_profiles_users"
   add_foreign_key "user_tag_assignments", "admins", column: "assigned_by_id"
-  add_foreign_key "user_tag_assignments", "admins", column: "removed_by_id"
   add_foreign_key "user_tag_assignments", "tenants"
   add_foreign_key "user_tag_assignments", "user_auto_taggings"
   add_foreign_key "user_tag_assignments", "user_tags"

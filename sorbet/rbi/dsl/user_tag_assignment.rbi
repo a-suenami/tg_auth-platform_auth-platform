@@ -399,9 +399,6 @@ class UserTagAssignment
     sig { params(args: T.untyped, blk: T.untyped).returns(::Admin) }
     def build_assigned_by(*args, &blk); end
 
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Admin) }
-    def build_removed_by(*args, &blk); end
-
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def build_tenant(*args, &blk); end
 
@@ -419,12 +416,6 @@ class UserTagAssignment
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Admin) }
     def create_assigned_by!(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Admin) }
-    def create_removed_by(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(::Admin) }
-    def create_removed_by!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant) }
     def create_tenant(*args, &blk); end
@@ -453,9 +444,6 @@ class UserTagAssignment
     sig { returns(T.nilable(::Admin)) }
     def reload_assigned_by; end
 
-    sig { returns(T.nilable(::Admin)) }
-    def reload_removed_by; end
-
     sig { returns(T.nilable(::Tenant)) }
     def reload_tenant; end
 
@@ -468,23 +456,8 @@ class UserTagAssignment
     sig { returns(T.nilable(::UserTag)) }
     def reload_user_tag; end
 
-    sig { returns(T.nilable(::Admin)) }
-    def removed_by; end
-
-    sig { params(value: T.nilable(::Admin)).void }
-    def removed_by=(value); end
-
-    sig { returns(T::Boolean) }
-    def removed_by_changed?; end
-
-    sig { returns(T::Boolean) }
-    def removed_by_previously_changed?; end
-
     sig { void }
     def reset_assigned_by; end
-
-    sig { void }
-    def reset_removed_by; end
 
     sig { void }
     def reset_tenant; end
@@ -548,9 +521,6 @@ class UserTagAssignment
   end
 
   module GeneratedAssociationRelationMethods
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-    def active(*args, &blk); end
-
     sig { returns(PrivateAssociationRelation) }
     def all; end
 
@@ -700,9 +670,6 @@ class UserTagAssignment
     def regroup(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-    def removed(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def reorder(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
@@ -764,14 +731,12 @@ class UserTagAssignment
         assigned_by_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         user_auto_tagging_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         assigned_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        removed_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        removed_by_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateAssociationRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, user_tag_id: nil, assignment_type: nil, assigned_by_id: nil, user_auto_tagging_id: nil, assigned_at: nil, removed_at: nil, removed_by_id: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, user_tag_id: nil, assignment_type: nil, assigned_by_id: nil, user_auto_tagging_id: nil, assigned_at: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -1051,96 +1016,6 @@ class UserTagAssignment
     sig { void }
     def id_will_change!; end
 
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def removed_at; end
-
-    sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def removed_at=(value); end
-
-    sig { returns(T::Boolean) }
-    def removed_at?; end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def removed_at_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def removed_at_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def removed_at_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def removed_at_change; end
-
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def removed_at_change_to_be_saved; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def removed_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def removed_at_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def removed_at_previous_change; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def removed_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def removed_at_previously_was; end
-
-    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
-    def removed_at_was; end
-
-    sig { void }
-    def removed_at_will_change!; end
-
-    sig { returns(T.nilable(::String)) }
-    def removed_by_id; end
-
-    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def removed_by_id=(value); end
-
-    sig { returns(T::Boolean) }
-    def removed_by_id?; end
-
-    sig { returns(T.nilable(::String)) }
-    def removed_by_id_before_last_save; end
-
-    sig { returns(T.untyped) }
-    def removed_by_id_before_type_cast; end
-
-    sig { returns(T::Boolean) }
-    def removed_by_id_came_from_user?; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def removed_by_id_change; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def removed_by_id_change_to_be_saved; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def removed_by_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def removed_by_id_in_database; end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def removed_by_id_previous_change; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def removed_by_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable(::String)) }
-    def removed_by_id_previously_was; end
-
-    sig { returns(T.nilable(::String)) }
-    def removed_by_id_was; end
-
-    sig { void }
-    def removed_by_id_will_change!; end
-
     sig { void }
     def restore_assigned_at!; end
 
@@ -1158,12 +1033,6 @@ class UserTagAssignment
 
     sig { void }
     def restore_id_value!; end
-
-    sig { void }
-    def restore_removed_at!; end
-
-    sig { void }
-    def restore_removed_by_id!; end
 
     sig { void }
     def restore_tenant_id!; end
@@ -1215,18 +1084,6 @@ class UserTagAssignment
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
-    def saved_change_to_removed_at; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def saved_change_to_removed_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
-    def saved_change_to_removed_by_id; end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def saved_change_to_removed_by_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
@@ -1502,12 +1359,6 @@ class UserTagAssignment
     def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def will_save_change_to_removed_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-    def will_save_change_to_removed_by_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_tenant_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -1524,9 +1375,6 @@ class UserTagAssignment
   end
 
   module GeneratedRelationMethods
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-    def active(*args, &blk); end
-
     sig { returns(PrivateRelation) }
     def all; end
 
@@ -1642,9 +1490,6 @@ class UserTagAssignment
     def regroup(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-    def removed(*args, &blk); end
-
-    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def reorder(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
@@ -1688,14 +1533,12 @@ class UserTagAssignment
         assigned_by_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         user_auto_tagging_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         assigned_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        removed_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        removed_by_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, user_tag_id: nil, assignment_type: nil, assigned_by_id: nil, user_auto_tagging_id: nil, assigned_at: nil, removed_at: nil, removed_by_id: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, user_tag_id: nil, assignment_type: nil, assigned_by_id: nil, user_auto_tagging_id: nil, assigned_at: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end
