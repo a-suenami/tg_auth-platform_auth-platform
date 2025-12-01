@@ -1,33 +1,110 @@
-.uk-margin-top.uk-container
-  / Breadcrumb
-  - breadcrumb_items = [{ text: '会員ID管理' }, { text: 'オートタギング', link: admin_area_user_auto_taggings_path }, { text: @user_auto_tagging.name }]
-  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+= render 'admin_area/users/user_layout' do
+  .p-user-auto-tagging-form data-controller="form-validation"
+    .p-user-auto-tagging-form__breadcrumb
+      = render 'admin_area/shared/breadcrumb', items: [{ text: 'オートタギング', link: admin_area_user_auto_taggings_path }, { text: @user_auto_tagging.name }]
+    .l-page-content__content__main.p-user-auto-tagging-form__content__main
+      = form_with model: @user_auto_tagging, url: admin_area_user_auto_tagging_path(@user_auto_tagging), method: :patch, local: true, data: { turbo_frame: '_top', form_validation_target: 'form' }, html: { id: "edit_user_auto_tagging_#{@user_auto_tagging.id}_form" } do |f|
+        = render 'admin_area/shared/form_error', target: f.object
+        .c-form
+          / 基本情報セクション
+          .c-form-section
+            .c-form-section__title 基本情報
+            .c-form-field
+              label.c-form-field__label オートタギング名
+              = f.text_field :name, placeholder: 'オートタギング名を入力', class: 'c-form-field__input', required: true
+            .c-form-field
+              label.c-form-field__label 説明
+              = f.text_area :description, placeholder: '説明文を入力', rows: 5, class: 'c-form-field__input'
 
-  .uk-grid data-uk-grid=""
-    .uk-width-expand
-      h2 = @user_auto_tagging.name
+          / 条件セクション（大セクション）
+          .c-form-section
+            .c-form-section__title 条件
+            .c-form-section__content
+              / 一致した時に設定するタグ（小セクション）
+              .c-form-section__sub-section
+                .c-form-section__sub-section__title 一致した時に設定するタグ
+                .c-form-field
+                  .c-user-detail-tag__list data-tag-picker-selected=""
+                    / 選択されたタグがここに表示されます（モック）
+                    = link_to tag_picker_admin_area_user_auto_taggings_path, class: 'c-user-detail-tag__add', data: { turbo_frame: 'modal-frame' } do
+                      = render 'shared/icons/icon-plus'
+                      span.c-user-detail-tag__add__text タグを追加
 
-      .uk-margin-top.uk-card.uk-card-default.uk-card-body
-        = render 'form', user_auto_tagging: @user_auto_tagging
+              / 期間設定（小セクション）
+              .c-form-section__sub-section data-controller="period-settings"
+                .c-form-section__sub-section__title 期間設定
+                .c-period-settings
+                  .c-period-settings__select
+                    .c-period-settings__select__field
+                      select.c-period-settings__select__input data-period-settings-target="select" data-action="change->period-settings#handleChange"
+                        option value="none" selected="selected" 期間設定なし
+                        option value="relative" 相対的に期間を指定する
+                        option value="fixed" 固定の期間を指定する
+                      .c-period-settings__select__text data-period-settings-target="text" 固定の期間を指定する
+                      .c-period-settings__select__icon
+                        = render 'shared/icons/icon-chevron-down'
+                  .c-period-settings__content data-period-settings-target="content"
+                    / 相対的に期間を指定する（モック）
+                    .c-period-settings__relative data-period-settings-target="relative" style="display: none;"
+                      .c-period-settings__relative__divider
+                      .c-period-settings__relative__fields
+                        select.c-period-settings__relative__argument
+                          option value="1" 1
+                          option value="2" 2
+                          option value="3" 3
+                        select.c-period-settings__relative__argument
+                          option value="month" ヶ月
+                          option value="year" 年
+                        .c-period-settings__relative__text 前に登録
+                    / 固定の期間を指定する
+                    .c-period-settings__fixed data-period-settings-target="fixed"
+                      .c-period-settings__fixed__divider
+                      .c-period-settings__fixed__fields
+                        .c-period-settings__fixed__argument data-period-settings-target="display" data-action="click->period-settings#openDatepicker" data-date-type="start"
+                          span.c-period-settings__fixed__argument__text 2025/01/01
+                        .c-period-settings__fixed__text から
+                        .c-period-settings__fixed__argument data-period-settings-target="display" data-action="click->period-settings#openDatepicker" data-date-type="end"
+                          span.c-period-settings__fixed__argument__text 2025/12/31
 
-    .uk-width-1-3
-      .uk-card.uk-card-default.uk-card-body.uk-margin-bottom
-        = button_to '削除する', admin_area_user_auto_tagging_path(@user_auto_tagging), method: :delete, class: 'uk-button uk-button-danger uk-width-1-1', data: { turbo_confirm: '本当に削除しますか？' }
+              / 条件設定（小セクション）
+              .c-form-section__sub-section
+                .c-form-section__sub-section__title 条件設定
+                .c-form-section__content data-controller="condition-blocks"
+                  .c-form-section__content__blocks data-condition-blocks-target="blocks"
+                  .c-form-section__content__empty data-condition-blocks-target="empty"
+                    .c-form-section__content__empty__text 条件ブロックがありません
+                  button.c-form-section__add-block type="button" data-action="click->condition-blocks#addBlock"
+                    = render 'shared/icons/icon-plus'
+                    span.c-form-section__add-block__text 条件ブロックを追加
 
-      .uk-card.uk-card-default.uk-card-body
-        .uk-margin-small
-          .uk-text-meta.uk-text-small 作成者
-          .uk-text-bold = @user_auto_tagging.created_by_name || '-'
+    .l-page-content__content__sub.p-user-auto-tagging-form__content__sub
+      .p-user-auto-tagging-form__content__sub__section
+        .p-user-auto-tagging-form__content__sub__button-wrapper
+          button.p-user-auto-tagging-form__content__sub__button.p-user-auto-tagging-form__content__sub__button--submit type="submit" form="edit_user_auto_tagging_#{@user_auto_tagging.id}_form" data-form-validation-target="submit" disabled="disabled" 変更を保存
+          button.p-user-auto-tagging-form__content__sub__button__chevron type="button" data-dropdown-toggle="dropdown-save-actions"
+            = render 'shared/icons/icon-chevron-down'
+          .p-user-auto-tagging-form__content__sub__button__dropdown id="dropdown-save-actions"
+            button.p-user-auto-tagging-form__content__sub__button__dropdown__item type="submit" form="edit_user_auto_tagging_#{@user_auto_tagging.id}_form" data-form-validation-target="submit" 変更を保存
+            = link_to admin_area_user_auto_tagging_path(@user_auto_tagging), data: { turbo_method: :delete, turbo_confirm: '本当に削除しますか？', turbo_frame: '_top' }, class: 'p-user-auto-tagging-form__content__sub__button__dropdown__item' do
+              | オートタグを削除
+        = link_to admin_area_user_auto_taggings_path, class: 'p-user-auto-tagging-form__content__sub__button p-user-auto-tagging-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
+          | キャンセル
+      .p-user-auto-tagging-form__content__sub__section
+        = link_to admin_area_users_path, class: 'p-user-auto-tagging-form__content__sub__button p-user-auto-tagging-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
+          | ユーザー一覧
+      .p-user-auto-tagging-form__content__sub__section.p-user-auto-tagging-form__content__sub__metadata
+        .c-info
+          .c-info__item
+            .c-info__item__label 作成者
+            .c-info__item__value = @user_auto_tagging.created_by_name || '-'
+          .c-info__item
+            .c-info__item__label 作成日時
+            .c-info__item__value = local_time(@user_auto_tagging.created_at)
+          .c-info__item
+            .c-info__item__label 最終更新者
+            .c-info__item__value = @user_auto_tagging.updated_by_name || '-'
+          .c-info__item
+            .c-info__item__label 最終更新日時
+            .c-info__item__value = local_time(@user_auto_tagging.updated_at)
 
-        .uk-margin-small
-          .uk-text-meta.uk-text-small 作成日時
-          div = @user_auto_tagging.created_at.strftime('%Y/%m/%d %H:%M')
-
-        - if @user_auto_tagging.updated_by_name.present?
-          .uk-margin-small
-            .uk-text-meta.uk-text-small 最終更新者
-            .uk-text-bold = @user_auto_tagging.updated_by_name
-
-          .uk-margin-small
-            .uk-text-meta.uk-text-small 最終更新日時
-            div = @user_auto_tagging.updated_at.strftime('%Y/%m/%d %H:%M')
+= render 'admin_area/shared/modal', modal_id: 'datepicker-modal'
