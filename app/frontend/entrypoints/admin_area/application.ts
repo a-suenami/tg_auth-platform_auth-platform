@@ -166,7 +166,7 @@ function initDropdownHandlers() {
   document.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
     const toggle = target.closest("[data-dropdown-toggle]") as HTMLElement;
-    const dropdown = target.closest(".c-tag-card__dropdown, .c-table-row-action__dropdown") as HTMLElement;
+    const dropdown = target.closest(".c-tag-card__dropdown, .c-table-row-action__dropdown, .l-header__container__account__dropdown") as HTMLElement;
 
     if (toggle) {
       e.preventDefault();
