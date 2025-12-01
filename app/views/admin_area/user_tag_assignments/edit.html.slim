@@ -41,9 +41,8 @@
             option value="" -- タグを選択 --
             - available_tags = @available_tags.reject { |t| @all_tag_ids.include?(t.id) }
             - available_tags.each do |tag|
-              option value=tag.id data-name=tag.name data-description=tag.description
-                = tag.name
-                = " - #{tag.description}" if tag.description.present?
+              option value=tag.id data-name=tag.name
+                = "#{tag.name}"
 
       .uk-margin-top
         = f.submit '保存する', class: 'uk-button uk-button-primary'
