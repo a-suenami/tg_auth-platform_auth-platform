@@ -19,6 +19,10 @@ module AdminArea
       @user_tags = UserTag.ordered
     end
 
+    def datepicker
+      render layout: false # Render without layout for modal
+    end
+
     def edit
       @user_tags = available_tags_for_selection(exclude_rule: @user_auto_tagging)
     end

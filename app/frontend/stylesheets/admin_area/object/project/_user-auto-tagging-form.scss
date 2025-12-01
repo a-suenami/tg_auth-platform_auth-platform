@@ -320,12 +320,23 @@
       background-color: #DBEAFE;
       color: #2B7FFF;
       border-radius: 4px;
-      display: inline-flex;
-      align-items: center;
       font-size: 14px;
       line-height: 14px;
       height: 14px;
-      padding: 4px;
+      padding: 4px 8px;
+      border: none;
+      appearance: none;
+      cursor: pointer;
+      font-family: var(--font-family);
+
+      &::-webkit-calendar-picker-indicator {
+        display: none;
+      }
+
+      option {
+        background-color: var(--color-background);
+        color: var(--color-text-body);
+      }
     }
 
     &__text {
@@ -359,18 +370,27 @@
       background-color: #DBEAFE;
       color: #2B7FFF;
       border-radius: 4px;
-      display: inline-flex;
-      align-items: center;
       font-size: 14px;
       line-height: 14px;
       height: 14px;
-      padding: 4px;
+      padding: 4px 8px;
+      border: none;
+      appearance: none;
+      cursor: pointer;
+      font-family: var(--font-family);
+      user-select: none;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: #BBDEFB;
+      }
 
       &__text {
         font-size: 14px;
         color: #2B7FFF;
         font-family: var(--font-family);
         line-height: 1;
+        pointer-events: none;
       }
     }
 

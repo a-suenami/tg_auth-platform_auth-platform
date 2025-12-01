@@ -97,6 +97,9 @@ function closeModal(modalId: string) {
   }
 }
 
+// グローバルスコープに公開
+(window as any).closeModal = closeModal;
+
 // モーダルのイベントハンドラーを初期化
 function initModalHandlers() {
   // 閉じるボタン（イベント委譲を使用してTurbo Frame内のボタンにも対応）
@@ -227,6 +230,31 @@ function initFilterHandlers() {
 
 // タグピッカーの選択機能
 function initTagPickerHandlers() {
+  // 日付ピッカーの「選択」ボタンクリック
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    const selectButton = target.closest("[data-action='select-date']") as HTMLElement;
+    if (selectButton) {
+      e.preventDefault();
+
+      // PeriodSettingsControllerのselectDateメソッドを呼び出す
+      const periodSettingsController = document.querySelector('[data-controller*="period-settings"]');
+      if (periodSettingsController) {
+        const application = (window as any).Stimulus;
+        if (application) {
+          const controller = application.getControllerForElementAndIdentifier(
+            periodSettingsController,
+            'period-settings'
+          );
+          if (controller && controller.selectDate) {
+            controller.selectDate(e);
+          }
+        }
+      }
+      return;
+    }
+  });
+
   // タグピッカーの「選択」ボタンクリック
   document.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
