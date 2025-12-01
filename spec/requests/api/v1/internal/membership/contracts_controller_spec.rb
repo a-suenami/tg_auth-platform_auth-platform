@@ -203,13 +203,21 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
 
   describe 'POST /api/v1/internal/membership/contracts/:id/cancel' do
     include_context 'current user session is present'
+    let(:stripe_request_options_matcher) { hash_including(:api_key, :stripe_version) }
 
     context 'when contract exists and has stripe subscription' do
       let(:id) { active_contract.id }
 
+      let(:stripe_subscription_response) {
+        instance_double(Stripe::Subscription, cancel_at_period_end: false, status: 'active')
+      }
+      let(:stripe_subscription_update_response) {
+        instance_double(Stripe::Subscription, status: 'active')
+      }
+      let(:stripe_request_options_matcher) { hash_including(:api_key, :stripe_version) }
+
       before do
-        # CancelSubscriptionServiceをモック
-        allow_any_instance_of(UserStripe::CancelSubscriptionService).to receive(:execute).and_return(active_contract)
+        allow(Stripe::Subscription).to receive_messages(retrieve: stripe_subscription_response, update: stripe_subscription_update_response)
       end
 
       it 'cancels the subscription' do
@@ -217,11 +225,86 @@ invoice: stripe_record_invoice, api_key_account: tenant_stripe_account.stripe_ac
 
         expect(body_hash['id']).to eq active_contract.id
         expect(body_hash['status']).to eq active_contract.status
+        expect(body_hash['cancel_at_period_end']).to be true
+        expect(active_contract.reload.cancel_at_period_end).to be true
+        expect(stripe_record_subscription.reload.status).to eq 'active'
       end
 
-      it 'calls CancelSubscriptionService' do
-        expect_any_instance_of(UserStripe::CancelSubscriptionService).to receive(:execute).with(contract: active_contract)
+      it 'sends requests to Stripe to stop auto renewal' do
         is_expected.to eq 200
+
+        expect(Stripe::Subscription).to have_received(:retrieve).with(
+          stripe_record_subscription.remote_id,
+          stripe_request_options_matcher,
+        )
+        expect(Stripe::Subscription).to have_received(:update).with(
+          stripe_record_subscription.remote_id,
+          { cancel_at_period_end: true },
+          stripe_request_options_matcher,
+        )
+      end
+    end
+
+    context 'when stripe subscription is already set to cancel later' do
+      let(:id) { active_contract.id }
+
+      before do
+        allow(Stripe::Subscription).to receive(:update)
+        allow(Stripe::Subscription).to receive(:retrieve).and_return(
+          instance_double(
+            Stripe::Subscription,
+            cancel_at_period_end: true,
+            status: 'active',
+          ),
+        )
+      end
+
+      it 'returns already_canceled error without calling Stripe update' do
+        is_expected.to eq 400
+        expect(body_hash[:error][:code]).to eq('already_canceled')
+        expect(Stripe::Subscription).not_to have_received(:update)
+      end
+    end
+
+    context 'when stripe subscription status is already canceled' do
+      let(:id) { active_contract.id }
+
+      before do
+        allow(Stripe::Subscription).to receive(:update)
+        allow(Stripe::Subscription).to receive(:retrieve).and_return(
+          instance_double(
+            Stripe::Subscription,
+            cancel_at_period_end: false,
+            status: 'canceled',
+          ),
+        )
+      end
+
+      it 'returns cancel_subscription_invalid_status_error error' do
+        is_expected.to eq 400
+        expect(body_hash[:error][:code]).to eq('cancel_subscription_invalid_status_error')
+        expect(Stripe::Subscription).not_to have_received(:update)
+      end
+    end
+
+    context 'when stripe subscription status is not cancellable' do
+      let(:id) { active_contract.id }
+
+      before do
+        allow(Stripe::Subscription).to receive(:update)
+        allow(Stripe::Subscription).to receive(:retrieve).and_return(
+          instance_double(
+            Stripe::Subscription,
+            cancel_at_period_end: false,
+            status: 'unpaid',
+          ),
+        )
+      end
+
+      it 'returns cancel_subscription_invalid_status_error' do
+        is_expected.to eq 400
+        expect(body_hash[:error][:code]).to eq('cancel_subscription_invalid_status_error')
+        expect(Stripe::Subscription).not_to have_received(:update)
       end
     end
 

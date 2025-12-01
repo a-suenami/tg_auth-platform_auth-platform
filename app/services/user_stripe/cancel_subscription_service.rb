@@ -25,14 +25,20 @@ module UserStripe
         raise Exceptions::Payment::InvalidPlanChange, 'Stripe subscriptionではありません'
       end
 
+      stripe_subscription_remote = Stripe::Subscription.retrieve(
+        stripe_subscription.remote_id,
+        stripe_api_key_config,
+      )
 
-      if stripe_subscription.last_subscription_schedule.present?
-        # 更新がスケジュールされている場合は、スケジュールを破棄
-        subscription_schedule = Stripe::SubscriptionSchedule.retrieve(stripe_subscription.last_subscription_schedule.remote_id, stripe_api_key_config)
-        if subscription_schedule.status == 'active'
-          subscription_schedule.release
-        end
+      # subscriptionのstatusがactive trialing past_due以外の場合はエラーを返す
+      unless ['active', 'trialing', 'past_due'].include?(stripe_subscription_remote.status)
+        raise Exceptions::Payment::CancelSubscriptionInvalidStatus
       end
+
+      if stripe_subscription_remote.cancel_at_period_end
+        raise Exceptions::Payment::AlreadyCanceled, 'すでに停止済みです'
+      end
+
       ActiveRecord::Base.transaction do
 
         # Stripeでcancel_at_period_endをtrueに設定
