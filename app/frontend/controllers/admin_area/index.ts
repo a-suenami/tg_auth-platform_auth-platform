@@ -7,6 +7,8 @@ import TemplatePreviewController from "./template_preview_controller";
 import FormValidationController from "./form_validation_controller";
 import PeriodSettingsController from "./period_settings_controller";
 import DatepickerController from "./datepicker_controller";
+import ConditionBlockController from "./condition_block_controller";
+import ConditionBlocksController from "./condition_blocks_controller";
 
 application.register("schedule-form", ScheduleFormController);
 application.register(
@@ -22,5 +24,7 @@ application.register("template-preview", TemplatePreviewController);
 application.register("form-validation", FormValidationController);
 application.register("period-settings", PeriodSettingsController);
 application.register("datepicker", DatepickerController);
+application.register("condition-block", ConditionBlockController);
+application.register("condition-blocks", ConditionBlocksController);
 
 console.log("this is frontend/controllers/admin_area/index.ts");
