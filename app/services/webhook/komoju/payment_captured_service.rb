@@ -60,6 +60,10 @@ module Webhook::Komoju
         expired_at: end_at,
       )
 
+      # Trigger auto-tagging for membership and plan events
+      UserAutoTagging::EventWorker.perform_async(membership_contract.user.id, 'membership_joined')
+      UserAutoTagging::EventWorker.perform_async(membership_contract.user.id, 'plan_joined')
+
       Rails.logger.info "Activated contract: #{membership_contract.id}, transaction: #{transaction.id}, period: #{start_at} to #{end_at}"
     end
   end

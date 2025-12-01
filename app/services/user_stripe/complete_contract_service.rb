@@ -111,6 +111,10 @@ module UserStripe
           expired_at: next_period_end,
         )
       end
+
+      # Trigger auto-tagging for membership and plan events
+      UserAutoTagging::EventWorker.perform_async(contract.user.id, 'membership_joined')
+      UserAutoTagging::EventWorker.perform_async(contract.user.id, 'plan_joined')
     end
   end
 end

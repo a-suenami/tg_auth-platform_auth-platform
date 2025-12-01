@@ -52,6 +52,9 @@ module Admins
       else
         create_user_profile
       end
+
+      # Trigger auto-tagging after successful profile update
+      UserAutoTagging::EventWorker.perform_async(user_id, 'profile_updated')
     rescue => e
       errors.add(:base, e.message)
     end
