@@ -2,44 +2,26 @@
 # frozen_string_literal: true
 
 module UserTagRules
-  # Rule to check plan subscription (current or duration)
+  # Rule to check current plan subscription
   #
-  # Config format for current subscription:
+  # Config format:
   #   {
-  #     "subscription_type": "current",
-  #     "values": ["5", "6"]  # Plan IDs
+  #     "values": ["uuid-1", "uuid-2"]  # Plan IDs
   #   }
   #
-  # Config format for duration subscription:
-  #   {
-  #     "subscription_type": "duration",
-  #     "values": ["5", "6"],
-  #     "duration_value": 6,
-  #     "duration_unit": "months"
-  #   }
+  # Triggers: [:plan_joined, :plan_left]
   #
   class PlanRule < AbstractRule
     extend T::Sig
 
-    sig do
-      params(
-        plan_ids: T::Array[String],
-        subscription_type: String,
-        duration_value: T.nilable(Integer),
-        duration_unit: T.nilable(String),
-      ).void
-    end
-    def initialize(plan_ids:, subscription_type:, duration_value: nil, duration_unit: nil)
+    sig { params(plan_ids: T::Array[String]).void }
+    def initialize(plan_ids:)
       @plan_ids = T.let(plan_ids, T::Array[String])
-      @subscription_type = T.let(subscription_type, String)
-      @duration_value = T.let(duration_value, T.nilable(Integer))
-      @duration_unit = T.let(duration_unit, T.nilable(String))
     end
 
     # TODO: Execution methods
-    # - events(): [:membership_joined, :membership_left] (current)
-    #            [:membership_joined, :membership_left, :new_day_arrived] (duration)
-    # - apply(relation): Filter users based on subscription_type
+    # - events(): [:plan_joined, :plan_left]
+    # - apply(relation): Filter users with current plan in @plan_ids
 
     # Validate config format
     #
@@ -48,12 +30,6 @@ module UserTagRules
     sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
     def self.validate_config(config)
       errors = []
-
-      subscription_type = config['subscription_type']
-      unless %w[current duration].include?(subscription_type)
-        errors << I18n.t('user_tag_rules.errors.subscription_type_invalid')
-        return errors
-      end
 
       values = config['values']
       unless values.is_a?(Array) && values.any?
@@ -65,22 +41,7 @@ module UserTagRules
         errors << I18n.t('user_tag_rules.errors.plan_ids_invalid')
       end
 
-      # Validate duration-specific fields
-      if subscription_type == 'duration'
-        duration_value = config['duration_value']
-        unless duration_value.present? && duration_value.to_i.positive?
-          errors << I18n.t('user_tag_rules.errors.duration_value_invalid')
-        end
-
-        duration_unit = config['duration_unit']
-        unless %w[days months years].include?(duration_unit)
-          errors << I18n.t('user_tag_rules.errors.duration_unit_invalid')
-        end
-      end
-
       errors
     end
-
-    # TODO: Build rule from config
   end
 end

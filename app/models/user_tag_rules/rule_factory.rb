@@ -33,9 +33,9 @@ module UserTagRules
       def validate(condition_type, config)
         case condition_type
         when 'membership'
-          MembershipRule.validate_config(config)
+          validate_membership(config)
         when 'plan'
-          PlanRule.validate_config(config)
+          validate_plan(config)
         when 'age'
           AgeRule.validate_config(config)
         when 'prefecture'
@@ -54,6 +54,38 @@ module UserTagRules
       # def build(condition_type, config)
       #   Build rule instance for execution
       # end
+
+      private
+
+      # Validate membership rule based on subscription_type
+      sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
+      def validate_membership(config)
+        subscription_type = config['subscription_type']
+        unless %w[current duration].include?(subscription_type)
+          return [I18n.t('user_tag_rules.errors.subscription_type_invalid')]
+        end
+
+        if subscription_type == 'duration'
+          MembershipDurationRule.validate_config(config)
+        else
+          MembershipRule.validate_config(config)
+        end
+      end
+
+      # Validate plan rule based on subscription_type
+      sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
+      def validate_plan(config)
+        subscription_type = config['subscription_type']
+        unless %w[current duration].include?(subscription_type)
+          return [I18n.t('user_tag_rules.errors.subscription_type_invalid')]
+        end
+
+        if subscription_type == 'duration'
+          PlanDurationRule.validate_config(config)
+        else
+          PlanRule.validate_config(config)
+        end
+      end
     end
   end
 end
