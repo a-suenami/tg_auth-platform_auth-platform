@@ -2,7 +2,7 @@
 
 module AdminArea
   class UsersController < ApplicationController
-    before_action :set_user, only: %i[show edit update reset_sms_ratelimit activities]
+    before_action :set_user, only: %i[show edit update destroy reset_sms_ratelimit activities]
     def index
       @users = User.all
       @users = @users.where(id: params[:id]) if params[:id].present?
@@ -42,6 +42,11 @@ module AdminArea
     end
 
     def activities
+    end
+
+    def destroy
+      Users::DestroyService.new.execute(user: @user)
+      redirect_to admin_area_users_path, notice: t('helpers.messages.deleted')
     end
 
     private

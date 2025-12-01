@@ -1,3 +1,11 @@
+@use './dropdown.scss' as *;
+
+.c-table-row-action-wrapper {
+  position: relative;
+  vertical-align: middle;
+  display: inline-block;
+}
+
 .c-table-row-action {
   vertical-align: middle;
   display: inline-block;
@@ -6,5 +14,15 @@
     aspect-ratio: 1;
     height: 16px;
     width: auto;
+  }
+}
+
+.c-table-row-action__dropdown {
+  @include dropdown-base;
+  top: calc(100% + 4px);
+  right: 0;
+
+  &__item {
+    @include dropdown-item;
   }
 }

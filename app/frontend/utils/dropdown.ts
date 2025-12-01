@@ -5,6 +5,30 @@
  */
 
 /**
+ * Sets or removes z-index on the ancestor table cell (td) for table dropdowns.
+ * This ensures the dropdown appears above other table rows.
+ *
+ * @param dropdown - The dropdown element
+ * @param zIndex - The z-index value to set, or null to remove
+ */
+function setTableCellZIndex(dropdown: HTMLElement | null, zIndex: string | null): void {
+  if (!dropdown) return;
+
+  // Only process table row action dropdowns
+  if (!dropdown.classList.contains('c-table-row-action__dropdown')) return;
+
+  // Find the ancestor td element
+  const td = dropdown.closest('td') as HTMLTableCellElement;
+  if (!td) return;
+
+  if (zIndex) {
+    td.style.zIndex = zIndex;
+  } else {
+    td.style.zIndex = '';
+  }
+}
+
+/**
  * Toggles a dropdown by its ID.
  * Closes all other dropdowns before opening the target one.
  *
@@ -23,6 +47,8 @@ export function toggleDropdown(dropdownId: string): boolean {
   // Toggle this dropdown
   if (!isOpen) {
     dropdown.setAttribute('data-dropdown-open', 'true');
+    // Set z-index on the table cell for table dropdowns
+    setTableCellZIndex(dropdown, '10');
     return true;
   }
 
@@ -34,7 +60,10 @@ export function toggleDropdown(dropdownId: string): boolean {
  */
 export function closeAllDropdowns(): void {
   document.querySelectorAll('[data-dropdown-open="true"]').forEach((d) => {
-    d.setAttribute('data-dropdown-open', 'false');
+    const dropdown = d as HTMLElement;
+    // Remove z-index from table cell before closing
+    setTableCellZIndex(dropdown, null);
+    dropdown.setAttribute('data-dropdown-open', 'false');
   });
 }
 
