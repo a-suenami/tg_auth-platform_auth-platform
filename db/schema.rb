@@ -939,7 +939,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   create_table "user_tag_assignments", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "User tag assignments (manual and auto)", force: :cascade do |t|
     t.citext "tenant_id", null: false, comment: "Tenant reference"
     t.uuid "user_id", null: false, comment: "User being tagged"
-    t.uuid "user_tag_id", comment: "Tag being assigned (for manual only)"
+    t.uuid "user_tag_id", null: false, comment: "Tag being assigned"
     t.string "assignment_type", null: false, comment: "Type: manual or auto"
     t.uuid "assigned_by_id", comment: "Admin who manually assigned (for manual only)"
     t.uuid "user_auto_tagging_id", comment: "Auto-tagging rule that assigned (for auto only)"
@@ -948,8 +948,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "updated_at", null: false
     t.index ["assigned_by_id"], name: "index_user_tag_assignments_on_assigned_by_id"
     t.index ["assignment_type"], name: "index_user_tag_assignments_on_assignment_type"
-    t.index ["tenant_id", "user_id", "user_auto_tagging_id"], name: "index_user_tag_assignments_auto_unique", unique: true, where: "(user_auto_tagging_id IS NOT NULL)"
-    t.index ["tenant_id", "user_id", "user_tag_id"], name: "index_user_tag_assignments_manual_unique", unique: true, where: "(user_tag_id IS NOT NULL)"
+    t.index ["tenant_id", "user_id", "user_tag_id"], name: "index_user_tag_assignments_unique", unique: true
     t.index ["tenant_id"], name: "index_user_tag_assignments_on_tenant_id"
     t.index ["user_auto_tagging_id"], name: "index_user_tag_assignments_on_user_auto_tagging_id"
     t.index ["user_id"], name: "index_user_tag_assignments_on_user_id"

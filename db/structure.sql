@@ -1,4 +1,4 @@
-\restrict 4QGXI7Qe2j4hPWiBMCbtX2w74hYZ2sRQtnuXEs57ES8LzqxYkyJAbKI7HrWvu1q
+\restrict 8XHkuQfj2f2BlcvYflqHzdg7Q2uqP51XRu6735QoCrtM0j2c35g2OoRRkoELkNe
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -2305,7 +2305,7 @@ CREATE TABLE public.user_tag_assignments (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
-    user_tag_id uuid,
+    user_tag_id uuid NOT NULL,
     assignment_type character varying NOT NULL,
     assigned_by_id uuid,
     user_auto_tagging_id uuid,
@@ -2340,7 +2340,7 @@ COMMENT ON COLUMN public.user_tag_assignments.user_id IS 'User being tagged';
 -- Name: COLUMN user_tag_assignments.user_tag_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.user_tag_assignments.user_tag_id IS 'Tag being assigned (for manual only)';
+COMMENT ON COLUMN public.user_tag_assignments.user_tag_id IS 'Tag being assigned';
 
 
 --
@@ -4384,20 +4384,6 @@ CREATE INDEX index_user_profiles_on_user_id ON public.user_profiles USING btree 
 
 
 --
--- Name: index_user_tag_assignments_auto_unique; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_user_tag_assignments_auto_unique ON public.user_tag_assignments USING btree (tenant_id, user_id, user_auto_tagging_id) WHERE (user_auto_tagging_id IS NOT NULL);
-
-
---
--- Name: index_user_tag_assignments_manual_unique; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_user_tag_assignments_manual_unique ON public.user_tag_assignments USING btree (tenant_id, user_id, user_tag_id) WHERE (user_tag_id IS NOT NULL);
-
-
---
 -- Name: index_user_tag_assignments_on_assigned_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4437,6 +4423,13 @@ CREATE INDEX index_user_tag_assignments_on_user_id ON public.user_tag_assignment
 --
 
 CREATE INDEX index_user_tag_assignments_on_user_tag_id ON public.user_tag_assignments USING btree (user_tag_id);
+
+
+--
+-- Name: index_user_tag_assignments_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_user_tag_assignments_unique ON public.user_tag_assignments USING btree (tenant_id, user_id, user_tag_id);
 
 
 --
@@ -5594,7 +5587,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 4QGXI7Qe2j4hPWiBMCbtX2w74hYZ2sRQtnuXEs57ES8LzqxYkyJAbKI7HrWvu1q
+\unrestrict 8XHkuQfj2f2BlcvYflqHzdg7Q2uqP51XRu6735QoCrtM0j2c35g2OoRRkoELkNe
 
 SET search_path TO "$user", public;
 
