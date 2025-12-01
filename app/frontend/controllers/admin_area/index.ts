@@ -9,6 +9,7 @@ import PeriodSettingsController from "./period_settings_controller";
 import DatepickerController from "./datepicker_controller";
 import ConditionBlockController from "./condition_block_controller";
 import ConditionBlocksController from "./condition_blocks_controller";
+import SidenavToggleController from "./sidenav_toggle_controller";
 
 application.register("schedule-form", ScheduleFormController);
 application.register(
@@ -26,5 +27,6 @@ application.register("period-settings", PeriodSettingsController);
 application.register("datepicker", DatepickerController);
 application.register("condition-block", ConditionBlockController);
 application.register("condition-blocks", ConditionBlocksController);
+application.register("sidenav-toggle", SidenavToggleController);
 
 console.log("this is frontend/controllers/admin_area/index.ts");

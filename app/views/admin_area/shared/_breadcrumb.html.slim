@@ -2,9 +2,9 @@
 / Usage: = render 'admin_area/shared/breadcrumb', items: [{ text: 'Home' }, { text: 'Users', link: users_path }, { text: 'Edit' }]
 / Last item auto becomes non-link (current page)
 
-.c-breadcrumb
+.c-breadcrumb data-controller='sidenav-toggle'
   .c-breadcrumb__sidenav
-    a.c-breadcrumb__sidenav__toggle href='#'
+    a.c-breadcrumb__sidenav__toggle href='#' data-action='click->sidenav-toggle#toggle'
       = render 'shared/icons/icon-sidenav'
   .c-breadcrumb__content
     - items.each_with_index do |item, index|
