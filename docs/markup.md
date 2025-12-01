@@ -1869,6 +1869,291 @@ function initDropdownHandlers() {
 - `z-index`でアクションボタンをカードのリンクより上に配置する
 - アクションボタンクリック時は`stopPropagation()`でカードのリンク処理を防ぐ
 
+## Stimulusコントローラーの実装パターン
+
+### 動的なDOM要素の生成とStimulusの連携
+
+Stimulusコントローラーで動的にDOM要素を生成する場合、Stimulusの自動スキャン機能を活用します。
+
+**ポイント:**
+- 動的に追加された要素に`data-controller`属性を設定すると、Stimulusが自動的にコントローラーを接続する
+- `requestAnimationFrame`を使用してDOMの更新を待つ必要はない（Stimulusが自動的に検出する）
+- 明示的な`application.load()`呼び出しは不要
+
+**実装例:**
+```typescript
+// 動的に要素を生成
+const block = document.createElement('div');
+block.className = 'c-condition-block';
+block.setAttribute('data-controller', 'condition-block');
+
+// DOMに追加すると、Stimulusが自動的にコントローラーを接続する
+container.appendChild(block);
+```
+
+### ユーティリティ関数の活用
+
+複数のコントローラーで共通する処理は、ユーティリティ関数として分離します。
+
+**実装例:**
+- `app/frontend/utils/dropdown.ts`: ドロップダウンの開閉制御
+- `app/frontend/utils/icons.ts`: SVGアイコンの生成
+- `app/frontend/utils/empty-state.ts`: 空状態の表示制御
+- `app/frontend/utils/condition-factory.ts`: 条件要素の生成（ファクトリーパターン）
+- `app/frontend/utils/condition-block-builder.ts`: 条件ブロックの生成（Builderパターン）
+
+**ポイント:**
+- 共通処理をユーティリティ関数に抽出することで、コードの重複を削減
+- テストしやすく、保守性が向上
+- 型安全性を保ちながら実装
+
+### ファクトリーパターンの使用
+
+条件タイプごとに異なるDOM構造を生成する場合、ファクトリーパターンを使用します。
+
+**実装例:**
+```typescript
+// app/frontend/utils/condition-factory.ts
+export function createCurrentMembershipCondition(
+  initializeSelectClass: (select: HTMLSelectElement) => void
+): DocumentFragment {
+  const fragment = document.createDocumentFragment();
+  // 条件タイプに応じたDOM要素を生成
+  return fragment;
+}
+
+// コントローラーでの使用
+const factory = conditionFactories[type];
+if (factory) {
+  const contentFragment = factory((select) => this.initializeSelectClass(select));
+  content.appendChild(contentFragment);
+}
+```
+
+**ポイント:**
+- 条件タイプごとの生成ロジックを分離
+- 新しい条件タイプの追加が容易
+- コードの可読性と保守性が向上
+
+### Builderパターンの使用
+
+複雑なDOM構造を生成する場合、Builderパターンを使用します。
+
+**実装例:**
+```typescript
+// app/frontend/utils/condition-block-builder.ts
+export class ConditionBlockBuilder {
+  static build(blockNumber: number): HTMLElement {
+    const block = document.createElement('div');
+    // ヘッダー、リスト、追加ボタンなどを構築
+    return block;
+  }
+}
+
+// コントローラーでの使用
+const block = ConditionBlockBuilder.build(blockNumber);
+container.appendChild(block);
+```
+
+**ポイント:**
+- 複雑なDOM構造の生成ロジックをカプセル化
+- 生成ロジックの変更が容易
+- コードの可読性が向上
+
+### ミックスインの活用
+
+複数のコントローラーで共通する機能は、ミックスインとして実装します。
+
+**実装例:**
+```typescript
+// app/frontend/controllers/admin_area/dropdown_mixin.ts
+export const DropdownMixin = {
+  handleOutsideClick(event: Event, dropdownSelectors: string[] = []): void {
+    // 外部クリック処理
+  },
+};
+
+// コントローラーでの使用
+private handleOutsideClick(event: Event) {
+  DropdownMixin.handleOutsideClick(event, ['.c-condition-block__dropdown']);
+}
+```
+
+**ポイント:**
+- 共通機能をミックスインとして分離
+- 複数のコントローラーで再利用可能
+- コードの重複を削減
+
+### SCSSのmixin化
+
+ドロップダウンなどの共通スタイルは、SCSSのmixinとして定義します。
+
+**実装例:**
+```scss
+// app/frontend/stylesheets/admin_area/object/component/_dropdown.scss
+@mixin dropdown-base {
+  position: absolute;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  // ... 共通スタイル
+}
+
+@mixin dropdown-item {
+  display: block;
+  padding: 12px 16px;
+  // ... 共通スタイル
+}
+
+// 使用例
+.c-condition-block {
+  &__header__dropdown {
+    @include dropdown-base;
+    top: calc(100% + 4px);
+    right: 0;
+
+    &__item {
+      @include dropdown-item;
+    }
+  }
+}
+```
+
+**ポイント:**
+- 共通スタイルをmixinとして定義することで、コードの重複を削減
+- スタイルの変更が容易
+- 一貫性のあるデザインを維持
+
+### 期間設定コンポーネントの実装
+
+期間設定のような複雑なフォーム要素は、Stimulusコントローラーで制御します。
+
+**マークアップ:**
+```slim
+.c-period-settings data-controller="period-settings"
+  .c-period-settings__select
+    select data-period-settings-target="select" data-action="change->period-settings#handleChange"
+      option value="none" 期間設定なし
+      option value="relative" 相対的に期間を指定する
+      option value="fixed" 固定の期間を指定する
+  .c-period-settings__content data-period-settings-target="content"
+    .c-period-settings__relative data-period-settings-target="relative" style="display: none;"
+      / 相対期間のフィールド
+    .c-period-settings__fixed data-period-settings-target="fixed"
+      / 固定期間のフィールド
+```
+
+**ポイント:**
+- 選択値に応じて表示するセクションを切り替える
+- `data-period-settings-target`でStimulusのターゲットを指定
+- `data-action`でイベントハンドラーを指定
+
+### 日付ピッカーの実装
+
+日付選択には、モーダル内に年月日のselectタグを配置したdatepickerを実装します。
+
+**マークアップ:**
+```slim
+/ 日付表示部分（クリック可能）
+.c-period-settings__fixed__argument data-action="click->period-settings#openDatepicker" data-date-type="start"
+  span.c-period-settings__fixed__argument__text 2025/01/01
+
+/ モーダル内のdatepicker
+.c-datepicker data-controller="datepicker"
+  .c-datepicker__fields
+    select.c-datepicker__field data-datepicker-target="year"
+      option value="2025" 2025
+    .c-datepicker__unit 年
+    select.c-datepicker__field data-datepicker-target="month"
+      option value="1" 1
+    .c-datepicker__unit 月
+    select.c-datepicker__field data-datepicker-target="day"
+      option value="1" 1
+    .c-datepicker__unit 日
+  button type="button" data-action="select-date" 選択
+```
+
+**ポイント:**
+- 日付表示部分をクリックするとモーダルが開く
+- モーダル内で年月日を選択
+- 選択した日付を表示部分に反映
+- Turbo Frameを使用してモーダルコンテンツを動的に読み込む
+
+### 条件ブロックの動的生成
+
+条件ブロックは、Stimulusコントローラーで動的に生成・管理します。
+
+**マークアップ:**
+```slim
+.c-form-section__content data-controller="condition-blocks"
+  .c-form-section__content__blocks data-condition-blocks-target="blocks"
+  .c-form-section__content__empty data-condition-blocks-target="empty"
+    .c-form-section__content__empty__text 条件ブロックがありません
+  button.c-form-section__add-block type="button" data-action="click->condition-blocks#addBlock"
+    = render 'shared/icons/icon-plus'
+    span.c-form-section__add-block__text 条件ブロックを追加
+```
+
+**ポイント:**
+- 条件ブロックは動的に追加・削除可能
+- 空状態の表示/非表示を自動制御
+- Builderパターンを使用してブロックを生成
+- 各ブロック内で条件を追加・削除可能
+
+### 空状態の動的管理
+
+空状態の表示/非表示は、ユーティリティ関数で統一管理します。
+
+**実装例:**
+```typescript
+// app/frontend/utils/empty-state.ts
+export function updateEmptyState(
+  container: HTMLElement,
+  emptyElement: HTMLElement,
+  itemSelector: string
+): void {
+  const items = container.querySelectorAll(itemSelector);
+  const hasItems = items.length > 0;
+  emptyElement.style.display = hasItems ? 'none' : 'flex';
+}
+
+// コントローラーでの使用
+private updateEmptyState() {
+  updateEmptyStateUtil(
+    this.listTarget,
+    this.emptyTarget,
+    '.c-condition-block__item'
+  );
+}
+```
+
+**ポイント:**
+- 空状態の表示/非表示ロジックを統一
+- 複数のコントローラーで再利用可能
+- コードの重複を削減
+
+### モーダルのパディング制御
+
+モーダルのボディにパディングを持たせない場合は、`--no-padding`モディファイアを使用します。
+
+**マークアップ:**
+```slim
+.c-modal__dialog__body.c-modal__dialog__body--no-padding
+  / パディングなしのコンテンツ
+```
+
+**スタイル:**
+```scss
+.c-modal__dialog__body {
+  &--no-padding {
+    padding: 0;
+  }
+}
+```
+
+**ポイント:**
+- タグピッカーのような表形式のコンテンツでは、パディングなしのモーダルを使用
+- モディファイアで柔軟に制御
+
 ## 参考
 
 - [BEM記法](http://getbem.com/)
