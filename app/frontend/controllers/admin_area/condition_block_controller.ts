@@ -1,7 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
-import { toggleDropdown, closeAllDropdowns, isClickInsideDropdown } from '@app/utils/dropdown';
+import { toggleDropdown, closeAllDropdowns } from '@app/utils/dropdown';
 import { createMoreVerticalIcon } from '@app/utils/icons';
 import { conditionFactories } from '@app/utils/condition-factory';
+import { DropdownMixin } from './dropdown_mixin';
 
 /**
  * Condition Block Controller
@@ -17,7 +18,8 @@ export default class extends Controller {
 
   connect() {
     // Close dropdown when clicking outside
-    document.addEventListener('click', this.handleOutsideClick.bind(this));
+    this.boundHandleOutsideClick = this.handleOutsideClick.bind(this);
+    document.addEventListener('click', this.boundHandleOutsideClick);
 
     // Initialize select classes for existing selects
     this.initializeSelectClasses();
@@ -27,8 +29,12 @@ export default class extends Controller {
   }
 
   disconnect() {
-    document.removeEventListener('click', this.handleOutsideClick.bind(this));
+    if (this.boundHandleOutsideClick) {
+      document.removeEventListener('click', this.boundHandleOutsideClick);
+    }
   }
+
+  private boundHandleOutsideClick?: (event: Event) => void;
 
   toggleDropdown(event: Event) {
     event.preventDefault();
@@ -192,15 +198,10 @@ export default class extends Controller {
   }
 
   private handleOutsideClick(event: Event) {
-    const target = event.target as HTMLElement;
-    const isInside = isClickInsideDropdown(target, [
+    DropdownMixin.handleOutsideClick(event, [
       '.c-condition-block__add-condition__dropdown',
       '.c-condition-block__item__dropdown',
     ]);
-
-    if (!isInside) {
-      closeAllDropdowns();
-    }
   }
 }
 

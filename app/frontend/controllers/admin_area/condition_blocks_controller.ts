@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
-import { toggleDropdown, closeAllDropdowns, isClickInsideDropdown } from '@app/utils/dropdown';
+import { toggleDropdown } from '@app/utils/dropdown';
 import { createMoreVerticalIcon, createPlusIcon } from '@app/utils/icons';
+import { DropdownMixin } from './dropdown_mixin';
 
 /**
  * Condition Blocks Controller
@@ -30,14 +31,9 @@ export default class extends Controller {
   }
 
   private handleOutsideClick(event: Event) {
-    const target = event.target as HTMLElement;
-    const isInside = isClickInsideDropdown(target, [
+    DropdownMixin.handleOutsideClick(event, [
       '.c-condition-block__header__dropdown',
     ]);
-
-    if (!isInside) {
-      closeAllDropdowns();
-    }
   }
 
   addBlock(event: Event) {
