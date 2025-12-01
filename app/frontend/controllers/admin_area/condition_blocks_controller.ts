@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { toggleDropdown } from '@app/utils/dropdown';
 import { createMoreVerticalIcon, createPlusIcon } from '@app/utils/icons';
 import { DropdownMixin } from './dropdown_mixin';
+import { updateEmptyState as updateEmptyStateUtil } from '@app/utils/empty-state';
 
 /**
  * Condition Blocks Controller
@@ -190,12 +191,11 @@ export default class extends Controller {
   private updateEmptyState() {
     if (!this.emptyTarget) return;
 
-    const blocks = this.blocksTarget.querySelectorAll('.c-condition-block');
-    if (blocks.length === 0) {
-      this.emptyTarget.style.display = 'flex';
-    } else {
-      this.emptyTarget.style.display = 'none';
-    }
+    updateEmptyStateUtil(
+      this.blocksTarget,
+      this.emptyTarget,
+      '.c-condition-block'
+    );
   }
 }
 

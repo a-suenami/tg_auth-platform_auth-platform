@@ -3,6 +3,7 @@ import { toggleDropdown, closeAllDropdowns } from '@app/utils/dropdown';
 import { createMoreVerticalIcon } from '@app/utils/icons';
 import { conditionFactories } from '@app/utils/condition-factory';
 import { DropdownMixin } from './dropdown_mixin';
+import { updateEmptyState as updateEmptyStateUtil } from '@app/utils/empty-state';
 
 /**
  * Condition Block Controller
@@ -189,12 +190,11 @@ export default class extends Controller {
   private updateEmptyState() {
     if (!this.emptyTarget) return;
 
-    const items = this.listTarget.querySelectorAll('.c-condition-block__item');
-    if (items.length === 0) {
-      this.emptyTarget.style.display = 'flex';
-    } else {
-      this.emptyTarget.style.display = 'none';
-    }
+    updateEmptyStateUtil(
+      this.listTarget,
+      this.emptyTarget,
+      '.c-condition-block__item'
+    );
   }
 
   private handleOutsideClick(event: Event) {
