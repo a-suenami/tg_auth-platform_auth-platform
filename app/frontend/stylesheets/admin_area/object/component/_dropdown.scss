@@ -1,0 +1,42 @@
+/**
+ * Dropdown Component
+ *
+ * Common styles for dropdown menus.
+ */
+
+@mixin dropdown-base {
+  position: absolute;
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+  min-width: 120px;
+  display: none;
+  overflow: hidden;
+  z-index: 1000;
+
+  &[data-dropdown-open="true"] {
+    display: block;
+  }
+}
+
+@mixin dropdown-item {
+  display: block;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--color-text-body);
+  text-decoration: none;
+  transition: background-color 0.2s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-family);
+
+  &:hover {
+    background-color: var(--color-background-gray);
+    color: var(--color-text-body);
+  }
+}
+

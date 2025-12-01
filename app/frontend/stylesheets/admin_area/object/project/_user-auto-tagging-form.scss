@@ -1,3 +1,5 @@
+@use '../component/dropdown' as *;
+
 // オートタギングフォーム（新規作成・編集）
 .p-user-auto-tagging-form {
   display: contents;
@@ -265,40 +267,12 @@
   }
 
   &__header__dropdown {
-    position: absolute;
+    @include dropdown-base;
     top: calc(100% + 4px);
     right: 0;
-    background-color: var(--color-background);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
-    min-width: 120px;
-    display: none;
-    overflow: hidden;
-    z-index: 1000;
-
-    &[data-dropdown-open="true"] {
-      display: block;
-    }
 
     &__item {
-      display: block;
-      padding: 12px 16px;
-      font-size: 14px;
-      color: var(--color-text-body);
-      text-decoration: none;
-      transition: background-color 0.2s;
-      border: none;
-      background: none;
-      width: 100%;
-      text-align: left;
-      cursor: pointer;
-      font-family: var(--font-family);
-
-      &:hover {
-        background-color: var(--color-background-gray);
-        color: var(--color-text-body);
-      }
+      @include dropdown-item;
     }
   }
 
@@ -411,40 +385,12 @@
     }
 
     &__dropdown {
-      position: absolute;
+      @include dropdown-base;
       top: calc(100% + 4px);
       right: 0;
-      background-color: var(--color-background);
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
-      min-width: 120px;
-      display: none;
-      overflow: hidden;
-      z-index: 1000;
-
-      &[data-dropdown-open="true"] {
-        display: block;
-      }
 
       &__item {
-        display: block;
-        padding: 12px 16px;
-        font-size: 14px;
-        color: var(--color-text-body);
-        text-decoration: none;
-        transition: background-color 0.2s;
-        border: none;
-        background: none;
-        width: 100%;
-        text-align: left;
-        cursor: pointer;
-        font-family: var(--font-family);
-
-        &:hover {
-          background-color: var(--color-background-gray);
-          color: var(--color-text-body);
-        }
+        @include dropdown-item;
       }
     }
   }
@@ -484,40 +430,13 @@
     }
 
     &__dropdown {
-      position: absolute;
+      @include dropdown-base;
       bottom: calc(100% + 4px);
       left: 0;
       right: 0;
-      background-color: var(--color-background);
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
-      display: none;
-      overflow: hidden;
-      z-index: 1000;
-
-      &[data-dropdown-open="true"] {
-        display: block;
-      }
 
       &__item {
-        display: block;
-        padding: 12px 16px;
-        font-size: 14px;
-        color: var(--color-text-body);
-        text-decoration: none;
-        transition: background-color 0.2s;
-        border: none;
-        background: none;
-        width: 100%;
-        text-align: left;
-        cursor: pointer;
-        font-family: var(--font-family);
-
-        &:hover {
-          background-color: var(--color-background-gray);
-          color: var(--color-text-body);
-        }
+        @include dropdown-item;
 
         &:not(:first-child) {
           border-top: 1px solid var(--color-border);
