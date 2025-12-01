@@ -45,3 +45,18 @@
         .uk-margin-small
           .uk-text-meta.uk-text-small 最終更新日時
           div = @user_tag.updated_at.strftime('%Y/%m/%d %H:%M')
+
+      - if @user_tag.user_auto_taggings.any?
+        .uk-card.uk-card-default.uk-card-body.uk-margin-top
+          h4.uk-card-title オートタギング設定
+          .uk-text-small.uk-text-muted.uk-margin-small-bottom
+            | このタグは以下のルールで自動付与されます
+          ul.uk-list.uk-list-divider
+            - @user_tag.user_auto_taggings.each do |auto_tagging|
+              li
+                = link_to edit_admin_area_user_auto_tagging_path(auto_tagging) do
+                  span = auto_tagging.name
+                  - if auto_tagging.enabled?
+                    span.uk-label.uk-label-success.uk-margin-small-left 有効
+                  - else
+                    span.uk-label.uk-margin-small-left 無効

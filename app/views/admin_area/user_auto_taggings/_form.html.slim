@@ -46,7 +46,46 @@
 
   hr.uk-margin-medium-top.uk-margin-medium-bottom
 
-  / Section 3: 条件設定
+  / Section 3: タグ設定
+  h3.uk-margin-bottom タグ設定
+
+  .uk-margin data-controller="auto-tagging-tag-selector"
+    .uk-text-small.uk-text-muted.uk-margin-small-bottom
+      | ルールにマッチしたユーザーに付与するタグを選択してください（複数選択可）
+
+    - if @user_tags.present?
+      - selected_tag_ids = user_auto_tagging.user_tag_ids
+      - selected_tags = @user_tags.select { |t| selected_tag_ids.include?(t.id) }
+      - available_tags = @user_tags.reject { |t| selected_tag_ids.include?(t.id) }
+
+      / Selected tags displayed as chips
+      .uk-margin-small-top data-auto-tagging-tag-selector-target="container" data-action="click->auto-tagging-tag-selector#removeTag" style="min-height: 40px; padding: 8px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fafafa;"
+        - if selected_tags.any?
+          - selected_tags.each do |tag|
+            span.uk-label.uk-label-primary.uk-margin-small-right.tag-chip data-tag-id=tag.id data-tag-name=tag.name style="cursor: pointer;"
+              = tag.name
+              |
+              span uk-icon="icon: close; ratio: 0.8"
+              = hidden_field_tag 'user_auto_tagging[user_tag_ids][]', tag.id, id: "user_tag_#{tag.id}"
+        - else
+          span.uk-text-meta data-auto-tagging-tag-selector-target="placeholder" タグが選択されていません
+
+      / Dropdown to add new tags
+      .uk-margin-small-top
+        label.uk-form-label.uk-text-small タグを追加
+        select.uk-select data-auto-tagging-tag-selector-target="selector" data-action="change->auto-tagging-tag-selector#addTag"
+          option value="" -- タグを選択 --
+          - available_tags.each do |tag|
+            option value=tag.id data-name=tag.name
+              = tag.name
+    - else
+      .uk-alert.uk-alert-warning
+        | タグが登録されていません。
+        = link_to '先にタグを作成してください', admin_area_user_tags_path
+
+  hr.uk-margin-medium-top.uk-margin-medium-bottom
+
+  / Section 4: 条件設定
   .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-bottom
     h3.uk-margin-remove 条件設定
     button.uk-button.uk-button-primary.uk-button-small type="button" data-action="click->user-auto-tagging-form#addRuleBlock"

@@ -10,9 +10,12 @@ class UserAutoTagging < ApplicationRecord
 
   has_one :schedule, class_name: 'AutoTaggingSchedule', dependent: :destroy
   has_many :rule_blocks, class_name: 'UserAutoTagging::RuleBlock', dependent: :destroy
+  has_many :auto_tagging_tags, class_name: 'UserAutoTaggingTag', dependent: :destroy
+  has_many :user_tags, through: :auto_tagging_tags
 
   accepts_nested_attributes_for :schedule, allow_destroy: true
   accepts_nested_attributes_for :rule_blocks, allow_destroy: true
+  accepts_nested_attributes_for :auto_tagging_tags, allow_destroy: true
 
   validates :name, presence: true
   validates :name, uniqueness: { scope: :tenant_id }
