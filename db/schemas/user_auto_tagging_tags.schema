@@ -1,0 +1,13 @@
+create_table :user_auto_tagging_tags, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Tags assigned by auto-tagging rules' do |t|
+  t.references :tenant, type: :citext, null: false, comment: 'Tenant reference'
+  t.references :user_auto_tagging, type: :uuid, null: false, comment: 'Auto-tagging rule reference'
+  t.references :user_tag, type: :uuid, null: false, comment: 'Tag to assign'
+
+  t.timestamps null: false
+
+  t.index [:user_auto_tagging_id, :user_tag_id], unique: true, name: 'idx_auto_tagging_tags_unique'
+end
+
+add_foreign_key :user_auto_tagging_tags, :tenants
+add_foreign_key :user_auto_tagging_tags, :user_auto_taggings
+add_foreign_key :user_auto_tagging_tags, :user_tags

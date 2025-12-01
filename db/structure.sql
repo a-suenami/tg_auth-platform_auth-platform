@@ -1,4 +1,4 @@
-\restrict 4QGXI7Qe2j4hPWiBMCbtX2w74hYZ2sRQtnuXEs57ES8LzqxYkyJAbKI7HrWvu1q
+\restrict VID40Tt7RgobBOgl8Osvh6ZdT24eCxuf7QWffKsK8pj6vayveOmGhkxUFFwazlV
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -2162,6 +2162,48 @@ COMMENT ON COLUMN public.user_auto_tagging_rules."position" IS 'Display order wi
 
 
 --
+-- Name: user_auto_tagging_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_auto_tagging_tags (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_auto_tagging_id uuid NOT NULL,
+    user_tag_id uuid NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE user_auto_tagging_tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.user_auto_tagging_tags IS 'Tags assigned by auto-tagging rules';
+
+
+--
+-- Name: COLUMN user_auto_tagging_tags.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_tagging_tags.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN user_auto_tagging_tags.user_auto_tagging_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_tagging_tags.user_auto_tagging_id IS 'Auto-tagging rule reference';
+
+
+--
+-- Name: COLUMN user_auto_tagging_tags.user_tag_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_auto_tagging_tags.user_tag_id IS 'Tag to assign';
+
+
+--
 -- Name: user_auto_taggings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2305,7 +2347,7 @@ CREATE TABLE public.user_tag_assignments (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     tenant_id public.citext NOT NULL,
     user_id uuid NOT NULL,
-    user_tag_id uuid,
+    user_tag_id uuid NOT NULL,
     assignment_type character varying NOT NULL,
     assigned_by_id uuid,
     user_auto_tagging_id uuid,
@@ -2340,7 +2382,7 @@ COMMENT ON COLUMN public.user_tag_assignments.user_id IS 'User being tagged';
 -- Name: COLUMN user_tag_assignments.user_tag_id; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.user_tag_assignments.user_tag_id IS 'Tag being assigned (for manual only)';
+COMMENT ON COLUMN public.user_tag_assignments.user_tag_id IS 'Tag being assigned';
 
 
 --
@@ -2946,6 +2988,14 @@ ALTER TABLE ONLY public.user_auto_tagging_rules
 
 
 --
+-- Name: user_auto_tagging_tags user_auto_tagging_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_tagging_tags
+    ADD CONSTRAINT user_auto_tagging_tags_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_auto_taggings user_auto_taggings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3044,6 +3094,13 @@ CREATE UNIQUE INDEX idx_account_locks_tenant_id_unlock_token_uniq ON public.acco
 --
 
 CREATE UNIQUE INDEX idx_admins_tenant_id_uid_uniq ON public.admins USING btree (tenant_id, uid);
+
+
+--
+-- Name: idx_auto_tagging_tags_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_auto_tagging_tags_unique ON public.user_auto_tagging_tags USING btree (user_auto_tagging_id, user_tag_id);
 
 
 --
@@ -4321,6 +4378,27 @@ CREATE INDEX index_user_auto_tagging_rules_on_tenant_id ON public.user_auto_tagg
 
 
 --
+-- Name: index_user_auto_tagging_tags_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auto_tagging_tags_on_tenant_id ON public.user_auto_tagging_tags USING btree (tenant_id);
+
+
+--
+-- Name: index_user_auto_tagging_tags_on_user_auto_tagging_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auto_tagging_tags_on_user_auto_tagging_id ON public.user_auto_tagging_tags USING btree (user_auto_tagging_id);
+
+
+--
+-- Name: index_user_auto_tagging_tags_on_user_tag_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auto_tagging_tags_on_user_tag_id ON public.user_auto_tagging_tags USING btree (user_tag_id);
+
+
+--
 -- Name: index_user_auto_taggings_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4384,20 +4462,6 @@ CREATE INDEX index_user_profiles_on_user_id ON public.user_profiles USING btree 
 
 
 --
--- Name: index_user_tag_assignments_auto_unique; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_user_tag_assignments_auto_unique ON public.user_tag_assignments USING btree (tenant_id, user_id, user_auto_tagging_id) WHERE (user_auto_tagging_id IS NOT NULL);
-
-
---
--- Name: index_user_tag_assignments_manual_unique; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_user_tag_assignments_manual_unique ON public.user_tag_assignments USING btree (tenant_id, user_id, user_tag_id) WHERE (user_tag_id IS NOT NULL);
-
-
---
 -- Name: index_user_tag_assignments_on_assigned_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4437,6 +4501,13 @@ CREATE INDEX index_user_tag_assignments_on_user_id ON public.user_tag_assignment
 --
 
 CREATE INDEX index_user_tag_assignments_on_user_tag_id ON public.user_tag_assignments USING btree (user_tag_id);
+
+
+--
+-- Name: index_user_tag_assignments_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_user_tag_assignments_unique ON public.user_tag_assignments USING btree (tenant_id, user_id, user_tag_id);
 
 
 --
@@ -4943,11 +5014,27 @@ ALTER TABLE ONLY public.user_tag_assignments
 
 
 --
+-- Name: user_auto_tagging_tags fk_rails_22ed4e6a2e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_tagging_tags
+    ADD CONSTRAINT fk_rails_22ed4e6a2e FOREIGN KEY (user_tag_id) REFERENCES public.user_tags(id);
+
+
+--
 -- Name: user_auto_tagging_rule_blocks fk_rails_2cdd36d912; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_auto_tagging_rule_blocks
     ADD CONSTRAINT fk_rails_2cdd36d912 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: user_auto_tagging_tags fk_rails_2dad976901; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_tagging_tags
+    ADD CONSTRAINT fk_rails_2dad976901 FOREIGN KEY (user_auto_tagging_id) REFERENCES public.user_auto_taggings(id);
 
 
 --
@@ -5012,6 +5099,14 @@ ALTER TABLE ONLY public.user_tags
 
 ALTER TABLE ONLY public.user_tag_assignments
     ADD CONSTRAINT fk_rails_5b06d62c98 FOREIGN KEY (user_tag_id) REFERENCES public.user_tags(id);
+
+
+--
+-- Name: user_auto_tagging_tags fk_rails_71a8d9f90b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auto_tagging_tags
+    ADD CONSTRAINT fk_rails_71a8d9f90b FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
@@ -5594,7 +5689,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 4QGXI7Qe2j4hPWiBMCbtX2w74hYZ2sRQtnuXEs57ES8LzqxYkyJAbKI7HrWvu1q
+\unrestrict VID40Tt7RgobBOgl8Osvh6ZdT24eCxuf7QWffKsK8pj6vayveOmGhkxUFFwazlV
 
 SET search_path TO "$user", public;
 

@@ -12,9 +12,11 @@ module AdminArea
     def new
       @user_auto_tagging = UserAutoTagging.new
       @user_auto_tagging.build_schedule
+      @user_tags = UserTag.ordered
     end
 
     def edit
+      @user_tags = UserTag.ordered
     end
 
     def create
@@ -73,6 +75,7 @@ module AdminArea
           :_destroy,
           rules_attributes: [:id, :condition_type, :position, :_destroy, :config],
         ],
+        user_tag_ids: [],
       ).tap do |whitelisted|
         # Parse config JSON strings to hashes
         whitelisted[:rule_blocks_attributes]&.each_value do |block_attrs|

@@ -10,7 +10,7 @@ class UserTagAssignment < ApplicationRecord
   # Associations
   belongs_to :tenant
   belongs_to :user
-  belongs_to :user_tag, optional: true
+  belongs_to :user_tag
   belongs_to :assigned_by, class_name: 'Admin', optional: true
   belongs_to :user_auto_tagging, optional: true
 
@@ -21,9 +21,7 @@ class UserTagAssignment < ApplicationRecord
 
   # Custom validations
   validate :manual_assignment_has_admin
-  validate :manual_assignment_has_tag
   validate :auto_assignment_has_rule
-  validate :auto_assignment_no_tag
 
   # Scopes
   scope :manual, -> { where(assignment_type: 'manual') }
@@ -54,23 +52,9 @@ class UserTagAssignment < ApplicationRecord
   end
 
   sig { void }
-  def manual_assignment_has_tag
-    return unless assignment_type == 'manual' && user_tag_id.blank?
-
-    errors.add(:user_tag, 'must be present for manual assignments')
-  end
-
-  sig { void }
   def auto_assignment_has_rule
     return unless assignment_type == 'auto' && user_auto_tagging_id.blank?
 
     errors.add(:user_auto_tagging, 'must be present for auto assignments')
-  end
-
-  sig { void }
-  def auto_assignment_no_tag
-    return unless assignment_type == 'auto' && user_tag_id.present?
-
-    errors.add(:user_tag, 'must be blank for auto assignments')
   end
 end

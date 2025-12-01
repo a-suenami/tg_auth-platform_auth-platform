@@ -33,9 +33,9 @@ module UserTagRules
       def validate(condition_type, config)
         case condition_type
         when 'membership'
-          MembershipRule.validate_config(config)
+          validate_membership(config)
         when 'plan'
-          PlanRule.validate_config(config)
+          validate_plan(config)
         when 'age'
           AgeRule.validate_config(config)
         when 'prefecture'
@@ -64,9 +64,9 @@ module UserTagRules
       def build(condition_type, config)
         case condition_type
         when 'membership'
-          MembershipRule.from_config(config)
+          build_membership(config)
         when 'plan'
-          PlanRule.from_config(config)
+          build_plan(config)
         when 'age'
           AgeRule.from_config(config)
         when 'prefecture'
@@ -77,6 +77,62 @@ module UserTagRules
           AccountLinkRule.from_config(config)
         else
           raise ArgumentError, "Unknown condition_type: #{condition_type}"
+        end
+      end
+
+      private
+
+      # Validate membership rule based on subscription_type
+      sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
+      def validate_membership(config)
+        subscription_type = config['subscription_type']
+        unless %w[current duration].include?(subscription_type)
+          return [I18n.t('user_tag_rules.errors.subscription_type_invalid')]
+        end
+
+        if subscription_type == 'duration'
+          MembershipDurationRule.validate_config(config)
+        else
+          MembershipRule.validate_config(config)
+        end
+      end
+
+      # Validate plan rule based on subscription_type
+      sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
+      def validate_plan(config)
+        subscription_type = config['subscription_type']
+        unless %w[current duration].include?(subscription_type)
+          return [I18n.t('user_tag_rules.errors.subscription_type_invalid')]
+        end
+
+        if subscription_type == 'duration'
+          PlanDurationRule.validate_config(config)
+        else
+          PlanRule.validate_config(config)
+        end
+      end
+
+      # Build membership rule based on subscription_type
+      sig { params(config: T::Hash[String, T.untyped]).returns(AbstractRule) }
+      def build_membership(config)
+        subscription_type = config['subscription_type']
+
+        if subscription_type == 'duration'
+          MembershipDurationRule.from_config(config)
+        else
+          MembershipRule.from_config(config)
+        end
+      end
+
+      # Build plan rule based on subscription_type
+      sig { params(config: T::Hash[String, T.untyped]).returns(AbstractRule) }
+      def build_plan(config)
+        subscription_type = config['subscription_type']
+
+        if subscription_type == 'duration'
+          PlanDurationRule.from_config(config)
+        else
+          PlanRule.from_config(config)
         end
       end
     end

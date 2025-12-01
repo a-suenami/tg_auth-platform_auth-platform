@@ -384,6 +384,23 @@ class UserAutoTagging
   end
 
   module GeneratedAssociationMethods
+    sig { returns(T::Array[T.untyped]) }
+    def auto_tagging_tag_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def auto_tagging_tag_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `UserAutoTagging` class because it declared `has_many :auto_tagging_tags`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::UserAutoTaggingTag::PrivateCollectionProxy) }
+    def auto_tagging_tags; end
+
+    sig { params(value: T::Enumerable[::UserAutoTaggingTag]).void }
+    def auto_tagging_tags=(value); end
+
+    sig { params(attributes: T.untyped).returns(T.untyped) }
+    def auto_tagging_tags_attributes=(attributes); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::Admin) }
     def build_created_by(*args, &blk); end
 
@@ -519,6 +536,20 @@ class UserAutoTagging
 
     sig { returns(T::Boolean) }
     def updated_by_previously_changed?; end
+
+    sig { returns(T::Array[T.untyped]) }
+    def user_tag_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def user_tag_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `UserAutoTagging` class because it declared `has_many :user_tags, through: :auto_tagging_tags`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
+    sig { returns(::UserTag::PrivateCollectionProxy) }
+    def user_tags; end
+
+    sig { params(value: T::Enumerable[::UserTag]).void }
+    def user_tags=(value); end
   end
 
   module GeneratedAssociationRelationMethods

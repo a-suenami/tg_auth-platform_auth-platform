@@ -890,6 +890,18 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_user_auto_tagging_rules_on_tenant_id"
   end
 
+  create_table "user_auto_tagging_tags", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Tags assigned by auto-tagging rules", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "user_auto_tagging_id", null: false, comment: "Auto-tagging rule reference"
+    t.uuid "user_tag_id", null: false, comment: "Tag to assign"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_user_auto_tagging_tags_on_tenant_id"
+    t.index ["user_auto_tagging_id", "user_tag_id"], name: "idx_auto_tagging_tags_unique", unique: true
+    t.index ["user_auto_tagging_id"], name: "index_user_auto_tagging_tags_on_user_auto_tagging_id"
+    t.index ["user_tag_id"], name: "index_user_auto_tagging_tags_on_user_tag_id"
+  end
+
   create_table "user_auto_taggings", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Auto-tagging rules for users", force: :cascade do |t|
     t.citext "tenant_id", null: false, comment: "Tenant reference"
     t.string "name", null: false, comment: "Rule name (CMS display)"
@@ -939,7 +951,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   create_table "user_tag_assignments", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "User tag assignments (manual and auto)", force: :cascade do |t|
     t.citext "tenant_id", null: false, comment: "Tenant reference"
     t.uuid "user_id", null: false, comment: "User being tagged"
-    t.uuid "user_tag_id", comment: "Tag being assigned (for manual only)"
+    t.uuid "user_tag_id", null: false, comment: "Tag being assigned"
     t.string "assignment_type", null: false, comment: "Type: manual or auto"
     t.uuid "assigned_by_id", comment: "Admin who manually assigned (for manual only)"
     t.uuid "user_auto_tagging_id", comment: "Auto-tagging rule that assigned (for auto only)"
@@ -948,8 +960,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "updated_at", null: false
     t.index ["assigned_by_id"], name: "index_user_tag_assignments_on_assigned_by_id"
     t.index ["assignment_type"], name: "index_user_tag_assignments_on_assignment_type"
-    t.index ["tenant_id", "user_id", "user_auto_tagging_id"], name: "index_user_tag_assignments_auto_unique", unique: true, where: "(user_auto_tagging_id IS NOT NULL)"
-    t.index ["tenant_id", "user_id", "user_tag_id"], name: "index_user_tag_assignments_manual_unique", unique: true, where: "(user_tag_id IS NOT NULL)"
+    t.index ["tenant_id", "user_id", "user_tag_id"], name: "index_user_tag_assignments_unique", unique: true
     t.index ["tenant_id"], name: "index_user_tag_assignments_on_tenant_id"
     t.index ["user_auto_tagging_id"], name: "index_user_tag_assignments_on_user_auto_tagging_id"
     t.index ["user_id"], name: "index_user_tag_assignments_on_user_id"
@@ -1163,6 +1174,9 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "user_auto_tagging_rule_blocks", "user_auto_taggings"
   add_foreign_key "user_auto_tagging_rules", "tenants"
   add_foreign_key "user_auto_tagging_rules", "user_auto_tagging_rule_blocks", column: "rule_block_id"
+  add_foreign_key "user_auto_tagging_tags", "tenants"
+  add_foreign_key "user_auto_tagging_tags", "user_auto_taggings"
+  add_foreign_key "user_auto_tagging_tags", "user_tags"
   add_foreign_key "user_auto_taggings", "admins", column: "created_by_id"
   add_foreign_key "user_auto_taggings", "admins", column: "updated_by_id"
   add_foreign_key "user_auto_taggings", "tenants"
