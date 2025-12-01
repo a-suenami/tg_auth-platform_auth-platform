@@ -8,6 +8,9 @@ class UserTag < ApplicationRecord
   belongs_to :created_by, class_name: 'Admin'
   belongs_to :updated_by, class_name: 'Admin', optional: true
 
+  has_many :tag_assignments, class_name: 'UserTagAssignment', dependent: :destroy
+  has_many :users, through: :tag_assignments
+
   validates :name, presence: true
   validates :name, uniqueness: { scope: :tenant_id, case_sensitive: false }
   validates :name, length: { maximum: 255 }

@@ -1,4 +1,4 @@
-\restrict 5vCzAPlTo0kaLF6bUIEbviQ8UqVHo1pZQW6rTHEOcRgmuOGkPMX5G9jpzAO6oE2
+\restrict 8XHkuQfj2f2BlcvYflqHzdg7Q2uqP51XRu6735QoCrtM0j2c35g2OoRRkoELkNe
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -2298,6 +2298,80 @@ CREATE TABLE public.user_profiles (
 
 
 --
+-- Name: user_tag_assignments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_tag_assignments (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    user_id uuid NOT NULL,
+    user_tag_id uuid NOT NULL,
+    assignment_type character varying NOT NULL,
+    assigned_by_id uuid,
+    user_auto_tagging_id uuid,
+    assigned_at timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE user_tag_assignments; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.user_tag_assignments IS 'User tag assignments (manual and auto)';
+
+
+--
+-- Name: COLUMN user_tag_assignments.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tag_assignments.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN user_tag_assignments.user_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tag_assignments.user_id IS 'User being tagged';
+
+
+--
+-- Name: COLUMN user_tag_assignments.user_tag_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tag_assignments.user_tag_id IS 'Tag being assigned';
+
+
+--
+-- Name: COLUMN user_tag_assignments.assignment_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tag_assignments.assignment_type IS 'Type: manual or auto';
+
+
+--
+-- Name: COLUMN user_tag_assignments.assigned_by_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tag_assignments.assigned_by_id IS 'Admin who manually assigned (for manual only)';
+
+
+--
+-- Name: COLUMN user_tag_assignments.user_auto_tagging_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tag_assignments.user_auto_tagging_id IS 'Auto-tagging rule that assigned (for auto only)';
+
+
+--
+-- Name: COLUMN user_tag_assignments.assigned_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tag_assignments.assigned_at IS 'When tag was assigned';
+
+
+--
 -- Name: user_tags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2893,6 +2967,14 @@ ALTER TABLE ONLY public.user_events
 
 ALTER TABLE ONLY public.user_profiles
     ADD CONSTRAINT user_profiles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_tag_assignments user_tag_assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_tag_assignments
+    ADD CONSTRAINT user_tag_assignments_pkey PRIMARY KEY (id);
 
 
 --
@@ -4302,6 +4384,55 @@ CREATE INDEX index_user_profiles_on_user_id ON public.user_profiles USING btree 
 
 
 --
+-- Name: index_user_tag_assignments_on_assigned_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_tag_assignments_on_assigned_by_id ON public.user_tag_assignments USING btree (assigned_by_id);
+
+
+--
+-- Name: index_user_tag_assignments_on_assignment_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_tag_assignments_on_assignment_type ON public.user_tag_assignments USING btree (assignment_type);
+
+
+--
+-- Name: index_user_tag_assignments_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_tag_assignments_on_tenant_id ON public.user_tag_assignments USING btree (tenant_id);
+
+
+--
+-- Name: index_user_tag_assignments_on_user_auto_tagging_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_tag_assignments_on_user_auto_tagging_id ON public.user_tag_assignments USING btree (user_auto_tagging_id);
+
+
+--
+-- Name: index_user_tag_assignments_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_tag_assignments_on_user_id ON public.user_tag_assignments USING btree (user_id);
+
+
+--
+-- Name: index_user_tag_assignments_on_user_tag_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_tag_assignments_on_user_tag_id ON public.user_tag_assignments USING btree (user_tag_id);
+
+
+--
+-- Name: index_user_tag_assignments_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_user_tag_assignments_unique ON public.user_tag_assignments USING btree (tenant_id, user_id, user_tag_id);
+
+
+--
 -- Name: index_user_tags_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4789,6 +4920,22 @@ ALTER TABLE ONLY public.payment_transactions
 
 
 --
+-- Name: user_tag_assignments fk_rails_0b4d28da8d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_tag_assignments
+    ADD CONSTRAINT fk_rails_0b4d28da8d FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: user_tag_assignments fk_rails_15a1e63aba; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_tag_assignments
+    ADD CONSTRAINT fk_rails_15a1e63aba FOREIGN KEY (assigned_by_id) REFERENCES public.admins(id);
+
+
+--
 -- Name: user_auto_tagging_rule_blocks fk_rails_2cdd36d912; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4810,6 +4957,14 @@ ALTER TABLE ONLY public.user_tags
 
 ALTER TABLE ONLY public.user_auto_taggings
     ADD CONSTRAINT fk_rails_30074fd50a FOREIGN KEY (updated_by_id) REFERENCES public.admins(id);
+
+
+--
+-- Name: user_tag_assignments fk_rails_32a895efba; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_tag_assignments
+    ADD CONSTRAINT fk_rails_32a895efba FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
@@ -4842,6 +4997,14 @@ ALTER TABLE ONLY public.auto_tagging_schedules
 
 ALTER TABLE ONLY public.user_tags
     ADD CONSTRAINT fk_rails_512adfb444 FOREIGN KEY (updated_by_id) REFERENCES public.admins(id);
+
+
+--
+-- Name: user_tag_assignments fk_rails_5b06d62c98; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_tag_assignments
+    ADD CONSTRAINT fk_rails_5b06d62c98 FOREIGN KEY (user_tag_id) REFERENCES public.user_tags(id);
 
 
 --
@@ -4906,6 +5069,14 @@ ALTER TABLE ONLY public.user_auto_tagging_rules
 
 ALTER TABLE ONLY public.oauth_access_tokens
     ADD CONSTRAINT fk_rails_ee63f25419 FOREIGN KEY (resource_owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: user_tag_assignments fk_rails_fa16674ff6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_tag_assignments
+    ADD CONSTRAINT fk_rails_fa16674ff6 FOREIGN KEY (user_auto_tagging_id) REFERENCES public.user_auto_taggings(id);
 
 
 --
@@ -5416,7 +5587,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 5vCzAPlTo0kaLF6bUIEbviQ8UqVHo1pZQW6rTHEOcRgmuOGkPMX5G9jpzAO6oE2
+\unrestrict 8XHkuQfj2f2BlcvYflqHzdg7Q2uqP51XRu6735QoCrtM0j2c35g2OoRRkoELkNe
 
 SET search_path TO "$user", public;
 

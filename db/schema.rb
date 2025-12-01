@@ -936,6 +936,25 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["user_id"], name: "index_user_profiles_on_user_id"
   end
 
+  create_table "user_tag_assignments", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "User tag assignments (manual and auto)", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "user_id", null: false, comment: "User being tagged"
+    t.uuid "user_tag_id", null: false, comment: "Tag being assigned"
+    t.string "assignment_type", null: false, comment: "Type: manual or auto"
+    t.uuid "assigned_by_id", comment: "Admin who manually assigned (for manual only)"
+    t.uuid "user_auto_tagging_id", comment: "Auto-tagging rule that assigned (for auto only)"
+    t.datetime "assigned_at", null: false, comment: "When tag was assigned"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assigned_by_id"], name: "index_user_tag_assignments_on_assigned_by_id"
+    t.index ["assignment_type"], name: "index_user_tag_assignments_on_assignment_type"
+    t.index ["tenant_id", "user_id", "user_tag_id"], name: "index_user_tag_assignments_unique", unique: true
+    t.index ["tenant_id"], name: "index_user_tag_assignments_on_tenant_id"
+    t.index ["user_auto_tagging_id"], name: "index_user_tag_assignments_on_user_auto_tagging_id"
+    t.index ["user_id"], name: "index_user_tag_assignments_on_user_id"
+    t.index ["user_tag_id"], name: "index_user_tag_assignments_on_user_tag_id"
+  end
+
   create_table "user_tags", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "User tags for manual tagging", force: :cascade do |t|
     t.citext "tenant_id", null: false, comment: "Tenant reference"
     t.string "name", null: false, comment: "Tag name"
@@ -1149,6 +1168,11 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "user_events", "users", column: ["tenant_id", "user_id"], primary_key: ["tenant_id", "id"]
   add_foreign_key "user_profiles", "tenants", name: "fk_user_profiles_tenants"
   add_foreign_key "user_profiles", "users", name: "fk_user_profiles_users"
+  add_foreign_key "user_tag_assignments", "admins", column: "assigned_by_id"
+  add_foreign_key "user_tag_assignments", "tenants"
+  add_foreign_key "user_tag_assignments", "user_auto_taggings"
+  add_foreign_key "user_tag_assignments", "user_tags"
+  add_foreign_key "user_tag_assignments", "users"
   add_foreign_key "user_tags", "admins", column: "created_by_id"
   add_foreign_key "user_tags", "admins", column: "updated_by_id"
   add_foreign_key "user_tags", "tenants"
