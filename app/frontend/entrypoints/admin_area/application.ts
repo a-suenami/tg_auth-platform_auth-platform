@@ -225,16 +225,13 @@ function initTagPickerHandlers() {
 
       // PeriodSettingsControllerのselectDateメソッドを呼び出す
       const periodSettingsController = document.querySelector('[data-controller*="period-settings"]');
-      if (periodSettingsController) {
-        const application = (window as any).Stimulus;
-        if (application) {
-          const controller = application.getControllerForElementAndIdentifier(
-            periodSettingsController,
-            'period-settings'
-          );
-          if (controller && controller.selectDate) {
-            controller.selectDate(e);
-          }
+      if (periodSettingsController && window.Stimulus) {
+        const controller = window.Stimulus.getControllerForElementAndIdentifier(
+          periodSettingsController,
+          'period-settings'
+        ) as any;
+        if (controller && typeof controller.selectDate === 'function') {
+          controller.selectDate(e);
         }
       }
       return;

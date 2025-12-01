@@ -54,10 +54,8 @@ export default class extends Controller {
     // Stimulus will automatically connect controllers when elements are added to the DOM
     // Use requestAnimationFrame to ensure DOM is fully updated before Stimulus scans
     requestAnimationFrame(() => {
-      const application = (window as any).Stimulus;
-      if (application && typeof application.load === 'function') {
-        application.load(block);
-      }
+      // Stimulus automatically scans for new controllers when DOM changes
+      // No explicit load call needed - Stimulus will detect the new element
     });
 
     // Update empty state
