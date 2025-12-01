@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { toggleDropdown, closeAllDropdowns, isClickInsideDropdown } from '@app/utils/dropdown';
 
 /**
  * Condition Block Controller
@@ -35,20 +36,7 @@ export default class extends Controller {
     const dropdownId = button.getAttribute('data-dropdown-toggle');
     if (!dropdownId) return;
 
-    const dropdown = document.getElementById(dropdownId) as HTMLElement;
-    if (!dropdown) return;
-
-    const isOpen = dropdown.getAttribute('data-dropdown-open') === 'true';
-
-    // Close all dropdowns
-    document.querySelectorAll('[data-dropdown-open="true"]').forEach((d) => {
-      d.setAttribute('data-dropdown-open', 'false');
-    });
-
-    // Toggle this dropdown
-    if (!isOpen) {
-      dropdown.setAttribute('data-dropdown-open', 'true');
-    }
+    toggleDropdown(dropdownId);
   }
 
   addCondition(event: Event) {
@@ -62,7 +50,7 @@ export default class extends Controller {
     // Close dropdown
     const dropdown = button.closest('.c-condition-block__add-condition__dropdown') as HTMLElement;
     if (dropdown) {
-      dropdown.setAttribute('data-dropdown-open', 'false');
+      closeAllDropdowns();
     }
 
     // Add condition based on type
@@ -269,20 +257,7 @@ export default class extends Controller {
     const dropdownId = button.getAttribute('data-dropdown-toggle');
     if (!dropdownId) return;
 
-    const dropdown = document.getElementById(dropdownId) as HTMLElement;
-    if (!dropdown) return;
-
-    const isOpen = dropdown.getAttribute('data-dropdown-open') === 'true';
-
-    // Close all dropdowns
-    document.querySelectorAll('[data-dropdown-open="true"]').forEach((d) => {
-      d.setAttribute('data-dropdown-open', 'false');
-    });
-
-    // Toggle this dropdown
-    if (!isOpen) {
-      dropdown.setAttribute('data-dropdown-open', 'true');
-    }
+    toggleDropdown(dropdownId);
   }
 
   removeCondition(event: Event) {
@@ -337,14 +312,13 @@ export default class extends Controller {
 
   private handleOutsideClick(event: Event) {
     const target = event.target as HTMLElement;
-    const addConditionDropdown = target.closest('.c-condition-block__add-condition__dropdown');
-    const itemDropdown = target.closest('.c-condition-block__item__dropdown');
-    const button = target.closest('[data-dropdown-toggle]');
+    const isInside = isClickInsideDropdown(target, [
+      '.c-condition-block__add-condition__dropdown',
+      '.c-condition-block__item__dropdown',
+    ]);
 
-    if (!addConditionDropdown && !itemDropdown && !button) {
-      document.querySelectorAll('[data-dropdown-open="true"]').forEach((d) => {
-        d.setAttribute('data-dropdown-open', 'false');
-      });
+    if (!isInside) {
+      closeAllDropdowns();
     }
   }
 }

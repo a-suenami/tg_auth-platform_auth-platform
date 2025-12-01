@@ -2,6 +2,7 @@ import * as Turbo from "@hotwired/turbo";
 import "@app/controllers/admin_area/index"; // Stimulus
 import UIkit from "uikit";
 import Icons from "uikit/dist/js/uikit-icons";
+import { toggleDropdown, closeAllDropdowns } from "@app/utils/dropdown";
 
 import "@app/stylesheets/admin_area/application.scss";
 
@@ -174,28 +175,13 @@ function initDropdownHandlers() {
       const dropdownId = toggle.getAttribute("data-dropdown-toggle");
       if (!dropdownId) return;
 
-      const targetDropdown = document.getElementById(dropdownId) as HTMLElement;
-      if (!targetDropdown) return;
-
-      const isOpen = targetDropdown.getAttribute("data-dropdown-open") === "true";
-
-      // すべてのドロップダウンを閉じる
-      document.querySelectorAll("[data-dropdown-open='true']").forEach((d) => {
-        d.setAttribute("data-dropdown-open", "false");
-      });
-
-      // クリックされたドロップダウンを開閉
-      if (!isOpen) {
-        targetDropdown.setAttribute("data-dropdown-open", "true");
-      }
+      toggleDropdown(dropdownId);
     } else if (dropdown) {
       // ドロップダウン内のリンククリック時は閉じない（リンクの処理を優先）
       e.stopPropagation();
     } else {
       // ドロップダウン外をクリックした場合は閉じる
-      document.querySelectorAll("[data-dropdown-open='true']").forEach((d) => {
-        d.setAttribute("data-dropdown-open", "false");
-      });
+      closeAllDropdowns();
     }
   });
 }

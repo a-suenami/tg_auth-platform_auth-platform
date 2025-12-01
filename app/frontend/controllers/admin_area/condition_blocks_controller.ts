@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { toggleDropdown, closeAllDropdowns, isClickInsideDropdown } from '@app/utils/dropdown';
 
 /**
  * Condition Blocks Controller
@@ -29,13 +30,12 @@ export default class extends Controller {
 
   private handleOutsideClick(event: Event) {
     const target = event.target as HTMLElement;
-    const dropdown = target.closest('.c-condition-block__header__dropdown');
-    const button = target.closest('[data-dropdown-toggle]');
+    const isInside = isClickInsideDropdown(target, [
+      '.c-condition-block__header__dropdown',
+    ]);
 
-    if (!dropdown && !button) {
-      document.querySelectorAll('[data-dropdown-open="true"]').forEach((d) => {
-        d.setAttribute('data-dropdown-open', 'false');
-      });
+    if (!isInside) {
+      closeAllDropdowns();
     }
   }
 
@@ -193,20 +193,7 @@ export default class extends Controller {
     const dropdownId = button.getAttribute('data-dropdown-toggle');
     if (!dropdownId) return;
 
-    const dropdown = document.getElementById(dropdownId) as HTMLElement;
-    if (!dropdown) return;
-
-    const isOpen = dropdown.getAttribute('data-dropdown-open') === 'true';
-
-    // Close all dropdowns
-    document.querySelectorAll('[data-dropdown-open="true"]').forEach((d) => {
-      d.setAttribute('data-dropdown-open', 'false');
-    });
-
-    // Toggle this dropdown
-    if (!isOpen) {
-      dropdown.setAttribute('data-dropdown-open', 'true');
-    }
+    toggleDropdown(dropdownId);
   }
 
   removeBlock(event: Event) {
