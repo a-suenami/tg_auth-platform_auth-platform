@@ -17,7 +17,6 @@
             - next unless assignment.user_tag
             span.uk-label.uk-label-success.uk-margin-small-right.uk-margin-small-bottom style="cursor: default;" title="ルール: #{assignment.user_auto_tagging&.name}"
               = assignment.user_tag.name
-              span.uk-margin-small-left style="font-size: 0.75em;" 🤖
 
     = form_with url: admin_area_user_user_tag_assignment_path(@user), method: :patch, class: 'uk-form-stacked', data: { controller: 'user-tag-assignment-form' } do |f|
 
