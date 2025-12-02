@@ -5,8 +5,7 @@ create_table :user_auto_tagging_tags, force: :cascade, id: :uuid, default: -> { 
 
   t.timestamps null: false
 
-  # Each tag can only be used in ONE auto-tagging rule per tenant
-  t.index [:tenant_id, :user_tag_id], unique: true, name: 'idx_auto_tagging_tags_tenant_tag_unique'
+  t.index [:user_auto_tagging_id, :user_tag_id], unique: true, name: 'idx_auto_tagging_tags_unique'
 end
 
 add_foreign_key :user_auto_tagging_tags, :tenants

@@ -1,4 +1,4 @@
-\restrict pcA0sD0cOlaccgkK8NjykNtTYmE83gMytAXSfFpuLeRgr3JjlOKoR530wAt6oe7
+\restrict VID40Tt7RgobBOgl8Osvh6ZdT24eCxuf7QWffKsK8pj6vayveOmGhkxUFFwazlV
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -3097,10 +3097,10 @@ CREATE UNIQUE INDEX idx_admins_tenant_id_uid_uniq ON public.admins USING btree (
 
 
 --
--- Name: idx_auto_tagging_tags_tenant_tag_unique; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_auto_tagging_tags_unique; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_auto_tagging_tags_tenant_tag_unique ON public.user_auto_tagging_tags USING btree (tenant_id, user_tag_id);
+CREATE UNIQUE INDEX idx_auto_tagging_tags_unique ON public.user_auto_tagging_tags USING btree (user_auto_tagging_id, user_tag_id);
 
 
 --
@@ -5689,7 +5689,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict pcA0sD0cOlaccgkK8NjykNtTYmE83gMytAXSfFpuLeRgr3JjlOKoR530wAt6oe7
+\unrestrict VID40Tt7RgobBOgl8Osvh6ZdT24eCxuf7QWffKsK8pj6vayveOmGhkxUFFwazlV
 
 SET search_path TO "$user", public;
 

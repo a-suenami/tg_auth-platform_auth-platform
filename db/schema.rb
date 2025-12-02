@@ -896,8 +896,8 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.uuid "user_tag_id", null: false, comment: "Tag to assign"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tenant_id", "user_tag_id"], name: "idx_auto_tagging_tags_tenant_tag_unique", unique: true
     t.index ["tenant_id"], name: "index_user_auto_tagging_tags_on_tenant_id"
+    t.index ["user_auto_tagging_id", "user_tag_id"], name: "idx_auto_tagging_tags_unique", unique: true
     t.index ["user_auto_tagging_id"], name: "index_user_auto_tagging_tags_on_user_auto_tagging_id"
     t.index ["user_tag_id"], name: "index_user_auto_tagging_tags_on_user_tag_id"
   end
