@@ -65,23 +65,21 @@ class UserAutoTagging
 
               added_count += 1
 
-            elsif !user_matches && existing_assignment&.user_auto_tagging_id == auto_tagging.id
-              # User doesn't match and has tag from THIS rule
-              # Check if any OTHER rule still protects this tag
-              unless protected_by_other_rule?(user.id, tag_id, exclude_rule: auto_tagging)
-                T.must(existing_assignment).destroy!
+            elsif !user_matches && existing_assignment.present?
+              # User doesn't match and has auto tag → REMOVE
+              # With unique tag constraint, this assignment must be from this rule
+              existing_assignment.destroy!
 
-                UserEvent.record!(
-                  user: user,
-                  event: UserEvent::Type::AutoUntagged.new(
-                    tag_id: tag_id,
-                    auto_tagging_rule_id: auto_tagging.id,
-                  ),
-                  transaction_time: transaction_time,
-                )
+              UserEvent.record!(
+                user: user,
+                event: UserEvent::Type::AutoUntagged.new(
+                  tag_id: tag_id,
+                  auto_tagging_rule_id: auto_tagging.id,
+                ),
+                transaction_time: transaction_time,
+              )
 
-                removed_count += 1
-              end
+              removed_count += 1
             end
           end
         end
@@ -99,23 +97,6 @@ class UserAutoTagging
     def find_relevant_rules(event)
       UserAutoTagging.enabled.includes(:auto_tagging_tags, rule_blocks: :rules).select do |rule|
         rule.active? && rule.events.include?(event)
-      end
-    end
-
-    # Check if any other active rule protects this (user, tag) pair
-    sig { params(user_id: String, tag_id: String, exclude_rule: UserAutoTagging).returns(T::Boolean) }
-    def protected_by_other_rule?(user_id, tag_id, exclude_rule:)
-      # Find other rules that have this tag
-      other_rules = UserAutoTagging
-        .enabled
-        .where.not(id: exclude_rule.id)
-        .joins(:auto_tagging_tags)
-        .where(user_auto_tagging_tags: { user_tag_id: tag_id })
-        .distinct
-        .includes(rule_blocks: :rules)
-
-      other_rules.any? do |rule|
-        rule.active? && rule.match?(user_id)
       end
     end
   end
