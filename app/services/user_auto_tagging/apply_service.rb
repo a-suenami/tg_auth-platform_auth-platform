@@ -27,11 +27,16 @@ class UserAutoTagging
 
       ActiveRecord::Base.transaction do
         expected_pairs = build_expected_pairs(user_auto_tagging, tag_ids)
+
+        # For adding: check ALL assignments (auto + manual) to avoid unique constraint violation
+        all_existing_pairs = UserTagAssignment.where(user_tag_id: tag_ids).pluck(:user_id, :user_tag_id).to_set
+
+        # For removing: only consider auto assignments (we don't remove manual tags)
         all_auto_assignments = UserTagAssignment.auto.where(user_tag_id: tag_ids)
         all_auto_pairs = all_auto_assignments.pluck(:user_id, :user_tag_id).to_set
 
         added_count = add_tag_assignments(
-          user_auto_tagging, expected_pairs, all_auto_pairs, transaction_time,
+          user_auto_tagging, expected_pairs, all_existing_pairs, transaction_time,
         )
         removed_count = remove_orphaned_assignments(
           expected_pairs, all_auto_pairs, all_auto_assignments, transaction_time,
