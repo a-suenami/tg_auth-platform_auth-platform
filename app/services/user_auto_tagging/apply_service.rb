@@ -114,15 +114,11 @@ class UserAutoTagging
       orphaned_pairs = existing_pairs - expected_pairs
       return 0 if orphaned_pairs.empty?
 
-      users_to_check = orphaned_pairs.map(&:first).compact.uniq
-      tags_to_check = orphaned_pairs.map(&:second).compact.uniq
-      users_by_id = User.where(id: users_to_check).index_by(&:id)
-      protected_pairs = find_protected_pairs(users_to_check, tags_to_check)
+      user_ids = orphaned_pairs.map(&:first).compact.uniq
+      users_by_id = User.where(id: user_ids).index_by(&:id)
 
       count = 0
       orphaned_pairs.each do |user_id, tag_id|
-        next if protected_pairs.include?([user_id, tag_id])
-
         assignment = all_auto_assignments.find_by(user_id: user_id, user_tag_id: tag_id)
         next unless assignment
 
@@ -145,30 +141,6 @@ class UserAutoTagging
       end
 
       count
-    end
-
-    sig { params(users_to_check: T::Array[String], tags_to_check: T::Array[String]).returns(T::Set[[String, String]]) }
-    def find_protected_pairs(users_to_check, tags_to_check)
-      protected_set = Set.new
-
-      ::UserAutoTagging
-        .enabled
-        .joins(:auto_tagging_tags)
-        .where(user_auto_tagging_tags: { user_tag_id: tags_to_check })
-        .distinct
-        .includes(:auto_tagging_tags, rule_blocks: :rules)
-        .find_each do |rule|
-          next unless rule.active?
-
-          matching_ids = rule.find_matching_users(User.where(id: users_to_check)).pluck(:id).to_set
-          rule.user_tag_ids.each do |rule_tag_id|
-            next unless tags_to_check.include?(rule_tag_id)
-
-            matching_ids.each { |uid| protected_set.add([uid, rule_tag_id]) }
-          end
-        end
-
-      protected_set
     end
   end
 end

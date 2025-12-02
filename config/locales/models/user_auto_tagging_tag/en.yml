@@ -1,0 +1,10 @@
+en:
+  activerecord:
+    models:
+      user_auto_tagging_tag: Auto-tagging Tag
+    errors:
+      models:
+        user_auto_tagging_tag:
+          attributes:
+            user_tag_id:
+              already_used_in_another_rule: is already used in another auto-tagging rule
