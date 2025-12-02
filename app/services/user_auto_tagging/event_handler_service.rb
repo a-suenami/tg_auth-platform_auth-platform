@@ -41,10 +41,13 @@ class UserAutoTagging
           user_matches = auto_tagging.match?(user.id)
 
           tag_ids.each do |tag_id|
-            existing_assignment = user.tag_assignments.auto.find_by(user_tag_id: tag_id)
+            # Check ALL assignments (auto + manual) for ADD logic
+            existing_any_assignment = user.tag_assignments.find_by(user_tag_id: tag_id)
+            # Check only AUTO assignments for REMOVE logic
+            existing_auto_assignment = user.tag_assignments.auto.find_by(user_tag_id: tag_id)
 
-            if user_matches && existing_assignment.nil?
-              # User matches and doesn't have tag → ADD
+            if user_matches && existing_any_assignment.nil?
+              # User matches and doesn't have tag (auto or manual) → ADD
               UserTagAssignment.create!(
                 tenant_id: user.tenant_id,
                 user: user,
@@ -65,10 +68,9 @@ class UserAutoTagging
 
               added_count += 1
 
-            elsif !user_matches && existing_assignment.present?
-              # User doesn't match and has auto tag → REMOVE
-              # With unique tag constraint, this assignment must be from this rule
-              existing_assignment.destroy!
+            elsif !user_matches && existing_auto_assignment.present?
+              # User doesn't match and has auto tag → REMOVE (don't touch manual tags)
+              existing_auto_assignment.destroy!
 
               UserEvent.record!(
                 user: user,
