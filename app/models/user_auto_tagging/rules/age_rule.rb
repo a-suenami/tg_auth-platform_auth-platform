@@ -12,23 +12,13 @@
 class UserAutoTagging::Rules::AgeRule < UserAutoTagging::Rules::AbstractRule
   extend T::Sig
 
-  sig { returns(T.untyped) }
-  attr_accessor :min
-
-  sig { returns(T.untyped) }
-  attr_accessor :max
+  attribute :min
+  attribute :max
 
   validate :min_must_be_valid_integer
   validate :max_must_be_valid_integer
   validate :max_must_be_greater_than_min
   validate :at_least_one_value_required
-
-  sig { params(config: T::Hash[String, T.untyped]).void }
-  def initialize(config = {})
-    super()
-    @min = T.let(config['min'], T.untyped)
-    @max = T.let(config['max'], T.untyped)
-  end
 
   # TODO: Execution methods
   # - events(): [:birthday_changed, :new_day_arrived]

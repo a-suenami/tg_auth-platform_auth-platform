@@ -13,17 +13,10 @@ class UserAutoTagging::Rules::GenderRule < UserAutoTagging::Rules::AbstractRule
 
   VALID_GENDERS = T.let(%w[male female].freeze, T::Array[String])
 
-  sig { returns(T.untyped) }
-  attr_accessor :values
+  attribute :values
 
   validates :values, presence: { message: ->(_object, _data) { I18n.t('auto_tagging.rules.errors.values_empty') } }
   validate :values_must_be_valid_genders
-
-  sig { params(config: T::Hash[String, T.untyped]).void }
-  def initialize(config = {})
-    super()
-    @values = T.let(config['values'], T.untyped)
-  end
 
   # TODO: Execution methods
   # - events(): [:profile_updated]

@@ -13,17 +13,10 @@
 class UserAutoTagging::Rules::PrefectureRule < UserAutoTagging::Rules::AbstractRule
   extend T::Sig
 
-  sig { returns(T.untyped) }
-  attr_accessor :values
+  attribute :values
 
   validates :values, presence: { message: ->(_object, _data) { I18n.t('auto_tagging.rules.errors.values_empty') } }
   validate :values_must_be_valid_prefecture_codes
-
-  sig { params(config: T::Hash[String, T.untyped]).void }
-  def initialize(config = {})
-    super()
-    @values = T.let(config['values'], T.untyped)
-  end
 
   # TODO: MR 2 - Execution methods
   # - events(): [:address_changed]
