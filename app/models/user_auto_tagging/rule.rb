@@ -7,7 +7,7 @@ class UserAutoTagging::Rule < ApplicationRecord
   self.table_name = 'user_auto_tagging_rules'
 
   CONDITION_TYPES = T.let(
-    %w[membership plan prefecture gender age account_link].freeze,
+    %w[membership membership_duration plan plan_duration prefecture gender age account_link].freeze,
     T::Array[String],
   )
 
@@ -27,8 +27,22 @@ class UserAutoTagging::Rule < ApplicationRecord
   # TODO: Rule execution
   # def to_rule
   #   Build rule engine instance for execution
-  #   UserAutoTagging::Rules::RuleFactory.build(condition_type, config)
+  #   RULE_CLASSES[condition_type].build(config)
   # end
+
+  RULE_CLASSES = T.let(
+    {
+      'membership' => Rules::MembershipRule,
+      'membership_duration' => Rules::MembershipDurationRule,
+      'plan' => Rules::PlanRule,
+      'plan_duration' => Rules::PlanDurationRule,
+      'prefecture' => Rules::PrefectureRule,
+      'gender' => Rules::GenderRule,
+      'age' => Rules::AgeRule,
+      'account_link' => Rules::AccountLinkRule,
+    }.freeze,
+    T::Hash[String, T.class_of(Rules::AbstractRule)],
+  )
 
   private
 
@@ -36,7 +50,10 @@ class UserAutoTagging::Rule < ApplicationRecord
   def config_matches_condition_type
     return if config.blank? || condition_type.blank?
 
-    validation_errors = UserAutoTagging::Rules::RuleFactory.validate(condition_type, config)
+    rule_class = RULE_CLASSES[condition_type]
+    return if rule_class.nil?
+
+    validation_errors = rule_class.validate_config(config)
     validation_errors.each do |error_message|
       errors.add(:config, error_message)
     end

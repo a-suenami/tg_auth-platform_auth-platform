@@ -56,7 +56,6 @@ en:
     rules:
       errors:
         # Common errors
-        subscription_type_invalid: subscription_type must be "current" or "duration"
         values_empty: values must be a non-empty array
         values_must_be_strings: values must be an array of strings
         # Membership errors

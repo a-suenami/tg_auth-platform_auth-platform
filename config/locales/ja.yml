@@ -61,7 +61,6 @@ ja:
     rules:
       errors:
         # Common errors
-        subscription_type_invalid: サブスクリプションタイプは「current」または「duration」である必要があります
         values_empty: 値は空でない配列である必要があります
         values_must_be_strings: 値は文字列の配列である必要があります
         # Membership errors

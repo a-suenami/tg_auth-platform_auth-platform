@@ -172,26 +172,6 @@ export default class extends Controller {
   }
 
   /**
-   * Handle subscription type change (current vs duration)
-   * - Show/hide duration input fields
-   * - Rebuild JSON config
-   */
-  handleSubscriptionTypeChange(event: Event) {
-    const select = event.target as HTMLSelectElement;
-    const configSection = select.closest('[class^="config-"]') as HTMLElement;
-    const durationFields = configSection.querySelector('.duration-fields') as HTMLElement;
-
-    if (select.value === 'duration') {
-      durationFields.style.display = 'block';
-    } else {
-      durationFields.style.display = 'none';
-    }
-
-    const rule = select.closest('.rule-item') as HTMLElement;
-    this.buildConfigJSON(rule);
-  }
-
-  /**
    * Handle any field change in config
    * - Rebuild JSON config when user changes any input/select/checkbox
    */
@@ -263,14 +243,6 @@ export default class extends Controller {
         // Text/Select
         inputField.value = config[fieldName];
       }
-
-      // Show duration fields if subscription type is "duration"
-      if (inputField.classList.contains('subscription-type-select')) {
-        const durationFields = configSection.querySelector('.duration-fields') as HTMLElement;
-        if (durationFields && inputField.value === 'duration') {
-          durationFields.style.display = 'block';
-        }
-      }
     });
   }
 
@@ -300,9 +272,13 @@ export default class extends Controller {
    * - Different handling for checkbox (array), number, text/select
    * - Store JSON string in hidden textarea for form submission
    *
-   * Example output:
+   * Example output for membership:
    * {
-   *   "subscription_type": "duration",
+   *   "values": ["Membership A", "Membership B"]
+   * }
+   *
+   * Example output for membership_duration:
+   * {
    *   "duration_value": 30,
    *   "duration_unit": "days",
    *   "values": ["Membership A", "Membership B"]
