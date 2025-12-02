@@ -13,32 +13,24 @@
 class UserAutoTagging::Rules::MembershipRule < UserAutoTagging::Rules::AbstractRule
   extend T::Sig
 
-  sig { params(membership_ids: T::Array[String]).void }
-  def initialize(membership_ids:)
-    @membership_ids = T.let(membership_ids, T::Array[String])
-  end
+  attribute :values
+
+  validates :values, presence: { message: ->(_object, _data) { I18n.t('auto_tagging.rules.errors.values_empty') } }
+  validate :values_must_be_valid_uuids
 
   # TODO: Execution methods
   # - events(): [:membership_joined, :membership_left]
-  # - apply(relation): Filter users with current membership in @membership_ids
+  # - apply(relation): Filter users with current membership in @values
 
-  # Validate config format
-  #
-  # @param config [Hash] Configuration hash
-  # @return [Array<String>] Array of error messages (empty if valid)
-  sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
-  def self.validate_config(config)
-    errors = []
+  private
 
-    values = config['values']
-    unless values.is_a?(Array) && values.any?
-      errors << I18n.t('auto_tagging.rules.errors.values_empty')
+  sig { void }
+  def values_must_be_valid_uuids
+    return unless values.is_a?(Array)
+    return if values.empty?
+
+    unless values.all? { |v| v.is_a?(String) && v.present? }
+      errors.add(:values, I18n.t('auto_tagging.rules.errors.membership_ids_invalid'))
     end
-
-    if values.is_a?(Array) && !values.all? { |v| v.is_a?(String) && v.present? }
-      errors << I18n.t('auto_tagging.rules.errors.membership_ids_invalid')
-    end
-
-    errors
   end
 end

@@ -18,6 +18,8 @@
 class UserAutoTagging::Rules::RuleFactory
   extend T::Sig
 
+  VALID_SUBSCRIPTION_TYPES = T.let(%w[current duration].freeze, T::Array[String])
+
   class << self
     extend T::Sig
 
@@ -30,60 +32,75 @@ class UserAutoTagging::Rules::RuleFactory
     # @return [Array<String>] Array of error messages (empty if valid)
     sig { params(condition_type: String, config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
     def validate(condition_type, config)
-      case condition_type
-      when 'membership'
-        validate_membership(config)
-      when 'plan'
-        validate_plan(config)
-      when 'age'
-        AgeRule.validate_config(config)
-      when 'prefecture'
-        PrefectureRule.validate_config(config)
-      when 'gender'
-        GenderRule.validate_config(config)
-      when 'account_link'
-        AccountLinkRule.validate_config(config)
-      else
-        # This should never happen if model validations work correctly
-        ["Unknown condition_type: #{condition_type}"]
-      end
+      klass = rule_class_for(condition_type, config)
+      return ["Unknown condition_type: #{condition_type}"] if klass.nil?
+      return [I18n.t('auto_tagging.rules.errors.subscription_type_invalid')] if klass == :invalid_subscription_type
+
+      rule = klass.from_config(config)
+      rule.valid?
+      rule.errors.full_messages
     end
 
-    # TODO: Rule execution
-    # def build(condition_type, config)
-    #   Build rule instance for execution
-    # end
+    # Build rule instance from condition_type and config
+    #
+    # @param condition_type [String] Type of condition
+    # @param config [Hash] Configuration hash
+    # @return [AbstractRule, nil] Rule instance or nil if unknown condition_type or invalid subscription_type
+    sig { params(condition_type: String, config: T::Hash[String, T.untyped]).returns(T.nilable(AbstractRule)) }
+    def build(condition_type, config)
+      klass = rule_class_for(condition_type, config)
+      return nil if klass.nil? || klass == :invalid_subscription_type
+
+      klass.from_config(config)
+    end
 
     private
 
-    # Validate membership rule based on subscription_type
-    sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
-    def validate_membership(config)
-      subscription_type = config['subscription_type']
-      unless %w[current duration].include?(subscription_type)
-        return [I18n.t('auto_tagging.rules.errors.subscription_type_invalid')]
-      end
-
-      if subscription_type == 'duration'
-        MembershipDurationRule.validate_config(config)
-      else
-        MembershipRule.validate_config(config)
+    # Get rule class for condition_type and config
+    #
+    # @param condition_type [String] Type of condition
+    # @param config [Hash] Configuration hash
+    # @return [Class, Symbol, nil] Rule class, :invalid_subscription_type, or nil if unknown
+    sig { params(condition_type: String, config: T::Hash[String, T.untyped]).returns(T.any(T.class_of(AbstractRule), Symbol, NilClass)) }
+    def rule_class_for(condition_type, config)
+      case condition_type
+      when 'membership'
+        membership_rule_class(config)
+      when 'plan'
+        plan_rule_class(config)
+      when 'age'
+        AgeRule
+      when 'prefecture'
+        PrefectureRule
+      when 'gender'
+        GenderRule
+      when 'account_link'
+        AccountLinkRule
       end
     end
 
-    # Validate plan rule based on subscription_type
-    sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
-    def validate_plan(config)
+    # Get membership rule class based on subscription_type
+    #
+    # @param config [Hash] Configuration hash
+    # @return [Class, :invalid_subscription_type, nil]
+    sig { params(config: T::Hash[String, T.untyped]).returns(T.any(T.class_of(AbstractRule), Symbol, NilClass)) }
+    def membership_rule_class(config)
       subscription_type = config['subscription_type']
-      unless %w[current duration].include?(subscription_type)
-        return [I18n.t('auto_tagging.rules.errors.subscription_type_invalid')]
-      end
+      return :invalid_subscription_type unless VALID_SUBSCRIPTION_TYPES.include?(subscription_type)
 
-      if subscription_type == 'duration'
-        PlanDurationRule.validate_config(config)
-      else
-        PlanRule.validate_config(config)
-      end
+      subscription_type == 'duration' ? MembershipDurationRule : MembershipRule
+    end
+
+    # Get plan rule class based on subscription_type
+    #
+    # @param config [Hash] Configuration hash
+    # @return [Class, :invalid_subscription_type, nil]
+    sig { params(config: T::Hash[String, T.untyped]).returns(T.any(T.class_of(AbstractRule), Symbol, NilClass)) }
+    def plan_rule_class(config)
+      subscription_type = config['subscription_type']
+      return :invalid_subscription_type unless VALID_SUBSCRIPTION_TYPES.include?(subscription_type)
+
+      subscription_type == 'duration' ? PlanDurationRule : PlanRule
     end
   end
 end

@@ -13,34 +13,24 @@
 class UserAutoTagging::Rules::PrefectureRule < UserAutoTagging::Rules::AbstractRule
   extend T::Sig
 
-  sig { params(prefecture_codes: T::Array[Integer]).void }
-  def initialize(prefecture_codes:)
-    @prefecture_codes = T.let(prefecture_codes, T::Array[Integer])
-  end
+  attribute :values
+
+  validates :values, presence: { message: ->(_object, _data) { I18n.t('auto_tagging.rules.errors.values_empty') } }
+  validate :values_must_be_valid_prefecture_codes
 
   # TODO: MR 2 - Execution methods
   # - events(): [:address_changed]
   # - apply(relation): Filter users by prefecture
 
-  # Validate config format
-  #
-  # @param config [Hash] Configuration hash
-  # @return [Array<String>] Array of error messages (empty if valid)
-  sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
-  def self.validate_config(config)
-    errors = []
+  private
 
-    values = config['values']
-    unless values.is_a?(Array) && values.any?
-      errors << I18n.t('auto_tagging.rules.errors.values_empty')
+  sig { void }
+  def values_must_be_valid_prefecture_codes
+    return unless values.is_a?(Array)
+    return if values.empty?
+
+    if values.any? { |v| v.to_i.zero? && v != '0' }
+      errors.add(:values, I18n.t('auto_tagging.rules.errors.prefecture_codes_invalid'))
     end
-
-    if values.is_a?(Array) && values.any? { |v| v.to_i.zero? && v != '0' }
-      errors << I18n.t('auto_tagging.rules.errors.prefecture_codes_invalid')
-    end
-
-    errors
   end
-
-  # TODO: MR 2 - Build rule from config
 end

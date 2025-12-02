@@ -15,51 +15,41 @@
 class UserAutoTagging::Rules::PlanDurationRule < UserAutoTagging::Rules::AbstractRule
   extend T::Sig
 
-  sig do
-    params(
-      plan_ids: T::Array[String],
-      duration_value: Integer,
-      duration_unit: String,
-    ).void
-  end
-  def initialize(plan_ids:, duration_value:, duration_unit:)
-    @plan_ids = T.let(plan_ids, T::Array[String])
-    @duration_value = T.let(duration_value, Integer)
-    @duration_unit = T.let(duration_unit, String)
-  end
+  VALID_DURATION_UNITS = T.let(%w[days months years].freeze, T::Array[String])
+
+  attribute :values
+  attribute :duration_value
+  attribute :duration_unit
+
+  validates :values, presence: { message: ->(_object, _data) { I18n.t('auto_tagging.rules.errors.values_empty') } }
+  validates :duration_unit, inclusion: {
+    in: VALID_DURATION_UNITS,
+    message: ->(_object, _data) { I18n.t('auto_tagging.rules.errors.duration_unit_invalid') },
+  }
+  validate :values_must_be_valid_uuids
+  validate :duration_value_must_be_positive
 
   # TODO: Execution methods
   # - events(): [:plan_joined, :plan_left, :new_day_arrived]
   # - apply(relation): Filter users who joined plan within duration
 
-  # Validate config format
-  #
-  # @param config [Hash] Configuration hash
-  # @return [Array<String>] Array of error messages (empty if valid)
-  sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
-  def self.validate_config(config)
-    errors = []
+  private
 
-    values = config['values']
-    unless values.is_a?(Array) && values.any?
-      errors << I18n.t('auto_tagging.rules.errors.values_empty')
+  # Plan IDs are UUIDs (strings), not integers
+  sig { void }
+  def values_must_be_valid_uuids
+    return unless values.is_a?(Array)
+    return if values.empty?
+
+    unless values.all? { |v| v.is_a?(String) && v.present? }
+      errors.add(:values, I18n.t('auto_tagging.rules.errors.plan_ids_invalid'))
     end
+  end
 
-    # Plan IDs are UUIDs (strings), not integers
-    if values.is_a?(Array) && !values.all? { |v| v.is_a?(String) && v.present? }
-      errors << I18n.t('auto_tagging.rules.errors.plan_ids_invalid')
-    end
-
-    duration_value = config['duration_value']
+  sig { void }
+  def duration_value_must_be_positive
     unless duration_value.present? && duration_value.to_i.positive?
-      errors << I18n.t('auto_tagging.rules.errors.duration_value_invalid')
+      errors.add(:duration_value, I18n.t('auto_tagging.rules.errors.duration_value_invalid'))
     end
-
-    duration_unit = config['duration_unit']
-    unless %w[days months years].include?(duration_unit)
-      errors << I18n.t('auto_tagging.rules.errors.duration_unit_invalid')
-    end
-
-    errors
   end
 end

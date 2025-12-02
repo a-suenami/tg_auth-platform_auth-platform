@@ -13,33 +13,25 @@
 class UserAutoTagging::Rules::PlanRule < UserAutoTagging::Rules::AbstractRule
   extend T::Sig
 
-  sig { params(plan_ids: T::Array[String]).void }
-  def initialize(plan_ids:)
-    @plan_ids = T.let(plan_ids, T::Array[String])
-  end
+  attribute :values
+
+  validates :values, presence: { message: ->(_object, _data) { I18n.t('auto_tagging.rules.errors.values_empty') } }
+  validate :values_must_be_valid_uuids
 
   # TODO: Execution methods
   # - events(): [:plan_joined, :plan_left]
-  # - apply(relation): Filter users with current plan in @plan_ids
+  # - apply(relation): Filter users with current plan in @values
 
-  # Validate config format
-  #
-  # @param config [Hash] Configuration hash
-  # @return [Array<String>] Array of error messages (empty if valid)
-  sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
-  def self.validate_config(config)
-    errors = []
+  private
 
-    values = config['values']
-    unless values.is_a?(Array) && values.any?
-      errors << I18n.t('auto_tagging.rules.errors.values_empty')
+  # Plan IDs are UUIDs (strings), not integers
+  sig { void }
+  def values_must_be_valid_uuids
+    return unless values.is_a?(Array)
+    return if values.empty?
+
+    unless values.all? { |v| v.is_a?(String) && v.present? }
+      errors.add(:values, I18n.t('auto_tagging.rules.errors.plan_ids_invalid'))
     end
-
-    # Plan IDs are UUIDs (strings), not integers
-    if values.is_a?(Array) && !values.all? { |v| v.is_a?(String) && v.present? }
-      errors << I18n.t('auto_tagging.rules.errors.plan_ids_invalid')
-    end
-
-    errors
   end
 end

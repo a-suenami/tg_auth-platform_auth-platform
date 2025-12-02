@@ -3,9 +3,10 @@
 
 # Base class for all user tag rules
 #
-# Config validation only
+# Uses ActiveModel::Attributes for config validation
 # Each concrete rule class must implement:
-# - self.validate_config(config): Validate config hash and return array of error messages
+# - attribute declarations using ActiveModel::Attributes
+# - validations using ActiveModel::Validations
 #
 # (TODO): Execution logic
 # - events(): List of events that trigger re-evaluation
@@ -16,18 +17,32 @@
 class UserAutoTagging::Rules::AbstractRule
   extend T::Sig
   extend T::Helpers
+  include ActiveModel::Model
+  include ActiveModel::Attributes
+  include ActiveModel::Validations
 
   abstract!
 
-  # Validate config format
+  # Factory method to create instance from config hash
   #
-  # Subclasses must override this method to provide validation logic
+  # @param config [Hash] Configuration hash (string keys)
+  # @return [AbstractRule] Instance of concrete rule class
+  sig { params(config: T::Hash[String, T.untyped]).returns(T.attached_class) }
+  def self.from_config(config)
+    new(config.transform_keys(&:to_sym))
+  end
+
+  # Validate config format (deprecated - use instance validations)
+  #
+  # Maintained for backwards compatibility during migration
   #
   # @param config [Hash] Configuration hash
   # @return [Array<String>] Array of error messages (empty if valid)
   sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
   def self.validate_config(config)
-    raise NotImplementedError, "#{name} must implement validate_config class method"
+    instance = from_config(config)
+    instance.valid?
+    instance.errors.full_messages
   end
 
   # TODO: Execution methods will be added here
