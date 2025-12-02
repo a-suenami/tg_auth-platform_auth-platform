@@ -1,0 +1,10 @@
+ja:
+  activerecord:
+    models:
+      user_auto_tagging_tag: オートタギングタグ
+    errors:
+      models:
+        user_auto_tagging_tag:
+          attributes:
+            user_tag_id:
+              already_used_in_another_rule: は既に他のオートタギングルールで使用されています
