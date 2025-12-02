@@ -10,6 +10,9 @@ module GeneratedPathHelpersModule
   include ::ActionDispatch::Routing::PolymorphicRoutes
 
   sig { params(args: T.untyped).returns(String) }
+  def activities_admin_area_user_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_auth_auth0_callback_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -163,10 +166,16 @@ module GeneratedPathHelpersModule
   def complete_off_session_card_api_v1_internal_me_card_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def datepicker_admin_area_user_auto_taggings_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_template_mail_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_auto_tagging_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_user_billing_address_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_contact_address_path(*args); end
@@ -242,6 +251,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_auto_tagging_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_user_billing_address_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_contact_address_path(*args); end
@@ -515,6 +527,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def sync_ruler_area_tenant_stripe_records_products_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def tag_picker_admin_area_user_auto_taggings_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def top_ruler_area_tenant_memberships_path(*args); end
