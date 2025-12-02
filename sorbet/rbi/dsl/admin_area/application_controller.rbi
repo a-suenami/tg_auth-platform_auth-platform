@@ -9,13 +9,6 @@ class AdminArea::ApplicationController
   include GeneratedUrlHelpersModule
   include GeneratedPathHelpersModule
 
-  # Methods from Turbo::Frames::FrameRequest module
-  sig { returns(T::Boolean) }
-  def turbo_frame_request?; end
-
-  sig { returns(T.nilable(String)) }
-  def turbo_frame_request_id; end
-
   sig { returns(HelperProxy) }
   def helpers; end
 
