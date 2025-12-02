@@ -11,31 +11,33 @@
 class UserAutoTagging::Rules::GenderRule < UserAutoTagging::Rules::AbstractRule
   extend T::Sig
 
-  sig { params(genders: T::Array[String]).void }
-  def initialize(genders:)
-    @genders = T.let(genders, T::Array[String])
+  VALID_GENDERS = T.let(%w[male female].freeze, T::Array[String])
+
+  sig { returns(T.untyped) }
+  attr_accessor :values
+
+  validates :values, presence: { message: ->(_object, _data) { I18n.t('auto_tagging.rules.errors.values_empty') } }
+  validate :values_must_be_valid_genders
+
+  sig { params(config: T::Hash[String, T.untyped]).void }
+  def initialize(config = {})
+    super()
+    @values = T.let(config['values'], T.untyped)
   end
 
   # TODO: Execution methods
   # - events(): [:profile_updated]
   # - apply(relation): Filter users by gender
 
-  # Validate config format
-  sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
-  def self.validate_config(config)
-    errors = []
+  private
 
-    values = config['values']
-    unless values.is_a?(Array) && values.any?
-      errors << I18n.t('auto_tagging.rules.errors.values_empty')
+  sig { void }
+  def values_must_be_valid_genders
+    return unless values.is_a?(Array)
+    return if values.empty?
+
+    unless values.all? { |v| VALID_GENDERS.include?(v) }
+      errors.add(:values, I18n.t('auto_tagging.rules.errors.gender_values_invalid'))
     end
-
-    if values.is_a?(Array) && !values.all? { |v| %w[male female].include?(v) }
-      errors << I18n.t('auto_tagging.rules.errors.gender_values_invalid')
-    end
-
-    errors
   end
-
-  # TODO: Build rule from config
 end

@@ -12,45 +12,62 @@
 class UserAutoTagging::Rules::AgeRule < UserAutoTagging::Rules::AbstractRule
   extend T::Sig
 
-  sig { params(min_age: T.nilable(Integer), max_age: T.nilable(Integer)).void }
-  def initialize(min_age: nil, max_age: nil)
-    @min_age = T.let(min_age, T.nilable(Integer))
-    @max_age = T.let(max_age, T.nilable(Integer))
+  sig { returns(T.untyped) }
+  attr_accessor :min
+
+  sig { returns(T.untyped) }
+  attr_accessor :max
+
+  validate :min_must_be_valid_integer
+  validate :max_must_be_valid_integer
+  validate :max_must_be_greater_than_min
+  validate :at_least_one_value_required
+
+  sig { params(config: T::Hash[String, T.untyped]).void }
+  def initialize(config = {})
+    super()
+    @min = T.let(config['min'], T.untyped)
+    @max = T.let(config['max'], T.untyped)
   end
 
   # TODO: Execution methods
   # - events(): [:birthday_changed, :new_day_arrived]
   # - apply(relation): Filter users by age range
 
-  # Validate config format
-  #
-  # @param config [Hash] Configuration hash
-  # @return [Array<String>] Array of error messages (empty if valid)
-  sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
-  def self.validate_config(config)
-    errors = []
+  private
 
-    min_age = config['min']
-    max_age = config['max']
+  sig { void }
+  def min_must_be_valid_integer
+    return if min.blank?
 
-    if min_age.present? && (!min_age.is_a?(Integer) || min_age.negative?)
-      errors << I18n.t('auto_tagging.rules.errors.age_min_invalid')
+    unless min.is_a?(Integer) && !min.negative?
+      errors.add(:min, I18n.t('auto_tagging.rules.errors.age_min_invalid'))
     end
-
-    if max_age.present? && (!max_age.is_a?(Integer) || max_age.negative?)
-      errors << I18n.t('auto_tagging.rules.errors.age_max_invalid')
-    end
-
-    if min_age.present? && max_age.present? && min_age >= max_age
-      errors << I18n.t('auto_tagging.rules.errors.age_max_less_than_min')
-    end
-
-    if min_age.blank? && max_age.blank?
-      errors << I18n.t('auto_tagging.rules.errors.age_both_blank')
-    end
-
-    errors
   end
 
-  # TODO: Build rule from config
+  sig { void }
+  def max_must_be_valid_integer
+    return if max.blank?
+
+    unless max.is_a?(Integer) && !max.negative?
+      errors.add(:max, I18n.t('auto_tagging.rules.errors.age_max_invalid'))
+    end
+  end
+
+  sig { void }
+  def max_must_be_greater_than_min
+    return if min.blank? || max.blank?
+    return unless min.is_a?(Integer) && max.is_a?(Integer)
+
+    if min >= max
+      errors.add(:max, I18n.t('auto_tagging.rules.errors.age_max_less_than_min'))
+    end
+  end
+
+  sig { void }
+  def at_least_one_value_required
+    if min.blank? && max.blank?
+      errors.add(:base, I18n.t('auto_tagging.rules.errors.age_both_blank'))
+    end
+  end
 end
