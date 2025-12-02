@@ -64,7 +64,7 @@ class StripeRecord
 
       @stripe_subscription ||= Stripe::Subscription.retrieve(
         { id: self.remote_id, expand: ['latest_invoice.confirmation_secret', 'pending_setup_intent'] },
-        AppStripe.configuration,
+        AppStripe.request_options,
       )
 
       @stripe_subscription
