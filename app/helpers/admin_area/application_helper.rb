@@ -19,9 +19,9 @@ module AdminArea
       # pagyのi18nキーを確認して、prev/nextのテキストを日本語に変更し、SVGアイコンを追加
       case key.to_s
       when 'pagy.nav.prev', 'nav.prev'
-        (render('shared/icons/icon-chevron-left') + ' 前へ').html_safe
+        "#{render('shared/icons/icon-chevron-left')} 前へ".html_safe
       when 'pagy.nav.next', 'nav.next'
-        ('次へ ' + render('shared/icons/icon-chevron-right')).html_safe
+        "次へ #{render('shared/icons/icon-chevron-right')}".html_safe
       else
         super(key, opts)
       end
