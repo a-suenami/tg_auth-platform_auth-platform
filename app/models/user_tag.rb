@@ -10,6 +10,8 @@ class UserTag < ApplicationRecord
 
   has_many :tag_assignments, class_name: 'UserTagAssignment', dependent: :destroy
   has_many :users, through: :tag_assignments
+  has_many :auto_tagging_tags, class_name: 'UserAutoTaggingTag', dependent: :destroy
+  has_many :user_auto_taggings, through: :auto_tagging_tags
 
   validates :name, presence: true
   validates :name, uniqueness: { scope: :tenant_id, case_sensitive: false }
