@@ -27,7 +27,7 @@ class UserAutoTagging::Rule < ApplicationRecord
   # TODO: Rule execution
   # def to_rule
   #   Build rule engine instance for execution
-  #   UserTagRules::RuleFactory.build(condition_type, config)
+  #   UserAutoTagging::Rules::RuleFactory.build(condition_type, config)
   # end
 
   private
@@ -36,7 +36,7 @@ class UserAutoTagging::Rule < ApplicationRecord
   def config_matches_condition_type
     return if config.blank? || condition_type.blank?
 
-    validation_errors = UserTagRules::RuleFactory.validate(condition_type, config)
+    validation_errors = UserAutoTagging::Rules::RuleFactory.validate(condition_type, config)
     validation_errors.each do |error_message|
       errors.add(:config, error_message)
     end
