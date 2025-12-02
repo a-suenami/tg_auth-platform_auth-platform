@@ -85,3 +85,36 @@
 
   / モーダル
   = render 'admin_area/shared/modal', modal_id: 'datepicker-modal'
+                        select.c-period-settings__relative__argument
+                          option value="month" ヶ月
+                          option value="year" 年
+                        .c-period-settings__relative__text 前に登録
+                    / 固定の期間を指定する
+                    .c-period-settings__fixed data-period-settings-target="fixed"
+                      .c-period-settings__fixed__divider
+                      .c-period-settings__fixed__fields
+                        .c-period-settings__fixed__argument data-period-settings-target="display" data-action="click->period-settings#openDatepicker" data-date-type="start"
+                          span.c-period-settings__fixed__argument__text 2025/01/01
+                        .c-period-settings__fixed__text から
+                        .c-period-settings__fixed__argument data-period-settings-target="display" data-action="click->period-settings#openDatepicker" data-date-type="end"
+                          span.c-period-settings__fixed__argument__text 2025/12/31
+
+              / 条件設定（小セクション）
+              .c-form-section__sub-section
+                .c-form-section__sub-section__title 条件設定
+                .c-form-section__content data-controller="condition-blocks"
+                  .c-form-section__content__blocks data-condition-blocks-target="blocks"
+                  .c-form-section__content__empty data-condition-blocks-target="empty"
+                    .c-form-section__content__empty__text 条件ブロックがありません
+                  button.c-form-section__add-block type="button" data-action="click->condition-blocks#addBlock"
+                    = render 'shared/icons/icon-plus'
+                    span.c-form-section__add-block__text 条件ブロックを追加
+
+    .l-page-content__content__sub.p-user-auto-tagging-form__content__sub
+      .p-user-auto-tagging-form__content__sub__section
+        button.p-user-auto-tagging-form__content__sub__button.p-user-auto-tagging-form__content__sub__button--submit type="submit" form="new_user_auto_tagging_form" data-form_validation_target="submit" data-form-validation-target="submit" disabled="disabled" 新規作成
+        = link_to admin_area_user_auto_taggings_path, class: 'p-user-auto-tagging-form__content__sub__button p-user-auto-tagging-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
+          | キャンセル
+
+  / モーダル
+  = render 'admin_area/shared/modal', modal_id: 'datepicker-modal'

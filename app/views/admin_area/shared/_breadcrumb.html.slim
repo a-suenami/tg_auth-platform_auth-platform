@@ -13,4 +13,4 @@
       - if index == items.length - 1 || item[:link].blank?
         span.c-breadcrumb__content__item.is-active = item[:text]
       - else
-        = link_to item[:text], item[:link], class: 'c-breadcrumb__content__item'
+        = link_to item[:text], item[:link], class: 'c-breadcrumb__content__item', data: item[:data] || {}

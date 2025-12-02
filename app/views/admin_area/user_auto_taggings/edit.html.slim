@@ -87,7 +87,7 @@
             button.p-user-auto-tagging-form__content__sub__button__dropdown__item type="submit" form="edit_user_auto_tagging_#{@user_auto_tagging.id}_form" data-form-validation-target="submit" 変更を保存
             = link_to admin_area_user_auto_tagging_path(@user_auto_tagging), data: { turbo_method: :delete, turbo_confirm: '本当に削除しますか？', turbo_frame: '_top' }, class: 'p-user-auto-tagging-form__content__sub__button__dropdown__item' do
               | オートタグを削除
-        = link_to admin_area_user_auto_taggings_path, class: 'p-user-auto-tagging-form__content__sub__button p-user-auto-tagging-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
+        = link_to admin_area_user_auto_taggings_path, class: 'p-user-auto-tagging-form__content__sub__button p-user-auto-tagging-form__content__sub__button--cancel', data: { turbo_frame: 'content' } do
           | キャンセル
       .p-user-auto-tagging-form__content__sub__section
         = link_to admin_area_users_path, class: 'p-user-auto-tagging-form__content__sub__button p-user-auto-tagging-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do

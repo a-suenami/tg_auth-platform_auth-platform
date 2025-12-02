@@ -45,8 +45,8 @@ html lang='ja'
             span.l-header__container__link__text サービス
       .l-header__container__account-wrapper
         a.l-header__container__account href='#' data-dropdown-toggle="dropdown-account"
-          = render 'shared/icons/icon-user'
-          span.l-header__container__account__text = @current_admin&.email
+        = render 'shared/icons/icon-user'
+        span.l-header__container__account__text = @current_admin&.email
         .l-header__container__account__dropdown id="dropdown-account"
           = link_to admin_area_logout_path, data: { turbo: false }, class: 'l-header__container__account__dropdown__item'
             | ログアウト

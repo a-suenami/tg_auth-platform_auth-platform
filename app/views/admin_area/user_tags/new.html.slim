@@ -15,5 +15,5 @@
     .l-page-content__content__sub.p-user-tag-form__content__sub
       .p-user-tag-form__content__sub__section
         button.p-user-tag-form__content__sub__button.p-user-tag-form__content__sub__button--submit type="submit" form="new_user_tag_form" data-form-validation-target="submit" disabled="disabled" 新規作成
-        = link_to admin_area_user_tags_path, class: 'p-user-tag-form__content__sub__button p-user-tag-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
+        = link_to admin_area_user_tags_path, class: 'p-user-tag-form__content__sub__button p-user-tag-form__content__sub__button--cancel', data: { turbo_frame: 'content' } do
           | キャンセル

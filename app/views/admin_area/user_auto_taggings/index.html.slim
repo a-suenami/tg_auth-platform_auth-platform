@@ -19,7 +19,7 @@
         .c-tag-card-list
           - @user_auto_taggings.each do |auto_tagging|
             .c-tag-card-wrapper
-              = link_to edit_admin_area_user_auto_tagging_path(auto_tagging), class: 'c-tag-card', data: { turbo_frame: '_top' } do
+              = link_to edit_admin_area_user_auto_tagging_path(auto_tagging), class: 'c-tag-card', data: { turbo_frame: 'content' } do
                 .c-tag-card__header
                   .c-tag-card__header__title = auto_tagging.name
                   .c-tag-card__header__description = auto_tagging.description.presence || '-'
