@@ -6,23 +6,29 @@ module AdminArea
     before_action :set_user
 
     def edit
+      # Load all assignments once with includes
+      all_assignments = @user.tag_assignments.includes(:user_tag, :user_auto_tagging).to_a
+
+      @auto_assignments = all_assignments.select(&:auto?)
+      @manual_assignments = all_assignments.reject(&:auto?)
+
+      @all_tag_ids = all_assignments.map(&:user_tag_id)
       @available_tags = UserTag.order(:name)
-      @all_tag_ids = @user.tag_assignments.pluck(:user_tag_id)
     end
 
     def update
-      # Get selected tag IDs from params
+      # Get selected tag IDs from params (manual tags only)
       selected_tag_ids = (params[:tag_ids] || []).compact_blank.map(&:to_s)
 
-      # Get all current tag assignments (both manual and auto)
-      current_assignments = @user.tag_assignments.includes(:user_tag).to_a
-      current_tag_ids = current_assignments.map { |a| a.user_tag_id.to_s }
+      # Get current MANUAL tag assignments only (auto tags are read-only)
+      current_manual_assignments = @user.tag_assignments.manual.includes(:user_tag).to_a
+      current_manual_tag_ids = current_manual_assignments.map { |a| a.user_tag_id.to_s }
 
-      # Tags to add (newly selected, will be added as manual)
-      tags_to_add = selected_tag_ids - current_tag_ids
+      # Tags to add (newly selected manual tags)
+      tags_to_add = selected_tag_ids - current_manual_tag_ids
 
-      # Tags to remove (unchecked tags - both manual and auto)
-      tags_to_remove = current_tag_ids - selected_tag_ids
+      # Tags to remove (unchecked manual tags only - never remove auto tags)
+      tags_to_remove = current_manual_tag_ids - selected_tag_ids
 
       # Wrap in transaction to ensure atomicity
       ActiveRecord::Base.transaction do
@@ -49,9 +55,9 @@ module AdminArea
           )
         end
 
-        # Remove unchecked tags (both manual and auto - all by admin action)
+        # Remove unchecked manual tags only
         tags_to_remove.each do |tag_id|
-          assignment = current_assignments.find { |a| a.user_tag_id.to_s == tag_id }
+          assignment = current_manual_assignments.find { |a| a.user_tag_id.to_s == tag_id }
           next unless assignment
 
           assignment.destroy!

@@ -314,6 +314,18 @@ module Exceptions
       end
     end
 
+    class CancelSubscriptionInvalidStatus < BaseError
+      sig { returns(Symbol) }
+      def code
+        :cancel_subscription_invalid_status_error
+      end
+
+      sig { returns(String) }
+      def message
+        I18n.t 'exceptions.payment.cancel_subscription_invalid_status_error'
+      end
+    end
+
     module Stripe
       class StripeError < BaseError
         sig { params(message: T.nilable(String)).void }

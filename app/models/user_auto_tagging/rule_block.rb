@@ -32,25 +32,8 @@ class UserAutoTagging::RuleBlock < ApplicationRecord
     UserTagRules::CompositeRule.new(rule_instances)
   end
 
-  # Check if a specific user matches ALL rules in this block (AND logic)
-  #
-  # @param user_id [String] User UUID
-  # @return [Boolean] True if user matches all rules
-  # @example
-  #   block.match?('user-uuid-123') #=> true
-  sig { params(user_id: String).returns(T::Boolean) }
-  def match?(user_id)
-    to_composite_rule.match?(user_id)
-  end
-
-  # Find all users matching ALL rules in this block
-  #
-  # @param relation [ActiveRecord::Relation] Base user relation
-  # @return [ActiveRecord::Relation] Filtered relation
-  # @example
-  #   block.apply(User.all) #=> User.where(...)
-  sig { params(relation: T.untyped).returns(T.untyped) }
-  def apply(relation)
-    to_composite_rule.apply(relation)
-  end
+  # Delegate match? and apply to composite rule
+  # - match?(user_id) - Check if user matches ALL rules in this block
+  # - apply(relation) - Find all users matching ALL rules
+  delegate :match?, :apply, to: :to_composite_rule
 end

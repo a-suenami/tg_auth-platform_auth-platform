@@ -6,35 +6,38 @@
   .uk-card.uk-card-default.uk-card-body
     h2.uk-card-title = "#{@user.email} のユーザタグ編集"
 
+    / Auto-tagged Section (Read-only)
+    - if @auto_assignments.any?
+      .uk-margin
+        label.uk-form-label.uk-text-bold
+          | オートタギング
+          span.uk-text-muted.uk-text-small.uk-margin-small-left (自動付与・編集不可)
+        .uk-margin-small-top style="padding: 8px; border: 1px solid #e5e5e5; border-radius: 4px; background: #f0fff0;"
+          - @auto_assignments.each do |assignment|
+            - next unless assignment.user_tag
+            span.uk-label.uk-label-success.uk-margin-small-right.uk-margin-small-bottom style="cursor: default;" title="ルール: #{assignment.user_auto_tagging&.name}"
+              = assignment.user_tag.name
+
     = form_with url: admin_area_user_user_tag_assignment_path(@user), method: :patch, class: 'uk-form-stacked', data: { controller: 'user-tag-assignment-form' } do |f|
 
-      / All Tags Section (Editable)
+      / Manual Tags Section (Editable)
       .uk-margin
-        label.uk-form-label.uk-text-bold ユーザタグ
-        .uk-text-small.uk-text-muted.uk-margin-small-bottom
-          | 🤖 = オートタギングにより付与されたタグ
+        label.uk-form-label.uk-text-bold 手動タグ
 
-        / Selected tags displayed as chips
+        / Selected manual tags displayed as chips
         .uk-margin-small-top data-user-tag-assignment-form-target="container" data-action="click->user-tag-assignment-form#removeTag" style="min-height: 40px; padding: 8px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fafafa;"
-          - if @all_tag_ids.any?
-            - @user.tag_assignments.includes(:user_tag, :user_auto_tagging).each do |assignment|
+          - if @manual_assignments.any?
+            - @manual_assignments.each do |assignment|
               - next unless assignment.user_tag
-              - if assignment.auto?
-                span.uk-label.uk-label-success.uk-margin-small-right.tag-chip data-tag-id=assignment.user_tag_id data-tag-name=assignment.user_tag.name style="cursor: pointer;" title="ルール: #{assignment.user_auto_tagging&.name}"
-                  = assignment.user_tag.name
-                  span.uk-margin-small-left style="font-size: 0.75em;" 🤖
-                  span uk-icon="icon: close; ratio: 0.8"
-                  = hidden_field_tag 'tag_ids[]', assignment.user_tag_id, id: "tag_input_#{assignment.user_tag_id}"
-              - else
-                span.uk-label.uk-margin-small-right.tag-chip data-tag-id=assignment.user_tag_id data-tag-name=assignment.user_tag.name style="cursor: pointer;"
-                  = assignment.user_tag.name
-                  |
-                  span uk-icon="icon: close; ratio: 0.8"
-                  = hidden_field_tag 'tag_ids[]', assignment.user_tag_id, id: "tag_input_#{assignment.user_tag_id}"
+              span.uk-label.uk-margin-small-right.tag-chip data-tag-id=assignment.user_tag_id data-tag-name=assignment.user_tag.name style="cursor: pointer;"
+                = assignment.user_tag.name
+                |
+                span uk-icon="icon: close; ratio: 0.8"
+                = hidden_field_tag 'tag_ids[]', assignment.user_tag_id, id: "tag_input_#{assignment.user_tag_id}"
           - else
             span.uk-text-meta data-user-tag-assignment-form-target="placeholder" タグが選択されていません
 
-        / Dropdown to add new tags
+        / Dropdown to add new tags (exclude both auto and manual assigned tags)
         .uk-margin-small-top
           label.uk-form-label.uk-text-small タグを追加
           select.uk-select data-user-tag-assignment-form-target="selector" data-action="change->user-tag-assignment-form#addTag"
@@ -42,7 +45,7 @@
             - available_tags = @available_tags.reject { |t| @all_tag_ids.include?(t.id) }
             - available_tags.each do |tag|
               option value=tag.id data-name=tag.name
-                = "#{tag.name}"
+                = tag.name
 
       .uk-margin-top
         = f.submit '保存する', class: 'uk-button uk-button-primary'
