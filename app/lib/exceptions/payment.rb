@@ -474,5 +474,57 @@ module Exceptions
         end
       end
     end
+
+    module Konbini
+      class BaseError < Payment::BaseError; end
+
+      class AccountNotConfigured < BaseError
+        sig { returns(Symbol) }
+        def code
+          :konbini_account_not_configured
+        end
+
+        sig { returns(String) }
+        def message
+          I18n.t('exceptions.payment.konbini.account_not_configured')
+        end
+      end
+
+      class RecurringNotSupported < BaseError
+        sig { returns(Symbol) }
+        def code
+          :konbini_recurring_not_supported
+        end
+
+        sig { returns(String) }
+        def message
+          I18n.t('exceptions.payment.konbini.recurring_not_supported')
+        end
+      end
+
+      class PlanDurationTooShort < BaseError
+        sig { returns(Symbol) }
+        def code
+          :konbini_plan_duration_too_short
+        end
+
+        sig { returns(String) }
+        def message
+          I18n.t('exceptions.payment.konbini.plan_duration_too_short')
+        end
+      end
+
+      class InvalidStore < BaseError
+        sig { returns(Symbol) }
+        def code
+          :konbini_invalid_store
+        end
+
+        sig { returns(String) }
+        def message
+          I18n.t('exceptions.payment.konbini.invalid_store')
+        end
+      end
+    end
   end
 end

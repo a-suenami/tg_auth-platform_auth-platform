@@ -47,19 +47,19 @@ module UserKomoju
     def validate_store(store)
       valid_stores = %w[seven-eleven lawson family-mart]
       unless valid_stores.include?(store)
-        raise ArgumentError, "Invalid store: #{store}. Must be one of: #{valid_stores.join(', ')}"
+        raise Exceptions::Payment::Konbini::InvalidStore
       end
     end
 
     def validate_membership_plan(membership_plan)
       # Konbini only supports non-recurring plans (one-time payment)
       if membership_plan.recurrence
-        raise StandardError, 'Konbini payment only supports non-recurring plans (manual renewal required)'
+        raise Exceptions::Payment::Konbini::RecurringNotSupported
       end
 
       # Konbini only supports plans with >= 1 year duration
       unless membership_plan.recurring_interval_unit == 'year' && membership_plan.recurring_interval_count >= 1
-        raise StandardError, 'Konbini payment only supports plans with 1 year or longer duration'
+        raise Exceptions::Payment::Konbini::PlanDurationTooShort
       end
     end
 
