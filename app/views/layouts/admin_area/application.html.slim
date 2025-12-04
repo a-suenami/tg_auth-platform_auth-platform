@@ -10,6 +10,7 @@ html lang='ja'
     = vite_client_tag
     = vite_typescript_tag 'entrypoints/admin_area/application'
     = csrf_meta_tags
+    = yield :head
   body.l-page
     .l-page-sidebar
         .uk-width-medium.uk-height-1-1.uk-section-secondary

@@ -4,52 +4,81 @@ import { Controller } from '@hotwired/stimulus';
  * User Tag Assignment Form Controller
  *
  * Manages the chip-based UI for adding/removing manual tags to users.
+ * Uses AJAX POST/DELETE for individual tag operations (no form submit).
  *
- * Features:
- * - Display selected tags as chips with remove button
- * - Dropdown to add new tags
- * - Dynamic add/remove with automatic dropdown updates
- * - Read-only display for auto-assigned tags
+ * Routes:
+ * - POST   /admin/users/:user_id/tags     → create (add tag)
+ * - DELETE /admin/users/:user_id/tags/:tag_id → destroy (remove tag)
+ * - GET    /admin/users/:user_id/tags/history → tag_history (turbo frame)
  */
 export default class extends Controller {
-  static targets = ['container', 'selector', 'placeholder'];
+  static targets = ['container', 'selector', 'placeholder', 'history'];
+  static values = {
+    baseUrl: String,
+  };
 
   declare readonly containerTarget: HTMLElement;
   declare readonly selectorTarget: HTMLSelectElement;
   declare readonly hasPlaceholderTarget: boolean;
   declare readonly placeholderTarget: HTMLElement;
+  declare readonly hasHistoryTarget: boolean;
+  declare readonly historyTarget: HTMLElement;
+  declare baseUrlValue: string;
 
   /**
-   * Add tag from dropdown selection
+   * Add tag from dropdown selection via AJAX POST
    */
-  addTag() {
+  async addTag() {
     const tagId = this.selectorTarget.value;
     const selectedOption = this.selectorTarget.options[this.selectorTarget.selectedIndex];
     const tagName = selectedOption.dataset.name;
 
     if (!tagId) return;
 
-    // Hide placeholder if exists
-    if (this.hasPlaceholderTarget) {
-      this.placeholderTarget.style.display = 'none';
+    try {
+      const response = await fetch(this.baseUrlValue, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': this.csrfToken(),
+        },
+        body: JSON.stringify({ tag_id: tagId }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        alert(data.error || 'タグの追加に失敗しました');
+        return;
+      }
+
+      // Hide placeholder if exists
+      if (this.hasPlaceholderTarget) {
+        this.placeholderTarget.style.display = 'none';
+      }
+
+      // Create chip element
+      const chip = this.createChip(tagId, tagName || '');
+      this.containerTarget.appendChild(chip);
+
+      // Remove from dropdown
+      selectedOption.remove();
+      this.selectorTarget.value = '';
+
+      // Re-initialize UIkit icons
+      this.initializeIcon(chip);
+
+      // Reload tag history
+      this.reloadHistory();
+    } catch (error) {
+      console.error('Failed to add tag:', error);
+      alert('タグの追加に失敗しました');
     }
-
-    // Create chip element
-    const chip = this.createChip(tagId, tagName || '');
-    this.containerTarget.appendChild(chip);
-
-    // Remove from dropdown
-    selectedOption.remove();
-    this.selectorTarget.value = '';
-
-    // Re-initialize UIkit icons
-    this.initializeIcon(chip);
   }
 
   /**
-   * Remove tag chip and restore to dropdown
+   * Remove tag chip via AJAX DELETE
    */
-  removeTag(event: Event) {
+  async removeTag(event: Event) {
     const chip = (event.target as HTMLElement).closest('.tag-chip');
     if (!chip) return;
 
@@ -58,34 +87,56 @@ export default class extends Controller {
 
     if (!tagId || !tagName) return;
 
-    // Remove chip
-    chip.remove();
+    try {
+      const response = await fetch(`${this.baseUrlValue}/${tagId}`, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRF-Token': this.csrfToken(),
+        },
+      });
 
-    // Add back to dropdown
-    this.addOptionToDropdown(tagId, tagName);
+      if (!response.ok) {
+        const data = await response.json();
+        alert(data.error || 'タグの削除に失敗しました');
+        return;
+      }
 
-    // Show placeholder if no tags
-    this.updatePlaceholderVisibility();
+      // Remove chip
+      chip.remove();
+
+      // Add back to dropdown
+      this.addOptionToDropdown(tagId, tagName);
+
+      // Show placeholder if no tags
+      this.updatePlaceholderVisibility();
+
+      // Reload tag history
+      this.reloadHistory();
+    } catch (error) {
+      console.error('Failed to remove tag:', error);
+      alert('タグの削除に失敗しました');
+    }
   }
 
   /**
-   * Create a chip element with hidden input
+   * Get CSRF token from meta tag
+   */
+  private csrfToken(): string {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    return meta?.getAttribute('content') || '';
+  }
+
+  /**
+   * Create a chip element
    */
   private createChip(tagId: string, tagName: string): HTMLElement {
     const chip = document.createElement('span');
     chip.className = 'uk-label uk-margin-small-right tag-chip';
     chip.setAttribute('data-tag-id', tagId);
     chip.setAttribute('data-tag-name', tagName);
+    chip.setAttribute('data-action', 'click->user-tag-assignment-form#removeTag');
     chip.style.cursor = 'pointer';
     chip.innerHTML = `${tagName} <span uk-icon="icon: close; ratio: 0.8"></span>`;
-
-    // Create hidden input
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'tag_ids[]';
-    input.value = tagId;
-    input.id = `tag_input_${tagId}`;
-    chip.appendChild(input);
 
     return chip;
   }
@@ -123,6 +174,32 @@ export default class extends Controller {
     const iconElement = element.querySelector('[uk-icon]');
     if (iconElement && (window as any).UIkit) {
       (window as any).UIkit.icon(iconElement);
+    }
+  }
+
+  /**
+   * Reload tag history turbo frame
+   */
+  private async reloadHistory() {
+    if (!this.hasHistoryTarget) return;
+
+    const historyUrl = `${this.baseUrlValue}/history`;
+
+    try {
+      const response = await fetch(historyUrl, {
+        headers: {
+          Accept: 'text/html',
+          'X-CSRF-Token': this.csrfToken(),
+        },
+      });
+
+      if (response.ok) {
+        const html = await response.text();
+        // Replace the turbo-frame content
+        this.historyTarget.outerHTML = html;
+      }
+    } catch (error) {
+      console.error('Failed to reload history:', error);
     }
   }
 }
