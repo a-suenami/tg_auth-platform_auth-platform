@@ -1,4 +1,7 @@
 / show user profile
+- content_for :head do
+  meta name="turbo-cache-control" content="no-cache"
+
 .uk-margin-top.uk-container
   .uk-card.uk-card-default.uk-card-body
     .uk-flex.uk-flex-right
@@ -105,7 +108,7 @@
 
     hr.uk-divider-icon
     .uk-flex.uk-flex-right
-      = link_to "編集", edit_admin_area_user_user_tag_assignment_path(@user), class: "uk-button uk-button-primary"
+      = link_to "編集", admin_area_user_user_tag_assignments_path(@user), class: "uk-button uk-button-primary"
     h2.uk-card-title ユーザタグ
     .uk-margin
       - if @user.tag_assignments.any?
