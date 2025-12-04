@@ -3,6 +3,8 @@
 module AdminArea
   module Templates
     class MailController < ApplicationController
+      helper AdminArea::TemplatesHelper
+
       before_action :set_template
 
       def edit
@@ -62,6 +64,28 @@ module AdminArea
       rescue => e
         flash[:error] = "キャンセルエラー: #{e.message}"
         redirect_to admin_area_template_path(@template)
+      end
+
+      def preview
+        body = params[:body] || @template.template_mail&.body || ''
+        title = params[:title] || @template.template_mail&.title
+        sample_data = params[:sample_data]&.to_unsafe_h || {}
+
+        @preview_result = ::Templates::Mail::PreviewService.new.call(
+          body: body,
+          title: title,
+          sample_data: sample_data,
+        )
+
+        @mail_template = @template.template_mail || @template.build_template_mail(
+          tenant_id: RequestStore.store[:current_tenant],
+        )
+
+        render turbo_stream: turbo_stream.update(
+          'preview-content',
+          partial: 'admin_area/templates/mail/preview_content',
+          locals: { mail_template: @mail_template, preview_result: @preview_result },
+        )
       end
 
       private

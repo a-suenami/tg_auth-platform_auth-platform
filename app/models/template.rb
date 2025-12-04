@@ -13,6 +13,12 @@ class Template < ApplicationRecord
   validates :name, presence: true
 
   scope :with_mail, -> { joins(:template_mail) }
+  scope :ordered, -> { order(created_at: :desc) }
+  scope :search_by_name, lambda { |term|
+    return all if term.blank?
+
+    where(arel_table[:name].lower.matches("%#{sanitize_sql_like(term.downcase)}%"))
+  }
 
   sig { returns(T.nilable(Integer)) }
   def published_version

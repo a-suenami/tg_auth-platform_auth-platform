@@ -1,0 +1,83 @@
+/ Help Modal
+#template-help-modal.uk-modal-container uk-modal=""
+  .uk-modal-dialog
+    button.uk-modal-close-default type="button" uk-close=""
+    .uk-modal-header
+      h2.uk-modal-title テンプレートヘルプ
+    .uk-modal-body uk-overflow-auto=""
+      / Variables Section
+      h4
+        span uk-icon="info"
+        |  利用可能な変数
+      p.uk-text-small.uk-text-muted.uk-margin-small-bottom
+        | 変数は二重波括弧で囲んで使用します。例: 「&#123;&#123; full_name &#125;&#125;様、こんにちは」
+      table.uk-table.uk-table-small.uk-table-divider.uk-table-striped
+        thead
+          tr
+            th style="width: 180px;" 変数
+            th 説明
+            th 例
+        tbody
+          tr
+            td
+              code &#123;&#123; first_name &#125;&#125;
+            td ユーザーの名前
+            td 太郎
+          tr
+            td
+              code &#123;&#123; last_name &#125;&#125;
+            td ユーザーの姓
+            td 山田
+          tr
+            td
+              code &#123;&#123; full_name &#125;&#125;
+            td ユーザーのフルネーム（姓 名）※自動生成
+            td 山田 太郎
+
+      hr.uk-margin
+
+      / HTML Tags Section
+      h4
+        span uk-icon="code"
+        |  利用可能なHTMLタグ
+      p.uk-text-small.uk-text-muted.uk-margin-small-bottom
+        | HTMLタグを直接入力できます。WYSIWYGエディタは将来のリリースで追加予定です。
+      div.uk-grid-small class="uk-child-width-1-3@m" uk-grid=""
+        div
+          h5.uk-text-bold.uk-margin-small-bottom テキスト
+          .uk-text-small
+            code &lt;p&gt;
+            |  段落 /
+            code &lt;br&gt;
+            |  改行 /
+            code &lt;span&gt;
+            |  インライン
+          .uk-text-small.uk-margin-small-top
+            code &lt;strong&gt;
+            |  太字 /
+            code &lt;em&gt;
+            |  斜体 /
+            code &lt;u&gt;
+            |  下線
+        div
+          h5.uk-text-bold.uk-margin-small-bottom 見出し・リスト
+          .uk-text-small
+            code &lt;h1&gt;
+            |  〜
+            code &lt;h6&gt;
+            |  見出し
+          .uk-text-small.uk-margin-small-top
+            code &lt;ul&gt;
+            |  /
+            code &lt;ol&gt;
+            |  リスト
+        div
+          h5.uk-text-bold.uk-margin-small-bottom リンク・画像
+          .uk-text-small
+            code &lt;a href="..."&gt;
+            |  リンク
+          .uk-text-small.uk-margin-small-top
+            code &lt;img src="..."&gt;
+            |  画像
+    .uk-modal-footer.uk-text-right
+      button.uk-button.uk-button-default.uk-modal-close type="button" 閉じる

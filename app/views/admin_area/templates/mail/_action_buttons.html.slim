@@ -1,0 +1,4 @@
+/ Shared Action Buttons for Edit and Preview tabs
+.uk-margin-top.uk-text-right
+  a.uk-button.uk-button-default href=admin_area_template_path(@template) キャンセル
+  button.uk-button.uk-button-primary.uk-margin-small-left type="button" data-action="click->template-preview#submitEditForm" = @mail_template&.new_record? ? '作成する' : '保存する'

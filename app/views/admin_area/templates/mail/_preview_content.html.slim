@@ -1,0 +1,38 @@
+/ Preview Content Partial (updated via Turbo Frame)
+
+/ Email Header
+.uk-card.uk-card-default.uk-card-body.uk-margin
+  .uk-flex.uk-flex-middle
+    .uk-margin-right
+      / Avatar circle
+      .uk-border-circle style="width: 50px; height: 50px; background: #e5e5e5; display: flex; align-items: center; justify-content: center;"
+        span uk-icon="icon: user; ratio: 1.5"
+    div
+      .uk-text-bold = Tenant.current&.name || 'ファンクラブ'
+      - if local_assigns[:preview_result] && preview_result[:success]
+        .uk-text-small.uk-text-muted = preview_result[:title].presence || mail_template&.title || "メールタイトル"
+      - else
+        .uk-text-small.uk-text-muted = mail_template&.title || "メールタイトル"
+      .uk-text-small.uk-text-muted to: サンプルユーザー様
+
+/ Email Body
+.uk-card.uk-card-default.uk-card-body style="max-width: 600px;"
+  - if local_assigns[:preview_result] && preview_result[:success]
+    / Rendered preview with variables interpolated
+    .email-preview-body style="line-height: 1.6;"
+      == preview_result[:html]
+  - elsif local_assigns[:preview_result] && !preview_result[:success]
+    / Error message
+    .uk-alert.uk-alert-danger uk-alert=""
+      a.uk-alert-close uk-close=""
+      span uk-icon="warning"
+      |  #{preview_result[:error]}
+    .email-preview-body.uk-text-muted
+      | テンプレートにエラーがあります
+  - else
+    / Default preview (no interpolation, just sanitized HTML)
+    .email-preview-body style="line-height: 1.6;"
+      - if mail_template&.body.present?
+        == sanitize_email_html(mail_template.body)
+      - else
+        p.uk-text-muted メール本文がまだ入力されていません

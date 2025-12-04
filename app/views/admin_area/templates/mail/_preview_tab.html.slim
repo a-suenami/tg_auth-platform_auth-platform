@@ -1,27 +1,35 @@
 / Preview Tab Content
-.uk-background-muted.uk-padding style="min-height: 500px;"
-  / Email Header
-  .uk-card.uk-card-default.uk-card-body.uk-margin
-    .uk-flex.uk-flex-middle
-      .uk-margin-right
-        / Avatar circle
-        .uk-border-circle style="width: 50px; height: 50px; background: #e5e5e5; display: flex; align-items: center; justify-content: center;"
-          span uk-icon="icon: user; ratio: 1.5"
-      div
-        .uk-text-bold Haguruma ファンクラブ
-        .uk-text-small.uk-text-muted = @mail_template.title || "メールタイトル"
-        .uk-text-small.uk-text-muted to: Yamada TARO
+.uk-grid uk-grid=""
+  / Sample Data Input Panel
+  .uk-width-1-3
+    .uk-card.uk-card-default.uk-card-body
+      h4.uk-card-title
+        span uk-icon="settings"
+        |  サンプルデータ
+      p.uk-text-small.uk-text-muted.uk-margin-small-bottom
+        | プレビュー用のサンプルデータを入力してください
 
-  / Email Card
-  .uk-card.uk-card-default.uk-card-body style="max-width: 600px;"
-    h3.uk-card-title = @mail_template.title || "メールタイトル"
-    p = @mail_template.body || "メール本文"
+      - sample_defaults = AdminArea::TemplatesHelper::DEFAULT_SAMPLE_DATA
+      = form_with url: preview_admin_area_template_mail_path(@template), method: :post, data: { template_preview_target: 'previewForm' }, id: 'preview-form' do |f|
+        .uk-margin-small
+          label.uk-form-label for="sample_first_name" 名前 (first_name)
+          = f.text_field 'sample_data[first_name]', value: sample_defaults['first_name'], class: 'uk-input uk-form-small', id: 'sample_first_name'
 
-    / Play button (decorative)
-    .uk-text-center.uk-margin-top.uk-padding style="border: 1px solid #e5e5e5; background: #f9f9f9;"
-      span uk-icon="icon: play-circle; ratio: 4" style="opacity: 0.7;"
+        .uk-margin-small
+          label.uk-form-label for="sample_last_name" 姓 (last_name)
+          = f.text_field 'sample_data[last_name]', value: sample_defaults['last_name'], class: 'uk-input uk-form-small', id: 'sample_last_name'
 
-/ Action Buttons (same as edit tab)
-.uk-margin-top.uk-text-right
-  a.uk-button.uk-button-default href=admin_area_template_path(@template) キャンセル
-  button.uk-button.uk-button-primary type="button" onclick="document.getElementById('mail-template-form').requestSubmit()" = @mail_template.new_record? ? '作成する' : '保存する'
+        / Hidden field for current body (synced via Stimulus)
+        = f.hidden_field :body, value: @mail_template&.body, data: { template_preview_target: 'previewBody' }
+        = f.hidden_field :title, value: @mail_template&.title, data: { template_preview_target: 'previewTitle' }
+
+        .uk-margin
+          button.uk-button.uk-button-primary.uk-width-1-1 type="button" data-action="click->template-preview#submitPreviewForm" プレビュー更新
+
+  / Preview Panel
+  .uk-width-2-3
+    .uk-background-muted.uk-padding style="min-height: 500px;"
+      #preview-content
+        = render 'admin_area/templates/mail/preview_content', mail_template: @mail_template, preview_result: @preview_result
+
+= render 'admin_area/templates/mail/action_buttons'
