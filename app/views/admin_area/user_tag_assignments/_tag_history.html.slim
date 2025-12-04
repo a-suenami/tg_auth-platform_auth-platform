@@ -1,0 +1,49 @@
+/ Tag History Partial - reloaded via Turbo Frame
+= turbo_frame_tag "tag-history", data: { user_tag_assignment_form_target: "history" } do
+  - tag_events = user.user_events.where(event_type: ['manually_tagged', 'manually_untagged', 'auto_tagged', 'auto_untagged']).order(transaction_time: :desc).limit(20).to_a
+  - if tag_events.any?
+    / Preload all related records to avoid N+1
+    - tag_ids = tag_events.map { |e| e.payload['tag_id'] }.compact.uniq
+    - admin_ids = tag_events.select { |e| e.event_type.include?('manually') }.map { |e| e.payload['tagged_by'] || e.payload['untagged_by'] }.compact.uniq
+    - rule_ids = tag_events.select { |e| e.event_type.include?('auto') }.map { |e| e.payload['auto_tagging_rule_id'] }.compact.uniq
+    - tags_by_id = UserTag.where(id: tag_ids).index_by(&:id)
+    - admins_by_id = Admin.where(id: admin_ids).index_by(&:id)
+    - rules_by_id = UserAutoTagging.where(id: rule_ids).index_by(&:id)
+
+    table.uk-table.uk-table-divider.uk-table-small.uk-table-striped
+      thead
+        tr
+          th タグ名
+          th アクション
+          th 種類
+          th 実行者
+          th 実行日時
+      tbody
+        - tag_events.each do |event|
+          - tag = tags_by_id[event.payload['tag_id']]
+          - next unless tag
+          - is_remove = event.event_type.include?('untagged')
+          tr
+            td = tag.name
+            td
+              - if is_remove
+                span.uk-label.uk-label-danger 削除
+              - else
+                span.uk-label.uk-label-success 追加
+            td
+              - if event.event_type.include?('manually')
+                span.uk-label 手動
+              - else
+                span.uk-label.uk-label-success 自動
+            td
+              - if event.event_type.include?('manually')
+                - admin_id = event.payload['tagged_by'] || event.payload['untagged_by']
+                - admin = admins_by_id[admin_id]
+                = admin&.name || '-'
+              - else
+                - rule_id = event.payload['auto_tagging_rule_id']
+                - rule = rules_by_id[rule_id]
+                = rule&.name || 'システム'
+            td = event.transaction_time.strftime('%Y/%m/%d %H:%M')
+  - else
+    p.uk-text-meta タグ履歴がありません

@@ -4,6 +4,7 @@
 module AdminArea
   class UserTagAssignmentsController < AdminArea::ApplicationController
     before_action :set_user
+    before_action :set_user_tag, only: [:create, :destroy]
 
     def edit
       @available_tags = UserTag.order(:name)
@@ -15,71 +16,76 @@ module AdminArea
       @manual_tag_ids = @all_tag_ids - @auto_tag_ids
     end
 
-    def update
-      # Get selected tag IDs from params
-      selected_tag_ids = (params[:tag_ids] || []).compact_blank.map(&:to_s)
-
-      # Get current manual tag assignments
-      current_assignments = @user.tag_assignments.manual.includes(:user_tag)
-      current_manual_tag_ids = current_assignments.pluck(:user_tag_id).map(&:to_s)
-
-      # Tags to add (newly selected)
-      tags_to_add = selected_tag_ids - current_manual_tag_ids
-
-      # Tags to remove (unchecked manual tags)
-      tags_to_remove = current_manual_tag_ids - selected_tag_ids
-
-      # Wrap in transaction to ensure atomicity
-      ActiveRecord::Base.transaction do
-        transaction_time = Time.zone.now
-
-        # Add new tags
-        tags_to_add.each do |tag_id|
-          UserTagAssignment.create!(
-            user: @user,
-            user_tag_id: tag_id,
-            assignment_type: 'manual',
-            assigned_by: current_admin,
-            assigned_at: transaction_time,
-          )
-
-          # Record event
-          UserEvent.record!(
-            user: @user,
-            event: UserEvent::Type::ManuallyTagged.new(
-              tag_id: tag_id,
-              tagged_by: T.must(current_admin).id,
-            ),
-            transaction_time: transaction_time,
-          )
-        end
-
-        # Remove unchecked tags (only manual ones)
-        tags_to_remove.each do |tag_id|
-          assignment = current_assignments.find { |a| a.user_tag_id.to_s == tag_id }
-          next unless assignment
-
-          assignment.destroy!
-
-          # Record event
-          UserEvent.record!(
-            user: @user,
-            event: UserEvent::Type::ManuallyUntagged.new(
-              tag_id: tag_id,
-              untagged_by: T.must(current_admin).id,
-            ),
-            transaction_time: transaction_time,
-          )
-        end
+    def create
+      # Check if already assigned
+      existing = @user.tag_assignments.find_by(user_tag: @user_tag)
+      if existing
+        render json: { error: 'タグは既に割り当てられています' }, status: :unprocessable_entity
+        return
       end
 
-      redirect_to admin_area_user_path(@user), notice: 'ユーザタグを更新しました'
+      transaction_time = Time.zone.now
+
+      ActiveRecord::Base.transaction do
+        UserTagAssignment.create!(
+          user: @user,
+          user_tag: @user_tag,
+          assignment_type: 'manual',
+          assigned_by: current_admin,
+          assigned_at: transaction_time,
+        )
+
+        UserEvent.record!(
+          user: @user,
+          event: UserEvent::Type::ManuallyTagged.new(
+            tag_id: @user_tag.id,
+            tagged_by: T.must(current_admin).id,
+          ),
+          transaction_time: transaction_time,
+        )
+      end
+
+      render json: { success: true, message: 'タグを追加しました' }
+    end
+
+    def destroy
+      assignment = @user.tag_assignments.manual.find_by(user_tag: @user_tag)
+
+      unless assignment
+        render json: { error: 'タグが見つかりません' }, status: :not_found
+        return
+      end
+
+      transaction_time = Time.zone.now
+
+      ActiveRecord::Base.transaction do
+        assignment.destroy!
+
+        UserEvent.record!(
+          user: @user,
+          event: UserEvent::Type::ManuallyUntagged.new(
+            tag_id: @user_tag.id,
+            untagged_by: T.must(current_admin).id,
+          ),
+          transaction_time: transaction_time,
+        )
+      end
+
+      render json: { success: true, message: 'タグを削除しました' }
+    end
+
+    def tag_history
+      render partial: 'tag_history', locals: { user: @user }
     end
 
     private
 
     def set_user
       @user = User.find(params[:user_id])
+    end
+
+    def set_user_tag
+      @user_tag = UserTag.find(params[:tag_id])
     end
   end
 end
