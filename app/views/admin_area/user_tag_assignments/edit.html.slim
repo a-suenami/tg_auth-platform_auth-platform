@@ -1,4 +1,5 @@
-.uk-margin-top.uk-container
+/ AJAX-based tag assignment (no form submit)
+.uk-margin-top.uk-container data-controller="user-tag-assignment-form" data-user-tag-assignment-form-base-url-value="#{admin_area_user_user_tag_assignments_path(@user)}"
   / Breadcrumb
   - breadcrumb_items = [{ text: 'ユーザー', link: admin_area_users_path }, { text: @user.email, link: admin_area_user_path(@user) }, { text: 'タグ編集' }]
   = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
@@ -18,87 +19,37 @@
             span.uk-label.uk-label-success.uk-margin-small-right.uk-margin-small-bottom style="cursor: default;" title="ルール: #{assignment.user_auto_tagging&.name}"
               = assignment.user_tag.name
 
-    = form_with url: admin_area_user_user_tag_assignment_path(@user), method: :patch, class: 'uk-form-stacked', data: { controller: 'user-tag-assignment-form' } do |f|
+    / Manual Tags Section (Editable via AJAX)
+    .uk-margin
+      label.uk-form-label.uk-text-bold 手動タグ
 
-      / Manual Tags Section (Editable)
-      .uk-margin
-        label.uk-form-label.uk-text-bold 手動タグ
+      / Selected manual tags displayed as chips
+      .uk-margin-small-top data-user-tag-assignment-form-target="container" style="min-height: 40px; padding: 8px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fafafa;"
+        - if @manual_assignments.any?
+          - @manual_assignments.each do |assignment|
+            - next unless assignment.user_tag
+            span.uk-label.uk-margin-small-right.tag-chip data-tag-id=assignment.user_tag_id data-tag-name=assignment.user_tag.name data-action="click->user-tag-assignment-form#removeTag" style="cursor: pointer;"
+              = assignment.user_tag.name
+              |
+              span uk-icon="icon: close; ratio: 0.8"
+        - else
+          span.uk-text-meta data-user-tag-assignment-form-target="placeholder" タグが選択されていません
 
-        / Selected manual tags displayed as chips
-        .uk-margin-small-top data-user-tag-assignment-form-target="container" data-action="click->user-tag-assignment-form#removeTag" style="min-height: 40px; padding: 8px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fafafa;"
-          - if @manual_assignments.any?
-            - @manual_assignments.each do |assignment|
-              - next unless assignment.user_tag
-              span.uk-label.uk-margin-small-right.tag-chip data-tag-id=assignment.user_tag_id data-tag-name=assignment.user_tag.name style="cursor: pointer;"
-                = assignment.user_tag.name
-                |
-                span uk-icon="icon: close; ratio: 0.8"
-                = hidden_field_tag 'tag_ids[]', assignment.user_tag_id, id: "tag_input_#{assignment.user_tag_id}"
-          - else
-            span.uk-text-meta data-user-tag-assignment-form-target="placeholder" タグが選択されていません
+      / Dropdown to add new tags (exclude both auto and manual assigned tags)
+      .uk-margin-small-top
+        label.uk-form-label.uk-text-small タグを追加
+        select.uk-select data-user-tag-assignment-form-target="selector" data-action="change->user-tag-assignment-form#addTag"
+          option value="" -- タグを選択 --
+          - available_tags = @available_tags.reject { |t| @all_tag_ids.include?(t.id) }
+          - available_tags.each do |tag|
+            option value=tag.id data-name=tag.name
+              = tag.name
 
-        / Dropdown to add new tags (exclude both auto and manual assigned tags)
-        .uk-margin-small-top
-          label.uk-form-label.uk-text-small タグを追加
-          select.uk-select data-user-tag-assignment-form-target="selector" data-action="change->user-tag-assignment-form#addTag"
-            option value="" -- タグを選択 --
-            - available_tags = @available_tags.reject { |t| @all_tag_ids.include?(t.id) }
-            - available_tags.each do |tag|
-              option value=tag.id data-name=tag.name
-                = tag.name
-
-      .uk-margin-top
-        = f.submit '保存する', class: 'uk-button uk-button-primary'
-        = link_to 'キャンセル', admin_area_user_path(@user), class: 'uk-button uk-button-default uk-margin-left'
+    .uk-margin-top
+      = link_to '戻る', admin_area_user_path(@user), class: 'uk-button uk-button-default', data: { turbo_action: 'replace' }
 
   .uk-card.uk-card-default.uk-card-body.uk-margin-top
     h3.uk-card-title タグ履歴
     p.uk-text-meta 最新20件のタグ変更履歴を表示
 
-    - tag_events = @user.user_events.where(event_type: ['manually_tagged', 'manually_untagged', 'auto_tagged', 'auto_untagged']).order(transaction_time: :desc).limit(20).to_a
-    - if tag_events.any?
-      / Preload all related records to avoid N+1
-      - tag_ids = tag_events.map { |e| e.payload['tag_id'] }.compact.uniq
-      - admin_ids = tag_events.select { |e| e.event_type.include?('manually') }.map { |e| e.payload['tagged_by'] || e.payload['untagged_by'] }.compact.uniq
-      - rule_ids = tag_events.select { |e| e.event_type.include?('auto') }.map { |e| e.payload['auto_tagging_rule_id'] }.compact.uniq
-      - tags_by_id = UserTag.where(id: tag_ids).index_by(&:id)
-      - admins_by_id = Admin.where(id: admin_ids).index_by(&:id)
-      - rules_by_id = UserAutoTagging.where(id: rule_ids).index_by(&:id)
-
-      table.uk-table.uk-table-divider.uk-table-small.uk-table-striped
-        thead
-          tr
-            th タグ名
-            th アクション
-            th 種類
-            th 実行者
-            th 実行日時
-        tbody
-          - tag_events.each do |event|
-            - tag = tags_by_id[event.payload['tag_id']]
-            - next unless tag
-            - is_remove = event.event_type.include?('untagged')
-            tr
-              td = tag.name
-              td
-                - if is_remove
-                  span.uk-label.uk-label-danger 削除
-                - else
-                  span.uk-label.uk-label-success 追加
-              td
-                - if event.event_type.include?('manually')
-                  span.uk-label 手動
-                - else
-                  span.uk-label.uk-label-success 自動
-              td
-                - if event.event_type.include?('manually')
-                  - admin_id = event.payload['tagged_by'] || event.payload['untagged_by']
-                  - admin = admins_by_id[admin_id]
-                  = admin&.name || '-'
-                - else
-                  - rule_id = event.payload['auto_tagging_rule_id']
-                  - rule = rules_by_id[rule_id]
-                  = rule&.name || 'システム'
-              td = event.transaction_time.strftime('%Y/%m/%d %H:%M')
-    - else
-      p.uk-text-meta タグ履歴がありません
+    = render 'tag_history', user: @user

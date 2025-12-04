@@ -14,7 +14,12 @@ Rails.application.routes.draw do
       end
       resource :user_profile, only: [:new, :create, :edit, :update]
       resource :contact_address, only: [:new, :create, :edit, :update]
-      resource :user_tag_assignment, only: [:edit, :update], path: 'tags'
+      resources :user_tag_assignments, only: [:edit, :create, :destroy], path: 'tags', param: :tag_id do
+        collection do
+          get '', action: :edit, as: ''
+          get 'history', action: :tag_history
+        end
+      end
     end
 
     resources :templates, only: [:index, :new, :create, :show] do
