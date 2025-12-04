@@ -1,4 +1,4 @@
-\restrict VID40Tt7RgobBOgl8Osvh6ZdT24eCxuf7QWffKsK8pj6vayveOmGhkxUFFwazlV
+\restrict XvqhVDkaVe9ZylyEvY5W0aWMkfM4WchP1avaIpBcSBtQslA76rNuC4WtjHxLRwf
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -149,6 +149,186 @@ CREATE TABLE public.contact_addresses (
 
 
 --
+-- Name: deliveries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.deliveries (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    name character varying NOT NULL,
+    template_id uuid NOT NULL,
+    delivery_type character varying DEFAULT 'datetime'::character varying NOT NULL,
+    scheduled_at timestamp(6) without time zone,
+    birthday_offset_days integer DEFAULT 0,
+    birthday_delivery_time character varying,
+    status character varying DEFAULT 'draft'::character varying NOT NULL,
+    created_by_id uuid,
+    updated_by_id uuid,
+    published_at timestamp(6) without time zone,
+    published_by_id uuid,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE deliveries; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.deliveries IS 'Email delivery campaigns';
+
+
+--
+-- Name: COLUMN deliveries.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN deliveries.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.name IS 'Delivery event name';
+
+
+--
+-- Name: COLUMN deliveries.template_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.template_id IS 'Email template reference';
+
+
+--
+-- Name: COLUMN deliveries.delivery_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.delivery_type IS 'datetime | birthday';
+
+
+--
+-- Name: COLUMN deliveries.scheduled_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.scheduled_at IS 'Scheduled delivery datetime (for datetime type)';
+
+
+--
+-- Name: COLUMN deliveries.birthday_offset_days; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.birthday_offset_days IS 'Days offset from birthday (for birthday type)';
+
+
+--
+-- Name: COLUMN deliveries.birthday_delivery_time; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.birthday_delivery_time IS 'Delivery time HH:MM (for birthday type)';
+
+
+--
+-- Name: COLUMN deliveries.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.status IS 'Delivery status';
+
+
+--
+-- Name: COLUMN deliveries.created_by_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.created_by_id IS 'Admin who created';
+
+
+--
+-- Name: COLUMN deliveries.updated_by_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.updated_by_id IS 'Admin who last updated';
+
+
+--
+-- Name: COLUMN deliveries.published_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.published_at IS 'When delivery was published/scheduled';
+
+
+--
+-- Name: COLUMN deliveries.published_by_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.published_by_id IS 'Admin who published';
+
+
+--
+-- Name: delivery_activities; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delivery_activities (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    delivery_id uuid NOT NULL,
+    admin_id uuid,
+    action character varying NOT NULL,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    note text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE delivery_activities; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.delivery_activities IS 'Delivery audit log';
+
+
+--
+-- Name: COLUMN delivery_activities.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_activities.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN delivery_activities.delivery_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_activities.delivery_id IS 'Delivery reference';
+
+
+--
+-- Name: COLUMN delivery_activities.admin_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_activities.admin_id IS 'Admin who performed action';
+
+
+--
+-- Name: COLUMN delivery_activities.action; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_activities.action IS 'Action type';
+
+
+--
+-- Name: COLUMN delivery_activities.metadata; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_activities.metadata IS 'What changed (JSON)';
+
+
+--
+-- Name: COLUMN delivery_activities.note; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_activities.note IS 'Optional note';
+
+
+--
 -- Name: delivery_addresses; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -167,6 +347,122 @@ CREATE TABLE public.delivery_addresses (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: delivery_executions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delivery_executions (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    delivery_id uuid NOT NULL,
+    user_id uuid NOT NULL,
+    status character varying DEFAULT 'pending'::character varying NOT NULL,
+    scheduled_for timestamp(6) without time zone,
+    sent_at timestamp(6) without time zone,
+    error_message text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE delivery_executions; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.delivery_executions IS 'Per-user delivery tracking';
+
+
+--
+-- Name: COLUMN delivery_executions.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_executions.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN delivery_executions.delivery_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_executions.delivery_id IS 'Delivery reference';
+
+
+--
+-- Name: COLUMN delivery_executions.user_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_executions.user_id IS 'Target user';
+
+
+--
+-- Name: COLUMN delivery_executions.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_executions.status IS 'Execution status';
+
+
+--
+-- Name: COLUMN delivery_executions.scheduled_for; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_executions.scheduled_for IS 'When this execution is scheduled';
+
+
+--
+-- Name: COLUMN delivery_executions.sent_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_executions.sent_at IS 'When email was actually sent';
+
+
+--
+-- Name: COLUMN delivery_executions.error_message; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_executions.error_message IS 'Error message if failed';
+
+
+--
+-- Name: delivery_user_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delivery_user_tags (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    delivery_id uuid NOT NULL,
+    user_tag_id uuid NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE delivery_user_tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.delivery_user_tags IS 'Many-to-many: deliveries to user_tags';
+
+
+--
+-- Name: COLUMN delivery_user_tags.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_user_tags.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN delivery_user_tags.delivery_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_user_tags.delivery_id IS 'Delivery reference';
+
+
+--
+-- Name: COLUMN delivery_user_tags.user_tag_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_user_tags.user_tag_id IS 'User tag reference';
 
 
 --
@@ -2612,11 +2908,43 @@ ALTER TABLE ONLY public.contact_addresses
 
 
 --
+-- Name: deliveries deliveries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.deliveries
+    ADD CONSTRAINT deliveries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delivery_activities delivery_activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_activities
+    ADD CONSTRAINT delivery_activities_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: delivery_addresses delivery_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.delivery_addresses
     ADD CONSTRAINT delivery_addresses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delivery_executions delivery_executions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_executions
+    ADD CONSTRAINT delivery_executions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delivery_user_tags delivery_user_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_user_tags
+    ADD CONSTRAINT delivery_user_tags_pkey PRIMARY KEY (id);
 
 
 --
@@ -3111,6 +3439,34 @@ CREATE UNIQUE INDEX idx_contact_addresses_tenant_id_user_id_uniq ON public.conta
 
 
 --
+-- Name: idx_delivery_activities_timeline; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_delivery_activities_timeline ON public.delivery_activities USING btree (delivery_id, created_at);
+
+
+--
+-- Name: idx_delivery_executions_pending; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_delivery_executions_pending ON public.delivery_executions USING btree (status, scheduled_for);
+
+
+--
+-- Name: idx_delivery_executions_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_delivery_executions_unique ON public.delivery_executions USING btree (delivery_id, user_id);
+
+
+--
+-- Name: idx_delivery_user_tags_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_delivery_user_tags_unique ON public.delivery_user_tags USING btree (delivery_id, user_tag_id);
+
+
+--
 -- Name: idx_komoju_payments_payment_deadline; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3482,6 +3838,90 @@ CREATE INDEX index_contact_addresses_on_user_id ON public.contact_addresses USIN
 
 
 --
+-- Name: index_deliveries_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_deliveries_on_created_by_id ON public.deliveries USING btree (created_by_id);
+
+
+--
+-- Name: index_deliveries_on_published_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_deliveries_on_published_by_id ON public.deliveries USING btree (published_by_id);
+
+
+--
+-- Name: index_deliveries_on_status_and_scheduled_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_deliveries_on_status_and_scheduled_at ON public.deliveries USING btree (status, scheduled_at);
+
+
+--
+-- Name: index_deliveries_on_template_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_deliveries_on_template_id ON public.deliveries USING btree (template_id);
+
+
+--
+-- Name: index_deliveries_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_deliveries_on_tenant_id ON public.deliveries USING btree (tenant_id);
+
+
+--
+-- Name: index_deliveries_on_tenant_id_and_delivery_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_deliveries_on_tenant_id_and_delivery_type ON public.deliveries USING btree (tenant_id, delivery_type);
+
+
+--
+-- Name: index_deliveries_on_tenant_id_and_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_deliveries_on_tenant_id_and_status ON public.deliveries USING btree (tenant_id, status);
+
+
+--
+-- Name: index_deliveries_on_updated_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_deliveries_on_updated_by_id ON public.deliveries USING btree (updated_by_id);
+
+
+--
+-- Name: index_delivery_activities_on_admin_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_activities_on_admin_id ON public.delivery_activities USING btree (admin_id);
+
+
+--
+-- Name: index_delivery_activities_on_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_activities_on_delivery_id ON public.delivery_activities USING btree (delivery_id);
+
+
+--
+-- Name: index_delivery_activities_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_activities_on_tenant_id ON public.delivery_activities USING btree (tenant_id);
+
+
+--
+-- Name: index_delivery_activities_on_tenant_id_and_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_activities_on_tenant_id_and_delivery_id ON public.delivery_activities USING btree (tenant_id, delivery_id);
+
+
+--
 -- Name: index_delivery_addresses_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3493,6 +3933,62 @@ CREATE INDEX index_delivery_addresses_on_tenant_id ON public.delivery_addresses 
 --
 
 CREATE INDEX index_delivery_addresses_on_user_id ON public.delivery_addresses USING btree (user_id);
+
+
+--
+-- Name: index_delivery_executions_on_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_executions_on_delivery_id ON public.delivery_executions USING btree (delivery_id);
+
+
+--
+-- Name: index_delivery_executions_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_executions_on_tenant_id ON public.delivery_executions USING btree (tenant_id);
+
+
+--
+-- Name: index_delivery_executions_on_tenant_id_and_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_executions_on_tenant_id_and_delivery_id ON public.delivery_executions USING btree (tenant_id, delivery_id);
+
+
+--
+-- Name: index_delivery_executions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_executions_on_user_id ON public.delivery_executions USING btree (user_id);
+
+
+--
+-- Name: index_delivery_user_tags_on_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_user_tags_on_delivery_id ON public.delivery_user_tags USING btree (delivery_id);
+
+
+--
+-- Name: index_delivery_user_tags_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_user_tags_on_tenant_id ON public.delivery_user_tags USING btree (tenant_id);
+
+
+--
+-- Name: index_delivery_user_tags_on_tenant_id_and_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_user_tags_on_tenant_id_and_delivery_id ON public.delivery_user_tags USING btree (tenant_id, delivery_id);
+
+
+--
+-- Name: index_delivery_user_tags_on_user_tag_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_user_tags_on_user_tag_id ON public.delivery_user_tags USING btree (user_tag_id);
 
 
 --
@@ -5006,11 +5502,35 @@ ALTER TABLE ONLY public.user_tag_assignments
 
 
 --
+-- Name: deliveries fk_rails_124bc6bba9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.deliveries
+    ADD CONSTRAINT fk_rails_124bc6bba9 FOREIGN KEY (created_by_id) REFERENCES public.admins(id);
+
+
+--
 -- Name: user_tag_assignments fk_rails_15a1e63aba; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_tag_assignments
     ADD CONSTRAINT fk_rails_15a1e63aba FOREIGN KEY (assigned_by_id) REFERENCES public.admins(id);
+
+
+--
+-- Name: delivery_executions fk_rails_1a70b85c1c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_executions
+    ADD CONSTRAINT fk_rails_1a70b85c1c FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: delivery_executions fk_rails_1b74871109; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_executions
+    ADD CONSTRAINT fk_rails_1b74871109 FOREIGN KEY (delivery_id) REFERENCES public.deliveries(id);
 
 
 --
@@ -5054,6 +5574,14 @@ ALTER TABLE ONLY public.user_auto_taggings
 
 
 --
+-- Name: deliveries fk_rails_30ece0c09d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.deliveries
+    ADD CONSTRAINT fk_rails_30ece0c09d FOREIGN KEY (updated_by_id) REFERENCES public.admins(id);
+
+
+--
 -- Name: user_tag_assignments fk_rails_32a895efba; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5067,6 +5595,22 @@ ALTER TABLE ONLY public.user_tag_assignments
 
 ALTER TABLE ONLY public.oauth_access_grants
     ADD CONSTRAINT fk_rails_330c32d8d9 FOREIGN KEY (resource_owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: delivery_activities fk_rails_3b215c87df; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_activities
+    ADD CONSTRAINT fk_rails_3b215c87df FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: delivery_activities fk_rails_3e6958aa2f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_activities
+    ADD CONSTRAINT fk_rails_3e6958aa2f FOREIGN KEY (delivery_id) REFERENCES public.deliveries(id);
 
 
 --
@@ -5086,6 +5630,14 @@ ALTER TABLE ONLY public.auto_tagging_schedules
 
 
 --
+-- Name: delivery_executions fk_rails_4e09fd8583; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_executions
+    ADD CONSTRAINT fk_rails_4e09fd8583 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: user_tags fk_rails_512adfb444; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5102,11 +5654,35 @@ ALTER TABLE ONLY public.user_tag_assignments
 
 
 --
+-- Name: deliveries fk_rails_5d26a31ef1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.deliveries
+    ADD CONSTRAINT fk_rails_5d26a31ef1 FOREIGN KEY (template_id) REFERENCES public.templates(id);
+
+
+--
+-- Name: deliveries fk_rails_718677f735; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.deliveries
+    ADD CONSTRAINT fk_rails_718677f735 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: user_auto_tagging_tags fk_rails_71a8d9f90b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_auto_tagging_tags
     ADD CONSTRAINT fk_rails_71a8d9f90b FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: deliveries fk_rails_7ad3eb2eb3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.deliveries
+    ADD CONSTRAINT fk_rails_7ad3eb2eb3 FOREIGN KEY (published_by_id) REFERENCES public.admins(id);
 
 
 --
@@ -5158,6 +5734,22 @@ ALTER TABLE ONLY public.auto_tagging_schedules
 
 
 --
+-- Name: delivery_user_tags fk_rails_b4a750d7f4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_user_tags
+    ADD CONSTRAINT fk_rails_b4a750d7f4 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: delivery_user_tags fk_rails_df4dc05abd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_user_tags
+    ADD CONSTRAINT fk_rails_df4dc05abd FOREIGN KEY (user_tag_id) REFERENCES public.user_tags(id);
+
+
+--
 -- Name: user_auto_tagging_rules fk_rails_e2fdd588cf; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5171,6 +5763,22 @@ ALTER TABLE ONLY public.user_auto_tagging_rules
 
 ALTER TABLE ONLY public.oauth_access_tokens
     ADD CONSTRAINT fk_rails_ee63f25419 FOREIGN KEY (resource_owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: delivery_activities fk_rails_f223fcaea8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_activities
+    ADD CONSTRAINT fk_rails_f223fcaea8 FOREIGN KEY (admin_id) REFERENCES public.admins(id);
+
+
+--
+-- Name: delivery_user_tags fk_rails_f777e1f716; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_user_tags
+    ADD CONSTRAINT fk_rails_f777e1f716 FOREIGN KEY (delivery_id) REFERENCES public.deliveries(id);
 
 
 --
@@ -5689,7 +6297,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict VID40Tt7RgobBOgl8Osvh6ZdT24eCxuf7QWffKsK8pj6vayveOmGhkxUFFwazlV
+\unrestrict XvqhVDkaVe9ZylyEvY5W0aWMkfM4WchP1avaIpBcSBtQslA76rNuC4WtjHxLRwf
 
 SET search_path TO "$user", public;
 

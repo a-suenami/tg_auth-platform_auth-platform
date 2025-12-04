@@ -63,3 +63,9 @@ require 'schemas/user_auto_tagging_rule_blocks.schema'
 require 'schemas/user_auto_tagging_rules.schema'
 require 'schemas/user_auto_tagging_tags.schema'
 require 'schemas/user_events.schema'
+
+# Delivery function
+require 'schemas/deliveries.schema'
+require 'schemas/delivery_user_tags.schema'
+require 'schemas/delivery_executions.schema'
+require 'schemas/delivery_activities.schema'
