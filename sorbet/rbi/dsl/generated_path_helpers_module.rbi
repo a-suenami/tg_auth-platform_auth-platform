@@ -64,6 +64,9 @@ module GeneratedPathHelpersModule
   def admin_area_user_user_tag_assignment_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_user_tag_assignments_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_users_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -224,6 +227,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def health_check_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def history_admin_area_user_user_tag_assignments_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def logout_sessions_path(*args); end
