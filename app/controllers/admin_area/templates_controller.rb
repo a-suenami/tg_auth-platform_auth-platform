@@ -2,11 +2,14 @@
 
 module AdminArea
   class TemplatesController < ApplicationController
-    MockPagination = Struct.new(:page, :total_count, :pages, :items, :from, :to, :prev, :next, keyword_init: true)
 
     def index
-      @templates = Template.includes(:template_mail, :template_mail_versions).order(created_at: :desc)
-      @pagy = mock_pagination
+      query = Template
+        .includes(:template_mail, :template_mail_versions)
+        .ordered
+        .search_by_name(params[:q])
+
+      @pagy, @templates = pagy(query, items: 10)
     end
 
     def show
@@ -36,19 +39,22 @@ module AdminArea
       redirect_to admin_area_templates_path
     end
 
+    def update
+      @template = Template.find(params[:id])
+
+      if @template.update(template_params)
+        flash[:notice] = 'テンプレート名を更新しました'
+      else
+        flash[:error] = @template.errors.full_messages.join(', ')
+      end
+
+      redirect_to admin_area_template_path(@template)
+    end
+
     private
 
-    def mock_pagination
-      MockPagination.new(
-        page: 1,
-        total_count: @templates.size,
-        pages: 1,
-        from: @templates.empty? ? 0 : 1,
-        to: @templates.size,
-        prev: nil,
-        next: nil,
-        items: @templates,
-      )
+    def template_params
+      params.require(:template).permit(:name)
     end
   end
 end

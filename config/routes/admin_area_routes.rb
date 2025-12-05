@@ -17,11 +17,12 @@ Rails.application.routes.draw do
       resource :contact_address, only: [:new, :create, :edit, :update]
     end
 
-    resources :templates, only: [:index, :new, :create, :show] do
+    resources :templates, except: [:edit, :destroy] do
       resource :mail, only: [:edit, :update], controller: 'templates/mail' do
         post :publish, on: :member
         post :schedule, on: :member
         post :cancel, on: :member
+        post :preview, on: :member
       end
     end
 

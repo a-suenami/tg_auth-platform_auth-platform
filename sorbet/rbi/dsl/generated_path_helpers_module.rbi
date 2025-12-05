@@ -331,6 +331,9 @@ module GeneratedPathHelpersModule
   def polling_api_v1_internal_membership_contract_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def preview_admin_area_template_mail_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def preview_ruler_area_tenant_stripe_records_products_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
