@@ -16,7 +16,7 @@ class Delivery < ApplicationRecord
   enum :delivery_type, {
     datetime: 'datetime',
     birthday: 'birthday',
-  }, prefix: true 
+  }, prefix: true
 
   belongs_to :tenant
   belongs_to :template
