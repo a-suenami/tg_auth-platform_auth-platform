@@ -36,6 +36,18 @@ export default class extends Controller {
         "shown",
         this.handleTabSwitch.bind(this)
       );
+
+      // Auto-switch to preview tab if tab=preview param is present
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("tab") === "preview") {
+        // Use setTimeout to ensure UIkit is fully initialized
+        setTimeout(() => {
+          const switcher = window.UIkit.switcher(this.tabContentTarget);
+          if (switcher) {
+            switcher.show(1); // Switch to preview tab (index 1)
+          }
+        }, 100);
+      }
     }
   }
 
@@ -81,6 +93,22 @@ export default class extends Controller {
       "mail-template-form"
     ) as HTMLFormElement | null;
     if (editForm) {
+      editForm.requestSubmit();
+    }
+  }
+
+  // Save and switch to preview tab
+  saveAndPreview() {
+    const editForm = document.getElementById(
+      "mail-template-form"
+    ) as HTMLFormElement | null;
+    if (editForm) {
+      // Add hidden field to indicate save_and_preview
+      const hiddenInput = document.createElement("input");
+      hiddenInput.type = "hidden";
+      hiddenInput.name = "save_and_preview";
+      hiddenInput.value = "1";
+      editForm.appendChild(hiddenInput);
       editForm.requestSubmit();
     }
   }

@@ -11,6 +11,15 @@ module AdminArea
         @mail_template = @template.template_mail || @template.build_template_mail(
           tenant_id: RequestStore.store[:current_tenant],
         )
+
+        # Auto-generate preview when redirected from save_and_preview
+        if params[:tab] == 'preview' && @mail_template.persisted?
+          @preview_result = ::Templates::Mail::PreviewService.new.call(
+            body: @mail_template.body,
+            title: @mail_template.title,
+            sample_data: AdminArea::TemplatesHelper::DEFAULT_SAMPLE_DATA,
+          )
+        end
       end
 
       def update
@@ -22,7 +31,12 @@ module AdminArea
         ).execute
 
         flash[:notice] = result == :created ? 'メールテンプレートを作成しました' : 'メールテンプレートを保存しました'
-        redirect_to admin_area_template_path(@template)
+
+        if params[:save_and_preview].present?
+          redirect_to edit_admin_area_template_mail_path(@template, tab: 'preview')
+        else
+          redirect_to admin_area_template_path(@template)
+        end
       rescue => e
         flash[:error] = "エラー: #{e.message}"
         redirect_to admin_area_template_path(@template)
