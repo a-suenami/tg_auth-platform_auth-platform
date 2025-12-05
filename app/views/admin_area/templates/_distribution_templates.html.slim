@@ -22,7 +22,8 @@
         div class="uk-width-2-3@m"
           .uk-card.uk-card-default.uk-card-body
             h4 = @mail_template.title
-            p.uk-text-small.uk-text-muted = @mail_template.body
+            .email-preview-body style="line-height: 1.6;"
+              == sanitize_email_html(@mail_template.body)
           = render 'change_history'
 
         / Right: Metadata & History sidebar
