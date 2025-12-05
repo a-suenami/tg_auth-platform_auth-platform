@@ -31,10 +31,10 @@ class Template < ApplicationRecord
 
     # Use preloaded data if available to avoid N+1 queries
     has_versions = if template_mail_versions.loaded?
-                     template_mail_versions.any?
-                   else
-                     template_mail_versions.exists?
-                   end
+      template_mail_versions.any?
+    else
+      template_mail_versions.exists?
+    end
     return :draft unless has_versions
 
     latest = latest_version
