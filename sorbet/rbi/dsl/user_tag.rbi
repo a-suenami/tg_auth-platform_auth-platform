@@ -382,6 +382,34 @@ class UserTag
     sig { returns(T::Boolean) }
     def created_by_previously_changed?; end
 
+    # This method is created by ActiveRecord on the `UserTag` class because it declared `has_many :deliveries, through: :delivery_user_tags`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
+    sig { returns(::Delivery::PrivateCollectionProxy) }
+    def deliveries; end
+
+    sig { params(value: T::Enumerable[::Delivery]).void }
+    def deliveries=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def delivery_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def delivery_ids=(ids); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def delivery_user_tag_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def delivery_user_tag_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `UserTag` class because it declared `has_many :delivery_user_tags`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::DeliveryUserTag::PrivateCollectionProxy) }
+    def delivery_user_tags; end
+
+    sig { params(value: T::Enumerable[::DeliveryUserTag]).void }
+    def delivery_user_tags=(value); end
+
     sig { returns(T.nilable(::Admin)) }
     def reload_created_by; end
 

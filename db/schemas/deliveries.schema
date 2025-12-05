@@ -3,34 +3,16 @@ create_table :deliveries, force: :cascade, id: :uuid, default: -> { 'gen_random_
   t.string :name, null: false, comment: 'Delivery event name'
   t.references :template, type: :uuid, null: false, comment: 'Email template reference'
 
-  # Delivery type: datetime (fixed schedule) or birthday (per-user schedule)
-  t.string :delivery_type, null: false, default: 'datetime', comment: 'datetime | birthday'
-
-  # For datetime type - fixed schedule
-  t.datetime :scheduled_at, comment: 'Scheduled delivery datetime (for datetime type)'
-
-  # For birthday type - relative to user birthday
-  t.integer :birthday_offset_days, default: 0, comment: 'Days offset from birthday (for birthday type)'
-  t.string :birthday_delivery_time, comment: 'Delivery time HH:MM (for birthday type)'
-
-  # Status: draft | scheduled | delivering | delivered | cancelled | paused
-  t.string :status, null: false, default: 'draft', comment: 'Delivery status'
-
   # Audit fields
   t.references :created_by, type: :uuid, comment: 'Admin who created'
   t.references :updated_by, type: :uuid, comment: 'Admin who last updated'
-  t.datetime :published_at, comment: 'When delivery was published/scheduled'
-  t.references :published_by, type: :uuid, comment: 'Admin who published'
 
   t.timestamps null: false
 
-  t.index [:tenant_id, :status]
-  t.index [:tenant_id, :delivery_type]
-  t.index [:status, :scheduled_at]
+  t.index [:tenant_id, :created_at]
 end
 
 add_foreign_key :deliveries, :tenants
 add_foreign_key :deliveries, :templates
 add_foreign_key :deliveries, :admins, column: :created_by_id
 add_foreign_key :deliveries, :admins, column: :updated_by_id
-add_foreign_key :deliveries, :admins, column: :published_by_id

@@ -73,41 +73,15 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.citext "tenant_id", null: false, comment: "Tenant reference"
     t.string "name", null: false, comment: "Delivery event name"
     t.uuid "template_id", null: false, comment: "Email template reference"
-    t.string "delivery_type", default: "datetime", null: false, comment: "datetime | birthday"
-    t.datetime "scheduled_at", comment: "Scheduled delivery datetime (for datetime type)"
-    t.integer "birthday_offset_days", default: 0, comment: "Days offset from birthday (for birthday type)"
-    t.string "birthday_delivery_time", comment: "Delivery time HH:MM (for birthday type)"
-    t.string "status", default: "draft", null: false, comment: "Delivery status"
     t.uuid "created_by_id", comment: "Admin who created"
     t.uuid "updated_by_id", comment: "Admin who last updated"
-    t.datetime "published_at", comment: "When delivery was published/scheduled"
-    t.uuid "published_by_id", comment: "Admin who published"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_deliveries_on_created_by_id"
-    t.index ["published_by_id"], name: "index_deliveries_on_published_by_id"
-    t.index ["status", "scheduled_at"], name: "index_deliveries_on_status_and_scheduled_at"
     t.index ["template_id"], name: "index_deliveries_on_template_id"
-    t.index ["tenant_id", "delivery_type"], name: "index_deliveries_on_tenant_id_and_delivery_type"
-    t.index ["tenant_id", "status"], name: "index_deliveries_on_tenant_id_and_status"
+    t.index ["tenant_id", "created_at"], name: "index_deliveries_on_tenant_id_and_created_at"
     t.index ["tenant_id"], name: "index_deliveries_on_tenant_id"
     t.index ["updated_by_id"], name: "index_deliveries_on_updated_by_id"
-  end
-
-  create_table "delivery_activities", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Delivery audit log", force: :cascade do |t|
-    t.citext "tenant_id", null: false, comment: "Tenant reference"
-    t.uuid "delivery_id", null: false, comment: "Delivery reference"
-    t.uuid "admin_id", comment: "Admin who performed action"
-    t.string "action", null: false, comment: "Action type"
-    t.jsonb "metadata", default: {}, comment: "What changed (JSON)"
-    t.text "note", comment: "Optional note"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["admin_id"], name: "index_delivery_activities_on_admin_id"
-    t.index ["delivery_id", "created_at"], name: "idx_delivery_activities_timeline"
-    t.index ["delivery_id"], name: "index_delivery_activities_on_delivery_id"
-    t.index ["tenant_id", "delivery_id"], name: "index_delivery_activities_on_tenant_id_and_delivery_id"
-    t.index ["tenant_id"], name: "index_delivery_activities_on_tenant_id"
   end
 
   create_table "delivery_addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -127,22 +101,74 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["user_id"], name: "index_delivery_addresses_on_user_id"
   end
 
+  create_table "delivery_birthdays", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Birthday-based delivery schedules", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "delivery_id", null: false, comment: "Parent delivery"
+    t.string "status", default: "draft", null: false, comment: "Birthday delivery status"
+    t.integer "offset_days", default: 0, null: false, comment: "Days offset from birthday (negative = before)"
+    t.string "delivery_time", default: "09:00", null: false, comment: "Delivery time HH:MM"
+    t.datetime "published_at", comment: "When birthday delivery was activated"
+    t.uuid "published_by_id", comment: "Admin who activated"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["delivery_id"], name: "idx_delivery_birthdays_delivery_unique", unique: true
+    t.index ["delivery_id"], name: "index_delivery_birthdays_on_delivery_id"
+    t.index ["published_by_id"], name: "index_delivery_birthdays_on_published_by_id"
+    t.index ["tenant_id", "status"], name: "index_delivery_birthdays_on_tenant_id_and_status"
+    t.index ["tenant_id"], name: "index_delivery_birthdays_on_tenant_id"
+  end
+
+  create_table "delivery_events", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Delivery event log (for audit and inter-system communication)", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "delivery_id", null: false, comment: "Delivery reference"
+    t.uuid "admin_id", comment: "Admin who triggered event (if applicable)"
+    t.datetime "transaction_time", null: false, comment: "Event occurrence time"
+    t.string "event_type", null: false, comment: "Event type: created, updated, published, cancelled, paused, resumed, sent, failed"
+    t.jsonb "payload", default: {}, null: false, comment: "Event details (metadata, changes, etc.)"
+    t.datetime "created_at", null: false
+    t.index ["admin_id"], name: "index_delivery_events_on_admin_id"
+    t.index ["delivery_id", "transaction_time"], name: "idx_delivery_events_timeline"
+    t.index ["delivery_id"], name: "index_delivery_events_on_delivery_id"
+    t.index ["tenant_id", "delivery_id"], name: "index_delivery_events_on_tenant_id_and_delivery_id"
+    t.index ["tenant_id", "transaction_time"], name: "idx_delivery_events_tenant_time"
+    t.index ["tenant_id"], name: "index_delivery_events_on_tenant_id"
+  end
+
   create_table "delivery_executions", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Per-user delivery tracking", force: :cascade do |t|
     t.citext "tenant_id", null: false, comment: "Tenant reference"
     t.uuid "delivery_id", null: false, comment: "Delivery reference"
     t.uuid "user_id", null: false, comment: "Target user"
-    t.string "status", default: "pending", null: false, comment: "Execution status"
-    t.datetime "scheduled_for", comment: "When this execution is scheduled"
+    t.string "status", default: "queued", null: false, comment: "Execution status"
+    t.datetime "scheduled_for", comment: "When this execution should be sent"
     t.datetime "sent_at", comment: "When email was actually sent"
+    t.integer "retry_count", default: 0, null: false, comment: "Number of retry attempts"
+    t.jsonb "result", default: {}, comment: "API response from email service (SendGrid/SES)"
     t.text "error_message", comment: "Error message if failed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["delivery_id", "user_id"], name: "idx_delivery_executions_unique", unique: true
     t.index ["delivery_id"], name: "index_delivery_executions_on_delivery_id"
-    t.index ["status", "scheduled_for"], name: "idx_delivery_executions_pending"
+    t.index ["status", "scheduled_for"], name: "idx_delivery_executions_queued"
     t.index ["tenant_id", "delivery_id"], name: "index_delivery_executions_on_tenant_id_and_delivery_id"
     t.index ["tenant_id"], name: "index_delivery_executions_on_tenant_id"
     t.index ["user_id"], name: "index_delivery_executions_on_user_id"
+  end
+
+  create_table "delivery_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Datetime-based delivery schedules", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "delivery_id", null: false, comment: "Parent delivery"
+    t.string "status", default: "draft", null: false, comment: "Schedule status"
+    t.datetime "scheduled_at", comment: "Scheduled delivery datetime"
+    t.datetime "published_at", comment: "When schedule was published"
+    t.uuid "published_by_id", comment: "Admin who published"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["delivery_id"], name: "idx_delivery_schedules_delivery_unique", unique: true
+    t.index ["delivery_id"], name: "index_delivery_schedules_on_delivery_id"
+    t.index ["published_by_id"], name: "index_delivery_schedules_on_published_by_id"
+    t.index ["status", "scheduled_at"], name: "idx_delivery_schedules_pending"
+    t.index ["tenant_id", "status"], name: "index_delivery_schedules_on_tenant_id_and_status"
+    t.index ["tenant_id"], name: "index_delivery_schedules_on_tenant_id"
   end
 
   create_table "delivery_user_tags", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Many-to-many: deliveries to user_tags", force: :cascade do |t|
@@ -1148,18 +1174,23 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "contact_addresses", "tenants", name: "fk_contact_addresses_tenants"
   add_foreign_key "contact_addresses", "users", name: "fk_contact_addresses_users"
   add_foreign_key "deliveries", "admins", column: "created_by_id"
-  add_foreign_key "deliveries", "admins", column: "published_by_id"
   add_foreign_key "deliveries", "admins", column: "updated_by_id"
   add_foreign_key "deliveries", "templates"
   add_foreign_key "deliveries", "tenants"
-  add_foreign_key "delivery_activities", "admins"
-  add_foreign_key "delivery_activities", "deliveries"
-  add_foreign_key "delivery_activities", "tenants"
   add_foreign_key "delivery_addresses", "tenants", name: "fk_delivery_addresses_tenants"
   add_foreign_key "delivery_addresses", "users", name: "fk_delivery_addresses_users"
+  add_foreign_key "delivery_birthdays", "admins", column: "published_by_id"
+  add_foreign_key "delivery_birthdays", "deliveries"
+  add_foreign_key "delivery_birthdays", "tenants"
+  add_foreign_key "delivery_events", "admins"
+  add_foreign_key "delivery_events", "deliveries"
+  add_foreign_key "delivery_events", "tenants"
   add_foreign_key "delivery_executions", "deliveries"
   add_foreign_key "delivery_executions", "tenants"
   add_foreign_key "delivery_executions", "users"
+  add_foreign_key "delivery_schedules", "admins", column: "published_by_id"
+  add_foreign_key "delivery_schedules", "deliveries"
+  add_foreign_key "delivery_schedules", "tenants"
   add_foreign_key "delivery_user_tags", "deliveries"
   add_foreign_key "delivery_user_tags", "tenants"
   add_foreign_key "delivery_user_tags", "user_tags"

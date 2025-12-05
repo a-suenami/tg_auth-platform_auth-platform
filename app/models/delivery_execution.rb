@@ -4,12 +4,13 @@ class DeliveryExecution < ApplicationRecord
   extend T::Sig
   include Multitenancy
 
-  # Enum (auto-generate: pending?, pending!, DeliveryExecution.pending scope, etc.)
+  MAX_RETRIES = T.let(5, Integer)
+
   enum :status, {
-    pending: 'pending',
+    queued: 'queued',
     sent: 'sent',
+    retrying: 'retrying',
     failed: 'failed',
-    skipped: 'skipped',
   }
 
   belongs_to :tenant
@@ -19,19 +20,46 @@ class DeliveryExecution < ApplicationRecord
   validates :delivery_id, uniqueness: { scope: :user_id }
 
   scope :scheduled_before, ->(time) { where('scheduled_for <= ?', time) }
+  scope :ready_to_send, -> { T.unsafe(queued).where('scheduled_for <= ?', Time.current) }
 
-  sig { params(error: String).void }
-  def mark_failed!(error)
-    update!(status: 'failed', error_message: error)
+  sig { params(api_result: T::Hash[String, T.untyped]).void }
+  def mark_sent!(api_result = {})
+    update!(
+      status: 'sent',
+      sent_at: Time.current,
+      result: api_result,
+    )
   end
 
-  sig { void }
-  def mark_sent!
-    update!(status: 'sent', sent_at: Time.current)
+  # Called when Sidekiq job fails - just increment retry_count
+  # Sidekiq handles the actual retry scheduling
+  sig { params(error: String, api_result: T::Hash[String, T.untyped]).void }
+  def mark_retrying!(error, api_result = {})
+    update!(
+      status: 'retrying',
+      retry_count: retry_count + 1,
+      error_message: error,
+      result: api_result,
+    )
   end
 
-  sig { params(reason: String).void }
-  def mark_skipped!(reason)
-    update!(status: 'skipped', error_message: reason)
+  # Called when max retries exhausted
+  sig { params(error: String, api_result: T::Hash[String, T.untyped]).void }
+  def mark_failed!(error, api_result = {})
+    update!(
+      status: 'failed',
+      error_message: error,
+      result: api_result,
+    )
+  end
+
+  sig { returns(T::Boolean) }
+  def can_retry?
+    retry_count < MAX_RETRIES
+  end
+
+  sig { returns(T::Boolean) }
+  def max_retries_reached?
+    retry_count >= MAX_RETRIES
   end
 end
