@@ -19,6 +19,12 @@ module GeneratedPathHelpersModule
   def admin_area_auth_logout_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_deliveries_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_delivery_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_login_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -148,6 +154,9 @@ module GeneratedPathHelpersModule
   def bulk_api_v1_internal_membership_contracts_credit_card_payments_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def cancel_admin_area_delivery_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def cancel_admin_area_template_mail_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -155,6 +164,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def complete_off_session_card_api_v1_internal_me_card_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_delivery_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_template_mail_path(*args); end
@@ -224,6 +236,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_delivery_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_admin_area_template_path(*args); end
@@ -322,6 +337,9 @@ module GeneratedPathHelpersModule
   def off_session_setup_intent_api_v1_internal_me_card_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def pause_admin_area_delivery_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def plan_change_api_v1_internal_membership_contract_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -335,6 +353,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def preview_ruler_area_tenant_stripe_records_products_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def publish_admin_area_delivery_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def publish_admin_area_template_mail_path(*args); end
@@ -359,6 +380,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def reset_sms_ratelimit_admin_area_user_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def resume_admin_area_delivery_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_auth_auth0_callback_path(*args); end

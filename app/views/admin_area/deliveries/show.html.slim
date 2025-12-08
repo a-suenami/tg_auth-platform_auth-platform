@@ -1,0 +1,153 @@
+.uk-margin-top.uk-container
+  / Breadcrumb
+  - breadcrumb_items = [{ text: '配信' }, { text: '配信イベント', link: admin_area_deliveries_path }, { text: @delivery.name }]
+  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+
+  .uk-grid data-uk-grid=""
+    / Main Content
+    div class="uk-width-2-3@m"
+      / Header
+      .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-bottom
+        h2.uk-margin-remove = @delivery.name
+        = render 'status_badge', delivery: @delivery
+
+      / Past Schedule Warning (draft only)
+      - if @delivery.schedule_type? && @delivery.schedule&.draft? && @delivery.schedule&.scheduled_at&.past?
+        .uk-alert.uk-alert-warning uk-alert=""
+          a.uk-alert-close uk-close=""
+          p
+            span uk-icon="warning"
+            |  配信予定日時が過去になっています。
+
+      / Delivery Info Card
+      .uk-card.uk-card-default.uk-card-body.uk-margin-bottom
+        dl.uk-description-list
+          dt 配信テンプレート
+          dd = @delivery.template&.name || '未設定'
+
+          dt ユーザータグ
+          dd
+            - if @delivery.user_tags.any?
+              - @delivery.user_tags.each do |tag|
+                span.uk-badge.uk-margin-small-right = tag.name
+            - else
+              | 未設定
+
+      / Target Users Card
+      .uk-card.uk-card-default.uk-card-body
+        .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-bottom
+          h4.uk-card-title.uk-margin-remove 配信対象ユーザー
+          span.uk-badge #{@target_users.size}名
+
+        - if @target_users.empty?
+          p.uk-text-muted 対象ユーザーがいません
+        - else
+          table.uk-table.uk-table-small.uk-table-divider
+            thead
+              tr
+                th ID
+                th 名前
+                th メールアドレス
+            tbody
+              - @target_users.each do |user|
+                tr
+                  td.uk-text-small = user.id[0..7] + '...'
+                  td = user.name || '-'
+                  td = user.email
+
+    / Sidebar
+    div class="uk-width-1-3@m"
+      / Actions Card
+      .uk-card.uk-card-default.uk-card-body.uk-card-small.uk-margin-small-bottom
+        - if @delivery.schedule&.draft? || @delivery.birthday&.draft?
+          = link_to edit_admin_area_delivery_path(@delivery), class: 'uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom' do
+            span uk-icon="pencil"
+            |  編集する
+
+          = button_to publish_admin_area_delivery_path(@delivery), method: :post, class: 'uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom', data: { confirm: '公開してもよろしいですか？' } do
+            span uk-icon="play"
+            |  公開する
+
+          = button_to admin_area_delivery_path(@delivery), method: :delete, class: 'uk-button uk-button-danger uk-width-1-1', data: { confirm: '削除してもよろしいですか？' } do
+            span uk-icon="trash"
+            |  削除する
+
+        - elsif @delivery.schedule&.scheduled?
+          = button_to cancel_admin_area_delivery_path(@delivery), method: :post, class: 'uk-button uk-button-danger uk-width-1-1', data: { confirm: 'キャンセルしてもよろしいですか？' } do
+            span uk-icon="ban"
+            |  キャンセル
+
+        - elsif @delivery.birthday_type? && @delivery.birthday&.ongoing?
+          = button_to pause_admin_area_delivery_path(@delivery), method: :post, class: 'uk-button uk-button-warning uk-width-1-1', data: { confirm: '配信を停止してもよろしいですか？' } do
+            span uk-icon="ban"
+            |  配信停止
+
+        - elsif @delivery.birthday_type? && @delivery.birthday&.paused?
+          = button_to resume_admin_area_delivery_path(@delivery), method: :post, class: 'uk-button uk-button-primary uk-width-1-1', data: { confirm: '配信を再開してもよろしいですか？' } do
+            span uk-icon="play"
+            |  配信再開
+
+        - else
+          p.uk-text-muted.uk-text-center 操作できません
+
+      / Metadata Card
+      .uk-card.uk-card-default.uk-card-body.uk-card-small.uk-margin-small-bottom
+        h4.uk-card-title 詳細情報
+        dl.uk-description-list
+          dt 配布タイプ
+          dd
+            - if @delivery.schedule_type?
+              | 日時指定
+            - else
+              | 誕生日
+
+          dt 配信日時
+          dd
+            - if @delivery.schedule_type?
+              - if @delivery.schedule&.scheduled_at
+                = local_time(@delivery.schedule.scheduled_at)
+              - else
+                | 未設定
+            - else
+              = birthday_timing_text(@delivery)
+
+          dt 作成日時
+          dd = local_time(@delivery.created_at)
+
+          dt 作成者
+          dd = @delivery.created_by&.name || @delivery.created_by&.email || '-'
+
+          - published_at = @delivery.schedule&.published_at || @delivery.birthday&.published_at
+          - published_by = @delivery.schedule&.published_by || @delivery.birthday&.published_by
+          - if published_at.present?
+            dt 公開日時
+            dd = local_time(published_at)
+
+            dt 公開者
+            dd = published_by&.name || published_by&.email || '-'
+
+      / Event Log Card
+      .uk-card.uk-card-default.uk-card-body.uk-card-small
+        h4.uk-card-title アクティビティ
+
+        - if @events.empty?
+          p.uk-text-muted アクティビティがありません
+        - else
+          .uk-timeline style="position: relative;"
+            - @events.each_with_index do |event, index|
+              - is_last = index == @events.size - 1
+              .uk-timeline-item.uk-flex style="padding-bottom: #{is_last ? '0' : '16px'};"
+                / Icon column
+                .uk-timeline-icon-col style="width: 24px; flex-shrink: 0; position: relative;"
+                  .uk-timeline-icon style="width: 20px; height: 20px; background: #f8f8f8; border: 2px solid #e5e5e5; border-radius: 50%; display: flex; align-items: center; justify-content: center;"
+                    = render 'event_icon', event: event
+                  - unless is_last
+                    .uk-timeline-line style="position: absolute; left: 9px; top: 24px; bottom: -16px; width: 2px; background: #e5e5e5;"
+                / Date column
+                .uk-text-small.uk-text-muted.uk-margin-small-left style="width: 80px; flex-shrink: 0;"
+                  = local_time(event.transaction_time)
+                / Content column
+                .uk-margin-small-left
+                  span.uk-text-bold = event.admin&.name || event.admin&.email || 'システム'
+                  span.uk-text-muted が
+                  = render 'event_action', event: event

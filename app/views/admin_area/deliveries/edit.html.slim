@@ -1,0 +1,9 @@
+.uk-margin-top.uk-container
+  / Breadcrumb
+  - breadcrumb_items = [{ text: '配信' }, { text: '配信イベント', link: admin_area_deliveries_path }, { text: @delivery.name, link: admin_area_delivery_path(@delivery) }, { text: '編集' }]
+  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+
+  h2 配信イベント編集
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = render 'form', delivery: @delivery, templates: @templates, user_tags: @user_tags

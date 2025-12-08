@@ -38,8 +38,11 @@ module AdminArea
     end
 
     def destroy
-      @user_tag.destroy!
-      redirect_to admin_area_user_tags_path, notice: 'タグを削除しました', status: :see_other
+      if @user_tag.destroy
+        redirect_to admin_area_user_tags_path, notice: 'タグを削除しました', status: :see_other
+      else
+        redirect_to admin_area_user_tags_path, alert: 'このタグは配信イベントで使用されているため削除できません', status: :see_other
+      end
     end
 
     private
