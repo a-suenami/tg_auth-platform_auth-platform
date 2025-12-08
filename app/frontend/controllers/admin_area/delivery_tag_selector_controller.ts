@@ -45,13 +45,25 @@ export default class extends Controller {
    * Remove tag chip and restore to dropdown
    */
   removeTag(event: Event) {
-    const chip = (event.target as HTMLElement).closest(".tag-chip");
+    event.preventDefault();
+    event.stopPropagation();
+
+    const target = event.target as HTMLElement;
+    const chip = target.closest(".tag-chip") as HTMLElement | null;
     if (!chip) return;
 
     const tagId = chip.getAttribute("data-tag-id");
     const tagName = chip.getAttribute("data-tag-name");
 
     if (!tagId || !tagName) return;
+
+    // Remove hidden input (now sibling of chip)
+    const hiddenInput = this.containerTarget.parentElement?.querySelector(
+      `input[type="hidden"][data-tag-id="${tagId}"]`
+    );
+    if (hiddenInput) {
+      hiddenInput.remove();
+    }
 
     // Remove chip
     chip.remove();
@@ -64,23 +76,30 @@ export default class extends Controller {
   }
 
   /**
-   * Create a chip element with hidden input
+   * Create a chip element and hidden input (as siblings)
    */
   private createChip(tagId: string, tagName: string): HTMLElement {
     const chip = document.createElement("span");
     chip.className = "uk-label uk-label-primary uk-margin-small-right tag-chip";
     chip.setAttribute("data-tag-id", tagId);
     chip.setAttribute("data-tag-name", tagName);
+    chip.setAttribute("data-action", "click->delivery-tag-selector#removeTag");
     chip.style.cursor = "pointer";
     chip.innerHTML = `${tagName} <span uk-icon="icon: close; ratio: 0.8"></span>`;
 
-    // Create hidden input
+    // Create hidden input as sibling (in parent container)
     const input = document.createElement("input");
     input.type = "hidden";
     input.name = "delivery[user_tag_ids][]";
     input.value = tagId;
     input.id = `delivery_user_tag_${tagId}`;
-    chip.appendChild(input);
+    input.setAttribute("data-tag-id", tagId);
+
+    // Insert hidden input in the form (parent of container)
+    const form = this.containerTarget.closest("form");
+    if (form) {
+      form.appendChild(input);
+    }
 
     return chip;
   }

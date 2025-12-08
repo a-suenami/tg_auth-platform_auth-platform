@@ -24,7 +24,9 @@ module Deliveries
 
     sig { returns(T::Boolean) }
     def execute
-      tags_changed = check_tags_changed
+      old_ids = delivery.user_tag_ids.map(&:to_s).sort
+      new_ids = new_tag_ids.map(&:to_s).compact_blank.sort
+      tags_changed = old_ids != new_ids
 
       success = T.let(false, T::Boolean)
       ActiveRecord::Base.transaction do

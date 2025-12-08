@@ -44,8 +44,6 @@ module AdminArea
 
 
     def update
-      @delivery.user_tag_ids = user_tag_ids_from_params
-
       service = Deliveries::UpdateService.new(
         delivery: @delivery,
         admin: T.must(current_admin),
@@ -136,19 +134,29 @@ module AdminArea
     end
 
     def delivery_params
-      params.require(:delivery).permit(:name, :template_id)
+      permitted_params.slice(:name, :template_id)
+    end
+
+    # Permit all form params to suppress warnings (accessed via helper methods)
+    def permitted_params
+      params.require(:delivery).permit(
+        :name, :template_id,
+        :delivery_type, :scheduled_at,
+        :birthday_offset_days, :birthday_delivery_time,
+        user_tag_ids: [],
+      )
     end
 
     def user_tag_ids_from_params
-      params[:delivery][:user_tag_ids]&.reject(&:blank?) || []
+      permitted_params[:user_tag_ids]&.reject(&:blank?) || []
     end
 
     def delivery_type_from_params
-      params[:delivery][:delivery_type] || 'schedule'
+      permitted_params[:delivery_type] || 'schedule'
     end
 
     def schedule_params
-      scheduled_at = params[:delivery][:scheduled_at]
+      scheduled_at = permitted_params[:scheduled_at]
       return {} if scheduled_at.blank?
 
       { scheduled_at: Time.iso8601(scheduled_at) }
@@ -158,8 +166,8 @@ module AdminArea
 
     def birthday_params
       {
-        offset_days: params[:delivery][:birthday_offset_days] || 0,
-        delivery_time: params[:delivery][:birthday_delivery_time] || '09:00',
+        offset_days: permitted_params[:birthday_offset_days] || 0,
+        delivery_time: permitted_params[:birthday_delivery_time] || '09:00',
       }
     end
 

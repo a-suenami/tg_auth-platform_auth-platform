@@ -34,14 +34,14 @@
       - available_tags = user_tags.reject { |t| selected_tag_ids.include?(t.id) }
 
       / Selected tags displayed as chips
-      .uk-margin-small-top data-delivery-tag-selector-target="container" data-action="click->delivery-tag-selector#removeTag" style="min-height: 40px; padding: 8px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fafafa;"
+      .uk-margin-small-top data-delivery-tag-selector-target="container" style="min-height: 40px; padding: 8px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fafafa;"
         - if selected_tags.any?
           - selected_tags.each do |tag|
-            span.uk-label.uk-label-primary.uk-margin-small-right.tag-chip data-tag-id=tag.id data-tag-name=tag.name style="cursor: pointer;"
+            span.uk-label.uk-label-primary.uk-margin-small-right.tag-chip data-tag-id=tag.id data-tag-name=tag.name style="cursor: pointer;" data-action="click->delivery-tag-selector#removeTag"
               = tag.name
               |
               span uk-icon="icon: close; ratio: 0.8"
-              = hidden_field_tag 'delivery[user_tag_ids][]', tag.id, id: "delivery_user_tag_#{tag.id}"
+            = hidden_field_tag 'delivery[user_tag_ids][]', tag.id, id: "delivery_user_tag_#{tag.id}", data: { tag_id: tag.id }
         - else
           span.uk-text-meta data-delivery-tag-selector-target="placeholder" タグが選択されていません
 
