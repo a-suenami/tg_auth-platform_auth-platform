@@ -42,11 +42,13 @@ class KomojuRecord
 
     sig { params(tenant: Tenant).void }
     def initialize(tenant:)
-      unless tenant.tenant_komoju_account&.enabled?
-        raise KomojuError.new, "Komoju account not configured or disabled for tenant: #{tenant.id}"
+      komoju_account = tenant.tenant_komoju_account
+
+      unless komoju_account&.enabled?
+        raise Exceptions::Payment::Konbini::AccountNotConfigured
       end
 
-      api_key = T.must(tenant.tenant_komoju_account).secret_key
+      api_key = komoju_account.secret_key
       @komoju_client = T.let(Komoju.connect(api_key), Komoju::Client)
     end
 
