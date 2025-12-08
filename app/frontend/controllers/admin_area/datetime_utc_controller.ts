@@ -28,7 +28,32 @@ export default class extends Controller {
 
   connect() {
     this.inputTargets.forEach((input) => this.setupInput(input));
-    this.element.addEventListener("formdata", this.handleFormData.bind(this));
+    // Use submit event to create hidden fields before form submission
+    this.element.addEventListener("submit", this.handleSubmit.bind(this));
+  }
+
+  private handleSubmit(_e: Event) {
+    this.inputTargets.forEach((input) => {
+      const name = input.dataset.name;
+      if (!name || !input.value) return;
+
+      const localDate = new Date(input.value);
+      if (isNaN(localDate.getTime())) return;
+
+      // Check if hidden field already exists
+      let hiddenField = this.element.querySelector(
+        `input[type="hidden"][name="${name}"]`
+      ) as HTMLInputElement | null;
+
+      if (!hiddenField) {
+        hiddenField = document.createElement("input");
+        hiddenField.type = "hidden";
+        hiddenField.name = name;
+        this.element.appendChild(hiddenField);
+      }
+
+      hiddenField.value = localDate.toISOString();
+    });
   }
 
   private setupInput(input: HTMLInputElement) {
@@ -53,20 +78,6 @@ export default class extends Controller {
     if (!isNaN(date.getTime())) {
       input.value = this.toDatetimeLocal(date);
     }
-  }
-
-  private handleFormData(e: Event) {
-    const formData = (e as FormDataEvent).formData;
-
-    this.inputTargets.forEach((input) => {
-      const name = input.dataset.name;
-      if (!name || !input.value) return;
-
-      const localDate = new Date(input.value);
-      if (!isNaN(localDate.getTime())) {
-        formData.set(name, localDate.toISOString());
-      }
-    });
   }
 
   // Format Date to datetime-local input value (YYYY-MM-DDTHH:MM)
