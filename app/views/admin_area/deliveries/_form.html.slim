@@ -13,6 +13,13 @@
       = f.text_field :name, placeholder: '配信イベント名を入力...', required: true, class: 'uk-input'
 
   .uk-margin
+    label.uk-form-label 配信方法
+    .uk-form-controls
+      select.uk-select disabled=true
+        option selected=true Eメール
+        option LINE
+
+  .uk-margin
     = f.label :template_id, '配信テンプレート', class: 'uk-form-label'
     .uk-form-controls
       - if templates.empty?

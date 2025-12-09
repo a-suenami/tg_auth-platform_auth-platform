@@ -24,6 +24,7 @@
         thead
           tr
             th イベント名
+            th 配信方法
             th 配信状態
             th テンプレート
             th 配信日時
@@ -33,6 +34,8 @@
             tr
               td
                 = link_to delivery.name, admin_area_delivery_path(delivery)
+              td
+                span.uk-label Eメール
               td
                 = render 'status_badge', delivery: delivery
               td

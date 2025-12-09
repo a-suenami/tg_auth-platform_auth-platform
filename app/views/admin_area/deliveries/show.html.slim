@@ -22,6 +22,10 @@
       / Delivery Info Card
       .uk-card.uk-card-default.uk-card-body.uk-margin-bottom
         dl.uk-description-list
+          dt 配信方法
+          dd
+            span.uk-label Eメール
+
           dt 配信テンプレート
           dd = @delivery.template&.name || '未設定'
 
