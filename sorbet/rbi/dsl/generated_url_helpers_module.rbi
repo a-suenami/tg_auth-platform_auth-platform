@@ -61,6 +61,12 @@ module GeneratedUrlHelpersModule
   def admin_area_user_user_profile_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_user_tag_assignment_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def admin_area_user_user_tag_assignments_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_users_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -175,6 +181,9 @@ module GeneratedUrlHelpersModule
   def edit_admin_area_user_user_profile_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_user_user_tag_assignment_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_email_template_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -218,6 +227,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def health_check_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def history_admin_area_user_user_tag_assignments_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def logout_sessions_url(*args); end

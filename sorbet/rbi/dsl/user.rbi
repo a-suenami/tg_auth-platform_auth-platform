@@ -660,6 +660,20 @@ class User
     sig { returns(T::Boolean) }
     def tenant_previously_changed?; end
 
+    sig { returns(T::Array[T.untyped]) }
+    def user_event_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def user_event_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :user_events`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::UserEvent::PrivateCollectionProxy) }
+    def user_events; end
+
+    sig { params(value: T::Enumerable[::UserEvent]).void }
+    def user_events=(value); end
+
     sig { returns(T.nilable(::UserProfile)) }
     def user_profile; end
 
