@@ -1,0 +1,19 @@
+create_table :delivery_events, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Delivery event log (for audit and inter-system communication)' do |t|
+  t.references :tenant, type: :citext, null: false, comment: 'Tenant reference'
+  t.references :delivery, type: :uuid, null: false, comment: 'Delivery reference'
+  t.references :admin, type: :uuid, comment: 'Admin who triggered event (if applicable)'
+
+  t.datetime :transaction_time, null: false, comment: 'Event occurrence time'
+  t.string :event_type, null: false, comment: 'Event type: created, updated, published, cancelled, paused, resumed, sent, failed'
+  t.jsonb :payload, null: false, default: {}, comment: 'Event details (metadata, changes, etc.)'
+
+  t.datetime :created_at, null: false
+
+  t.index [:delivery_id, :transaction_time], name: 'idx_delivery_events_timeline'
+  t.index [:tenant_id, :transaction_time], name: 'idx_delivery_events_tenant_time'
+  t.index [:tenant_id, :delivery_id]
+end
+
+add_foreign_key :delivery_events, :tenants
+add_foreign_key :delivery_events, :deliveries
+add_foreign_key :delivery_events, :admins
