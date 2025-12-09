@@ -8,13 +8,18 @@ Rails.application.routes.draw do
     get '/auth/failure' => 'auth0#failure'
     get '/auth/logout' => 'auth0#logout'
 
-    resources :users, only: %i[index show edit update]
-    resources :users, only: [] do
+    resources :users, only: %i[index show edit update] do
       member do
         put :reset_sms_ratelimit
       end
       resource :user_profile, only: [:new, :create, :edit, :update]
       resource :contact_address, only: [:new, :create, :edit, :update]
+      resources :user_tag_assignments, only: [:edit, :create, :destroy], path: 'tags', param: :tag_id do
+        collection do
+          get '', action: :edit, as: ''
+          get 'history', action: :tag_history
+        end
+      end
     end
 
     resources :templates, except: [:edit, :destroy] do
