@@ -17,5 +17,10 @@ module Deliveries
 
     sig { returns(Admin) }
     attr_reader :admin
+
+    sig { params(event: DeliveryEvent::Type::Base).void }
+    def record_event(event)
+      DeliveryEvent.record!(delivery: delivery, event: event, admin: admin)
+    end
   end
 end

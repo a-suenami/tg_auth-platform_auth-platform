@@ -24,18 +24,23 @@ module Deliveries
     def execute
       delivery.created_by = admin
 
-      success = T.let(false, T::Boolean)
-      ActiveRecord::Base.transaction do
-        unless delivery.save
-          raise ActiveRecord::Rollback
-        end
+      # Validate delivery first
+      return false unless delivery.valid?
 
-        build_child
-        record_event(DeliveryEvent::Type::Created.new)
-        success = true
+      # Validate child record
+      child = build_child_record
+      unless child.valid?
+        child.errors.each { |error| delivery.errors.add(:base, error.full_message) }
+        return false
       end
 
-      success
+      ActiveRecord::Base.transaction do
+        delivery.save!
+        child.save!
+        record_event(DeliveryEvent::Type::Created.new)
+      end
+
+      true
     end
 
     private
@@ -49,27 +54,22 @@ module Deliveries
     sig { returns(T::Hash[Symbol, T.untyped]) }
     attr_reader :birthday_params
 
-    sig { void }
-    def build_child
+    sig { returns(T.any(DeliverySchedule, DeliveryBirthday)) }
+    def build_child_record
       if delivery_type == 'birthday'
-        delivery.create_birthday!(
+        delivery.build_birthday(
           tenant: Tenant.current,
           status: 'draft',
           offset_days: birthday_params[:offset_days] || 0,
           delivery_time: birthday_params[:delivery_time] || '09:00',
         )
       else
-        delivery.create_schedule!(
+        delivery.build_schedule(
           tenant: Tenant.current,
           status: 'draft',
           scheduled_at: schedule_params[:scheduled_at],
         )
       end
-    end
-
-    sig { params(event: DeliveryEvent::Type::Base).void }
-    def record_event(event)
-      DeliveryEvent.record!(delivery: delivery, event: event, admin: admin)
     end
   end
 end

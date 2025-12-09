@@ -20,11 +20,6 @@ ja:
         restrict_dependent_destroy:
           has_one: "%{record}が存在しているため削除できません"
           has_many: "%{record}が存在しているため削除できません"
-      models:
-        delivery_schedule:
-          attributes:
-            scheduled_at:
-              must_be_future: は現在より後の日時を指定してください
   admin_area:
     deliveries:
       created: 配信イベントを作成しました
@@ -38,6 +33,7 @@ ja:
         draft_only_edit: 下書き状態の配信イベントのみ編集できます
         draft_only_delete: 下書き状態の配信イベントのみ削除できます
         draft_only_publish: 下書き状態の配信イベントのみ公開できます
+        publish_failed: 配信イベントの公開に失敗しました
         cannot_cancel: この配信イベントはキャンセルできません
         cannot_pause: この配信イベントは停止できません
         cannot_resume: この配信イベントは再開できません

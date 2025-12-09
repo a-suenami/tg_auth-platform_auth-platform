@@ -28,15 +28,27 @@ module Deliveries
       new_ids = new_tag_ids.map(&:to_s).compact_blank.sort
       tags_changed = old_ids != new_ids
 
-      success = T.let(false, T::Boolean)
+      # Validate delivery with new params
+      delivery.assign_attributes(delivery_params)
+      return false unless delivery.valid?
+
+      # Validate child record
+      child = delivery.schedule || delivery.birthday
+      if child
+        assign_child_attributes(child)
+        unless child.valid?
+          child.errors.each { |error| delivery.errors.add(:base, error.full_message) }
+          return false
+        end
+      end
+
       ActiveRecord::Base.transaction do
         delivery.user_tag_ids = new_tag_ids if tags_changed
+        delivery.save!
 
-        unless delivery.update(delivery_params)
-          raise ActiveRecord::Rollback
-        end
+        child_changed = child&.changed? || false
+        child&.save!
 
-        child_changed = update_child
         delivery_changed = (delivery.saved_changes.keys - ['updated_at']).any?
         has_changes = delivery_changed || tags_changed || child_changed
 
@@ -44,11 +56,9 @@ module Deliveries
           delivery.update_column(:updated_by_id, admin.id)
           record_event(DeliveryEvent::Type::Updated.new)
         end
-
-        success = true
       end
 
-      success
+      true
     end
 
     private
@@ -65,48 +75,17 @@ module Deliveries
     sig { returns(T::Hash[Symbol, T.untyped]) }
     attr_reader :birthday_params
 
-    sig { returns(T::Boolean) }
-    def check_tags_changed
-      old_tag_ids = delivery.user_tag_ids.map(&:to_s).sort
-      new_tag_ids_normalized = new_tag_ids.map(&:to_s).compact_blank.sort
-      old_tag_ids != new_tag_ids_normalized
-    end
-
-    sig { returns(T::Boolean) }
-    def update_child
-      if delivery.schedule
-        update_schedule
-      elsif delivery.birthday
-        update_birthday
-      else
-        false
+    sig { params(child: T.any(DeliverySchedule, DeliveryBirthday)).void }
+    def assign_child_attributes(child)
+      case child
+      when DeliverySchedule
+        child.assign_attributes(scheduled_at: schedule_params[:scheduled_at])
+      when DeliveryBirthday
+        child.assign_attributes(
+          offset_days: birthday_params[:offset_days] || 0,
+          delivery_time: birthday_params[:delivery_time] || '09:00',
+        )
       end
-    end
-
-    sig { returns(T::Boolean) }
-    def update_schedule
-      schedule = T.must(delivery.schedule)
-      schedule.assign_attributes(scheduled_at: schedule_params[:scheduled_at])
-      changed = schedule.changed?
-      schedule.save! if changed
-      changed
-    end
-
-    sig { returns(T::Boolean) }
-    def update_birthday
-      birthday = T.must(delivery.birthday)
-      birthday.assign_attributes(
-        offset_days: birthday_params[:offset_days] || 0,
-        delivery_time: birthday_params[:delivery_time] || '09:00',
-      )
-      changed = birthday.changed?
-      birthday.save! if changed
-      changed
-    end
-
-    sig { params(event: DeliveryEvent::Type::Base).void }
-    def record_event(event)
-      DeliveryEvent.record!(delivery: delivery, event: event, admin: admin)
     end
   end
 end

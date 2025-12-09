@@ -66,47 +66,43 @@ module AdminArea
     end
 
     def publish
-      child = @delivery.schedule || @delivery.birthday
-      child.update!(
-        status: @delivery.schedule_type? ? 'scheduled' : 'ongoing',
-        published_at: Time.current,
-        published_by: current_admin,
-      )
-      DeliveryEvent.record!(delivery: @delivery, event: DeliveryEvent::Type::Published.new, admin: current_admin)
-      redirect_to admin_area_delivery_path(@delivery), notice: t('admin_area.deliveries.published')
+      service = Deliveries::PublishService.new(delivery: @delivery, admin: T.must(current_admin))
+
+      if service.execute
+        redirect_to admin_area_delivery_path(@delivery), notice: t('admin_area.deliveries.published')
+      else
+        redirect_to admin_area_delivery_path(@delivery), alert: t('admin_area.deliveries.errors.publish_failed')
+      end
     end
 
     def cancel
-      unless @delivery.schedule&.can_cancel?
-        redirect_to admin_area_delivery_path(@delivery), alert: t('admin_area.deliveries.errors.cannot_cancel')
-        return
-      end
+      service = Deliveries::CancelService.new(delivery: @delivery, admin: T.must(current_admin))
 
-      @delivery.schedule.cancelled!
-      DeliveryEvent.record!(delivery: @delivery, event: DeliveryEvent::Type::Cancelled.new, admin: current_admin)
-      redirect_to admin_area_delivery_path(@delivery), notice: t('admin_area.deliveries.cancelled')
+      if service.execute
+        redirect_to admin_area_delivery_path(@delivery), notice: t('admin_area.deliveries.cancelled')
+      else
+        redirect_to admin_area_delivery_path(@delivery), alert: t('admin_area.deliveries.errors.cannot_cancel')
+      end
     end
 
     def pause
-      unless @delivery.birthday&.can_pause?
-        redirect_to admin_area_delivery_path(@delivery), alert: t('admin_area.deliveries.errors.cannot_pause')
-        return
-      end
+      service = Deliveries::PauseService.new(delivery: @delivery, admin: T.must(current_admin))
 
-      @delivery.birthday.paused!
-      DeliveryEvent.record!(delivery: @delivery, event: DeliveryEvent::Type::Paused.new, admin: current_admin)
-      redirect_to admin_area_delivery_path(@delivery), notice: t('admin_area.deliveries.paused')
+      if service.execute
+        redirect_to admin_area_delivery_path(@delivery), notice: t('admin_area.deliveries.paused')
+      else
+        redirect_to admin_area_delivery_path(@delivery), alert: t('admin_area.deliveries.errors.cannot_pause')
+      end
     end
 
     def resume
-      unless @delivery.birthday&.can_resume?
-        redirect_to admin_area_delivery_path(@delivery), alert: t('admin_area.deliveries.errors.cannot_resume')
-        return
-      end
+      service = Deliveries::ResumeService.new(delivery: @delivery, admin: T.must(current_admin))
 
-      @delivery.birthday.ongoing!
-      DeliveryEvent.record!(delivery: @delivery, event: DeliveryEvent::Type::Resumed.new, admin: current_admin)
-      redirect_to admin_area_delivery_path(@delivery), notice: t('admin_area.deliveries.resumed')
+      if service.execute
+        redirect_to admin_area_delivery_path(@delivery), notice: t('admin_area.deliveries.resumed')
+      else
+        redirect_to admin_area_delivery_path(@delivery), alert: t('admin_area.deliveries.errors.cannot_resume')
+      end
     end
 
     private

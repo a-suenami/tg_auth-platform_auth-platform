@@ -14,13 +14,6 @@ en:
       uniqueness: " is registered."
       is_destroyed: It was deleted
       blank: is blanked.
-  activerecord:
-    errors:
-      models:
-        delivery_schedule:
-          attributes:
-            scheduled_at:
-              must_be_future: must be a future date and time
   admin_area:
     deliveries:
       created: Delivery event created successfully
@@ -34,6 +27,7 @@ en:
         draft_only_edit: Only draft delivery events can be edited
         draft_only_delete: Only draft delivery events can be deleted
         draft_only_publish: Only draft delivery events can be published
+        publish_failed: Failed to publish delivery event
         cannot_cancel: This delivery event cannot be cancelled
         cannot_pause: This delivery event cannot be paused
         cannot_resume: This delivery event cannot be resumed
