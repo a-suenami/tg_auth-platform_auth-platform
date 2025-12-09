@@ -21,11 +21,6 @@ class Delivery < ApplicationRecord
   validate :must_have_user_tags
 
   scope :ordered, -> { order(created_at: :desc) }
-  scope :search_by_name, lambda { |term|
-    return all if term.blank?
-
-    where(arel_table[:name].lower.matches("%#{sanitize_sql_like(term.downcase)}%"))
-  }
 
   sig { returns(T::Boolean) }
   def schedule_type?
