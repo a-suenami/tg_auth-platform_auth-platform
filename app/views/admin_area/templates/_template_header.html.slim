@@ -1,7 +1,11 @@
 h2 = @template.name
 
 .uk-margin-top.uk-card.uk-card-default.uk-card-body
-  .uk-margin
-    label.uk-form-label テンプレート名
-    .uk-panel.uk-panel-box.uk-padding-small style="border: 1px solid #e5e5e5; background: #fafafa;"
-      = @template.name
+  = form_with model: @template, url: admin_area_template_path(@template), method: :patch, class: 'uk-form-stacked' do |f|
+    .uk-margin
+      = f.label :name, 'テンプレート名', class: 'uk-form-label'
+      .uk-flex.uk-flex-middle
+        .uk-width-expand
+          = f.text_field :name, class: 'uk-input', required: true
+        .uk-margin-left
+          = f.submit '保存', class: 'uk-button uk-button-primary'

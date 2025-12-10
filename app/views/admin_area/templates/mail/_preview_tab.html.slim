@@ -1,27 +1,15 @@
 / Preview Tab Content
+/ Hidden form for preview (synced via Stimulus from edit form)
+- sample_defaults = AdminArea::TemplatesHelper::DEFAULT_SAMPLE_DATA
+= form_with url: preview_admin_area_template_mail_path(@template), method: :post, data: { template_preview_target: 'previewForm' }, id: 'preview-form', style: 'display: none;' do |f|
+  = f.hidden_field 'sample_data[first_name]', value: sample_defaults['first_name']
+  = f.hidden_field 'sample_data[last_name]', value: sample_defaults['last_name']
+  = f.hidden_field :body, value: @mail_template&.body, data: { template_preview_target: 'previewBody' }
+  = f.hidden_field :title, value: @mail_template&.title, data: { template_preview_target: 'previewTitle' }
+
+/ Preview Panel (Full Width)
 .uk-background-muted.uk-padding style="min-height: 500px;"
-  / Email Header
-  .uk-card.uk-card-default.uk-card-body.uk-margin
-    .uk-flex.uk-flex-middle
-      .uk-margin-right
-        / Avatar circle
-        .uk-border-circle style="width: 50px; height: 50px; background: #e5e5e5; display: flex; align-items: center; justify-content: center;"
-          span uk-icon="icon: user; ratio: 1.5"
-      div
-        .uk-text-bold Haguruma ファンクラブ
-        .uk-text-small.uk-text-muted = @mail_template.title || "メールタイトル"
-        .uk-text-small.uk-text-muted to: Yamada TARO
+  #preview-content
+    = render 'admin_area/templates/mail/preview_content', mail_template: @mail_template, preview_result: @preview_result
 
-  / Email Card
-  .uk-card.uk-card-default.uk-card-body style="max-width: 600px;"
-    h3.uk-card-title = @mail_template.title || "メールタイトル"
-    p = @mail_template.body || "メール本文"
-
-    / Play button (decorative)
-    .uk-text-center.uk-margin-top.uk-padding style="border: 1px solid #e5e5e5; background: #f9f9f9;"
-      span uk-icon="icon: play-circle; ratio: 4" style="opacity: 0.7;"
-
-/ Action Buttons (same as edit tab)
-.uk-margin-top.uk-text-right
-  a.uk-button.uk-button-default href=admin_area_template_path(@template) キャンセル
-  button.uk-button.uk-button-primary type="button" onclick="document.getElementById('mail-template-form').requestSubmit()" = @mail_template.new_record? ? '作成する' : '保存する'
+= render 'admin_area/templates/mail/action_buttons'

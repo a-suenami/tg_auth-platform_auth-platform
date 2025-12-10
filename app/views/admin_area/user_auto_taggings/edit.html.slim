@@ -1,6 +1,6 @@
 .uk-margin-top.uk-container
   / Breadcrumb
-  - breadcrumb_items = [{ text: 'ユーザー' }, { text: 'オートタギング', link: admin_area_user_auto_taggings_path }, { text: @user_auto_tagging.name }]
+  - breadcrumb_items = [{ text: '会員ID管理' }, { text: 'オートタギング', link: admin_area_user_auto_taggings_path }, { text: @user_auto_tagging.name }]
   = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
 
   .uk-grid data-uk-grid=""
@@ -23,10 +23,11 @@
           .uk-text-meta.uk-text-small 作成日時
           div = @user_auto_tagging.created_at.strftime('%Y/%m/%d %H:%M')
 
-        .uk-margin-small
-          .uk-text-meta.uk-text-small 最終更新者
-          .uk-text-bold = @user_auto_tagging.updated_by_name || '-'
+        - if @user_auto_tagging.updated_by_name.present?
+          .uk-margin-small
+            .uk-text-meta.uk-text-small 最終更新者
+            .uk-text-bold = @user_auto_tagging.updated_by_name
 
-        .uk-margin-small
-          .uk-text-meta.uk-text-small 最終更新日時
-          div = @user_auto_tagging.updated_at.strftime('%Y/%m/%d %H:%M')
+          .uk-margin-small
+            .uk-text-meta.uk-text-small 最終更新日時
+            div = @user_auto_tagging.updated_at.strftime('%Y/%m/%d %H:%M')
