@@ -17,9 +17,41 @@ module UserTagRules
       @provider = T.let(provider, String)
     end
 
-    # TODO: Execution methods
-    # - events(): [:account_linked, :account_unlinked]
-    # - apply(relation): Filter users with linked accounts
+    # MR 2.1: Execution methods
+
+    # Build rule from config hash
+    #
+    # @param config [Hash] Configuration hash
+    # @return [AccountLinkRule] Rule instance
+    sig { params(config: T::Hash[String, T.untyped]).returns(AccountLinkRule) }
+    def self.from_config(config)
+      new(
+        provider: config['value'],
+      )
+    end
+
+    # Events that trigger this rule
+    #
+    # @return [Array<Symbol>] Event names
+    sig { override.returns(T::Array[Symbol]) }
+    def events
+      [:account_linked, :account_unlinked]
+    end
+
+    # Filter users with linked external accounts
+    #
+    # @param relation [ActiveRecord::Relation] Base user relation
+    # @return [ActiveRecord::Relation] Filtered relation
+    sig { override.params(relation: T.untyped).returns(T.untyped) }
+    def apply(relation)
+      relation
+        .joins(<<~SQL.squish)
+          INNER JOIN users__linked_applications ON users__linked_applications.user_id = users.id AND users__linked_applications.tenant_id = users.tenant_id
+          INNER JOIN oauth_applications ON oauth_applications.id = users__linked_applications.oauth_application_id
+        SQL
+        .where(oauth_applications: { name: @provider })
+        .distinct
+    end
 
     # Validate config format
     sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
@@ -37,7 +69,5 @@ module UserTagRules
 
       errors
     end
-
-    # TODO: Build rule from config
   end
 end

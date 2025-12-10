@@ -6,6 +6,7 @@ module UserTagRules
   #
   # Config format:
   #   {
+  #     "subscription_type": "current",
   #     "values": ["uuid-1", "uuid-2"]  # Membership IDs
   #   }
   #
@@ -19,9 +20,34 @@ module UserTagRules
       @membership_ids = T.let(membership_ids, T::Array[String])
     end
 
-    # TODO: Execution methods
-    # - events(): [:membership_joined, :membership_left]
-    # - apply(relation): Filter users with current membership in @membership_ids
+    # Build rule from config hash
+    #
+    # @param config [Hash] Configuration hash
+    # @return [MembershipRule] Rule instance
+    sig { params(config: T::Hash[String, T.untyped]).returns(MembershipRule) }
+    def self.from_config(config)
+      new(membership_ids: config['values'])
+    end
+
+    # Events that trigger this rule
+    #
+    # @return [Array<Symbol>] Event names
+    sig { override.returns(T::Array[Symbol]) }
+    def events
+      [:membership_joined, :membership_left]
+    end
+
+    # Filter users matching membership criteria
+    #
+    # @param relation [ActiveRecord::Relation] Base user relation
+    # @return [ActiveRecord::Relation] Filtered relation
+    sig { override.params(relation: T.untyped).returns(T.untyped) }
+    def apply(relation)
+      relation
+        .joins('INNER JOIN membership_users ON membership_users.user_id = users.id AND membership_users.tenant_id = users.tenant_id')
+        .where('membership_users.status = ? AND membership_users.membership_id IN (?)', 'active', @membership_ids)
+        .distinct
+    end
 
     # Validate config format
     #

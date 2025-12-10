@@ -6,7 +6,7 @@ module UserTagRules
   #
   # Config format:
   #   {
-  #     "values": ["male", "female"]
+  #     "values": ["male", "female", "other"]
   #   }
   #
   class GenderRule < AbstractRule
@@ -17,9 +17,58 @@ module UserTagRules
       @genders = T.let(genders, T::Array[String])
     end
 
-    # TODO: Execution methods
-    # - events(): [:profile_updated]
-    # - apply(relation): Filter users by gender
+    # MR 2.1: Execution methods
+
+    # Build rule from config hash
+    #
+    # @param config [Hash] Configuration hash
+    # @return [GenderRule] Rule instance
+    sig { params(config: T::Hash[String, T.untyped]).returns(GenderRule) }
+    def self.from_config(config)
+      new(
+        genders: config['values'],
+      )
+    end
+
+    # Events that trigger this rule
+    #
+    # @return [Array<Symbol>] Event names
+    sig { override.returns(T::Array[Symbol]) }
+    def events
+      [:profile_updated]
+    end
+
+    # Filter users matching gender criteria
+    #
+    # Note: "other" matches users with gender = "other", NULL, or blank
+    # (i.e., all users who are not explicitly male or female)
+    #
+    # @param relation [ActiveRecord::Relation] Base user relation
+    # @return [ActiveRecord::Relation] Filtered relation
+    sig { override.params(relation: T.untyped).returns(T.untyped) }
+    def apply(relation)
+      base_query = relation
+        .joins('INNER JOIN user_profiles ON user_profiles.user_id = users.id AND user_profiles.tenant_id = users.tenant_id')
+
+      conditions = []
+      params = []
+
+      # Handle male/female
+      explicit_genders = @genders & ['male', 'female']
+      if explicit_genders.any?
+        conditions << 'user_profiles.gender IN (?)'
+        params << explicit_genders
+      end
+
+      # Handle "other" (includes other/nil/blank)
+      if @genders.include?('other')
+        conditions << '(user_profiles.gender NOT IN (?) OR user_profiles.gender IS NULL OR user_profiles.gender = ?)'
+        params << ['male', 'female']
+        params << ''
+      end
+
+      base_query.where(conditions.join(' OR '), *params).distinct
+    end
 
     # Validate config format
     sig { params(config: T::Hash[String, T.untyped]).returns(T::Array[String]) }
@@ -31,13 +80,11 @@ module UserTagRules
         errors << I18n.t('user_tag_rules.errors.values_empty')
       end
 
-      if values.is_a?(Array) && !values.all? { |v| %w[male female].include?(v) }
+      if values.is_a?(Array) && !values.all? { |v| %w[male female other].include?(v) }
         errors << I18n.t('user_tag_rules.errors.gender_values_invalid')
       end
 
       errors
     end
-
-    # TODO: Build rule from config
   end
 end

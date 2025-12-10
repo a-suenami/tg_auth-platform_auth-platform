@@ -19,9 +19,55 @@ module UserTagRules
       @max_age = T.let(max_age, T.nilable(Integer))
     end
 
-    # TODO: Execution methods
-    # - events(): [:birthday_changed, :new_day_arrived]
-    # - apply(relation): Filter users by age range
+    # MR 2.1: Execution methods
+
+    # Build rule from config hash
+    #
+    # @param config [Hash] Configuration hash
+    # @return [AgeRule] Rule instance
+    sig { params(config: T::Hash[String, T.untyped]).returns(AgeRule) }
+    def self.from_config(config)
+      new(
+        min_age: config['min'],
+        max_age: config['max'],
+      )
+    end
+
+    # Events that trigger this rule
+    #
+    # @return [Array<Symbol>] Event names
+    sig { override.returns(T::Array[Symbol]) }
+    def events
+      [:profile_updated, :new_day_arrived]
+    end
+
+    # Filter users matching age criteria
+    #
+    # @param relation [ActiveRecord::Relation] Base user relation
+    # @return [ActiveRecord::Relation] Filtered relation
+    sig { override.params(relation: T.untyped).returns(T.untyped) }
+    def apply(relation)
+      return relation.none if @min_age.nil? && @max_age.nil?
+
+      result = relation
+        .joins('INNER JOIN user_profiles ON user_profiles.user_id = users.id AND user_profiles.tenant_id = users.tenant_id')
+
+      today = Time.zone.today
+
+      if @max_age
+        # Max age N means born on or after (N+1) years ago
+        min_birth_date = today - (@max_age + 1).years + 1.day
+        result = result.where('user_profiles.birth_date >= ?', min_birth_date)
+      end
+
+      if @min_age
+        # Min age N means born on or before N years ago
+        max_birth_date = today - @min_age.years
+        result = result.where('user_profiles.birth_date <= ?', max_birth_date)
+      end
+
+      result.distinct
+    end
 
     # Validate config format
     #
@@ -52,7 +98,5 @@ module UserTagRules
 
       errors
     end
-
-    # TODO: Build rule from config
   end
 end

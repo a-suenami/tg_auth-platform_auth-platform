@@ -78,7 +78,7 @@ ja:
       # Prefecture errors
       prefecture_codes_invalid: 値は有効な都道府県コードである必要があります
       # Gender errors
-      gender_values_invalid: 性別の値は「male」または「female」である必要があります
+      gender_values_invalid: 性別の値は「male」、「female」、または「other」である必要があります
       account_link_value_empty: 値は空でない文字列である必要があります
       account_link_value_invalid: 値は「LINE」である必要があります
       # Composite rule

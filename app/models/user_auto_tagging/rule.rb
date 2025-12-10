@@ -24,11 +24,18 @@ class UserAutoTagging::Rule < ApplicationRecord
 
   scope :ordered, -> { order(position: :asc) }
 
-  # TODO: Rule execution
-  # def to_rule
-  #   Build rule engine instance for execution
-  #   UserTagRules::RuleFactory.build(condition_type, config)
-  # end
+  # MR 2.2: Execution methods
+
+  # Build rule engine instance from this config
+  #
+  # @return [UserTagRules::AbstractRule] Rule instance ready for execution
+  # @example
+  #   rule = Rule.find(123)
+  #   rule.to_rule #=> UserTagRules::MembershipRule instance
+  sig { returns(UserTagRules::AbstractRule) }
+  def to_rule
+    UserTagRules::RuleFactory.build(condition_type, config)
+  end
 
   private
 
