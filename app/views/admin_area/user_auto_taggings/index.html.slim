@@ -1,20 +1,19 @@
 .uk-margin-top.uk-container
   / Breadcrumb
-  - breadcrumb_items = [{ text: 'ユーザー' }, { text: 'オートタギング' }]
+  - breadcrumb_items = [{ text: '会員ID管理' }, { text: 'オートタギング' }]
   = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
 
   .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-bottom.uk-margin-top
     h2 オートタギング
 
   .uk-card.uk-card-default.uk-card-body.uk-margin-bottom
-    .uk-flex.uk-flex-between.uk-flex-middle
-      .uk-width-2-3
-        = form_with url: admin_area_user_auto_taggings_path, method: :get, class: "uk-search uk-search-default uk-width-1-1" do |f|
-          = f.text_field :q, placeholder: "ルール名を入力...", value: params[:q], class: "uk-search-input"
-      .uk-width-1-3.uk-text-right
-        = link_to new_admin_area_user_auto_tagging_path, class: "uk-button uk-button-primary" do
-          span uk-icon="plus"
-          |  新規作成
+    .uk-flex.uk-flex-middle
+      = form_with url: admin_area_user_auto_taggings_path, method: :get, class: "uk-search uk-search-default uk-width-expand" do |f|
+        = f.text_field :q, placeholder: "ルール名を入力...", value: params[:q], class: "uk-search-input"
+      = link_to 'クリア', admin_area_user_auto_taggings_path, class: "uk-button uk-button-default uk-margin-small-left"
+      = link_to new_admin_area_user_auto_tagging_path, class: "uk-button uk-button-primary uk-margin-small-left" do
+        span uk-icon="plus"
+        |  新規作成
 
   .uk-card.uk-card-default.uk-card-body
     - if @user_auto_taggings.empty?
