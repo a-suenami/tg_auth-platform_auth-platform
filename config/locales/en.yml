@@ -52,3 +52,30 @@ en:
   date:
     formats:
       ymd: "%Y/%m/%d"
+  user_tag_rules:
+    errors:
+      # Common errors
+      subscription_type_invalid: subscription_type must be "current" or "duration"
+      values_empty: values must be a non-empty array
+      values_must_be_strings: values must be an array of strings
+      # Membership errors
+      membership_ids_invalid: values must be valid membership IDs (UUIDs)
+      # Plan errors
+      plan_ids_invalid: values must be valid plan IDs (UUIDs)
+      # Duration errors
+      duration_value_invalid: duration_value must be a positive integer
+      duration_unit_invalid: duration_unit must be one of days, months, years
+      # Age errors
+      age_min_invalid: min must be a non-negative integer
+      age_max_invalid: max must be a non-negative integer
+      age_max_less_than_min: max must be greater than min
+      age_both_blank: at least one of min or max must be present
+      # Prefecture errors
+      prefecture_codes_invalid: values must be valid prefecture codes
+      # Gender errors
+      gender_values_invalid: gender values must be "male" or "female"
+      # Account link errors
+      account_link_value_empty: value must be a non-empty string
+      account_link_value_invalid: value must be "LINE"
+      # Composite rule
+      composite_not_supported: CompositeRule does not support config-based validation. Build from rule objects instead
