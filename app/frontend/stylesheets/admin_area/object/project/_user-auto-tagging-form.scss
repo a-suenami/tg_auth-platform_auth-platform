@@ -729,6 +729,11 @@
     }
   }
 
+  // 条件ブロックが0件のときの空表示
+  .p-user-auto-tagging__rule-blocks-empty {
+    display: block;
+  }
+
   // ラジオボタンを横並びにする専用クラス（他要素への影響を避ける）
   .p-user-auto-tagging__radio-group {
     display: flex;

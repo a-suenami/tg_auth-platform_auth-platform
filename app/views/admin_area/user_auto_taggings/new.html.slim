@@ -51,6 +51,8 @@
                   .c-condition-block__list data-user-auto-tagging-form-target="ruleBlocksContainer"
                     = f.fields_for :rule_blocks do |block_form|
                       = render 'admin_area/user_auto_taggings/rule_block_fields', f: block_form
+                  .p-user-auto-tagging__rule-blocks-empty data-user-auto-tagging-form-target="ruleBlocksEmpty"
+                    .c-empty 条件ブロックがありません
                   .c-condition-block__add-block
                     button.c-form-section__add-block type="button" data-action="click->user-auto-tagging-form#addRuleBlock"
                       = render 'shared/icons/icon-plus'

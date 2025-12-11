@@ -14,9 +14,16 @@ import { Controller } from '@hotwired/stimulus';
  *       - Config (JSON stored as string, built from UI fields)
  */
 export default class extends Controller {
-  static targets = ['ruleBlocksContainer', 'ruleBlockTemplate', 'ruleTemplate'];
+  static targets = [
+    'ruleBlocksContainer',
+    'ruleBlocksEmpty',
+    'ruleBlockTemplate',
+    'ruleTemplate',
+  ];
 
   declare readonly ruleBlocksContainerTarget: HTMLElement;
+  declare readonly ruleBlocksEmptyTarget: HTMLElement;
+  declare readonly hasRuleBlocksEmptyTarget: boolean;
   declare readonly ruleBlockTemplateTarget: HTMLTemplateElement;
   declare readonly ruleTemplateTarget: HTMLTemplateElement;
 
@@ -32,6 +39,7 @@ export default class extends Controller {
     this.blockIndex = initialCount ? parseInt(initialCount) : 0;
 
     this.initializeExistingRules();
+    this.toggleEmptyState();
   }
 
   /**
@@ -56,6 +64,7 @@ export default class extends Controller {
     this.ruleBlocksContainerTarget.appendChild(newBlock);
     this.blockIndex++;
     this.updateBlockNumbers();
+    this.toggleEmptyState();
 
     // Automatically add one rule to the new block
     const rulesContainer = newBlock.querySelector('.rules-container') as HTMLElement;
@@ -81,11 +90,13 @@ export default class extends Controller {
     if (destroyInput) {
       destroyInput.value = '1';
       block.style.display = 'none';
+      block.setAttribute('data-destroy', 'true');
     } else {
       block.remove();
     }
 
     this.updateBlockNumbers();
+    this.toggleEmptyState();
   }
 
   /**
@@ -363,6 +374,24 @@ export default class extends Controller {
     if (jsonField) {
       jsonField.value = JSON.stringify(config);
     }
+  }
+
+  /**
+   * Show/hide empty state when rule blocks are added/removed
+   */
+  private toggleEmptyState() {
+    if (!this.hasRuleBlocksEmptyTarget) return;
+
+    const blocks = Array.from(
+      this.ruleBlocksContainerTarget.querySelectorAll('.c-condition-block')
+    ) as HTMLElement[];
+
+    const hasVisible = blocks.some(
+      (block) => block.style.display !== 'none' && block.getAttribute('data-destroy') !== 'true'
+    );
+
+    this.ruleBlocksEmptyTarget.style.display = hasVisible ? 'none' : 'block';
+    this.ruleBlocksContainerTarget.style.display = hasVisible ? 'grid' : 'none';
   }
 
   /**
