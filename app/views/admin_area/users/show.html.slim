@@ -161,15 +161,10 @@
           = link_to billing_address_link, class: "p-user-show__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
             = render 'shared/icons/icon-edit'
             | 編集する
-        .p-user-show__content__section__billing
-          .p-user-show__content__section__billing__radio
-            label.p-user-show__content__section__billing__radio__item
-              input type='radio' name='billing_address' checked='checked'
-              | 配送先住所と請求先住所
-            label.p-user-show__content__section__billing__radio__item
-              input type='radio' name='billing_address'
-              | 配送先住所と異なる
         .c-info
+          .c-info__item
+            .c-info__item__label 配送先住所と請求先住所
+            .c-info__item__value -
           .c-info__item
             .c-info__item__label = ContactAddress.human_attribute_name(:zip_code)
             .c-info__item__value
