@@ -156,7 +156,8 @@
       .p-user-show__content__section
         .p-user-show__content__section__label
           | 請求先住所
-          - billing_address_link = @user.billing_address.present? ? edit_admin_area_user_billing_address_path(@user) : new_admin_area_user_billing_address_path(@user)
+          - # TODO: billing_addressモデルが実装されたら、@user.billing_address.present?で判定する
+          - billing_address_link = new_admin_area_user_billing_address_path(@user)
           = link_to billing_address_link, class: "p-user-show__content__section__label__edit", data: { turbo_frame: 'modal-frame' } do
             = render 'shared/icons/icon-edit'
             | 編集する
