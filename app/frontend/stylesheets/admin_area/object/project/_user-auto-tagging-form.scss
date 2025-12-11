@@ -361,12 +361,6 @@
       }
     }
 
-    &__list {
-      display: grid;
-      gap: 16px;
-      min-height: 0;
-    }
-
     &__empty {
       display: flex;
       align-items: center;
@@ -714,7 +708,25 @@
 
   // 条件ブロック間の余白（上記で設定済みだが念のためスコープ内で維持）
   .c-condition-block__list {
+    display: grid;
     gap: 16px;
+  }
+
+  // ルールリスト（ブロック内の条件リスト）専用
+  .p-user-auto-tagging__rule-list {
+    display: grid;
+    gap: 0;
+    min-height: 0;
+
+    .p-user-auto-tagging__rule {
+      border-top: 1px solid var(--color-border);
+      padding-top: 12px;
+      padding-bottom: 12px;
+
+      &:first-child {
+        border-top: none;
+      }
+    }
   }
 
   // ラジオボタンを横並びにする専用クラス（他要素への影響を避ける）

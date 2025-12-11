@@ -16,7 +16,7 @@
     button.c-condition-block__header__menu.remove-block type="button" data-action="click->user-auto-tagging-form#removeRuleBlock"
       = render 'shared/icons/icon-close'
 
-  .rules-container.c-condition-block__list.p-user-auto-tagging__rules
+  .rules-container.p-user-auto-tagging__rule-list
     - if block_form
       = block_form.fields_for :rules do |rule_form|
         = render 'admin_area/user_auto_taggings/rule_fields', f: rule_form
