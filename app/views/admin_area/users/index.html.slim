@@ -85,10 +85,12 @@
               - unless Rails.env.production?
                 td 1234-5678-0000
                 td
-                  .c-tag-list
-                    - 1..5.times do |i|
-                      .c-tag.c-tag--primary
-                        | ユーザタグ#{i + 1}
+                  - if user.tag_assignments.any?
+                    .c-tag-list
+                      - user.tag_assignments.includes(:user_tag).first(5).each do |assignment|
+                        - next unless assignment.user_tag
+                        .c-tag.c-tag--primary
+                          = assignment.user_tag.name
               td
                 .c-table-row-action-wrapper
                   a.c-table-row-action href='#' data-dropdown-toggle="dropdown-user-#{user.id}"

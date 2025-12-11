@@ -4,7 +4,7 @@ module AdminArea
   class UsersController < ApplicationController
     before_action :set_user, only: %i[show edit update destroy reset_sms_ratelimit activities]
     def index
-      @users = User.all
+      @users = User.all.includes(:user_profile, tag_assignments: :user_tag)
       @users = @users.where(id: params[:id]) if params[:id].present?
       if params[:email].present?
         users_table = User.arel_table
