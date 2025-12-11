@@ -1,9 +1,9 @@
 = render 'admin_area/users/user_layout' do
-  .p-user-auto-tagging-form data-controller="form-validation"
+  .p-user-auto-tagging-form data-controller="form-validation user-auto-tagging-form"
     .p-user-auto-tagging-form__breadcrumb
       = render 'admin_area/shared/breadcrumb', items: [{ text: 'オートタギング', link: admin_area_user_auto_taggings_path }, { text: @user_auto_tagging.name }]
     .l-page-content__content__main.p-user-auto-tagging-form__content__main
-      = form_with model: @user_auto_tagging, url: admin_area_user_auto_tagging_path(@user_auto_tagging), method: :patch, local: true, data: { turbo_frame: '_top', form_validation_target: 'form' }, html: { id: "edit_user_auto_tagging_#{@user_auto_tagging.id}_form" } do |f|
+      = form_with model: @user_auto_tagging, url: admin_area_user_auto_tagging_path(@user_auto_tagging), method: :patch, local: true, data: { turbo_frame: '_top', form_validation_target: 'form' }, html: { id: "edit_user_auto_tagging_#{@user_auto_tagging.id}_form", 'data-initial-block-count': @user_auto_tagging.rule_blocks.size } do |f|
         = render 'admin_area/shared/form_error', target: f.object
         .c-form
           / 基本情報セクション
@@ -15,6 +15,18 @@
             .c-form-field
               label.c-form-field__label 説明
               = f.text_area :description, placeholder: '説明文を入力', rows: 5, class: 'c-form-field__input'
+            .c-form-field
+              label.c-form-field__label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"
+                .c-checkbox
+                  = f.check_box :enabled, class: 'c-checkbox__input'
+                  span.c-checkbox__checkbox
+                span 有効にする
+            .c-form-field
+              label.c-form-field__label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"
+                .c-checkbox
+                  = f.check_box :shareable, class: 'c-checkbox__input'
+                  span.c-checkbox__checkbox
+                span 連携タグ設定
 
           / 条件セクション（大セクション）
           .c-form-section
@@ -25,7 +37,13 @@
                 .c-form-section__sub-section__title 一致した時に設定するタグ
                 .c-form-field
                   .c-user-detail-tag__list data-tag-picker-selected=""
-                    / 選択されたタグがここに表示されます（モック）
+                    - if @user_auto_tagging.user_tags.any?
+                      - @user_auto_tagging.user_tags.each do |tag|
+                        .c-user-detail-tag__item data-tag-id="#{tag.id}"
+                          span.c-user-detail-tag__item__text = tag.name
+                          = link_to '#', class: 'c-user-detail-tag__item__remove', data: { action: 'remove-tag', tag_id: tag.id } do
+                            = render 'shared/icons/icon-close'
+                          = hidden_field_tag 'user_auto_tagging[user_tag_ids][]', tag.id, id: "user_tag_#{tag.id}"
                     = link_to tag_picker_admin_area_user_auto_taggings_path, class: 'c-user-detail-tag__add', data: { turbo_frame: 'modal-frame' } do
                       = render 'shared/icons/icon-plus'
                       span.c-user-detail-tag__add__text タグを追加
@@ -69,13 +87,19 @@
               / 条件設定（小セクション）
               .c-form-section__sub-section
                 .c-form-section__sub-section__title 条件設定
-                .c-form-section__content data-controller="condition-blocks"
-                  .c-form-section__content__blocks data-condition-blocks-target="blocks"
-                  .c-form-section__content__empty data-condition-blocks-target="empty"
-                    .c-form-section__content__empty__text 条件ブロックがありません
-                  button.c-form-section__add-block type="button" data-action="click->condition-blocks#addBlock"
-                    = render 'shared/icons/icon-plus'
-                    span.c-form-section__add-block__text 条件ブロックを追加
+                p.c-form-field__label__hint 条件ブロックはOR、ブロック内の条件はANDで評価されます
+                .c-form-section__content
+                  .c-condition-block__list data-user-auto-tagging-form-target="ruleBlocksContainer"
+                    = f.fields_for :rule_blocks do |block_form|
+                      = render 'admin_area/user_auto_taggings/rule_block_fields', f: block_form
+                  .c-condition-block__add-block
+                    button.c-form-section__add-block type="button" data-action="click->user-auto-tagging-form#addRuleBlock"
+                      = render 'shared/icons/icon-plus'
+                      span.c-form-section__add-block__text 条件ブロックを追加
+                  template data-user-auto-tagging-form-target="ruleBlockTemplate"
+                    = render 'admin_area/user_auto_taggings/rule_block_fields', f: nil, template: true
+                  template data-user-auto-tagging-form-target="ruleTemplate"
+                    = render 'admin_area/user_auto_taggings/rule_fields', f: nil, template: true
 
     .l-page-content__content__sub.p-user-auto-tagging-form__content__sub
       .p-user-auto-tagging-form__content__sub__section

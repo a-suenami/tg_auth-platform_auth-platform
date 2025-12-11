@@ -294,9 +294,11 @@ function initTagPickerHandlers() {
       "[data-tag-picker-selected]"
     ) as HTMLElement;
     if (displayArea) {
-      // 既存のタグ要素だけを削除（ボタンは保持）
+      // 既存のタグ要素とhidden inputを削除（ボタンは保持）
       const existingTags = displayArea.querySelectorAll(".c-user-detail-tag__item");
       existingTags.forEach((tag) => tag.remove());
+      const existingInputs = displayArea.querySelectorAll('input[type="hidden"][name*="user_tag_ids"]');
+      existingInputs.forEach((input) => input.remove());
 
       // 選択されたタグを追加
       selectedTags.forEach((tag) => {
@@ -310,6 +312,15 @@ function initTagPickerHandlers() {
             ${closeIcon}
           </a>
         `;
+
+        // hidden inputを追加
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = "user_auto_tagging[user_tag_ids][]";
+        hiddenInput.value = tag.id;
+        hiddenInput.id = `user_tag_${tag.id}`;
+        tagElement.appendChild(hiddenInput);
+
         // ボタンの前にタグを追加
         const addButton = displayArea.querySelector(".c-user-detail-tag__add");
         if (addButton) {
@@ -340,6 +351,11 @@ function initTagPickerHandlers() {
 
     const tagElement = removeButton.closest(".c-user-detail-tag__item") as HTMLElement;
     if (tagElement) {
+      // hidden inputも削除
+      const hiddenInput = tagElement.querySelector(`input[type="hidden"][value="${tagId}"]`);
+      if (hiddenInput) {
+        hiddenInput.remove();
+      }
       tagElement.remove();
     }
   });

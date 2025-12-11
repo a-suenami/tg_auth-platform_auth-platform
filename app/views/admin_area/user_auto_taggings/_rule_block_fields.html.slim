@@ -1,7 +1,7 @@
 - template ||= false
 - block_form = f unless template
 
-.rule-block.uk-card.uk-card-default.uk-card-body.uk-margin-bottom
+.rule-block.c-condition-block
   - if block_form
     = block_form.hidden_field :position
     = block_form.hidden_field :_destroy
@@ -9,20 +9,19 @@
     input type="hidden" name="user_auto_tagging[rule_blocks_attributes][NEW_RECORD][position]" value="0"
     input type="hidden" name="user_auto_tagging[rule_blocks_attributes][NEW_RECORD][_destroy]" value="0"
 
-  .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-small-bottom
-    h4.uk-margin-remove
+  .c-condition-block__header
+    .c-condition-block__title
       | 条件ブロック&nbsp;
       span.block-number
-    button.remove-block.uk-button.uk-button-text.uk-text-danger type="button" data-action="click->user-auto-tagging-form#removeRuleBlock"
-      span uk-icon="trash"
-      | &nbsp;ブロックを削除
+    button.c-condition-block__header__menu.remove-block type="button" data-action="click->user-auto-tagging-form#removeRuleBlock"
+      = render 'shared/icons/icon-close'
 
-  .rules-container
+  .rules-container.c-condition-block__list
     - if block_form
       = block_form.fields_for :rules do |rule_form|
         = render 'admin_area/user_auto_taggings/rule_fields', f: rule_form
 
-  .uk-margin-top
-    button.add-rule.uk-button.uk-button-default.uk-button-small type="button" data-action="click->user-auto-tagging-form#addRule"
-      span uk-icon="plus"
-      | &nbsp;条件を追加
+  .c-condition-block__add-condition-wrapper
+    button.add-rule.c-condition-block__add-condition type="button" data-action="click->user-auto-tagging-form#addRule"
+      = render 'shared/icons/icon-plus'
+      span.c-condition-block__add-condition__text 条件を追加
