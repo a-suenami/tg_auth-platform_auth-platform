@@ -202,28 +202,27 @@
         .p-user-show__content__section__onetime-plan.c-table.has-border
           table
             thead
+              tr
+                th プラン名
+                th 価格
+                th 決済方法
+                th ステータス
+                th 作成日時
+                th 入金日時
+            tbody
+              - # TODO: 実際の買い切りプランデータに置き換え
+              - onetime_plans = [{ name: 'Onetime Plan A', price: '¥2,000', method: 'クレジットカード', status: '入金済み', status_class: 'is-success', created_at: '2025-12-31 23:59', paid_at: '2025-12-31 23:59' }, { name: 'Onetime Plan A', price: '¥2,000', method: 'クレジットカード', status: '期限切れ', status_class: 'is-inactive', created_at: '2025-12-31 23:59', paid_at: '2025-12-31 23:59' }, { name: 'Onetime Plan A', price: '¥2,000', method: 'クレジットカード', status: '入金待ち', status_class: 'is-warning', created_at: '2025-12-31 23:59', paid_at: '2025-12-31 23:59' }, { name: 'Onetime Plan A', price: '¥2,000', method: 'クレジットカード', status: '入金済み', status_class: 'is-success', created_at: '2025-12-31', paid_at: '2025-12-31' }]
+              - onetime_plans.each do |plan|
                 tr
-                  th プラン名
-                  th 価格
-                  th 決済方法
-                  th ステータス
-                  th 作成日時
-                  th 入金日時
-              tbody
-                - # TODO: 実際の買い切りプランデータに置き換え
-                - onetime_plans = [{ name: 'Onetime Plan A', price: '¥2,000', method: 'クレジットカード', status: '入金済み', status_class: 'is-success', created_at: '2025-12-31 23:59', paid_at: '2025-12-31 23:59' }, { name: 'Onetime Plan A', price: '¥2,000', method: 'クレジットカード', status: '期限切れ', status_class: 'is-inactive', created_at: '2025-12-31 23:59', paid_at: '2025-12-31 23:59' }, { name: 'Onetime Plan A', price: '¥2,000', method: 'クレジットカード', status: '入金待ち', status_class: 'is-warning', created_at: '2025-12-31 23:59', paid_at: '2025-12-31 23:59' }, { name: 'Onetime Plan A', price: '¥2,000', method: 'クレジットカード', status: '入金済み', status_class: 'is-success', created_at: '2025-12-31', paid_at: '2025-12-31' }]
-                - onetime_plans.each do |plan|
-                  tr
-                    td = plan[:name]
-                    td = plan[:price]
-                    td = plan[:method]
-                    td
-                      .p-user-show__content__section__onetime-plan__status class="#{plan[:status_class]}" = plan[:status]
-                    td = plan[:created_at]
-                    td = plan[:paid_at]
+                  td = plan[:name]
+                  td = plan[:price]
+                  td = plan[:method]
+                  td
+                    .p-user-show__content__section__onetime-plan__status class="#{plan[:status_class]}" = plan[:status]
+                  td = plan[:created_at]
+                  td = plan[:paid_at]
 
     .l-page-content__content__sub.p-user-show__content__sub
-<<<<<<< HEAD
       .p-user-show__content__section
         .p-user-show__content__section__sms-reset
           = form_with url: reset_sms_ratelimit_admin_area_user_path(@user), method: :put, local: true, class: 'p-user-show__content__section__sms-reset__form' do |f|
@@ -237,17 +236,6 @@
             .c-user-detail-memo__edit__actions
               button.c-user-detail-memo__edit__actions__cancel キャンセル
               button.c-user-detail-memo__edit__actions__save 保存
-=======
-      - unless Rails.env.production?
-        .p-user-show__content__section
-          .c-user-detail-memo
-            label.c-user-detail-memo__label 内部メモ
-            .c-user-detail-memo__edit
-              textarea.c-user-detail-memo__edit__textarea placeholder='内部メモ'
-              .c-user-detail-memo__edit__actions
-                button.c-user-detail-memo__edit__actions__cancel キャンセル
-                button.c-user-detail-memo__edit__actions__save 保存
->>>>>>> 84061b0 (未実装の部分を非表示にする)
 
       .p-user-show__content__section
         .p-user-show__content__section__label
