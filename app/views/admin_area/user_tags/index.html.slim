@@ -3,11 +3,14 @@
     = render 'admin_area/shared/breadcrumb', items: [{ text: 'すべてのタグ' }]
 
     .c-tag-list-header
-      = form_with url: admin_area_user_tags_path, method: :get, local: true, class: 'c-tag-list-header__search' do |f|
-        = f.text_field :q, placeholder: 'タグ名で検索', value: params[:q], class: 'c-tag-list-header__search__input'
-        = render 'shared/icons/icon-search'
-      = link_to admin_area_user_tags_path, class: 'c-tag-list-header__clear' do
-        | クリア
+      .c-tag-list-header__left
+        = form_with url: admin_area_user_tags_path, method: :get, local: true, class: 'c-tag-list-header__search-form' do |f|
+          .c-tag-list-header__search
+            = f.text_field :q, placeholder: 'タグ名で検索', value: params[:q], class: 'c-tag-list-header__search__input'
+            = render 'shared/icons/icon-search'
+          = f.submit '検索', class: 'c-tag-list-header__search-button'
+        = link_to admin_area_user_tags_path, class: 'c-tag-list-header__clear' do
+          | クリア
       = link_to new_admin_area_user_tag_path, class: 'c-tag-list-header__button', data: { turbo_frame: '_top' } do
         = render 'shared/icons/icon-plus'
         span.c-tag-list-header__button__text 新規タグ
