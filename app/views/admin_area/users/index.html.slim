@@ -92,7 +92,7 @@
               td
                 .c-table-row-action-wrapper
                   a.c-table-row-action href='#' data-dropdown-toggle="dropdown-user-#{user.id}"
-                  = render 'shared/icons/icon-more-vertical'
+                    = render 'shared/icons/icon-more-vertical'
                   .c-table-row-action__dropdown id="dropdown-user-#{user.id}"
                     = link_to admin_area_user_path(user), data: { turbo_method: :delete, turbo_confirm: '本当に削除しますか？', turbo_frame: '_top' }, class: 'c-table-row-action__dropdown__item'
                       | 削除
