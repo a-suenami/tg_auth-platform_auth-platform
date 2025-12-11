@@ -174,7 +174,7 @@ function initDropdownHandlers() {
     if (toggle || actionWrapper) {
       e.preventDefault();
       e.stopPropagation();
-      
+
       // トグルボタンの場合はドロップダウンを開閉
       if (toggle) {
         const dropdownId = toggle.getAttribute("data-dropdown-toggle");
