@@ -202,7 +202,8 @@ export default class extends Controller {
 
     // Support both .tag-chip (old style) and .c-user-detail-tag__item.tag-chip (modal style)
     const hasChips = this.containerTarget.querySelectorAll('.tag-chip').length > 0;
-    this.placeholderTarget.style.display = hasChips ? 'none' : 'block';
+    // c-empty uses display: flex, so use 'flex' instead of 'block'
+    this.placeholderTarget.style.display = hasChips ? 'none' : 'flex';
   }
 
   /**

@@ -5,8 +5,8 @@
   @include common.c-user-detail-common;
 
   &__list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(97px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 8px;
   }
 
@@ -46,14 +46,6 @@
     }
   }
 
-  &__empty {
-    grid-column: 1 / -1;
-    padding: 8px;
-    text-align: center;
-    color: var(--color-text-inactive);
-    font-size: 13px;
-  }
-
   &__add {
     display: flex;
     align-items: center;
@@ -65,9 +57,11 @@
     border-radius: 6px;
     color: rgba(black, .3);
     text-decoration: none;
-    justify-self: start;
     height: 13px;
     line-height: 13px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: auto;
 
     svg {
       object-fit: contain;

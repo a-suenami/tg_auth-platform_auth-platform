@@ -255,10 +255,11 @@
                     a.c-user-detail-tag__item__lock href='#' aria-label='auto tag' title="オートタギング: #{assignment.user_auto_tagging&.name}"
                       = render 'shared/icons/icon-lock'
             - else
-              .c-user-detail-tag__empty タグが設定されていません
-          = link_to admin_area_user_user_tag_assignments_path(@user), class: "c-user-detail-tag__add", data: { turbo_frame: 'modal-frame' } do
-            = render 'shared/icons/icon-plus'
-            span.c-user-detail-tag__add__text タグを追加
+              .c-empty style="width: 100%;"
+                .c-empty__text タグが設定されていません
+            = link_to admin_area_user_user_tag_assignments_path(@user), class: "c-user-detail-tag__add", data: { turbo_frame: 'modal-frame' } do
+              = render 'shared/icons/icon-plus'
+              span.c-user-detail-tag__add__text タグを追加
 
       .p-user-show__content__section
         .c-user-detail-activity
