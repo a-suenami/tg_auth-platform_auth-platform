@@ -167,6 +167,7 @@ function initDropdownHandlers() {
     const target = e.target as HTMLElement;
     const toggle = target.closest("[data-dropdown-toggle]") as HTMLElement;
     const dropdown = target.closest(".c-tag-card__dropdown, .c-table-row-action__dropdown, .l-header__container__account__dropdown") as HTMLElement;
+    const actionWrapper = target.closest(".c-tag-card__action-wrapper") as HTMLElement;
 
     if (toggle) {
       e.preventDefault();
@@ -179,11 +180,27 @@ function initDropdownHandlers() {
     } else if (dropdown) {
       // ドロップダウン内のリンククリック時は閉じない（リンクの処理を優先）
       e.stopPropagation();
+    } else if (actionWrapper) {
+      // 3点ドットボタンエリアがクリックされた場合は、カードのリンクを無効化
+      e.preventDefault();
+      e.stopPropagation();
     } else {
       // ドロップダウン外をクリックした場合は閉じる
       closeAllDropdowns();
     }
   });
+
+  // カードのリンククリック時に、3点ドットボタンエリアがクリックされた場合はリンクを無効化
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    const cardLink = target.closest(".c-tag-card") as HTMLAnchorElement;
+    const actionWrapper = target.closest(".c-tag-card__action-wrapper") as HTMLElement;
+
+    if (cardLink && actionWrapper) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true); // capture phaseで実行して、Turboの処理より先に実行
 }
 
 // 絞り込みセクションの開閉を制御
