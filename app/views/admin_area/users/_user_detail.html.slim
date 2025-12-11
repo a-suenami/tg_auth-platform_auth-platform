@@ -28,19 +28,19 @@
         .c-user-detail-tag
           label.c-user-detail-tag__label タグ
           .c-user-detail-tag__list
-            - 1..3.times do |i|
-              .c-user-detail-tag__item
-                .c-user-detail-tag__item__text Tag #{i}
-                a.c-user-detail-tag__item__remove href='#'
-                  = render 'shared/icons/icon-close'
-            - 1..3.times do |i|
-              .c-user-detail-tag__item.is-auto-tag
-                .c-user-detail-tag__item__text Tag #{i}
-                a.c-user-detail-tag__item__lock href='#'
-                  = render 'shared/icons/icon-lock'
-            a.c-user-detail-tag__add href='#'
-              = render 'shared/icons/icon-plus'
-              span.c-user-detail-tag__add__text タグを追加
+            - if @user.tag_assignments.any?
+              - @user.tag_assignments.includes(:user_tag, :user_auto_tagging).each do |assignment|
+                - is_auto = !assignment.manual?
+                .c-user-detail-tag__item class=(is_auto ? 'is-auto-tag' : nil)
+                  .c-user-detail-tag__item__text = assignment.user_tag&.name || '-'
+                  - if is_auto
+                    a.c-user-detail-tag__item__lock href='#' aria-label='auto tag' title="オートタギング: #{assignment.user_auto_tagging&.name}"
+                      = render 'shared/icons/icon-lock'
+            - else
+              .c-user-detail-tag__empty タグが設定されていません
+          = link_to admin_area_user_user_tag_assignments_path(@user), class: "c-user-detail-tag__add", data: { turbo_frame: 'modal-frame' } do
+            = render 'shared/icons/icon-plus'
+            span.c-user-detail-tag__add__text タグを追加
       .p-user-detail__content__section
         .p-user-detail__content__section__label
           | アカウント
@@ -67,7 +67,7 @@
             .c-info__item__label 電話番号
             .c-info__item__value
               = @user.phone_number
-              .c-info__item__value__status
+              .c-info__item__value__status.is-error
                 = render 'shared/icons/icon-attention-circle-fill'
           .c-info__item
             .c-info__item__label 年代
@@ -83,7 +83,7 @@
           .c-info__item
             .c-info__item__label アカウント削除日
             .c-info__item__value
-              | -
+              = @user.deleted_at || '-'
       .p-user-detail__content__section
         .p-user-detail__content__section__label
           | プロフィール
