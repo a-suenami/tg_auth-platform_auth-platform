@@ -79,9 +79,23 @@ export default class extends Controller {
    * Remove tag chip via AJAX DELETE
    */
   async removeTag(event: Event) {
-    // Support both .tag-chip (old style) and .c-user-detail-tag__item (modal style)
-    const chip = (event.target as HTMLElement).closest('.tag-chip') ||
-                 (event.target as HTMLElement).closest('.c-user-detail-tag__item');
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Find the chip element - support multiple patterns:
+    // 1. Click on remove link (.c-user-detail-tag__item__remove) or its SVG child -> find parent .c-user-detail-tag__item
+    // 2. Click on .tag-chip directly (old style)
+    // 3. Click on .c-user-detail-tag__item directly
+    const target = event.target as HTMLElement;
+    const removeLink = target.closest('.c-user-detail-tag__item__remove') ||
+                      (target.tagName === 'svg' && target.closest('.c-user-detail-tag__item__remove'));
+
+    const chip = removeLink
+      ? (removeLink as HTMLElement).closest('.c-user-detail-tag__item') ||
+        (removeLink as HTMLElement).closest('.tag-chip')
+      : target.closest('.tag-chip') ||
+        target.closest('.c-user-detail-tag__item');
+
     if (!chip) return;
 
     const tagId = chip.getAttribute('data-tag-id');

@@ -28,9 +28,9 @@
         - if @manual_assignments.any?
           - @manual_assignments.each do |assignment|
             - next unless assignment.user_tag
-            .c-user-detail-tag__item.tag-chip data-tag-id=assignment.user_tag_id data-tag-name=assignment.user_tag.name data-action="click->user-tag-assignment-form#removeTag"
+            .c-user-detail-tag__item.tag-chip data-tag-id=assignment.user_tag_id data-tag-name=assignment.user_tag.name
               .c-user-detail-tag__item__text = assignment.user_tag.name
-              a.c-user-detail-tag__item__remove href="#" aria-label="タグを削除"
+              a.c-user-detail-tag__item__remove href="#" aria-label="タグを削除" data-action="click->user-tag-assignment-form#removeTag"
                 = render 'shared/icons/icon-close'
         - else
           .c-user-detail-tag__empty data-user-tag-assignment-form-target="placeholder" タグが選択されていません
