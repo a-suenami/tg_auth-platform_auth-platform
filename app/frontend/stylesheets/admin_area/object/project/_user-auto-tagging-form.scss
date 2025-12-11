@@ -363,7 +363,7 @@
 
     &__list {
       display: grid;
-      gap: 0;
+      gap: 16px;
       min-height: 0;
     }
 
@@ -387,9 +387,7 @@
     }
 
     &__item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: grid;
       padding: 12px 16px;
       gap: 12px;
       position: relative;
@@ -401,11 +399,9 @@
       }
 
       &__content {
-        display: flex;
-        align-items: center;
-        gap: 4px;
+        display: grid;
+        gap: 8px;
         flex: 1;
-        flex-wrap: wrap;
       }
 
       &__pill {
@@ -652,7 +648,6 @@
         display: flex;
         align-items: center;
         gap: 4px;
-        padding: 16px;
       }
 
       &__argument {
@@ -699,6 +694,41 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+  }
+
+  // 条件ラベル（条件1など）のヘッダー用スコープ
+  .p-user-auto-tagging__rule__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  // 条件設定タイトル内のヒント
+  .c-form-section__sub-section__title {
+    .c-form-field__label__hint {
+      font-size: 12px;
+      line-height: 1.5;
+      display: block;
+    }
+  }
+
+  // 条件ブロック間の余白（上記で設定済みだが念のためスコープ内で維持）
+  .c-condition-block__list {
+    gap: 16px;
+  }
+
+  // ラジオボタンを横並びにする専用クラス（他要素への影響を避ける）
+  .p-user-auto-tagging__radio-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
   }
 }
 

@@ -1,7 +1,7 @@
 - template ||= false
 - block_form = f unless template
 
-.rule-block.c-condition-block
+.rule-block.c-condition-block.p-user-auto-tagging__rule-block
   - if block_form
     = block_form.hidden_field :position
     = block_form.hidden_field :_destroy
@@ -16,7 +16,7 @@
     button.c-condition-block__header__menu.remove-block type="button" data-action="click->user-auto-tagging-form#removeRuleBlock"
       = render 'shared/icons/icon-close'
 
-  .rules-container.c-condition-block__list
+  .rules-container.c-condition-block__list.p-user-auto-tagging__rules
     - if block_form
       = block_form.fields_for :rules do |rule_form|
         = render 'admin_area/user_auto_taggings/rule_fields', f: rule_form
