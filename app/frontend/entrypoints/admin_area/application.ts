@@ -162,45 +162,54 @@ function initModalHandlers() {
 
 // ドロップダウンの開閉を制御
 function initDropdownHandlers() {
-  // ドロップダウンのトグルボタンクリック
+  // カードのリンククリック時に、3点ドットボタンエリアがクリックされた場合はリンクを無効化
+  // capture phaseで実行して、Turboの処理より先に実行
   document.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
     const toggle = target.closest("[data-dropdown-toggle]") as HTMLElement;
-    const dropdown = target.closest(".c-tag-card__dropdown, .c-table-row-action__dropdown, .l-header__container__account__dropdown") as HTMLElement;
     const actionWrapper = target.closest(".c-tag-card__action-wrapper") as HTMLElement;
-
-    if (toggle) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const dropdownId = toggle.getAttribute("data-dropdown-toggle");
-      if (!dropdownId) return;
-
-      toggleDropdown(dropdownId);
-    } else if (dropdown) {
-      // ドロップダウン内のリンククリック時は閉じない（リンクの処理を優先）
-      e.stopPropagation();
-    } else if (actionWrapper) {
-      // 3点ドットボタンエリアがクリックされた場合は、カードのリンクを無効化
-      e.preventDefault();
-      e.stopPropagation();
-    } else {
-      // ドロップダウン外をクリックした場合は閉じる
-      closeAllDropdowns();
-    }
-  });
-
-  // カードのリンククリック時に、3点ドットボタンエリアがクリックされた場合はリンクを無効化
-  document.addEventListener("click", (e) => {
-    const target = e.target as HTMLElement;
     const cardLink = target.closest(".c-tag-card") as HTMLAnchorElement;
-    const actionWrapper = target.closest(".c-tag-card__action-wrapper") as HTMLElement;
 
+    // 3点ドットボタンまたはそのエリアがクリックされた場合
+    if (toggle || actionWrapper) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // トグルボタンの場合はドロップダウンを開閉
+      if (toggle) {
+        const dropdownId = toggle.getAttribute("data-dropdown-toggle");
+        if (dropdownId) {
+          toggleDropdown(dropdownId);
+        }
+      }
+      return;
+    }
+
+    // カードのリンクがクリックされたが、3点ドットボタンエリア内の場合は無効化
     if (cardLink && actionWrapper) {
       e.preventDefault();
       e.stopPropagation();
+      return;
     }
-  }, true); // capture phaseで実行して、Turboの処理より先に実行
+  }, true); // capture phaseで実行
+
+  // ドロップダウンの開閉と外側クリックの処理
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    const dropdown = target.closest(".c-tag-card__dropdown, .c-table-row-action__dropdown, .l-header__container__account__dropdown") as HTMLElement;
+
+    if (dropdown) {
+      // ドロップダウン内のリンククリック時は閉じない（リンクの処理を優先）
+      e.stopPropagation();
+    } else {
+      // ドロップダウン外をクリックした場合は閉じる
+      // ただし、トグルボタンがクリックされた場合はcapture phaseで既に処理済みなのでスキップ
+      const toggle = target.closest("[data-dropdown-toggle]") as HTMLElement;
+      if (!toggle) {
+        closeAllDropdowns();
+      }
+    }
+  });
 }
 
 // 絞り込みセクションの開閉を制御
