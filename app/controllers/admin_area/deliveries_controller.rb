@@ -13,8 +13,14 @@ module AdminArea
     end
 
     def show
+      # Sync results from Blastengine if applicable (real-time on UI view)
+      sync_blastengine_results
+
       @target_users = target_users_for_delivery(@delivery)
       @events = @delivery.delivery_events.includes(:admin).ordered
+
+      # For birthday: load delivery history grouped by date
+      @delivery_history = load_delivery_history if @delivery.birthday_type?
     end
 
     def new
@@ -185,6 +191,67 @@ module AdminArea
         .where(tag_assignments: { user_tag_id: delivery.user_tag_ids })
         .distinct
         .limit(100)
+    end
+
+    # Sync delivery results from Blastengine on UI view (real-time)
+    # Only syncs if:
+    # - Has blastengine_delivery_id (delivery was sent to Blastengine)
+    # - Status is appropriate for sync
+    #   - Schedule: 'delivering' or 'delivered' (one-time delivery)
+    #   - Birthday: 'delivering' or 'ongoing' (recurring, sync recent results for open tracking)
+    def sync_blastengine_results
+      schedule = @delivery.schedule
+      birthday = @delivery.birthday
+
+      if schedule&.blastengine_delivery_id.present? && %w[delivering delivered].include?(schedule.status)
+        Deliveries::ConfirmResultService.new(schedule: schedule).execute
+      elsif birthday.present? && %w[delivering ongoing].include?(birthday.status)
+        sync_birthday_results
+      end
+    rescue StandardError => e
+      Rails.logger.warn("[DeliveriesController] Blastengine sync failed: #{e.message}")
+      # Don't raise - show page with stale data rather than error
+    end
+
+    # Sync recent birthday delivery results (open tracking updates over time)
+    def sync_birthday_results
+      api = Blastengine::API.new
+
+      # Sync recent results (last 7 days) for open tracking updates
+      recent_results = @delivery.delivery_results
+                                .where('delivery_date >= ?', 7.days.ago.to_date)
+                                .where.not(blastengine_delivery_id: nil)
+
+      recent_results.each do |result|
+        detail = api.delivery_detail(delivery_id: result.blastengine_delivery_id.to_i)
+        result.update!(
+          total_count: detail['total_count'] || 0,
+          sent_count: detail['sent_count'] || 0,
+          drop_count: detail['drop_count'] || 0,
+          soft_error_count: detail['soft_error_count'] || 0,
+          hard_error_count: detail['hard_error_count'] || 0,
+          open_count: detail['open_count'] || 0,
+          synced_at: Time.current,
+        )
+      end
+    end
+
+    # Load delivery history for birthday deliveries (grouped by date)
+    # Returns array of hashes: [{ date:, result:, recipients: }]
+    def load_delivery_history
+      results = @delivery.delivery_results.order(delivery_date: :desc).limit(30)
+
+      results.map do |result|
+        recipients = @delivery.delivery_recipients
+                              .for_date(result.delivery_date)
+                              .includes(user: :user_profile)
+                              .order(status: :asc)
+        {
+          date: result.delivery_date,
+          result: result,
+          recipients: recipients,
+        }
+      end
     end
   end
 end

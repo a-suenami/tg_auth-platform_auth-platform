@@ -1,0 +1,20 @@
+/ Target Users Card
+.uk-card.uk-card-default.uk-card-body
+  .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-bottom
+    h4.uk-card-title.uk-margin-remove 配信対象ユーザー
+    span.uk-badge #{target_users.size}名
+  - if target_users.empty?
+    p.uk-text-muted 対象ユーザーがいません
+  - else
+    table.uk-table.uk-table-small.uk-table-divider
+      thead
+        tr
+          th ID
+          th 名前
+          th メールアドレス
+      tbody
+        - target_users.each do |user|
+          tr
+            td.uk-text-small = user.id[0..7] + '...'
+            td = user.user_profile&.name || '-'
+            td = user.email

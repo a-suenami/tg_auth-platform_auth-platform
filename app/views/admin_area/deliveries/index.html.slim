@@ -10,7 +10,7 @@
     = form_with url: admin_area_deliveries_path, method: :get, class: "uk-flex uk-flex-middle", data: { turbo_frame: '_top' } do |f|
       .uk-search.uk-search-default.uk-width-expand
         = f.text_field :q, placeholder: "イベント名を入力...", value: params[:q], class: "uk-search-input uk-width-1-1"
-      = f.select :status, options_for_select([['すべて', ''], ['下書き', 'draft'], ['予約済み', 'scheduled'], ['稼働中', 'ongoing'], ['配信中', 'delivering'], ['配信済み', 'delivered'], ['キャンセル', 'cancelled'], ['停止中', 'paused']], params[:status]), {}, class: "uk-select uk-margin-small-left uk-form-width-medium", onchange: "this.form.submit()"
+      = f.select :status, options_for_select([['すべて', ''], ['下書き', 'draft'], ['予約済み', 'scheduled'], ['稼働中', 'ongoing'], ['準備中', 'preparing'], ['配信中', 'delivering'], ['配信済み', 'delivered'], ['キャンセル', 'cancelled'], ['停止中', 'paused']], params[:status]), {}, class: "uk-select uk-margin-small-left uk-form-width-medium", onchange: "this.form.submit()"
       = link_to 'クリア', admin_area_deliveries_path, class: "uk-button uk-button-default uk-margin-small-left"
       = link_to new_admin_area_delivery_path, class: "uk-button uk-button-primary uk-margin-small-left" do
         span uk-icon="plus"
