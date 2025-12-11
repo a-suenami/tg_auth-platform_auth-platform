@@ -13,13 +13,21 @@
             label.c-form-field__label 説明
             = f.text_area :description, placeholder: '説明文を入力', rows: 5, class: 'c-form-field__input'
     .l-page-content__content__sub.p-user-tag-form__content__sub
-      button.p-user-tag-form__content__sub__button.p-user-tag-form__content__sub__button--submit type="submit" form="edit_user_tag_form" data-form-validation-target="submit" 変更を保存
-      = link_to admin_area_user_tags_path, class: 'p-user-tag-form__content__sub__button p-user-tag-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
-        | キャンセル
-      = link_to admin_area_users_path, class: 'p-user-tag-form__content__sub__button p-user-tag-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
-        | ユーザー一覧
-      = button_to '削除する', admin_area_user_tag_path(@user_tag), method: :delete, class: 'p-user-tag-form__content__sub__button p-user-tag-form__content__sub__button--delete', data: { turbo_confirm: '本当に削除しますか？' }
-      .p-user-tag-form__content__sub__metadata
+      .p-user-tag-form__content__sub__section
+        .p-user-tag-form__content__sub__button-wrapper
+          button.p-user-tag-form__content__sub__button.p-user-tag-form__content__sub__button--submit type="submit" form="edit_user_tag_form" data-form-validation-target="submit" 変更を保存
+          button.p-user-tag-form__content__sub__button__chevron type="button" data-dropdown-toggle="dropdown-save-actions"
+            = render 'shared/icons/icon-chevron-down'
+          .p-user-tag-form__content__sub__button__dropdown id="dropdown-save-actions"
+            button.p-user-tag-form__content__sub__button__dropdown__item type="submit" form="edit_user_tag_form" data-form-validation-target="submit" 変更を保存
+            = link_to admin_area_user_tag_path(@user_tag), data: { turbo_method: :delete, turbo_confirm: '本当に削除しますか？', turbo_frame: '_top' }, class: 'p-user-tag-form__content__sub__button__dropdown__item' do
+              | タグを削除
+        = link_to admin_area_user_tags_path, class: 'p-user-tag-form__content__sub__button p-user-tag-form__content__sub__button--cancel', data: { turbo_frame: 'content' } do
+          | キャンセル
+      .p-user-tag-form__content__sub__section
+        = link_to admin_area_users_path, class: 'p-user-tag-form__content__sub__button p-user-tag-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
+          | ユーザー一覧
+      .p-user-tag-form__content__sub__section.p-user-tag-form__content__sub__metadata
         .c-info
           .c-info__item
             .c-info__item__label 作成者
