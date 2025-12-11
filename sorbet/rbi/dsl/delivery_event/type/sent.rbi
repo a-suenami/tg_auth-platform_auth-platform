@@ -10,10 +10,10 @@ class DeliveryEvent::Type::Sent
 
   module GeneratedAttributeMethods
     sig { returns(T.nilable(::String)) }
-    def execution_id; end
+    def recipient_id; end
 
     sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-    def execution_id=(value); end
+    def recipient_id=(value); end
 
     sig { returns(T.nilable(::String)) }
     def user_id; end

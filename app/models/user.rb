@@ -66,6 +66,9 @@ class User < ApplicationRecord
   # Events
   has_many :user_events, dependent: :destroy
 
+  # Deliveries
+  has_many :delivery_recipients, dependent: :destroy
+
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :email, uniqueness: { scope: :tenant_id, conditions: -> { where(deleted_at: nil) } }
   validates :phone_number, phony_plausible: true

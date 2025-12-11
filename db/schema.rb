@@ -109,8 +109,13 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "delivery_time", default: "09:00", null: false, comment: "Delivery time HH:MM"
     t.datetime "published_at", comment: "When birthday delivery was activated"
     t.uuid "published_by_id", comment: "Admin who activated"
+    t.bigint "blastengine_delivery_id", comment: "Current day Blastengine bulk delivery ID"
+    t.string "blastengine_job_id", comment: "Current day CSV import job ID"
+    t.date "last_setup_date", comment: "Which date setup was done for"
+    t.datetime "setup_completed_at", comment: "When bulk setup completed for current day"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["blastengine_delivery_id"], name: "idx_delivery_birthdays_blastengine"
     t.index ["delivery_id"], name: "idx_delivery_birthdays_delivery_unique", unique: true
     t.index ["delivery_id"], name: "index_delivery_birthdays_on_delivery_id"
     t.index ["published_by_id"], name: "index_delivery_birthdays_on_published_by_id"
@@ -134,24 +139,48 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_delivery_events_on_tenant_id"
   end
 
-  create_table "delivery_executions", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Per-user delivery tracking", force: :cascade do |t|
+  create_table "delivery_recipients", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Recipients for each delivery (fixed at setup time)", force: :cascade do |t|
     t.citext "tenant_id", null: false, comment: "Tenant reference"
     t.uuid "delivery_id", null: false, comment: "Delivery reference"
     t.uuid "user_id", null: false, comment: "Target user"
-    t.string "status", default: "queued", null: false, comment: "Execution status"
-    t.datetime "scheduled_for", comment: "When this execution should be sent"
-    t.datetime "sent_at", comment: "When email was actually sent"
-    t.integer "retry_count", default: 0, null: false, comment: "Number of retry attempts"
-    t.jsonb "result", default: {}, comment: "API response from email service (SendGrid/SES)"
+    t.date "delivery_date", null: false, comment: "Date of delivery batch (enables yearly birthday emails)"
+    t.string "status", default: "pending", null: false, comment: "Delivery status from Blastengine"
+    t.datetime "scheduled_for", comment: "When this should be sent"
+    t.datetime "sent_at", comment: "When email was actually sent (from Blastengine)"
     t.text "error_message", comment: "Error message if failed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["delivery_id", "user_id"], name: "idx_delivery_executions_unique", unique: true
-    t.index ["delivery_id"], name: "index_delivery_executions_on_delivery_id"
-    t.index ["status", "scheduled_for"], name: "idx_delivery_executions_queued"
-    t.index ["tenant_id", "delivery_id"], name: "index_delivery_executions_on_tenant_id_and_delivery_id"
-    t.index ["tenant_id"], name: "index_delivery_executions_on_tenant_id"
-    t.index ["user_id"], name: "index_delivery_executions_on_user_id"
+    t.index ["delivery_id", "delivery_date"], name: "idx_delivery_recipients_date"
+    t.index ["delivery_id", "status"], name: "idx_delivery_recipients_status"
+    t.index ["delivery_id", "user_id", "delivery_date"], name: "idx_delivery_recipients_unique", unique: true
+    t.index ["delivery_id"], name: "index_delivery_recipients_on_delivery_id"
+    t.index ["tenant_id", "delivery_id"], name: "index_delivery_recipients_on_tenant_id_and_delivery_id"
+    t.index ["tenant_id"], name: "index_delivery_recipients_on_tenant_id"
+    t.index ["user_id"], name: "index_delivery_recipients_on_user_id"
+  end
+
+  create_table "delivery_results", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Aggregated delivery results from Blastengine", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "delivery_id", null: false, comment: "Delivery reference"
+    t.uuid "delivery_schedule_id", comment: "Schedule reference (for fixed-time deliveries)"
+    t.uuid "delivery_birthday_id", comment: "Birthday reference (for birthday deliveries)"
+    t.bigint "blastengine_delivery_id", null: false, comment: "Blastengine bulk delivery ID"
+    t.date "delivery_date", comment: "Date of delivery (for birthday daily results)"
+    t.integer "total_count", default: 0, null: false, comment: "Total recipients"
+    t.integer "sent_count", default: 0, null: false, comment: "Successfully sent"
+    t.integer "drop_count", default: 0, null: false, comment: "Dropped (invalid email, etc.)"
+    t.integer "soft_error_count", default: 0, null: false, comment: "Soft bounce (temporary failure)"
+    t.integer "hard_error_count", default: 0, null: false, comment: "Hard bounce (permanent failure)"
+    t.integer "open_count", default: 0, null: false, comment: "Opened emails"
+    t.datetime "synced_at", comment: "When results were last synced from Blastengine"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blastengine_delivery_id"], name: "idx_delivery_results_blastengine_unique", unique: true
+    t.index ["delivery_birthday_id"], name: "index_delivery_results_on_delivery_birthday_id"
+    t.index ["delivery_id", "delivery_date"], name: "idx_delivery_results_delivery_date"
+    t.index ["delivery_id"], name: "index_delivery_results_on_delivery_id"
+    t.index ["delivery_schedule_id"], name: "index_delivery_results_on_delivery_schedule_id"
+    t.index ["tenant_id"], name: "index_delivery_results_on_tenant_id"
   end
 
   create_table "delivery_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Datetime-based delivery schedules", force: :cascade do |t|
@@ -161,8 +190,12 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "scheduled_at", comment: "Scheduled delivery datetime"
     t.datetime "published_at", comment: "When schedule was published"
     t.uuid "published_by_id", comment: "Admin who published"
+    t.bigint "blastengine_delivery_id", comment: "Blastengine bulk delivery ID"
+    t.string "blastengine_job_id", comment: "Blastengine CSV import job ID"
+    t.datetime "setup_completed_at", comment: "When bulk setup completed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["blastengine_delivery_id"], name: "idx_delivery_schedules_blastengine"
     t.index ["delivery_id"], name: "idx_delivery_schedules_delivery_unique", unique: true
     t.index ["delivery_id"], name: "index_delivery_schedules_on_delivery_id"
     t.index ["published_by_id"], name: "index_delivery_schedules_on_published_by_id"
@@ -1185,9 +1218,13 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "delivery_events", "admins"
   add_foreign_key "delivery_events", "deliveries"
   add_foreign_key "delivery_events", "tenants"
-  add_foreign_key "delivery_executions", "deliveries"
-  add_foreign_key "delivery_executions", "tenants"
-  add_foreign_key "delivery_executions", "users"
+  add_foreign_key "delivery_recipients", "deliveries"
+  add_foreign_key "delivery_recipients", "tenants"
+  add_foreign_key "delivery_recipients", "users"
+  add_foreign_key "delivery_results", "deliveries"
+  add_foreign_key "delivery_results", "delivery_birthdays"
+  add_foreign_key "delivery_results", "delivery_schedules"
+  add_foreign_key "delivery_results", "tenants"
   add_foreign_key "delivery_schedules", "admins", column: "published_by_id"
   add_foreign_key "delivery_schedules", "deliveries"
   add_foreign_key "delivery_schedules", "tenants"

@@ -411,6 +411,12 @@ class DeliveryBirthday
 
     sig { returns(T::Boolean) }
     def paused?; end
+
+    sig { void }
+    def preparing!; end
+
+    sig { returns(T::Boolean) }
+    def preparing?; end
   end
 
   module GeneratedAssociationMethods
@@ -452,6 +458,20 @@ class DeliveryBirthday
 
     sig { returns(T::Boolean) }
     def delivery_previously_changed?; end
+
+    sig { returns(T::Array[T.untyped]) }
+    def delivery_result_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def delivery_result_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `DeliveryBirthday` class because it declared `has_many :delivery_results`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::DeliveryResult::PrivateCollectionProxy) }
+    def delivery_results; end
+
+    sig { params(value: T::Enumerable[::DeliveryResult]).void }
+    def delivery_results=(value); end
 
     sig { returns(T.nilable(::Admin)) }
     def published_by; end
@@ -619,6 +639,9 @@ class DeliveryBirthday
     def not_paused(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+    def not_preparing(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def null_relation?(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
@@ -644,6 +667,9 @@ class DeliveryBirthday
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def preload(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+    def preparing(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def readonly(*args, &blk); end
@@ -716,12 +742,16 @@ class DeliveryBirthday
         delivery_time: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         published_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         published_by_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        blastengine_delivery_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        blastengine_job_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        last_setup_date: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        setup_completed_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateAssociationRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, delivery_id: nil, status: nil, offset_days: nil, delivery_time: nil, published_at: nil, published_by_id: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, delivery_id: nil, status: nil, offset_days: nil, delivery_time: nil, published_at: nil, published_by_id: nil, blastengine_delivery_id: nil, blastengine_job_id: nil, last_setup_date: nil, setup_completed_at: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -731,6 +761,96 @@ class DeliveryBirthday
   end
 
   module GeneratedAttributeMethods
+    sig { returns(T.nilable(::Integer)) }
+    def blastengine_delivery_id; end
+
+    sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+    def blastengine_delivery_id=(value); end
+
+    sig { returns(T::Boolean) }
+    def blastengine_delivery_id?; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def blastengine_delivery_id_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def blastengine_delivery_id_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def blastengine_delivery_id_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def blastengine_delivery_id_change; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def blastengine_delivery_id_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def blastengine_delivery_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def blastengine_delivery_id_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def blastengine_delivery_id_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def blastengine_delivery_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Integer)) }
+    def blastengine_delivery_id_previously_was; end
+
+    sig { returns(T.nilable(::Integer)) }
+    def blastengine_delivery_id_was; end
+
+    sig { void }
+    def blastengine_delivery_id_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def blastengine_job_id; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def blastengine_job_id=(value); end
+
+    sig { returns(T::Boolean) }
+    def blastengine_job_id?; end
+
+    sig { returns(T.nilable(::String)) }
+    def blastengine_job_id_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def blastengine_job_id_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def blastengine_job_id_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def blastengine_job_id_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def blastengine_job_id_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def blastengine_job_id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def blastengine_job_id_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def blastengine_job_id_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def blastengine_job_id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def blastengine_job_id_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def blastengine_job_id_was; end
+
+    sig { void }
+    def blastengine_job_id_will_change!; end
+
     sig { returns(::ActiveSupport::TimeWithZone) }
     def created_at; end
 
@@ -956,6 +1076,51 @@ class DeliveryBirthday
     sig { void }
     def id_will_change!; end
 
+    sig { returns(T.nilable(::Date)) }
+    def last_setup_date; end
+
+    sig { params(value: T.nilable(::Date)).returns(T.nilable(::Date)) }
+    def last_setup_date=(value); end
+
+    sig { returns(T::Boolean) }
+    def last_setup_date?; end
+
+    sig { returns(T.nilable(::Date)) }
+    def last_setup_date_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def last_setup_date_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def last_setup_date_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::Date), T.nilable(::Date)])) }
+    def last_setup_date_change; end
+
+    sig { returns(T.nilable([T.nilable(::Date), T.nilable(::Date)])) }
+    def last_setup_date_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def last_setup_date_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Date)) }
+    def last_setup_date_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::Date), T.nilable(::Date)])) }
+    def last_setup_date_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def last_setup_date_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::Date)) }
+    def last_setup_date_previously_was; end
+
+    sig { returns(T.nilable(::Date)) }
+    def last_setup_date_was; end
+
+    sig { void }
+    def last_setup_date_will_change!; end
+
     sig { returns(::Integer) }
     def offset_days; end
 
@@ -1092,6 +1257,12 @@ class DeliveryBirthday
     def published_by_id_will_change!; end
 
     sig { void }
+    def restore_blastengine_delivery_id!; end
+
+    sig { void }
+    def restore_blastengine_job_id!; end
+
+    sig { void }
     def restore_created_at!; end
 
     sig { void }
@@ -1107,6 +1278,9 @@ class DeliveryBirthday
     def restore_id_value!; end
 
     sig { void }
+    def restore_last_setup_date!; end
+
+    sig { void }
     def restore_offset_days!; end
 
     sig { void }
@@ -1116,6 +1290,9 @@ class DeliveryBirthday
     def restore_published_by_id!; end
 
     sig { void }
+    def restore_setup_completed_at!; end
+
+    sig { void }
     def restore_status!; end
 
     sig { void }
@@ -1123,6 +1300,18 @@ class DeliveryBirthday
 
     sig { void }
     def restore_updated_at!; end
+
+    sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+    def saved_change_to_blastengine_delivery_id; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_blastengine_delivery_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_blastengine_job_id; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_blastengine_job_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([::ActiveSupport::TimeWithZone, ::ActiveSupport::TimeWithZone])) }
     def saved_change_to_created_at; end
@@ -1154,6 +1343,12 @@ class DeliveryBirthday
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
+    sig { returns(T.nilable([T.nilable(::Date), T.nilable(::Date)])) }
+    def saved_change_to_last_setup_date; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_last_setup_date?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
     sig { returns(T.nilable([::Integer, ::Integer])) }
     def saved_change_to_offset_days; end
 
@@ -1172,6 +1367,12 @@ class DeliveryBirthday
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_published_by_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def saved_change_to_setup_completed_at; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_setup_completed_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_status; end
 
@@ -1189,6 +1390,51 @@ class DeliveryBirthday
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_updated_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def setup_completed_at; end
+
+    sig { params(value: T.nilable(::ActiveSupport::TimeWithZone)).returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def setup_completed_at=(value); end
+
+    sig { returns(T::Boolean) }
+    def setup_completed_at?; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def setup_completed_at_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def setup_completed_at_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def setup_completed_at_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def setup_completed_at_change; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def setup_completed_at_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def setup_completed_at_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def setup_completed_at_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::ActiveSupport::TimeWithZone), T.nilable(::ActiveSupport::TimeWithZone)])) }
+    def setup_completed_at_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def setup_completed_at_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def setup_completed_at_previously_was; end
+
+    sig { returns(T.nilable(::ActiveSupport::TimeWithZone)) }
+    def setup_completed_at_was; end
+
+    sig { void }
+    def setup_completed_at_will_change!; end
 
     sig { returns(::String) }
     def status; end
@@ -1326,6 +1572,12 @@ class DeliveryBirthday
     def updated_at_will_change!; end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_blastengine_delivery_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_blastengine_job_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_created_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -1341,6 +1593,9 @@ class DeliveryBirthday
     def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_last_setup_date?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_offset_days?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -1348,6 +1603,9 @@ class DeliveryBirthday
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_published_by_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_setup_completed_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_status?(from: T.unsafe(nil), to: T.unsafe(nil)); end
@@ -1448,6 +1706,9 @@ class DeliveryBirthday
     def not_paused(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+    def not_preparing(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def null_relation?(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
@@ -1473,6 +1734,9 @@ class DeliveryBirthday
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def preload(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+    def preparing(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def readonly(*args, &blk); end
@@ -1527,12 +1791,16 @@ class DeliveryBirthday
         delivery_time: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         published_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         published_by_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        blastengine_delivery_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        blastengine_job_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        last_setup_date: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        setup_completed_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, delivery_id: nil, status: nil, offset_days: nil, delivery_time: nil, published_at: nil, published_by_id: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, id: nil, tenant_id: nil, delivery_id: nil, status: nil, offset_days: nil, delivery_time: nil, published_at: nil, published_by_id: nil, blastengine_delivery_id: nil, blastengine_job_id: nil, last_setup_date: nil, setup_completed_at: nil, created_at: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

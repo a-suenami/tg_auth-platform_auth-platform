@@ -1,0 +1,34 @@
+create_table :delivery_results, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Aggregated delivery results from Blastengine' do |t|
+  t.references :tenant, type: :citext, null: false, comment: 'Tenant reference'
+  t.references :delivery, type: :uuid, null: false, comment: 'Delivery reference'
+  t.references :delivery_schedule, type: :uuid, comment: 'Schedule reference (for fixed-time deliveries)'
+  t.references :delivery_birthday, type: :uuid, comment: 'Birthday reference (for birthday deliveries)'
+
+  # Blastengine delivery ID (unique per result)
+  t.bigint :blastengine_delivery_id, null: false, comment: 'Blastengine bulk delivery ID'
+
+  # For birthday: which date this result is for
+  t.date :delivery_date, comment: 'Date of delivery (for birthday daily results)'
+
+  # Aggregated counts from Blastengine API
+  # https://blastengine.jp/documents/#tag/deliveries/operation/delivery-detail-get
+  t.integer :total_count, null: false, default: 0, comment: 'Total recipients'
+  t.integer :sent_count, null: false, default: 0, comment: 'Successfully sent'
+  t.integer :drop_count, null: false, default: 0, comment: 'Dropped (invalid email, etc.)'
+  t.integer :soft_error_count, null: false, default: 0, comment: 'Soft bounce (temporary failure)'
+  t.integer :hard_error_count, null: false, default: 0, comment: 'Hard bounce (permanent failure)'
+  t.integer :open_count, null: false, default: 0, comment: 'Opened emails'
+
+  # Timestamps
+  t.datetime :synced_at, comment: 'When results were last synced from Blastengine'
+
+  t.timestamps null: false
+
+  t.index [:blastengine_delivery_id], unique: true, name: 'idx_delivery_results_blastengine_unique'
+  t.index [:delivery_id, :delivery_date], name: 'idx_delivery_results_delivery_date'
+end
+
+add_foreign_key :delivery_results, :tenants
+add_foreign_key :delivery_results, :deliveries
+add_foreign_key :delivery_results, :delivery_schedules
+add_foreign_key :delivery_results, :delivery_birthdays

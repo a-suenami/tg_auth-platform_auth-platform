@@ -14,8 +14,9 @@ class Delivery < ApplicationRecord
 
   has_many :delivery_user_tags, dependent: :destroy
   has_many :user_tags, through: :delivery_user_tags
-  has_many :delivery_executions, dependent: :destroy
+  has_many :delivery_recipients, dependent: :destroy
   has_many :delivery_events, dependent: :destroy
+  has_many :delivery_results, dependent: :destroy
 
   validates :name, presence: true, length: { maximum: 255 }
   validate :must_have_user_tags
@@ -49,6 +50,40 @@ class Delivery < ApplicationRecord
   sig { returns(T.nilable(String)) }
   def status
     schedule&.status || birthday&.status
+  end
+
+  # Recipient statistics for monitoring
+  sig { returns(T::Hash[Symbol, Integer]) }
+  def recipient_stats
+    recipients = delivery_recipients.group(:status).count
+    total = recipients.values.sum
+    {
+      total: total,
+      pending: recipients['pending'] || 0,
+      sent: recipients['sent'] || 0,
+      failed: recipients['failed'] || 0,
+    }
+  end
+
+  # Check if all recipients are in terminal state (sent or failed)
+  sig { returns(T::Boolean) }
+  def all_processed?
+    delivery_recipients.exists? && delivery_recipients.where(status: 'pending').empty?
+  end
+
+  sig { returns(Float) }
+  def success_rate
+    total = delivery_recipients.count
+    return 0.0 if total.zero?
+
+    sent = delivery_recipients.sent.count
+    T.cast((sent.to_f / total * 100).round(2), Float)
+  end
+
+  # Get single result for schedule type deliveries (backward compatibility)
+  sig { returns(T.nilable(DeliveryResult)) }
+  def delivery_result
+    delivery_results.first
   end
 
   private
