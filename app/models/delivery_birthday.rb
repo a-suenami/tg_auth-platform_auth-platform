@@ -25,7 +25,7 @@ class DeliveryBirthday < ApplicationRecord
 
   sig { returns(T::Boolean) }
   def can_pause?
-    ongoing?
+    ongoing? || preparing?
   end
 
   sig { returns(T::Boolean) }
