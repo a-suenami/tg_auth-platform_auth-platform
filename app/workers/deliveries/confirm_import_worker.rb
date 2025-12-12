@@ -1,14 +1,15 @@
 # typed: false
 
 module Deliveries
-  # ConfirmImportWorker runs every minute to check CSV import status
-  # and commit deliveries when import is complete
+  # ConfirmImportWorker checks CSV import status for a single record
+  # and commits the delivery when import is complete
   #
-  # Handles both DeliverySchedule and DeliveryBirthday with status='preparing'
+  # Called by OrchestratorWorker with (type, record_id, tenant_id)
   class ConfirmImportWorker
     include Sidekiq::Worker
+    include Concerns::TenantContext
 
-    sidekiq_options queue: :default, retry: false
+    sidekiq_options queue: :default, retry: 3
 
     # Blastengine job statuses:
     # WAIT (待ち), STARTED (処理中), FINISHED (完了), FAILED (失敗),
@@ -16,32 +17,27 @@ module Deliveries
     FINISHED_STATUS = 'FINISHED'.freeze
     ERROR_STATUSES = %w[FAILED STOP SYSTEM_ERROR TIMEOUT].freeze
 
-    def perform
-      confirm_scheduled_deliveries
-      confirm_birthday_deliveries
+    def perform(type, record_id, tenant_id)
+      set_tenant_context_by_id(tenant_id)
+
+      case type
+      when 'schedule'
+        schedule = DeliverySchedule.find_by(id: record_id)
+        process_schedule(schedule) if schedule
+      when 'birthday'
+        birthday = DeliveryBirthday.find_by(id: record_id)
+        process_birthday(birthday) if birthday
+      end
+    rescue StandardError => e
+      Rails.logger.error("[ConfirmImportWorker] #{type} #{record_id} failed: #{e.message}")
+      Rails.logger.error(e.backtrace.first(5).join("\n"))
+      raise # Re-raise for Sidekiq retry
     end
 
     private
 
-    def confirm_scheduled_deliveries
-      DeliverySchedule.where(status: 'preparing').find_each do |schedule|
-        set_tenant_context(schedule.tenant)
-        process_schedule(schedule)
-      rescue StandardError => e
-        Rails.logger.error("[ConfirmImportWorker] Schedule #{schedule.id} failed: #{e.message}")
-      end
-    end
-
-    def confirm_birthday_deliveries
-      DeliveryBirthday.where(status: 'preparing').find_each do |birthday|
-        set_tenant_context(birthday.tenant)
-        process_birthday(birthday)
-      rescue StandardError => e
-        Rails.logger.error("[ConfirmImportWorker] Birthday #{birthday.id} failed: #{e.message}")
-      end
-    end
-
     def process_schedule(schedule)
+      return unless schedule.preparing? # Status guard
       return if schedule.blastengine_job_id.blank?
 
       api = Blastengine::API.new
@@ -71,6 +67,7 @@ module Deliveries
     end
 
     def process_birthday(birthday)
+      return unless birthday.preparing? # Status guard
       return if birthday.blastengine_job_id.blank?
 
       api = Blastengine::API.new
@@ -112,9 +109,5 @@ module Deliveries
       )
     end
 
-    def set_tenant_context(tenant)
-      RequestStore.store[:current_tenant_domain] = tenant.domain
-      Tenant.current
-    end
   end
 end

@@ -18,23 +18,8 @@ production:
     expire_email_verifiers:
       cron: '0 0 0 1 * *'
       class: ExpireEmailVerifiersWorker
-    delivery_setup:
+    delivery_orchestrator:
       cron: '* * * * *'
-      class: Deliveries::SetupWorker
+      class: Deliveries::OrchestratorWorker
       queue: default
-      description: 'Setup scheduled deliveries for Blastengine bulk sending (~15 mins before)'
-    confirm_import:
-      cron: '* * * * *'
-      class: Deliveries::ConfirmImportWorker
-      queue: default
-      description: 'Check CSV import status and commit deliveries when ready'
-    confirm_result:
-      cron: '*/15 * * * *'
-      class: Deliveries::ConfirmResultWorker
-      queue: low_priority
-      description: 'Sync delivery results from Blastengine every 15 minutes (real-time sync on UI view)'
-    birthday_setup:
-      cron: '* * * * *'
-      class: Deliveries::Birthday::SetupWorker
-      queue: default
-      description: 'Setup birthday deliveries for Blastengine bulk sending (~15 mins before)'
+      description: 'Orchestrate delivery workers: setup, import confirmation, result sync'

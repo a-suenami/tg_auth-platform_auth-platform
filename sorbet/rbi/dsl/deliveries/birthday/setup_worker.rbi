@@ -7,13 +7,25 @@
 
 class Deliveries::Birthday::SetupWorker
   class << self
-    sig { returns(String) }
-    def perform_async; end
+    sig { params(birthday_id: T.untyped, tenant_id: T.untyped).returns(String) }
+    def perform_async(birthday_id, tenant_id); end
 
-    sig { params(interval: T.any(DateTime, Time, ActiveSupport::TimeWithZone)).returns(String) }
-    def perform_at(interval); end
+    sig do
+      params(
+        interval: T.any(DateTime, Time, ActiveSupport::TimeWithZone),
+        birthday_id: T.untyped,
+        tenant_id: T.untyped
+      ).returns(String)
+    end
+    def perform_at(interval, birthday_id, tenant_id); end
 
-    sig { params(interval: T.any(Numeric, ActiveSupport::Duration)).returns(String) }
-    def perform_in(interval); end
+    sig do
+      params(
+        interval: T.any(Numeric, ActiveSupport::Duration),
+        birthday_id: T.untyped,
+        tenant_id: T.untyped
+      ).returns(String)
+    end
+    def perform_in(interval, birthday_id, tenant_id); end
   end
 end
