@@ -26,7 +26,7 @@ class DeliverySchedule < ApplicationRecord
 
   sig { returns(T::Boolean) }
   def can_cancel?
-    scheduled?
+    scheduled? || preparing?
   end
 
   sig { returns(T::Boolean) }
