@@ -204,7 +204,7 @@ module AdminArea
       birthday = @delivery.birthday
 
       if schedule&.blastengine_delivery_id.present? && %w[delivering delivered].include?(schedule.status)
-        Deliveries::ConfirmResultService.new(schedule: schedule).execute
+        Deliveries::FixedTime::ConfirmResultService.new(schedule: schedule).execute
       elsif birthday.present? && %w[delivering ongoing].include?(birthday.status)
         sync_birthday_results
       end
