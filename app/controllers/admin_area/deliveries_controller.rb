@@ -76,7 +76,7 @@ module AdminArea
     end
 
     def cancel
-      service = Deliveries::CancelService.new(delivery: @delivery, admin: T.must(current_admin))
+      service = Deliveries::FixedTime::CancelService.new(delivery: @delivery, admin: T.must(current_admin))
 
       if service.execute
         redirect_to admin_area_delivery_path(@delivery), notice: t('admin_area.deliveries.cancelled')
@@ -86,7 +86,7 @@ module AdminArea
     end
 
     def pause
-      service = Deliveries::PauseService.new(delivery: @delivery, admin: T.must(current_admin))
+      service = Deliveries::Birthday::PauseService.new(delivery: @delivery, admin: T.must(current_admin))
 
       if service.execute
         redirect_to admin_area_delivery_path(@delivery), notice: t('admin_area.deliveries.paused')
@@ -96,7 +96,7 @@ module AdminArea
     end
 
     def resume
-      service = Deliveries::ResumeService.new(delivery: @delivery, admin: T.must(current_admin))
+      service = Deliveries::Birthday::ResumeService.new(delivery: @delivery, admin: T.must(current_admin))
 
       if service.execute
         redirect_to admin_area_delivery_path(@delivery), notice: t('admin_area.deliveries.resumed')
