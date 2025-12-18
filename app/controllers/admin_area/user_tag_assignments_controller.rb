@@ -7,13 +7,14 @@ module AdminArea
     before_action :set_user_tag, only: [:create, :destroy]
 
     def edit
-      @available_tags = UserTag.order(:name)
+      # Load all assignments once with includes (for tooltip display)
+      all_assignments = @user.tag_assignments.includes(:user_tag, :user_auto_tagging).to_a
 
-      # Load all assignments once and cache for view
-      assignments = @user.tag_assignments.to_a
-      @all_tag_ids = assignments.map(&:user_tag_id)
-      @auto_tag_ids = assignments.select(&:auto?).map(&:user_tag_id)
-      @manual_tag_ids = @all_tag_ids - @auto_tag_ids
+      @auto_assignments = all_assignments.select(&:auto?)
+      @manual_assignments = all_assignments.reject(&:auto?)
+
+      @all_tag_ids = all_assignments.map(&:user_tag_id)
+      @available_tags = UserTag.order(:name)
     end
 
     def create
