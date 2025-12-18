@@ -63,6 +63,9 @@ class ContactAddressForm < ApplicationForm
     else
       create_contact_address
     end
+
+    # Trigger auto-tagging after successful address change
+    UserAutoTagging::EventWorker.perform_async(user_id, 'address_changed')
   rescue => e
     errors.add(:base, e.message)
   end

@@ -12,11 +12,11 @@ module AdminArea
     def new
       @user_auto_tagging = UserAutoTagging.new
       @user_auto_tagging.build_schedule
-      @user_tags = UserTag.ordered
+      @user_tags = available_tags_for_selection
     end
 
     def edit
-      @user_tags = UserTag.ordered
+      @user_tags = available_tags_for_selection(exclude_rule: @user_auto_tagging)
     end
 
     def create
@@ -24,8 +24,12 @@ module AdminArea
       @user_auto_tagging.created_by = current_admin
 
       if @user_auto_tagging.save
+        # Apply auto-tagging rules to all matching users
+        apply_tagging_rules(@user_auto_tagging)
+
         redirect_to admin_area_user_auto_taggings_path, notice: 'オートタグ設定を保存しました'
       else
+        @user_tags = available_tags_for_selection
         render :new, status: :unprocessable_entity
       end
     end
@@ -34,13 +38,18 @@ module AdminArea
       @user_auto_tagging.updated_by = current_admin
 
       if @user_auto_tagging.update(user_auto_tagging_params)
+        # Apply auto-tagging rules to all matching users
+        apply_tagging_rules(@user_auto_tagging)
+
         redirect_to admin_area_user_auto_taggings_path, notice: 'オートタグ設定を更新しました'
       else
+        @user_tags = available_tags_for_selection(exclude_rule: @user_auto_tagging)
         render :edit, status: :unprocessable_entity
       end
     end
 
     def destroy
+      # Assignments will be automatically deleted via dependent: :destroy in model
       @user_auto_tagging.destroy!
       redirect_to admin_area_user_auto_taggings_path, notice: 'オートタグ設定を削除しました', status: :see_other
     end
@@ -49,6 +58,23 @@ module AdminArea
 
     def set_user_auto_tagging
       @user_auto_tagging = UserAutoTagging.find(params[:id])
+    end
+
+    def apply_tagging_rules(user_auto_tagging)
+      UserAutoTagging::ApplyWorker.perform_async(user_auto_tagging.id)
+    end
+
+    # Get tags available for selection (excluding tags already used by other rules)
+    def available_tags_for_selection(exclude_rule: nil)
+      used_tag_ids = UserAutoTaggingTag.pluck(:user_tag_id)
+
+      # If editing, allow tags that are already assigned to this rule
+      if exclude_rule
+        current_rule_tag_ids = exclude_rule.user_tag_ids
+        used_tag_ids -= current_rule_tag_ids
+      end
+
+      UserTag.where.not(id: used_tag_ids).ordered
     end
 
     def user_auto_tagging_params

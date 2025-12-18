@@ -56,11 +56,11 @@
       .uk-margin-small
         label.uk-form-label メンバーシップ選択
         .uk-grid-small data-uk-grid=""
-          - ['Membership A', 'Membership B', 'Membership C'].each do |membership|
+          - Membership.all.each do |membership|
             .uk-width-1-3
               label
-                input.uk-checkbox type="checkbox" data-field="values" value=membership data-action="change->user-auto-tagging-form#handleFieldChange"
-                | &nbsp;#{membership}
+                input.uk-checkbox type="checkbox" data-field="values" value=membership.id data-action="change->user-auto-tagging-form#handleFieldChange"
+                | &nbsp;#{membership.display_name}
 
     / Plan Config
     .config-plan style="display: none;"
@@ -84,11 +84,11 @@
       .uk-margin-small
         label.uk-form-label プラン選択
         .uk-grid-small data-uk-grid=""
-          - ['Plan A', 'Plan B', 'Plan C'].each do |plan|
+          - Membership::Plan.all.each do |plan|
             .uk-width-1-3
               label
-                input.uk-checkbox type="checkbox" data-field="values" value=plan data-action="change->user-auto-tagging-form#handleFieldChange"
-                | &nbsp;#{plan}
+                input.uk-checkbox type="checkbox" data-field="values" value=plan.id data-action="change->user-auto-tagging-form#handleFieldChange"
+                | &nbsp;#{plan.name}
 
     / Prefecture Config
     .config-prefecture style="display: none;"
@@ -106,14 +106,18 @@
       .uk-margin-small
         label.uk-form-label 性別選択
         .uk-grid-small data-uk-grid=""
-          .uk-width-1-2
+          .uk-width-1-3
             label
               input.uk-checkbox type="checkbox" data-field="values" value="male" data-action="change->user-auto-tagging-form#handleFieldChange"
               | &nbsp;男性
-          .uk-width-1-2
+          .uk-width-1-3
             label
               input.uk-checkbox type="checkbox" data-field="values" value="female" data-action="change->user-auto-tagging-form#handleFieldChange"
               | &nbsp;女性
+          .uk-width-1-3
+            label
+              input.uk-checkbox type="checkbox" data-field="values" value="other" data-action="change->user-auto-tagging-form#handleFieldChange"
+              | &nbsp;その他
 
     / Age Config
     .config-age style="display: none;"
