@@ -21,7 +21,6 @@ class UserAutoTagging < ApplicationRecord
   validates :name, presence: true
   validates :name, uniqueness: { scope: :tenant_id }
   validates :enabled, inclusion: { in: [true, false] }
-  validates :shareable, inclusion: { in: [true, false] }
 
   scope :enabled, -> { where(enabled: true) }
   scope :ordered, -> { order(created_at: :desc) }

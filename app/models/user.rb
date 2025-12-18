@@ -62,6 +62,10 @@ class User < ApplicationRecord
   # Tags
   has_many :tag_assignments, class_name: 'UserTagAssignment', dependent: :destroy
   has_many :user_tags, through: :tag_assignments
+  has_many :integration_enabled_tags,
+    -> { where(integration_enabled: T.unsafe(true)) },
+    through: :tag_assignments,
+    source: :user_tag
 
   # Events
   has_many :user_events, dependent: :destroy

@@ -463,6 +463,20 @@ class User
     def email_verifiers=(value); end
 
     sig { returns(T::Array[T.untyped]) }
+    def integration_enabled_tag_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def integration_enabled_tag_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `User` class because it declared `has_many :integration_enabled_tags, through: :tag_assignments`.
+    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
+    sig { returns(::UserTag::PrivateCollectionProxy) }
+    def integration_enabled_tags; end
+
+    sig { params(value: T::Enumerable[::UserTag]).void }
+    def integration_enabled_tags=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
     def linked_application_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }

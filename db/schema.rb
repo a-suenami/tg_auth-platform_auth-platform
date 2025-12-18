@@ -1038,7 +1038,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "name", null: false, comment: "Rule name (CMS display)"
     t.text "description", comment: "Rule description"
     t.boolean "enabled", default: true, null: false, comment: "Whether rule is active"
-    t.boolean "shareable", default: false, null: false, comment: "Tag shareable with linked apps (連携タグ設定)"
     t.uuid "created_by_id", comment: "Admin who created this rule"
     t.uuid "updated_by_id", comment: "Admin who last updated this rule"
     t.datetime "created_at", null: false
@@ -1104,6 +1103,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.text "description", comment: "Tag description"
     t.uuid "created_by_id", comment: "Admin who created this tag"
     t.uuid "updated_by_id", comment: "Admin who last updated this tag"
+    t.boolean "integration_enabled", default: false, null: false, comment: "Enable tag sync to integrated apps (連携タグ設定)"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_user_tags_on_created_by_id"
