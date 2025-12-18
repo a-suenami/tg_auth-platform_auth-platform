@@ -166,6 +166,11 @@ gem 'phony_rails'
 # typing
 gem 'sorbet-runtime', '~> 0.6.12466'
 
+# Feature flags
+gem 'flipper', '~> 1.3'
+gem 'flipper-redis', '~> 1.3'
+gem 'flipper-ui', '~> 1.3'
+
 # reCAPTCHA Enterprise Client
 gem 'google-cloud-recaptcha_enterprise-v1', '~> 0.17.3'
 # Stripe Client
