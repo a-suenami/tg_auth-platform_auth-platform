@@ -1,0 +1,22 @@
+create_table :delivery_birthdays, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Birthday-based delivery schedules' do |t|
+  t.references :tenant, type: :citext, null: false, comment: 'Tenant reference'
+  t.references :delivery, type: :uuid, null: false, comment: 'Parent delivery'
+
+  # Status: draft | ongoing | delivering | paused
+  t.string :status, null: false, default: 'draft', comment: 'Birthday delivery status'
+  t.integer :offset_days, null: false, default: 0, comment: 'Days offset from birthday (negative = before)'
+  t.string :delivery_time, null: false, default: '09:00', comment: 'Delivery time HH:MM'
+
+  # Publish tracking
+  t.datetime :published_at, comment: 'When birthday delivery was activated'
+  t.references :published_by, type: :uuid, comment: 'Admin who activated'
+
+  t.timestamps null: false
+
+  t.index [:delivery_id], unique: true, name: 'idx_delivery_birthdays_delivery_unique'
+  t.index [:tenant_id, :status]
+end
+
+add_foreign_key :delivery_birthdays, :tenants
+add_foreign_key :delivery_birthdays, :deliveries
+add_foreign_key :delivery_birthdays, :admins, column: :published_by_id

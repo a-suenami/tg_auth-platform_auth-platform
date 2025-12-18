@@ -1,0 +1,18 @@
+create_table :deliveries, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Email delivery campaigns' do |t|
+  t.references :tenant, type: :citext, null: false, comment: 'Tenant reference'
+  t.string :name, null: false, comment: 'Delivery event name'
+  t.references :template, type: :uuid, null: false, comment: 'Email template reference'
+
+  # Audit fields
+  t.references :created_by, type: :uuid, comment: 'Admin who created'
+  t.references :updated_by, type: :uuid, comment: 'Admin who last updated'
+
+  t.timestamps null: false
+
+  t.index [:tenant_id, :created_at]
+end
+
+add_foreign_key :deliveries, :tenants
+add_foreign_key :deliveries, :templates
+add_foreign_key :deliveries, :admins, column: :created_by_id
+add_foreign_key :deliveries, :admins, column: :updated_by_id
