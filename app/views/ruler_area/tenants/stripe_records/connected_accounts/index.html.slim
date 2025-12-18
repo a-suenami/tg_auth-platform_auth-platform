@@ -1,0 +1,28 @@
+h1 Stripe Connect Accounts
+
+.uk-margin
+  = link_to 'New Connected Account', new_ruler_area_tenant_stripe_records_connected_account_path(@tenant), class: 'uk-button uk-button-primary'
+
+.uk-overflow-auto
+  table.uk-table.uk-table-hover.uk-table-striped
+    thead
+      tr
+        th Display Name
+        th Remote ID
+        th Type
+        th Platform Account
+        th Actions
+    tbody
+      - @connected_accounts.each do |account|
+        tr
+          td = account.display_name
+          td = account.remote_id
+          td = account.type
+          td = account.controlling_platform&.display_name
+          td
+            = link_to 'Show', ruler_area_tenant_stripe_records_connected_account_path(@tenant, account), class: 'uk-button uk-button-small uk-button-secondary uk-margin-small-right'
+            = link_to 'Onboarding', onboarding_ruler_area_tenant_stripe_records_connected_account_path(@tenant, account), class: 'uk-button uk-button-small uk-button-primary uk-margin-small-right'
+            = link_to 'Delete', ruler_area_tenant_stripe_records_connected_account_path(@tenant, account), data: { "turbo-method": "delete", "turbo-confirm": 'Are you sure?' }, class: 'uk-button uk-button-small uk-button-danger'
+
+.uk-margin
+  == pagy_nav(@pagy) if @pagy

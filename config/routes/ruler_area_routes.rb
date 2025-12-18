@@ -38,6 +38,10 @@ Rails.application.routes.draw do
             put :sync, on: :collection
           end
           resources :accounts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+          resources :connected_accounts, only: [:index, :show, :new, :create, :destroy] do
+            get :onboarding, on: :member
+            get :refresh, on: :member
+          end
         end
         namespace :komoju_records do
           resources :accounts, only: [:index, :show, :new, :create, :edit, :update, :destroy]

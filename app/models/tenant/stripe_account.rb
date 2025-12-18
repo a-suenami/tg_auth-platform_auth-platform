@@ -8,7 +8,6 @@ class Tenant::StripeAccount < ApplicationRecord
   belongs_to :tenant
   belongs_to :stripe_account, class_name: 'StripeRecord::Account'
 
-  # TODO: FIX stripe connect廃止するので、charge_typeは必要ないはず
   # Connect の支払いタイプ
   class ChargeTypeEnum < T::Enum
     enums do

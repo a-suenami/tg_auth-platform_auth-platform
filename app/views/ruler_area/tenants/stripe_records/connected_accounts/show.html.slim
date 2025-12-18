@@ -1,0 +1,31 @@
+h1 Connected Account Details
+
+- if flash[:alert]
+  .uk-alert.uk-alert-danger
+    = flash[:alert]
+
+- if flash[:notice]
+  .uk-alert.uk-alert-success
+    = flash[:notice]
+
+.uk-card.uk-card-default.uk-card-body
+  h3 Account Information
+  dl.uk-description-list.uk-description-list-divider
+    dt Display Name
+    dd = @connected_account.display_name
+    dt Remote ID
+    dd = @connected_account.remote_id
+    dt Type
+    dd = @connected_account.type
+    dt Platform Account
+    dd = @connected_account.controlling_platform&.ruler_full_display_name
+    - if @connected_account.business_profile_name
+      dt Business Profile Name
+      dd = @connected_account.business_profile_name
+    - if @connected_account.payments_statement_descriptor
+      dt Statement Descriptor
+      dd = @connected_account.payments_statement_descriptor
+
+.uk-margin
+  = link_to 'Onboarding', onboarding_ruler_area_tenant_stripe_records_connected_account_path(@tenant, @connected_account), class: 'uk-button uk-button-primary uk-margin-small-right'
+  = link_to 'Back', ruler_area_tenant_stripe_records_connected_accounts_path(@tenant), class: 'uk-button uk-button-secondary'

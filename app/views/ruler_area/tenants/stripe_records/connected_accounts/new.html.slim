@@ -1,0 +1,18 @@
+h1 New Connected Account
+
+- if flash[:alert]
+  .uk-alert.uk-alert-danger
+    = flash[:alert]
+
+= form_with url: ruler_area_tenant_stripe_records_connected_accounts_path(@tenant), method: :post, local: true do |form|
+  .uk-margin
+    = form.label :controlling_platform_id, 'Platform Account', class: 'uk-form-label'
+    .uk-form-controls
+      = form.select :controlling_platform_id, @platform_accounts.map { |a| [a.ruler_full_display_name, a.id] }, { prompt: 'Select Platform Account' }, class: 'uk-select', required: true
+      .uk-text-meta Connected AccountはこのPlatform Accountに紐付けられます
+
+  .uk-margin
+    = form.submit 'Create Connected Account', class: 'uk-button uk-button-primary'
+
+.uk-margin
+  = link_to 'Back', ruler_area_tenant_stripe_records_connected_accounts_path(@tenant), class: 'uk-button uk-button-secondary'
