@@ -1,0 +1,64 @@
+.uk-margin-top.uk-container
+  .uk-flex.uk-flex-between.uk-flex-middle
+    h2 会員ID一覧
+    span.uk-badge.uk-background-primary New UI
+
+  .uk-card.uk-card-default.uk-card-body
+    p 検索条件
+    = form_with url: admin_area_users_path, method: :get do |f|
+      .uk-margin
+        = f.label :id, "ID"
+        = f.text_field :id, placeholder: "539dde46-68a2-4619-9866-63b7478ae36e", value: params[:id], class: "uk-input"
+      .uk-margin
+        = f.label :email, "メールアドレス"
+        = f.text_field :email, placeholder: "mail@example.com", value: params[:email], class: "uk-input"
+      .uk-margin
+        = f.label :phone_number, "電話番号"
+        = f.text_field :phone_number, placeholder: "+818012345678 (国際電話番号フォーマット)", value: params[:phone_number], class: "uk-input"
+      = submit_tag "Search", class: "uk-button uk-button-secondary"
+      = link_to "検索初期化", admin_area_users_path, class: "uk-button uk-button-default uk-margin-left"
+    br
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    - if @users.empty?
+      p.uk-text-lead
+        | No users found
+    - else
+      table.uk-table.uk-table-divider
+        tr
+          th
+            | ID
+          th
+            | メールアドレス
+          th
+            | 氏名
+          th
+            | 性別
+          th
+            | 年代
+          th
+            | 都道府県
+          th
+            | 操作
+        - @users.each do |user|
+          tr
+            td
+              = user.id
+            td
+              = user.email
+            td
+              = user&.user_profile&.name
+            td
+              = user&.user_profile&.gender
+            td
+              - if user&.user_profile&.age_range.present?
+                = user&.user_profile&.age_range
+                | 代
+              - else
+                | -
+            td
+              = user&.contact_address&.prefecture&.name
+            td
+              = link_to "詳細", admin_area_user_path(user), class: "uk-button uk-button-secondary"
+
+    == pagy_nav(@pagy)
