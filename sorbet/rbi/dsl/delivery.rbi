@@ -416,18 +416,32 @@ class Delivery
     def delivery_events=(value); end
 
     sig { returns(T::Array[T.untyped]) }
-    def delivery_execution_ids; end
+    def delivery_recipient_ids; end
 
     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
-    def delivery_execution_ids=(ids); end
+    def delivery_recipient_ids=(ids); end
 
-    # This method is created by ActiveRecord on the `Delivery` class because it declared `has_many :delivery_executions`.
+    # This method is created by ActiveRecord on the `Delivery` class because it declared `has_many :delivery_recipients`.
     # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-    sig { returns(::DeliveryExecution::PrivateCollectionProxy) }
-    def delivery_executions; end
+    sig { returns(::DeliveryRecipient::PrivateCollectionProxy) }
+    def delivery_recipients; end
 
-    sig { params(value: T::Enumerable[::DeliveryExecution]).void }
-    def delivery_executions=(value); end
+    sig { params(value: T::Enumerable[::DeliveryRecipient]).void }
+    def delivery_recipients=(value); end
+
+    sig { returns(T::Array[T.untyped]) }
+    def delivery_result_ids; end
+
+    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+    def delivery_result_ids=(ids); end
+
+    # This method is created by ActiveRecord on the `Delivery` class because it declared `has_many :delivery_results`.
+    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
+    sig { returns(::DeliveryResult::PrivateCollectionProxy) }
+    def delivery_results; end
+
+    sig { params(value: T::Enumerable[::DeliveryResult]).void }
+    def delivery_results=(value); end
 
     sig { returns(T::Array[T.untyped]) }
     def delivery_user_tag_ids; end

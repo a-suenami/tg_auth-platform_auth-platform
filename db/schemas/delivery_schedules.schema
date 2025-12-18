@@ -10,11 +10,17 @@ create_table :delivery_schedules, force: :cascade, id: :uuid, default: -> { 'gen
   t.datetime :published_at, comment: 'When schedule was published'
   t.references :published_by, type: :uuid, comment: 'Admin who published'
 
+  # Blastengine bulk delivery tracking
+  t.bigint :blastengine_delivery_id, comment: 'Blastengine bulk delivery ID'
+  t.string :blastengine_job_id, comment: 'Blastengine CSV import job ID'
+  t.datetime :setup_completed_at, comment: 'When bulk setup completed'
+
   t.timestamps null: false
 
   t.index [:delivery_id], unique: true, name: 'idx_delivery_schedules_delivery_unique'
   t.index [:tenant_id, :status]
   t.index [:status, :scheduled_at], name: 'idx_delivery_schedules_pending'
+  t.index [:blastengine_delivery_id], name: 'idx_delivery_schedules_blastengine'
 end
 
 add_foreign_key :delivery_schedules, :tenants

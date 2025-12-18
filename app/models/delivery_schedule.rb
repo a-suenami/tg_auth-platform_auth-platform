@@ -4,11 +4,12 @@ class DeliverySchedule < ApplicationRecord
   extend T::Sig
   include Multitenancy
 
-  # Status: draft → scheduled → delivering → delivered
+  # Status: draft → scheduled → preparing → delivering → delivered
   #                          ↘ cancelled
   enum :status, {
     draft: 'draft',
     scheduled: 'scheduled',
+    preparing: 'preparing',
     delivering: 'delivering',
     delivered: 'delivered',
     cancelled: 'cancelled',
@@ -18,12 +19,14 @@ class DeliverySchedule < ApplicationRecord
   belongs_to :delivery
   belongs_to :published_by, class_name: 'Admin', optional: true
 
+  has_one :delivery_result, dependent: :destroy
+
   validates :scheduled_at, presence: true
   validate :scheduled_at_must_be_future, if: :draft?
 
   sig { returns(T::Boolean) }
   def can_cancel?
-    scheduled?
+    scheduled? || preparing?
   end
 
   sig { returns(T::Boolean) }

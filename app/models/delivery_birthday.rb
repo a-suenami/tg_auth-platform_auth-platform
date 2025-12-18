@@ -6,10 +6,11 @@ class DeliveryBirthday < ApplicationRecord
 
   # Status: draft → ongoing ⇄ paused
   #                    ↓
-  #               delivering
+  #               preparing → delivering → (back to ongoing)
   enum :status, {
     draft: 'draft',
     ongoing: 'ongoing',
+    preparing: 'preparing',
     delivering: 'delivering',
     paused: 'paused',
   }
@@ -18,11 +19,13 @@ class DeliveryBirthday < ApplicationRecord
   belongs_to :delivery
   belongs_to :published_by, class_name: 'Admin', optional: true
 
+  has_many :delivery_results, dependent: :destroy
+
   validates :delivery_time, presence: true
 
   sig { returns(T::Boolean) }
   def can_pause?
-    ongoing?
+    ongoing? || preparing?
   end
 
   sig { returns(T::Boolean) }
