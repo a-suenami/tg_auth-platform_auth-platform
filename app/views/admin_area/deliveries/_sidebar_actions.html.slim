@@ -1,0 +1,32 @@
+/ Actions Card
+.uk-card.uk-card-default.uk-card-body.uk-card-small.uk-margin-small-bottom
+  - if delivery.schedule&.draft? || delivery.birthday&.draft?
+    = link_to edit_admin_area_delivery_path(delivery), class: 'uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom' do
+      span uk-icon="pencil"
+      |  編集する
+
+    = button_to publish_admin_area_delivery_path(delivery), method: :post, class: 'uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom', data: { confirm: '公開してもよろしいですか？' } do
+      span uk-icon="play"
+      |  公開する
+
+    = button_to admin_area_delivery_path(delivery), method: :delete, class: 'uk-button uk-button-danger uk-width-1-1', data: { confirm: '削除してもよろしいですか？' } do
+      span uk-icon="trash"
+      |  削除する
+
+  - elsif delivery.schedule&.can_cancel?
+    = button_to cancel_admin_area_delivery_path(delivery), method: :post, class: 'uk-button uk-button-danger uk-width-1-1', data: { confirm: 'キャンセルしてもよろしいですか？' } do
+      span uk-icon="ban"
+      |  キャンセル
+
+  - elsif delivery.birthday&.can_pause?
+    = button_to pause_admin_area_delivery_path(delivery), method: :post, class: 'uk-button uk-button-warning uk-width-1-1', data: { confirm: '配信を停止してもよろしいですか？' } do
+      span uk-icon="ban"
+      |  配信停止
+
+  - elsif delivery.birthday&.can_resume?
+    = button_to resume_admin_area_delivery_path(delivery), method: :post, class: 'uk-button uk-button-primary uk-width-1-1', data: { confirm: '配信を再開してもよろしいですか？' } do
+      span uk-icon="play"
+      |  配信再開
+
+  - else
+    p.uk-text-muted.uk-text-center 操作できません

@@ -1,0 +1,67 @@
+/ Delivery Status Card (for schedule type, not draft)
+.uk-card.uk-card-default.uk-card-body
+  .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-bottom
+    h4.uk-card-title.uk-margin-remove 配信状況
+    .uk-flex.uk-flex-middle
+      - stats = delivery.recipient_stats
+      span.uk-label.uk-label-success.uk-margin-small-right 送信済み #{stats[:sent]}
+      span.uk-label.uk-label-warning.uk-margin-small-right 待機中 #{stats[:pending]}
+      - if stats[:failed] > 0
+        span.uk-label.uk-label-danger.uk-margin-small-right 失敗 #{stats[:failed]}
+
+  / Progress bar
+  .uk-margin-small-bottom
+    progress.uk-progress value="#{stats[:sent]}" max="#{stats[:total]}"
+    .uk-text-small.uk-text-muted
+      | #{delivery.success_rate}% 完了 (#{stats[:sent]}/#{stats[:total]})
+
+  / Blastengine Result Summary (if available)
+  - result = delivery.delivery_result
+  - if result.present?
+    .uk-margin-bottom
+      dl.uk-description-list.uk-description-list-divider
+        .uk-grid.uk-child-width-1-3 data-uk-grid=""
+          div
+            dt.uk-text-small 開封率
+            dd.uk-text-lead #{result.open_rate}%
+          div
+            dt.uk-text-small ドロップ
+            dd.uk-text-lead = result.drop_count
+          div
+            dt.uk-text-small バウンス
+            dd.uk-text-lead #{result.soft_error_count + result.hard_error_count}
+      - if result.synced_at.present?
+        .uk-text-small.uk-text-muted.uk-text-right
+          | 最終同期: #{local_time(result.synced_at)}
+
+  / Recipient list
+  - if delivery.delivery_recipients.any?
+    table.uk-table.uk-table-small.uk-table-divider
+      thead
+        tr
+          th 名前
+          th メールアドレス
+          th ステータス
+          th 送信日時
+      tbody
+        - delivery.delivery_recipients.includes(user: :user_profile).order(created_at: :desc).limit(100).each do |recipient|
+          tr
+            td = recipient.user&.user_profile&.name || '-'
+            td = recipient.user&.email
+            td
+              - case recipient.status
+              - when 'sent'
+                span.uk-label.uk-label-success 送信済み
+              - when 'pending'
+                span.uk-label 待機中
+              - when 'failed'
+                span.uk-label.uk-label-danger 失敗
+            td.uk-text-small
+              - if recipient.sent_at
+                = local_time(recipient.sent_at)
+              - elsif recipient.error_message
+                span.uk-text-danger title="#{recipient.error_message}" エラー
+              - else
+                | -
+  - else
+    p.uk-text-muted.uk-text-center 配信準備中です...
