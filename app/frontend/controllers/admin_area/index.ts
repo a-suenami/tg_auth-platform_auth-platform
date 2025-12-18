@@ -1,15 +1,19 @@
 import { application } from "@app/controllers/application";
-import DatetimeUtcController from "./datetime_utc_controller";
-import AutoTaggingTagSelectorController from "./auto_tagging_tag_selector_controller";
 import UserAutoTaggingFormController from "./user_auto_tagging_form_controller";
-import UserTagAssignmentFormController from "./user_tag_assignment_form_controller";
+import AutoTaggingTagSelectorController from "./auto_tagging_tag_selector_controller";
 import TemplatePreviewController from "./template_preview_controller";
+import DeliveryFormController from "./delivery_form_controller";
+import DeliveryTagSelectorController from "./delivery_tag_selector_controller";
+import DatetimeUtcController from "./datetime_utc_controller";
+import UserTagAssignmentFormController from "./user_tag_assignment_form_controller";
 
 application.register(
   "auto-tagging-tag-selector",
   AutoTaggingTagSelectorController
 );
 application.register("template-preview", TemplatePreviewController);
+application.register("delivery-form", DeliveryFormController);
+application.register("delivery-tag-selector", DeliveryTagSelectorController);
 application.register("datetime-utc", DatetimeUtcController);
 application.register("user-auto-tagging-form", UserAutoTaggingFormController);
 application.register(

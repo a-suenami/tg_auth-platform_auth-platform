@@ -14,6 +14,23 @@ en:
       uniqueness: " is registered."
       is_destroyed: It was deleted
       blank: is blanked.
+  admin_area:
+    deliveries:
+      created: Delivery event created successfully
+      updated: Delivery event updated successfully
+      destroyed: Delivery event deleted successfully
+      published: Delivery event published successfully
+      cancelled: Delivery event cancelled successfully
+      paused: Delivery event paused successfully
+      resumed: Delivery event resumed successfully
+      errors:
+        draft_only_edit: Only draft delivery events can be edited
+        draft_only_delete: Only draft delivery events can be deleted
+        draft_only_publish: Only draft delivery events can be published
+        publish_failed: Failed to publish delivery event
+        cannot_cancel: This delivery event cannot be cancelled
+        cannot_pause: This delivery event cannot be paused
+        cannot_resume: This delivery event cannot be resumed
   helpers:
     select:
       prompt: Please choose.

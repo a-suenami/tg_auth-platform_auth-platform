@@ -34,5 +34,15 @@ Rails.application.routes.draw do
     # User Tag Management
     resources :user_tags
     resources :user_auto_taggings
+
+    # Delivery Management
+    resources :deliveries do
+      member do
+        post :publish   # draft → scheduled
+        post :cancel    # scheduled → cancelled (datetime only)
+        post :pause     # scheduled → paused (birthday only)
+        post :resume    # paused → scheduled (birthday only)
+      end
+    end
   end
 end
