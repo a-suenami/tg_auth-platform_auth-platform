@@ -3718,10 +3718,10 @@ CREATE UNIQUE INDEX idx_admins_tenant_id_uid_uniq ON public.admins USING btree (
 
 
 --
--- Name: idx_auto_tagging_tags_unique; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_auto_tagging_tags_tenant_tag_unique; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX idx_auto_tagging_tags_unique ON public.user_auto_tagging_tags USING btree (user_auto_tagging_id, user_tag_id);
+CREATE UNIQUE INDEX idx_auto_tagging_tags_tenant_tag_unique ON public.user_auto_tagging_tags USING btree (tenant_id, user_tag_id);
 
 
 --

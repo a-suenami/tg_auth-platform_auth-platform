@@ -1,4 +1,7 @@
 = form_with model: [:admin_area, user_auto_tagging], class: 'uk-form-stacked', data: { controller: 'user-auto-tagging-form', 'initial-block-count': user_auto_tagging.rule_blocks.size } do |f|
+  / Error display
+  = render 'admin_area/shared/form_error', target: user_auto_tagging
+
   / Section 1: 基本情報
   h3.uk-margin-bottom 基本情報
 
