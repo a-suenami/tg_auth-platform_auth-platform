@@ -10,7 +10,7 @@
 #
 # Example in Flipper UI:
 #   delivery (1 feature)
-#     └── actors: ["Tenant;sample", "Tenant;twogate"]
+#     └── actors: ["Tenant:sample", "Tenant:twogate"]
 #
 class TenantFeatureFlags
   extend T::Sig
@@ -78,8 +78,8 @@ class TenantFeatureFlags
     def enabled_tenants(flag_name)
       feature = Flipper.feature(flag_name)
       feature.actors_value
-             .select { |actor_id| actor_id.start_with?('Tenant;') }
-             .map { |actor_id| actor_id.delete_prefix('Tenant;') }
+             .select { |actor_id| actor_id.start_with?('Tenant:') }
+             .map { |actor_id| actor_id.delete_prefix('Tenant:') }
     end
 
     # Check if feature exists in Flipper

@@ -34,7 +34,7 @@ class Tenant < ApplicationRecord
   # Flipper actor support - returns unique identifier for feature flags
   sig { returns(String) }
   def flipper_id
-    "Tenant;#{id}"
+    "Tenant:#{id}"
   end
 
   class << self
