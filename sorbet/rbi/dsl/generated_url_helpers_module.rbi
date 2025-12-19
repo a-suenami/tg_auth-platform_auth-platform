@@ -238,6 +238,9 @@ module GeneratedUrlHelpersModule
   def edit_ruler_area_tenant_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def enqueue_ruler_area_sidekiq_jobs_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def health_check_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -269,6 +272,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_ruler_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_sidekiq_job_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_admin_url(*args); end
@@ -419,6 +425,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_rulers_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_sidekiq_web_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_admin_url(*args); end

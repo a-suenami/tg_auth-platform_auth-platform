@@ -1,3 +1,13 @@
+# typed: false
+# frozen_string_literal: true
+
+require 'sidekiq-ent/web'
+
+Sidekiq::Web.authorize do |env, _method, _path|
+  session = env['rack.session']
+  Ruler.find_by(id: session[:current_ruler_id]).present?
+end
+
 Rails.application.routes.draw do
   namespace :ruler_area, path: :ruler do
     root to: 'application#root', as: :root
@@ -9,6 +19,12 @@ Rails.application.routes.draw do
     get '/auth/logout' => 'auth0#logout'
 
     resources :rulers, only: [:index, :new, :create, :destroy]
+
+    # Sidekiq
+    resources :sidekiq_jobs, only: [:new] do
+      post 'enqueue', on: :collection
+    end
+    mount Sidekiq::Web, at: '/sidekiq'
 
     resources :tenants, only: [:index, :new, :create, :edit, :update] do
       get :admin_area, on: :member

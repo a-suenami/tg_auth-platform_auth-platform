@@ -238,6 +238,9 @@ module GeneratedPathHelpersModule
   def edit_ruler_area_tenant_tenant_stripe_account_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def enqueue_ruler_area_sidekiq_jobs_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def health_check_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -269,6 +272,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_ruler_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_sidekiq_job_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_admin_path(*args); end
@@ -419,6 +425,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_rulers_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_sidekiq_web_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_admin_path(*args); end
