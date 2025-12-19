@@ -24,7 +24,7 @@ module AdminArea
       end
 
       @user_tags = UserTag.ordered
-      @users = @users.includes(:user_profile, contact_address: :prefecture)
+      @users = @users.includes(:user_profile, :contact_address)
       @pagy, @users = pagy @users
     end
 
