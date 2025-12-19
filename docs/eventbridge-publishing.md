@@ -75,6 +75,13 @@ Examples:
 | `delivery_address.changed.v1` | Delivery address changed |
 | `delivery_address.removed.v1` | Delivery address removed |
 
+### Tag Events
+
+| detail-type | Trigger |
+|-------------|---------|
+| `tag.added.v1` | Tag assigned |
+| `tag.removed.v1` | Tag removed |
+
 ## Detail Payload Structure
 
 All payloads use **snake_case** for JSON keys.
@@ -124,7 +131,8 @@ All payloads use **snake_case** for JSON keys.
     "first_name_kana": "タロウ",
     "last_name_kana": "スズキ",
     "birth_date": "1990-01-15",
-    "gender": "male"
+    "gender": "male",
+    "tags": []
   }
 }
 ```

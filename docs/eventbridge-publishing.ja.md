@@ -75,6 +75,13 @@ com.twogate.idp/{tenant_id}/users
 | `delivery_address.changed.v1` | 配送先住所変更 |
 | `delivery_address.removed.v1` | 配送先住所削除 |
 
+### Tag イベント
+
+| detail-type | トリガー |
+|-------------|---------|
+| `tag.added.v1` | タグ付与 |
+| `tag.removed.v1` | タグ削除 |
+
 ## Detail ペイロード構造
 
 すべてのペイロードで JSON キーは **snake_case** を使用します。
@@ -124,7 +131,8 @@ com.twogate.idp/{tenant_id}/users
     "first_name_kana": "タロウ",
     "last_name_kana": "スズキ",
     "birth_date": "1990-01-15",
-    "gender": "male"
+    "gender": "male",
+    "tags": []
   }
 }
 ```
