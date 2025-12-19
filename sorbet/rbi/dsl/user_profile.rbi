@@ -617,21 +617,21 @@ class UserProfile
     sig do
       params(
         string_query: String,
-        id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        first_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        last_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        first_name_kana: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        last_name_kana: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         birth_date: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        gender: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        first_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        first_name_kana: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        gender: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        last_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        last_name_kana: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateAssociationRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, first_name: nil, last_name: nil, first_name_kana: nil, last_name_kana: nil, birth_date: nil, gender: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, birth_date: nil, created_at: nil, first_name: nil, first_name_kana: nil, gender: nil, id: nil, last_name: nil, last_name_kana: nil, tenant_id: nil, updated_at: nil, user_id: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -1458,21 +1458,21 @@ class UserProfile
     sig do
       params(
         string_query: String,
-        id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        first_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        last_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        first_name_kana: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        last_name_kana: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         birth_date: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
-        gender: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        first_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        first_name_kana: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        gender: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        last_name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        last_name_kana: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        user_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateRelation)
     end
-    def where(string_query = nil, id: nil, tenant_id: nil, user_id: nil, first_name: nil, last_name: nil, first_name_kana: nil, last_name_kana: nil, birth_date: nil, gender: nil, created_at: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, birth_date: nil, created_at: nil, first_name: nil, first_name_kana: nil, gender: nil, id: nil, last_name: nil, last_name_kana: nil, tenant_id: nil, updated_at: nil, user_id: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end
