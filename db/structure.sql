@@ -1,4 +1,4 @@
-\restrict dq2TbLJuuYcNnMGUC0rvLYYfABPluEBaTzBOETbLtGVgTgoG4iGhwT7wJE7cBqh
+\restrict 6egwX1QNobLtpo7sJUTCToTyMlhw0HqJmSW4KqqKN16G5FrJVTBsQ3eejnZzKU8
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -748,6 +748,70 @@ CREATE TABLE public.email_templates (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: flipper_features; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.flipper_features (
+    id bigint NOT NULL,
+    key character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: flipper_features_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.flipper_features_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: flipper_features_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.flipper_features_id_seq OWNED BY public.flipper_features.id;
+
+
+--
+-- Name: flipper_gates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.flipper_gates (
+    id bigint NOT NULL,
+    feature_key character varying NOT NULL,
+    key character varying NOT NULL,
+    value character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: flipper_gates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.flipper_gates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: flipper_gates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.flipper_gates_id_seq OWNED BY public.flipper_gates.id;
 
 
 --
@@ -3145,6 +3209,20 @@ COMMENT ON COLUMN public.users__sms_verifiers.ignore_in_rate_limit IS 'SMS送信
 
 
 --
+-- Name: flipper_features id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flipper_features ALTER COLUMN id SET DEFAULT nextval('public.flipper_features_id_seq'::regclass);
+
+
+--
+-- Name: flipper_gates id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flipper_gates ALTER COLUMN id SET DEFAULT nextval('public.flipper_gates_id_seq'::regclass);
+
+
+--
 -- Name: account_locks account_locks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3246,6 +3324,22 @@ ALTER TABLE ONLY public.delivery_user_tags
 
 ALTER TABLE ONLY public.email_templates
     ADD CONSTRAINT email_templates_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: flipper_features flipper_features_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flipper_features
+    ADD CONSTRAINT flipper_features_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: flipper_gates flipper_gates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flipper_gates
+    ADD CONSTRAINT flipper_gates_pkey PRIMARY KEY (id);
 
 
 --
@@ -3820,6 +3914,13 @@ CREATE INDEX idx_delivery_schedules_pending ON public.delivery_schedules USING b
 --
 
 CREATE UNIQUE INDEX idx_delivery_user_tags_unique ON public.delivery_user_tags USING btree (delivery_id, user_tag_id);
+
+
+--
+-- Name: idx_flipper_gates_feature_key_key_value; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_flipper_gates_feature_key_key_value ON public.flipper_gates USING btree (feature_key, key, value);
 
 
 --
@@ -4422,6 +4523,13 @@ CREATE INDEX index_email_templates_on_tenant_id ON public.email_templates USING 
 --
 
 CREATE UNIQUE INDEX index_email_templates_on_tenant_id_template_type ON public.email_templates USING btree (tenant_id, template_type);
+
+
+--
+-- Name: index_flipper_features_on_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_flipper_features_on_key ON public.flipper_features USING btree (key);
 
 
 --
@@ -6788,7 +6896,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict dq2TbLJuuYcNnMGUC0rvLYYfABPluEBaTzBOETbLtGVgTgoG4iGhwT7wJE7cBqh
+\unrestrict 6egwX1QNobLtpo7sJUTCToTyMlhw0HqJmSW4KqqKN16G5FrJVTBsQ3eejnZzKU8
 
 SET search_path TO "$user", public;
 

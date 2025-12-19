@@ -175,6 +175,10 @@ gem 'stripe', '~> 15.4.0'
 gem 'komoju'
 # Mangrove provides type utility to use with Sorbet
 gem 'mangrove', '~> 0.37.3'
+# Feature flags
+gem 'flipper', '~> 1.3'
+gem 'flipper-active_record', '~> 1.3'
+gem 'flipper-ui', '~> 1.3'
 
 # for shopify
 gem 'shopify_api', '~> 14.11.1'

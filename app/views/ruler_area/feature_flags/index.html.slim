@@ -1,0 +1,64 @@
+ul.uk-breadcrumb
+  li
+    span Feature Flags
+
+.am-page-header
+  h3 Feature Flags 管理
+
+/ Tenant Settings Section
+.uk-margin-top
+  .uk-card.uk-card-default.uk-card-body
+    h4.uk-card-title
+      span.uk-margin-small-right uk-icon="users"
+      | テナント別設定
+    p.uk-text-muted.uk-text-small
+      | 各テナントごとに機能の有効/無効を切り替えられます。
+
+    table.uk-table.uk-table-divider.uk-table-hover
+      thead
+        tr
+          th Feature
+          th.uk-text-center Global
+          - @tenants.each do |tenant|
+            th.uk-text-center = tenant.name
+      tbody
+        - @features.each do |feature|
+          - status = @feature_status[feature]
+          tr
+            td
+              strong = feature
+            td.uk-text-center
+              - if status[:global_on]
+                span.uk-label.uk-label-success ON
+              - else
+                span.uk-label OFF
+            - @tenants.each do |tenant|
+              td.uk-text-center
+                - if status[:tenant_status][tenant.id]
+                  = button_to toggle_ruler_area_feature_flags_path, method: :post, params: { feature: feature, tenant_id: tenant.id, enable: false }, class: 'uk-button uk-button-small uk-button-danger', data: { turbo_confirm: "#{tenant.name} で #{feature} を無効にしますか？" } do
+                    | OFF
+                - else
+                  = button_to toggle_ruler_area_feature_flags_path, method: :post, params: { feature: feature, tenant_id: tenant.id, enable: true }, class: 'uk-button uk-button-small uk-button-primary' do
+                    | ON
+
+/ Flipper UI Link
+.uk-margin-top
+  .uk-card.uk-card-default.uk-card-body
+    h4.uk-card-title
+      span.uk-margin-small-right uk-icon="cog"
+      | Flipper UI
+    p.uk-text-muted.uk-text-small
+      | より詳細な設定（パーセンテージロールアウト、グローバル有効化など）は Flipper UI で行えます。
+    = link_to 'Flipper UI を開く', ruler_area_flipper_path, class: 'uk-button uk-button-default', target: '_blank'
+
+/ Legend
+.uk-margin-top
+  .uk-card.uk-card-muted.uk-card-body.uk-card-small
+    h5.uk-card-title 凡例
+    .uk-grid.uk-child-width-1-2
+      div
+        span.uk-label.uk-label-success ON
+        span.uk-margin-small-left 有効
+      div
+        span.uk-label OFF
+        span.uk-margin-small-left 無効
