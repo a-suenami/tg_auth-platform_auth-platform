@@ -14,20 +14,21 @@ module AdminArea
       @users = @users.where(phone_number: params[:phone_number]) if params[:phone_number].present?
       @pagy, @users = pagy @users
 
-      render :index_new if feature_enabled?(:admin_new_ui)
+      render_with_ui_toggle('index')
     end
 
     def show
       if turbo_frame_request? && turbo_frame_request_id == 'detail'
         render partial: 'admin_area/users/user_detail'
       else
-        render :show
+        render_with_ui_toggle('show')
       end
     end
 
     def edit
       @user.build_user_profile unless @user.user_profile
       @user.build_contact_address unless @user.contact_address
+      render_with_ui_toggle('edit')
     end
 
     def update
