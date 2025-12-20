@@ -547,9 +547,6 @@ module GeneratedPathHelpersModule
   def sync_ruler_area_tenant_stripe_records_products_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def toggle_master_ruler_area_feature_flags_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def toggle_ruler_area_feature_flags_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }

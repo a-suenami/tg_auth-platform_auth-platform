@@ -57,6 +57,11 @@ Rails.application.routes.draw do
         namespace :komoju_records do
           resources :accounts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         end
+        resources :feature_flags, only: [:index] do
+          collection do
+            post :toggle
+          end
+        end
       end
     end
   end
