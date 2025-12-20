@@ -406,6 +406,12 @@ module GeneratedPathHelpersModule
   def ruler_area_auth_logout_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def ruler_area_feature_flags_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_flipper_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_login_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -431,6 +437,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_email_templates_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_feature_flags_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_komoju_records_account_path(*args); end
@@ -539,6 +548,12 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def sync_ruler_area_tenant_stripe_records_products_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def toggle_ruler_area_feature_flags_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def toggle_ruler_area_tenant_feature_flags_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def top_ruler_area_tenant_memberships_path(*args); end

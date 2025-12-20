@@ -31,6 +31,12 @@ class Tenant < ApplicationRecord
   # 今は固定、今後種類が増える可能性を考慮して、Tenantから参照だけするようにしておく。
   enumerize :card_payment_gateway, enum_class: CardPaymentGatewayEnum, default: CardPaymentGatewayEnum::Stripe.serialize
 
+  # Flipper actor support - returns unique identifier for feature flags
+  sig { returns(String) }
+  def flipper_id
+    "Tenant:#{id}"
+  end
+
   class << self
     extend T::Sig
 
