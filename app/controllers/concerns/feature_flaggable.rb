@@ -28,7 +28,7 @@ module FeatureFlaggable
 
     respond_to do |format|
       format.html do
-        flash[:alert] = 'この機能は現在利用できません'
+        flash[:alert] = I18n.t('feature_flags.errors.not_available')
         redirect_back fallback_location: admin_area_root_path
       end
       format.json do
