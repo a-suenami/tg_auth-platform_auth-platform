@@ -14,7 +14,7 @@ module AdminArea
       @users = @users.where(phone_number: params[:phone_number]) if params[:phone_number].present?
       @pagy, @users = pagy @users
 
-      render 'index.new' if feature_enabled?(:admin_new_ui)
+      render :index_new if feature_enabled?(:admin_new_ui)
     end
 
     def show
