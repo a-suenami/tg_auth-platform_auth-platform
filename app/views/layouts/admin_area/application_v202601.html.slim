@@ -50,7 +50,7 @@ html lang='ja'
         .l-header__container__account__dropdown id="dropdown-account"
           = link_to admin_area_logout_path, data: { turbo: false }, class: 'l-header__container__account__dropdown__item'
             | ログアウト
-    = render 'layouts/admin_area/flash'
+    = render 'layouts/admin_area/flash_v202601'
     .l-page__container
       = yield
 

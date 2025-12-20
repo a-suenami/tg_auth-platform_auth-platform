@@ -1,7 +1,7 @@
 = render 'admin_area/users/user_layout' do
   .p-user-show
     .p-user-show__breadcrumb
-      = render 'admin_area/shared/breadcrumb', items: [{ text: 'すべてのユーザー', link: admin_area_users_path, data: { turbo_frame: 'content' } }, { text: @user.user_profile&.name || @user.id }]
+      = render 'admin_area/shared/breadcrumb_v202601', items: [{ text: 'すべてのユーザー', link: admin_area_users_path, data: { turbo_frame: 'content' } }, { text: @user.user_profile&.name || @user.id }]
     .l-page-content__content__main.p-user-show__content__main
       - unless Rails.env.production?
         .p-user-show__content__section

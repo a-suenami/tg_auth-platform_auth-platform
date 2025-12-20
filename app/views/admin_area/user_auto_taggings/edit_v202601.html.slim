@@ -1,9 +1,9 @@
 = render 'admin_area/users/user_layout' do
   .p-user-auto-tagging-form data-controller="form-validation user-auto-tagging-form"
     .p-user-auto-tagging-form__breadcrumb
-      = render 'admin_area/shared/breadcrumb', items: [{ text: 'オートタギング', link: admin_area_user_auto_taggings_path }, { text: '新規オートタギング' }]
+      = render 'admin_area/shared/breadcrumb_v202601', items: [{ text: 'オートタギング', link: admin_area_user_auto_taggings_path }, { text: @user_auto_tagging.name }]
     .l-page-content__content__main.p-user-auto-tagging-form__content__main
-      = form_with model: @user_auto_tagging, url: admin_area_user_auto_taggings_path, method: :post, local: true, data: { turbo_frame: '_top', form_validation_target: 'form' }, html: { id: 'new_user_auto_tagging_form', 'data-initial-block-count': @user_auto_tagging.rule_blocks.size } do |f|
+      = form_with model: @user_auto_tagging, url: admin_area_user_auto_tagging_path(@user_auto_tagging), method: :patch, local: true, data: { turbo_frame: '_top', form_validation_target: 'form' }, html: { id: "edit_user_auto_tagging_#{@user_auto_tagging.id}_form", 'data-initial-block-count': @user_auto_tagging.rule_blocks.size } do |f|
         = render 'admin_area/shared/form_error', target: f.object
         .c-form
           / 基本情報セクション
@@ -37,7 +37,13 @@
                 .c-form-section__sub-section__title 一致した時に設定するタグ
                 .c-form-field
                   .c-user-detail-tag__list data-tag-picker-selected=""
-                    / 選択されたタグがここに表示されます（モック）
+                    - if @user_auto_tagging.user_tags.any?
+                      - @user_auto_tagging.user_tags.each do |tag|
+                        .c-user-detail-tag__item data-tag-id="#{tag.id}"
+                          span.c-user-detail-tag__item__text = tag.name
+                          = link_to '#', class: 'c-user-detail-tag__item__remove', data: { action: 'remove-tag', tag_id: tag.id } do
+                            = render 'shared/icons/icon-close'
+                          = hidden_field_tag 'user_auto_tagging[user_tag_ids][]', tag.id, id: "user_tag_#{tag.id}"
                     = link_to tag_picker_admin_area_user_auto_taggings_path, class: 'c-user-detail-tag__add', data: { turbo_frame: 'modal-frame' } do
                       = render 'shared/icons/icon-plus'
                       span.c-user-detail-tag__add__text タグを追加
@@ -50,7 +56,7 @@
                 .c-form-section__content
                   .c-condition-block__list data-user-auto-tagging-form-target="ruleBlocksContainer"
                     = f.fields_for :rule_blocks do |block_form|
-                      = render 'admin_area/user_auto_taggings/rule_block_fields', f: block_form
+                      = render 'admin_area/user_auto_taggings/rule_block_fields_v202601', f: block_form
                   .p-user-auto-tagging__rule-blocks-empty data-user-auto-tagging-form-target="ruleBlocksEmpty"
                     .c-empty 条件ブロックがありません
                   .c-condition-block__add-block
@@ -58,23 +64,38 @@
                       = render 'shared/icons/icon-plus'
                       span.c-form-section__add-block__text 条件ブロックを追加
                   template data-user-auto-tagging-form-target="ruleBlockTemplate"
-                    = render 'admin_area/user_auto_taggings/rule_block_fields', f: nil, template: true
+                    = render 'admin_area/user_auto_taggings/rule_block_fields_v202601', f: nil, template: true
                   template data-user-auto-tagging-form-target="ruleTemplate"
-                    = render 'admin_area/user_auto_taggings/rule_fields', f: nil, template: true
+                    = render 'admin_area/user_auto_taggings/rule_fields_v202601', f: nil, template: true
 
     .l-page-content__content__sub.p-user-auto-tagging-form__content__sub
       .p-user-auto-tagging-form__content__sub__section
         .p-user-auto-tagging-form__content__sub__button-wrapper
-          button.p-user-auto-tagging-form__content__sub__button.p-user-auto-tagging-form__content__sub__button--submit type="submit" form="new_user_auto_tagging_form" data-form-validation-target="submit" disabled="disabled" 新規作成
+          button.p-user-auto-tagging-form__content__sub__button.p-user-auto-tagging-form__content__sub__button--submit type="submit" form="edit_user_auto_tagging_#{@user_auto_tagging.id}_form" data-form-validation-target="submit" disabled="disabled" 変更を保存
           button.p-user-auto-tagging-form__content__sub__button__chevron type="button" data-dropdown-toggle="dropdown-save-actions"
             = render 'shared/icons/icon-chevron-down'
           .p-user-auto-tagging-form__content__sub__button__dropdown id="dropdown-save-actions"
-            button.p-user-auto-tagging-form__content__sub__button__dropdown__item type="submit" form="new_user_auto_tagging_form" data-form-validation-target="submit" 新規作成
-        = link_to admin_area_user_auto_taggings_path, class: 'p-user-auto-tagging-form__content__sub__button p-user-auto-tagging-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
+            button.p-user-auto-tagging-form__content__sub__button__dropdown__item type="submit" form="edit_user_auto_tagging_#{@user_auto_tagging.id}_form" data-form-validation-target="submit" 変更を保存
+            = link_to admin_area_user_auto_tagging_path(@user_auto_tagging), data: { turbo_method: :delete, turbo_confirm: '本当に削除しますか？', turbo_frame: '_top' }, class: 'p-user-auto-tagging-form__content__sub__button__dropdown__item' do
+              | オートタグを削除
+        = link_to admin_area_user_auto_taggings_path, class: 'p-user-auto-tagging-form__content__sub__button p-user-auto-tagging-form__content__sub__button--cancel', data: { turbo_frame: 'content' } do
           | キャンセル
       .p-user-auto-tagging-form__content__sub__section
         = link_to admin_area_users_path, class: 'p-user-auto-tagging-form__content__sub__button p-user-auto-tagging-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
           | ユーザー一覧
+      .p-user-auto-tagging-form__content__sub__section.p-user-auto-tagging-form__content__sub__metadata
+        .c-info
+          .c-info__item
+            .c-info__item__label 作成者
+            .c-info__item__value = @user_auto_tagging.created_by_name || '-'
+          .c-info__item
+            .c-info__item__label 作成日時
+            .c-info__item__value = local_time(@user_auto_tagging.created_at)
+          .c-info__item
+            .c-info__item__label 最終更新者
+            .c-info__item__value = @user_auto_tagging.updated_by_name || '-'
+          .c-info__item
+            .c-info__item__label 最終更新日時
+            .c-info__item__value = local_time(@user_auto_tagging.updated_at)
 
-  / モーダル
-  = render 'admin_area/shared/modal', modal_id: 'datepicker-modal'
+= render 'admin_area/shared/modal', modal_id: 'datepicker-modal'
