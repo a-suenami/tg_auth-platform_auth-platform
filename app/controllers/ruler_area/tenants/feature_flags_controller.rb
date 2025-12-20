@@ -6,8 +6,8 @@ module RulerArea
     class FeatureFlagsController < ApplicationController
       def index
         @features = FeatureFlagRegistry.tenant_flags
-        @feature_status = @features.each_with_object({}) do |feature, hash|
-          hash[feature] = {
+        @feature_status = @features.index_with do |feature|
+          {
             description: FeatureFlagRegistry.description(feature),
             enabled: TenantFeatureFlags.enabled_for_tenant?(feature, @tenant),
             global_on: TenantFeatureFlags.globally_enabled?(feature),

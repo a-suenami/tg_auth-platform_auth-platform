@@ -16,7 +16,7 @@ class FeatureFlagRegistry
     delivery: { description: '配信機能を有効化', scope: :tenant },
     admin_new_ui: { description: '管理画面の新UIを有効化', scope: :tenant },
     ruler_new_ui: { description: 'Ruler管理画面の新UIを有効化', scope: :global },
-  }.freeze, T::Hash[Symbol, FlagConfig])
+  }.freeze, T::Hash[Symbol, FlagConfig],)
 
   class << self
     extend T::Sig
