@@ -1,4 +1,4 @@
-\restrict 6egwX1QNobLtpo7sJUTCToTyMlhw0HqJmSW4KqqKN16G5FrJVTBsQ3eejnZzKU8
+\restrict dF0SFqOKnz9IBXPBaRSfgakyccmaLc4zwOISotCO5P8QvAQFhdH6Mfnv1YVSCR8
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -2842,7 +2842,6 @@ CREATE TABLE public.user_auto_taggings (
     name character varying NOT NULL,
     description text,
     enabled boolean DEFAULT true NOT NULL,
-    shareable boolean DEFAULT false NOT NULL,
     created_by_id uuid,
     updated_by_id uuid,
     created_at timestamp(6) without time zone NOT NULL,
@@ -2883,13 +2882,6 @@ COMMENT ON COLUMN public.user_auto_taggings.description IS 'Rule description';
 --
 
 COMMENT ON COLUMN public.user_auto_taggings.enabled IS 'Whether rule is active';
-
-
---
--- Name: COLUMN user_auto_taggings.shareable; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.user_auto_taggings.shareable IS 'Tag shareable with linked apps (連携タグ設定)';
 
 
 --
@@ -3053,6 +3045,7 @@ CREATE TABLE public.user_tags (
     description text,
     created_by_id uuid,
     updated_by_id uuid,
+    integration_enabled boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -3098,6 +3091,13 @@ COMMENT ON COLUMN public.user_tags.created_by_id IS 'Admin who created this tag'
 --
 
 COMMENT ON COLUMN public.user_tags.updated_by_id IS 'Admin who last updated this tag';
+
+
+--
+-- Name: COLUMN user_tags.integration_enabled; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tags.integration_enabled IS 'Enable tag sync to integrated apps (連携タグ設定)';
 
 
 --
@@ -6896,7 +6896,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 6egwX1QNobLtpo7sJUTCToTyMlhw0HqJmSW4KqqKN16G5FrJVTBsQ3eejnZzKU8
+\unrestrict dF0SFqOKnz9IBXPBaRSfgakyccmaLc4zwOISotCO5P8QvAQFhdH6Mfnv1YVSCR8
 
 SET search_path TO "$user", public;
 
