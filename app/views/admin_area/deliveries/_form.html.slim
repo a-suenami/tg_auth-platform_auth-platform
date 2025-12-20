@@ -1,0 +1,113 @@
+- default_type = delivery.persisted? ? (delivery.schedule_type? ? 'schedule' : 'birthday') : 'schedule'
+- scheduled_at_utc = delivery.schedule&.scheduled_at&.utc&.iso8601
+= form_with model: [:admin_area, delivery], class: 'uk-form-stacked', data: { controller: 'delivery-form datetime-utc', delivery_form_type_value: default_type } do |f|
+  - if delivery.errors.any?
+    .uk-alert.uk-alert-danger
+      ul
+        - delivery.errors.full_messages.each do |message|
+          li = message
+
+  .uk-margin
+    = f.label :name, '配信イベント名', class: 'uk-form-label'
+    .uk-form-controls
+      = f.text_field :name, placeholder: '配信イベント名を入力...', required: true, class: 'uk-input'
+
+  .uk-margin
+    label.uk-form-label 配信方法
+    .uk-form-controls
+      select.uk-select disabled=true
+        option selected=true Eメール
+        option LINE
+
+  .uk-margin
+    = f.label :template_id, '配信テンプレート', class: 'uk-form-label'
+    .uk-form-controls
+      - if templates.empty?
+        .uk-alert.uk-alert-warning.uk-margin-small-bottom
+          span uk-icon="warning"
+          |  公開済みのテンプレートがありません。
+          = link_to '先にテンプレートを作成してください', admin_area_templates_path
+      = f.collection_select :template_id, templates, :id, :name, { prompt: '選択してください' }, class: 'uk-select', disabled: templates.empty?
+
+  .uk-margin data-controller="delivery-tag-selector"
+    label.uk-form-label
+      | ユーザータグ
+    .uk-text-small.uk-text-muted.uk-margin-small-bottom
+      | 配信対象のユーザータグを選択してください（複数選択可）
+
+    - if user_tags.present?
+      - selected_tag_ids = delivery.user_tag_ids
+      - selected_tags = user_tags.select { |t| selected_tag_ids.include?(t.id) }
+      - available_tags = user_tags.reject { |t| selected_tag_ids.include?(t.id) }
+
+      / Selected tags displayed as chips
+      .uk-margin-small-top data-delivery-tag-selector-target="container" style="min-height: 40px; padding: 8px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fafafa;"
+        - if selected_tags.any?
+          - selected_tags.each do |tag|
+            span.uk-label.uk-label-primary.uk-margin-small-right.tag-chip data-tag-id=tag.id data-tag-name=tag.name style="cursor: pointer;" data-action="click->delivery-tag-selector#removeTag"
+              = tag.name
+              |
+              span uk-icon="icon: close; ratio: 0.8"
+            = hidden_field_tag 'delivery[user_tag_ids][]', tag.id, id: "delivery_user_tag_#{tag.id}", data: { tag_id: tag.id }
+        - else
+          span.uk-text-meta data-delivery-tag-selector-target="placeholder" タグが選択されていません
+
+      / Dropdown to add new tags
+      .uk-margin-small-top
+        label.uk-form-label.uk-text-small タグを追加
+        select.uk-select data-delivery-tag-selector-target="selector" data-action="change->delivery-tag-selector#addTag"
+          option value="" -- タグを選択 --
+          - available_tags.each do |tag|
+            option value=tag.id data-name=tag.name
+              = tag.name
+    - else
+      .uk-alert.uk-alert-warning
+        span uk-icon="warning"
+        |  ユーザータグがありません。
+        = link_to '先にタグを作成してください', admin_area_user_tags_path
+
+  .uk-margin
+    label.uk-form-label 配布タイプ
+    .uk-form-controls
+      label.uk-margin-right
+        - schedule_checked = delivery.persisted? ? delivery.schedule_type? : true
+        input type="radio" name="delivery[delivery_type]" value="schedule" checked=schedule_checked data-action="delivery-form#toggleType" class="uk-radio"
+        =<> '日時指定'
+      label
+        - birthday_checked = delivery.persisted? ? delivery.birthday_type? : false
+        input type="radio" name="delivery[delivery_type]" value="birthday" checked=birthday_checked data-action="delivery-form#toggleType" class="uk-radio"
+        =<> '誕生日'
+
+  / Schedule fields
+  - schedule_hidden = delivery.persisted? ? delivery.birthday_type? : false
+  div data-delivery-form-target="scheduleFields" class=(schedule_hidden ? 'uk-hidden' : '')
+    .uk-margin
+      label.uk-form-label 配信日時
+      .uk-form-controls
+        input type="datetime-local" class="uk-input" style="width: auto;" data-datetime-utc-target="input" data-utc=scheduled_at_utc data-name="delivery[scheduled_at]"
+
+  / Birthday fields
+  - birthday_hidden = delivery.persisted? ? delivery.schedule_type? : true
+  div data-delivery-form-target="birthdayFields" class=(birthday_hidden ? 'uk-hidden' : '')
+    .uk-card.uk-card-default.uk-card-body.uk-card-small.uk-margin
+      p.uk-text-small.uk-text-primary
+        span uk-icon="info"
+        |  ユーザーの誕生日を基準に配信されます
+
+      .uk-flex.uk-flex-top
+        .uk-width-1-2
+          label.uk-form-label タイミング
+          .uk-form-controls.uk-flex.uk-flex-middle
+            | 誕生日の
+            input type="number" name="delivery[birthday_offset_days]" value="#{delivery.birthday&.offset_days || 0}" class="uk-input uk-width-small uk-margin-small-left uk-margin-small-right" style="width: 80px;"
+            | 日後
+          p.uk-text-small.uk-text-muted ※負の値で前日指定
+
+        .uk-width-1-2
+          label.uk-form-label 配信時刻
+          .uk-form-controls
+            input type="time" name="delivery[birthday_delivery_time]" value="#{delivery.birthday&.delivery_time || '09:00'}" class="uk-input" style="width: auto;"
+
+  .uk-margin
+    = f.submit (delivery.persisted? ? '更新する' : '作成する'), class: 'uk-button uk-button-primary'
+    = link_to 'キャンセル', (delivery.persisted? ? admin_area_delivery_path(delivery) : admin_area_deliveries_path), class: 'uk-button uk-button-default uk-margin-left'

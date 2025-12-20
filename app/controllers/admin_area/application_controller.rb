@@ -6,6 +6,7 @@ module AdminArea
     extend T::Sig
     include Pagy::Backend
     include AdminArea::ExceptionRescuable
+    include FeatureFlaggable
 
     before_action :authenticate!
     before_action :set_tenant

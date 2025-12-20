@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    models:
+      delivery: Delivery Event
+    attributes:
+      delivery:
+        id: ID
+        name: Event Name
+        template: Template
+        template_id: Template
+        user_tags: User Tags
+        created_by: Created By
+        updated_by: Updated By
+        created_at: Created At
+        updated_at: Updated At

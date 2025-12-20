@@ -1,0 +1,25 @@
+/ Event Log Card
+.uk-card.uk-card-default.uk-card-body.uk-card-small
+  h4.uk-card-title アクティビティ
+
+  - if events.empty?
+    p.uk-text-muted アクティビティがありません
+  - else
+    .uk-timeline style="position: relative;"
+      - events.each_with_index do |event, index|
+        - is_last = index == events.size - 1
+        .uk-timeline-item.uk-flex style="padding-bottom: #{is_last ? '0' : '16px'};"
+          / Icon column
+          .uk-timeline-icon-col style="width: 24px; flex-shrink: 0; position: relative;"
+            .uk-timeline-icon style="width: 20px; height: 20px; background: #f8f8f8; border: 2px solid #e5e5e5; border-radius: 50%; display: flex; align-items: center; justify-content: center;"
+              = render 'event_icon', event: event
+            - unless is_last
+              .uk-timeline-line style="position: absolute; left: 9px; top: 24px; bottom: -16px; width: 2px; background: #e5e5e5;"
+          / Date column
+          .uk-text-small.uk-text-muted.uk-margin-small-left style="width: 80px; flex-shrink: 0;"
+            = local_time(event.transaction_time)
+          / Content column
+          .uk-margin-small-left
+            span.uk-text-bold = event.admin&.name || event.admin&.email || 'システム'
+            span.uk-text-muted が
+            = render 'event_action', event: event

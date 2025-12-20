@@ -1,0 +1,145 @@
+- template ||= false
+- rule_form = f unless template
+
+.rule-item.uk-margin
+  - if rule_form
+    = rule_form.hidden_field :position
+    = rule_form.hidden_field :_destroy
+  - else
+    input type="hidden" name="user_auto_tagging[rule_blocks_attributes][NEW_RECORD][rules_attributes][NEW_RECORD][position]" value="0"
+    input type="hidden" name="user_auto_tagging[rule_blocks_attributes][NEW_RECORD][rules_attributes][NEW_RECORD][_destroy]" value="0"
+
+  .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-small-bottom
+    label.uk-form-label.uk-margin-remove
+      | 条件&nbsp;
+      span.rule-number
+    button.remove-rule.uk-button.uk-button-danger.uk-button-small type="button" data-action="click->user-auto-tagging-form#removeRule"
+      span uk-icon="close"
+
+  / Condition Type Select
+  .uk-margin-small
+    label.uk-form-label 条件タイプ
+    - if template
+      select.condition-type-select.uk-select name="user_auto_tagging[rule_blocks_attributes][NEW_RECORD][rules_attributes][NEW_RECORD][condition_type]" data-action="change->user-auto-tagging-form#handleConditionTypeChange"
+        option value="" 条件タイプを選択
+        option value="membership" 購読中メンバーシップ
+        option value="plan" 購読中プラン
+        option value="prefecture" 居住都道府県
+        option value="gender" 性別
+        option value="age" 年代
+        option value="account_link" アカウント連携
+    - else
+      - condition_options = [['条件タイプを選択', ''], ['購読中メンバーシップ', 'membership'], ['購読中プラン', 'plan'], ['居住都道府県', 'prefecture'], ['性別', 'gender'], ['年代', 'age'], ['アカウント連携', 'account_link']]
+      = rule_form.select :condition_type, condition_options, {}, class: 'condition-type-select uk-select', required: true, data: { action: 'change->user-auto-tagging-form#handleConditionTypeChange' }
+
+  / Config Fields Container (dynamic based on condition type)
+  .config-fields data-config-container=""
+    / Membership Config
+    .config-membership style="display: none;"
+      .uk-margin-small
+        label.uk-form-label 購読タイプ
+        select.subscription-type-select.uk-select data-field="subscription_type" data-action="change->user-auto-tagging-form#handleSubscriptionTypeChange change->user-auto-tagging-form#handleFieldChange"
+          option value="current" 現在購読中
+          option value="duration" 一定期間以上購読中
+
+      .duration-fields style="display: none;"
+        .uk-margin-small
+          label.uk-form-label 購読期間
+          .uk-grid-small data-uk-grid=""
+            .uk-width-auto
+              input.uk-input type="number" min="1" data-field="duration_value" style="width: 100px;" placeholder="数" data-action="change->user-auto-tagging-form#handleFieldChange"
+            .uk-width-auto
+              select.uk-select data-field="duration_unit" style="width: 120px;" data-action="change->user-auto-tagging-form#handleFieldChange"
+                option value="days" 日
+                option value="months" ヶ月
+
+      .uk-margin-small
+        label.uk-form-label メンバーシップ選択
+        .uk-grid-small data-uk-grid=""
+          - Membership.all.each do |membership|
+            .uk-width-1-3
+              label
+                input.uk-checkbox type="checkbox" data-field="values" value=membership.id data-action="change->user-auto-tagging-form#handleFieldChange"
+                | &nbsp;#{membership.display_name}
+
+    / Plan Config
+    .config-plan style="display: none;"
+      .uk-margin-small
+        label.uk-form-label 購読タイプ
+        select.subscription-type-select.uk-select data-field="subscription_type" data-action="change->user-auto-tagging-form#handleSubscriptionTypeChange change->user-auto-tagging-form#handleFieldChange"
+          option value="current" 現在購読中
+          option value="duration" 一定期間以上購読中
+
+      .duration-fields style="display: none;"
+        .uk-margin-small
+          label.uk-form-label 購読期間
+          .uk-grid-small data-uk-grid=""
+            .uk-width-auto
+              input.uk-input type="number" min="1" data-field="duration_value" style="width: 100px;" placeholder="数" data-action="change->user-auto-tagging-form#handleFieldChange"
+            .uk-width-auto
+              select.uk-select data-field="duration_unit" style="width: 120px;" data-action="change->user-auto-tagging-form#handleFieldChange"
+                option value="days" 日
+                option value="months" ヶ月
+
+      .uk-margin-small
+        label.uk-form-label プラン選択
+        .uk-grid-small data-uk-grid=""
+          - Membership::Plan.all.each do |plan|
+            .uk-width-1-3
+              label
+                input.uk-checkbox type="checkbox" data-field="values" value=plan.id data-action="change->user-auto-tagging-form#handleFieldChange"
+                | &nbsp;#{plan.name}
+
+    / Prefecture Config
+    .config-prefecture style="display: none;"
+      .uk-margin-small
+        label.uk-form-label 都道府県選択
+        .uk-grid-small data-uk-grid=""
+          - ['北海道', '東京都', '大阪府', '福岡県'].each do |pref|
+            .uk-width-1-4
+              label
+                input.uk-checkbox type="checkbox" data-field="values" value=pref data-action="change->user-auto-tagging-form#handleFieldChange"
+                | &nbsp;#{pref}
+
+    / Gender Config
+    .config-gender style="display: none;"
+      .uk-margin-small
+        label.uk-form-label 性別選択
+        .uk-grid-small data-uk-grid=""
+          .uk-width-1-3
+            label
+              input.uk-checkbox type="checkbox" data-field="values" value="male" data-action="change->user-auto-tagging-form#handleFieldChange"
+              | &nbsp;男性
+          .uk-width-1-3
+            label
+              input.uk-checkbox type="checkbox" data-field="values" value="female" data-action="change->user-auto-tagging-form#handleFieldChange"
+              | &nbsp;女性
+          .uk-width-1-3
+            label
+              input.uk-checkbox type="checkbox" data-field="values" value="other" data-action="change->user-auto-tagging-form#handleFieldChange"
+              | &nbsp;その他
+
+    / Age Config
+    .config-age style="display: none;"
+      .uk-margin-small
+        label.uk-form-label 年齢範囲
+        .uk-grid-small data-uk-grid=""
+          .uk-width-1-2
+            input.uk-input type="number" min="0" data-field="min" placeholder="最小年齢" data-action="change->user-auto-tagging-form#handleFieldChange"
+          .uk-width-1-2
+            input.uk-input type="number" min="0" data-field="max" placeholder="最大年齢" data-action="change->user-auto-tagging-form#handleFieldChange"
+
+    / Account Link Config
+    .config-account_link style="display: none;"
+      .uk-margin-small
+        label.uk-form-label アカウント連携
+        select.uk-select data-field="value" data-action="change->user-auto-tagging-form#handleFieldChange"
+          option value="" 選択してください
+          option value="LINE" LINE
+
+  / Hidden field to store final config JSON
+  - if template
+    textarea.config-json-field name="user_auto_tagging[rule_blocks_attributes][NEW_RECORD][rules_attributes][NEW_RECORD][config]" style="display: none;"
+  - else
+    - config_value = rule_form.object.config.is_a?(Hash) ? rule_form.object.config.to_json : rule_form.object.config
+    = rule_form.text_area :config, value: config_value, class: 'config-json-field', style: 'display: none;'

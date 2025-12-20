@@ -1,0 +1,9 @@
+- status = delivery.status
+- schedule_colors = { 'draft' => 'uk-label', 'scheduled' => 'uk-label uk-label-primary', 'preparing' => 'uk-label uk-label-warning', 'delivering' => 'uk-label uk-label-warning', 'delivered' => 'uk-label uk-label-success', 'cancelled' => 'uk-label uk-label-danger' }
+- birthday_colors = { 'draft' => 'uk-label', 'ongoing' => 'uk-label uk-label-primary', 'preparing' => 'uk-label uk-label-warning', 'delivering' => 'uk-label uk-label-warning', 'paused' => 'uk-label uk-label-danger' }
+- schedule_labels = { 'draft' => '下書き', 'scheduled' => '予約済み', 'preparing' => '準備中', 'delivering' => '配信中', 'delivered' => '配信済み', 'cancelled' => 'キャンセル' }
+- birthday_labels = { 'draft' => '下書き', 'ongoing' => '稼働中', 'preparing' => '準備中', 'delivering' => '配信中', 'paused' => '停止中' }
+- if delivery.schedule_type?
+  span class=schedule_colors[status] = schedule_labels[status]
+- else
+  span class=birthday_colors[status] = birthday_labels[status]

@@ -1,0 +1,14 @@
+create_table :delivery_user_tags, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Many-to-many: deliveries to user_tags' do |t|
+  t.references :tenant, type: :citext, null: false, comment: 'Tenant reference'
+  t.references :delivery, type: :uuid, null: false, comment: 'Delivery reference'
+  t.references :user_tag, type: :uuid, null: false, comment: 'User tag reference'
+
+  t.timestamps null: false
+
+  t.index [:delivery_id, :user_tag_id], unique: true, name: 'idx_delivery_user_tags_unique'
+  t.index [:tenant_id, :delivery_id]
+end
+
+add_foreign_key :delivery_user_tags, :tenants
+add_foreign_key :delivery_user_tags, :deliveries
+add_foreign_key :delivery_user_tags, :user_tags

@@ -1,4 +1,4 @@
-\restrict pcA0sD0cOlaccgkK8NjykNtTYmE83gMytAXSfFpuLeRgr3JjlOKoR530wAt6oe7
+\restrict dF0SFqOKnz9IBXPBaRSfgakyccmaLc4zwOISotCO5P8QvAQFhdH6Mfnv1YVSCR8
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -149,6 +149,64 @@ CREATE TABLE public.contact_addresses (
 
 
 --
+-- Name: deliveries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.deliveries (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    name character varying NOT NULL,
+    template_id uuid NOT NULL,
+    created_by_id uuid,
+    updated_by_id uuid,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE deliveries; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.deliveries IS 'Email delivery campaigns';
+
+
+--
+-- Name: COLUMN deliveries.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN deliveries.name; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.name IS 'Delivery event name';
+
+
+--
+-- Name: COLUMN deliveries.template_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.template_id IS 'Email template reference';
+
+
+--
+-- Name: COLUMN deliveries.created_by_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.created_by_id IS 'Admin who created';
+
+
+--
+-- Name: COLUMN deliveries.updated_by_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.deliveries.updated_by_id IS 'Admin who last updated';
+
+
+--
 -- Name: delivery_addresses; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -170,6 +228,513 @@ CREATE TABLE public.delivery_addresses (
 
 
 --
+-- Name: delivery_birthdays; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delivery_birthdays (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    delivery_id uuid NOT NULL,
+    status character varying DEFAULT 'draft'::character varying NOT NULL,
+    offset_days integer DEFAULT 0 NOT NULL,
+    delivery_time character varying DEFAULT '09:00'::character varying NOT NULL,
+    published_at timestamp(6) without time zone,
+    published_by_id uuid,
+    blastengine_delivery_id bigint,
+    blastengine_job_id character varying,
+    last_setup_date date,
+    setup_completed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE delivery_birthdays; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.delivery_birthdays IS 'Birthday-based delivery schedules';
+
+
+--
+-- Name: COLUMN delivery_birthdays.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_birthdays.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN delivery_birthdays.delivery_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_birthdays.delivery_id IS 'Parent delivery';
+
+
+--
+-- Name: COLUMN delivery_birthdays.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_birthdays.status IS 'Birthday delivery status';
+
+
+--
+-- Name: COLUMN delivery_birthdays.offset_days; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_birthdays.offset_days IS 'Days offset from birthday (negative = before)';
+
+
+--
+-- Name: COLUMN delivery_birthdays.delivery_time; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_birthdays.delivery_time IS 'Delivery time HH:MM';
+
+
+--
+-- Name: COLUMN delivery_birthdays.published_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_birthdays.published_at IS 'When birthday delivery was activated';
+
+
+--
+-- Name: COLUMN delivery_birthdays.published_by_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_birthdays.published_by_id IS 'Admin who activated';
+
+
+--
+-- Name: COLUMN delivery_birthdays.blastengine_delivery_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_birthdays.blastengine_delivery_id IS 'Current day Blastengine bulk delivery ID';
+
+
+--
+-- Name: COLUMN delivery_birthdays.blastengine_job_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_birthdays.blastengine_job_id IS 'Current day CSV import job ID';
+
+
+--
+-- Name: COLUMN delivery_birthdays.last_setup_date; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_birthdays.last_setup_date IS 'Which date setup was done for';
+
+
+--
+-- Name: COLUMN delivery_birthdays.setup_completed_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_birthdays.setup_completed_at IS 'When bulk setup completed for current day';
+
+
+--
+-- Name: delivery_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delivery_events (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    delivery_id uuid NOT NULL,
+    admin_id uuid,
+    transaction_time timestamp(6) without time zone NOT NULL,
+    event_type character varying NOT NULL,
+    payload jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE delivery_events; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.delivery_events IS 'Delivery event log (for audit and inter-system communication)';
+
+
+--
+-- Name: COLUMN delivery_events.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_events.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN delivery_events.delivery_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_events.delivery_id IS 'Delivery reference';
+
+
+--
+-- Name: COLUMN delivery_events.admin_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_events.admin_id IS 'Admin who triggered event (if applicable)';
+
+
+--
+-- Name: COLUMN delivery_events.transaction_time; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_events.transaction_time IS 'Event occurrence time';
+
+
+--
+-- Name: COLUMN delivery_events.event_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_events.event_type IS 'Event type: created, updated, published, cancelled, paused, resumed, sent, failed';
+
+
+--
+-- Name: COLUMN delivery_events.payload; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_events.payload IS 'Event details (metadata, changes, etc.)';
+
+
+--
+-- Name: delivery_recipients; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delivery_recipients (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    delivery_id uuid NOT NULL,
+    user_id uuid NOT NULL,
+    delivery_date date NOT NULL,
+    status character varying DEFAULT 'pending'::character varying NOT NULL,
+    scheduled_for timestamp(6) without time zone,
+    sent_at timestamp(6) without time zone,
+    error_message text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE delivery_recipients; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.delivery_recipients IS 'Recipients for each delivery (fixed at setup time)';
+
+
+--
+-- Name: COLUMN delivery_recipients.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_recipients.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN delivery_recipients.delivery_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_recipients.delivery_id IS 'Delivery reference';
+
+
+--
+-- Name: COLUMN delivery_recipients.user_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_recipients.user_id IS 'Target user';
+
+
+--
+-- Name: COLUMN delivery_recipients.delivery_date; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_recipients.delivery_date IS 'Date of delivery batch (enables yearly birthday emails)';
+
+
+--
+-- Name: COLUMN delivery_recipients.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_recipients.status IS 'Delivery status from Blastengine';
+
+
+--
+-- Name: COLUMN delivery_recipients.scheduled_for; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_recipients.scheduled_for IS 'When this should be sent';
+
+
+--
+-- Name: COLUMN delivery_recipients.sent_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_recipients.sent_at IS 'When email was actually sent (from Blastengine)';
+
+
+--
+-- Name: COLUMN delivery_recipients.error_message; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_recipients.error_message IS 'Error message if failed';
+
+
+--
+-- Name: delivery_results; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delivery_results (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    delivery_id uuid NOT NULL,
+    delivery_schedule_id uuid,
+    delivery_birthday_id uuid,
+    blastengine_delivery_id bigint NOT NULL,
+    delivery_date date,
+    total_count integer DEFAULT 0 NOT NULL,
+    sent_count integer DEFAULT 0 NOT NULL,
+    drop_count integer DEFAULT 0 NOT NULL,
+    soft_error_count integer DEFAULT 0 NOT NULL,
+    hard_error_count integer DEFAULT 0 NOT NULL,
+    open_count integer DEFAULT 0 NOT NULL,
+    synced_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE delivery_results; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.delivery_results IS 'Aggregated delivery results from Blastengine';
+
+
+--
+-- Name: COLUMN delivery_results.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_results.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN delivery_results.delivery_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_results.delivery_id IS 'Delivery reference';
+
+
+--
+-- Name: COLUMN delivery_results.delivery_schedule_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_results.delivery_schedule_id IS 'Schedule reference (for fixed-time deliveries)';
+
+
+--
+-- Name: COLUMN delivery_results.delivery_birthday_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_results.delivery_birthday_id IS 'Birthday reference (for birthday deliveries)';
+
+
+--
+-- Name: COLUMN delivery_results.blastengine_delivery_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_results.blastengine_delivery_id IS 'Blastengine bulk delivery ID';
+
+
+--
+-- Name: COLUMN delivery_results.delivery_date; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_results.delivery_date IS 'Date of delivery (for birthday daily results)';
+
+
+--
+-- Name: COLUMN delivery_results.total_count; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_results.total_count IS 'Total recipients';
+
+
+--
+-- Name: COLUMN delivery_results.sent_count; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_results.sent_count IS 'Successfully sent';
+
+
+--
+-- Name: COLUMN delivery_results.drop_count; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_results.drop_count IS 'Dropped (invalid email, etc.)';
+
+
+--
+-- Name: COLUMN delivery_results.soft_error_count; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_results.soft_error_count IS 'Soft bounce (temporary failure)';
+
+
+--
+-- Name: COLUMN delivery_results.hard_error_count; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_results.hard_error_count IS 'Hard bounce (permanent failure)';
+
+
+--
+-- Name: COLUMN delivery_results.open_count; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_results.open_count IS 'Opened emails';
+
+
+--
+-- Name: COLUMN delivery_results.synced_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_results.synced_at IS 'When results were last synced from Blastengine';
+
+
+--
+-- Name: delivery_schedules; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delivery_schedules (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    delivery_id uuid NOT NULL,
+    status character varying DEFAULT 'draft'::character varying NOT NULL,
+    scheduled_at timestamp(6) without time zone,
+    published_at timestamp(6) without time zone,
+    published_by_id uuid,
+    blastengine_delivery_id bigint,
+    blastengine_job_id character varying,
+    setup_completed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE delivery_schedules; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.delivery_schedules IS 'Datetime-based delivery schedules';
+
+
+--
+-- Name: COLUMN delivery_schedules.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_schedules.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN delivery_schedules.delivery_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_schedules.delivery_id IS 'Parent delivery';
+
+
+--
+-- Name: COLUMN delivery_schedules.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_schedules.status IS 'Schedule status';
+
+
+--
+-- Name: COLUMN delivery_schedules.scheduled_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_schedules.scheduled_at IS 'Scheduled delivery datetime';
+
+
+--
+-- Name: COLUMN delivery_schedules.published_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_schedules.published_at IS 'When schedule was published';
+
+
+--
+-- Name: COLUMN delivery_schedules.published_by_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_schedules.published_by_id IS 'Admin who published';
+
+
+--
+-- Name: COLUMN delivery_schedules.blastengine_delivery_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_schedules.blastengine_delivery_id IS 'Blastengine bulk delivery ID';
+
+
+--
+-- Name: COLUMN delivery_schedules.blastengine_job_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_schedules.blastengine_job_id IS 'Blastengine CSV import job ID';
+
+
+--
+-- Name: COLUMN delivery_schedules.setup_completed_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_schedules.setup_completed_at IS 'When bulk setup completed';
+
+
+--
+-- Name: delivery_user_tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.delivery_user_tags (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    delivery_id uuid NOT NULL,
+    user_tag_id uuid NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: TABLE delivery_user_tags; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.delivery_user_tags IS 'Many-to-many: deliveries to user_tags';
+
+
+--
+-- Name: COLUMN delivery_user_tags.tenant_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_user_tags.tenant_id IS 'Tenant reference';
+
+
+--
+-- Name: COLUMN delivery_user_tags.delivery_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_user_tags.delivery_id IS 'Delivery reference';
+
+
+--
+-- Name: COLUMN delivery_user_tags.user_tag_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.delivery_user_tags.user_tag_id IS 'User tag reference';
+
+
+--
 -- Name: email_templates; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -183,6 +748,70 @@ CREATE TABLE public.email_templates (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: flipper_features; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.flipper_features (
+    id bigint NOT NULL,
+    key character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: flipper_features_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.flipper_features_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: flipper_features_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.flipper_features_id_seq OWNED BY public.flipper_features.id;
+
+
+--
+-- Name: flipper_gates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.flipper_gates (
+    id bigint NOT NULL,
+    feature_key character varying NOT NULL,
+    key character varying NOT NULL,
+    value character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: flipper_gates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.flipper_gates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: flipper_gates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.flipper_gates_id_seq OWNED BY public.flipper_gates.id;
 
 
 --
@@ -2213,7 +2842,6 @@ CREATE TABLE public.user_auto_taggings (
     name character varying NOT NULL,
     description text,
     enabled boolean DEFAULT true NOT NULL,
-    shareable boolean DEFAULT false NOT NULL,
     created_by_id uuid,
     updated_by_id uuid,
     created_at timestamp(6) without time zone NOT NULL,
@@ -2254,13 +2882,6 @@ COMMENT ON COLUMN public.user_auto_taggings.description IS 'Rule description';
 --
 
 COMMENT ON COLUMN public.user_auto_taggings.enabled IS 'Whether rule is active';
-
-
---
--- Name: COLUMN user_auto_taggings.shareable; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.user_auto_taggings.shareable IS 'Tag shareable with linked apps (連携タグ設定)';
 
 
 --
@@ -2424,6 +3045,7 @@ CREATE TABLE public.user_tags (
     description text,
     created_by_id uuid,
     updated_by_id uuid,
+    integration_enabled boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -2469,6 +3091,13 @@ COMMENT ON COLUMN public.user_tags.created_by_id IS 'Admin who created this tag'
 --
 
 COMMENT ON COLUMN public.user_tags.updated_by_id IS 'Admin who last updated this tag';
+
+
+--
+-- Name: COLUMN user_tags.integration_enabled; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.user_tags.integration_enabled IS 'Enable tag sync to integrated apps (連携タグ設定)';
 
 
 --
@@ -2580,6 +3209,20 @@ COMMENT ON COLUMN public.users__sms_verifiers.ignore_in_rate_limit IS 'SMS送信
 
 
 --
+-- Name: flipper_features id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flipper_features ALTER COLUMN id SET DEFAULT nextval('public.flipper_features_id_seq'::regclass);
+
+
+--
+-- Name: flipper_gates id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flipper_gates ALTER COLUMN id SET DEFAULT nextval('public.flipper_gates_id_seq'::regclass);
+
+
+--
 -- Name: account_locks account_locks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2612,6 +3255,14 @@ ALTER TABLE ONLY public.contact_addresses
 
 
 --
+-- Name: deliveries deliveries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.deliveries
+    ADD CONSTRAINT deliveries_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: delivery_addresses delivery_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2620,11 +3271,75 @@ ALTER TABLE ONLY public.delivery_addresses
 
 
 --
+-- Name: delivery_birthdays delivery_birthdays_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_birthdays
+    ADD CONSTRAINT delivery_birthdays_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delivery_events delivery_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_events
+    ADD CONSTRAINT delivery_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delivery_recipients delivery_recipients_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_recipients
+    ADD CONSTRAINT delivery_recipients_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delivery_results delivery_results_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_results
+    ADD CONSTRAINT delivery_results_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delivery_schedules delivery_schedules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_schedules
+    ADD CONSTRAINT delivery_schedules_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: delivery_user_tags delivery_user_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_user_tags
+    ADD CONSTRAINT delivery_user_tags_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: email_templates email_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.email_templates
     ADD CONSTRAINT email_templates_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: flipper_features flipper_features_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flipper_features
+    ADD CONSTRAINT flipper_features_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: flipper_gates flipper_gates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flipper_gates
+    ADD CONSTRAINT flipper_gates_pkey PRIMARY KEY (id);
 
 
 --
@@ -3111,6 +3826,104 @@ CREATE UNIQUE INDEX idx_contact_addresses_tenant_id_user_id_uniq ON public.conta
 
 
 --
+-- Name: idx_delivery_birthdays_blastengine; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_delivery_birthdays_blastengine ON public.delivery_birthdays USING btree (blastengine_delivery_id);
+
+
+--
+-- Name: idx_delivery_birthdays_delivery_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_delivery_birthdays_delivery_unique ON public.delivery_birthdays USING btree (delivery_id);
+
+
+--
+-- Name: idx_delivery_events_tenant_time; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_delivery_events_tenant_time ON public.delivery_events USING btree (tenant_id, transaction_time);
+
+
+--
+-- Name: idx_delivery_events_timeline; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_delivery_events_timeline ON public.delivery_events USING btree (delivery_id, transaction_time);
+
+
+--
+-- Name: idx_delivery_recipients_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_delivery_recipients_date ON public.delivery_recipients USING btree (delivery_id, delivery_date);
+
+
+--
+-- Name: idx_delivery_recipients_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_delivery_recipients_status ON public.delivery_recipients USING btree (delivery_id, status);
+
+
+--
+-- Name: idx_delivery_recipients_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_delivery_recipients_unique ON public.delivery_recipients USING btree (delivery_id, user_id, delivery_date);
+
+
+--
+-- Name: idx_delivery_results_blastengine_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_delivery_results_blastengine_unique ON public.delivery_results USING btree (blastengine_delivery_id);
+
+
+--
+-- Name: idx_delivery_results_delivery_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_delivery_results_delivery_date ON public.delivery_results USING btree (delivery_id, delivery_date);
+
+
+--
+-- Name: idx_delivery_schedules_blastengine; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_delivery_schedules_blastengine ON public.delivery_schedules USING btree (blastengine_delivery_id);
+
+
+--
+-- Name: idx_delivery_schedules_delivery_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_delivery_schedules_delivery_unique ON public.delivery_schedules USING btree (delivery_id);
+
+
+--
+-- Name: idx_delivery_schedules_pending; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_delivery_schedules_pending ON public.delivery_schedules USING btree (status, scheduled_at);
+
+
+--
+-- Name: idx_delivery_user_tags_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_delivery_user_tags_unique ON public.delivery_user_tags USING btree (delivery_id, user_tag_id);
+
+
+--
+-- Name: idx_flipper_gates_feature_key_key_value; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_flipper_gates_feature_key_key_value ON public.flipper_gates USING btree (feature_key, key, value);
+
+
+--
 -- Name: idx_komoju_payments_payment_deadline; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3482,6 +4295,41 @@ CREATE INDEX index_contact_addresses_on_user_id ON public.contact_addresses USIN
 
 
 --
+-- Name: index_deliveries_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_deliveries_on_created_by_id ON public.deliveries USING btree (created_by_id);
+
+
+--
+-- Name: index_deliveries_on_template_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_deliveries_on_template_id ON public.deliveries USING btree (template_id);
+
+
+--
+-- Name: index_deliveries_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_deliveries_on_tenant_id ON public.deliveries USING btree (tenant_id);
+
+
+--
+-- Name: index_deliveries_on_tenant_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_deliveries_on_tenant_id_and_created_at ON public.deliveries USING btree (tenant_id, created_at);
+
+
+--
+-- Name: index_deliveries_on_updated_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_deliveries_on_updated_by_id ON public.deliveries USING btree (updated_by_id);
+
+
+--
 -- Name: index_delivery_addresses_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3496,6 +4344,174 @@ CREATE INDEX index_delivery_addresses_on_user_id ON public.delivery_addresses US
 
 
 --
+-- Name: index_delivery_birthdays_on_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_birthdays_on_delivery_id ON public.delivery_birthdays USING btree (delivery_id);
+
+
+--
+-- Name: index_delivery_birthdays_on_published_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_birthdays_on_published_by_id ON public.delivery_birthdays USING btree (published_by_id);
+
+
+--
+-- Name: index_delivery_birthdays_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_birthdays_on_tenant_id ON public.delivery_birthdays USING btree (tenant_id);
+
+
+--
+-- Name: index_delivery_birthdays_on_tenant_id_and_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_birthdays_on_tenant_id_and_status ON public.delivery_birthdays USING btree (tenant_id, status);
+
+
+--
+-- Name: index_delivery_events_on_admin_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_events_on_admin_id ON public.delivery_events USING btree (admin_id);
+
+
+--
+-- Name: index_delivery_events_on_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_events_on_delivery_id ON public.delivery_events USING btree (delivery_id);
+
+
+--
+-- Name: index_delivery_events_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_events_on_tenant_id ON public.delivery_events USING btree (tenant_id);
+
+
+--
+-- Name: index_delivery_events_on_tenant_id_and_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_events_on_tenant_id_and_delivery_id ON public.delivery_events USING btree (tenant_id, delivery_id);
+
+
+--
+-- Name: index_delivery_recipients_on_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_recipients_on_delivery_id ON public.delivery_recipients USING btree (delivery_id);
+
+
+--
+-- Name: index_delivery_recipients_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_recipients_on_tenant_id ON public.delivery_recipients USING btree (tenant_id);
+
+
+--
+-- Name: index_delivery_recipients_on_tenant_id_and_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_recipients_on_tenant_id_and_delivery_id ON public.delivery_recipients USING btree (tenant_id, delivery_id);
+
+
+--
+-- Name: index_delivery_recipients_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_recipients_on_user_id ON public.delivery_recipients USING btree (user_id);
+
+
+--
+-- Name: index_delivery_results_on_delivery_birthday_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_results_on_delivery_birthday_id ON public.delivery_results USING btree (delivery_birthday_id);
+
+
+--
+-- Name: index_delivery_results_on_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_results_on_delivery_id ON public.delivery_results USING btree (delivery_id);
+
+
+--
+-- Name: index_delivery_results_on_delivery_schedule_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_results_on_delivery_schedule_id ON public.delivery_results USING btree (delivery_schedule_id);
+
+
+--
+-- Name: index_delivery_results_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_results_on_tenant_id ON public.delivery_results USING btree (tenant_id);
+
+
+--
+-- Name: index_delivery_schedules_on_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_schedules_on_delivery_id ON public.delivery_schedules USING btree (delivery_id);
+
+
+--
+-- Name: index_delivery_schedules_on_published_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_schedules_on_published_by_id ON public.delivery_schedules USING btree (published_by_id);
+
+
+--
+-- Name: index_delivery_schedules_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_schedules_on_tenant_id ON public.delivery_schedules USING btree (tenant_id);
+
+
+--
+-- Name: index_delivery_schedules_on_tenant_id_and_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_schedules_on_tenant_id_and_status ON public.delivery_schedules USING btree (tenant_id, status);
+
+
+--
+-- Name: index_delivery_user_tags_on_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_user_tags_on_delivery_id ON public.delivery_user_tags USING btree (delivery_id);
+
+
+--
+-- Name: index_delivery_user_tags_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_user_tags_on_tenant_id ON public.delivery_user_tags USING btree (tenant_id);
+
+
+--
+-- Name: index_delivery_user_tags_on_tenant_id_and_delivery_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_user_tags_on_tenant_id_and_delivery_id ON public.delivery_user_tags USING btree (tenant_id, delivery_id);
+
+
+--
+-- Name: index_delivery_user_tags_on_user_tag_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_delivery_user_tags_on_user_tag_id ON public.delivery_user_tags USING btree (user_tag_id);
+
+
+--
 -- Name: index_email_templates_on_tenant_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3507,6 +4523,13 @@ CREATE INDEX index_email_templates_on_tenant_id ON public.email_templates USING 
 --
 
 CREATE UNIQUE INDEX index_email_templates_on_tenant_id_template_type ON public.email_templates USING btree (tenant_id, template_type);
+
+
+--
+-- Name: index_flipper_features_on_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_flipper_features_on_key ON public.flipper_features USING btree (key);
 
 
 --
@@ -4998,11 +6021,35 @@ ALTER TABLE ONLY public.payment_transactions
 
 
 --
+-- Name: delivery_results fk_rails_0173972a71; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_results
+    ADD CONSTRAINT fk_rails_0173972a71 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: user_tag_assignments fk_rails_0b4d28da8d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_tag_assignments
     ADD CONSTRAINT fk_rails_0b4d28da8d FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: deliveries fk_rails_124bc6bba9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.deliveries
+    ADD CONSTRAINT fk_rails_124bc6bba9 FOREIGN KEY (created_by_id) REFERENCES public.admins(id);
+
+
+--
+-- Name: delivery_recipients fk_rails_137e61fc54; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_recipients
+    ADD CONSTRAINT fk_rails_137e61fc54 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
@@ -5054,6 +6101,14 @@ ALTER TABLE ONLY public.user_auto_taggings
 
 
 --
+-- Name: deliveries fk_rails_30ece0c09d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.deliveries
+    ADD CONSTRAINT fk_rails_30ece0c09d FOREIGN KEY (updated_by_id) REFERENCES public.admins(id);
+
+
+--
 -- Name: user_tag_assignments fk_rails_32a895efba; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5067,6 +6122,14 @@ ALTER TABLE ONLY public.user_tag_assignments
 
 ALTER TABLE ONLY public.oauth_access_grants
     ADD CONSTRAINT fk_rails_330c32d8d9 FOREIGN KEY (resource_owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: delivery_birthdays fk_rails_3a723aa957; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_birthdays
+    ADD CONSTRAINT fk_rails_3a723aa957 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
@@ -5086,11 +6149,27 @@ ALTER TABLE ONLY public.auto_tagging_schedules
 
 
 --
+-- Name: delivery_birthdays fk_rails_4a78653e02; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_birthdays
+    ADD CONSTRAINT fk_rails_4a78653e02 FOREIGN KEY (published_by_id) REFERENCES public.admins(id);
+
+
+--
 -- Name: user_tags fk_rails_512adfb444; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_tags
     ADD CONSTRAINT fk_rails_512adfb444 FOREIGN KEY (updated_by_id) REFERENCES public.admins(id);
+
+
+--
+-- Name: delivery_events fk_rails_54c1eb2330; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_events
+    ADD CONSTRAINT fk_rails_54c1eb2330 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
 
 
 --
@@ -5102,11 +6181,67 @@ ALTER TABLE ONLY public.user_tag_assignments
 
 
 --
+-- Name: deliveries fk_rails_5d26a31ef1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.deliveries
+    ADD CONSTRAINT fk_rails_5d26a31ef1 FOREIGN KEY (template_id) REFERENCES public.templates(id);
+
+
+--
+-- Name: delivery_results fk_rails_5eb9c7a71d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_results
+    ADD CONSTRAINT fk_rails_5eb9c7a71d FOREIGN KEY (delivery_id) REFERENCES public.deliveries(id);
+
+
+--
+-- Name: delivery_schedules fk_rails_6ac3a748a8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_schedules
+    ADD CONSTRAINT fk_rails_6ac3a748a8 FOREIGN KEY (published_by_id) REFERENCES public.admins(id);
+
+
+--
+-- Name: deliveries fk_rails_718677f735; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.deliveries
+    ADD CONSTRAINT fk_rails_718677f735 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
 -- Name: user_auto_tagging_tags fk_rails_71a8d9f90b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.user_auto_tagging_tags
     ADD CONSTRAINT fk_rails_71a8d9f90b FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: delivery_events fk_rails_778e501c1a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_events
+    ADD CONSTRAINT fk_rails_778e501c1a FOREIGN KEY (delivery_id) REFERENCES public.deliveries(id);
+
+
+--
+-- Name: delivery_events fk_rails_80304f78d7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_events
+    ADD CONSTRAINT fk_rails_80304f78d7 FOREIGN KEY (admin_id) REFERENCES public.admins(id);
+
+
+--
+-- Name: delivery_schedules fk_rails_8d2faf2760; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_schedules
+    ADD CONSTRAINT fk_rails_8d2faf2760 FOREIGN KEY (delivery_id) REFERENCES public.deliveries(id);
 
 
 --
@@ -5158,6 +6293,54 @@ ALTER TABLE ONLY public.auto_tagging_schedules
 
 
 --
+-- Name: delivery_schedules fk_rails_b30388b150; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_schedules
+    ADD CONSTRAINT fk_rails_b30388b150 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: delivery_user_tags fk_rails_b4a750d7f4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_user_tags
+    ADD CONSTRAINT fk_rails_b4a750d7f4 FOREIGN KEY (tenant_id) REFERENCES public.tenants(id);
+
+
+--
+-- Name: delivery_birthdays fk_rails_c56966b935; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_birthdays
+    ADD CONSTRAINT fk_rails_c56966b935 FOREIGN KEY (delivery_id) REFERENCES public.deliveries(id);
+
+
+--
+-- Name: delivery_recipients fk_rails_d59b64634b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_recipients
+    ADD CONSTRAINT fk_rails_d59b64634b FOREIGN KEY (delivery_id) REFERENCES public.deliveries(id);
+
+
+--
+-- Name: delivery_results fk_rails_d6f0554146; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_results
+    ADD CONSTRAINT fk_rails_d6f0554146 FOREIGN KEY (delivery_schedule_id) REFERENCES public.delivery_schedules(id);
+
+
+--
+-- Name: delivery_user_tags fk_rails_df4dc05abd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_user_tags
+    ADD CONSTRAINT fk_rails_df4dc05abd FOREIGN KEY (user_tag_id) REFERENCES public.user_tags(id);
+
+
+--
 -- Name: user_auto_tagging_rules fk_rails_e2fdd588cf; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5166,11 +6349,35 @@ ALTER TABLE ONLY public.user_auto_tagging_rules
 
 
 --
+-- Name: delivery_recipients fk_rails_edeeb3ba6e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_recipients
+    ADD CONSTRAINT fk_rails_edeeb3ba6e FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: oauth_access_tokens fk_rails_ee63f25419; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.oauth_access_tokens
     ADD CONSTRAINT fk_rails_ee63f25419 FOREIGN KEY (resource_owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: delivery_results fk_rails_f1a10afb70; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_results
+    ADD CONSTRAINT fk_rails_f1a10afb70 FOREIGN KEY (delivery_birthday_id) REFERENCES public.delivery_birthdays(id);
+
+
+--
+-- Name: delivery_user_tags fk_rails_f777e1f716; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.delivery_user_tags
+    ADD CONSTRAINT fk_rails_f777e1f716 FOREIGN KEY (delivery_id) REFERENCES public.deliveries(id);
 
 
 --
@@ -5689,7 +6896,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict pcA0sD0cOlaccgkK8NjykNtTYmE83gMytAXSfFpuLeRgr3JjlOKoR530wAt6oe7
+\unrestrict dF0SFqOKnz9IBXPBaRSfgakyccmaLc4zwOISotCO5P8QvAQFhdH6Mfnv1YVSCR8
 
 SET search_path TO "$user", public;
 

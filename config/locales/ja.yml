@@ -20,6 +20,26 @@ ja:
         restrict_dependent_destroy:
           has_one: "%{record}が存在しているため削除できません"
           has_many: "%{record}が存在しているため削除できません"
+  feature_flags:
+    errors:
+      not_available: この機能は現在利用できません
+  admin_area:
+    deliveries:
+      created: 配信イベントを作成しました
+      updated: 配信イベントを更新しました
+      destroyed: 配信イベントを削除しました
+      published: 配信イベントを公開しました
+      cancelled: 配信イベントをキャンセルしました
+      paused: 配信イベントを停止しました
+      resumed: 配信イベントを再開しました
+      errors:
+        draft_only_edit: 下書き状態の配信イベントのみ編集できます
+        draft_only_delete: 下書き状態の配信イベントのみ削除できます
+        draft_only_publish: 下書き状態の配信イベントのみ公開できます
+        publish_failed: 配信イベントの公開に失敗しました
+        cannot_cancel: この配信イベントはキャンセルできません
+        cannot_pause: この配信イベントは停止できません
+        cannot_resume: この配信イベントは再開できません
   helpers:
     select:
       prompt: 選択してください

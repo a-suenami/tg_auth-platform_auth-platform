@@ -1,0 +1,14 @@
+ja:
+  activerecord:
+    models:
+      delivery_birthday: 誕生日配信
+    attributes:
+      delivery_birthday:
+        id: ID
+        offset_days: 誕生日からの日数
+        delivery_time: 配信時刻
+        status: ステータス
+        published_at: 公開日時
+        published_by: 公開者
+        created_at: 作成日時
+        updated_at: 更新日時

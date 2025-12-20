@@ -69,6 +69,21 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["user_id"], name: "index_contact_addresses_on_user_id"
   end
 
+  create_table "deliveries", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Email delivery campaigns", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.string "name", null: false, comment: "Delivery event name"
+    t.uuid "template_id", null: false, comment: "Email template reference"
+    t.uuid "created_by_id", comment: "Admin who created"
+    t.uuid "updated_by_id", comment: "Admin who last updated"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_deliveries_on_created_by_id"
+    t.index ["template_id"], name: "index_deliveries_on_template_id"
+    t.index ["tenant_id", "created_at"], name: "index_deliveries_on_tenant_id_and_created_at"
+    t.index ["tenant_id"], name: "index_deliveries_on_tenant_id"
+    t.index ["updated_by_id"], name: "index_deliveries_on_updated_by_id"
+  end
+
   create_table "delivery_addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
@@ -86,6 +101,122 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["user_id"], name: "index_delivery_addresses_on_user_id"
   end
 
+  create_table "delivery_birthdays", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Birthday-based delivery schedules", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "delivery_id", null: false, comment: "Parent delivery"
+    t.string "status", default: "draft", null: false, comment: "Birthday delivery status"
+    t.integer "offset_days", default: 0, null: false, comment: "Days offset from birthday (negative = before)"
+    t.string "delivery_time", default: "09:00", null: false, comment: "Delivery time HH:MM"
+    t.datetime "published_at", comment: "When birthday delivery was activated"
+    t.uuid "published_by_id", comment: "Admin who activated"
+    t.bigint "blastengine_delivery_id", comment: "Current day Blastengine bulk delivery ID"
+    t.string "blastengine_job_id", comment: "Current day CSV import job ID"
+    t.date "last_setup_date", comment: "Which date setup was done for"
+    t.datetime "setup_completed_at", comment: "When bulk setup completed for current day"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blastengine_delivery_id"], name: "idx_delivery_birthdays_blastengine"
+    t.index ["delivery_id"], name: "idx_delivery_birthdays_delivery_unique", unique: true
+    t.index ["delivery_id"], name: "index_delivery_birthdays_on_delivery_id"
+    t.index ["published_by_id"], name: "index_delivery_birthdays_on_published_by_id"
+    t.index ["tenant_id", "status"], name: "index_delivery_birthdays_on_tenant_id_and_status"
+    t.index ["tenant_id"], name: "index_delivery_birthdays_on_tenant_id"
+  end
+
+  create_table "delivery_events", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Delivery event log (for audit and inter-system communication)", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "delivery_id", null: false, comment: "Delivery reference"
+    t.uuid "admin_id", comment: "Admin who triggered event (if applicable)"
+    t.datetime "transaction_time", null: false, comment: "Event occurrence time"
+    t.string "event_type", null: false, comment: "Event type: created, updated, published, cancelled, paused, resumed, sent, failed"
+    t.jsonb "payload", default: {}, null: false, comment: "Event details (metadata, changes, etc.)"
+    t.datetime "created_at", null: false
+    t.index ["admin_id"], name: "index_delivery_events_on_admin_id"
+    t.index ["delivery_id", "transaction_time"], name: "idx_delivery_events_timeline"
+    t.index ["delivery_id"], name: "index_delivery_events_on_delivery_id"
+    t.index ["tenant_id", "delivery_id"], name: "index_delivery_events_on_tenant_id_and_delivery_id"
+    t.index ["tenant_id", "transaction_time"], name: "idx_delivery_events_tenant_time"
+    t.index ["tenant_id"], name: "index_delivery_events_on_tenant_id"
+  end
+
+  create_table "delivery_recipients", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Recipients for each delivery (fixed at setup time)", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "delivery_id", null: false, comment: "Delivery reference"
+    t.uuid "user_id", null: false, comment: "Target user"
+    t.date "delivery_date", null: false, comment: "Date of delivery batch (enables yearly birthday emails)"
+    t.string "status", default: "pending", null: false, comment: "Delivery status from Blastengine"
+    t.datetime "scheduled_for", comment: "When this should be sent"
+    t.datetime "sent_at", comment: "When email was actually sent (from Blastengine)"
+    t.text "error_message", comment: "Error message if failed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["delivery_id", "delivery_date"], name: "idx_delivery_recipients_date"
+    t.index ["delivery_id", "status"], name: "idx_delivery_recipients_status"
+    t.index ["delivery_id", "user_id", "delivery_date"], name: "idx_delivery_recipients_unique", unique: true
+    t.index ["delivery_id"], name: "index_delivery_recipients_on_delivery_id"
+    t.index ["tenant_id", "delivery_id"], name: "index_delivery_recipients_on_tenant_id_and_delivery_id"
+    t.index ["tenant_id"], name: "index_delivery_recipients_on_tenant_id"
+    t.index ["user_id"], name: "index_delivery_recipients_on_user_id"
+  end
+
+  create_table "delivery_results", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Aggregated delivery results from Blastengine", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "delivery_id", null: false, comment: "Delivery reference"
+    t.uuid "delivery_schedule_id", comment: "Schedule reference (for fixed-time deliveries)"
+    t.uuid "delivery_birthday_id", comment: "Birthday reference (for birthday deliveries)"
+    t.bigint "blastengine_delivery_id", null: false, comment: "Blastengine bulk delivery ID"
+    t.date "delivery_date", comment: "Date of delivery (for birthday daily results)"
+    t.integer "total_count", default: 0, null: false, comment: "Total recipients"
+    t.integer "sent_count", default: 0, null: false, comment: "Successfully sent"
+    t.integer "drop_count", default: 0, null: false, comment: "Dropped (invalid email, etc.)"
+    t.integer "soft_error_count", default: 0, null: false, comment: "Soft bounce (temporary failure)"
+    t.integer "hard_error_count", default: 0, null: false, comment: "Hard bounce (permanent failure)"
+    t.integer "open_count", default: 0, null: false, comment: "Opened emails"
+    t.datetime "synced_at", comment: "When results were last synced from Blastengine"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blastengine_delivery_id"], name: "idx_delivery_results_blastengine_unique", unique: true
+    t.index ["delivery_birthday_id"], name: "index_delivery_results_on_delivery_birthday_id"
+    t.index ["delivery_id", "delivery_date"], name: "idx_delivery_results_delivery_date"
+    t.index ["delivery_id"], name: "index_delivery_results_on_delivery_id"
+    t.index ["delivery_schedule_id"], name: "index_delivery_results_on_delivery_schedule_id"
+    t.index ["tenant_id"], name: "index_delivery_results_on_tenant_id"
+  end
+
+  create_table "delivery_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Datetime-based delivery schedules", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "delivery_id", null: false, comment: "Parent delivery"
+    t.string "status", default: "draft", null: false, comment: "Schedule status"
+    t.datetime "scheduled_at", comment: "Scheduled delivery datetime"
+    t.datetime "published_at", comment: "When schedule was published"
+    t.uuid "published_by_id", comment: "Admin who published"
+    t.bigint "blastengine_delivery_id", comment: "Blastengine bulk delivery ID"
+    t.string "blastengine_job_id", comment: "Blastengine CSV import job ID"
+    t.datetime "setup_completed_at", comment: "When bulk setup completed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blastengine_delivery_id"], name: "idx_delivery_schedules_blastengine"
+    t.index ["delivery_id"], name: "idx_delivery_schedules_delivery_unique", unique: true
+    t.index ["delivery_id"], name: "index_delivery_schedules_on_delivery_id"
+    t.index ["published_by_id"], name: "index_delivery_schedules_on_published_by_id"
+    t.index ["status", "scheduled_at"], name: "idx_delivery_schedules_pending"
+    t.index ["tenant_id", "status"], name: "index_delivery_schedules_on_tenant_id_and_status"
+    t.index ["tenant_id"], name: "index_delivery_schedules_on_tenant_id"
+  end
+
+  create_table "delivery_user_tags", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "Many-to-many: deliveries to user_tags", force: :cascade do |t|
+    t.citext "tenant_id", null: false, comment: "Tenant reference"
+    t.uuid "delivery_id", null: false, comment: "Delivery reference"
+    t.uuid "user_tag_id", null: false, comment: "User tag reference"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["delivery_id", "user_tag_id"], name: "idx_delivery_user_tags_unique", unique: true
+    t.index ["delivery_id"], name: "index_delivery_user_tags_on_delivery_id"
+    t.index ["tenant_id", "delivery_id"], name: "index_delivery_user_tags_on_tenant_id_and_delivery_id"
+    t.index ["tenant_id"], name: "index_delivery_user_tags_on_tenant_id"
+    t.index ["user_tag_id"], name: "index_delivery_user_tags_on_user_tag_id"
+  end
+
   create_table "email_templates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "name", null: false
@@ -96,6 +227,22 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "updated_at", null: false
     t.index ["tenant_id", "template_type"], name: "index_email_templates_on_tenant_id_template_type", unique: true
     t.index ["tenant_id"], name: "index_email_templates_on_tenant_id"
+  end
+
+  create_table "flipper_features", force: :cascade do |t|
+    t.string "key", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_flipper_features_on_key", unique: true
+  end
+
+  create_table "flipper_gates", force: :cascade do |t|
+    t.string "feature_key", null: false
+    t.string "key", null: false
+    t.string "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feature_key", "key", "value"], name: "idx_flipper_gates_feature_key_key_value", unique: true
   end
 
   create_table "komoju_record_accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -907,7 +1054,6 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "name", null: false, comment: "Rule name (CMS display)"
     t.text "description", comment: "Rule description"
     t.boolean "enabled", default: true, null: false, comment: "Whether rule is active"
-    t.boolean "shareable", default: false, null: false, comment: "Tag shareable with linked apps (連携タグ設定)"
     t.uuid "created_by_id", comment: "Admin who created this rule"
     t.uuid "updated_by_id", comment: "Admin who last updated this rule"
     t.datetime "created_at", null: false
@@ -973,6 +1119,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.text "description", comment: "Tag description"
     t.uuid "created_by_id", comment: "Admin who created this tag"
     t.uuid "updated_by_id", comment: "Admin who last updated this tag"
+    t.boolean "integration_enabled", default: false, null: false, comment: "Enable tag sync to integrated apps (連携タグ設定)"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_user_tags_on_created_by_id"
@@ -1075,8 +1222,31 @@ ActiveRecord::Schema[7.1].define(version: 0) do
   add_foreign_key "auto_tagging_schedules", "user_auto_taggings"
   add_foreign_key "contact_addresses", "tenants", name: "fk_contact_addresses_tenants"
   add_foreign_key "contact_addresses", "users", name: "fk_contact_addresses_users"
+  add_foreign_key "deliveries", "admins", column: "created_by_id"
+  add_foreign_key "deliveries", "admins", column: "updated_by_id"
+  add_foreign_key "deliveries", "templates"
+  add_foreign_key "deliveries", "tenants"
   add_foreign_key "delivery_addresses", "tenants", name: "fk_delivery_addresses_tenants"
   add_foreign_key "delivery_addresses", "users", name: "fk_delivery_addresses_users"
+  add_foreign_key "delivery_birthdays", "admins", column: "published_by_id"
+  add_foreign_key "delivery_birthdays", "deliveries"
+  add_foreign_key "delivery_birthdays", "tenants"
+  add_foreign_key "delivery_events", "admins"
+  add_foreign_key "delivery_events", "deliveries"
+  add_foreign_key "delivery_events", "tenants"
+  add_foreign_key "delivery_recipients", "deliveries"
+  add_foreign_key "delivery_recipients", "tenants"
+  add_foreign_key "delivery_recipients", "users"
+  add_foreign_key "delivery_results", "deliveries"
+  add_foreign_key "delivery_results", "delivery_birthdays"
+  add_foreign_key "delivery_results", "delivery_schedules"
+  add_foreign_key "delivery_results", "tenants"
+  add_foreign_key "delivery_schedules", "admins", column: "published_by_id"
+  add_foreign_key "delivery_schedules", "deliveries"
+  add_foreign_key "delivery_schedules", "tenants"
+  add_foreign_key "delivery_user_tags", "deliveries"
+  add_foreign_key "delivery_user_tags", "tenants"
+  add_foreign_key "delivery_user_tags", "user_tags"
   add_foreign_key "email_templates", "tenants", name: "fk_email_templates_tenants"
   add_foreign_key "komoju_record_accounts", "tenants", name: "fk_komoju_record_accounts_tenants"
   add_foreign_key "komoju_record_payments", "tenants", name: "fk_komoju_payments_tenants"

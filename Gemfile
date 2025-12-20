@@ -131,6 +131,7 @@ gem 'yaml_vault', '~> 1.3.2'
 # # HTTP client
 gem 'faraday', '~> 2.9'
 gem 'faraday-retry', '~> 2.2.0'
+gem 'faraday-multipart', '~> 1.0'
 # gem 'faraday-http-cache', '~> 2.4.0'
 # # Convert bytesize to human readable string
 # gem 'bytesize', '~> 0.1.0'
@@ -174,6 +175,10 @@ gem 'stripe', '~> 15.4.0'
 gem 'komoju'
 # Mangrove provides type utility to use with Sorbet
 gem 'mangrove', '~> 0.37.3'
+# Feature flags
+gem 'flipper', '~> 1.3'
+gem 'flipper-redis', '~> 1.3'
+gem 'flipper-ui', '~> 1.3'
 
 # for shopify
 gem 'shopify_api', '~> 14.11.1'

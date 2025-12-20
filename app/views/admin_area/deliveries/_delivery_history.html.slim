@@ -1,0 +1,51 @@
+/ Birthday Delivery History Card
+.uk-card.uk-card-default.uk-card-body.uk-margin-top
+  h4.uk-card-title 配信履歴
+  .uk-accordion data-uk-accordion="multiple: true"
+    - delivery_history.each do |entry|
+      li
+        a.uk-accordion-title href="#"
+          .uk-flex.uk-flex-between.uk-flex-middle
+            span
+              span uk-icon="calendar"
+              = " #{entry[:date].strftime('%Y/%m/%d')}"
+            .uk-flex
+              span.uk-badge.uk-margin-small-right title="送信数" #{entry[:result].sent_count}名
+              - if entry[:result].open_rate > 0
+                span.uk-text-small.uk-text-muted 開封率 #{entry[:result].open_rate}%
+        .uk-accordion-content
+          / Stats summary
+          .uk-grid.uk-child-width-1-4.uk-margin-small-bottom data-uk-grid=""
+            div
+              .uk-text-small.uk-text-muted 送信
+              .uk-text-bold #{entry[:result].sent_count}
+            div
+              .uk-text-small.uk-text-muted 開封率
+              .uk-text-bold #{entry[:result].open_rate}%
+            div
+              .uk-text-small.uk-text-muted ドロップ
+              .uk-text-bold #{entry[:result].drop_count}
+            div
+              .uk-text-small.uk-text-muted バウンス
+              .uk-text-bold #{entry[:result].soft_error_count + entry[:result].hard_error_count}
+          / Recipient list
+          - if entry[:recipients].any?
+            table.uk-table.uk-table-small.uk-table-divider
+              thead
+                tr
+                  th 名前
+                  th メールアドレス
+                  th ステータス
+              tbody
+                - entry[:recipients].each do |recipient|
+                  tr
+                    td = recipient.user&.user_profile&.name || '-'
+                    td = recipient.user&.email
+                    td
+                      - case recipient.status
+                      - when 'sent'
+                        span.uk-label.uk-label-success 送信済み
+                      - when 'failed'
+                        span.uk-label.uk-label-danger 失敗
+                      - else
+                        span.uk-label 待機中

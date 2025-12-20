@@ -1,0 +1,35 @@
+/ Metadata Card
+.uk-card.uk-card-default.uk-card-body.uk-card-small.uk-margin-small-bottom
+  h4.uk-card-title 詳細情報
+  dl.uk-description-list
+    dt 配布タイプ
+    dd
+      - if delivery.schedule_type?
+        | 日時指定
+      - else
+        | 誕生日
+
+    dt 配信日時
+    dd
+      - if delivery.schedule_type?
+        - if delivery.schedule&.scheduled_at
+          = local_time(delivery.schedule.scheduled_at)
+        - else
+          | 未設定
+      - else
+        = birthday_timing_text(delivery)
+
+    dt 作成日時
+    dd = local_time(delivery.created_at)
+
+    dt 作成者
+    dd = delivery.created_by&.name || delivery.created_by&.email || '-'
+
+    - published_at = delivery.schedule&.published_at || delivery.birthday&.published_at
+    - published_by = delivery.schedule&.published_by || delivery.birthday&.published_by
+    - if published_at.present?
+      dt 公開日時
+      dd = local_time(published_at)
+
+      dt 公開者
+      dd = published_by&.name || published_by&.email || '-'
