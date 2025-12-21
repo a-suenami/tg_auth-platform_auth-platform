@@ -60,10 +60,10 @@ module AdminArea
     end
 
     # Render the appropriate view based on feature flag
-    # Usage: render_with_ui_toggle('index') or render_with_ui_toggle('show', locals: { user: @user })
-    sig { params(action_name: String, options: T.untyped).void }
+    # Usage: render_with_ui_toggle(:index) or render_with_ui_toggle(:show, locals: { user: @user })
+    sig { params(action_name: T.any(String, Symbol), options: T.untyped).void }
     def render_with_ui_toggle(action_name, **options)
-      template = new_ui_enabled? ? "#{action_name}_v202601" : action_name
+      template = new_ui_enabled? ? "#{action_name}_v202601" : action_name.to_s
       render template, **options
     end
   end
