@@ -1,0 +1,20 @@
+.l-page {
+  display: grid;
+  grid-template-areas: 'sidebar contents';
+  grid-template-columns: $sidebar-width 1fr;
+  height: 100vh;
+  position: relative;
+}
+
+.l-page-sidebar {
+  font-size: 1.4rem;
+  grid-area: sidebar;
+}
+
+.l-page-contents {
+  grid-area: contents;
+  padding: 0 24px 72px;
+  position: relative;
+  overflow-x: hidden;
+}
+
