@@ -67,5 +67,11 @@ module RailsApp
     config.action_controller.include_all_helpers = false
 
     config.session_store :cookie_store, key: '_rails_app_session', secure: Rails.env.production?
+
+    # --------------------------------------------------------------------------
+    # ViewComponent
+    # --------------------------------------------------------------------------
+    config.view_component.preview_paths << Rails.root.join('spec/components/previews')
+    config.view_component.default_preview_layout = 'component_preview'
   end
 end

@@ -90,6 +90,8 @@ gem 'turbo-rails', '~> 1.5'
 gem 'stimulus-rails', '~> 1.3', '>= 1.3.3'
 # Template Engine
 gem 'liquid', '~> 5.4.0'
+# Component-based view development
+gem 'view_component', '~> 3.21'
 
 # ------------------------------------------------------------------------------
 # Utilities
@@ -241,6 +243,8 @@ end
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '~> 4.2', '>= 4.2.1'
+  # UI component preview and documentation tool (like Storybook for Rails)
+  gem 'lookbook', '~> 2.3'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring', '~> 4.1', '>= 4.1.3'
   gem 'spring-watcher-listen', '~> 2.1.0'
