@@ -4,7 +4,7 @@ import UIkit from "uikit";
 import Icons from "uikit/dist/js/uikit-icons";
 import { toggleDropdown, closeAllDropdowns } from "@app/utils/dropdown";
 
-import "@app/stylesheets/admin_area/application_v202601.scss";
+import "@app/stylesheets/admin_area_v202601/application.scss";
 
 Turbo.session.drive = true;
 
