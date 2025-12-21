@@ -1,0 +1,44 @@
+.l-page-content
+  .l-page-content__navigation
+    = link_to admin_area_users_path, class: "l-page-content__navigation__item #{'is-active' if controller_name == 'users'}" do
+      span.l-page-content__navigation__item__text すべてのユーザー
+      span.l-page-content__navigation__item__count = User.count
+    - if controller_name == 'user_tags'
+      input#tags-is-open.l-page-content__navigation__checkbox type="checkbox" checked="checked"
+      .l-page-content__navigation__item class="#{'is-active' if controller_name == 'user_tags' && !params[:id]}"
+        = link_to admin_area_user_tags_path, class: "l-page-content__navigation__item__text", data: { turbo_frame: '_top' } do
+          | タグ
+        label.l-page-content__navigation__item__chevron for="tags-is-open"
+          = render 'shared/icons/icon-chevron-down'
+      .l-page-content__navigation__children
+        - if UserTag.any?
+          - UserTag.ordered.limit(20).each do |tag|
+            = link_to edit_admin_area_user_tag_path(tag), class: "l-page-content__navigation__children__item #{'is-active' if params[:id].to_s == tag.id.to_s}", data: { turbo_frame: '_top' } do
+              = tag.name
+        - else
+          .l-page-content__navigation__children__empty
+            .l-page-content__navigation__children__empty__text タグがありません
+    - else
+      = link_to admin_area_user_tags_path, class: "l-page-content__navigation__item #{'is-active' if controller_name == 'user_tags'}" do
+        span.l-page-content__navigation__item__text タグ
+    - unless Rails.env.production?
+      - if controller_name == 'user_auto_taggings'
+        input#auto-tagging-is-open.l-page-content__navigation__checkbox type="checkbox" checked="checked"
+        .l-page-content__navigation__item class="#{'is-active' if controller_name == 'user_auto_taggings' && !params[:id]}"
+          = link_to admin_area_user_auto_taggings_path, class: "l-page-content__navigation__item__text", data: { turbo_frame: '_top' } do
+            | オートタギング
+          label.l-page-content__navigation__item__chevron for="auto-tagging-is-open"
+            = render 'shared/icons/icon-chevron-down'
+        .l-page-content__navigation__children
+          - if UserAutoTagging.any?
+            - UserAutoTagging.ordered.limit(20).each do |auto_tagging|
+              = link_to edit_admin_area_user_auto_tagging_path(auto_tagging), class: "l-page-content__navigation__children__item #{'is-active' if params[:id].to_s == auto_tagging.id.to_s}", data: { turbo_frame: '_top' } do
+                = auto_tagging.name
+          - else
+            .l-page-content__navigation__children__empty
+              .l-page-content__navigation__children__empty__text オートタグがありません
+      - else
+        = link_to admin_area_user_auto_taggings_path, class: "l-page-content__navigation__item #{'is-active' if controller_name == 'user_auto_taggings'}", data: { turbo_frame: '_top' } do
+          span.l-page-content__navigation__item__text オートタギング
+  = turbo_frame_tag "content", class: "l-page-content__content" do
+    = yield

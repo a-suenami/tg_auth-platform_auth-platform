@@ -1,0 +1,42 @@
+// 詳細セクションコンポーネントのmixin
+@mixin c-detail-section {
+  display: grid;
+  gap: 16px;
+
+  &__label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    color: var(--color-text-heading);
+
+    &__edit {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      font-size: 14px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+      line-height: 1;
+      color: var(--color-text-heading);
+      text-decoration: none;
+      transition: background-color 0.2s;
+      box-shadow: var(--box-shadow);
+
+      &:hover {
+        background-color: var(--color-background-gray);
+      }
+
+      svg {
+        object-fit: contain;
+        width: 14px;
+        height: auto;
+        display: block;
+        aspect-ratio: 1;
+      }
+    }
+  }
+}
+

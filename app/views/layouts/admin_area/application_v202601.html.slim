@@ -1,0 +1,58 @@
+doctype html
+html lang='ja'
+  head
+    meta charset='utf-8'
+    meta name='viewport' content='width=device-width,initial-scale=1.0,user-scalable=no'
+    meta http-equiv='content-language' content='ja'
+    / title = Tenant.current.name
+    title = Tenant.current.name
+    / link rel='icon' href=vite_asset_path('images/admin_area/favicon.svg')
+
+    link rel="preconnect" href="https://fonts.googleapis.com"
+    link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""
+    link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet"
+
+    = vite_client_tag
+    = vite_typescript_tag 'entrypoints/admin_area/application_v202601'
+    = csrf_meta_tags
+    = yield :head
+  body.l-page
+    .l-header
+      = link_to admin_area_root_path, class: 'l-header__container__logo' do
+        = vite_image_tag 'images/idp-logo.svg', alt: 'IDP', class: 'l-header__container__logo__image'
+      .l-header__container
+        - unless Rails.env.production?
+          = link_to '#', class: 'l-header__container__link' do
+            = render 'shared/icons/icon-dashboard'
+            span.l-header__container__link__text ダッシュボード
+        = link_to admin_area_users_path, class: "l-header__container__link #{'is-active' if ['users', 'user_tags', 'user_auto_taggings'].include?(controller_name)}" do
+          = render 'shared/icons/icon-user'
+          span.l-header__container__link__text ユーザー
+        - unless Rails.env.production?
+          = link_to '#', class: 'l-header__container__link' do
+            = render 'shared/icons/icon-transaction'
+            span.l-header__container__link__text 取引
+        = link_to admin_area_templates_path, class: "l-header__container__link #{'is-active' if controller_name == 'templates'}" do
+          = render 'shared/icons/icon-newsletter'
+          span.l-header__container__link__text 配信
+        - unless Rails.env.production?
+          = link_to '#', class: 'l-header__container__link' do
+            = render 'shared/icons/icon-plan'
+            span.l-header__container__link__text プラン
+        - unless Rails.env.production?
+          = link_to '#', class: 'l-header__container__link' do
+            = render 'shared/icons/icon-service'
+            span.l-header__container__link__text サービス
+      .l-header__container__account-wrapper
+        a.l-header__container__account href='#' data-dropdown-toggle="dropdown-account"
+        = render 'shared/icons/icon-user'
+        span.l-header__container__account__text = @current_admin&.email
+        .l-header__container__account__dropdown id="dropdown-account"
+          = link_to admin_area_logout_path, data: { turbo: false }, class: 'l-header__container__account__dropdown__item'
+            | ログアウト
+    = render 'layouts/admin_area/flash_v202601'
+    .l-page__container
+      = yield
+
+    / 共通モーダル
+    = render 'admin_area/shared/modal', modal_id: 'common-modal'

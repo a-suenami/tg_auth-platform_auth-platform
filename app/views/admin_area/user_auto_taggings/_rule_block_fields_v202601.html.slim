@@ -1,0 +1,27 @@
+- template ||= false
+- block_form = f unless template
+
+.rule-block.c-condition-block.p-user-auto-tagging__rule-block
+  - if block_form
+    = block_form.hidden_field :position
+    = block_form.hidden_field :_destroy
+  - else
+    input type="hidden" name="user_auto_tagging[rule_blocks_attributes][NEW_RECORD][position]" value="0"
+    input type="hidden" name="user_auto_tagging[rule_blocks_attributes][NEW_RECORD][_destroy]" value="0"
+
+  .c-condition-block__header
+    .c-condition-block__title
+      | 条件ブロック&nbsp;
+      span.block-number
+    button.c-condition-block__header__menu.remove-block type="button" data-action="click->user-auto-tagging-form#removeRuleBlock"
+      = render 'shared/icons/icon-close'
+
+  .rules-container.p-user-auto-tagging__rule-list
+    - if block_form
+      = block_form.fields_for :rules do |rule_form|
+        = render 'admin_area/user_auto_taggings/rule_fields_v202601', f: rule_form
+
+  .c-condition-block__add-condition-wrapper
+    button.add-rule.c-condition-block__add-condition type="button" data-action="click->user-auto-tagging-form#addRule"
+      = render 'shared/icons/icon-plus'
+      span.c-condition-block__add-condition__text 条件を追加

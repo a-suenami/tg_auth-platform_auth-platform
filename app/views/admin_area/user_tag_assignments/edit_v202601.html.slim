@@ -1,0 +1,59 @@
+= turbo_frame_tag "modal-frame" do
+  .c-modal__dialog__header
+    .c-modal__dialog__header__subtitle = @user.user_profile&.name || @user.email
+    .c-modal__dialog__header__title タグの紐付け
+    = link_to "#", class: "c-modal__dialog__header__close", data: { action: "close-modal" } do
+      = render 'shared/icons/icon-close'
+  .c-modal__dialog__body.p-tag-assignment-edit data-controller="user-tag-assignment-form" data-user-tag-assignment-form-base-url-value="#{admin_area_user_user_tag_assignments_path(@user)}"
+    / Auto-tagged Section (Read-only)
+    - if @auto_assignments.any?
+      .c-form-field
+        label.c-form-field__label
+          | オートタギング
+          span.p-tag-assignment-edit__auto-tag-label (自動付与・編集不可)
+        .c-user-detail-tag__list.p-tag-assignment-edit__auto-tag-list
+          - @auto_assignments.each do |assignment|
+            - next unless assignment.user_tag
+            .c-user-detail-tag__item.is-auto-tag title="ルール: #{assignment.user_auto_tagging&.name}"
+              .c-user-detail-tag__item__text = assignment.user_tag.name
+              a.c-user-detail-tag__item__lock href='#' aria-label='auto tag'
+                = render 'shared/icons/icon-lock'
+
+    / Manual Tags Section (Editable via AJAX)
+    .c-form-field
+      label.c-form-field__label 手動タグ
+
+      / Selected manual tags displayed as chips
+      .c-user-detail-tag__list.p-tag-assignment-edit__manual-tag-list data-user-tag-assignment-form-target="container"
+        - if @manual_assignments.any?
+          - @manual_assignments.each do |assignment|
+            - next unless assignment.user_tag
+            .c-user-detail-tag__item.tag-chip data-tag-id=assignment.user_tag_id data-tag-name=assignment.user_tag.name
+              .c-user-detail-tag__item__text = assignment.user_tag.name
+              a.c-user-detail-tag__item__remove href="#" aria-label="タグを削除" data-action="click->user-tag-assignment-form#removeTag"
+                = render 'shared/icons/icon-close'
+        - else
+          .c-empty.p-tag-assignment-edit__empty data-user-tag-assignment-form-target="placeholder"
+            .c-empty__text タグが選択されていません
+
+      / Dropdown to add new tags (exclude both auto and manual assigned tags)
+      .c-form-field.p-tag-assignment-edit__add-tag-field
+        label.c-form-field__label タグを追加
+        .c-form-field__input-wrapper
+          select.c-form-field__input.c-form-field__input--select data-user-tag-assignment-form-target="selector" data-action="change->user-tag-assignment-form#addTag"
+            option value="" -- タグを選択 --
+            - available_tags = @available_tags.reject { |t| @all_tag_ids.include?(t.id) }
+            - available_tags.each do |tag|
+              option value=tag.id data-name=tag.name
+                = tag.name
+          .c-form-field__input-wrapper__dropdown
+            = render 'shared/icons/icon-chevron-down'
+
+    / Tag History Section
+    .c-form-field.p-tag-assignment-edit__history-field
+      label.c-form-field__label タグ履歴
+      .c-form-field.p-tag-assignment-edit__history-note
+        span 最新20件のタグ変更履歴を表示
+      = render 'tag_history', user: @user
+  .c-modal__dialog__footer
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--cancel type="button" data-action="close-modal" キャンセル

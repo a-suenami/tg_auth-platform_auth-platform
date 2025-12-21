@@ -2,9 +2,9 @@
 
 module AdminArea
   class UsersController < ApplicationController
-    before_action :set_user, only: %i[show edit update reset_sms_ratelimit]
+    before_action :set_user, only: %i[show edit update destroy reset_sms_ratelimit activities]
     def index
-      @users = User.all
+      @users = User.all.includes(:user_profile, tag_assignments: :user_tag)
       @users = @users.where(id: params[:id]) if params[:id].present?
       if params[:email].present?
         users_table = User.arel_table
@@ -14,15 +14,21 @@ module AdminArea
       @users = @users.where(phone_number: params[:phone_number]) if params[:phone_number].present?
       @pagy, @users = pagy @users
 
-      render :index_new if feature_enabled?(:admin_new_ui)
+      render_with_ui_toggle('index')
     end
 
     def show
+      if turbo_frame_request? && turbo_frame_request_id == 'detail'
+        render partial: 'admin_area/users/user_detail'
+      else
+        render_with_ui_toggle('show')
+      end
     end
 
     def edit
       @user.build_user_profile unless @user.user_profile
       @user.build_contact_address unless @user.contact_address
+      render_with_ui_toggle('edit')
     end
 
     def update
@@ -36,6 +42,14 @@ module AdminArea
     def reset_sms_ratelimit
       @user.sms_verifiers.where('created_at > ?', 24.hours.ago).update_all(ignore_in_rate_limit: true)
       redirect_to admin_area_user_path(@user), notice: 'SMS送信制限をリセットしました。'
+    end
+
+    def activities
+    end
+
+    def destroy
+      Users::DestroyService.new.execute(user: @user)
+      redirect_to admin_area_users_path, notice: t('helpers.messages.deleted')
     end
 
     private

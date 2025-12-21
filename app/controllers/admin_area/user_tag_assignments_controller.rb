@@ -15,6 +15,7 @@ module AdminArea
 
       @all_tag_ids = all_assignments.map(&:user_tag_id)
       @available_tags = UserTag.order(:name)
+      render_with_ui_toggle(:edit)
     end
 
     def create

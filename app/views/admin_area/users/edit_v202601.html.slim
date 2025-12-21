@@ -1,0 +1,56 @@
+= turbo_frame_tag "modal-frame" do
+  .c-modal__dialog__header
+    .c-modal__dialog__header__subtitle = @user.user_profile&.name
+    .c-modal__dialog__header__title アカウントの編集
+    = link_to "#", class: "c-modal__dialog__header__close", data: { action: "close-modal" } do
+      = render 'shared/icons/icon-close'
+  .c-modal__dialog__body
+    = form_with model: [:admin_area, @user], url: admin_area_user_path(@user), method: :patch, local: true, data: { turbo_frame: '_top' }, html: { id: "edit_user_#{@user.id}" } do |f|
+      .c-form
+        .c-form-field
+          label.c-form-field__label ID
+          .c-form-field__input-wrapper
+            input.c-form-field__input type="text" value="#{@user.id}" readonly="readonly"
+        .c-form-field
+          label.c-form-field__label 会員番号
+          .c-form-field__input-wrapper
+            input.c-form-field__input type="text" value="1234-5678-9000" readonly="readonly"
+        .c-form-field
+          label.c-form-field__label メールアドレス
+          .c-form-field__input-group
+            .c-form-field__input-group__input
+              = f.email_field :email, value: @user.email, class: 'c-form-field__input'
+            .c-form-field__input-group__status
+              = f.select 'email_verified_status', [['確認済み', 'confirmed'], ['未確認', 'unconfirmed']], { selected: (@user.email_verified ? 'confirmed' : 'unconfirmed') }, { class: 'c-form-field__input c-form-field__input--select' }
+              .c-form-field__input-group__status__dropdown
+                = render 'shared/icons/icon-chevron-down'
+        .c-form-field
+          label.c-form-field__label 電話番号
+          .c-form-field__input-group
+            .c-form-field__input-group__input
+              = f.telephone_field :phone_number, value: @user.phone_number, class: 'c-form-field__input'
+            .c-form-field__input-group__status
+              = f.select 'phone_verified_status', [['確認済み', 'confirmed'], ['未確認', 'unconfirmed']], { selected: (@user.sms_verified ? 'confirmed' : 'unconfirmed') }, { class: 'c-form-field__input c-form-field__input--select' }
+              .c-form-field__input-group__status__dropdown
+                = render 'shared/icons/icon-chevron-down'
+        .c-form-field
+          label.c-form-field__label プロフィール登録状況
+          .c-form-field__input-wrapper
+            = f.select 'profile_registration_status', [['未登録', '未登録'], ['登録済み', '登録済み']], { selected: '未登録' }, { class: 'c-form-field__input c-form-field__input--select' }
+            .c-form-field__input-wrapper__dropdown
+              = render 'shared/icons/icon-chevron-down'
+        .c-form-field
+          label.c-form-field__label SMS送信
+          .c-form-field__input-wrapper
+            = f.select 'sms_sending', [['送信許可', '送信許可'], ['送信禁止', '送信禁止']], { selected: '送信禁止' }, { class: 'c-form-field__input c-form-field__input--select' }
+            .c-form-field__input-wrapper__dropdown
+              = render 'shared/icons/icon-chevron-down'
+        .c-form-field
+          label.c-form-field__label ユーザー削除時刻
+          .c-form-field__input-wrapper
+            = f.datetime_local_field :deleted_at, value: @user.deleted_at&.strftime('%Y-%m-%dT%H:%M'), placeholder: 'YYYY/MM/DD hh:dd', class: 'c-form-field__input'
+            .c-form-field__input-wrapper__calendar
+              = render 'shared/icons/icon-calendar'
+  .c-modal__dialog__footer
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--cancel type="button" data-action="close-modal" キャンセル
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--save type="submit" form="edit_user_#{@user.id}" data-shortcut="⌘+S" 保存

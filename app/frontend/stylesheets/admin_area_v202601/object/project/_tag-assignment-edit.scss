@@ -1,0 +1,45 @@
+// タグ紐付け編集ページ
+.p-tag-assignment-edit {
+  // オートタギングセクション
+  &__auto-tag-label {
+    font-size: 12px;
+    color: var(--color-text-inactive);
+    font-weight: normal;
+    margin-left: 4px;
+  }
+
+  &__auto-tag-list {
+    padding: 8px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: #f0fff0;
+  }
+
+  // 手動タグセクション
+  &__manual-tag-list {
+    min-height: 40px;
+  }
+
+  &__empty {
+    width: 100%;
+  }
+
+  // タグ追加セクション
+  &__add-tag-field {
+    margin-top: 12px;
+  }
+
+  // タグ履歴セクション
+  &__history-field {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  &__history-note {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--color-text-inactive);
+  }
+}
+

@@ -7,13 +7,16 @@ module AdminArea
     def index
       query = UserTag.ordered.search_by_name(params[:q])
       @pagy, @user_tags = pagy(query, items: 10)
+      render_with_ui_toggle(:index)
     end
 
     def new
       @user_tag = UserTag.new
+      render_with_ui_toggle(:new)
     end
 
     def edit
+      render_with_ui_toggle(:edit)
     end
 
     def create
@@ -23,7 +26,7 @@ module AdminArea
       if @user_tag.save
         redirect_to admin_area_user_tags_path, notice: 'タグを作成しました'
       else
-        render :new, status: :unprocessable_entity
+        render_with_ui_toggle(:new, status: :unprocessable_entity)
       end
     end
 
@@ -33,7 +36,7 @@ module AdminArea
       if @user_tag.update(user_tag_params)
         redirect_to admin_area_user_tags_path, notice: 'タグを更新しました'
       else
-        render :edit, status: :unprocessable_entity
+        render_with_ui_toggle(:edit, status: :unprocessable_entity)
       end
     end
 

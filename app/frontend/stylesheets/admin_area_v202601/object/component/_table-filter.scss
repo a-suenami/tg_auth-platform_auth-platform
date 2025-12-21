@@ -1,0 +1,68 @@
+// テーブル絞り込みセクション
+.c-table-filter {
+  display: none;
+  padding: 24px;
+  background-color: var(--color-background-gray);
+  border-bottom: 1px solid var(--color-border);
+
+  &[data-filter-open="true"] {
+    display: block;
+  }
+
+  &__form {
+    display: grid;
+    gap: 24px;
+    max-width: 320px;
+  }
+
+  &__fields {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    &__button {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      border: 1px solid var(--color-border);
+      background-color: var(--color-background);
+      color: var(--color-text-body);
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+      box-shadow: var(--box-shadow);
+      text-decoration: none;
+      text-align: center;
+      display: inline-block;
+      box-sizing: border-box;
+
+      &--submit {
+        background-color: var(--color-primary);
+        color: var(--color-primary-contrast);
+        border-color: var(--color-primary);
+
+        &:hover {
+          background-color: var(--color-text-heading);
+          border-color: var(--color-text-heading);
+        }
+      }
+
+      &--reset {
+        background-color: var(--color-background);
+        color: var(--color-text-inactive);
+        border-color: var(--color-border);
+
+        &:hover {
+          background-color: var(--color-background-gray);
+          color: var(--color-text-inactive);
+        }
+      }
+    }
+  }
+}
+

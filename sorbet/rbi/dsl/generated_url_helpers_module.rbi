@@ -10,6 +10,9 @@ module GeneratedUrlHelpersModule
   include ::ActionDispatch::Routing::PolymorphicRoutes
 
   sig { params(args: T.untyped).returns(String) }
+  def activities_admin_area_user_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_auth_auth0_callback_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -172,6 +175,9 @@ module GeneratedUrlHelpersModule
   def complete_off_session_card_api_v1_internal_me_card_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def datepicker_admin_area_user_auto_taggings_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_delivery_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -179,6 +185,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_auto_tagging_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_user_billing_address_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_contact_address_url(*args); end
@@ -257,6 +266,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_auto_tagging_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_user_billing_address_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_contact_address_url(*args); end
@@ -548,6 +560,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def sync_ruler_area_tenant_stripe_records_products_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def tag_picker_admin_area_user_auto_taggings_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def toggle_ruler_area_feature_flags_url(*args); end

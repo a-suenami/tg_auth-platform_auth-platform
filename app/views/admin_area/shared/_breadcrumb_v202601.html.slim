@@ -1,0 +1,16 @@
+/ Breadcrumb component
+/ Usage: = render 'admin_area/shared/breadcrumb_v202601', items: [{ text: 'Home' }, { text: 'Users', link: users_path }, { text: 'Edit' }]
+/ Last item auto becomes non-link (current page)
+
+.c-breadcrumb data-controller='sidenav-toggle'
+  .c-breadcrumb__sidenav
+    a.c-breadcrumb__sidenav__toggle href='#' data-action='click->sidenav-toggle#toggle'
+      = render 'shared/icons/icon-sidenav'
+  .c-breadcrumb__content
+    - items.each_with_index do |item, index|
+      - if index > 0
+        = render 'shared/icons/icon-chevron-right'
+      - if index == items.length - 1 || item[:link].blank?
+        span.c-breadcrumb__content__item.is-active = item[:text]
+      - else
+        = link_to item[:text], item[:link], class: 'c-breadcrumb__content__item', data: item[:data] || {}

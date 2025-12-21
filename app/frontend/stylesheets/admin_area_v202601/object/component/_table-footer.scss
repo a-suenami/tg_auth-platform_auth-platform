@@ -1,0 +1,38 @@
+.c-table-footer {
+  padding: 16px;
+  display: grid;
+  place-items: center;
+  min-height: 30px;
+  .pagy-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    .page {
+      padding: 8px;
+      background-color: var(--color-background);
+      border-radius: 8px;
+      color: var(--color-text-inactive);
+      font-size: 14px;
+      &.prev,
+      &.next {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      &:not(.prev, .next) {
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        width: 20px;
+        align-self: center;
+        flex: none;
+      }
+      &.active {
+        border: 1px solid var(--color-border);
+        box-shadow: var(--box-shadow);
+        color: var(--color-text-active);
+      }
+    }
+  }
+}
