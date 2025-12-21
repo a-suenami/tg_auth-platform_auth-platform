@@ -1,0 +1,35 @@
+.uk-margin-top.uk-container
+  / Breadcrumb
+  - breadcrumb_items = [{ text: '会員ID管理' }, { text: 'タグ管理' }]
+  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+
+  .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-bottom.uk-margin-top
+    h2 タグ管理
+
+  .uk-card.uk-card-default.uk-card-body.uk-margin-bottom
+    .uk-flex.uk-flex-middle
+      = form_with url: admin_area_user_tags_path, method: :get, class: "uk-search uk-search-default uk-width-expand" do |f|
+        = f.text_field :q, placeholder: "タグ名を入力...", value: params[:q], class: "uk-search-input"
+      = link_to 'クリア', admin_area_user_tags_path, class: "uk-button uk-button-default uk-margin-small-left"
+      = link_to new_admin_area_user_tag_path, class: "uk-button uk-button-primary uk-margin-small-left" do
+        span uk-icon="plus"
+        |  新規作成
+
+  .uk-card.uk-card-default.uk-card-body
+    - if @user_tags.empty?
+      p.uk-text-lead タグが見つかりません
+    - else
+      table.uk-table.uk-table-divider.uk-table-hover
+        thead
+          tr
+            th 名前
+            th 説明
+        tbody
+          - @user_tags.each do |tag|
+            tr
+              td
+                = link_to tag.name, edit_admin_area_user_tag_path(tag.id)
+              td
+                = truncate(tag.description, length: 100)
+
+    == pagy_nav(@pagy)

@@ -1,0 +1,33 @@
+.uk-margin-top.uk-container
+  / Breadcrumb
+  - breadcrumb_items = [{ text: '会員ID管理' }, { text: 'オートタギング', link: admin_area_user_auto_taggings_path }, { text: @user_auto_tagging.name }]
+  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+
+  .uk-grid data-uk-grid=""
+    .uk-width-expand
+      h2 = @user_auto_tagging.name
+
+      .uk-margin-top.uk-card.uk-card-default.uk-card-body
+        = render 'form', user_auto_tagging: @user_auto_tagging
+
+    .uk-width-1-3
+      .uk-card.uk-card-default.uk-card-body.uk-margin-bottom
+        = button_to '削除する', admin_area_user_auto_tagging_path(@user_auto_tagging), method: :delete, class: 'uk-button uk-button-danger uk-width-1-1', data: { turbo_confirm: '本当に削除しますか？' }
+
+      .uk-card.uk-card-default.uk-card-body
+        .uk-margin-small
+          .uk-text-meta.uk-text-small 作成者
+          .uk-text-bold = @user_auto_tagging.created_by_name || '-'
+
+        .uk-margin-small
+          .uk-text-meta.uk-text-small 作成日時
+          div = @user_auto_tagging.created_at.strftime('%Y/%m/%d %H:%M')
+
+        - if @user_auto_tagging.updated_by_name.present?
+          .uk-margin-small
+            .uk-text-meta.uk-text-small 最終更新者
+            .uk-text-bold = @user_auto_tagging.updated_by_name
+
+          .uk-margin-small
+            .uk-text-meta.uk-text-small 最終更新日時
+            div = @user_auto_tagging.updated_at.strftime('%Y/%m/%d %H:%M')

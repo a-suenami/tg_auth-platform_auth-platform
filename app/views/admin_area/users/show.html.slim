@@ -1,0 +1,123 @@
+/ show user profile
+- content_for :head do
+  meta name="turbo-cache-control" content="no-cache"
+
+.uk-margin-top.uk-container
+  .uk-card.uk-card-default.uk-card-body
+    .uk-flex.uk-flex-right
+      // SMS送信制限解除
+      = form_with url: reset_sms_ratelimit_admin_area_user_path(@user), method: :put, local: true do |f|
+        = f.submit 'SMS送信制限解除', class: 'uk-button uk-button-secondary'
+      = link_to "編集", edit_admin_area_user_path(@user), class: "uk-button uk-button-primary uk-margin-left"
+    h3.uk-card-title ユーザ詳細
+
+
+    .uk-margin
+      dt.uk-text-bold ID
+      dd = @user.id
+    .uk-margin
+      dt.uk-text-bold メールアドレス
+      dd = @user.email
+    .uk-margin
+      dt.uk-text-bold 電話番号
+      dd = @user.phone_number
+    .uk-margin
+      dt.uk-text-bold 氏名
+      dd = @user.user_profile&.name
+    .uk-margin
+      dt.uk-text-bold 年代
+      dd
+        - if @user&.user_profile&.age_range.present?
+          = @user&.user_profile&.age_range
+          | 代
+        - else
+          | -
+    .uk-margin
+      dt.uk-text-bold = User.human_attribute_name(:enabled)
+      dd = @user.enabled
+    .uk-margin
+      dt.uk-text-bold = User.human_attribute_name(:sms_verified)
+      dd = @user.sms_verified
+    .uk-margin
+      dt.uk-text-bold = User.human_attribute_name(:suppress_sms_verification)
+      dd = @user.suppress_sms_verification
+    .uk-margin
+      dt.uk-text-bold = User.human_attribute_name(:email_verified)
+      dd = @user.email_verified
+    .uk-margin
+      dt.uk-text-bold = User.human_attribute_name(:deleted_at)
+      dd = @user.deleted_at
+    .uk-margin
+      dt.uk-text-bold アカウント作成日
+      dd = local_time(@user.created_at)
+
+    hr.uk-divider-icon
+    .uk-flex.uk-flex-right
+      - if @user.user_profile.present?
+        = link_to "プロフィール編集", edit_admin_area_user_user_profile_path(@user), class: "uk-button uk-button-primary"
+      - else
+        = link_to "プロフィール新規作成", new_admin_area_user_user_profile_path(@user), class: "uk-button uk-button-primary"
+    h2.uk-card-title プロフィール情報
+    .uk-margin
+      dt.uk-text-bold = UserProfile.human_attribute_name(:last_name)
+      dd = @user&.user_profile&.last_name
+    .uk-margin
+      dt.uk-text-bold = UserProfile.human_attribute_name(:first_name)
+      dd = @user&.user_profile&.first_name
+    .uk-margin
+      dt.uk-text-bold = UserProfile.human_attribute_name(:last_name_kana)
+      dd = @user&.user_profile&.last_name_kana
+    .uk-margin
+      dt.uk-text-bold = UserProfile.human_attribute_name(:first_name_kana)
+      dd = @user&.user_profile&.first_name_kana
+    .uk-margin
+      dt.uk-text-bold = UserProfile.human_attribute_name(:birth_date)
+      dd = @user&.user_profile&.birth_date
+    .uk-margin
+      dt.uk-text-bold = UserProfile.human_attribute_name(:gender)
+      dd = @user&.user_profile&.gender
+
+    hr.uk-divider-icon
+    .uk-flex.uk-flex-right
+      - if @user.contact_address.present?
+        = link_to "連絡先住所編集", edit_admin_area_user_contact_address_path(@user), class: "uk-button uk-button-primary"
+      - else
+        = link_to "連絡先住所新規作成", new_admin_area_user_contact_address_path(@user), class: "uk-button uk-button-primary"
+    h2.uk-card-title 連絡先住所
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:zip_code)
+      dd = @user&.contact_address&.zip_code
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:prefecture)
+      dd = @user&.contact_address&.prefecture&.name
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:city)
+      dd = @user&.contact_address&.city
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:street)
+      dd = @user&.contact_address&.street
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:building)
+      dd = @user&.contact_address&.building
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:phone_number)
+      dd = @user&.contact_address&.phone_number
+    .uk-margin
+      dt.uk-text-bold = ContactAddress.human_attribute_name(:country_code)
+      dd = @user&.contact_address&.country_code
+
+    hr.uk-divider-icon
+    .uk-flex.uk-flex-right
+      = link_to "編集", admin_area_user_user_tag_assignments_path(@user), class: "uk-button uk-button-primary"
+    h2.uk-card-title ユーザタグ
+    .uk-margin
+      - if @user.tag_assignments.any?
+        - @user.tag_assignments.includes(:user_tag, :user_auto_tagging).each do |assignment|
+          - if assignment.manual?
+            span.uk-label.uk-margin-small-right = assignment.user_tag&.name
+          - else
+            span.uk-label.uk-label-success.uk-margin-small-right title="オートタギング: #{assignment.user_auto_tagging&.name}"
+              = assignment.user_tag&.name
+              span.uk-margin-small-left style="font-size: 0.75em; opacity: 0.9;" 🤖
+      - else
+        | タグが設定されていません

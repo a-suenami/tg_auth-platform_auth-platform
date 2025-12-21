@@ -1,0 +1,37 @@
+= render 'admin_area/shared/form_error', target: f.object
+
+.uk-margin
+h2 連絡先住所
+.uk-margin
+  = f.label :zip_code, class: 'uk-form-label'
+  .uk-form-controls
+    em ex) 123-4567
+    = f.text_field :zip_code, class: "uk-input"
+.uk-margin
+  = f.label :prefecture_code, class: 'uk-form-label'
+  .uk-form-controls
+    = f.number_field :prefecture_code, class: "uk-input"
+.uk-marginf
+  = f.label :city, class: 'uk-form-label'
+  .uk-form-controls
+    = f.text_field :city, class: "uk-input"
+.uk-margin
+  = f.label :street, class: 'uk-form-label'
+  .uk-form-controls
+    = f.text_field :street, class: "uk-input"
+.uk-margin
+  = f.label :building, class: 'uk-form-label'
+  .uk-form-controls
+    = f.text_field :building, class: "uk-input"
+.uk-margin
+  = f.label :phone_number, class: 'uk-form-label'
+  .uk-form-controls
+    em 注意: 国内電話番号でも国際電話番号でも可
+    = f.text_field :phone_number, class: "uk-input"
+.uk-margin
+  = f.label :country_code, class: 'uk-form-label'
+  .uk-form-controls
+    = f.text_field :country_code, class: "uk-input"
+
+
+= f.submit class: "uk-button uk-button-default"

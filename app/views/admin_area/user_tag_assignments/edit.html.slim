@@ -1,0 +1,55 @@
+/ AJAX-based tag assignment (no form submit)
+.uk-margin-top.uk-container data-controller="user-tag-assignment-form" data-user-tag-assignment-form-base-url-value="#{admin_area_user_user_tag_assignments_path(@user)}"
+  / Breadcrumb
+  - breadcrumb_items = [{ text: 'ユーザー', link: admin_area_users_path }, { text: @user.email, link: admin_area_user_path(@user) }, { text: 'タグ編集' }]
+  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+
+  .uk-card.uk-card-default.uk-card-body
+    h2.uk-card-title = "#{@user.email} のユーザタグ編集"
+
+    / Auto-tagged Section (Read-only)
+    - if @auto_assignments.any?
+      .uk-margin
+        label.uk-form-label.uk-text-bold
+          | オートタギング
+          span.uk-text-muted.uk-text-small.uk-margin-small-left (自動付与・編集不可)
+        .uk-margin-small-top style="padding: 8px; border: 1px solid #e5e5e5; border-radius: 4px; background: #f0fff0;"
+          - @auto_assignments.each do |assignment|
+            - next unless assignment.user_tag
+            span.uk-label.uk-label-success.uk-margin-small-right.uk-margin-small-bottom style="cursor: default;" title="ルール: #{assignment.user_auto_tagging&.name}"
+              = assignment.user_tag.name
+
+    / Manual Tags Section (Editable via AJAX)
+    .uk-margin
+      label.uk-form-label.uk-text-bold 手動タグ
+
+      / Selected manual tags displayed as chips
+      .uk-margin-small-top data-user-tag-assignment-form-target="container" style="min-height: 40px; padding: 8px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fafafa;"
+        - if @manual_assignments.any?
+          - @manual_assignments.each do |assignment|
+            - next unless assignment.user_tag
+            span.uk-label.uk-margin-small-right.tag-chip data-tag-id=assignment.user_tag_id data-tag-name=assignment.user_tag.name data-action="click->user-tag-assignment-form#removeTag" style="cursor: pointer;"
+              = assignment.user_tag.name
+              |
+              span uk-icon="icon: close; ratio: 0.8"
+        - else
+          span.uk-text-meta data-user-tag-assignment-form-target="placeholder" タグが選択されていません
+
+      / Dropdown to add new tags (exclude both auto and manual assigned tags)
+      .uk-margin-small-top
+        label.uk-form-label.uk-text-small タグを追加
+        select.uk-select data-user-tag-assignment-form-target="selector" data-action="change->user-tag-assignment-form#addTag"
+          option value="" -- タグを選択 --
+          - available_tags = @available_tags.reject { |t| @all_tag_ids.include?(t.id) }
+          - available_tags.each do |tag|
+            option value=tag.id data-name=tag.name
+              = tag.name
+
+    .uk-margin-top
+      = link_to '戻る', admin_area_user_path(@user), class: 'uk-button uk-button-default', data: { turbo_action: 'replace' }
+
+  .uk-card.uk-card-default.uk-card-body.uk-margin-top
+    h3.uk-card-title タグ履歴
+    p.uk-text-meta 最新20件のタグ変更履歴を表示
+
+    = render 'tag_history', user: @user
