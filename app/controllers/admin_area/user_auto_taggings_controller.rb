@@ -7,12 +7,14 @@ module AdminArea
     def index
       query = UserAutoTagging.ordered.search_by_name(params[:q])
       @pagy, @user_auto_taggings = pagy(query, items: 10)
+      render_with_ui_toggle(:index)
     end
 
     def new
       @user_auto_tagging = UserAutoTagging.new
       @user_auto_tagging.build_schedule
       @user_tags = available_tags_for_selection
+      render_with_ui_toggle(:new)
     end
 
     def tag_picker
@@ -25,6 +27,7 @@ module AdminArea
 
     def edit
       @user_tags = available_tags_for_selection(exclude_rule: @user_auto_tagging)
+      render_with_ui_toggle(:edit)
     end
 
     def create
@@ -38,7 +41,7 @@ module AdminArea
         redirect_to admin_area_user_auto_taggings_path, notice: 'オートタグ設定を保存しました'
       else
         @user_tags = available_tags_for_selection
-        render :new, status: :unprocessable_entity
+        render_with_ui_toggle(:new, status: :unprocessable_entity)
       end
     end
 
@@ -52,7 +55,7 @@ module AdminArea
         redirect_to admin_area_user_auto_taggings_path, notice: 'オートタグ設定を更新しました'
       else
         @user_tags = available_tags_for_selection(exclude_rule: @user_auto_tagging)
-        render :edit, status: :unprocessable_entity
+        render_with_ui_toggle(:edit, status: :unprocessable_entity)
       end
     end
 

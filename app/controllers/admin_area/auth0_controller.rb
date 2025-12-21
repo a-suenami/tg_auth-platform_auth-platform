@@ -4,11 +4,12 @@
 
 module AdminArea
   class Auth0Controller < ApplicationController
-    layout 'admin_area/auth0'
+    layout :resolve_auth0_layout
     skip_before_action :authenticate!, only: [:login, :callback, :failure]
 
     def login
       redirect_to admin_area_users_path if signed_in?
+      render_with_ui_toggle(:login) unless performed?
     end
 
     def callback
@@ -35,6 +36,10 @@ module AdminArea
     end
 
     private
+
+    def resolve_auth0_layout
+      new_ui_enabled? ? 'admin_area/auth0_v202601' : 'admin_area/auth0'
+    end
 
     def logout_url
       request_params = {
