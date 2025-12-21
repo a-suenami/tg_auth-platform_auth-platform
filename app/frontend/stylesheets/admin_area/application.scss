@@ -1,7 +1,7 @@
 @use './admin_theme.scss';
-// @import './variables.scss';
-// @import './layout/page.scss';
-// @import './layout/sidebar.scss';
+// Old UI styles (for feature flag off)
+@use './layout/page_old.scss';
+@use './layout/sidebar_old.scss';
 
 @use './foundation/variables.scss';
 @use './foundation/base.scss';
