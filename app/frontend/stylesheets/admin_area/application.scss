@@ -1,38 +1,4 @@
-@use './admin_theme.scss';
-// Old UI styles (for feature flag off)
-@use './layout/page_old.scss';
-@use './layout/sidebar_old.scss';
-
-@use './foundation/variables.scss';
-@use './foundation/base.scss';
-
-@use './layout/page.scss';
-@use './layout/header.scss';
-@use './layout/page-content.scss';
-@use './layout/auth-page.scss';
-
-@use './object/component/breadcrumb.scss';
-@use './object/component/table.scss';
-@use './object/component/table-header.scss';
-@use './object/component/table-filter.scss';
-@use './object/component/table-footer.scss';
-@use './object/component/checkbox.scss';
-@use './object/component/tag.scss';
-@use './object/component/tag-card.scss';
-@use './object/component/tag-list-header.scss';
-@use './object/component/table-row-action.scss';
-@use './object/component/flash.scss';
-@use './object/component/info.scss';
-@use './object/component/empty.scss';
-@use './object/component/modal.scss';
-@use './object/component/form.scss';
-@use './object/component/form-field.scss';
-@use './object/component/tag-picker.scss';
-@use './object/component/datepicker.scss';
-
-@use './object/project/user-detail.scss';
-@use './object/project/user-show.scss';
-@use './object/project/auth-login.scss';
-@use './object/project/user-tag-form.scss';
-@use './object/project/user-auto-tagging-form.scss';
-@use './object/project/tag-assignment-edit.scss';
+@import './admin_theme.scss';
+@import './variables.scss';
+@import './layout/page.scss';
+@import './layout/sidebar.scss';
