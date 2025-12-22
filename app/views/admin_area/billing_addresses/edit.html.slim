@@ -1,0 +1,13 @@
+= turbo_frame_tag "modal-frame" do
+  .c-modal__dialog__header
+    .c-modal__dialog__header__subtitle = @user.user_profile&.name
+    .c-modal__dialog__header__title 請求先住所の編集
+    = link_to "#", class: "c-modal__dialog__header__close", data: { action: "close-modal" } do
+      = render 'shared/icons/icon-close'
+  .c-modal__dialog__body
+    = form_with url: "#", method: :put, local: true, data: { turbo_frame: '_top' }, html: { id: "edit_billing_address" } do |f|
+      = render 'form', f: f
+  .c-modal__dialog__footer
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--cancel type="button" data-action="close-modal" キャンセル
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--save type="submit" form="edit_billing_address" data-shortcut="⌘+S" 保存 (⌘+S)
+

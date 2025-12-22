@@ -1,0 +1,6 @@
+.c-flash
+  - uikit_flash.each do |status, message|
+    input.c-flash__checkbox type="checkbox" checked="" id="flash-#{status}-#{message.hash}"
+    label.c-flash__message for="flash-#{status}-#{message.hash}" data-status=status
+      = message
+      = render 'shared/icons/icon-close'

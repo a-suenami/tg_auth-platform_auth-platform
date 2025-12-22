@@ -18,6 +18,7 @@ module AdminArea
         return
       end
       @user_profile = Admins::UserProfileForm.build(user_id: params[:user_id], id: @user.user_profile&.id, params: nil)
+      render_with_ui_toggle(:edit)
     end
 
     def create
@@ -39,7 +40,7 @@ module AdminArea
         @user_profile.perform!
         redirect_to admin_area_user_path(@user), notice: t('helpers.messages.updated')
       else
-        render :edit, status: :unprocessable_entity
+        render_with_ui_toggle(:edit, status: :unprocessable_entity)
       end
     end
   end

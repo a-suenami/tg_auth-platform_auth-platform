@@ -14,9 +14,16 @@ import { Controller } from '@hotwired/stimulus';
  *       - Config (JSON stored as string, built from UI fields)
  */
 export default class extends Controller {
-  static targets = ['ruleBlocksContainer', 'ruleBlockTemplate', 'ruleTemplate'];
+  static targets = [
+    'ruleBlocksContainer',
+    'ruleBlocksEmpty',
+    'ruleBlockTemplate',
+    'ruleTemplate',
+  ];
 
   declare readonly ruleBlocksContainerTarget: HTMLElement;
+  declare readonly ruleBlocksEmptyTarget: HTMLElement;
+  declare readonly hasRuleBlocksEmptyTarget: boolean;
   declare readonly ruleBlockTemplateTarget: HTMLTemplateElement;
   declare readonly ruleTemplateTarget: HTMLTemplateElement;
 
@@ -32,6 +39,7 @@ export default class extends Controller {
     this.blockIndex = initialCount ? parseInt(initialCount) : 0;
 
     this.initializeExistingRules();
+    this.toggleEmptyState();
   }
 
   /**
@@ -56,6 +64,7 @@ export default class extends Controller {
     this.ruleBlocksContainerTarget.appendChild(newBlock);
     this.blockIndex++;
     this.updateBlockNumbers();
+    this.toggleEmptyState();
 
     // Automatically add one rule to the new block
     const rulesContainer = newBlock.querySelector('.rules-container') as HTMLElement;
@@ -81,11 +90,13 @@ export default class extends Controller {
     if (destroyInput) {
       destroyInput.value = '1';
       block.style.display = 'none';
+      block.setAttribute('data-destroy', 'true');
     } else {
       block.remove();
     }
 
     this.updateBlockNumbers();
+    this.toggleEmptyState();
   }
 
   /**
@@ -165,8 +176,8 @@ export default class extends Controller {
    */
   handleConditionTypeChange(event: Event) {
     const select = event.target as HTMLSelectElement;
-    const rule = select.closest('.rule-item') as HTMLElement;
-    const configFields = rule.querySelector('.config-fields') as HTMLElement;
+    const rule = select.closest('.rule-item, .p-user-auto-tagging__rule') as HTMLElement;
+    const configFields = rule.querySelector('.config-fields, .p-user-auto-tagging__config-fields') as HTMLElement;
     this.showConfigFields(select.value, configFields);
     this.buildConfigJSON(rule);
   }
@@ -178,8 +189,8 @@ export default class extends Controller {
    */
   handleSubscriptionTypeChange(event: Event) {
     const select = event.target as HTMLSelectElement;
-    const configSection = select.closest('[class^="config-"]') as HTMLElement;
-    const durationFields = configSection.querySelector('.duration-fields') as HTMLElement;
+    const configSection = select.closest('.config-membership, .config-plan, .config-prefecture, .config-gender, .config-age, .config-account_link, .p-user-auto-tagging__config-section') as HTMLElement;
+    const durationFields = configSection.querySelector('.duration-fields, .p-user-auto-tagging__duration-fields') as HTMLElement;
 
     if (select.value === 'duration') {
       durationFields.style.display = 'block';
@@ -197,7 +208,7 @@ export default class extends Controller {
    */
   handleFieldChange(event: Event) {
     const field = event.target as HTMLElement;
-    const rule = field.closest('.rule-item') as HTMLElement;
+    const rule = field.closest('.rule-item, .p-user-auto-tagging__rule') as HTMLElement;
     this.buildConfigJSON(rule);
   }
 
@@ -208,10 +219,10 @@ export default class extends Controller {
    * - Populate UI fields from parsed config
    */
   private initializeExistingRules() {
-    this.element.querySelectorAll('.rule-item').forEach(ruleElement => {
+    this.element.querySelectorAll('.rule-item, .p-user-auto-tagging__rule').forEach(ruleElement => {
       const rule = ruleElement as HTMLElement;
       const conditionTypeSelect = rule.querySelector('.condition-type-select') as HTMLSelectElement;
-      const configFields = rule.querySelector('.config-fields') as HTMLElement;
+      const configFields = rule.querySelector('.config-fields, .p-user-auto-tagging__config-fields') as HTMLElement;
       const configJsonField = rule.querySelector('.config-json-field') as HTMLTextAreaElement;
 
       if (!conditionTypeSelect || !configFields || !configJsonField) return;
@@ -240,7 +251,7 @@ export default class extends Controller {
    * - Special handling for subscription type to show duration fields
    */
   private populateConfigFields(rule: HTMLElement, conditionType: string, config: Record<string, any>) {
-    const configSection = rule.querySelector('.config-' + conditionType) as HTMLElement;
+    const configSection = rule.querySelector('.config-' + conditionType + ', .p-user-auto-tagging__config-section.config-' + conditionType) as HTMLElement;
     if (!configSection) return;
 
     configSection.querySelectorAll('[data-field]').forEach(field => {
@@ -280,16 +291,28 @@ export default class extends Controller {
    * - Show only the section matching condition type
    */
   private showConfigFields(conditionType: string, configFields: HTMLElement) {
+    // configFieldsコンテナ自体の表示制御（p-scopedはcontents）
+    if (configFields) {
+      const isProjectScoped = configFields.classList.contains('p-user-auto-tagging__config-fields');
+      configFields.style.display = isProjectScoped ? 'contents' : 'block';
+    }
+
     // Hide all config sections
-    configFields.querySelectorAll('[class^="config-"]').forEach(section => {
+    configFields
+      .querySelectorAll('[class^="config-"], .p-user-auto-tagging__config-section')
+      .forEach(section => {
       (section as HTMLElement).style.display = 'none';
     });
 
     // Show relevant config section
     if (conditionType) {
-      const section = configFields.querySelector('.config-' + conditionType) as HTMLElement;
+      const section = configFields.querySelector(
+        '.config-' + conditionType + ', .p-user-auto-tagging__config-section.config-' + conditionType
+      ) as HTMLElement;
       if (section) {
-        section.style.display = 'block';
+        // config-sectionはcontentsで表示、それ以外はblock
+        const isProjectScoped = section.classList.contains('p-user-auto-tagging__config-section');
+        section.style.display = isProjectScoped ? 'contents' : 'block';
       }
     }
   }
@@ -313,7 +336,9 @@ export default class extends Controller {
     const conditionType = conditionTypeSelect?.value;
     if (!conditionType) return;
 
-    const configSection = rule.querySelector('.config-' + conditionType) as HTMLElement;
+    const configSection = rule.querySelector(
+      '.config-' + conditionType + ', .p-user-auto-tagging__config-section.config-' + conditionType
+    ) as HTMLElement;
     if (!configSection) return;
 
     const config: Record<string, any> = {};
@@ -349,6 +374,24 @@ export default class extends Controller {
     if (jsonField) {
       jsonField.value = JSON.stringify(config);
     }
+  }
+
+  /**
+   * Show/hide empty state when rule blocks are added/removed
+   */
+  private toggleEmptyState() {
+    if (!this.hasRuleBlocksEmptyTarget) return;
+
+    const blocks = Array.from(
+      this.ruleBlocksContainerTarget.querySelectorAll('.c-condition-block')
+    ) as HTMLElement[];
+
+    const hasVisible = blocks.some(
+      (block) => block.style.display !== 'none' && block.getAttribute('data-destroy') !== 'true'
+    );
+
+    this.ruleBlocksEmptyTarget.style.display = hasVisible ? 'none' : 'block';
+    this.ruleBlocksContainerTarget.style.display = hasVisible ? 'grid' : 'none';
   }
 
   /**

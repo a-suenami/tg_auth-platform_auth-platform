@@ -1,0 +1,80 @@
+// ラジオボタングループコンポーネント
+.c-form-field__radio-group {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background-color: var(--color-background);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+
+  &__item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s;
+
+    &:not(:first-child) {
+      border-left: 1px solid var(--color-border);
+    }
+
+    &:hover {
+      background-color: var(--color-background);
+    }
+  }
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+
+    &:checked + .c-form-field__radio-group__radio {
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    &:checked ~ .c-form-field__radio-group__label {
+      color: var(--color-text-heading);
+      font-weight: 500;
+    }
+  }
+
+  &__radio {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #99A1AF;
+    border-radius: 50%;
+    background-color: var(--color-background);
+    display: inline-grid;
+    place-items: center;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    position: relative;
+    box-sizing: border-box;
+
+    &::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      opacity: 0;
+      border: 1px solid rgba(black, 0.8);
+      background-color: var(--color-text-heading);
+      border-radius: 50%;
+      transition: width 0.1s ease-in-out, height 0.1s ease-in-out;
+    }
+  }
+
+  &__label {
+    font-size: 14px;
+    color: var(--color-text-body);
+    cursor: pointer;
+    user-select: none;
+  }
+}
+

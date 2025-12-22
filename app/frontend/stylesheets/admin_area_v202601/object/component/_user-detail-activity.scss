@@ -1,0 +1,115 @@
+@use 'user-detail-common.scss' as common;
+
+// アクティビティコンポーネント
+.c-user-detail-activity {
+  @include common.c-user-detail-common;
+
+  &__list {
+    display: grid;
+    gap: 24px 8px;
+    grid-template-columns: 24px 70px 1fr;
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: -24px;
+      left: 11px;
+      width: 2px;
+      z-index: 0;
+      background-color: var(--color-background-gray-dark);
+    }
+
+    &:first-child {
+      &::before {
+        top: 0;
+      }
+    }
+
+    &:last-child {
+      &::before {
+        bottom: calc(100% - 24px);
+      }
+    }
+
+    &__icon {
+      position: relative;
+      z-index: 5;
+      width: 24px;
+      aspect-ratio: 1;
+      background-color: var(--color-background-gray-dark);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: var(--color-background-gray-alpha);
+
+      &[data-kind='success'] {
+        background-color: var(--color-success-background);
+      }
+
+      &[data-kind='notice'] {
+        background-color: var(--color-notice-background);
+      }
+
+      svg {
+        width: 16px;
+        aspect-ratio: 1;
+        object-fit: contain;
+      }
+    }
+
+    &__date {
+      font-size: 12px;
+      color: var(--color-text-inactive);
+    }
+
+    &__text {
+      font-size: 13px;
+      color: var(--color-text-active);
+    }
+  }
+
+  &__more {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    position: relative;
+    line-height: 24px;
+    color: var(--color-text-heading);
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -24px;
+      bottom: 0;
+      left: 11px;
+      width: 2px;
+      z-index: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 4px,
+        var(--color-background-gray-dark) 4px,
+        var(--color-background-gray-dark) 8px
+      );
+    }
+    &__text {
+      grid-column: 2 / -1;
+    }
+  }
+}
+
+// モーダル内でのみ日付カラムの幅制限を無しにする
+.c-modal__dialog__body {
+  .c-user-detail-activity__list {
+    grid-template-columns: 24px auto 1fr;
+  }
+}
+

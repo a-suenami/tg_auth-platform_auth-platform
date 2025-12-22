@@ -27,6 +27,12 @@ class AdminArea::ApplicationController
     include ::Pagy::UrlHelpers
     include ::Pagy::Frontend
     include ::AdminArea::ApplicationHelper
+
+    sig { params(flag_name: T.untyped).returns(T.untyped) }
+    def feature_enabled?(flag_name); end
+
+    sig { returns(T::Boolean) }
+    def new_ui_enabled?; end
   end
 
   class HelperProxy < ::ActionView::Base

@@ -1,0 +1,34 @@
+= turbo_frame_tag "modal-frame" do
+  .c-modal__dialog__header
+    .c-modal__dialog__header__title 日付を選択
+    = link_to "#", class: "c-modal__dialog__header__close", data: { action: "close-modal" } do
+      = render 'shared/icons/icon-close'
+  .c-modal__dialog__body
+    .c-datepicker data-controller="datepicker"
+      .c-datepicker__fields
+        .c-datepicker__field__wrapper
+          select.c-datepicker__field__select data-datepicker-target="year" data-action="change->datepicker#updateDate"
+            - (Date.today.year - 5).upto(Date.today.year + 5) do |year|
+              option value="#{year}" = year
+          .c-datepicker__field__dropdown
+            = render 'shared/icons/icon-chevron-down'
+        span.c-datepicker__field__unit 年
+        .c-datepicker__field__wrapper
+          select.c-datepicker__field__select data-datepicker-target="month" data-action="change->datepicker#updateDate"
+            - (1..12).each do |month|
+              option value="#{month}" = month
+          .c-datepicker__field__dropdown
+            = render 'shared/icons/icon-chevron-down'
+        span.c-datepicker__field__unit 月
+        .c-datepicker__field__wrapper
+          select.c-datepicker__field__select data-datepicker-target="day" data-action="change->datepicker#updateDate"
+            - (1..31).each do |day|
+              option value="#{day}" = day
+          .c-datepicker__field__dropdown
+            = render 'shared/icons/icon-chevron-down'
+        span.c-datepicker__field__unit 日
+      input type="hidden" data-datepicker-target="dateValue" value=""
+  .c-modal__dialog__footer
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--cancel type="button" data-action="close-modal" キャンセル
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--save type="button" data-action="select-date" 選択
+

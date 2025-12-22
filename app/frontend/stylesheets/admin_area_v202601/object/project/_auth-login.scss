@@ -1,0 +1,45 @@
+.p-auth-login {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1fr;
+  justify-items: stretch;
+  min-width: 320px;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+
+    &__logo {
+      height: 48px;
+      width: auto;
+      flex-shrink: 0;
+    }
+
+    &__tenant {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--color-text-inactive);
+      letter-spacing: 0.02em;
+    }
+  }
+
+  &__button {
+    appearance: none;
+    background-color: var(--color-primary);
+    color: var(--color-primary-contrast);
+    border: none;
+    border-radius: 12px;
+    padding: 18px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.02em;
+  }
+
+  &__form {
+    display: contents;
+  }
+}

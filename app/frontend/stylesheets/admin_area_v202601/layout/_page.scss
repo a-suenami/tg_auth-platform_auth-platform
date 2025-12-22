@@ -1,0 +1,16 @@
+.l-page {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 100dvh;
+  overflow-y: auto;
+  &__container {
+    margin: 0 16px 16px;
+    background-color: var(--color-background);
+    box-shadow: var(--box-shadow-pale);
+    border-radius: 16px;
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    display: grid;
+    align-items: stretch;
+  }
+}

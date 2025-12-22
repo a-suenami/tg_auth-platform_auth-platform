@@ -4,8 +4,7 @@ html lang='ja'
     meta charset='utf-8'
     meta name='viewport' content='width=device-width,initial-scale=1.0,user-scalable=no'
     meta http-equiv='content-language' content='ja'
-    / title = Tenant.current.name
-    title = "Tenant.current.name"
+    title = Tenant.current&.name || 'Admin'
     / link rel='icon' href=vite_asset_path('images/admin_area/favicon.svg')
     = vite_client_tag
     = vite_typescript_tag 'entrypoints/admin_area/application'
@@ -30,7 +29,7 @@ html lang='ja'
                       li
                         = link_to 'オートタギング', admin_area_user_auto_taggings_path
                       
-                - unless Rails.env.production?
+                - if feature_enabled?(:delivery)
                   ul.uk-parent
                     li.uk-parent 配信
                     ul.uk-nav-sub

@@ -15,6 +15,18 @@ module AdminArea
       render partial: 'admin_area/pagy/nav', locals: { pagy: }
     end
 
+    def pagy_t(key, opts = {})
+      # pagyのi18nキーを確認して、prev/nextのテキストを日本語に変更し、SVGアイコンを追加
+      case key.to_s
+      when 'pagy.nav.prev', 'nav.prev'
+        "#{render('shared/icons/icon-chevron-left')} 前へ".html_safe
+      when 'pagy.nav.next', 'nav.next'
+        "次へ #{render('shared/icons/icon-chevron-right')}".html_safe
+      else
+        super(key, opts)
+      end
+    end
+
     def last_access_page
       cookies[:page]
     end
@@ -42,11 +54,11 @@ module AdminArea
 
     def class_of(key)
       # primary, success, warning or a danger
-      case key
-      when 'notice'
-        'primary'
+      case key.to_s
       when 'alert'
         'danger'
+      when 'success'
+        'success'
       else
         ''
       end

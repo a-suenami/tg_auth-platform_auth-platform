@@ -6,6 +6,12 @@ module AdminArea
     extend T::Sig
     include Pagy::Backend
     include AdminArea::ExceptionRescuable
+    include FeatureFlaggable
+
+    NEW_UI_FLAG = :admin_new_ui
+
+    layout :resolve_layout
+    helper_method :new_ui_enabled?
 
     before_action :authenticate!
     before_action :set_tenant
@@ -42,5 +48,25 @@ module AdminArea
 
       Tenant.current
     end
+
+    sig { returns(String) }
+    def resolve_layout
+      new_ui_enabled? ? 'admin_area/application_v202601' : 'admin_area/application'
+    end
+
+    sig { returns(T::Boolean) }
+    def new_ui_enabled?
+      feature_enabled?(NEW_UI_FLAG)
+    end
+
+    # Render the appropriate view based on feature flag
+    # Usage: render_with_ui_toggle(:index) or render_with_ui_toggle(:show, locals: { user: @user })
+    sig { params(action_name: T.any(String, Symbol), options: T.untyped).void }
+    # rubocop:disable Style/ArgumentsForwarding
+    def render_with_ui_toggle(action_name, **options)
+      template = new_ui_enabled? ? "#{action_name}_v202601" : action_name.to_s
+      render(template, **options)
+    end
+    # rubocop:enable Style/ArgumentsForwarding
   end
 end

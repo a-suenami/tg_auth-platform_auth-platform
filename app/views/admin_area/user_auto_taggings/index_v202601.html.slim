@@ -1,0 +1,44 @@
+= render 'admin_area/users/user_layout' do
+  .l-page-content__content__main
+    = render 'admin_area/shared/breadcrumb_v202601', items: [{ text: 'オートタギング' }]
+
+    .c-tag-list-header
+      .c-tag-list-header__left
+        = form_with url: admin_area_user_auto_taggings_path, method: :get, local: true, class: 'c-tag-list-header__search-form' do |f|
+          .c-tag-list-header__search
+            = f.text_field :q, placeholder: 'オートタギング名で検索', value: params[:q], class: 'c-tag-list-header__search__input'
+            = render 'shared/icons/icon-search'
+          = f.submit '検索', class: 'c-tag-list-header__search-button'
+        = link_to admin_area_user_auto_taggings_path, class: 'c-tag-list-header__clear' do
+          | クリア
+      = link_to new_admin_area_user_auto_tagging_path, class: 'c-tag-list-header__button', data: { turbo_frame: '_top' } do
+        = render 'shared/icons/icon-plus'
+        span.c-tag-list-header__button__text 新規オートタギング
+
+    .c-tag-list-content
+      - if @user_auto_taggings.empty?
+        .c-empty オートタグが見つかりません
+      - else
+        .c-tag-card-list
+          - @user_auto_taggings.each do |auto_tagging|
+            .c-tag-card-wrapper
+              = link_to edit_admin_area_user_auto_tagging_path(auto_tagging), class: 'c-tag-card', data: { turbo_frame: 'content' } do
+                .c-tag-card__header
+                  .c-tag-card__header__title = auto_tagging.name
+                  .c-tag-card__header__description = auto_tagging.description.presence || '-'
+                .c-tag-card__footer
+                  .c-tag-card__footer__author
+                    .c-tag-card__footer__author__avatar
+                      = render 'shared/icons/icon-user'
+                    .c-tag-card__footer__author__name 作成者 #{auto_tagging.created_by_name || '-'}
+                  .c-tag-card__footer__tag
+                    - status_label = auto_tagging.shareable ? '連携タグ設定中' : 'ローカル'
+                    .c-tag-card__footer__tag__item = status_label
+              .c-tag-card__action-wrapper
+                .c-tag-card__action data-dropdown-toggle="dropdown-#{auto_tagging.id}"
+                  = render 'shared/icons/icon-more-vertical'
+                .c-tag-card__dropdown id="dropdown-#{auto_tagging.id}"
+                  = link_to admin_area_user_auto_tagging_path(auto_tagging), data: { turbo_method: :delete, turbo_confirm: '本当に削除しますか？', turbo_frame: '_top' }, class: 'c-tag-card__dropdown__item' do
+                    | 削除
+        .c-table-footer
+          == pagy_nav(@pagy)

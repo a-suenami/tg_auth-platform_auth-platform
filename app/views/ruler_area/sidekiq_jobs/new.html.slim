@@ -1,0 +1,18 @@
+.uk-container.uk-margin-top
+  h2 Sidekiq Job実行
+
+  = form_with url: enqueue_ruler_area_sidekiq_jobs_path, method: :post, class: 'uk-form-stacked', data: { controller: 'sidekiq-job-form', 'sidekiq-job-form-hints-value': @job_hints.to_json } do |f|
+    .uk-margin
+      = f.label :name, 'Job名', class: 'uk-form-label'
+      .uk-form-controls
+        = f.select :name, options_for_select(@allowed_jobs), { prompt: '-- Jobを選択 --' }, class: 'uk-select', data: { 'sidekiq-job-form-target': 'select', action: 'change->sidekiq-job-form#selectChanged' }
+      .uk-text-meta.uk-margin-small-top data-sidekiq-job-form-target="jobHint" style="display: none;"
+
+    .uk-margin
+      = f.label :args, '引数 (カンマ区切り)', class: 'uk-form-label'
+      .uk-form-controls
+        = f.text_field :args, placeholder: 'arg1,arg2,arg3', class: 'uk-input', data: { 'sidekiq-job-form-target': 'argsInput' }
+      .uk-text-muted.uk-text-small.uk-margin-small-top data-sidekiq-job-form-target="argsHint" style="display: none;"
+
+    .uk-margin
+      = f.submit 'Enqueue', class: 'uk-button uk-button-primary'

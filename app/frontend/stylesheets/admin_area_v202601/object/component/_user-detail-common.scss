@@ -1,0 +1,12 @@
+// ユーザー詳細コンポーネントの共通mixin
+@mixin c-user-detail-common {
+  display: grid;
+  gap: 8px;
+
+  &__label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-heading);
+  }
+}
+

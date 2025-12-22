@@ -1,0 +1,13 @@
+/ 共通モーダルコンポーネント
+/ locals:
+/   modal_id: モーダルのID（必須）
+- modal_id ||= "modal-#{SecureRandom.hex(4)}"
+
+.c-modal data-modal-id="#{modal_id}"
+  .c-modal__overlay
+  .c-modal__dialog
+    = turbo_frame_tag "modal-frame", class: "c-modal__dialog__frame" do
+      / Turbo Frameがロードされるまで待機
+      .c-modal__dialog__body
+        | 読み込み中...
+

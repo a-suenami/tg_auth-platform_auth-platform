@@ -1,0 +1,63 @@
+// 情報表示コンポーネント
+.c-info {
+  background-color: var(--color-background-gray);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+
+  &__item {
+    display: grid;
+    gap: 8px;
+    padding: 8px 12px;
+
+    &:not(:first-child) {
+      border-top: 1px solid var(--color-border);
+    }
+
+    &__label {
+      font-size: 12px;
+      color: var(--color-text-inactive);
+    }
+
+    &__value {
+      font-size: 14px;
+      color: var(--color-text-active);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+
+      &__status {
+        color: var(--color-success-text);
+        display: flex;
+        align-items: center;
+
+        &.is-error {
+          color: var(--color-attention-icon);
+        }
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+
+    &--row {
+      display: flex;
+      padding: 0;
+
+      .c-info__item {
+        flex: 1;
+        display: grid;
+        gap: 8px;
+        padding: 8px 12px;
+
+        &:not(:first-child) {
+          border-top: none;
+          border-left: 1px solid var(--color-border);
+        }
+      }
+    }
+  }
+}
+

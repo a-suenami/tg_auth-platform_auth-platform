@@ -6,9 +6,9 @@ ja:
       user_profile:
         id: ID
         first_name: 名
-        last_name: 苗字
-        first_name_kana: 名(カナ)
-        last_name_kana: 苗字(カナ)
+        last_name: 姓
+        first_name_kana: メイ
+        last_name_kana: セイ
         birth_date: 誕生日
         gender: 性別
         created_at: 作成日時
@@ -25,3 +25,9 @@ ja:
               format: はカタカナのみ使用できます
             last_name_kana:
               format: はカタカナのみ使用できます
+  enumerize:
+    user_profile:
+      gender:
+        male: 男性
+        female: 女性
+        other: その他

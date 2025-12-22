@@ -20,6 +20,9 @@ ja:
         restrict_dependent_destroy:
           has_one: "%{record}が存在しているため削除できません"
           has_many: "%{record}が存在しているため削除できません"
+  feature_flags:
+    errors:
+      not_available: この機能は現在利用できません
   admin_area:
     deliveries:
       created: 配信イベントを作成しました

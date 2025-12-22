@@ -1,0 +1,40 @@
+.c-breadcrumb {
+  display: flex;
+  align-items: center;
+  padding: 8px 24px;
+  border-bottom: 1px solid var(--color-border);
+  height: 48px;
+  &__sidenav {
+    padding-right: 24px;
+    border-right: 1px solid var(--color-border);
+    &__toggle {
+      display: block;
+      svg {
+        display: block;
+        aspect-ratio: 1;
+        width: 20px;
+        height: auto;
+      }
+    }
+  }
+  &__content {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-left: 24px;
+    color: var(--color-text-inactive);
+    &__item {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 100%;
+      &.is-active {
+        color: var(--color-text-active);
+      }
+    }
+    svg {
+      width: 6px;
+      height: auto;
+      display: block;
+    }
+  }
+}

@@ -10,6 +10,9 @@ module GeneratedUrlHelpersModule
   include ::ActionDispatch::Routing::PolymorphicRoutes
 
   sig { params(args: T.untyped).returns(String) }
+  def activities_admin_area_user_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def admin_area_auth_auth0_callback_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -172,6 +175,9 @@ module GeneratedUrlHelpersModule
   def complete_off_session_card_api_v1_internal_me_card_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def datepicker_admin_area_user_auto_taggings_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_delivery_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -179,6 +185,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_auto_tagging_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_admin_area_user_billing_address_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_contact_address_url(*args); end
@@ -238,6 +247,9 @@ module GeneratedUrlHelpersModule
   def edit_ruler_area_tenant_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def enqueue_ruler_area_sidekiq_jobs_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def health_check_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -259,6 +271,9 @@ module GeneratedUrlHelpersModule
   def new_admin_area_user_auto_tagging_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_user_billing_address_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_contact_address_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -269,6 +284,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_ruler_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_sidekiq_job_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_admin_url(*args); end
@@ -406,6 +424,12 @@ module GeneratedUrlHelpersModule
   def ruler_area_auth_logout_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def ruler_area_feature_flags_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_flipper_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_login_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -421,6 +445,9 @@ module GeneratedUrlHelpersModule
   def ruler_area_rulers_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def ruler_area_sidekiq_web_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_admin_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -431,6 +458,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_email_templates_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_feature_flags_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_komoju_records_account_url(*args); end
@@ -539,6 +569,15 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def sync_ruler_area_tenant_stripe_records_products_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def tag_picker_admin_area_user_auto_taggings_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def toggle_ruler_area_feature_flags_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def toggle_ruler_area_tenant_feature_flags_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def top_ruler_area_tenant_memberships_url(*args); end

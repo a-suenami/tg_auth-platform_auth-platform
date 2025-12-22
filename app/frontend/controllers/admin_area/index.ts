@@ -2,6 +2,12 @@ import { application } from "@app/controllers/application";
 import UserAutoTaggingFormController from "./user_auto_tagging_form_controller";
 import AutoTaggingTagSelectorController from "./auto_tagging_tag_selector_controller";
 import TemplatePreviewController from "./template_preview_controller";
+import FormValidationController from "./form_validation_controller";
+import PeriodSettingsController from "./period_settings_controller";
+import DatepickerController from "./datepicker_controller";
+import ConditionBlockController from "./condition_block_controller";
+import ConditionBlocksController from "./condition_blocks_controller";
+import SidenavToggleController from "./sidenav_toggle_controller";
 import DeliveryFormController from "./delivery_form_controller";
 import DeliveryTagSelectorController from "./delivery_tag_selector_controller";
 import DatetimeUtcController from "./datetime_utc_controller";
@@ -25,5 +31,11 @@ application.register(
   "user-search-tag-selector",
   UserSearchTagSelectorController
 );
+application.register("form-validation", FormValidationController);
+application.register("period-settings", PeriodSettingsController);
+application.register("datepicker", DatepickerController);
+application.register("condition-block", ConditionBlockController);
+application.register("condition-blocks", ConditionBlocksController);
+application.register("sidenav-toggle", SidenavToggleController);
 
 console.log("this is frontend/controllers/admin_area/index.ts");

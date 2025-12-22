@@ -1,0 +1,49 @@
+@use '../component/detail-section.scss' as detail-section;
+@use '../component/user-detail-memo.scss';
+@use '../component/user-detail-tag.scss';
+@use '../component/user-detail-activity.scss';
+@use './user-show/plan.scss';
+@use './user-show/onetime-plan.scss';
+
+.p-user-show {
+  display: contents;
+  &__breadcrumb {
+    grid-column: 1 / -1;
+  }
+  &__content {
+    &__main,
+    &__sub {
+      padding: 16px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+    &__section {
+      @include detail-section.c-detail-section;
+
+      &__sms-reset {
+        &__form {
+          &__button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+            border: 1px solid var(--color-border);
+            background-color: var(--color-background);
+            color: var(--color-text-body);
+            font-family: var(--font-family);
+            width: 100%;
+            box-shadow: var(--box-shadow);
+
+            &:hover {
+              background-color: var(--color-background-gray);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
