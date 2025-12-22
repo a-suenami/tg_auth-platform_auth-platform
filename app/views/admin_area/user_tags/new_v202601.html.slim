@@ -12,6 +12,13 @@
           .c-form-field
             label.c-form-field__label 説明
             = f.text_area :description, placeholder: '説明文を入力', rows: 5, class: 'c-form-field__input'
+          .c-form-field
+            label.c-form-field__label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"
+              .c-checkbox
+                = f.check_box :integration_enabled, class: 'c-checkbox__input'
+                span.c-checkbox__checkbox
+              span 連携タグ設定
+            .c-form-field__hint 有効にすると、このタグは連携アプリに同期されます
     .l-page-content__content__sub.p-user-tag-form__content__sub
       .p-user-tag-form__content__sub__section
         button.p-user-tag-form__content__sub__button.p-user-tag-form__content__sub__button--submit type="submit" form="new_user_tag_form" data-form-validation-target="submit" disabled="disabled" 新規作成

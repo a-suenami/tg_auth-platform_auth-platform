@@ -56,7 +56,7 @@ module AdminArea
     end
 
     def user_tag_params
-      params.require(:user_tag).permit(:name, :description)
+      params.require(:user_tag).permit(:name, :description, :integration_enabled)
     end
   end
 end
