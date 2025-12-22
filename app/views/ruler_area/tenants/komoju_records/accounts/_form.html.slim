@@ -27,10 +27,4 @@
       .uk-text-meta The secret API key from Komoju (starts with sk_). Leave blank to keep existing key.
 
   .uk-margin
-    = form.label :webhook_secret, 'Webhook Secret', class: 'uk-form-label'
-    .uk-form-controls
-      = form.password_field :webhook_secret, class: 'uk-input', placeholder: 'wh_secret_...', required: !@komoju_account.persisted?
-      .uk-text-meta The webhook signature secret from Komoju. Leave blank to keep existing secret.
-
-  .uk-margin
     = form.submit class: 'uk-button uk-button-primary'
