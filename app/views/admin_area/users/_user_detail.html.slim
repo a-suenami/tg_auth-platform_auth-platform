@@ -3,7 +3,7 @@
     .p-user-detail__header
       a.p-user-detail__header__close href='#'
         = render 'shared/icons/icon-close'
-      .p-user-detail__header__title = @user.user_profile&.name || '1234-5678-0000'
+      .p-user-detail__header__title = @user.user_profile&.name || @user.email
       = link_to admin_area_user_path(@user), class: "p-user-detail__header__link", data: { turbo_frame: 'content' } do
         = render 'shared/icons/icon-external-link'
     .p-user-detail__content
@@ -52,9 +52,10 @@
           .c-info__item
             .c-info__item__label ID
             .c-info__item__value = @user.id
-          .c-info__item
-            .c-info__item__label 会員番号
-            .c-info__item__value 1234-5678-0000
+          /- TODO: 会員番号機能が実装されたら有効化
+          /  .c-info__item
+          /    .c-info__item__label 会員番号
+          /    .c-info__item__value = @user.member_number || '-'
           .c-info__item
             .c-info__item__label 名前
             .c-info__item__value = @user.user_profile&.name

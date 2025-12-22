@@ -25,6 +25,22 @@ module AdminArea
       end
     end
 
+    def new
+      @user = User.new
+      render_with_ui_toggle('new')
+    end
+
+    def create
+      @user = User.new(create_user_params)
+      @user.tenant_id = T.must(Tenant.current_id)
+
+      if @user.save
+        redirect_to admin_area_users_path, notice: '会員を登録しました'
+      else
+        render_with_ui_toggle('new', status: :unprocessable_entity)
+      end
+    end
+
     def edit
       @user.build_user_profile unless @user.user_profile
       @user.build_contact_address unless @user.contact_address
@@ -67,6 +83,14 @@ module AdminArea
         :email_verified,
         :deleted_at,
         :suppress_sms_verification,
+      )
+    end
+
+    def create_user_params
+      params.require(:user).permit(
+        :email,
+        :password,
+        :phone_number,
       )
     end
   end

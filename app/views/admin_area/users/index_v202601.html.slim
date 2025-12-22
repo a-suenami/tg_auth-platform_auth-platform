@@ -9,6 +9,9 @@
         .c-table-header__content__search
           input.c-table-header__content__search__input type='text' placeholder='検索'
           = render 'shared/icons/icon-search'
+        = link_to new_admin_area_user_path, class: 'c-table-header__content__action', data: { turbo_frame: '_top' }
+          = render 'shared/icons/icon-plus'
+          span 会員新規登録
         a.c-table-header__content__more href='#'
           = render 'shared/icons/icon-more'
       - unless @users.empty?

@@ -1,0 +1,23 @@
+.uk-margin-top.uk-container
+  h2 会員新規登録
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with model: @user, url: admin_area_users_path, method: :post, class: 'uk-form-horizontal' do |f|
+      = render 'admin_area/shared/form_error', target: f.object
+      .uk-margin
+        = f.label :email, class: 'uk-form-label'
+        .uk-form-controls
+          = f.email_field :email, class: "uk-input", required: true, placeholder: "mail@example.com"
+      .uk-margin
+        = f.label :password, class: 'uk-form-label'
+        .uk-form-controls
+          em 注意: 8文字以上、大文字・小文字・数字を各1文字以上含む
+          = f.password_field :password, class: "uk-input", placeholder: "パスワード（任意）"
+      .uk-margin
+        = f.label :phone_number, class: 'uk-form-label'
+        .uk-form-controls
+          em 注意: 国際電話番号のフォーマットにする必要あり(例: +818012345678)
+          = f.text_field :phone_number, class: "uk-input", placeholder: "+818012345678"
+
+      = f.submit "登録", class: "uk-button uk-button-primary"
+      = link_to "キャンセル", admin_area_users_path, class: "uk-button uk-button-default uk-margin-left"

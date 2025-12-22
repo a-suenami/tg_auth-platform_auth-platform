@@ -1,0 +1,24 @@
+= render 'admin_area/users/user_layout' do
+  .p-user-tag-form data-controller="form-validation"
+    .p-user-tag-form__breadcrumb
+      = render 'admin_area/shared/breadcrumb_v202601', items: [{ text: 'すべてのユーザー', link: admin_area_users_path }, { text: '会員新規登録' }]
+    .l-page-content__content__main.p-user-tag-form__content__main
+      = form_with model: @user, url: admin_area_users_path, method: :post, local: true, data: { turbo_frame: '_top', form_validation_target: 'form' }, html: { id: 'new_user_form' } do |f|
+        = render 'admin_area/shared/form_error', target: f.object
+        .c-form
+          .c-form-field
+            label.c-form-field__label メールアドレス
+            = f.email_field :email, placeholder: 'mail@example.com', class: 'c-form-field__input', required: true
+          .c-form-field
+            label.c-form-field__label パスワード
+            = f.password_field :password, placeholder: 'パスワード（任意）', class: 'c-form-field__input'
+            .c-form-field__hint 8文字以上、大文字・小文字・数字を各1文字以上含む
+          .c-form-field
+            label.c-form-field__label 電話番号
+            = f.text_field :phone_number, placeholder: '+818012345678', class: 'c-form-field__input'
+            .c-form-field__hint 国際電話番号フォーマット（例: +818012345678）
+    .l-page-content__content__sub.p-user-tag-form__content__sub
+      .p-user-tag-form__content__sub__section
+        button.p-user-tag-form__content__sub__button.p-user-tag-form__content__sub__button--submit type="submit" form="new_user_form" data-form-validation-target="submit" disabled="disabled" 会員登録
+        = link_to admin_area_users_path, class: 'p-user-tag-form__content__sub__button p-user-tag-form__content__sub__button--cancel', data: { turbo_frame: '_top' } do
+          | キャンセル
