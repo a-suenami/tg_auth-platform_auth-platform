@@ -30,6 +30,29 @@
 
 `detail-type` にバージョンを含める（例: `profile.changed.v1`）。これにより、破壊的変更時に新旧バージョンを並行運用できる。
 
+### 補足: Transactional Outbox パターン
+
+この設計は [Transactional Outbox パターン](https://microservices.io/patterns/data/transactional-outbox.html)に相当する。
+
+1. ビジネスロジックの実行時に `UserEvent` レコードをデータベースに保存（同一トランザクション内）
+2. `after_commit` で Sidekiq ワーカーをエンキュー
+3. ワーカーが `UserEvent` を読み取り、EventBridge に送信
+4. `eventbridge_published_at` で送信済みを記録し、冪等性を担保
+
+これにより、データベースへの書き込みとイベント発行の整合性が保証される。
+
+#### Outbox パターン実現の代替手段
+
+以下の方法も検討したが、いずれも現時点では過剰と判断し、Rails の `after_commit` + Sidekiq を採用した。
+
+| 方法 | 不採用理由 |
+|-----|-----------|
+| [AWS DMS](https://aws.amazon.com/dms/) | コストがかかる。本来はデータ移行のためのサービスであり、継続的な CDC も可能だが主たる用途ではない |
+| [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) / [DynamoDB Streams](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.html) | 現在の規模・開発スケジュールを鑑みると、オーバーテクノロジー |
+| [Debezium](https://debezium.io/) | CDC を実現する OSS として有力だが、Kafka Connect 等のインフラ構築が必要 |
+
+将来的にイベント量が増加した場合や、より厳密な順序保証が必要になった場合は、これらの導入を再検討する。
+
 ## 理由
 
 ### 既存実装を変更しない理由

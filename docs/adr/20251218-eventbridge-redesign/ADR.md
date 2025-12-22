@@ -30,6 +30,29 @@ Leave the existing `PublishEvents::PublishService` unchanged, create a new `Publ
 
 Include the version in `detail-type` (e.g., `profile.changed.v1`). This allows parallel operation of old and new versions during breaking changes.
 
+### Note: Transactional Outbox Pattern
+
+This design corresponds to the [Transactional Outbox pattern](https://microservices.io/patterns/data/transactional-outbox.html).
+
+1. Save `UserEvent` record to the database during business logic execution (within the same transaction)
+2. Enqueue Sidekiq worker via `after_commit`
+3. Worker reads `UserEvent` and sends to EventBridge
+4. Record publication status in `eventbridge_published_at` to ensure idempotency
+
+This guarantees consistency between database writes and event publishing.
+
+#### Alternative Approaches for Outbox Pattern
+
+The following methods were considered but deemed excessive for the current situation. We adopted Rails `after_commit` + Sidekiq instead.
+
+| Method | Reason for Not Adopting |
+|--------|------------------------|
+| [AWS DMS](https://aws.amazon.com/dms/) | Costly. Primarily a data migration service; continuous CDC is possible but not its main purpose |
+| [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) / [DynamoDB Streams](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.html) | Over-engineering given the current scale and development schedule |
+| [Debezium](https://debezium.io/) | A promising OSS for CDC, but requires infrastructure setup such as Kafka Connect |
+
+We will reconsider these options if event volume increases or stricter ordering guarantees become necessary in the future.
+
 ## Rationale
 
 ### Reasons for not modifying the existing implementation
