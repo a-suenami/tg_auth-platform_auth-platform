@@ -1,5 +1,5 @@
 import * as Turbo from '@hotwired/turbo';
-// import '@app/controllers/ruler_area/index'; // Stimulus
+import '@app/controllers/ruler_area/index'; // Stimulus
 import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons';
 
