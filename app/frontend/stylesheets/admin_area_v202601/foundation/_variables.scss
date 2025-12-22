@@ -1,0 +1,50 @@
+:root {
+  --color-background-gray: #F9FAFB;
+  --color-background-gray-light: #fdfdfd;
+  --color-background: #ffffff;
+  --color-background-gray-dark: #e0e0e0;
+  --color-background-gray-alpha: rgba(black, .5);
+
+  --color-border: #E5E7EB;
+
+  --color-text-heading: #6A7282;
+  --color-text-body: #1E2939;
+  --color-text-active: #1E2939;
+  --color-text-inactive: #6A7282;
+  --color-text-placeholder: #D1D5DC;
+
+  --color-primary: #222222;
+  --color-primary-contrast: #ffffff;
+
+  --color-accent: #F8FAFC;
+
+  --color-success-background: #AFF5B4;
+  --color-success-text: #16801F;
+  --color-success-icon: #76C902;
+  --color-success-status: #00C950;
+
+  --color-attention-background: #FFA2A2;
+  --color-attention-text: #82181A;
+  --color-attention-icon: #FF5E85;
+
+  --color-warning-status: #F0B100;
+
+  --color-notice-background: #8EC5FF;
+
+  --color-muted-status: #D1D5DC;
+
+  --color-tag-background: #ECFEFF;
+  --color-tag-text: #{rgba(black, .6)};
+  --color-auto-tag-background: #FEFCE8;
+  --color-auto-tag-text: #{rgba(black, .6)};
+
+  --color-a: rgba(black, .5);
+
+  --font-size-body: 13px;
+  --font-size-heading: 14px;
+
+  --box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  --box-shadow-pale: 0 4px 16px 0 rgba(0, 0, 0, 0.02);
+
+  --font-family: 'Noto Sans JP', sans-serif;
+}

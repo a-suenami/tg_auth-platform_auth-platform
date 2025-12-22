@@ -1,0 +1,22 @@
+doctype html
+html lang='ja'
+  head
+    meta charset='utf-8'
+    meta name='viewport' content='width=device-width,initial-scale=1.0,user-scalable=no'
+    meta http-equiv='content-language' content='ja'
+    / title = Tenant.current.name
+    title = Tenant.current.name
+    / link rel='icon' href=vite_asset_path('images/admin_area/favicon.svg')
+
+    link rel="preconnect" href="https://fonts.googleapis.com"
+    link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""
+    link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet"
+
+    = vite_client_tag
+    = vite_typescript_tag 'entrypoints/admin_area/application'
+    = csrf_meta_tags
+  body.l-auth-page
+    = render 'layouts/admin_area/flash'
+    .l-auth-page__container
+      = yield
+

@@ -1,0 +1,26 @@
+// previewへのフォーム stripe_product_idを送信
+= form_with(url: preview_ruler_area_tenant_stripe_records_products_path, method: :post, local: true, data: { turbo: false }) do |f|
+  = f.text_field :stripe_product_id
+  = f.submit '同期する', class: "uk-button uk-button-default"
+
+// @stripe_record_productsの情報を表示
+- if @stripe_record_products.present?
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    h2 Stripe 会員プラン管理 - 一覧
+
+    table
+      thead
+        tr
+          th 商品名
+          th 商品ID
+          th 状態
+          th 操作
+      tbody
+        - @stripe_record_products.each do |product|
+          tr
+            td= product.name
+            td= product.remote_id
+            td= !product.deleted
+            td
+              = link_to '詳細', ruler_area_tenant_stripe_records_product_path(id: product.id), class: "uk-button"
+              = link_to '削除', ruler_area_tenant_stripe_records_product_path(id: product.id), data: { turbo_method: :delete }, class: 'uk-button uk-button-small uk-button-danger'

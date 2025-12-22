@@ -31,6 +31,8 @@ html lang='ja'
                       li
                         = link_to 'テナント詳細設定', ruler_area_tenant_tenant_settings_path(@tenant_id)
                       li
+                        = link_to 'メンバーシップ管理', top_ruler_area_tenant_memberships_path(@tenant_id)
+                      li
                         = link_to 'SPA 設定', ruler_area_tenant_login_spa_applications_path(@tenant_id)
                       li
                         = link_to 'テンプレート管理', ruler_area_tenant_email_templates_path(@tenant_id)
@@ -40,10 +42,35 @@ html lang='ja'
                         = link_to 'Admin一覧', ruler_area_tenant_admins_path(@tenant_id)
                       li
                         = link_to 'Shopify Multipass設定', ruler_area_tenant_shopify_multipass_stores_path(@tenant_id)
+                      li
+                        = link_to 'StripeProducts', ruler_area_tenant_stripe_records_products_path(@tenant_id)
+                      li
+                        = link_to 'Stripe設定', ruler_area_tenant_tenant_stripe_account_path(@tenant_id)
+                      li
+                        = link_to 'Stripe Accounts', ruler_area_tenant_stripe_records_accounts_path(@tenant_id)
+                      li
+                        = link_to 'Komoju設定', ruler_area_tenant_tenant_komoju_account_path(@tenant_id)
+                      li
+                        = link_to 'Komoju Accounts', ruler_area_tenant_komoju_records_accounts_path(@tenant_id)
+                      li
+                        = link_to 'Feature Flags', ruler_area_tenant_feature_flags_path(@tenant_id)
             .tg-sidebar-section
               ul.uk-nav.uk-nav-default
                 ul.uk-parent
                   = link_to 'Ruler一覧', ruler_area_rulers_path
+            .tg-sidebar-section
+              ul.uk-nav.uk-nav-default
+                ul.uk-parent
+                  span SIDEKIQ
+                  ul.uk-nav-sub
+                    li
+                      = link_to 'Webコンソール', ruler_area_sidekiq_web_path, data: { turbo: false }
+                    li
+                      = link_to 'Job実行', new_ruler_area_sidekiq_job_path
+            .tg-sidebar-section
+              ul.uk-nav.uk-nav-default
+                ul.uk-parent
+                  = link_to 'Feature Flags', ruler_area_feature_flags_path
             .tg-sidebar-section.bottom
               ul.uk-nav.uk-nav-default
                 li アカウント

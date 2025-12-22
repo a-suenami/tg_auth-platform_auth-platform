@@ -4,12 +4,12 @@ html lang='ja'
     meta charset='utf-8'
     meta name='viewport' content='width=device-width,initial-scale=1.0,user-scalable=no'
     meta http-equiv='content-language' content='ja'
-    / title = Tenant.current.name
-    title = "Tenant.current.name"
+    title = Tenant.current&.name || 'Admin'
     / link rel='icon' href=vite_asset_path('images/admin_area/favicon.svg')
     = vite_client_tag
     = vite_typescript_tag 'entrypoints/admin_area/application'
     = csrf_meta_tags
+    = yield :head
   body.l-page
     .l-page-sidebar
         .uk-width-medium.uk-height-1-1.uk-section-secondary
@@ -23,6 +23,20 @@ html lang='ja'
                   ul.uk-nav-sub
                     li
                       = link_to '会員ID一覧', admin_area_users_path
+                    - if feature_enabled?(:user_tag)
+                      li
+                        = link_to 'タグ', admin_area_user_tags_path
+                      li
+                        = link_to 'オートタギング', admin_area_user_auto_taggings_path
+                      
+                - if feature_enabled?(:delivery)
+                  ul.uk-parent
+                    li.uk-parent 配信
+                    ul.uk-nav-sub
+                      li
+                        = link_to 'テンプレート', admin_area_templates_path
+                      li
+                        = link_to '配信イベント', admin_area_deliveries_path
             .tg-sidebar-section.bottom
               ul.uk-nav.uk-nav-default
                 li アカウント

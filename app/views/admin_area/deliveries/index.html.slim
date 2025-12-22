@@ -1,0 +1,61 @@
+.uk-margin-top.uk-container
+  / Breadcrumb
+  - breadcrumb_items = [{ text: '配信' }, { text: '配信イベント' }]
+  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+
+  .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-bottom.uk-margin-top
+    h2 配信イベント一覧
+
+  .uk-card.uk-card-default.uk-card-body.uk-margin-bottom
+    = form_with url: admin_area_deliveries_path, method: :get, class: "uk-flex uk-flex-middle", data: { turbo_frame: '_top' } do |f|
+      .uk-search.uk-search-default.uk-width-expand
+        = f.text_field :q, placeholder: "イベント名を入力...", value: params[:q], class: "uk-search-input uk-width-1-1"
+      = f.select :status, options_for_select([['すべて', ''], ['下書き', 'draft'], ['予約済み', 'scheduled'], ['稼働中', 'ongoing'], ['準備中', 'preparing'], ['配信中', 'delivering'], ['配信済み', 'delivered'], ['キャンセル', 'cancelled'], ['停止中', 'paused']], params[:status]), {}, class: "uk-select uk-margin-small-left uk-form-width-medium", onchange: "this.form.submit()"
+      = link_to 'クリア', admin_area_deliveries_path, class: "uk-button uk-button-default uk-margin-small-left"
+      = link_to new_admin_area_delivery_path, class: "uk-button uk-button-primary uk-margin-small-left" do
+        span uk-icon="plus"
+        |  新規作成
+
+  .uk-card.uk-card-default.uk-card-body
+    - if @deliveries.empty?
+      p.uk-text-lead 配信イベントが見つかりません
+    - else
+      table.uk-table.uk-table-divider.uk-table-hover
+        thead
+          tr
+            th イベント名
+            th 配信方法
+            th 配信状態
+            th テンプレート
+            th 配信日時
+            th タグ
+        tbody
+          - @deliveries.each do |delivery|
+            tr
+              td
+                = link_to delivery.name, admin_area_delivery_path(delivery)
+              td
+                span.uk-label Eメール
+              td
+                = render 'status_badge', delivery: delivery
+              td
+                = delivery.template&.name || '-'
+              td
+                - if delivery.schedule_type?
+                  - if delivery.schedule&.scheduled_at
+                    = local_time(delivery.schedule.scheduled_at)
+                  - else
+                    | -
+                - else
+                  = birthday_timing_text(delivery)
+              td
+                - first_tag = delivery.user_tags.first
+                - remaining_count = delivery.user_tags.size - 1
+                - if first_tag
+                  span.uk-label = first_tag.name
+                  - if remaining_count > 0
+                    span.uk-text-muted.uk-margin-small-left +他#{remaining_count}
+                - else
+                  | -
+
+    == pagy_nav(@pagy)

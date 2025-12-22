@@ -1,0 +1,227 @@
+@use 'radio-group.scss';
+
+// フォームフィールドコンポーネント
+.c-form-field {
+  display: grid;
+  gap: 8px;
+
+  &__label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-heading);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    &__required {
+      color: var(--color-attention-text);
+      font-size: 12px;
+    }
+  }
+
+  &__label-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  &__input-group {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-background);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+
+    &__input {
+      flex: 1;
+      position: relative;
+
+      .c-form-field__input {
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+
+        &:focus {
+          box-shadow: none;
+          border-color: transparent;
+        }
+      }
+
+      &:not(:first-child) {
+        border-left: 1px solid var(--color-border);
+      }
+    }
+
+    &__status {
+      position: relative;
+      border-left: 1px solid var(--color-border);
+      min-width: 120px;
+
+      .c-form-field__input {
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        padding-right: 40px;
+
+        &:focus {
+          box-shadow: none;
+          border-color: transparent;
+        }
+      }
+
+      &__dropdown {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        pointer-events: none;
+        color: var(--color-text-inactive);
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+
+  &__input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--box-shadow);
+
+    &__status {
+      position: absolute;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      &.is-success {
+        color: var(--color-success-icon);
+      }
+
+      &.is-error {
+        color: var(--color-attention-icon);
+      }
+    }
+
+    &__dropdown {
+      position: absolute;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+      color: var(--color-text-inactive);
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    &__calendar {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      color: var(--color-text-inactive);
+      border-left: 1px solid var(--color-border);
+      min-width: 48px;
+      aspect-ratio: 1;
+
+      svg {
+        width: 14px;
+        height: 13px;
+      }
+    }
+  }
+
+  &__input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-background);
+    font-size: 14px;
+    color: var(--color-text-body);
+    font-family: var(--font-family);
+    appearance: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    // datetime-localのデフォルトアイコンを非表示
+    &[type="datetime-local"] {
+      padding-right: 60px;
+
+      &::-webkit-calendar-picker-indicator {
+        display: none;
+      }
+    }
+
+    // dateのデフォルトアイコンを非表示
+    &[type="date"] {
+      padding-right: 60px;
+
+      &::-webkit-calendar-picker-indicator {
+        display: none;
+      }
+    }
+
+    &::placeholder {
+      color: var(--color-text-placeholder);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(34, 34, 34, 0.1);
+    }
+
+    &:disabled,
+    &[readonly] {
+      background-color: var(--color-background-gray);
+      color: var(--color-text-inactive);
+      cursor: not-allowed;
+    }
+
+    &--select {
+      padding-right: 40px;
+      cursor: pointer;
+
+      &:focus {
+        border-color: var(--color-primary);
+      }
+    }
+  }
+
+  // ステータスアイコンがある場合のパディング調整
+  &__input-wrapper__status + &__input-wrapper__dropdown,
+  &__input-wrapper__status + &__input-wrapper__calendar {
+    right: 36px;
+  }
+
+  // ドロップダウンアイコンがある場合のパディング調整
+  &__input--select {
+    padding-right: 40px;
+  }
+
+  // ステータスアイコンとドロップダウンアイコンが両方ある場合
+  &__input-wrapper__status + &__input-wrapper__dropdown + &__input,
+  &__input-wrapper__status + &__input-wrapper__calendar + &__input {
+    padding-right: 64px;
+  }
+}

@@ -1,0 +1,9 @@
+.uk-margin-top.uk-container
+  / Breadcrumb
+  - breadcrumb_items = [{ text: '会員ID管理' }, { text: 'オートタギング', link: admin_area_user_auto_taggings_path }, { text: '新規作成' }]
+  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+
+  h2 オートタグ設定を作成
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = render 'form', user_auto_tagging: @user_auto_tagging

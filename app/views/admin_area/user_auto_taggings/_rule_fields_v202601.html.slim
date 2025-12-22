@@ -1,0 +1,132 @@
+- template ||= false
+- rule_form = f unless template
+
+.rule-item.c-condition-block__item.p-user-auto-tagging__rule
+  - if rule_form
+    = rule_form.hidden_field :position
+    = rule_form.hidden_field :_destroy
+  - else
+    input type="hidden" name="user_auto_tagging[rule_blocks_attributes][NEW_RECORD][rules_attributes][NEW_RECORD][position]" value="0"
+    input type="hidden" name="user_auto_tagging[rule_blocks_attributes][NEW_RECORD][rules_attributes][NEW_RECORD][_destroy]" value="0"
+
+  .c-condition-block__item__content.p-user-auto-tagging__rule__header
+    .c-condition-block__item__text
+      | 条件&nbsp;
+      span.rule-number
+    button.remove-rule.c-condition-block__item__menu type="button" data-action="click->user-auto-tagging-form#removeRule"
+      = render 'shared/icons/icon-close'
+
+  / Condition Type Select
+  .c-condition-block__item__content.p-user-auto-tagging__rule__content
+    label.c-form-field__label 条件タイプ
+    - if template
+      select.condition-type-select.c-condition-block__item__pill name="user_auto_tagging[rule_blocks_attributes][NEW_RECORD][rules_attributes][NEW_RECORD][condition_type]" data-action="change->user-auto-tagging-form#handleConditionTypeChange"
+        option value="" 条件タイプを選択
+        option value="membership" 購読中メンバーシップ
+        option value="plan" 購読中プラン
+        option value="prefecture" 居住都道府県
+        option value="gender" 性別
+        option value="age" 年代
+        option value="account_link" アカウント連携
+    - else
+      - condition_options = [['条件タイプを選択', ''], ['購読中メンバーシップ', 'membership'], ['購読中プラン', 'plan'], ['居住都道府県', 'prefecture'], ['性別', 'gender'], ['年代', 'age'], ['アカウント連携', 'account_link']]
+      = rule_form.select :condition_type, condition_options, {}, class: 'condition-type-select c-condition-block__item__pill', required: true, data: { action: 'change->user-auto-tagging-form#handleConditionTypeChange' }
+
+  / Config Fields Container (dynamic based on condition type)
+  .config-fields.p-user-auto-tagging__config-fields data-config-container=""
+    / Membership Config
+    .config-membership.p-user-auto-tagging__config-section style="display: none;"
+      .c-form-field
+        label.c-form-field__label 購読タイプ
+        select.subscription-type-select.c-condition-block__item__pill data-field="subscription_type" data-action="change->user-auto-tagging-form#handleSubscriptionTypeChange change->user-auto-tagging-form#handleFieldChange"
+          option value="current" 現在購読中
+          option value="duration" 一定期間以上購読中
+
+      .duration-fields.p-user-auto-tagging__duration-fields style="display: none;"
+        .c-form-field
+          label.c-form-field__label 購読期間
+          .c-period-settings__fixed__fields
+            input.c-condition-block__item__pill type="number" min="1" data-field="duration_value" placeholder="数" data-action="change->user-auto-tagging-form#handleFieldChange" style="width: 100px;"
+            select.c-condition-block__item__pill data-field="duration_unit" data-action="change->user-auto-tagging-form#handleFieldChange" style="width: 120px;"
+              option value="days" 日
+              option value="months" ヶ月
+
+      .c-form-field
+        label.c-form-field__label メンバーシップ選択
+        .c-condition-block__item__content.p-user-auto-tagging__radio-group
+          - ['Membership A', 'Membership B', 'Membership C'].each do |membership|
+            label.c-form-field__label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"
+              input.c-checkbox__input type="checkbox" data-field="values" value=membership data-action="change->user-auto-tagging-form#handleFieldChange"
+              span.c-checkbox__checkbox
+              span = membership
+
+    / Plan Config
+    .config-plan.p-user-auto-tagging__config-section style="display: none;"
+      .c-form-field
+        label.c-form-field__label 購読タイプ
+        select.subscription-type-select.c-condition-block__item__pill data-field="subscription_type" data-action="change->user-auto-tagging-form#handleSubscriptionTypeChange change->user-auto-tagging-form#handleFieldChange"
+          option value="current" 現在購読中
+          option value="duration" 一定期間以上購読中
+
+      .duration-fields.p-user-auto-tagging__duration-fields style="display: none;"
+        .c-form-field
+          label.c-form-field__label 購読期間
+          .c-period-settings__fixed__fields
+            input.c-condition-block__item__pill type="number" min="1" data-field="duration_value" placeholder="数" data-action="change->user-auto-tagging-form#handleFieldChange" style="width: 100px;"
+            select.c-condition-block__item__pill data-field="duration_unit" data-action="change->user-auto-tagging-form#handleFieldChange" style="width: 120px;"
+              option value="days" 日
+              option value="months" ヶ月
+
+      .c-form-field
+        label.c-form-field__label プラン選択
+        .c-condition-block__item__content.p-user-auto-tagging__radio-group
+          - ['Plan A', 'Plan B', 'Plan C'].each do |plan|
+            label.c-form-field__label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"
+              input.c-checkbox__input type="checkbox" data-field="values" value=plan data-action="change->user-auto-tagging-form#handleFieldChange"
+              span.c-checkbox__checkbox
+              span = plan
+
+    / Prefecture Config
+    .config-prefecture.p-user-auto-tagging__config-section style="display: none;"
+      .c-form-field
+        label.c-form-field__label 都道府県選択
+        .c-condition-block__item__content.p-user-auto-tagging__rule__content.p-user-auto-tagging__radio-group
+          - ['北海道', '東京都', '大阪府', '福岡県'].each do |pref|
+            label.c-form-field__label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"
+              input.c-checkbox__input type="checkbox" data-field="values" value=pref data-action="change->user-auto-tagging-form#handleFieldChange"
+              span.c-checkbox__checkbox
+              span = pref
+
+    / Gender Config
+    .config-gender.p-user-auto-tagging__config-section style="display: none;"
+      .c-form-field
+        label.c-form-field__label 性別選択
+        .c-condition-block__item__content.p-user-auto-tagging__rule__content.p-user-auto-tagging__radio-group
+          - [['male','男性'],['female','女性'],['other','その他']].each do |value,label_text|
+            label.c-form-field__label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"
+              input.c-checkbox__input type="checkbox" data-field="values" value=value data-action="change->user-auto-tagging-form#handleFieldChange"
+              span.c-checkbox__checkbox
+              span = label_text
+
+    / Age Config
+    .config-age.p-user-auto-tagging__config-section style="display: none;"
+      .c-form-field
+        label.c-form-field__label 年齢範囲
+        .c-period-settings__fixed__fields
+          input.c-condition-block__item__pill type="number" min="0" data-field="min" placeholder="最小年齢" data-action="change->user-auto-tagging-form#handleFieldChange"
+          input.c-condition-block__item__pill type="number" min="0" data-field="max" placeholder="最大年齢" data-action="change->user-auto-tagging-form#handleFieldChange"
+
+    / Account Link Config
+    .config-account_link.p-user-auto-tagging__config-section style="display: none;"
+      .c-form-field
+        label.c-form-field__label アカウント連携
+        select.c-condition-block__item__pill data-field="value" data-action="change->user-auto-tagging-form#handleFieldChange"
+          option value="" 選択してください
+          option value="LINE" LINE
+
+  / Hidden field to store final config JSON
+  - if template
+    textarea.config-json-field name="user_auto_tagging[rule_blocks_attributes][NEW_RECORD][rules_attributes][NEW_RECORD][config]" style="display: none;"
+  - else
+    - config_value = rule_form.object.config.is_a?(Hash) ? rule_form.object.config.to_json : rule_form.object.config
+    = rule_form.text_area :config, value: config_value, class: 'config-json-field', style: 'display: none;'

@@ -1,6 +1,31 @@
+# typed: false
+# frozen_string_literal: true
+
+require 'sidekiq-ent/web'
+
+Sidekiq::Web.authorize do |env, _method, _path|
+  session = env['rack.session']
+  Ruler.find_by(id: session[:current_ruler_id]).present?
+end
+
 Rails.application.routes.draw do
+  # Flipper UI - mounted outside namespace with session protection
+  flipper_constraint = lambda do |request|
+    request.session[:current_ruler_id].present?
+  end
+  constraints flipper_constraint do
+    mount Flipper::UI.app(Flipper) => '/ruler/flipper', as: :ruler_area_flipper
+  end
+
   namespace :ruler_area, path: :ruler do
     root to: 'application#root', as: :root
+
+    # Feature flags management
+    resources :feature_flags, only: [:index] do
+      collection do
+        post :toggle
+      end
+    end
 
     get 'login', to: 'auth0#login'
     get 'logout', to: 'auth0#logout'
@@ -10,6 +35,12 @@ Rails.application.routes.draw do
 
     resources :rulers, only: [:index, :new, :create, :destroy]
 
+    # Sidekiq
+    resources :sidekiq_jobs, only: [:new] do
+      post 'enqueue', on: :collection
+    end
+    mount Sidekiq::Web, at: '/sidekiq'
+
     resources :tenants, only: [:index, :new, :create, :edit, :update] do
       get :admin_area, on: :member
       scope module: 'tenants' do
@@ -17,9 +48,36 @@ Rails.application.routes.draw do
         resources :admins, only: [:index, :new, :create, :destroy]
         resources :login_spa_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :tenant_settings, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        resources :memberships, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+          get :top, on: :collection
+        end
+        resources :membership_groups, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+          get :assign_memberships, on: :member
+          patch :update_memberships, on: :member
+        end
+        resources :membership_plans, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+          resources :membership_plan_payment_methods, only: [:edit, :update]
+        end
         resources :shopify_multipass_stores, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :email_templates, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :oauth_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        resource :tenant_stripe_account, only: [:show, :new, :create, :edit, :update, :destroy]
+        resource :tenant_komoju_account, only: [:show, :new, :create, :edit, :update, :destroy]
+        namespace :stripe_records do
+          resources :products, only: [:index, :show, :destroy] do
+            post :preview, on: :collection
+            put :sync, on: :collection
+          end
+          resources :accounts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        end
+        namespace :komoju_records do
+          resources :accounts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        end
+        resources :feature_flags, only: [:index] do
+          collection do
+            post :toggle
+          end
+        end
       end
     end
   end

@@ -1,0 +1,13 @@
+# ==============================================================================
+# db/schemas/stripe_record/api_keys.schema
+# ==============================================================================
+create_table :stripe_record_api_keys, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false, index: true, foreign_key: { name: :fk_stripe_record_api_keys_tenants }
+  t.string :remote_id,            null: false, index: { unique: true, name: 'idx_stripe_record_api_keys_remote_id_uniq' }, comment: 'Stripe の API キー ID'
+
+  t.string :display_name,         null: false, comment: 'API キーがどのアカウントのものかを識別するための名前'
+  t.string :publishable_key,      null: false
+  t.string :secret_key_encrypted, null: false
+
+  t.timestamps null: false
+end

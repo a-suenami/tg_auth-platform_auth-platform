@@ -1,0 +1,11 @@
+/ Breadcrumb component
+/ Usage: = render 'admin_area/shared/breadcrumb', items: [{ text: 'Home' }, { text: 'Users', link: users_path }, { text: 'Edit' }]
+/ Last item auto becomes non-link (current page)
+
+ul.uk-breadcrumb
+  - items.each_with_index do |item, index|
+    li
+      - if index == items.length - 1 || item[:link].blank?
+        span = item[:text]
+      - else
+        = link_to item[:text], item[:link]

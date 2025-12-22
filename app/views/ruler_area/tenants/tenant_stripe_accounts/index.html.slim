@@ -1,0 +1,31 @@
+h1 Tenant Stripe Account
+
+- if @tenant_stripe_account.present?
+  .uk-card.uk-card-default.uk-card-body
+    table.uk-table.uk-table-striped
+      thead
+        tr
+          th Stripe Account
+          th Charge Type
+          th Fee Rate
+          th Tax Rate ID
+          th Webhook Secret
+          th Actions
+      tbody
+        tr
+          td = @tenant_stripe_account.stripe_account.display_name
+          td = @tenant_stripe_account.charge_type
+          td = "#{@tenant_stripe_account.fee_rate_percentage}%"
+          td = @tenant_stripe_account.tax_rate_id
+          td = @tenant_stripe_account.webhook_secret.present? ? '***' : 'Not set'
+          td
+            = link_to 'Show', ruler_area_tenant_tenant_stripe_account_path(@tenant), class: 'uk-button uk-button-small uk-button-primary'
+            = link_to 'Edit', edit_ruler_area_tenant_tenant_stripe_account_path(@tenant), class: 'uk-button uk-button-small uk-button-secondary'
+            = link_to 'Destroy', ruler_area_tenant_tenant_stripe_account_path(@tenant), method: :delete, data: { confirm: 'Are you sure?' }, class: 'uk-button uk-button-small uk-button-danger'
+- else
+  .uk-alert.uk-alert-warning
+    p No tenant stripe account configured yet.
+
+br
+
+= link_to 'New Tenant Stripe Account', new_ruler_area_tenant_tenant_stripe_account_path(@tenant), class: 'uk-button uk-button-primary'

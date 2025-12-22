@@ -1,0 +1,35 @@
+.p-user-show__content__section__onetime-plan {
+  .p-user-show__content__section__onetime-plan__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+
+    &::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      display: block;
+      border-radius: 50%;
+    }
+
+    &.is-success {
+      &::before {
+        background-color: var(--color-success-status);
+      }
+    }
+
+    &.is-warning {
+      &::before {
+        background-color: var(--color-warning-status);
+      }
+    }
+
+    &.is-inactive {
+      &::before {
+        background-color: var(--color-muted-status);
+      }
+    }
+  }
+}
+

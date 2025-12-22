@@ -1,0 +1,21 @@
+= turbo_frame_tag "modal-frame" do
+  .c-modal__dialog__header
+    .c-modal__dialog__header__subtitle = @user.user_profile&.name || @user.id
+    .c-modal__dialog__header__title アクティビティ
+    = link_to "#", class: "c-modal__dialog__header__close", data: { action: "close-modal" } do
+      = render 'shared/icons/icon-close'
+  .c-modal__dialog__body
+    .c-user-detail-activity
+      .c-user-detail-activity__label アクティビティ
+      .c-user-detail-activity__list
+        - # TODO: 実際のアクティビティデータに置き換え
+        - activity_templates = [{ icon: 'icon-activity-award', kind: 'success', text: 'ゴールド会員に昇格しました' }, { icon: 'icon-activity-birthday', kind: 'notice', text: 'Plan Aを購読して1年が経ちました' }, { icon: 'icon-activity-update', kind: 'success', text: 'Membership Aの更新に成功しました' }, { icon: 'icon-activity-purchase', kind: 'default', text: 'Plan Aの購読を開始しました' }, { icon: 'icon-activity-purchase', kind: 'default', text: '買い切り Plan Aを購入申込しました' }, { icon: 'icon-activity-award', kind: 'success', text: 'シルバー会員に昇格しました' }, { icon: 'icon-activity-update', kind: 'success', text: 'Membership Bの更新に成功しました' }, { icon: 'icon-activity-purchase', kind: 'default', text: 'Plan Bの購読を開始しました' }]
+        - 30.times do |i|
+          - activity = activity_templates[i % activity_templates.length]
+          - date = (30 - i).days.ago.strftime('%Y-%m-%d %H:%M')
+          .c-user-detail-activity__item
+            .c-user-detail-activity__item__icon data-kind="#{activity[:kind]}"
+              = render "shared/icons/#{activity[:icon]}"
+            .c-user-detail-activity__item__date = date
+            .c-user-detail-activity__item__text = activity[:text]
+

@@ -1,0 +1,13 @@
+ja:
+  activerecord:
+    models:
+      membership: メンバーシップ
+    attributes:
+      membership:
+        id: ID
+        name: メンバーシップ名
+        display_name: 表示名
+        position: 表示順序
+        tier: 階層
+        created_at: 作成日時
+        updated_at: 更新日時

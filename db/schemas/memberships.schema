@@ -1,0 +1,13 @@
+create_table :memberships, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'メンバーシップ' do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :membership_group, type: :uuid, null: true, comment: 'メンバーシップグループ'
+  t.string :name, comment: 'メンバーシップ識別子'
+  t.string :display_name, comment: 'メンバーシップ名称'
+  t.integer :position, comment: '表示順序'
+  t.integer :tier, comment: '階級'
+
+  t.timestamps null: false
+end
+
+add_foreign_key :memberships, :tenants, name: :fk_memberships_tenants
+add_foreign_key :memberships, :membership_groups, column: :membership_group_id, name: :fk_membership_groups

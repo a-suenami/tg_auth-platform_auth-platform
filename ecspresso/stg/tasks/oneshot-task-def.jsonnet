@@ -46,7 +46,7 @@ local memory_reservation = 256;
     // fluent bit
     {
       "essential": true,
-      "image": "amazon/aws-for-fluent-bit:2.28.4",
+      "image": "public.ecr.aws/aws-observability/aws-for-fluent-bit:2.28.4",
       "name": "log_router",
       "firelensConfiguration": {
           "type": "fluentbit",

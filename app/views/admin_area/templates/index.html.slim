@@ -1,0 +1,38 @@
+.uk-margin-top.uk-container
+  / Breadcrumb
+  - breadcrumb_items = [{ text: '配信' }, { text: 'テンプレート' }]
+  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+
+  .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-bottom.uk-margin-top
+    h2 テンプレート一覧
+
+  .uk-card.uk-card-default.uk-card-body.uk-margin-bottom
+    .uk-flex.uk-flex-middle
+      = form_with url: admin_area_templates_path, method: :get, class: "uk-search uk-search-default uk-width-expand" do |f|
+        = f.text_field :q, placeholder: "テンプレート名を入力...", value: params[:q], class: "uk-search-input"
+      = link_to 'クリア', admin_area_templates_path, class: "uk-button uk-button-default uk-margin-small-left"
+      = link_to new_admin_area_template_path, class: "uk-button uk-button-primary uk-margin-small-left" do
+        span uk-icon="plus"
+        |  新規作成
+
+  .uk-card.uk-card-default.uk-card-body
+    - if @templates.empty?
+      p.uk-text-lead テンプレートが見つかりません
+    - else
+      table.uk-table.uk-table-divider.uk-table-hover
+        thead
+          tr
+            th 名前
+            th 最新バージョンの状態
+            th 公開中バージョン
+        tbody
+          - @templates.each do |template|
+            tr
+              td
+                = link_to template.name, admin_area_template_path(template.id)
+              td
+                span class="uk-label #{status_label_class(template.state)}"
+                  = status_label_text(template.state)
+              td = template.published_version || '-'
+
+    == pagy_nav(@pagy)

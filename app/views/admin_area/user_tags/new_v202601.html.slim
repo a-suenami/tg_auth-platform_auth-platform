@@ -1,0 +1,19 @@
+= render 'admin_area/users/user_layout' do
+  .p-user-tag-form data-controller="form-validation"
+    .p-user-tag-form__breadcrumb
+      = render 'admin_area/shared/breadcrumb_v202601', items: [{ text: 'すべてのタグ', link: admin_area_user_tags_path }, { text: '新規タグ' }]
+    .l-page-content__content__main.p-user-tag-form__content__main
+      = form_with model: @user_tag, url: admin_area_user_tags_path, method: :post, local: true, data: { turbo_frame: '_top', form_validation_target: 'form' }, html: { id: 'new_user_tag_form' } do |f|
+        = render 'admin_area/shared/form_error', target: f.object
+        .c-form
+          .c-form-field
+            label.c-form-field__label タグ名
+            = f.text_field :name, placeholder: 'タグ名を入力', class: 'c-form-field__input', required: true
+          .c-form-field
+            label.c-form-field__label 説明
+            = f.text_area :description, placeholder: '説明文を入力', rows: 5, class: 'c-form-field__input'
+    .l-page-content__content__sub.p-user-tag-form__content__sub
+      .p-user-tag-form__content__sub__section
+        button.p-user-tag-form__content__sub__button.p-user-tag-form__content__sub__button--submit type="submit" form="new_user_tag_form" data-form-validation-target="submit" disabled="disabled" 新規作成
+        = link_to admin_area_user_tags_path, class: 'p-user-tag-form__content__sub__button p-user-tag-form__content__sub__button--cancel', data: { turbo_frame: 'content' } do
+          | キャンセル

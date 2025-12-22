@@ -1,0 +1,751 @@
+@use '../component/dropdown' as *;
+
+// オートタギングフォーム（新規作成・編集）
+.p-user-auto-tagging-form {
+  display: contents;
+
+  &__breadcrumb {
+    grid-column: 1 / -1;
+  }
+
+  &__content {
+    &__main {
+      padding: 24px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    &__sub {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      align-content: start;
+
+      &__section {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        border-bottom: 1px solid var(--color-border);
+
+        &:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
+      }
+
+      &__button-wrapper {
+        position: relative;
+
+        // submitボタンが無効化されている場合、矢印部分も視覚的に無効化
+        .p-user-auto-tagging-form__content__sub__button--submit[disabled] ~ .p-user-auto-tagging-form__content__sub__button__chevron {
+          opacity: 0.5;
+          cursor: not-allowed;
+
+          &:hover::before {
+            background-color: transparent;
+          }
+        }
+      }
+
+      &__button {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        border: 1px solid var(--color-border);
+        background-color: var(--color-background);
+        color: var(--color-text-body);
+        cursor: pointer;
+        transition: background-color 0.2s, border-color 0.2s;
+        box-shadow: var(--box-shadow);
+        text-decoration: none;
+        text-align: center;
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+
+        &:hover {
+          background-color: var(--color-background-gray);
+        }
+
+        &--submit {
+          background-color: var(--color-primary);
+          color: var(--color-primary-contrast);
+          border-color: var(--color-primary);
+
+          // button-wrapper内にある場合のみ、矢印部分のスペースを確保
+          .p-user-auto-tagging-form__content__sub__button-wrapper & {
+            padding-right: 40px;
+          }
+
+          &:hover:not(:disabled) {
+            background-color: var(--color-text-heading);
+            border-color: var(--color-text-heading);
+          }
+
+          &[disabled] {
+            background-color: var(--color-background-gray);
+            color: var(--color-text-inactive);
+            border-color: var(--color-border);
+            cursor: not-allowed;
+            pointer-events: none;
+          }
+        }
+
+        &__chevron {
+          position: absolute;
+          right: 4px;
+          top: 50%;
+          transform: translateY(-50%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 24px;
+          height: 24px;
+          cursor: pointer;
+          border: none;
+          background: none;
+          padding: 0;
+          border-radius: 50%;
+          transition: background-color 0.2s;
+          z-index: 1;
+
+          &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: transparent;
+            transition: background-color 0.2s;
+          }
+
+          &:hover::before {
+            background-color: rgba(255, 255, 255, 0.1);
+          }
+
+          svg {
+            display: block;
+            aspect-ratio: 1;
+            width: 8px;
+            height: auto;
+            color: var(--color-primary-contrast);
+            position: relative;
+            z-index: 1;
+          }
+        }
+
+        &__dropdown {
+          @include dropdown-base;
+          top: calc(100% + 4px);
+          left: 0;
+          right: 0;
+
+          &__item {
+            @include dropdown-item;
+
+            &:not(:first-child) {
+              border-top: 1px solid var(--color-border);
+            }
+          }
+        }
+
+        &--cancel {
+          background-color: var(--color-background);
+          color: var(--color-text-inactive);
+          border-color: var(--color-border);
+
+          &:hover {
+            background-color: var(--color-background-gray);
+            color: var(--color-text-inactive);
+          }
+        }
+      }
+
+      &__metadata {
+        gap: 24px;
+      }
+    }
+  }
+}
+
+// フォームセクションコンポーネント
+.c-form-section {
+  display: grid;
+  gap: 16px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-text-heading);
+  }
+
+  &__content {
+    display: grid;
+    gap: 16px;
+
+    &__blocks {
+      display: grid;
+      gap: 16px;
+      &:empty {
+        display: none;
+      }
+    }
+
+    &__empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      color: var(--color-text-inactive);
+      font-size: 14px;
+      background-color: var(--color-background-gray);
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+
+      &[style*="display: none"] {
+        display: none !important;
+      }
+
+      &__text {
+        font-size: 14px;
+        color: var(--color-text-inactive);
+        text-align: center;
+      }
+    }
+  }
+
+  &__sub-section {
+    display: grid;
+    gap: 8px;
+
+    &__title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-heading);
+    }
+  }
+
+  &__add-block {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-background);
+    color: var(--color-text-body);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: var(--box-shadow);
+
+    &:hover {
+      background-color: var(--color-background-gray);
+    }
+
+    svg {
+      display: block;
+      aspect-ratio: 1;
+      width: 14px;
+      height: auto;
+    }
+
+    &__text {
+      font-size: 14px;
+    }
+  }
+}
+
+// フォームフィールドボタン
+.c-form-field__button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background-color: var(--color-background);
+  color: var(--color-text-body);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: var(--box-shadow);
+  width: fit-content;
+
+  &:hover {
+    background-color: var(--color-background-gray);
+  }
+
+  svg {
+    display: block;
+    aspect-ratio: 1;
+    width: 14px;
+    height: auto;
+  }
+
+  &__text {
+    font-size: 14px;
+  }
+}
+
+// 条件ブロックコンポーネント（このページ専用のスコープでコンポーネントクラスを上書き）
+.p-user-auto-tagging-form {
+  .c-condition-block {
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    padding: 0;
+    display: grid;
+    gap: 0;
+
+    &__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    &__title {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--color-text-heading);
+    }
+
+    &__header {
+      position: relative;
+    }
+
+    &__header__menu {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--color-text-inactive);
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--color-text-body);
+      }
+
+      svg {
+        display: block;
+        aspect-ratio: 1;
+        width: 16px;
+        height: auto;
+      }
+    }
+
+    &__header__dropdown {
+      @include dropdown-base;
+      top: calc(100% + 4px);
+      right: 0;
+
+      &__item {
+        @include dropdown-item;
+      }
+    }
+
+    &__empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      color: var(--color-text-inactive);
+      font-size: 14px;
+
+      &[style*="display: none"] {
+        display: none !important;
+      }
+
+      &__text {
+        font-size: 14px;
+        color: var(--color-text-inactive);
+        text-align: center;
+      }
+    }
+
+    &__item {
+      display: grid;
+      padding: 12px 16px;
+      gap: 12px;
+      position: relative;
+
+      &__divider {
+        height: 1px;
+        background-color: var(--color-border);
+        margin: 0;
+      }
+
+      &__content {
+        display: grid;
+        gap: 8px;
+        flex: 1;
+      }
+
+      &__pill {
+        display: inline-block;
+        background-color: #DBEAFE;
+        color: #2B7FFF;
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 14px;
+        height: 14px;
+        padding: 4px 8px;
+        font-family: var(--font-family);
+        white-space: nowrap;
+        border: none;
+        appearance: none;
+        cursor: pointer;
+        box-sizing: content-box;
+
+        &:is(select) {
+          &[data-unselected="true"] {
+            color: #8EC5FF;
+          }
+
+          option {
+            background-color: var(--color-background);
+            color: var(--color-text-body);
+          }
+        }
+      }
+
+      &__text {
+        font-size: 14px;
+        color: var(--color-text-body);
+        font-family: var(--font-family);
+        line-height: 1;
+        white-space: nowrap;
+      }
+
+      &__menu {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: var(--color-text-inactive);
+        transition: color 0.2s;
+        flex-shrink: 0;
+
+        &:hover {
+          color: var(--color-text-body);
+        }
+
+        svg {
+          display: block;
+          aspect-ratio: 1;
+          width: 16px;
+          height: auto;
+        }
+      }
+
+      &__dropdown {
+        @include dropdown-base;
+        top: calc(100% + 4px);
+        right: 0;
+
+        &__item {
+          @include dropdown-item;
+        }
+      }
+    }
+
+    &__add-condition-wrapper {
+      position: relative;
+      border-top: 1px solid var(--color-border);
+    }
+
+    &__add-condition {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 16px;
+      border: none;
+      background: none;
+      color: var(--color-text-body);
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      width: 100%;
+      text-align: left;
+
+      &:hover {
+        background-color: var(--color-background-gray);
+      }
+
+      svg {
+        display: block;
+        aspect-ratio: 1;
+        width: 14px;
+        height: auto;
+      }
+
+      &__text {
+        font-size: 14px;
+      }
+
+      &__dropdown {
+        @include dropdown-base;
+        bottom: calc(100% + 4px);
+        left: 0;
+        right: 0;
+
+        &__item {
+          @include dropdown-item;
+
+          &:not(:first-child) {
+            border-top: 1px solid var(--color-border);
+          }
+        }
+      }
+    }
+  }
+
+  // 期間設定コンポーネント
+  .c-period-settings {
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+
+    &__select {
+      padding: 0;
+
+      &__field {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+      }
+
+      &__input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 1;
+      }
+
+      &__text {
+        font-size: 14px;
+        color: var(--color-text-body);
+        flex: 1;
+        pointer-events: none;
+      }
+
+      &__icon {
+        display: flex;
+        align-items: center;
+        pointer-events: none;
+        color: var(--color-text-heading);
+
+        svg {
+          display: block;
+          aspect-ratio: 1;
+          width: 16px;
+          height: auto;
+        }
+      }
+    }
+
+    &__content {
+      display: grid;
+      gap: 0;
+    }
+
+    &__relative {
+      display: grid;
+      gap: 0;
+      padding: 0;
+
+      &__divider {
+        height: 1px;
+        background-color: var(--color-border);
+        margin: 0;
+      }
+
+      &__fields {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 16px;
+      }
+
+      &__argument {
+        display: inline-block;
+        background-color: #DBEAFE;
+        color: #2B7FFF;
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 14px;
+        height: 14px;
+        padding: 4px 8px;
+        border: none;
+        appearance: none;
+        cursor: pointer;
+        font-family: var(--font-family);
+        box-sizing: content-box;
+
+        &::-webkit-calendar-picker-indicator {
+          display: none;
+        }
+
+        option {
+          background-color: var(--color-background);
+          color: var(--color-text-body);
+        }
+      }
+
+      &__text {
+        font-size: 14px;
+        color: var(--color-text-body);
+        font-family: var(--font-family);
+        line-height: 1;
+      }
+    }
+
+    &__fixed {
+      display: grid;
+      gap: 0;
+      padding: 0;
+
+      &__divider {
+        height: 1px;
+        background-color: var(--color-border);
+        margin: 0;
+      }
+
+      &__fields {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      &__argument {
+        display: inline-block;
+        background-color: #DBEAFE;
+        color: #2B7FFF;
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 14px;
+        height: 14px;
+        padding: 4px 8px;
+        border: none;
+        appearance: none;
+        cursor: pointer;
+        font-family: var(--font-family);
+        user-select: none;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: #BBDEFB;
+        }
+
+        &__text {
+          font-size: 14px;
+          color: #2B7FFF;
+          font-family: var(--font-family);
+          line-height: 1;
+          pointer-events: none;
+        }
+      }
+
+      &__text {
+        font-size: 14px;
+        color: var(--color-text-body);
+        font-family: var(--font-family);
+        line-height: 1;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  // このページでのみc-user-detail-tag__listのスタイルを上書き
+  .c-user-detail-tag__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  // 条件ラベル（条件1など）のヘッダー用スコープ
+  .p-user-auto-tagging__rule__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  // 条件設定タイトル内のヒント
+  .c-form-section__sub-section__title {
+    .c-form-field__label__hint {
+      font-size: 12px;
+      line-height: 1.5;
+      display: block;
+    }
+  }
+
+  // 条件ブロック間の余白（上記で設定済みだが念のためスコープ内で維持）
+  .c-condition-block__list {
+    display: grid;
+    gap: 16px;
+  }
+
+  // ルールリスト（ブロック内の条件リスト）専用
+  .p-user-auto-tagging__rule-list {
+    display: grid;
+    gap: 0;
+    min-height: 0;
+
+    .p-user-auto-tagging__rule {
+      border-top: 1px solid var(--color-border);
+      padding-top: 12px;
+      padding-bottom: 12px;
+
+      &:first-child {
+        border-top: none;
+      }
+    }
+  }
+
+  // 条件ブロックが0件のときの空表示
+  .p-user-auto-tagging__rule-blocks-empty {
+    display: block;
+  }
+
+  // ラジオボタンを横並びにする専用クラス（他要素への影響を避ける）
+  .p-user-auto-tagging__radio-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+  }
+}
+

@@ -46,12 +46,13 @@ module RailsApp
     # --------------------------------------------------------------------------
     # Routing
     # --------------------------------------------------------------------------
-    config.paths['config/routes.rb'].concat Dir[Rails.root.join('config/routes/**/*.rb')]
+    config.paths['config/routes.rb'].concat Rails.root.glob('config/routes/**/*.rb')
 
     # --------------------------------------------------------------------------
     # Loading files
     # --------------------------------------------------------------------------
     config.paths.add 'lib', eager_load: true
+    Rails.autoloaders.main.ignore(Rails.root.join('lib/monkey_patches/**/*.rb'))
 
     # --------------------------------------------------------------------------
     # i18n

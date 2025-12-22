@@ -20,6 +20,26 @@ ja:
         restrict_dependent_destroy:
           has_one: "%{record}が存在しているため削除できません"
           has_many: "%{record}が存在しているため削除できません"
+  feature_flags:
+    errors:
+      not_available: この機能は現在利用できません
+  admin_area:
+    deliveries:
+      created: 配信イベントを作成しました
+      updated: 配信イベントを更新しました
+      destroyed: 配信イベントを削除しました
+      published: 配信イベントを公開しました
+      cancelled: 配信イベントをキャンセルしました
+      paused: 配信イベントを停止しました
+      resumed: 配信イベントを再開しました
+      errors:
+        draft_only_edit: 下書き状態の配信イベントのみ編集できます
+        draft_only_delete: 下書き状態の配信イベントのみ削除できます
+        draft_only_publish: 下書き状態の配信イベントのみ公開できます
+        publish_failed: 配信イベントの公開に失敗しました
+        cannot_cancel: この配信イベントはキャンセルできません
+        cannot_pause: この配信イベントは停止できません
+        cannot_resume: この配信イベントは再開できません
   helpers:
     select:
       prompt: 選択してください
@@ -57,3 +77,29 @@ ja:
   date:
     formats:
       default: "%Y/%m/%d"
+  user_tag_rules:
+    errors:
+      # Common errors
+      subscription_type_invalid: サブスクリプションタイプは「current」または「duration」である必要があります
+      values_empty: 値は空でない配列である必要があります
+      values_must_be_strings: 値は文字列の配列である必要があります
+      # Membership errors
+      membership_ids_invalid: 値は有効なメンバーシップID（UUID）である必要があります
+      # Plan errors
+      plan_ids_invalid: 値は有効なプランID（UUID）である必要があります
+      # Duration errors
+      duration_value_invalid: 期間の値は正の整数である必要があります
+      duration_unit_invalid: 期間の単位は「days」「months」「years」のいずれかである必要があります
+      # Age errors
+      age_min_invalid: 最小年齢は非負の整数である必要があります
+      age_max_invalid: 最大年齢は非負の整数である必要があります
+      age_max_less_than_min: 最大年齢は最小年齢より大きい必要があります
+      age_both_blank: 最小年齢または最大年齢の少なくとも一方を指定する必要があります
+      # Prefecture errors
+      prefecture_codes_invalid: 値は有効な都道府県コードである必要があります
+      # Gender errors
+      gender_values_invalid: 性別の値は「male」、「female」、または「other」である必要があります
+      account_link_value_empty: 値は空でない文字列である必要があります
+      account_link_value_invalid: 値は「LINE」である必要があります
+      # Composite rule
+      composite_not_supported: CompositeRuleは設定ベースの検証をサポートしていません。代わりにルールオブジェクトから構築してください

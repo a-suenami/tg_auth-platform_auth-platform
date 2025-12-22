@@ -1,0 +1,50 @@
+// タグピッカーコンポーネント
+.c-tag-picker {
+  display: grid;
+  gap: 16px;
+
+  &__list {
+    overflow: auto;
+    max-height: 400px;
+    overflow-y: auto;
+    background-color: var(--color-background);
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-background);
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: var(--color-background-gray);
+    }
+
+    &__content {
+      display: grid;
+      gap: 4px;
+      flex: 1;
+    }
+
+    &__name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-body);
+    }
+
+    &__description {
+      font-size: 12px;
+      color: var(--color-text-inactive);
+      line-height: 1.4;
+    }
+  }
+}
+

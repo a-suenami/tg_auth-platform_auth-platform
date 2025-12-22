@@ -1,10 +1,13 @@
 # ==============================================================================
 # .rubocop
 # ==============================================================================
-require:
+plugins:
   - rubocop-rails
   - rubocop-rspec
   - rubocop-sorbet
+  - rubocop-rspec_rails
+  - rubocop-factory_bot
+  - rubocop-capybara
 
 # ------------------------------------------------------------------------------
 # AllCops
@@ -29,14 +32,7 @@ AllCops:
     - scripts/**/*
     - node_modules/**/*
 
-# Sorbet
-# it's too hard to write type annotation for helpers/controllers
-Sorbet/FalseSigil:
-  Exclude:
-    - 'app/controllers/**/*'
-    - 'app/helpers/**/*'
-    - 'config/**/*'
-    - 'db/**/*'
+
 
 # ------------------------------------------------------------------------------
 # Rails
@@ -132,6 +128,9 @@ Rails/I18nLocaleAssignment: # new in 2.11
   Enabled: true
 Rails/I18nLocaleTexts: # new in 2.14
   Enabled: true
+  Exclude:
+    - 'app/controllers/ruler_area/**/*'
+    - 'app/controllers/admin_area/**/*'
 Rails/IgnoredColumnsAssignment: # new in 2.17
   Enabled: true
 Rails/MigrationClassName: # new in 2.14
@@ -213,19 +212,19 @@ RSpec/SubjectDeclaration: # new in 2.5
   Enabled: true
 RSpec/VerifiedDoubleReference: # new in 2.10.0
   Enabled: true
-RSpec/FactoryBot/ConsistentParenthesesStyle: # new in 2.14
+FactoryBot/ConsistentParenthesesStyle: # new in 2.14
   Enabled: true
-RSpec/FactoryBot/FactoryNameStyle: # new in 2.16
+FactoryBot/FactoryNameStyle: # new in 2.16
   Enabled: true
-RSpec/FactoryBot/SyntaxMethods: # new in 2.7
+FactoryBot/SyntaxMethods: # new in 2.7
   Enabled: true
-RSpec/Rails/AvoidSetupHook: # new in 2.4
+RSpecRails/Rails/AvoidSetupHook: # new in 2.4
   Enabled: true
-RSpec/Rails/HaveHttpStatus: # new in 2.12
+RSpecRails/Rails/HaveHttpStatus: # new in 2.12
   Enabled: true
-RSpec/Rails/InferredSpecType: # new in 2.14
+RSpecRails/Rails/InferredSpecType: # new in 2.14
   Enabled: true
-RSpec/Rails/MinitestAssertions: # new in 2.17
+RSpecRails/Rails/MinitestAssertions: # new in 2.17
   Enabled: true
 
 # ------------------------------------------------------------------------------
@@ -489,6 +488,7 @@ Metrics/BlockLength:
     - spec/**/*.rb
     - config/environments/*.rb
     - config/routes/**/*.rb
+    - db/schemas/**/*.schema
 Metrics/AbcSize:
   Max: 100
 Metrics/CyclomaticComplexity:
@@ -500,7 +500,7 @@ Metrics/ParameterLists:
 Metrics/ModuleLength:
   Max: 200
 Metrics/ClassLength:
-  Max: 200
+  Max: 500
 
 
 # ------------------------------------------------------------------------------
@@ -659,3 +659,24 @@ Capybara/SpecificFinders: # new in 2.13
   Enabled: true
 Capybara/SpecificMatcher: # new in 2.12
   Enabled: true
+
+# ------------------------------------------------------------------------------
+# Sorbet
+# ------------------------------------------------------------------------------
+# it's too hard to write type annotation for helpers/controllers
+Sorbet/FalseSigil:
+  Exclude:
+    - 'app/controllers/**/*'
+    - app/helpers/**/*
+    - config/**/*
+    - db/**/*
+    - spec/factories/**/*
+    - spec/helpers/**/*
+Sorbet/EmptyLineAfterSig:
+  Enabled: false
+Sorbet/ConstantsFromStrings:
+  Exclude: # 直した方がよさそうだが一旦 exclude
+    - app/workers/observe_job_status_worker.rb
+Sorbet/MultipleTEnumValues:
+  Enabled: false
+

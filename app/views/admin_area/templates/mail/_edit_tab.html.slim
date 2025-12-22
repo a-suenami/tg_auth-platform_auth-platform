@@ -1,0 +1,21 @@
+/ Edit Tab Content
+= form_with url: admin_area_template_mail_path(@template), method: :put, class: 'uk-form-stacked', id: 'mail-template-form' do |f|
+  .uk-card.uk-card-default.uk-card-body
+    / Email Title
+    .uk-margin
+      = f.label :title, 'メールタイトル', class: 'uk-form-label'
+      .uk-form-controls
+        = f.text_field :title, value: @mail_template.title, placeholder: 'メールのタイトルを入力...', required: true, class: 'uk-input', name: 'title', data: { template_preview_target: 'editTitle', action: 'input->template-preview#syncAll' }
+
+    / Email Body Template
+    .uk-margin
+      .uk-flex.uk-flex-between.uk-flex-middle
+        = f.label :body, 'メール本文テンプレート', class: 'uk-form-label uk-margin-remove'
+        a.uk-text-small href="#template-help-modal" uk-toggle=""
+          span uk-icon="icon: question; ratio: 0.8"
+          |  ヘルプ
+      .uk-form-controls.uk-margin-small-top
+        = f.text_area :body, value: @mail_template.body, placeholder: '本文のテンプレートを入力...', required: true, rows: 15, class: 'uk-textarea', style: 'font-family: monospace;', name: 'body', data: { template_preview_target: 'editBody', action: 'input->template-preview#syncAll' }
+
+= render 'admin_area/templates/mail/action_buttons'
+= render 'admin_area/templates/mail/help_modal'

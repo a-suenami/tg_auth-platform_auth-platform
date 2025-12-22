@@ -1,0 +1,12 @@
+create_table :template_mails, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :template, type: :uuid, null: false, comment: 'Parent template', index: false
+  t.string :title, comment: 'メールタイトル（現在の下書き）'
+  t.text :body, comment: 'メール本文（現在の下書き）'
+
+  t.timestamps null: false
+  t.index :template_id, name: :idx_template_mails_template_id, unique: true
+end
+
+add_foreign_key :template_mails, :tenants, name: :fk_template_mails_tenants
+add_foreign_key :template_mails, :templates, name: :fk_template_mails_templates

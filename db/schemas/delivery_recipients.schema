@@ -1,0 +1,33 @@
+create_table :delivery_recipients, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Recipients for each delivery (fixed at setup time)' do |t|
+  t.references :tenant, type: :citext, null: false, comment: 'Tenant reference'
+  t.references :delivery, type: :uuid, null: false, comment: 'Delivery reference'
+  t.references :user, type: :uuid, null: false, comment: 'Target user'
+
+  # Session/batch identifier - allows same user to receive multiple times (e.g., birthday every year)
+  t.date :delivery_date, null: false, comment: 'Date of delivery batch (enables yearly birthday emails)'
+
+  # Status: pending | sent | failed
+  # - pending: waiting for Blastengine to send
+  # - sent: successfully sent (from Blastengine logs)
+  # - failed: failed to send (bounce/drop)
+  t.string :status, null: false, default: 'pending', comment: 'Delivery status from Blastengine'
+
+  # Timing
+  t.datetime :scheduled_for, comment: 'When this should be sent'
+  t.datetime :sent_at, comment: 'When email was actually sent (from Blastengine)'
+
+  # Error tracking (from Blastengine logs)
+  t.text :error_message, comment: 'Error message if failed'
+
+  t.timestamps null: false
+
+  # Unique per user per delivery per date (allows same user to receive birthday email yearly)
+  t.index [:delivery_id, :user_id, :delivery_date], unique: true, name: 'idx_delivery_recipients_unique'
+  t.index [:tenant_id, :delivery_id]
+  t.index [:delivery_id, :status], name: 'idx_delivery_recipients_status'
+  t.index [:delivery_id, :delivery_date], name: 'idx_delivery_recipients_date'
+end
+
+add_foreign_key :delivery_recipients, :tenants
+add_foreign_key :delivery_recipients, :deliveries
+add_foreign_key :delivery_recipients, :users

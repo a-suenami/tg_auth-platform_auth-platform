@@ -23,13 +23,44 @@ module AppIdp
 
     private
 
+    def safe_parse_url(url)
+      return nil if url.blank?
+
+      # 1. 非ASCII文字が含まれている場合は%エンコード
+      encoded_url = encode_non_ascii(url)
+      # 2. パースして返す
+      begin
+        URI.parse(encoded_url)
+      rescue URI::InvalidURIError, URI::InvalidComponentError
+        # 3. パースに失敗した場合は、無効なURLとしてnilを返す
+        nil
+      end
+    end
+
+    # 非ASCII文字をエンコードする
+    def encode_non_ascii(url)
+      return url if url.ascii_only?
+
+      url.each_char.map { |char|
+        # ASCII（0x00〜0x7F）の範囲かどうかをチェック
+        char.ascii_only? ? char : CGI.escape(char)
+      }.join
+    end
+
     # return_toのホストチェック
     def validate_return_to(return_to, multipass_store)
-      uri = URI.parse(return_to || '')
+      uri = safe_parse_url(return_to)
 
-      if !uri.host || uri.host == URI.parse(multipass_store.store_url).host
-        return_to
-      end
+      # URLが無効な場合は、デフォルトのreturn_toを返す
+      return nil if uri.nil?
+
+      # ホストがない -> 相対パスとみなす、フォーマットが正しいか確認
+      return uri.to_s if uri.host.nil? && uri.to_s.match?(%r{\A/[a-zA-Z0-9._~!$&'()*+,;=:@/?#%-]*\z})
+      # ホストがある -> ホストがマルチパスストアのホストと一致するか確認
+      return uri.to_s if uri.host == URI.parse(multipass_store.store_url).host
+
+      # それ以外は無効なURLとしてnilを返す
+      nil
     end
 
     def check_and_update_email(user, multipass_store)

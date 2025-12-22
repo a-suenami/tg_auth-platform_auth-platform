@@ -17,3 +17,10 @@ google_cloud_platform:
     key: this_is_key
     google_cloud_service_account: |
       {}
+stripe:
+  default_key_for_develop:
+    name: 開発用キー
+    publishable_key:
+    secret_key:
+    remote_id:
+    tax_rate_id:

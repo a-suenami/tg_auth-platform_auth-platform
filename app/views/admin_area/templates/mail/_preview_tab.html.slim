@@ -1,0 +1,15 @@
+/ Preview Tab Content
+/ Hidden form for preview (synced via Stimulus from edit form)
+- sample_defaults = AdminArea::TemplatesHelper::DEFAULT_SAMPLE_DATA
+= form_with url: preview_admin_area_template_mail_path(@template), method: :post, data: { template_preview_target: 'previewForm' }, id: 'preview-form', style: 'display: none;' do |f|
+  = f.hidden_field 'sample_data[first_name]', value: sample_defaults['first_name']
+  = f.hidden_field 'sample_data[last_name]', value: sample_defaults['last_name']
+  = f.hidden_field :body, value: @mail_template&.body, data: { template_preview_target: 'previewBody' }
+  = f.hidden_field :title, value: @mail_template&.title, data: { template_preview_target: 'previewTitle' }
+
+/ Preview Panel (Full Width)
+.uk-background-muted.uk-padding style="min-height: 500px;"
+  #preview-content
+    = render 'admin_area/templates/mail/preview_content', mail_template: @mail_template, preview_result: @preview_result
+
+= render 'admin_area/templates/mail/action_buttons'

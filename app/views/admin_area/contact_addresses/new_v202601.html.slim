@@ -1,0 +1,13 @@
+= turbo_frame_tag "modal-frame" do
+  .c-modal__dialog__header
+    .c-modal__dialog__header__subtitle = @user.user_profile&.name
+    .c-modal__dialog__header__title 配送先住所の作成
+    = link_to "#", class: "c-modal__dialog__header__close", data: { action: "close-modal" } do
+      = render 'shared/icons/icon-close'
+  .c-modal__dialog__body
+    = form_with model: @contact_address, url: admin_area_user_contact_address_path(@user), method: :post, local: true, data: { turbo_frame: '_top' }, html: { id: "new_contact_address_#{@user.id}" } do |f|
+      = render 'admin_area/shared/form_error', target: f.object
+      = render 'form_v202601', f: f
+  .c-modal__dialog__footer
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--cancel type="button" data-action="close-modal" キャンセル
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--save type="submit" form="new_contact_address_#{@user.id}" data-shortcut="⌘+S" 保存 (⌘+S)

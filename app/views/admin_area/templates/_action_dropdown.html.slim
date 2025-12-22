@@ -1,0 +1,35 @@
+- case @template_state
+- when :draft
+    button.uk-button.uk-button-primary.uk-width-1-1.uk-flex.uk-flex-between.uk-flex-middle type="button" uk-toggle="target: #dropdown-draft"
+      span 公開する
+      span uk-icon="icon: triangle-down"
+    div#dropdown-draft uk-dropdown="mode: click; pos: bottom-right"
+      ul.uk-nav.uk-dropdown-nav
+        li
+          = link_to edit_admin_area_template_mail_path(@template) do
+            | 下書きを編集する
+        li
+          = link_to publish_admin_area_template_mail_path(@template), data: { turbo_method: :post, turbo_confirm: '本当に公開しますか？' } do
+            | 公開する
+        li
+          = link_to '#', onclick: "UIkit.modal('#schedule-modal').show(); return false;" do
+            | 公開予約設定
+
+- when :scheduled
+  .uk-width-1-1
+    button.uk-button.uk-button-warning.uk-width-1-1.uk-flex.uk-flex-between.uk-flex-middle type="button" uk-toggle="target: #dropdown-scheduled"
+      span 公開設定を編集する
+      span uk-icon="icon: triangle-down"
+    div#dropdown-scheduled uk-dropdown="mode: click; pos: bottom-justify"
+      ul.uk-nav.uk-dropdown-nav
+        li
+          = link_to '#', onclick: "UIkit.modal('#schedule-modal').show(); return false;" do
+            | 公開設定を編集する
+        li
+          = link_to cancel_admin_area_template_mail_path(@template), data: { turbo_method: :post, turbo_confirm: '公開予約を取り消しますか？' } do
+            | 公開予約を取り消す
+
+- when :published
+  .uk-width-1-1
+    = link_to edit_admin_area_template_mail_path(@template), class: 'uk-button uk-button-primary uk-width-1-1' do
+      | 下書きを作成する

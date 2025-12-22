@@ -1,0 +1,16 @@
+= render 'ruler_area/shared/form_error', target: f.object
+
+.uk-margin
+  = f.label :name
+  = f.text_field :name, class: "uk-input"
+.uk-margin
+  = f.label :display_name
+  = f.text_field :display_name, class: "uk-input"
+.uk-margin
+  = f.label :position
+  = f.number_field :position, class: "uk-input"
+.uk-margin
+  = f.label :tier
+  = f.text_field :tier, class: "uk-input"
+
+= f.submit class: "uk-button uk-button-default"

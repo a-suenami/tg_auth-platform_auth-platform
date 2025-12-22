@@ -1,0 +1,15 @@
+create_table :stripe_record_trial_histories, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Stripeのトライアル履歴' do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :user, type: :uuid, null: false
+  t.references :membership, type: :uuid, null: false
+  t.references :membership_plan, type: :uuid, null: false
+  t.references :stripe_record_subscription, type: :uuid
+  t.string :fingerprint, null: false, comment: '決済手段のユニークな識別子(ex: クレジットカードのfingerprint)'
+  t.datetime :trial_start, null: false, comment: 'トライアル開始日時'
+  t.datetime :trial_end, null: true, comment: 'トライアル終了日時'
+  t.integer :trial_period_days, null: false, comment: 'トライアル日数'
+
+  t.timestamps null: false
+
+  t.index [:tenant_id, :membership_id, :fingerprint], unique: true, name: :idx_stripe_record_trial_histories_unique
+end

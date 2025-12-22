@@ -41,3 +41,12 @@ domains:
   admin: <%= ENV['ADMIN_DOMAIN'] %>
   ruler: <%= ENV['RULER_DOMAIN'] %>
 super_mode: <%= !!ActiveRecord::Type::Boolean.new.cast(ENV['SUPER_MODE']) %>
+encryptor:
+  current:
+    secret: <%= Rails.application.secret_key_base.freeze %>
+    iterations: 1000
+    cipher: 'aes-256-gcm'
+  previous:
+    secret:
+    iterations:
+    cipher:

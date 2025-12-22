@@ -1,0 +1,28 @@
+.uk-margin-top.uk-container data-controller="template-preview"
+  / Breadcrumb
+  - breadcrumb_items = [{ text: '配信' }, { text: 'テンプレート', link: admin_area_templates_path }, { text: @template.name, link: admin_area_template_path(@template) }, { text: @mail_template.new_record? ? 'メールテンプレート新規作成' : 'メールテンプレート編集' }]
+  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+
+  / Page Header
+  .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-top
+    h2 = @mail_template.new_record? ? 'メールテンプレート新規作成' : 'メールテンプレート編集'
+    a.uk-button.uk-button-default href=admin_area_template_path(@template) キャンセル
+
+  / Main Content
+  .uk-margin-top
+    / Tabs with Switcher
+    ul.uk-tab uk-tab="connect: #tab-content"
+      li.uk-active
+        a href="#" 編集
+      li
+        a href="#" プレビュー
+
+    / Tab Content Switcher
+    ul#tab-content.uk-switcher.uk-margin-top data-template-preview-target="tabContent"
+      / Edit Tab
+      li
+        = render 'edit_tab'
+
+      / Preview Tab
+      li
+        = render 'preview_tab'

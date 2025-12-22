@@ -1,0 +1,139 @@
+# typed: false
+
+module UserKomoju
+  class CreateMembershipPaymentService < BaseService
+    def execute(user:, membership_plan:, store:)
+      validate_store(store)
+      validate_membership_plan(membership_plan)
+
+      komoju_payment = nil
+
+      ActiveRecord::Base.transaction do
+        # Create konbini payment via Komoju
+        komoju_payment, komoju_error = create_komoju_payment(user:, membership_plan:, store:)
+
+        if komoju_error
+          raise komoju_error
+        end
+
+        unless komoju_payment
+          raise StandardError, 'Komoju payment was not created'
+        end
+
+        # Create contract with pending status
+        contract = create_contract(user:)
+
+        # Create payment transaction
+        create_payment_transaction(user:, contract:, komoju_payment:)
+
+        # Create contract term
+        create_contract_term(user:, contract:, membership_plan:)
+
+        # Create membership users with pending status
+        create_membership_users(user:, membership_plan:, contract:)
+
+        contract
+      end
+    rescue => e
+      # If transaction rollback, cancel the Komoju payment
+      if komoju_payment&.remote_id
+        cancel_komoju_payment(komoju_payment.remote_id)
+      end
+      raise e
+    end
+
+    private
+
+    def validate_store(store)
+      valid_stores = %w[seven-eleven lawson family-mart]
+      unless valid_stores.include?(store)
+        raise Exceptions::Payment::Konbini::InvalidStore
+      end
+    end
+
+    def validate_membership_plan(membership_plan)
+      # Konbini only supports non-recurring plans (one-time payment)
+      if membership_plan.recurrence
+        raise Exceptions::Payment::Konbini::RecurringNotSupported
+      end
+
+      # Konbini only supports plans with >= 1 year duration
+      unless membership_plan.recurring_interval_unit == 'year' && membership_plan.recurring_interval_count >= 1
+        raise Exceptions::Payment::Konbini::PlanDurationTooShort
+      end
+    end
+
+    def create_komoju_payment(user:, membership_plan:, store:)
+      # Amount is stored in membership_plan, not in payment_method
+      amount = membership_plan.amount
+
+      # Convert store string to KonbiniStore enum
+      store_enum = KomojuRecord::Client::Payments::KonbiniStore.deserialize(store)
+
+      # Create payment via Komoju API (uses tenant's default_expiry_days)
+      KomojuRecord::Payment.create_with_konbini!(
+        amount: amount,
+        currency: 'JPY',
+        store: store_enum,
+        user: user,
+      )
+    end
+
+    def create_contract(user:)
+      Membership::Contract.create!(
+        user: user,
+        tenant: user.tenant,
+        status: :pending,
+      )
+    end
+
+    def create_payment_transaction(user:, contract:, komoju_payment:)
+      Payment::Transaction.create!(
+        user: user,
+        tenant: user.tenant,
+        membership_contract: contract,
+        payment_type: :convenience,
+        payment_provider: :komoju,
+        chargeable: komoju_payment,
+        paid_amount: komoju_payment.amount,
+        status: :pending,
+        recurrence: false,
+      )
+    end
+
+    def create_contract_term(user:, contract:, membership_plan:)
+      # For konbini, start_at and end_at will be set by webhook after payment is captured
+      # This allows proper calculation from payment date, not contract creation date
+      Membership::ContractTerm.create!(
+        user: user,
+        membership_contract: contract,
+        membership_plan: membership_plan,
+        payment_type: :convenience,
+        start_at: nil, # Will be set when payment is captured
+        end_at: nil,   # Will be set when payment is captured
+        status: :current,
+      )
+    end
+
+    def create_membership_users(user:, membership_plan:, contract:)
+      membership_plan.memberships.each do |membership|
+        Membership::User.create!(
+          user: user,
+          membership: membership,
+          status: :pending,
+          membership_contract: contract,
+        )
+      end
+    end
+
+    def cancel_komoju_payment(remote_id)
+      # Best effort cancellation - don't fail if Komoju API is down
+      tenant = Tenant.current
+      KomojuRecord.client(tenant: tenant).payments.cancel(remote_id)
+      Rails.logger.info "Cancelled Komoju payment: #{remote_id} for tenant: #{tenant.id}"
+    rescue => e
+      Rails.logger.error "Failed to cancel Komoju payment: #{remote_id} for tenant: #{tenant&.id}, error: #{e.message}"
+      # Don't re-raise - service already failed, this is just cleanup
+    end
+  end
+end

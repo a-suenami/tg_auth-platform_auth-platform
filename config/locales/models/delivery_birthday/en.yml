@@ -1,0 +1,14 @@
+en:
+  activerecord:
+    models:
+      delivery_birthday: Birthday Delivery
+    attributes:
+      delivery_birthday:
+        id: ID
+        offset_days: Days from Birthday
+        delivery_time: Delivery Time
+        status: Status
+        published_at: Published At
+        published_by: Published By
+        created_at: Created At
+        updated_at: Updated At

@@ -1,0 +1,20 @@
+# Flipper feature flags tables
+# Uses Flipper's built-in actor system for multi-tenant support
+# Actor IDs stored in `value` column (e.g., "Tenant;sample")
+create_table :flipper_features, force: :cascade do |t|
+  t.string :key, null: false
+
+  t.timestamps null: false
+
+  t.index :key, unique: true
+end
+
+create_table :flipper_gates, force: :cascade do |t|
+  t.string :feature_key, null: false
+  t.string :key, null: false
+  t.string :value
+
+  t.timestamps null: false
+
+  t.index [:feature_key, :key, :value], unique: true, name: :idx_flipper_gates_feature_key_key_value
+end

@@ -1,0 +1,42 @@
+.uk-margin-top.uk-container
+  / Breadcrumb
+  - breadcrumb_items = [{ text: '配信' }, { text: '配信イベント', link: admin_area_deliveries_path }, { text: @delivery.name }]
+  = render 'admin_area/shared/breadcrumb', items: breadcrumb_items
+
+  .uk-grid data-uk-grid=""
+    / Main Content
+    div class="uk-width-2-3@m"
+      / Header
+      .uk-flex.uk-flex-between.uk-flex-middle.uk-margin-bottom
+        h2.uk-margin-remove = @delivery.name
+        = render 'status_badge', delivery: @delivery
+
+      / Past Schedule Warning (draft only)
+      - if @delivery.schedule_type? && @delivery.schedule&.draft? && @delivery.schedule&.scheduled_at&.past?
+        .uk-alert.uk-alert-warning uk-alert=""
+          a.uk-alert-close uk-close=""
+          p
+            span uk-icon="warning"
+            |  配信予定日時が過去になっています。
+
+      / Delivery Info Card
+      = render 'delivery_info', delivery: @delivery
+
+      / Schedule type: Show 配信対象ユーザー (draft/scheduled) or 配信状況 (preparing/delivering/delivered)
+      / Birthday type: Always show 配信対象ユーザー + 配信履歴 (no 配信状況)
+      - if @delivery.schedule_type?
+        - if %w[draft scheduled].include?(@delivery.schedule&.status)
+          = render 'target_users', target_users: @target_users
+        - else
+          = render 'delivery_status', delivery: @delivery
+
+      - elsif @delivery.birthday_type?
+        = render 'target_users', target_users: @target_users
+        - if @delivery_history.present?
+          = render 'delivery_history', delivery_history: @delivery_history
+
+    / Sidebar
+    div class="uk-width-1-3@m"
+      = render 'sidebar_actions', delivery: @delivery
+      = render 'sidebar_metadata', delivery: @delivery
+      = render 'sidebar_activity', events: @events

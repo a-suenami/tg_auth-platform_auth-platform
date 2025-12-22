@@ -1,0 +1,43 @@
+= turbo_frame_tag "modal-frame" do
+  .c-modal__dialog__header
+    .c-modal__dialog__header__subtitle = @user.user_profile&.name
+    .c-modal__dialog__header__title プロフィールの編集
+    = link_to "#", class: "c-modal__dialog__header__close", data: { action: "close-modal" } do
+      = render 'shared/icons/icon-close'
+  .c-modal__dialog__body
+    = form_with model: @user_profile, url: admin_area_user_user_profile_path(@user), method: :put, local: true, data: { turbo_frame: '_top' }, html: { id: "edit_user_profile_#{@user.id}" } do |f|
+      = render 'admin_area/shared/form_error', target: f.object
+      .c-form
+        .c-form-field
+          .c-form-field__label-group
+            label.c-form-field__label = UserProfile.human_attribute_name(:last_name)
+            label.c-form-field__label = UserProfile.human_attribute_name(:first_name)
+          .c-form-field__input-group
+            .c-form-field__input-group__input
+              = f.text_field :last_name, class: 'c-form-field__input'
+            .c-form-field__input-group__input
+              = f.text_field :first_name, class: 'c-form-field__input'
+        .c-form-field
+          .c-form-field__label-group
+            label.c-form-field__label = UserProfile.human_attribute_name(:last_name_kana)
+            label.c-form-field__label = UserProfile.human_attribute_name(:first_name_kana)
+          .c-form-field__input-group
+            .c-form-field__input-group__input
+              = f.text_field :last_name_kana, class: 'c-form-field__input'
+            .c-form-field__input-group__input
+              = f.text_field :first_name_kana, class: 'c-form-field__input'
+        .c-form-field
+          label.c-form-field__label = UserProfile.human_attribute_name(:birth_date)
+          .c-form-field__input-wrapper
+            = f.date_field :birth_date, value: @user_profile.birth_date&.strftime('%Y-%m-%d'), class: 'c-form-field__input'
+            .c-form-field__input-wrapper__calendar
+              = render 'shared/icons/icon-calendar'
+        .c-form-field
+          label.c-form-field__label = UserProfile.human_attribute_name(:gender)
+          .c-form-field__input-wrapper
+            = f.select :gender, UserProfile.gender.options, { include_blank: false }, { class: 'c-form-field__input c-form-field__input--select' }
+            .c-form-field__input-wrapper__dropdown
+              = render 'shared/icons/icon-chevron-down'
+  .c-modal__dialog__footer
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--cancel type="button" data-action="close-modal" キャンセル
+    button.c-modal__dialog__footer__button.c-modal__dialog__footer__button--save type="submit" form="edit_user_profile_#{@user.id}" data-shortcut="⌘+S" 保存

@@ -32,12 +32,12 @@ class UserProfileForm < ApplicationForm
     if id
       user_profile = UserProfile.find(id)
 
-      instance.first_name = user_profile&.first_name
-      instance.last_name = user_profile&.last_name
-      instance.first_name_kana = user_profile&.first_name_kana
-      instance.last_name_kana = user_profile&.last_name_kana
-      instance.birth_date = user_profile&.birth_date
-      instance.gender = user_profile&.gender
+      instance.first_name = user_profile.first_name
+      instance.last_name = user_profile.last_name
+      instance.first_name_kana = user_profile.first_name_kana
+      instance.last_name_kana = user_profile.last_name_kana
+      instance.birth_date = user_profile.birth_date
+      instance.gender = user_profile.gender
     end
 
     if params.present?
@@ -60,6 +60,9 @@ class UserProfileForm < ApplicationForm
     else
       create_user_profile
     end
+
+    # Trigger auto-tagging after successful profile update
+    UserAutoTagging::EventWorker.perform_async(user_id, 'profile_updated')
   rescue => e
     errors.add(:base, e.message)
   end

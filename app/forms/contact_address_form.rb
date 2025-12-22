@@ -35,13 +35,13 @@ class ContactAddressForm < ApplicationForm
     if id
       contact_address = ContactAddress.find(id)
 
-      instance.zip_code = contact_address&.zip_code
-      instance.prefecture_code = contact_address&.prefecture_code
-      instance.city = contact_address&.city
-      instance.street = contact_address&.street
-      instance.building = contact_address&.building
-      instance.phone_number = contact_address&.phone_number
-      instance.country_code = contact_address&.country_code
+      instance.zip_code = contact_address.zip_code
+      instance.prefecture_code = contact_address.prefecture_code
+      instance.city = contact_address.city
+      instance.street = contact_address.street
+      instance.building = contact_address.building
+      instance.phone_number = contact_address.phone_number
+      instance.country_code = contact_address.country_code
     end
 
     if params.present?
@@ -63,6 +63,9 @@ class ContactAddressForm < ApplicationForm
     else
       create_contact_address
     end
+
+    # Trigger auto-tagging after successful address change
+    UserAutoTagging::EventWorker.perform_async(user_id, 'address_changed')
   rescue => e
     errors.add(:base, e.message)
   end

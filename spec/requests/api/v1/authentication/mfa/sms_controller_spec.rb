@@ -66,8 +66,7 @@ deleted: true, deleted_at: Time.zone.now,)
 
       before do
         allow(ExpirableCookie).to receive(:new).and_return(session_mock)
-        allow(session_mock).to receive(:[]=).and_return(nil)
-        allow(session_mock).to receive(:session_clear).and_return(nil)
+        allow(session_mock).to receive_messages('[]=': nil, session_clear: nil)
         allow(session_mock).to receive(:[]) do |key|
           case key
           when :current_user_id
@@ -283,8 +282,7 @@ verifier_type: :mfa,)
       other_sms_verifier
       other_user_sms_verifier
       allow(ExpirableCookie).to receive(:new).and_return(session_mock)
-      allow(session_mock).to receive(:[]=).and_return(nil)
-      allow(session_mock).to receive(:session_clear).and_return(nil)
+      allow(session_mock).to receive_messages('[]=': nil, session_clear: nil)
       allow(session_mock).to receive(:[]) do |key|
         case key
         when :current_user_id

@@ -1,0 +1,15 @@
+create_table :user_auto_tagging_rules, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'Individual rules within blocks (AND logic within block)' do |t|
+  t.references :tenant, type: :citext, null: false, comment: 'Tenant reference'
+  t.references :rule_block, type: :uuid, null: false, comment: 'Rule block reference'
+  t.string :condition_type, null: false, comment: 'Type: membership, plan, prefecture, gender, age, account_link'
+  t.jsonb :config, null: false, default: {}, comment: 'Condition configuration (varies by type)'
+  t.integer :position, null: false, comment: 'Display order within block'
+
+  t.timestamps null: false
+
+  t.index [:rule_block_id, :position]
+  t.index :condition_type
+end
+
+add_foreign_key :user_auto_tagging_rules, :tenants
+add_foreign_key :user_auto_tagging_rules, :user_auto_tagging_rule_blocks, column: :rule_block_id

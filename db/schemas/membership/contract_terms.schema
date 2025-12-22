@@ -1,0 +1,18 @@
+create_table :membership_contract_terms, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' }, comment: 'ユーザーのメンバーシップ契約の詳細,変更履歴' do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :user, type: :uuid, null: false
+  t.references :membership_contract, type: :uuid, null: false
+  t.references :membership_plan, type: :uuid, null: false
+
+  t.string :payment_type, null: false, comment: '支払い方法: credit_card, convenience, campaign_code, external_linkageなど'
+  t.string :status, null: false, comment: 'ステータス'
+  t.datetime :start_at, comment: '開始日時'
+  t.datetime :end_at, comment: '終了日時'
+
+  t.timestamps null: false
+end
+
+add_foreign_key :membership_contract_terms, :tenants, name: :fk_membership_contract_terms_tenants
+add_foreign_key :membership_contract_terms, :users, name: :fk_membership_contract_terms_users
+add_foreign_key :membership_contract_terms, :membership_contracts, name: :fk_membership_contract_terms_contracts, column: :membership_contract_id
+add_foreign_key :membership_contract_terms, :membership_plans, name: :fk_membership_contract_terms_plans, column: :membership_plan_id

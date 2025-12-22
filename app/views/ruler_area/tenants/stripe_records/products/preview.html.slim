@@ -1,0 +1,30 @@
+.uk-margin-top.uk-container
+  h2 Stripe 会員プラン管理 - プレビュー
+
+  p まだ同期されていません。下の「同期する」ボタンを押して同期を完了してください。
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    h2 商品名
+      | #{@stripe_record_product.name} - #{@stripe_record_product.remote_id}
+
+    h2 プラン情報
+    table
+      thead
+        tr
+          th 価格の説明
+          th 価格（円）
+          th 請求間隔
+          th 状態
+      tbody
+        - @stripe_record_product.prices.each do |price|
+          tr
+            td= price.name || '-'
+            td= price.amount
+            td #{price.interval_count}#{price.interval_unit_text}毎
+            td= price.deleted_text
+
+    .ui.center.aligned.grid style='margin-top: 15px;'
+      = form_with(url: sync_ruler_area_tenant_stripe_records_products_path, method: :put, local: true, data: { turbo: false }) do |f|
+        = f.hidden_field :stripe_product_id, value: @stripe_record_product.remote_id
+        = f.submit class: "uk-button uk-button-default"
+

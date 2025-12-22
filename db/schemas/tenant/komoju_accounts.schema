@@ -1,0 +1,16 @@
+# ==============================================================================
+# db/schemas/tenant/komoju_accounts.schema
+# ==============================================================================
+create_table :tenant_komoju_accounts, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant,         type: :citext, null: false, index: { unique: true }, foreign_key: { name: :fk_tenant_komoju_accounts__tenants }
+  t.references :komoju_account, type: :uuid,   null: false, index: true,             foreign_key: {
+    name: :fk_tenant_komoju_accounts_komoju_accounts, to_table: :komoju_record_accounts, column: :komoju_account_id,
+  }
+
+  t.boolean :enabled, null: false, default: true, comment: 'Whether Komoju payment is enabled for this tenant'
+  t.integer :default_expiry_days, null: false, default: 7, comment: 'Default payment expiration in days for konbini'
+
+  t.timestamps null: false
+
+  t.index [:tenant_id, :komoju_account_id], name: :index_komoju_account_per_tenant_unique, using: :btree, unique: true
+end

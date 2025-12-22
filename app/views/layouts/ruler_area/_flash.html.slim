@@ -13,5 +13,5 @@ javascript:
 
   document.addEventListener('turbo:before-visit', async () => {
     UIkit.notification.closeAll();
-    Turbo.clearCache();
+    Turbo.cache.clear();
   });
