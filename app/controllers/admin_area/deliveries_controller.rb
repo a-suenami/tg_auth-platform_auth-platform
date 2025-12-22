@@ -2,6 +2,8 @@
 
 module AdminArea
   class DeliveriesController < ApplicationController
+    require_feature :delivery
+
     before_action :set_delivery, only: [:show, :edit, :update, :destroy, :publish, :cancel, :pause, :resume]
     before_action :load_form_data, only: [:new, :create, :edit, :update]
     before_action :ensure_draft, only: [:edit, :update, :destroy, :publish]

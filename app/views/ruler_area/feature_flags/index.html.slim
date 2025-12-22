@@ -1,0 +1,50 @@
+ul.uk-breadcrumb
+  li
+    span Feature Flags
+
+.am-page-header
+  h3 Feature Flags 管理
+
+/ Global Settings Section
+.uk-margin-top
+  .uk-card.uk-card-default.uk-card-body
+    h4.uk-card-title
+      span.uk-margin-small-right uk-icon="settings"
+      | グローバル設定
+    p.uk-text-muted.uk-text-small
+      | 全テナントに対して機能の有効/無効を切り替えます。テナント別の設定は各テナントの設定画面から行えます。
+
+    - if @features.empty?
+      p.uk-text-lead
+        | No feature flags found
+    - else
+      table.uk-table.uk-table-divider.uk-table-hover
+        thead
+          tr
+            th Feature
+            th 説明
+            th.uk-text-center 有効
+        tbody
+          - @features.each do |feature|
+            - status = @feature_status[feature]
+            tr
+              td
+                strong = feature
+              td.uk-text-muted
+                = status[:description]
+              td.uk-text-center
+                = form_with url: toggle_ruler_area_feature_flags_path, method: :post, local: true, data: { turbo: false } do |f|
+                  = f.hidden_field :feature, value: feature
+                  = f.hidden_field :enable, value: !status[:global_on]
+                  = f.check_box :checked, { checked: status[:global_on], class: 'uk-checkbox', onchange: 'this.form.submit()' }, true, false
+
+/ Flipper UI Link (staging and development only)
+- unless Rails.env.production?
+  .uk-margin-top
+    .uk-card.uk-card-default.uk-card-body
+      h4.uk-card-title
+        span.uk-margin-small-right uk-icon="cog"
+        | Flipper UI
+      p.uk-text-muted.uk-text-small
+        | より詳細な設定（パーセンテージロールアウト等）は Flipper UI で行えます。
+      = link_to 'Flipper UI を開く', ruler_area_flipper_path, class: 'uk-button uk-button-default', target: '_blank'

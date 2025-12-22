@@ -9,8 +9,23 @@ Sidekiq::Web.authorize do |env, _method, _path|
 end
 
 Rails.application.routes.draw do
+  # Flipper UI - mounted outside namespace with session protection
+  flipper_constraint = lambda do |request|
+    request.session[:current_ruler_id].present?
+  end
+  constraints flipper_constraint do
+    mount Flipper::UI.app(Flipper) => '/ruler/flipper', as: :ruler_area_flipper
+  end
+
   namespace :ruler_area, path: :ruler do
     root to: 'application#root', as: :root
+
+    # Feature flags management
+    resources :feature_flags, only: [:index] do
+      collection do
+        post :toggle
+      end
+    end
 
     get 'login', to: 'auth0#login'
     get 'logout', to: 'auth0#logout'
@@ -57,6 +72,11 @@ Rails.application.routes.draw do
         end
         namespace :komoju_records do
           resources :accounts, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        end
+        resources :feature_flags, only: [:index] do
+          collection do
+            post :toggle
+          end
         end
       end
     end

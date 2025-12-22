@@ -2,6 +2,7 @@
 
 module AdminArea
   class TemplatesController < ApplicationController
+    require_feature :delivery
 
     def index
       query = Template

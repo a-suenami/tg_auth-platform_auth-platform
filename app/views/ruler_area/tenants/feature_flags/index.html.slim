@@ -1,0 +1,33 @@
+.uk-margin-top.uk-container
+  h2 Feature Flags
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    p.uk-text-muted.uk-text-small
+      | このテナントで有効にする機能を設定します。グローバルで有効化されている機能はここでの設定に関わらず有効になります。
+
+    - if @features.empty?
+      p.uk-text-lead
+        | No feature flags found
+    - else
+      table.uk-table.uk-table-divider
+        thead
+          tr
+            th Feature
+            th 説明
+            th 有効
+        tbody
+          - @features.each do |feature|
+            - status = @feature_status[feature]
+            tr
+              td
+                strong = feature
+              td.uk-text-muted
+                = status[:description]
+              td
+                - if status[:global_on]
+                  span.uk-label.uk-label-success グローバル有効
+                - else
+                  = form_with url: toggle_ruler_area_tenant_feature_flags_path(@tenant), method: :post, local: true, data: { turbo: false } do |f|
+                    = f.hidden_field :feature, value: feature
+                    = f.hidden_field :enable, value: !status[:enabled]
+                    = f.check_box :checked, { checked: status[:enabled], class: 'uk-checkbox', onchange: 'this.form.submit()' }, true, false

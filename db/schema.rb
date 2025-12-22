@@ -229,6 +229,22 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["tenant_id"], name: "index_email_templates_on_tenant_id"
   end
 
+  create_table "flipper_features", force: :cascade do |t|
+    t.string "key", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_flipper_features_on_key", unique: true
+  end
+
+  create_table "flipper_gates", force: :cascade do |t|
+    t.string "feature_key", null: false
+    t.string "key", null: false
+    t.string "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feature_key", "key", "value"], name: "idx_flipper_gates_feature_key_key_value", unique: true
+  end
+
   create_table "komoju_record_accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.string "remote_id", null: false, comment: "Komoju merchant ID"
