@@ -23,7 +23,7 @@ html lang='ja'
                   ul.uk-nav-sub
                     li
                       = link_to '会員ID一覧', admin_area_users_path
-                    - unless Rails.env.production?
+                    - if feature_enabled?(:user_tag)
                       li
                         = link_to 'タグ', admin_area_user_tags_path
                       li

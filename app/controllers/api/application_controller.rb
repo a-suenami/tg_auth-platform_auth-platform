@@ -6,6 +6,7 @@ module API
     extend T::Sig
     include API::ExceptionRescuable
     include ExpirableCookieUseable
+    include FeatureFlaggable
     before_action :set_tenant
 
 
