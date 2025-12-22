@@ -47,13 +47,14 @@ com.twogate.idp/{tenant_id}/users
   "event_data": {
     "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
     "occurred_at": "2025-12-19T10:30:00+09:00",
-    "params": { ... }
+    "attr1": "value1",
+    "attr2": "value2"
   },
   "resource": { ... }
 }
 ```
 
-- `event_data`: イベントメタデータとトリガーパラメータ
+- `event_data`: イベントメタデータとイベント固有の属性
 - `resource`: 変更後のリソース全体のスナップショット
 
 ### 4. JSON キー命名規則

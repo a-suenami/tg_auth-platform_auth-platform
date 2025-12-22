@@ -47,13 +47,14 @@ Examples: `profile.changed.v1`, `delivery_address.added.v1`
   "event_data": {
     "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
     "occurred_at": "2025-12-19T10:30:00+09:00",
-    "params": { ... }
+    "attr1": "value1",
+    "attr2": "value2"
   },
   "resource": { ... }
 }
 ```
 
-- `event_data`: Event metadata and trigger parameters
+- `event_data`: Event metadata and event-specific attributes
 - `resource`: Full snapshot of the resource after the change
 
 ### 4. JSON Key Naming Convention

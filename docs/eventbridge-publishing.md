@@ -91,9 +91,8 @@ All payloads use **snake_case** for JSON keys.
   "event_data": {
     "id": "evt_xxxxxxxxxxxx",
     "occurred_at": "2025-12-19T10:30:00+09:00",
-    "params": {
-      // Parameters that triggered the event
-    }
+    "attr1": "value1",
+    "attr2": "value2"
   },
   "resource": {
     // Full snapshot of the resource after the change
@@ -107,7 +106,7 @@ All payloads use **snake_case** for JSON keys.
 |-------|-------------|
 | `event_data.id` | Unique event identifier (for idempotency) |
 | `event_data.occurred_at` | Event timestamp (ISO 8601 with timezone) |
-| `event_data.params` | Parameters that triggered the event |
+| `event_data.*` | Event-specific attributes |
 | `resource` | Complete resource snapshot after the change |
 
 ## Payload Examples
@@ -119,10 +118,8 @@ All payloads use **snake_case** for JSON keys.
   "event_data": {
     "id": "evt_abc123def456",
     "occurred_at": "2025-12-19T10:30:00+09:00",
-    "params": {
-      "last_name": "Suzuki",
-      "last_name_kana": "スズキ"
-    }
+    "last_name": "Suzuki",
+    "last_name_kana": "スズキ"
   },
   "resource": {
     "user_id": "usr_123456",
@@ -144,16 +141,14 @@ All payloads use **snake_case** for JSON keys.
   "event_data": {
     "id": "evt_xyz789",
     "occurred_at": "2025-12-19T10:30:00+09:00",
-    "params": {
-      "zip_code": "100-0001",
-      "prefecture_code": "13",
-      "city": "Chiyoda-ku",
-      "street": "Marunouchi 1-1-1",
-      "building": "Tokyo Building 5F",
-      "phone_number": "+819012345678",
-      "country_code": "JP",
-      "is_default": true
-    }
+    "zip_code": "100-0001",
+    "prefecture_code": "13",
+    "city": "Chiyoda-ku",
+    "street": "Marunouchi 1-1-1",
+    "building": "Tokyo Building 5F",
+    "phone_number": "+819012345678",
+    "country_code": "JP",
+    "is_default": true
   },
   "resource": {
     "id": "da_789",

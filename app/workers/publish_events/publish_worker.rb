@@ -38,11 +38,8 @@ module PublishEvents
   #     "event_data": {
   #       "id": "evt_xxxxxxxxxxxx",
   #       "occurred_at": "2025-12-19T10:30:00+09:00",
-  #       "params": {
-  #         // Parameters that triggered the event
-  #         "last_name": "鈴木",
-  #         "last_name_kana": "スズキ"
-  #       }
+  #       "last_name": "鈴木",
+  #       "last_name_kana": "スズキ"
   #     },
   #     "resource": {
   #       // Full snapshot of the resource after the change
@@ -100,7 +97,7 @@ module PublishEvents
       {
         event_data: {
           id: user_event.id,
-          occurred_at: user_event.created_at&.iso8601,
+          occurred_at: user_event.created_at.iso8601,
           # TODO: Replace with actual data from user_event.payload
           tag_id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
           display_name: 'Sample Tag',

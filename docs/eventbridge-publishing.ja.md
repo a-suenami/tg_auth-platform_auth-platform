@@ -91,9 +91,8 @@ com.twogate.idp/{tenant_id}/users
   "event_data": {
     "id": "evt_xxxxxxxxxxxx",
     "occurred_at": "2025-12-19T10:30:00+09:00",
-    "params": {
-      // イベントのトリガーとなったパラメータ
-    }
+    "attr1": "value1",
+    "attr2": "value2"
   },
   "resource": {
     // 変更後のリソース全体のスナップショット
@@ -107,7 +106,7 @@ com.twogate.idp/{tenant_id}/users
 |-----------|------|
 | `event_data.id` | イベントの一意識別子（冪等性担保用） |
 | `event_data.occurred_at` | イベント発生時刻（ISO 8601、タイムゾーン付き） |
-| `event_data.params` | イベントのトリガーとなったパラメータ |
+| `event_data.*` | イベント固有の属性 |
 | `resource` | 変更後のリソース全体のスナップショット |
 
 ## ペイロード例
@@ -119,10 +118,8 @@ com.twogate.idp/{tenant_id}/users
   "event_data": {
     "id": "evt_abc123def456",
     "occurred_at": "2025-12-19T10:30:00+09:00",
-    "params": {
-      "last_name": "鈴木",
-      "last_name_kana": "スズキ"
-    }
+    "last_name": "鈴木",
+    "last_name_kana": "スズキ"
   },
   "resource": {
     "user_id": "usr_123456",
@@ -144,16 +141,14 @@ com.twogate.idp/{tenant_id}/users
   "event_data": {
     "id": "evt_xyz789",
     "occurred_at": "2025-12-19T10:30:00+09:00",
-    "params": {
-      "zip_code": "100-0001",
-      "prefecture_code": "13",
-      "city": "千代田区",
-      "street": "丸の内1-1-1",
-      "building": "東京ビル 5F",
-      "phone_number": "+819012345678",
-      "country_code": "JP",
-      "is_default": true
-    }
+    "zip_code": "100-0001",
+    "prefecture_code": "13",
+    "city": "千代田区",
+    "street": "丸の内1-1-1",
+    "building": "東京ビル 5F",
+    "phone_number": "+819012345678",
+    "country_code": "JP",
+    "is_default": true
   },
   "resource": {
     "id": "da_789",
