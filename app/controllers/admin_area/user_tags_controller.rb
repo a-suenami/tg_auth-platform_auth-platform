@@ -2,6 +2,7 @@
 
 module AdminArea
   class UserTagsController < ApplicationController
+    require_feature :user_tag
     before_action :set_user_tag, only: [:edit, :update, :destroy]
 
     def index

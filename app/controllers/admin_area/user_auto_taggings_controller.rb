@@ -2,6 +2,7 @@
 
 module AdminArea
   class UserAutoTaggingsController < ApplicationController
+    require_feature :user_tag
     before_action :set_user_auto_tagging, only: [:edit, :update, :destroy]
 
     def index
