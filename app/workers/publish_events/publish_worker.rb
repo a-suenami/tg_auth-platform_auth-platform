@@ -68,9 +68,12 @@ module PublishEvents
       return if skip_publishing?
 
       user_event = UserEvent.find(user_event_id)
+      return if user_event.eventbridge_published?
+
       Tenant.current_domain = T.cast(T.must(user_event.tenant).domain, String)
 
       put_event(user_event:)
+      user_event.mark_eventbridge_published!
     end
 
     private

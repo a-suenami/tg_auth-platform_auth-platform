@@ -23,6 +23,22 @@ class UserEvent < ApplicationRecord
     )
   end
 
+  # TODO: Add eventbridge_published_at column to user_events table
+  sig { returns(T.nilable(Time)) }
+  def eventbridge_published_at
+    nil
+  end
+
+  sig { returns(T::Boolean) }
+  def eventbridge_published?
+    eventbridge_published_at.present?
+  end
+
+  sig { void }
+  def mark_eventbridge_published!
+    # TODO: update!(eventbridge_published_at: Time.current)
+  end
+
   private
 
   sig { void }
