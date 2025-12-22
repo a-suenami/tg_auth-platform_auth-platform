@@ -24,24 +24,25 @@
             .c-user-detail-memo__label 内部メモ
             .c-user-detail-memo__edit
               .c-user-detail-memo__edit__textarea このユーザーには注意してくださいこのユーザーには注意してください
-      .p-user-detail__content__section
-        .c-user-detail-tag
-          label.c-user-detail-tag__label タグ
-          .c-user-detail-tag__list
-            - if @user.tag_assignments.any?
-              - @user.tag_assignments.includes(:user_tag, :user_auto_tagging).each do |assignment|
-                - is_auto = !assignment.manual?
-                .c-user-detail-tag__item class=(is_auto ? 'is-auto-tag' : nil)
-                  .c-user-detail-tag__item__text = assignment.user_tag&.name || '-'
-                  - if is_auto
-                    a.c-user-detail-tag__item__lock href='#' aria-label='auto tag' title="オートタギング: #{assignment.user_auto_tagging&.name}"
-                      = render 'shared/icons/icon-lock'
-            - else
-              .c-empty style="width: 100%;"
-                .c-empty__text タグが設定されていません
-            = link_to admin_area_user_user_tag_assignments_path(@user), class: "c-user-detail-tag__add", data: { turbo_frame: 'modal-frame' } do
-              = render 'shared/icons/icon-plus'
-              span.c-user-detail-tag__add__text タグを追加
+      - if feature_enabled?(:user_tag)
+        .p-user-detail__content__section
+          .c-user-detail-tag
+            label.c-user-detail-tag__label タグ
+            .c-user-detail-tag__list
+              - if @user.tag_assignments.any?
+                - @user.tag_assignments.includes(:user_tag, :user_auto_tagging).each do |assignment|
+                  - is_auto = !assignment.manual?
+                  .c-user-detail-tag__item class=(is_auto ? 'is-auto-tag' : nil)
+                    .c-user-detail-tag__item__text = assignment.user_tag&.name || '-'
+                    - if is_auto
+                      a.c-user-detail-tag__item__lock href='#' aria-label='auto tag' title="オートタギング: #{assignment.user_auto_tagging&.name}"
+                        = render 'shared/icons/icon-lock'
+              - else
+                .c-empty style="width: 100%;"
+                  .c-empty__text タグが設定されていません
+              = link_to admin_area_user_user_tag_assignments_path(@user), class: "c-user-detail-tag__add", data: { turbo_frame: 'modal-frame' } do
+                = render 'shared/icons/icon-plus'
+                span.c-user-detail-tag__add__text タグを追加
       .p-user-detail__content__section
         .p-user-detail__content__section__label
           | アカウント

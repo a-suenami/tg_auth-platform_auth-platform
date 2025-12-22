@@ -70,15 +70,38 @@ export default class extends Controller {
   }
 
   /**
+   * Check if we're in v202601 UI (new design)
+   */
+  private isNewUI(): boolean {
+    return this.containerTarget.classList.contains("c-user-detail-tag__list");
+  }
+
+  /**
    * Create a chip element with hidden input
    */
   private createChip(tagId: string, tagName: string): HTMLElement {
-    const chip = document.createElement("span");
-    chip.className = "uk-label uk-label-primary uk-margin-small-right tag-chip";
+    const chip = document.createElement("div");
     chip.setAttribute("data-tag-id", tagId);
     chip.setAttribute("data-tag-name", tagName);
-    chip.style.cursor = "pointer";
-    chip.innerHTML = `${tagName} <span uk-icon="icon: close; ratio: 0.8"></span>`;
+
+    if (this.isNewUI()) {
+      // v202601 styling
+      chip.className = "c-user-detail-tag__item tag-chip";
+      chip.innerHTML = `
+        <span class="c-user-detail-tag__item__text">${tagName}</span>
+        <a href="#" class="c-user-detail-tag__item__remove" data-action="click->user-search-tag-selector#removeTag">
+          <svg class="c-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </a>
+      `;
+    } else {
+      // Old UI styling (UIkit)
+      chip.className = "uk-label uk-label-primary uk-margin-small-right tag-chip";
+      chip.style.cursor = "pointer";
+      chip.innerHTML = `${tagName} <span uk-icon="icon: close; ratio: 0.8"></span>`;
+    }
 
     // Create hidden input for form submission
     const input = document.createElement("input");
