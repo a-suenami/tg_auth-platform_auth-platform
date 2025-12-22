@@ -11,15 +11,71 @@ h1 Komoju Record Account Details
     dd
       code = '*' * 20 + @komoju_account.secret_key[-8..-1]
       .uk-text-meta Encrypted in database, showing last 8 characters only
-    dt Webhook Secret
-    dd
-      code = '*' * 20 + @komoju_account.webhook_secret[-8..-1]
-      .uk-text-meta Encrypted in database, showing last 8 characters only
     dt Created At
     dd = @komoju_account.created_at.strftime('%Y-%m-%d %H:%M:%S')
     dt Updated At
     dd = @komoju_account.updated_at.strftime('%Y-%m-%d %H:%M:%S')
 
+.uk-card.uk-card-default.uk-card-body.uk-margin-top
+  h3 Webhook Configuration
+  p Copy the following values to your Komoju dashboard webhook settings:
+
+  .uk-margin
+    label.uk-form-label Webhook URL
+    .uk-flex.uk-flex-middle
+      code#webhook-url.uk-padding-small.uk-background-muted style="word-break: break-all; flex: 1;"
+        = @komoju_webhook_url
+      button.uk-button.uk-button-secondary.uk-margin-small-left type="button" onclick="copyToClipboard('webhook-url', this)"
+        | Copy
+
+  .uk-margin
+    label.uk-form-label Webhook Secret
+    .uk-flex.uk-flex-middle
+      code#webhook-secret.uk-padding-small.uk-background-muted style="word-break: break-all; flex: 1;" data-secret="#{@komoju_account.webhook_secret}"
+        = '*' * 32
+      button#toggle-secret.uk-button.uk-button-default.uk-margin-small-left type="button" onclick="toggleSecret()" title="Show/Hide"
+        span uk-icon="icon: eye"
+      button.uk-button.uk-button-secondary.uk-margin-small-left type="button" onclick="copyToClipboard('webhook-secret', this, true)"
+        | Copy
+
 .uk-margin
   = link_to 'Edit', edit_ruler_area_tenant_komoju_records_account_path(@tenant, @komoju_account), class: 'uk-button uk-button-secondary uk-margin-small-right'
   = link_to 'Back', ruler_area_tenant_komoju_records_accounts_path(@tenant), class: 'uk-button uk-button-secondary'
+
+javascript:
+  let secretVisible = false;
+
+  function toggleSecret() {
+    const element = document.getElementById('webhook-secret');
+    const toggleBtn = document.getElementById('toggle-secret');
+    const secret = element.dataset.secret;
+
+    if (secretVisible) {
+      element.textContent = '*'.repeat(32);
+      toggleBtn.innerHTML = '<span uk-icon="icon: eye"></span>';
+      secretVisible = false;
+    } else {
+      element.textContent = secret;
+      toggleBtn.innerHTML = '<span uk-icon="icon: eye-slash"></span>';
+      secretVisible = true;
+    }
+  }
+
+  function copyToClipboard(elementId, button, useDataAttr) {
+    const element = document.getElementById(elementId);
+    const text = useDataAttr ? element.dataset.secret : element.textContent.trim();
+    navigator.clipboard.writeText(text).then(function() {
+      const originalText = button.textContent;
+      button.textContent = 'Copied!';
+      button.classList.remove('uk-button-secondary');
+      button.classList.add('uk-button-success');
+      setTimeout(function() {
+        button.textContent = originalText;
+        button.classList.remove('uk-button-success');
+        button.classList.add('uk-button-secondary');
+      }, 2000);
+    }).catch(function(err) {
+      console.error('Failed to copy: ', err);
+      alert('Failed to copy to clipboard');
+    });
+  }

@@ -13,6 +13,7 @@ module RulerArea
         end
 
         def show
+          @komoju_webhook_url = build_komoju_webhook_url
         end
 
         def new
@@ -24,9 +25,10 @@ module RulerArea
 
         def create
           @komoju_account = KomojuRecord::Account.new(komoju_account_params.merge(tenant_id: @tenant.id))
+          @komoju_account.webhook_secret = generate_webhook_secret
 
           if @komoju_account.save
-            redirect_to ruler_area_tenant_komoju_records_accounts_path(@tenant), notice: 'Komoju account was successfully created.'
+            redirect_to ruler_area_tenant_komoju_records_account_path(@tenant, @komoju_account), notice: 'Komoju account was successfully created.'
           else
             render :new, status: :unprocessable_entity
           end
@@ -61,6 +63,18 @@ module RulerArea
             :secret_key,
             :webhook_secret,
           )
+        end
+
+        def generate_webhook_secret
+          "whsec_#{SecureRandom.hex(32)}"
+        end
+
+        def build_komoju_webhook_url
+          if Rails.env.development?
+            "http://#{@tenant.id}.localhost:3000/webhook/komoju"
+          else
+            "https://#{@tenant.domain}/webhook/komoju"
+          end
         end
       end
     end

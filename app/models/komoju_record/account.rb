@@ -8,7 +8,7 @@ class KomojuRecord
     extend T::Sig
     include Multitenancy
 
-    has_one :tenant_komoju_account, class_name: 'Tenant::KomojuAccount', foreign_key: :komoju_account_id, inverse_of: :komoju_account
+    has_one :tenant_komoju_account, class_name: 'Tenant::KomojuAccount', foreign_key: :komoju_account_id, inverse_of: :komoju_account, dependent: :destroy
 
     # Virtual attributes for decrypted values
     attribute :secret_key, :string
