@@ -16,6 +16,8 @@ class FeatureFlagRegistry
     delivery: { description: '配信機能を有効化', scope: :tenant },
     admin_new_ui: { description: '管理画面の新UIを有効化', scope: :tenant },
     ruler_new_ui: { description: 'Ruler管理画面の新UIを有効化', scope: :global },
+    user_tag: { description: 'タグ機能を有効化', scope: :tenant },
+    komoju_payment: { description: 'コンビニ決済を有効化', scope: :tenant },
   }.freeze, T::Hash[Symbol, FlagConfig],)
 
   class << self

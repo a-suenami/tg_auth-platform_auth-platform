@@ -3,6 +3,7 @@
 
 module AdminArea
   class UserTagAssignmentsController < AdminArea::ApplicationController
+    require_feature :user_tag
     before_action :set_user
     before_action :set_user_tag, only: [:create, :destroy]
 

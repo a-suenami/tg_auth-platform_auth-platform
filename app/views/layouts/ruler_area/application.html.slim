@@ -67,6 +67,10 @@ html lang='ja'
                       = link_to 'Webコンソール', ruler_area_sidekiq_web_path, data: { turbo: false }
                     li
                       = link_to 'Job実行', new_ruler_area_sidekiq_job_path
+            .tg-sidebar-section
+              ul.uk-nav.uk-nav-default
+                ul.uk-parent
+                  = link_to 'Feature Flags', ruler_area_feature_flags_path
             .tg-sidebar-section.bottom
               ul.uk-nav.uk-nav-default
                 li アカウント

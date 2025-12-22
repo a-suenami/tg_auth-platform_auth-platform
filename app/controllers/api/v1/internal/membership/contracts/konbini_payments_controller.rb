@@ -3,6 +3,8 @@
 
 module API::V1::Internal::Membership::Contracts
   class KonbiniPaymentsController < API::V1::Internal::Membership::Contracts::ApplicationController
+    require_feature :komoju_payment
+
     def create
       @membership_plan = Membership::Plan.find(memberships_contracts_params[:membership_plan_id])
       store = normalize_store(memberships_contracts_params[:store])
