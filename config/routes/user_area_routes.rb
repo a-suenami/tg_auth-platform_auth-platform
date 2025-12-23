@@ -30,6 +30,12 @@ Rails.application.routes.draw do
     get 'my', to: 'mypage#show', as: :mypage
     get 'my/profile', to: 'profiles#edit', as: :edit_profile
     patch 'my/profile', to: 'profiles#update', as: :profile
+    get 'my/memberships', to: 'memberships#my_memberships', as: :my_memberships
+
+    # メンバーシッププラン
+    get 'memberships', to: 'memberships#index', as: :membership_plans
+    get 'memberships/:id', to: 'memberships#show', as: :membership_plan
+    post 'memberships/:id/purchase', to: 'memberships#purchase', as: :purchase_membership_plan
 
     resources :authorizations, only: [] do
       collection do
