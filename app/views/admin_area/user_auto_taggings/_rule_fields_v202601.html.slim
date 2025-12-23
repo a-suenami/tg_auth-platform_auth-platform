@@ -54,11 +54,11 @@
       .c-form-field
         label.c-form-field__label メンバーシップ選択
         .c-condition-block__item__content.p-user-auto-tagging__radio-group
-          - ['Membership A', 'Membership B', 'Membership C'].each do |membership|
+          - @memberships.each do |membership|
             label.c-form-field__label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"
-              input.c-checkbox__input type="checkbox" data-field="values" value=membership data-action="change->user-auto-tagging-form#handleFieldChange"
+              input.c-checkbox__input type="checkbox" data-field="values" value=membership.id data-action="change->user-auto-tagging-form#handleFieldChange"
               span.c-checkbox__checkbox
-              span = membership
+              span = membership.display_name
 
     / Plan Config
     .config-plan.p-user-auto-tagging__config-section style="display: none;"
@@ -80,22 +80,22 @@
       .c-form-field
         label.c-form-field__label プラン選択
         .c-condition-block__item__content.p-user-auto-tagging__radio-group
-          - ['Plan A', 'Plan B', 'Plan C'].each do |plan|
+          - @membership_plans.each do |plan|
             label.c-form-field__label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"
-              input.c-checkbox__input type="checkbox" data-field="values" value=plan data-action="change->user-auto-tagging-form#handleFieldChange"
+              input.c-checkbox__input type="checkbox" data-field="values" value=plan.id data-action="change->user-auto-tagging-form#handleFieldChange"
               span.c-checkbox__checkbox
-              span = plan
+              span = plan.name
 
     / Prefecture Config
     .config-prefecture.p-user-auto-tagging__config-section style="display: none;"
       .c-form-field
         label.c-form-field__label 都道府県選択
         .c-condition-block__item__content.p-user-auto-tagging__rule__content.p-user-auto-tagging__radio-group
-          - ['北海道', '東京都', '大阪府', '福岡県'].each do |pref|
+          - @prefectures.each do |name, code|
             label.c-form-field__label style="display: flex; align-items: center; gap: 8px; cursor: pointer;"
-              input.c-checkbox__input type="checkbox" data-field="values" value=pref data-action="change->user-auto-tagging-form#handleFieldChange"
+              input.c-checkbox__input type="checkbox" data-field="values" value=code data-action="change->user-auto-tagging-form#handleFieldChange"
               span.c-checkbox__checkbox
-              span = pref
+              span = name
 
     / Gender Config
     .config-gender.p-user-auto-tagging__config-section style="display: none;"
