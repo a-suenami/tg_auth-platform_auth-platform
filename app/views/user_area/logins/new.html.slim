@@ -1,26 +1,40 @@
-.l-page
-  .uk-section
-    .uk-flex.uk-flex-center
-      .uk-card.uk-card-default.uk-card-body.card-width-narrow
-        h3.uk-card-title ログイン
+.ua-auth-container
+  .ua-auth-content
+    .ua-auth-card
+      / ヘッダー
+      .ua-auth-header
+        h1.ua-auth-title ログイン
 
+      / ボディ
+      .ua-auth-body
+        / フラッシュメッセージ
         - if flash[:error].present?
-          .uk-alert.uk-alert-danger
-            p = flash[:error]
+          .ua-alert.ua-alert--error.uk-margin-bottom
+            = flash[:error]
 
-        = form_with url: login_path, method: :post, local: true do |f|
-          .uk-margin
-            label.uk-form-label メールアドレス
-            .uk-form-controls
-              = f.email_field :email, value: @email, class: 'uk-input', placeholder: 'example@example.com', required: true, autofocus: true
+        / ログインフォーム
+        = form_with url: login_path, method: :post, local: true, class: 'ua-form' do |f|
+          .ua-form__group
+            label.ua-form__label メールアドレス
+            = f.email_field :email, value: @email, class: 'ua-form__input', placeholder: 'example@example.com', required: true, autofocus: true
 
-          .uk-margin
-            label.uk-form-label パスワード
-            .uk-form-controls
-              = f.password_field :password, class: 'uk-input', placeholder: 'パスワード', required: true
+          .ua-form__group
+            label.ua-form__label パスワード
+            = f.password_field :password, class: 'ua-form__input', placeholder: 'パスワード', required: true
 
-          .uk-margin
-            = f.submit 'ログイン', class: 'uk-button uk-button-primary uk-width-1-1'
+          .uk-margin-medium-top
+            = f.submit 'ログイン', class: 'ua-btn ua-btn--lg ua-btn--primary'
 
-        .uk-margin-top.uk-text-center
-          = link_to '新規登録はこちら', sign_up_path
+        / パスワードリセットリンク
+        .uk-text-center.uk-margin-top
+          = link_to 'パスワードを忘れた方はこちら', '#', class: 'ua-link'
+
+        / 新規登録リンク
+        .ua-auth-footer
+          p.uk-margin-small-bottom アカウントをお持ちでない方
+          = link_to '新規登録はこちら', sign_up_path, class: 'ua-btn ua-btn--md ua-btn--secondary ua-btn--full-width'
+
+  / フッター
+  footer.ua-footer
+    .ua-footer__copyright
+      | &copy; #{Time.current.year} All Rights Reserved.

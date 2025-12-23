@@ -2,52 +2,24 @@
 @import './variables.scss';
 @import './layout/page.scss';
 
+// =============================================================================
+// Base Styles
+// =============================================================================
+body {
+  font-family: var(--ua-font-family-body);
+  color: var(--ua-color-text);
+  line-height: var(--ua-line-height-base);
+  background-color: var(--ua-color-background);
+}
+
+// =============================================================================
 // レスポンシブカード幅
+// =============================================================================
 .card-width-responsive {
   width: 100%;
 
-  @media (min-width: 960px) {
+  @media (min-width: $breakpoint-lg) {
     width: 66.666%;
-  }
-}
-
-// レスポンシブ2カラムグリッド
-.action-buttons-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-
-  @media (min-width: 640px) {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-// フォーム用2カラムグリッド（960px以上で2カラム）
-.form-grid-responsive {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 15px;
-
-  @media (min-width: 960px) {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-// コンテンツ幅 2/3（960px以上）
-.content-width-2-3 {
-  width: 100%;
-
-  @media (min-width: 960px) {
-    width: 66.666%;
-  }
-}
-
-// コンテンツ幅 1/3（960px以上）
-.content-width-1-3 {
-  width: 100%;
-
-  @media (min-width: 960px) {
-    width: 33.333%;
   }
 }
 
@@ -55,18 +27,619 @@
 .card-width-narrow {
   width: 100%;
 
-  @media (min-width: 960px) {
+  @media (min-width: $breakpoint-lg) {
+    width: 33.333%;
+    min-width: 390px;
+  }
+}
+
+// =============================================================================
+// レスポンシブグリッド
+// =============================================================================
+.action-buttons-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ua-spacing-sm);
+
+  @media (min-width: $breakpoint-sm) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.form-grid-responsive {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ua-spacing-md);
+
+  @media (min-width: $breakpoint-lg) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.content-width-2-3 {
+  width: 100%;
+
+  @media (min-width: $breakpoint-lg) {
+    width: 66.666%;
+  }
+}
+
+.content-width-1-3 {
+  width: 100%;
+
+  @media (min-width: $breakpoint-lg) {
     width: 33.333%;
   }
 }
 
-// プラン一覧用3カラムグリッド
 .plans-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
+  gap: var(--ua-spacing-lg);
 
-  @media (min-width: 960px) {
+  @media (min-width: $breakpoint-lg) {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+// =============================================================================
+// Page Title (Figma: パーツ=タイトル)
+// =============================================================================
+.ua-page-title {
+  font-family: var(--ua-font-family-heading);
+  font-size: var(--ua-font-size-xl);
+  font-weight: 700;
+  color: var(--ua-color-primary);
+  text-align: center;
+  padding: 30px 0 20px;
+  background-color: var(--ua-color-primary-light);
+}
+
+// =============================================================================
+// Section Heading (Figma: h2)
+// =============================================================================
+.ua-section-heading {
+  font-family: var(--ua-font-family-heading);
+  font-size: var(--ua-font-size-md);
+  font-weight: 700;
+  color: var(--ua-color-text);
+  padding-left: var(--ua-spacing-md);
+  border-left: 4px solid var(--ua-color-accent-light);
+  margin-bottom: var(--ua-spacing-sm);
+}
+
+// =============================================================================
+// Card (Figma: カード)
+// =============================================================================
+.ua-card {
+  background-color: var(--ua-color-white);
+  border-radius: var(--ua-radius-md);
+  box-shadow: var(--ua-shadow-md);
+  overflow: hidden;
+
+  &__header {
+    background-color: var(--ua-color-primary-light);
+    padding: var(--ua-spacing-lg);
+    text-align: center;
+  }
+
+  &__body {
+    padding: var(--ua-spacing-lg);
+  }
+
+  &__footer {
+    background-color: var(--ua-color-background-alt);
+    padding: var(--ua-spacing-lg);
+    text-align: center;
+  }
+}
+
+// =============================================================================
+// Membership Card (Figma: MembershipCard)
+// =============================================================================
+.ua-membership-card {
+  position: relative;
+  width: 100%;
+  max-width: 354px;
+  aspect-ratio: 354 / 200;
+  border-radius: var(--ua-radius-md);
+  border: 1px solid var(--ua-color-white);
+  box-shadow: var(--ua-shadow-md);
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+
+  &__content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--ua-spacing-md);
+    color: var(--ua-color-white);
+  }
+
+  &__info {
+    font-family: var(--ua-font-family-heading);
+    font-size: var(--ua-font-size-xs);
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: -0.03em;
+  }
+}
+
+// =============================================================================
+// Button (Figma: ボタン)
+// =============================================================================
+.ua-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ua-spacing-xs);
+  font-family: var(--ua-font-family-heading);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+
+  // サイズバリエーション
+  &--sm {
+    padding: 5px 20px;
+    font-size: var(--ua-font-size-sm);
+    border-radius: var(--ua-radius-full);
+    min-height: 34px;
+  }
+
+  &--md {
+    padding: 8px 24px;
+    font-size: var(--ua-font-size-base);
+    border-radius: var(--ua-radius-full);
+    min-height: 44px;
+  }
+
+  &--lg {
+    padding: 12px 32px;
+    font-size: var(--ua-font-size-md);
+    border-radius: var(--ua-radius-full);
+    min-height: 50px;
+    width: 100%;
+  }
+
+  // カラーバリエーション
+  &--primary {
+    background-color: var(--ua-color-accent);
+    color: var(--ua-color-white);
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  &--secondary {
+    background-color: var(--ua-color-white);
+    color: var(--ua-color-accent);
+    border: 1px solid var(--ua-color-accent);
+
+    &:hover {
+      background-color: var(--ua-color-primary-light);
+    }
+  }
+
+  &--outline {
+    background-color: transparent;
+    color: var(--ua-color-primary);
+    border: 1px solid var(--ua-color-primary);
+
+    &:hover {
+      background-color: var(--ua-color-primary-light);
+    }
+  }
+
+  &--ghost {
+    background-color: transparent;
+    color: var(--ua-color-text);
+
+    &:hover {
+      background-color: var(--ua-color-background-alt);
+    }
+  }
+
+  // 状態
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &--full-width {
+    width: 100%;
+  }
+}
+
+// =============================================================================
+// Form (Figma: フォーム)
+// =============================================================================
+.ua-form {
+  &__group {
+    margin-bottom: var(--ua-spacing-md);
+  }
+
+  &__label {
+    display: block;
+    font-family: var(--ua-font-family-heading);
+    font-size: var(--ua-font-size-sm);
+    font-weight: 700;
+    color: var(--ua-color-text);
+    margin-bottom: var(--ua-spacing-xs);
+  }
+
+  &__input,
+  &__select,
+  &__textarea {
+    width: 100%;
+    padding: 12px 16px;
+    font-family: var(--ua-font-family-body);
+    font-size: var(--ua-font-size-base);
+    color: var(--ua-color-text);
+    background-color: var(--ua-color-white);
+    border: 1px solid var(--ua-color-border);
+    border-radius: var(--ua-radius-sm);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--ua-color-primary);
+      box-shadow: 0 0 0 3px rgba(78, 52, 192, 0.1);
+    }
+
+    &::placeholder {
+      color: var(--ua-color-text-muted);
+    }
+
+    &--error {
+      border-color: var(--ua-color-error);
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+      }
+    }
+  }
+
+  &__textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  &__hint {
+    font-size: var(--ua-font-size-sm);
+    color: var(--ua-color-text-muted);
+    margin-top: var(--ua-spacing-xs);
+  }
+
+  &__error {
+    font-size: var(--ua-font-size-sm);
+    color: var(--ua-color-error);
+    margin-top: var(--ua-spacing-xs);
+  }
+}
+
+// =============================================================================
+// Alert (Figma: メッセージ)
+// =============================================================================
+.ua-alert {
+  padding: var(--ua-spacing-md);
+  border-radius: var(--ua-radius-sm);
+  font-size: var(--ua-font-size-base);
+  text-align: center;
+
+  &--success {
+    background-color: #D1FAE5;
+    color: #065F46;
+    border: 1px solid #10B981;
+  }
+
+  &--error {
+    background-color: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #EF4444;
+  }
+
+  &--warning {
+    background-color: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #F59E0B;
+  }
+
+  &--info {
+    background-color: var(--ua-color-primary-light);
+    color: var(--ua-color-primary);
+    border: 1px solid var(--ua-color-primary);
+  }
+}
+
+// =============================================================================
+// Table (Figma: テーブル)
+// =============================================================================
+.ua-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: var(--ua-spacing-sm) var(--ua-spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--ua-color-border);
+  }
+
+  th {
+    font-family: var(--ua-font-family-heading);
+    font-weight: 700;
+    color: var(--ua-color-text-muted);
+    font-size: var(--ua-font-size-sm);
+    width: 30%;
+
+    @include mobile-only {
+      display: block;
+      width: 100%;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+  }
+
+  td {
+    font-size: var(--ua-font-size-base);
+
+    @include mobile-only {
+      display: block;
+      width: 100%;
+      padding-top: var(--ua-spacing-xs);
+    }
+  }
+
+  tr {
+    @include mobile-only {
+      display: block;
+      padding: var(--ua-spacing-sm) 0;
+      border-bottom: 1px solid var(--ua-color-border);
+    }
+  }
+}
+
+// =============================================================================
+// Badge / Label
+// =============================================================================
+.ua-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: var(--ua-font-size-xs);
+  font-weight: 700;
+  border-radius: var(--ua-radius-sm);
+
+  &--success {
+    background-color: #D1FAE5;
+    color: #065F46;
+  }
+
+  &--warning {
+    background-color: #FEF3C7;
+    color: #92400E;
+  }
+
+  &--error {
+    background-color: #FEE2E2;
+    color: #991B1B;
+  }
+
+  &--info {
+    background-color: var(--ua-color-primary-light);
+    color: var(--ua-color-primary);
+  }
+}
+
+// =============================================================================
+// Link
+// =============================================================================
+.ua-link {
+  color: var(--ua-color-text);
+  text-decoration: underline;
+  font-size: var(--ua-font-size-sm);
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--ua-color-primary);
+  }
+
+  &--primary {
+    color: var(--ua-color-primary);
+  }
+
+  &--accent {
+    color: var(--ua-color-accent);
+  }
+}
+
+// =============================================================================
+// Menu List (Figma: メニュー)
+// =============================================================================
+.ua-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  &__item {
+    border-bottom: 1px solid var(--ua-color-border);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--ua-spacing-md);
+    color: var(--ua-color-text);
+    text-decoration: none;
+    font-size: var(--ua-font-size-base);
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: var(--ua-color-primary-light);
+    }
+
+    &::after {
+      content: '>';
+      color: var(--ua-color-text-muted);
+    }
+  }
+}
+
+// =============================================================================
+// Footer (Figma: sp-フッター)
+// =============================================================================
+.ua-footer {
+  background-color: var(--ua-color-background-alt);
+  padding: var(--ua-spacing-lg);
+  text-align: center;
+
+  &__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ua-spacing-xs);
+    margin-bottom: var(--ua-spacing-md);
+
+    @include tablet-up {
+      flex-direction: row;
+      justify-content: center;
+      gap: var(--ua-spacing-lg);
+    }
+  }
+
+  &__link {
+    font-family: var(--ua-font-family-display);
+    font-size: var(--ua-font-size-2xl);
+    font-weight: 700;
+    color: var(--ua-color-primary);
+    text-decoration: none;
+    line-height: 1.8;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__copyright {
+    font-size: var(--ua-font-size-xs);
+    color: var(--ua-color-text-muted);
+  }
+}
+
+// =============================================================================
+// Auth Container (認証ページ用)
+// =============================================================================
+.ua-auth-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ua-color-background);
+}
+
+.ua-auth-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--ua-spacing-lg);
+
+  @include tablet-up {
+    justify-content: center;
+    padding: var(--ua-spacing-2xl);
+  }
+}
+
+.ua-auth-card {
+  width: 100%;
+  max-width: var(--ua-container-sm);
+  background-color: var(--ua-color-white);
+
+  @include tablet-up {
+    border-radius: var(--ua-radius-md);
+    box-shadow: var(--ua-shadow-md);
+  }
+}
+
+.ua-auth-header {
+  background-color: var(--ua-color-primary-light);
+  padding: var(--ua-spacing-xl) var(--ua-spacing-lg);
+  text-align: center;
+}
+
+.ua-auth-title {
+  font-family: var(--ua-font-family-heading);
+  font-size: var(--ua-font-size-xl);
+  font-weight: 700;
+  color: var(--ua-color-primary);
+  margin: 0;
+}
+
+.ua-auth-body {
+  padding: var(--ua-spacing-xl) var(--ua-spacing-lg);
+}
+
+.ua-auth-description {
+  font-size: var(--ua-font-size-base);
+  color: var(--ua-color-text);
+  text-align: center;
+  line-height: var(--ua-line-height-base);
+  margin-bottom: var(--ua-spacing-xl);
+}
+
+.ua-auth-footer {
+  text-align: center;
+  padding-top: var(--ua-spacing-lg);
+  border-top: 1px solid var(--ua-color-border);
+  margin-top: var(--ua-spacing-lg);
+}
+
+// =============================================================================
+// Mypage Container (マイページ用)
+// =============================================================================
+.ua-mypage-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ua-color-background);
+}
+
+.ua-mypage-header {
+  background-color: var(--ua-color-primary-light);
+  padding: var(--ua-spacing-xl) var(--ua-spacing-lg);
+  text-align: center;
+}
+
+.ua-mypage-title {
+  font-family: var(--ua-font-family-heading);
+  font-size: var(--ua-font-size-xl);
+  font-weight: 700;
+  color: var(--ua-color-primary);
+  margin: 0;
+}
+
+.ua-mypage-card-section {
+  background-color: var(--ua-color-primary-light);
+  padding: 0 var(--ua-spacing-lg) var(--ua-spacing-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ua-mypage-content {
+  padding: var(--ua-spacing-lg);
+  max-width: var(--ua-container-lg);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.ua-mypage-section {
+  margin-bottom: var(--ua-spacing-2xl);
 }

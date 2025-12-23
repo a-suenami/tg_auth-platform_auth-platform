@@ -3,6 +3,11 @@
 module UserArea
   class SessionsController < ApplicationController
     def logout
+      # 既にログアウト済みの場合はログイン画面へリダイレクト
+      unless cookie_session[:current_user_id].present?
+        return redirect_to login_path
+      end
+
       cookie_session.session_clear
 
       if params[:client_id] && params[:returnTo].present?
