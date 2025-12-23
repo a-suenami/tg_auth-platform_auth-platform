@@ -10,6 +10,9 @@ module UserArea
     rescue_from Exception, with: :handle_500 if Rails.env.production?
 
     before_action :set_tenant
+    before_action :load_design_settings
+
+    helper_method :design_settings
 
     private
 
@@ -17,6 +20,16 @@ module UserArea
     def set_tenant
       RequestStore.store[:current_tenant_domain] = request.host || '-'
       Tenant.current
+    end
+
+    sig { void }
+    def load_design_settings
+      @design_settings = Tenant.current&.design_setting || Tenant::DesignSetting.new
+    end
+
+    sig { returns(Tenant::DesignSetting) }
+    def design_settings
+      @design_settings || Tenant::DesignSetting.new
     end
 
     sig { params(exception: T.nilable(Exception)).void }

@@ -26,6 +26,9 @@ aws:
   secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
   region: <%= ENV['AWS_REGION'] %>
   event_bus_name: <%= ENV['AWS_EVENT_BUS_NAME'] %>
+  s3:
+    media_bucket: <%= ENV['AWS_S3_MEDIA_BUCKET'] %>
+    cloudfront_media_host: <%= ENV['AWS_CLOUDFRONT_MEDIA_HOST'] %>
 doorkeeper:
   openid_connect:
     signing_key: <%= ENV['DOORKEEPER_OPENID_CONNECT_SIGNING_KEY'] %>

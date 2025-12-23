@@ -9,6 +9,17 @@ html lang='ja'
     = vite_client_tag
     = vite_typescript_tag 'entrypoints/user_area/application'
     = csrf_meta_tags
+    - if @design_settings&.persisted?
+      style type="text/css"
+        | :root {
+        |   --ua-color-primary: #{@design_settings.color_primary};
+        |   --ua-color-primary-light: #{@design_settings.color_primary_light};
+        |   --ua-color-accent: #{@design_settings.color_accent};
+        |   --ua-color-accent-light: #{@design_settings.color_accent_light};
+        |   --ua-font-family-heading: #{@design_settings.font_family_heading};
+        |   --ua-font-family-base: #{@design_settings.font_family_base};
+        | }
+    = yield :head
   body
     .uk-container.uk-container-expand.uk-background-muted
       = yield

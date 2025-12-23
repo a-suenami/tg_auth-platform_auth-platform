@@ -36,6 +36,4 @@
           = button_to '認証コードを再送信', mfa_sms_resend_path, method: :post, class: 'ua-link'
 
   / フッター
-  footer.ua-footer
-    .ua-footer__copyright
-      | &copy; #{Time.current.year} All Rights Reserved.
+  = render 'user_area/shared/footer'

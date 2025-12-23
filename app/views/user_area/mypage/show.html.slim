@@ -8,12 +8,17 @@
     .ua-mypage-content
       .ua-alert.ua-alert--success
         = flash[:notice]
+  - if flash[:error].present?
+    .ua-mypage-content
+      .ua-alert.ua-alert--error
+        = flash[:error]
 
   / ヒーローセクション（ピンク背景エリア）
   .ua-mypage-hero
     / メンバーシップカード
     .ua-mypage-card-section
-      .ua-membership-card
+      - card_style = @design_settings&.membership_card_image_url.present? ? "background-image: url(#{@design_settings.membership_card_image_url});" : nil
+      .ua-membership-card style=card_style
         .ua-membership-card__content
           .ua-membership-card__info
             | MEMBER ID: #{@user.id}
@@ -135,6 +140,4 @@
       = link_to 'ログアウト', logout_path, class: 'ua-btn ua-btn--lg ua-btn--outline'
 
   / フッター
-  footer.ua-footer
-    .ua-footer__copyright
-      | &copy; #{Time.current.year} All Rights Reserved.
+  = render 'user_area/shared/footer'

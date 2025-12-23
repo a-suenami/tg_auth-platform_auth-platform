@@ -571,6 +571,13 @@ body {
     }
   }
 
+  &__sub-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--ua-spacing-sm);
+  }
+
   &__copyright {
     font-size: var(--ua-font-size-xs);
     color: var(--ua-color-text-muted);

@@ -1,13 +1,15 @@
 .ua-auth-container
   .ua-auth-content
     / 左サイドパネル（PC版のみ表示）
-    .ua-auth-side
-      .ua-auth-side__icon
-        svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          line x1="5" y1="12" x2="19" y2="12"
-          polyline points="12 5 19 12 12 19"
-      h2.ua-auth-side__title 新規会員登録
-      p.ua-auth-side__subtitle またはログイン
+    - side_style = @design_settings&.login_side_image_url.present? ? "background-image: url(#{@design_settings.login_side_image_url}); background-size: cover; background-position: center;" : nil
+    .ua-auth-side style=side_style
+      - unless @design_settings&.login_side_image_url.present?
+        .ua-auth-side__icon
+          svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            line x1="5" y1="12" x2="19" y2="12"
+            polyline points="12 5 19 12 12 19"
+        h2.ua-auth-side__title 新規会員登録
+        p.ua-auth-side__subtitle またはログイン
 
     / 右メインエリア
     .ua-auth-main
@@ -24,12 +26,9 @@
               = flash[:error]
 
           / 説明文
-          .ua-auth-description
-            | OOIDとは、
-            br
-            | OOが提供する各種サービスを
-            br
-            | 一つのアカウントでご利用いただくためのIDです
+          - if @design_settings&.description_text.present?
+            .ua-auth-description
+              = simple_format(@design_settings.description_text)
 
           / 新規登録フォーム
           = form_with url: sign_up_path, method: :post, local: true, class: 'ua-form' do |f|
@@ -45,17 +44,4 @@
               = link_to 'ログインはこちら', login_path, class: 'ua-btn ua-btn--lg ua-btn--secondary'
 
   / フッター
-  footer.ua-footer
-    .ua-footer__links
-      = link_to 'TOP', '#', class: 'ua-footer__link'
-      = link_to 'NEWS', '#', class: 'ua-footer__link'
-      = link_to 'MY PAGE', '#', class: 'ua-footer__link'
-
-    .uk-margin-top
-      = link_to '利用規約・チケット規約', '#', class: 'ua-link uk-margin-small-right'
-      = link_to '個人情報の取り扱いについて', '#', class: 'ua-link uk-margin-small-right'
-      = link_to 'サイトポリシー', '#', class: 'ua-link uk-margin-small-right'
-      = link_to 'FAQ / お問い合わせ', '#', class: 'ua-link'
-
-    .ua-footer__copyright.uk-margin-top
-      | &copy; #{Time.current.year} All Rights Reserved.
+  = render 'user_area/shared/footer'

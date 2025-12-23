@@ -73,6 +73,4 @@
       = link_to 'プラン一覧に戻る', membership_plans_path, class: 'ua-btn ua-btn--md ua-btn--outline'
 
   / フッター
-  footer.ua-footer
-    .ua-footer__copyright
-      | &copy; #{Time.current.year} All Rights Reserved.
+  = render 'user_area/shared/footer'

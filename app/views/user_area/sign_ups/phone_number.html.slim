@@ -27,6 +27,4 @@
             = f.submit '認証コードを送信', class: 'ua-btn ua-btn--lg ua-btn--primary'
 
   / フッター
-  footer.ua-footer
-    .ua-footer__copyright
-      | &copy; #{Time.current.year} All Rights Reserved.
+  = render 'user_area/shared/footer'

@@ -14,6 +14,7 @@ class Tenant < ApplicationRecord
   has_many :oauth_providers, dependent: :destroy
   has_one :tenant_stripe_account, class_name: 'Tenant::StripeAccount'
   has_one :tenant_komoju_account, class_name: 'Tenant::KomojuAccount'
+  has_one :design_setting, class_name: 'Tenant::DesignSetting', dependent: :destroy
 
   # Membership
   has_many :memberships, dependent: :destroy
