@@ -94,7 +94,6 @@ module AdminArea
         :name,
         :description,
         :enabled,
-        :shareable,
         schedule_attributes: [:id, :start_at, :end_at, :_destroy],
         rule_blocks_attributes: [
           :id,
