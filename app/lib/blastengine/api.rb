@@ -110,6 +110,14 @@ module Blastengine
       },)
     end
 
+    # Step 3 (alternative): Commit immediately (no reservation)
+    # Use when reservation_time has passed
+    # https://blastengine.jp/documents/#tag/deliveries/operation/delivery-commit-immediate
+    sig { params(delivery_id: Integer).returns(T.untyped) }
+    def bulk_commit_immediate(delivery_id:)
+      request(:patch, "/api/v1/deliveries/bulk/commit/#{delivery_id}/immediate")
+    end
+
     # Cancel scheduled bulk delivery
     sig { params(delivery_id: Integer).returns(T.untyped) }
     def bulk_cancel(delivery_id:)

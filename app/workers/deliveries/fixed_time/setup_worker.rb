@@ -13,7 +13,7 @@ module Deliveries
       include Sidekiq::Worker
       include Concerns::TenantContext
 
-      sidekiq_options queue: :default, retry: 3
+      sidekiq_options queue: :default, retry: 3, unique_for: 5.minutes
 
       def perform(schedule_id, tenant_id)
         set_tenant_context_by_id(tenant_id)

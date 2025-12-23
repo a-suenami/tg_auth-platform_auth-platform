@@ -10,7 +10,7 @@ module Deliveries
     include Sidekiq::Worker
     include Concerns::TenantContext
 
-    sidekiq_options queue: :low_priority, retry: 3
+    sidekiq_options queue: :low_priority, retry: 3, unique_for: 5.minutes
 
     def perform(type, record_id, tenant_id)
       set_tenant_context_by_id(tenant_id)

@@ -13,7 +13,7 @@ module Deliveries
       include Sidekiq::Worker
       include Concerns::TenantContext
 
-      sidekiq_options queue: :default, retry: 3
+      sidekiq_options queue: :default, retry: 3, unique_for: 5.minutes
 
       SETUP_MINUTES_BEFORE = 15
 
