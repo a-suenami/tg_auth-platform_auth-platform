@@ -1,4 +1,4 @@
-\restrict dF0SFqOKnz9IBXPBaRSfgakyccmaLc4zwOISotCO5P8QvAQFhdH6Mfnv1YVSCR8
+\restrict iVIpWV2cHKvAciwrCTajJz0TTWooguaUCkggqRqr6LnCJpMoGWx8jA1iwbehqoG
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -1518,6 +1518,25 @@ CREATE TABLE public.oauth_openid_requests (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     access_grant_id uuid NOT NULL,
     nonce character varying NOT NULL
+);
+
+
+--
+-- Name: oauth_providers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.oauth_providers (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    provider character varying NOT NULL,
+    client_id character varying NOT NULL,
+    client_secret character varying NOT NULL,
+    auth_url character varying NOT NULL,
+    token_url character varying NOT NULL,
+    user_info_url character varying,
+    scopes character varying DEFAULT ''::character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -3471,6 +3490,14 @@ ALTER TABLE ONLY public.oauth_openid_requests
 
 
 --
+-- Name: oauth_providers oauth_providers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.oauth_providers
+    ADD CONSTRAINT oauth_providers_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: payment_subscriptions payment_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4803,6 +4830,13 @@ CREATE UNIQUE INDEX index_oauth_applications_on_uid ON public.oauth_applications
 --
 
 CREATE INDEX index_oauth_openid_requests_on_access_grant_id ON public.oauth_openid_requests USING btree (access_grant_id);
+
+
+--
+-- Name: index_oauth_providers_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_oauth_providers_on_tenant_id ON public.oauth_providers USING btree (tenant_id);
 
 
 --
@@ -6896,7 +6930,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict dF0SFqOKnz9IBXPBaRSfgakyccmaLc4zwOISotCO5P8QvAQFhdH6Mfnv1YVSCR8
+\unrestrict iVIpWV2cHKvAciwrCTajJz0TTWooguaUCkggqRqr6LnCJpMoGWx8jA1iwbehqoG
 
 SET search_path TO "$user", public;
 

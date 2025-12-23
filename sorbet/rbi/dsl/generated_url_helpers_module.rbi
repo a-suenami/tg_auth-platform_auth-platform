@@ -229,6 +229,9 @@ module GeneratedUrlHelpersModule
   def edit_ruler_area_tenant_oauth_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_oauth_provider_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_shopify_multipass_store_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -313,6 +316,9 @@ module GeneratedUrlHelpersModule
   def new_ruler_area_tenant_oauth_application_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def new_ruler_area_tenant_oauth_provider_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_shopify_multipass_store_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -340,6 +346,9 @@ module GeneratedUrlHelpersModule
   def oauth_authorized_applications_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def oauth_callback_federated_authentications_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def oauth_discovery_keys_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -350,6 +359,9 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def oauth_introspect_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def oauth_redirect_federated_authentications_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def oauth_revoke_url(*args); end
@@ -500,6 +512,12 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_oauth_applications_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_oauth_provider_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_oauth_providers_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_root_url(*args); end

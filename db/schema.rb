@@ -487,6 +487,20 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.index ["access_grant_id"], name: "index_oauth_openid_requests_on_access_grant_id"
   end
 
+  create_table "oauth_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "provider", null: false
+    t.string "client_id", null: false
+    t.string "client_secret", null: false
+    t.string "auth_url", null: false
+    t.string "token_url", null: false
+    t.string "user_info_url"
+    t.string "scopes", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "index_oauth_providers_on_tenant_id"
+  end
+
   create_table "payment_subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "支払い取引情報", force: :cascade do |t|
     t.citext "tenant_id", null: false
     t.uuid "user_id", null: false
