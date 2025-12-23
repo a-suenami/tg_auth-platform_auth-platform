@@ -143,6 +143,24 @@ scope module: :user_area do
 end
 ```
 
+## 実装状況
+
+### 完了
+
+- [x] `oauth_area` → `user_area` リネーム（コントローラー、ビュー、ルーティング、フロントエンド）
+- [x] `doorkeeper.rb` の `OauthArea::` → `UserArea::` 変更
+- [x] `LoginsController` 作成（ログイン画面・処理）
+- [x] `SignUpsController` 作成（複数ステップのサインアップフロー）
+- [x] `MfaController` 作成（SMS二要素認証）
+- [x] ビューファイル作成（logins, sign_ups, mfa）
+- [x] ルーティング追加（`config/routes/user_area_routes.rb`）
+- [x] `login_spa_applications` テーブルに `enable_web_login`, `enable_web_sign_up` カラム追加
+
+### 未完了
+
+- [ ] テストの作成
+- [ ] フロントエンドの詳細なスタイリング
+
 ## 参考
 
 - [Auth0 Custom Domains](https://auth0.com/docs/customize/custom-domains) - 1テナント1ドメインの参考
