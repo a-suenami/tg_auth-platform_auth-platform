@@ -18,6 +18,11 @@ module Deliveries
       def perform(schedule_id, tenant_id)
         set_tenant_context_by_id(tenant_id)
 
+        Sentry.set_context('worker', {
+          class: self.class.name,
+          schedule_id: schedule_id,
+        },)
+
         schedule = DeliverySchedule.find_by(id: schedule_id)
         return unless schedule
         return unless schedule.scheduled? # Status guard: may have changed
@@ -30,6 +35,14 @@ module Deliveries
           Rails.logger.info("[FixedTime::SetupWorker] #{schedule_id} setup complete")
         else
           Rails.logger.error("[FixedTime::SetupWorker] #{schedule_id} failed: #{result[:error]}")
+          capture_soft_failure(
+            '[FixedTime::SetupWorker] Setup service failed',
+            context: {
+              schedule_id: schedule_id,
+              delivery_id: schedule.delivery_id,
+              error: result[:error],
+            },
+          )
         end
       rescue StandardError => e
         Rails.logger.error("[FixedTime::SetupWorker] Error processing #{schedule_id}: #{e.message}")

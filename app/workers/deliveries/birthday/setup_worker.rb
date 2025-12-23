@@ -20,6 +20,11 @@ module Deliveries
       def perform(birthday_id, tenant_id)
         set_tenant_context_by_id(tenant_id)
 
+        Sentry.set_context('worker', {
+          class: self.class.name,
+          birthday_id: birthday_id,
+        },)
+
         birthday = DeliveryBirthday.find_by(id: birthday_id)
         return unless birthday
         return unless birthday.ongoing? # Status guard: may have changed
@@ -39,6 +44,15 @@ module Deliveries
           Rails.logger.info("[Birthday::SetupWorker] #{birthday_id} setup complete: #{result[:users_count] || 0} users")
         else
           Rails.logger.error("[Birthday::SetupWorker] #{birthday_id} failed: #{result[:error]}")
+          capture_soft_failure(
+            '[Birthday::SetupWorker] Setup service failed',
+            context: {
+              birthday_id: birthday_id,
+              delivery_id: birthday.delivery_id,
+              delivery_time: birthday.delivery_time,
+              error: result[:error],
+            },
+          )
         end
       rescue StandardError => e
         Rails.logger.error("[Birthday::SetupWorker] Error processing #{birthday_id}: #{e.message}")

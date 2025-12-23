@@ -18,10 +18,19 @@ module Deliveries
     RESULT_SYNC_INTERVAL = 15 # minutes
 
     def perform
+      Sentry.set_context('orchestrator', {
+        started_at: Time.current.iso8601,
+        result_sync_enabled: should_sync_results?,
+      },)
+
       dispatch_schedule_setups
       dispatch_birthday_setups
       dispatch_import_confirmations
       dispatch_result_syncs if should_sync_results?
+    rescue StandardError => e
+      # Capture any unexpected errors in orchestrator
+      Rails.logger.error("[OrchestratorWorker] Unexpected error: #{e.message}")
+      raise # Re-raise for Sentry to capture with context
     end
 
     private

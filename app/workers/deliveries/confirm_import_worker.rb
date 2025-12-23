@@ -40,6 +40,13 @@ module Deliveries
       return unless schedule.preparing? # Status guard
       return if schedule.blastengine_job_id.blank?
 
+      Sentry.set_context('schedule', {
+        id: schedule.id,
+        delivery_id: schedule.delivery_id,
+        blastengine_job_id: schedule.blastengine_job_id,
+        scheduled_at: schedule.scheduled_at&.iso8601,
+      },)
+
       api = Blastengine::API.new
       result = api.bulk_import_status(job_id: schedule.blastengine_job_id.to_s)
 
@@ -59,6 +66,16 @@ module Deliveries
         Rails.logger.info("[ConfirmImportWorker] Schedule #{schedule.id} committed at #{reservation_time}")
       when *ERROR_STATUSES
         Rails.logger.error("[ConfirmImportWorker] Schedule #{schedule.id} import failed: #{result['status']}")
+        capture_soft_failure(
+          '[ConfirmImportWorker] Blastengine import failed',
+          context: {
+            type: 'schedule',
+            record_id: schedule.id,
+            blastengine_job_id: schedule.blastengine_job_id,
+            blastengine_status: result['status'],
+            api_response: result,
+          },
+        )
         # Keep in preparing status for manual intervention
       else
         # WAIT or STARTED - still importing, check again next minute
@@ -69,6 +86,13 @@ module Deliveries
     def process_birthday(birthday)
       return unless birthday.preparing? # Status guard
       return if birthday.blastengine_job_id.blank?
+
+      Sentry.set_context('birthday', {
+        id: birthday.id,
+        delivery_id: birthday.delivery_id,
+        blastengine_job_id: birthday.blastengine_job_id,
+        delivery_time: birthday.delivery_time,
+      },)
 
       api = Blastengine::API.new
       result = api.bulk_import_status(job_id: birthday.blastengine_job_id.to_s)
@@ -90,6 +114,16 @@ module Deliveries
         Rails.logger.info("[ConfirmImportWorker] Birthday #{birthday.id} committed at #{reservation_time}")
       when *ERROR_STATUSES
         Rails.logger.error("[ConfirmImportWorker] Birthday #{birthday.id} import failed: #{result['status']}")
+        capture_soft_failure(
+          '[ConfirmImportWorker] Blastengine birthday import failed',
+          context: {
+            type: 'birthday',
+            record_id: birthday.id,
+            blastengine_job_id: birthday.blastengine_job_id,
+            blastengine_status: result['status'],
+            api_response: result,
+          },
+        )
         # Reset to ongoing so it can retry tomorrow
         birthday.update!(status: 'ongoing', blastengine_job_id: nil)
       else
