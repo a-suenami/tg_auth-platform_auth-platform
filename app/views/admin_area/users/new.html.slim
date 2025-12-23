@@ -8,6 +8,31 @@
         = f.label :email, class: 'uk-form-label'
         .uk-form-controls
           = f.email_field :email, class: "uk-input", required: true, placeholder: "mail@example.com"
+      = f.fields_for :user_profile do |pf|
+        .uk-margin
+          label.uk-form-label 氏名
+          .uk-form-controls
+            .uk-grid.uk-grid-small
+              .uk-width-1-2
+                = pf.text_field :last_name, class: "uk-input", placeholder: "姓"
+              .uk-width-1-2
+                = pf.text_field :first_name, class: "uk-input", placeholder: "名"
+        .uk-margin
+          label.uk-form-label 氏名（カナ）
+          .uk-form-controls
+            .uk-grid.uk-grid-small
+              .uk-width-1-2
+                = pf.text_field :last_name_kana, class: "uk-input", placeholder: "セイ"
+              .uk-width-1-2
+                = pf.text_field :first_name_kana, class: "uk-input", placeholder: "メイ"
+        .uk-margin
+          label.uk-form-label 生年月日
+          .uk-form-controls
+            = pf.date_field :birth_date, class: "uk-input", max: Date.current.to_s
+        .uk-margin
+          label.uk-form-label 性別
+          .uk-form-controls
+            = pf.select :gender, [['男性', 'male'], ['女性', 'female'], ['その他', 'other']], { include_blank: '選択してください' }, class: "uk-select"
       .uk-margin
         = f.label :password, class: 'uk-form-label'
         .uk-form-controls

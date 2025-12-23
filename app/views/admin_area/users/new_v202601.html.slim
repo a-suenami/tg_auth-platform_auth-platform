@@ -9,6 +9,27 @@
           .c-form-field
             label.c-form-field__label メールアドレス
             = f.email_field :email, placeholder: 'mail@example.com', class: 'c-form-field__input', required: true
+          = f.fields_for :user_profile do |pf|
+            .c-form-field
+              label.c-form-field__label 氏名
+              .c-form-field__input-group
+                .c-form-field__input-group__input
+                  = pf.text_field :last_name, placeholder: '姓', class: 'c-form-field__input'
+                .c-form-field__input-group__input
+                  = pf.text_field :first_name, placeholder: '名', class: 'c-form-field__input'
+            .c-form-field
+              label.c-form-field__label 氏名（カナ）
+              .c-form-field__input-group
+                .c-form-field__input-group__input
+                  = pf.text_field :last_name_kana, placeholder: 'セイ', class: 'c-form-field__input'
+                .c-form-field__input-group__input
+                  = pf.text_field :first_name_kana, placeholder: 'メイ', class: 'c-form-field__input'
+            .c-form-field
+              label.c-form-field__label 生年月日
+              = pf.date_field :birth_date, class: 'c-form-field__input', max: Date.current.to_s
+            .c-form-field
+              label.c-form-field__label 性別
+              = pf.select :gender, [['男性', 'male'], ['女性', 'female'], ['その他', 'other']], { include_blank: '選択してください' }, class: 'c-form-field__input c-form-field__input--select'
           .c-form-field
             label.c-form-field__label パスワード
             = f.password_field :password, placeholder: 'パスワード（任意）', class: 'c-form-field__input'

@@ -27,7 +27,14 @@ module AdminArea
 
     def new
       @user = User.new
+      @user.build_user_profile
       render_with_ui_toggle('new')
+    end
+
+    def edit
+      @user.build_user_profile unless @user.user_profile
+      @user.build_contact_address unless @user.contact_address
+      render_with_ui_toggle('edit')
     end
 
     def create
@@ -39,18 +46,27 @@ module AdminArea
         @user.phone_number = "#{params[:country_code]}#{params[:user][:phone_number_local]}"
       end
 
+      # Build user_profile for nested attributes
+      @user.build_user_profile unless @user.user_profile
+
+      # Validate user profile using UserProfileForm before saving
+      profile_form = build_user_profile_form
+      unless profile_form.valid?
+        profile_form.errors.each { |error| @user.errors.add("user_profile.#{error.attribute}", error.message) }
+        return render_with_ui_toggle('new', status: :unprocessable_entity)
+      end
+
       if @user.save
+        # Create user profile after user is saved
+        profile_form.user = @user
+        profile_form.user_id = @user.id
+        profile_form.perform!
         redirect_to admin_area_users_path, notice: 'ユーザーを登録しました'
       else
         render_with_ui_toggle('new', status: :unprocessable_entity)
       end
     end
 
-    def edit
-      @user.build_user_profile unless @user.user_profile
-      @user.build_contact_address unless @user.contact_address
-      render_with_ui_toggle('edit')
-    end
 
     def update
       if @user.update(user_params)
@@ -96,7 +112,37 @@ module AdminArea
         :email,
         :password,
         :phone_number,
+        user_profile_attributes: [:first_name, :last_name, :first_name_kana, :last_name_kana, :birth_date, :gender],
       )
+    end
+
+    def build_user_profile_form
+      tenant = Tenant.find(T.must(Tenant.current_id))
+      profile_field_rules = if tenant.tenant_setting&.profile_field_rules.present?
+        parsed = JSON.parse(T.must(tenant.tenant_setting).profile_field_rules, symbolize_names: true)
+        UserForm::DEFAULT_PROFILE_FIELD_RULES.deep_merge(parsed)
+      else
+        UserForm::DEFAULT_PROFILE_FIELD_RULES
+      end
+
+      form = UserProfileForm.new
+      form.current_profile_field_rules = profile_field_rules
+      form.tenant_id = Tenant.current_id
+
+      # Set profile attributes from params
+      if params[:user][:user_profile_attributes].present?
+        profile_params = params[:user][:user_profile_attributes].permit(
+          :first_name, :last_name, :first_name_kana, :last_name_kana, :birth_date, :gender,
+        )
+        form.first_name = profile_params[:first_name]
+        form.last_name = profile_params[:last_name]
+        form.first_name_kana = profile_params[:first_name_kana]
+        form.last_name_kana = profile_params[:last_name_kana]
+        form.birth_date = profile_params[:birth_date].present? ? profile_params[:birth_date].to_date : nil
+        form.gender = profile_params[:gender]
+      end
+
+      form
     end
   end
 end
