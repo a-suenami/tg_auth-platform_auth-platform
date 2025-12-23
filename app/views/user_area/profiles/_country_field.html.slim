@@ -1,0 +1,13 @@
+.uk-margin
+  label.uk-form-label
+    = label
+    - if required
+      span.uk-text-danger *
+  .uk-form-controls
+    - countries = ISO3166::Country.all.map { |c| [c.iso_short_name, c.alpha2] }.sort_by(&:first)
+    - if editable
+      = select_tag field_name, options_for_select(countries, value || 'JP'), class: 'uk-select'
+    - else
+      - country_name = ISO3166::Country[value]&.iso_short_name rescue ''
+      = text_field_tag nil, country_name, class: 'uk-input', disabled: true
+      = hidden_field_tag field_name, value
