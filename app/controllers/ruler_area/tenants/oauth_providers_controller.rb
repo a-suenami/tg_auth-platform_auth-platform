@@ -2,6 +2,8 @@
 
 module RulerArea::Tenants
   class OauthProvidersController < ApplicationController
+    before_action :require_feature!
+
     def index
       @oauth_providers = OauthProvider.all
       @pagy, @oauth_providers = pagy @oauth_providers
@@ -44,6 +46,12 @@ module RulerArea::Tenants
     end
 
     private
+
+    def require_feature!
+      return if TenantFeatureFlags.enabled?(:external_oauth_provider)
+
+      redirect_to ruler_area_tenant_root_path(@tenant_id), alert: 'この機能は有効化されていません'
+    end
 
     def oauth_provider_params
       params.require(:oauth_provider).permit(:provider, :client_id, :client_secret, :auth_url, :token_url, :user_info_url, :scopes)

@@ -1,6 +1,7 @@
 module OauthArea
   class FederatedAuthenticationsController < ApplicationMetalController
     before_action :set_tenant
+    before_action :require_feature!
 
     def redirect
       provider = Tenant.current.oauth_providers.find_by(provider: params[:provider])
@@ -26,6 +27,12 @@ module OauthArea
     end
 
     private
+
+    def require_feature!
+      return if TenantFeatureFlags.enabled?(:external_oauth_provider)
+
+      render json: { error: 'Feature not available' }, status: :forbidden
+    end
 
     def oauth_authorize_url(provider)
       "#{provider.auth_url}?client_id=#{provider.client_id}&redirect_uri=#{callback_url(provider)}&response_type=code&scope=#{provider.scopes}"
