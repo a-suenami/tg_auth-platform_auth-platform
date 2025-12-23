@@ -32,6 +32,12 @@ Rails.application.routes.draw do
     patch 'my/profile', to: 'profiles#update', as: :profile
     get 'my/memberships', to: 'memberships#my_memberships', as: :my_memberships
 
+    # クレジットカード
+    get 'my/credit_card', to: 'credit_cards#show', as: :credit_card
+    get 'my/credit_card/new', to: 'credit_cards#new', as: :new_credit_card
+    get 'my/credit_card/complete', to: 'credit_cards#complete', as: :complete_credit_card
+    delete 'my/credit_card', to: 'credit_cards#destroy'
+
     # メンバーシッププラン
     get 'memberships', to: 'memberships#index', as: :membership_plans
     get 'memberships/:id', to: 'memberships#show', as: :membership_plan

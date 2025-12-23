@@ -54,7 +54,7 @@ module UserArea
     # 契約中のメンバーシップ一覧
     def my_memberships
       @contracts = current_user.membership_contracts
-                               .includes(:membership_plan, payment_transactions: :payment_method)
+                               .includes(current_contract_term: :membership_plan)
                                .order(created_at: :desc)
     end
 

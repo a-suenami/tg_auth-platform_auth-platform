@@ -27,12 +27,12 @@
             .uk-flex.uk-flex-between.uk-flex-middle.uk-flex-wrap
               div
                 h3 style="margin: 0 0 8px 0; font-size: var(--ua-font-size-lg); font-weight: 700;"
-                  = contract.membership_plan&.name || 'プラン'
+                  = contract.current_contract_term&.membership_plan&.name || 'プラン'
                 p.uk-margin-remove style="color: var(--ua-color-text-muted); font-size: var(--ua-font-size-sm);"
                   | 契約日: #{contract.created_at.strftime('%Y年%m月%d日')}
-                - if contract.expires_at.present?
+                - if contract.expired_at.present?
                   p.uk-margin-remove style="color: var(--ua-color-text-muted); font-size: var(--ua-font-size-sm);"
-                    | 有効期限: #{contract.expires_at.strftime('%Y年%m月%d日')}
+                    | 有効期限: #{contract.expired_at.strftime('%Y年%m月%d日')}
 
               div.uk-margin-small-top
                 - case contract.status
