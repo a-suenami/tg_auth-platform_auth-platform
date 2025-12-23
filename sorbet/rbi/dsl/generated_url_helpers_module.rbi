@@ -178,9 +178,6 @@ module GeneratedUrlHelpersModule
   def datepicker_admin_area_user_auto_taggings_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def dev_bypass_federated_authentications_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_delivery_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }

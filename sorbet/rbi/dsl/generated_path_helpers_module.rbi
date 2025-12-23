@@ -178,9 +178,6 @@ module GeneratedPathHelpersModule
   def datepicker_admin_area_user_auto_taggings_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def dev_bypass_federated_authentications_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_delivery_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }

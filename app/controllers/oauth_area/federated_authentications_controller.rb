@@ -48,8 +48,8 @@ module OauthArea
         client_secret: provider.client_secret,
         code: code,
         grant_type: 'authorization_code',
-        redirect_uri: callback_url(provider)
-      })
+        redirect_uri: callback_url(provider),
+      },)
 
       JSON.parse(response.body) if response.success?
     end
