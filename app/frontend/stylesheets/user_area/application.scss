@@ -150,7 +150,7 @@ body {
   }
 
   &__footer {
-    background-color: var(--ua-color-background-alt);
+    background-color: var(--ua-color-primary-light);
     padding: var(--ua-spacing-lg);
     text-align: center;
     margin-top: auto;
@@ -265,7 +265,7 @@ body {
     color: var(--ua-color-text);
 
     &:hover {
-      background-color: var(--ua-color-background-alt);
+      background-color: var(--ua-color-primary-light);
     }
   }
 
@@ -541,7 +541,7 @@ body {
 // Footer (Figma: sp-フッター)
 // =============================================================================
 .ua-footer {
-  background-color: var(--ua-color-background-alt);
+  background-color: var(--ua-color-primary-light);
   padding: var(--ua-spacing-lg);
   text-align: center;
 

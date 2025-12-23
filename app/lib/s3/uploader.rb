@@ -10,16 +10,21 @@ module S3
 
     sig { void }
     def initialize
-      client_options = {
-        access_key_id: Settings.aws.access_key_id,
-        secret_access_key: Settings.aws.secret_access_key,
-        region: Settings.aws.region
-      }
-
-      # ローカル開発環境（minio）の場合はエンドポイントを指定
+      # ローカル開発環境（minio）の場合はENV変数を直接使用
       if ENV['AWS_S3_ENDPOINT'].present?
-        client_options[:endpoint] = ENV['AWS_S3_ENDPOINT']
-        client_options[:force_path_style] = true
+        client_options = {
+          access_key_id: ENV.fetch('AWS_ACCESS_KEY_ID'),
+          secret_access_key: ENV.fetch('AWS_SECRET_ACCESS_KEY'),
+          region: ENV.fetch('AWS_REGION', 'ap-northeast-1'),
+          endpoint: ENV['AWS_S3_ENDPOINT'],
+          force_path_style: true
+        }
+      else
+        client_options = {
+          access_key_id: Settings.aws.access_key_id,
+          secret_access_key: Settings.aws.secret_access_key,
+          region: Settings.aws.region
+        }
       end
 
       @client = T.let(Aws::S3::Client.new(client_options), Aws::S3::Client)
