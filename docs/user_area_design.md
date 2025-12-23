@@ -67,9 +67,11 @@ JWT への移行は将来的な検討事項として残す。
 | `app/controllers/user_area/logins_controller.rb` | ログイン画面・処理 |
 | `app/controllers/user_area/sign_ups_controller.rb` | サインアップ画面・処理（複数ステップ） |
 | `app/controllers/user_area/mfa_controller.rb` | SMS MFA 画面・処理（ログイン後用） |
+| `app/controllers/user_area/profiles_controller.rb` | プロフィール登録・編集画面 |
 | `app/views/user_area/logins/new.html.slim` | ログインフォーム |
 | `app/views/user_area/sign_ups/*.html.slim` | サインアップの各ステップ画面 |
 | `app/views/user_area/mfa/new.html.slim` | SMS MFA 認証コード入力 |
+| `app/views/user_area/profiles/edit.html.slim` | プロフィール登録・編集フォーム |
 
 ### リネーム・移行するファイル
 
@@ -133,15 +135,52 @@ scope module: :user_area do
   post 'mfa/sms', to: 'mfa#create'
   post 'mfa/sms/resend', to: 'mfa#resend'
 
+  # ログアウト
+  get 'logout', to: 'sessions#logout'
+
+  # マイページ
+  get 'my', to: 'mypage#show'
+  get 'my/profile', to: 'profiles#edit'
+  patch 'my/profile', to: 'profiles#update'
+  get 'my/memberships', to: 'memberships#my_memberships'
+
+  # メンバーシッププラン
+  get 'memberships', to: 'memberships#index'
+  get 'memberships/:id', to: 'memberships#show'
+  post 'memberships/:id/purchase', to: 'memberships#purchase'
+
   # 既存（oauth_area から移行）
-  resources :sessions, only: [] do
+  resources :authorizations, only: [] do
     collection do
-      get :logout
+      get :relaunch
     end
   end
   # ...
 end
 ```
+
+## 実装状況
+
+### 完了
+
+- [x] `oauth_area` → `user_area` リネーム（コントローラー、ビュー、ルーティング、フロントエンド）
+- [x] `doorkeeper.rb` の `OauthArea::` → `UserArea::` 変更
+- [x] `LoginsController` 作成（ログイン画面・処理）
+- [x] `SignUpsController` 作成（複数ステップのサインアップフロー）
+- [x] `MfaController` 作成（SMS二要素認証）
+- [x] `ProfilesController` 作成（プロフィール登録・編集、`profile_field_rules` による項目出し分け対応）
+- [x] `MypageController` 作成（マイページ）
+- [x] `MembershipsController` 作成（プラン一覧・詳細・購入・契約一覧）
+- [x] ビューファイル作成（logins, sign_ups, mfa, profiles, mypage, memberships）
+- [x] ルーティング追加（`config/routes/user_area_routes.rb`）
+- [x] `login_spa_applications` テーブルに `enable_web_login`, `enable_web_sign_up` カラム追加
+- [x] ルーティング変更（`/logout`, `/my`, `/my/profile`, `/my/memberships`）
+
+### 未完了
+
+- [ ] テストの作成
+- [ ] フロントエンドの詳細なスタイリング
+- [ ] クレジットカード登録画面（決済連携）
 
 ## 参考
 

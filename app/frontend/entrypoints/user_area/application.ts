@@ -3,7 +3,7 @@ import * as Turbo from '@hotwired/turbo';
 import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons';
 
-import '@app/stylesheets/oauth_area/application.scss';
+import '@app/stylesheets/user_area/application.scss';
 
 // require('@rails/ujs').start();
 

@@ -1,0 +1,12 @@
+.uk-margin
+  label.uk-form-label
+    = label
+    - if required
+      span.uk-text-danger *
+  .uk-form-controls
+    - if editable
+      = select_tag field_name, options_for_select([['選択してください', ''], ['男性', 'male'], ['女性', 'female'], ['その他', 'other']], value), class: 'uk-select'
+    - else
+      - gender_label = { 'male' => '男性', 'female' => '女性', 'other' => 'その他' }[value.to_s] || ''
+      = text_field_tag nil, gender_label, class: 'uk-input', disabled: true
+      = hidden_field_tag field_name, value

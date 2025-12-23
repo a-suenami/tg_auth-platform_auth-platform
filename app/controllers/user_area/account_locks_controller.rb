@@ -1,6 +1,6 @@
 # typed: true
 
-module OauthArea
+module UserArea
   class AccountLocksController < ApplicationController
     # Account Lock解除 エンドポイント
     def unlock
@@ -10,7 +10,7 @@ module OauthArea
         end
         render 'unlock'
       else
-        render 'oauth_area/sessions/error'
+        render 'user_area/sessions/error'
       end
     end
   end

@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  scope module: :oauth_area do
+  scope module: :user_area do
     # ログイン
     get 'login', to: 'logins#new', as: :login
     post 'login', to: 'logins#create'
@@ -23,6 +23,20 @@ Rails.application.routes.draw do
     post 'mfa/sms', to: 'mfa#create'
     post 'mfa/sms/resend', to: 'mfa#resend', as: :mfa_sms_resend
 
+    # ログアウト
+    get 'logout', to: 'sessions#logout', as: :logout
+
+    # マイページ
+    get 'my', to: 'mypage#show', as: :mypage
+    get 'my/profile', to: 'profiles#edit', as: :edit_profile
+    patch 'my/profile', to: 'profiles#update', as: :profile
+    get 'my/memberships', to: 'memberships#my_memberships', as: :my_memberships
+
+    # メンバーシッププラン
+    get 'memberships', to: 'memberships#index', as: :membership_plans
+    get 'memberships/:id', to: 'memberships#show', as: :membership_plan
+    post 'memberships/:id/purchase', to: 'memberships#purchase', as: :purchase_membership_plan
+
     resources :authorizations, only: [] do
       collection do
         get :relaunch
@@ -35,7 +49,7 @@ Rails.application.routes.draw do
     end
     resources :sessions, only: [] do
       collection do
-        get :logout
+        get :logout  # 後方互換性のため残す
       end
     end
 

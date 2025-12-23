@@ -1,4 +1,4 @@
-module OauthArea
+module UserArea
   class FederatedAuthenticationsController < ApplicationMetalController
     before_action :set_tenant
     before_action :require_feature!

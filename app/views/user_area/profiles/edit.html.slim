@@ -1,0 +1,125 @@
+.l-page
+  .uk-section
+    .uk-flex.uk-flex-center
+      .uk-card.uk-card-default.uk-card-body class="uk-width-2-3@m"
+        h3.uk-card-title プロフィール登録
+
+        - if flash[:error].present?
+          .uk-alert.uk-alert-danger
+            p = flash[:error]
+
+        - if flash[:notice].present?
+          .uk-alert.uk-alert-success
+            p = flash[:notice]
+
+        = form_with url: profile_path, method: :patch, local: true do |f|
+          / ユーザープロフィール
+          - user_profile_rules = @profile_field_rules[:user_profiles]
+
+          h4.uk-heading-line
+            span 基本情報
+
+          .uk-grid.uk-child-width-1-2@m data-uk-grid=""
+            - unless user_profile_rules[:last_name][:hidden]
+              div
+                = render 'field', f: f, field_name: 'user[user_profile_attributes][last_name]',
+                  label: '姓', value: @user_form.user_profile_form.last_name,
+                  required: user_profile_rules[:last_name][:required],
+                  editable: field_editable?(:user_profiles, :last_name)
+
+            - unless user_profile_rules[:first_name][:hidden]
+              div
+                = render 'field', f: f, field_name: 'user[user_profile_attributes][first_name]',
+                  label: '名', value: @user_form.user_profile_form.first_name,
+                  required: user_profile_rules[:first_name][:required],
+                  editable: field_editable?(:user_profiles, :first_name)
+
+            - unless user_profile_rules[:last_name_kana][:hidden]
+              div
+                = render 'field', f: f, field_name: 'user[user_profile_attributes][last_name_kana]',
+                  label: '姓（カナ）', value: @user_form.user_profile_form.last_name_kana,
+                  required: user_profile_rules[:last_name_kana][:required],
+                  editable: field_editable?(:user_profiles, :last_name_kana)
+
+            - unless user_profile_rules[:first_name_kana][:hidden]
+              div
+                = render 'field', f: f, field_name: 'user[user_profile_attributes][first_name_kana]',
+                  label: '名（カナ）', value: @user_form.user_profile_form.first_name_kana,
+                  required: user_profile_rules[:first_name_kana][:required],
+                  editable: field_editable?(:user_profiles, :first_name_kana)
+
+            - unless user_profile_rules[:birth_date][:hidden]
+              div
+                = render 'date_field', f: f, field_name: 'user[user_profile_attributes][birth_date]',
+                  label: '生年月日', value: @user_form.user_profile_form.birth_date,
+                  required: user_profile_rules[:birth_date][:required],
+                  editable: field_editable?(:user_profiles, :birth_date)
+
+            - unless user_profile_rules[:gender][:hidden]
+              div
+                = render 'gender_field', f: f, field_name: 'user[user_profile_attributes][gender]',
+                  label: '性別', value: @user_form.user_profile_form.gender,
+                  required: user_profile_rules[:gender][:required],
+                  editable: field_editable?(:user_profiles, :gender)
+
+          / 住所情報
+          - contact_address_rules = @profile_field_rules[:contact_address]
+          - show_address_section = contact_address_rules.values.any? { |v| !v[:hidden] }
+
+          - if show_address_section
+            h4.uk-heading-line.uk-margin-medium-top
+              span 住所情報
+
+            .uk-grid.uk-child-width-1-2@m data-uk-grid=""
+              - unless contact_address_rules[:country_code][:hidden]
+                div
+                  = render 'country_field', f: f, field_name: 'user[contact_address_attributes][country_code]',
+                    label: '国', value: @user_form.contact_address_form.country_code,
+                    required: contact_address_rules[:country_code][:required],
+                    editable: field_editable?(:contact_address, :country_code)
+
+              - unless contact_address_rules[:zip_code][:hidden]
+                div
+                  = render 'field', f: f, field_name: 'user[contact_address_attributes][zip_code]',
+                    label: '郵便番号', value: @user_form.contact_address_form.zip_code,
+                    required: contact_address_rules[:zip_code][:required],
+                    editable: field_editable?(:contact_address, :zip_code),
+                    placeholder: '000-0000'
+
+              - unless contact_address_rules[:prefecture_code][:hidden]
+                div
+                  = render 'prefecture_field', f: f, field_name: 'user[contact_address_attributes][prefecture_code]',
+                    label: '都道府県', value: @user_form.contact_address_form.prefecture_code,
+                    required: contact_address_rules[:prefecture_code][:required],
+                    editable: field_editable?(:contact_address, :prefecture_code)
+
+              - unless contact_address_rules[:city][:hidden]
+                div
+                  = render 'field', f: f, field_name: 'user[contact_address_attributes][city]',
+                    label: '市区町村', value: @user_form.contact_address_form.city,
+                    required: contact_address_rules[:city][:required],
+                    editable: field_editable?(:contact_address, :city)
+
+              - unless contact_address_rules[:street][:hidden]
+                div
+                  = render 'field', f: f, field_name: 'user[contact_address_attributes][street]',
+                    label: '番地', value: @user_form.contact_address_form.street,
+                    required: contact_address_rules[:street][:required],
+                    editable: field_editable?(:contact_address, :street)
+
+              - unless contact_address_rules[:building][:hidden]
+                div
+                  = render 'field', f: f, field_name: 'user[contact_address_attributes][building]',
+                    label: '建物名・部屋番号', value: @user_form.contact_address_form.building,
+                    required: contact_address_rules[:building][:required],
+                    editable: field_editable?(:contact_address, :building)
+
+              - unless contact_address_rules[:phone_number][:hidden]
+                div
+                  = render 'field', f: f, field_name: 'user[contact_address_attributes][phone_number]',
+                    label: '電話番号', value: @user_form.contact_address_form.phone_number,
+                    required: contact_address_rules[:phone_number][:required],
+                    editable: field_editable?(:contact_address, :phone_number)
+
+          .uk-margin-medium-top
+            = f.submit '保存', class: 'uk-button uk-button-primary uk-width-1-1'
