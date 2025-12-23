@@ -1,0 +1,92 @@
+.l-page
+  .uk-section
+    .uk-flex.uk-flex-center
+      .uk-card.uk-card-default.uk-card-body class="uk-width-2-3@m"
+        h3.uk-card-title マイページ
+
+        - if flash[:notice].present?
+          .uk-alert.uk-alert-success
+            p = flash[:notice]
+
+        / アカウント情報
+        h4.uk-heading-line
+          span アカウント情報
+
+        table.uk-table.uk-table-striped
+          tbody
+            tr
+              th.uk-width-1-4 メールアドレス
+              td = @user.email
+            tr
+              th 電話番号
+              td = @user.phone_number.presence || '未登録'
+            tr
+              th ステータス
+              td
+                - if @user.enabled?
+                  span.uk-label.uk-label-success 有効
+                - else
+                  span.uk-label.uk-label-warning 未完了
+
+        / プロフィール情報
+        - if @user.user_profile.present?
+          h4.uk-heading-line.uk-margin-medium-top
+            span プロフィール
+
+          table.uk-table.uk-table-striped
+            tbody
+              - if @user.user_profile.last_name.present? || @user.user_profile.first_name.present?
+                tr
+                  th.uk-width-1-4 氏名
+                  td = "#{@user.user_profile.last_name} #{@user.user_profile.first_name}"
+              - if @user.user_profile.last_name_kana.present? || @user.user_profile.first_name_kana.present?
+                tr
+                  th 氏名（カナ）
+                  td = "#{@user.user_profile.last_name_kana} #{@user.user_profile.first_name_kana}"
+              - if @user.user_profile.birth_date.present?
+                tr
+                  th 生年月日
+                  td = @user.user_profile.birth_date.strftime('%Y年%m月%d日')
+              - if @user.user_profile.gender.present?
+                tr
+                  th 性別
+                  td
+                    - case @user.user_profile.gender
+                    - when 'male'
+                      | 男性
+                    - when 'female'
+                      | 女性
+                    - when 'other'
+                      | その他
+
+        / 住所情報
+        - if @user.contact_address.present?
+          h4.uk-heading-line.uk-margin-medium-top
+            span 住所
+
+          table.uk-table.uk-table-striped
+            tbody
+              - if @user.contact_address.zip_code.present?
+                tr
+                  th.uk-width-1-4 郵便番号
+                  td = @user.contact_address.zip_code
+              - if @user.contact_address.prefecture.present?
+                tr
+                  th 都道府県
+                  td = @user.contact_address.prefecture.name
+              - if @user.contact_address.city.present? || @user.contact_address.street.present?
+                tr
+                  th 住所
+                  td = "#{@user.contact_address.city}#{@user.contact_address.street}"
+              - if @user.contact_address.building.present?
+                tr
+                  th 建物名
+                  td = @user.contact_address.building
+
+        / アクションボタン
+        .uk-margin-large-top
+          .uk-grid.uk-child-width-1-2@s data-uk-grid=""
+            div
+              = link_to 'プロフィールを編集', edit_profile_path, class: 'uk-button uk-button-primary uk-width-1-1'
+            div
+              = link_to 'ログアウト', logout_sessions_path, class: 'uk-button uk-button-default uk-width-1-1'

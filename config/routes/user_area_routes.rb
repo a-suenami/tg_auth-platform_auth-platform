@@ -23,6 +23,9 @@ Rails.application.routes.draw do
     post 'mfa/sms', to: 'mfa#create'
     post 'mfa/sms/resend', to: 'mfa#resend', as: :mfa_sms_resend
 
+    # マイページ
+    get 'mypage', to: 'mypage#show', as: :mypage
+
     # プロフィール登録・編集
     get 'profile', to: 'profiles#edit', as: :edit_profile
     patch 'profile', to: 'profiles#update', as: :profile
