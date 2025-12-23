@@ -2,13 +2,15 @@
   display: grid;
   grid-template-areas: 'contents';
   grid-template-columns: 1fr;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
+  margin: 0;
+  padding: 0;
 }
 
 .l-page-contents {
   grid-area: contents;
-  padding: 0 24px 72px;
+  padding: 0;
   position: relative;
   overflow-x: hidden;
 }

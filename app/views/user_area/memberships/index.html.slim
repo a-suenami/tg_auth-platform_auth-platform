@@ -1,47 +1,63 @@
-.l-page
-  .uk-section
-    .uk-container
-      h2.uk-heading-line
-        span メンバーシッププラン
+.ua-mypage-container
+  / ヘッダー
+  .ua-mypage-header
+    h1.ua-mypage-title メンバーシッププラン
 
-      - if flash[:notice].present?
-        .uk-alert.uk-alert-success
-          p = flash[:notice]
+  / メインコンテンツ
+  .ua-mypage-content
+    / フラッシュメッセージ
+    - if flash[:notice].present?
+      .ua-alert.ua-alert--success.uk-margin-bottom
+        = flash[:notice]
 
-      - if flash[:error].present?
-        .uk-alert.uk-alert-danger
-          p = flash[:error]
+    - if flash[:error].present?
+      .ua-alert.ua-alert--error.uk-margin-bottom
+        = flash[:error]
 
-      - if @membership_plans.empty?
-        .uk-alert
-          p 現在利用可能なプランはありません
+    - if @membership_plans.empty?
+      .ua-alert.ua-alert--info
+        p 現在利用可能なプランはありません
 
-      - else
-        .plans-grid
-          - @membership_plans.each do |plan|
-            .uk-card.uk-card-default.uk-card-hover
-              .uk-card-header
-                h3.uk-card-title = plan.name
+    - else
+      .plans-grid
+        - @membership_plans.each do |plan|
+          .ua-card
+            .ua-card__header
+              h3 style="margin: 0; color: var(--ua-color-primary); font-size: var(--ua-font-size-lg);"
+                = plan.name
+              .uk-margin-small-top
                 - plan.memberships.each do |membership|
-                  span.uk-label.uk-margin-small-right = membership.display_name
+                  span.ua-badge.ua-badge--info.uk-margin-small-right
+                    = membership.display_name
 
-              .uk-card-body
-                .uk-text-lead.uk-text-center
-                  span.uk-text-bold style="font-size: 2rem"
-                    = number_to_currency(plan.amount, unit: '¥', precision: 0)
-                  span.uk-text-muted
-                    = " / #{plan.recurring_interval_count}#{interval_unit_label(plan.recurring_interval_unit)}"
+            .ua-card__body
+              .uk-text-center.uk-margin-bottom
+                span style="font-size: 2rem; font-weight: 700; color: var(--ua-color-primary);"
+                  = number_to_currency(plan.amount, unit: '¥', precision: 0)
+                span.uk-text-muted style="font-size: var(--ua-font-size-sm);"
+                  = " / #{plan.recurring_interval_count}#{interval_unit_label(plan.recurring_interval_unit)}"
 
-                ul.uk-list.uk-list-bullet.uk-margin-top
-                  - if plan.recurrence
-                    li 自動更新あり
-                  - else
-                    li 一回払い
-                  - plan.plan_payment_methods.each do |pm|
-                    li = payment_method_label(pm.payment_type)
+              ul style="list-style: none; padding: 0; margin: 0;"
+                - if plan.recurrence
+                  li.uk-margin-small-bottom
+                    span style="color: var(--ua-color-success);" ✓
+                    |  自動更新あり
+                - else
+                  li.uk-margin-small-bottom
+                    span style="color: var(--ua-color-success);" ✓
+                    |  一回払い
+                - plan.plan_payment_methods.each do |pm|
+                  li.uk-margin-small-bottom
+                    span style="color: var(--ua-color-success);" ✓
+                    |  #{payment_method_label(pm.payment_type)}
 
-              .uk-card-footer
-                = link_to '詳細を見る', membership_plan_path(plan), class: 'uk-button uk-button-primary uk-width-1-1'
+            .ua-card__footer
+              = link_to '詳細を見る', membership_plan_path(plan), class: 'ua-btn ua-btn--md ua-btn--primary ua-btn--full-width'
 
-      .uk-margin-large-top.uk-text-center
-        = link_to 'マイページに戻る', mypage_path, class: 'uk-button uk-button-default'
+    .uk-margin-large-top.uk-text-center
+      = link_to 'マイページに戻る', mypage_path, class: 'ua-btn ua-btn--md ua-btn--outline'
+
+  / フッター
+  footer.ua-footer
+    .ua-footer__copyright
+      | &copy; #{Time.current.year} All Rights Reserved.

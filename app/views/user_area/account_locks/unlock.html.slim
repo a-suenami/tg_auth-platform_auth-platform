@@ -1,9 +1,21 @@
-.l-page
-  .uk-section
-    .uk-flex.uk-flex-center
-      .uk-card.uk-card-default.uk-card-body.card-width-narrow
-        h3.uk-card-title アカウントロックを解除しました
-        p 再度ログインをお試しください
+.ua-auth-container
+  .ua-auth-content
+    .ua-auth-card
+      / ヘッダー
+      .ua-auth-header
+        h1.ua-auth-title アカウントロック解除
+
+      / ボディ
+      .ua-auth-body
+        .ua-alert.ua-alert--success
+          p アカウントロックを解除しました。
+          p 再度ログインをお試しください。
+
         - if @login_url.present?
-          .uk-margin-medium-top
-            = link_to 'ログイン画面へ', @login_url, class: 'uk-button uk-button-primary uk-button-large'
+          .uk-margin-medium-top.uk-text-center
+            = link_to 'ログイン画面へ', @login_url, class: 'ua-btn ua-btn--lg ua-btn--primary'
+
+  / フッター
+  footer.ua-footer
+    .ua-footer__copyright
+      | &copy; #{Time.current.year} All Rights Reserved.

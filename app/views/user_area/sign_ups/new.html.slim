@@ -1,38 +1,61 @@
 .ua-auth-container
   .ua-auth-content
-    .ua-auth-card
-      / ヘッダー
-      .ua-auth-header
-        h1.ua-auth-title 新規登録
+    / 左サイドパネル（PC版のみ表示）
+    .ua-auth-side
+      .ua-auth-side__icon
+        svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          line x1="5" y1="12" x2="19" y2="12"
+          polyline points="12 5 19 12 12 19"
+      h2.ua-auth-side__title 新規会員登録
+      p.ua-auth-side__subtitle またはログイン
 
-      / ボディ
-      .ua-auth-body
-        / フラッシュメッセージ
-        - if flash[:error].present?
-          .ua-alert.ua-alert--error.uk-margin-bottom
-            = flash[:error]
+    / 右メインエリア
+    .ua-auth-main
+      .ua-auth-card
+        / ヘッダー（SP版のみ表示）
+        .ua-auth-header
+          h1.ua-auth-title 新規登録
 
-        / 説明文
-        .ua-auth-description
-          | メールアドレスを入力してください。
-          br
-          | 認証コードをお送りします。
+        / ボディ
+        .ua-auth-body
+          / フラッシュメッセージ
+          - if flash[:error].present?
+            .ua-alert.ua-alert--error.uk-margin-bottom
+              = flash[:error]
 
-        / 新規登録フォーム
-        = form_with url: sign_up_path, method: :post, local: true, class: 'ua-form' do |f|
-          .ua-form__group
-            label.ua-form__label メールアドレス
-            = f.email_field :email, value: @email, class: 'ua-form__input', placeholder: 'example@example.com', required: true, autofocus: true
+          / 説明文
+          .ua-auth-description
+            | OOIDとは、
+            br
+            | OOが提供する各種サービスを
+            br
+            | 一つのアカウントでご利用いただくためのIDです
 
-          .uk-margin-medium-top
-            = f.submit '認証コードを送信', class: 'ua-btn ua-btn--lg ua-btn--primary'
+          / 新規登録フォーム
+          = form_with url: sign_up_path, method: :post, local: true, class: 'ua-form' do |f|
+            .ua-form__group
+              label.ua-form__label メールアドレス
+              = f.email_field :email, value: @email, class: 'ua-form__input', placeholder: 'email@example.com', required: true, autofocus: true
 
-        / ログインリンク
-        .ua-auth-footer
-          p.uk-margin-small-bottom すでにアカウントをお持ちの方
-          = link_to 'ログインはこちら', login_path, class: 'ua-btn ua-btn--md ua-btn--secondary ua-btn--full-width'
+            .uk-margin-large-top
+              = f.submit '認証コードを送信', class: 'ua-btn ua-btn--lg ua-btn--primary'
+
+            / ログインボタン
+            .uk-margin-top
+              = link_to 'ログインはこちら', login_path, class: 'ua-btn ua-btn--lg ua-btn--secondary'
 
   / フッター
   footer.ua-footer
-    .ua-footer__copyright
+    .ua-footer__links
+      = link_to 'TOP', '#', class: 'ua-footer__link'
+      = link_to 'NEWS', '#', class: 'ua-footer__link'
+      = link_to 'MY PAGE', '#', class: 'ua-footer__link'
+
+    .uk-margin-top
+      = link_to '利用規約・チケット規約', '#', class: 'ua-link uk-margin-small-right'
+      = link_to '個人情報の取り扱いについて', '#', class: 'ua-link uk-margin-small-right'
+      = link_to 'サイトポリシー', '#', class: 'ua-link uk-margin-small-right'
+      = link_to 'FAQ / お問い合わせ', '#', class: 'ua-link'
+
+    .ua-footer__copyright.uk-margin-top
       | &copy; #{Time.current.year} All Rights Reserved.

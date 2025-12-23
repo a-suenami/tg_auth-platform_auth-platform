@@ -1,8 +1,17 @@
-.l-page
-  .uk-section
-    .uk-flex.uk-flex-center
-      .uk-card.uk-card-default.uk-card-body.card-width-narrow
-        h3.uk-card-title セッションエラー
-        p
-          | エラーが発生しました。
-          | ログインを初めからやり直してください。
+.ua-auth-container
+  .ua-auth-content
+    .ua-auth-card
+      / ヘッダー
+      .ua-auth-header
+        h1.ua-auth-title セッションエラー
+
+      / ボディ
+      .ua-auth-body
+        .ua-alert.ua-alert--error
+          p エラーが発生しました。
+          p ログインを初めからやり直してください。
+
+  / フッター
+  footer.ua-footer
+    .ua-footer__copyright
+      | &copy; #{Time.current.year} All Rights Reserved.

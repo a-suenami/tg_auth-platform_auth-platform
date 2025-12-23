@@ -1,6 +1,17 @@
-.l-page
-  .uk-section
-    .uk-flex.uk-flex-center
-      .uk-card.uk-card-default.uk-card-body.card-width-narrow
-        h3.uk-card-title ログアウトを完了しました
-        p またのご利用をお待ちしております
+.ua-auth-container
+  .ua-auth-content
+    .ua-auth-card
+      / ヘッダー
+      .ua-auth-header
+        h1.ua-auth-title ログアウト完了
+
+      / ボディ
+      .ua-auth-body
+        .ua-alert.ua-alert--success
+          p ログアウトを完了しました。
+          p またのご利用をお待ちしております。
+
+  / フッター
+  footer.ua-footer
+    .ua-footer__copyright
+      | &copy; #{Time.current.year} All Rights Reserved.

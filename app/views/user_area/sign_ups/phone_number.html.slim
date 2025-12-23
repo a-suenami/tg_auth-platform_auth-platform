@@ -1,20 +1,32 @@
-.l-page
-  .uk-section
-    .uk-flex.uk-flex-center
-      .uk-card.uk-card-default.uk-card-body.card-width-narrow
-        h3.uk-card-title 電話番号認証
+.ua-auth-container
+  .ua-auth-content
+    .ua-auth-card
+      / ヘッダー
+      .ua-auth-header
+        h1.ua-auth-title 電話番号認証
 
+      / ボディ
+      .ua-auth-body
+        / フラッシュメッセージ
         - if flash[:error].present?
-          .uk-alert.uk-alert-danger
-            p = flash[:error]
+          .ua-alert.ua-alert--error.uk-margin-bottom
+            = flash[:error]
 
-        p.uk-text-muted SMS認証のため、電話番号を入力してください。
+        / 説明文
+        .ua-auth-description
+          | SMS認証のため、電話番号を入力してください。
 
-        = form_with url: sign_up_phone_number_path, method: :post, local: true do |f|
-          .uk-margin
-            label.uk-form-label 電話番号
-            .uk-form-controls
-              = f.telephone_field :phone_number, class: 'uk-input', placeholder: '+81901234567', required: true, autofocus: true
+        / 電話番号フォーム
+        = form_with url: sign_up_phone_number_path, method: :post, local: true, class: 'ua-form' do |f|
+          .ua-form__group
+            label.ua-form__label 電話番号
+            = f.telephone_field :phone_number, class: 'ua-form__input', placeholder: '09012345678', required: true, autofocus: true
+            p.ua-form__hint ハイフンなしで入力してください
 
-          .uk-margin
-            = f.submit '認証コードを送信', class: 'uk-button uk-button-primary uk-width-1-1'
+          .uk-margin-medium-top
+            = f.submit '認証コードを送信', class: 'ua-btn ua-btn--lg ua-btn--primary'
+
+  / フッター
+  footer.ua-footer
+    .ua-footer__copyright
+      | &copy; #{Time.current.year} All Rights Reserved.

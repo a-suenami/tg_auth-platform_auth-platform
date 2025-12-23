@@ -5,11 +5,30 @@
 // =============================================================================
 // Base Styles
 // =============================================================================
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   font-family: var(--ua-font-family-body);
   color: var(--ua-color-text);
   line-height: var(--ua-line-height-base);
   background-color: var(--ua-color-background);
+}
+
+// UIKit overrides
+.uk-section {
+  padding: 0;
+  margin: 0;
+}
+
+.uk-container {
+  max-width: 100%;
+  padding: 0;
 }
 
 // =============================================================================
@@ -116,6 +135,8 @@ body {
   border-radius: var(--ua-radius-md);
   box-shadow: var(--ua-shadow-md);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
   &__header {
     background-color: var(--ua-color-primary-light);
@@ -125,12 +146,14 @@ body {
 
   &__body {
     padding: var(--ua-spacing-lg);
+    flex: 1;
   }
 
   &__footer {
     background-color: var(--ua-color-background-alt);
     padding: var(--ua-spacing-lg);
     text-align: center;
+    margin-top: auto;
   }
 }
 
@@ -181,28 +204,30 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   border: none;
+  box-sizing: border-box;
 
   // サイズバリエーション
   &--sm {
     padding: 5px 20px;
     font-size: var(--ua-font-size-sm);
     border-radius: var(--ua-radius-full);
-    min-height: 34px;
+    height: 34px;
   }
 
   &--md {
     padding: 8px 24px;
     font-size: var(--ua-font-size-base);
     border-radius: var(--ua-radius-full);
-    min-height: 44px;
+    height: 44px;
   }
 
   &--lg {
     padding: 12px 32px;
     font-size: var(--ua-font-size-md);
     border-radius: var(--ua-radius-full);
-    min-height: 50px;
+    height: 50px;
     width: 100%;
+    max-width: 100%;
   }
 
   // カラーバリエーション
@@ -261,6 +286,10 @@ body {
 .ua-form {
   &__group {
     margin-bottom: var(--ua-spacing-md);
+
+    @include tablet-up {
+      margin-bottom: var(--ua-spacing-xl);
+    }
   }
 
   &__label {
@@ -270,6 +299,11 @@ body {
     font-weight: 700;
     color: var(--ua-color-text);
     margin-bottom: var(--ua-spacing-xs);
+
+    @include tablet-up {
+      font-size: var(--ua-font-size-base);
+      margin-bottom: var(--ua-spacing-sm);
+    }
   }
 
   &__input,
@@ -284,6 +318,12 @@ body {
     border: 1px solid var(--ua-color-border);
     border-radius: var(--ua-radius-sm);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    @include tablet-up {
+      padding: 16px 20px;
+      font-size: var(--ua-font-size-md);
+      border-radius: var(--ua-radius-md);
+    }
 
     &:focus {
       outline: none;
@@ -535,36 +575,99 @@ body {
 }
 
 // =============================================================================
-// Auth Container (認証ページ用)
+// Auth Container (認証ページ用) - 2カラムレイアウト対応
 // =============================================================================
 .ua-auth-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: var(--ua-color-background);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .ua-auth-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: var(--ua-spacing-lg);
 
   @include tablet-up {
+    flex-direction: row;
+  }
+}
+
+// 左サイドパネル（PC版のみ表示）
+.ua-auth-side {
+  display: none;
+
+  @include tablet-up {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    width: 40%;
+    min-width: 300px;
+    background-color: var(--ua-color-primary-light);
     padding: var(--ua-spacing-2xl);
   }
 }
 
-.ua-auth-card {
-  width: 100%;
-  max-width: var(--ua-container-sm);
+.ua-auth-side__icon {
+  font-size: 64px;
+  color: var(--ua-color-accent);
+  margin-bottom: var(--ua-spacing-xl);
+
+  svg, img {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.ua-auth-side__title {
+  font-family: var(--ua-font-family-heading);
+  font-size: var(--ua-font-size-xl);
+  font-weight: 700;
+  color: var(--ua-color-accent);
+  text-align: center;
+  margin: 0;
+}
+
+.ua-auth-side__subtitle {
+  font-family: var(--ua-font-family-heading);
+  font-size: var(--ua-font-size-md);
+  color: var(--ua-color-accent);
+  text-align: center;
+  margin-top: var(--ua-spacing-sm);
+}
+
+// 右メインエリア（フォーム）
+.ua-auth-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   background-color: var(--ua-color-white);
 
   @include tablet-up {
-    border-radius: var(--ua-radius-md);
-    box-shadow: var(--ua-shadow-md);
+    width: 60%;
+  }
+}
+
+.ua-auth-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  background-color: var(--ua-color-white);
+  padding: 0;
+
+  @include tablet-up {
+    padding: 0 80px;
+    max-width: 600px;
+    margin: 0 auto;
   }
 }
 
@@ -572,6 +675,11 @@ body {
   background-color: var(--ua-color-primary-light);
   padding: var(--ua-spacing-xl) var(--ua-spacing-lg);
   text-align: center;
+
+  // PC版では非表示（サイドパネルにタイトルがある）
+  @include tablet-up {
+    display: none;
+  }
 }
 
 .ua-auth-title {
@@ -584,6 +692,14 @@ body {
 
 .ua-auth-body {
   padding: var(--ua-spacing-xl) var(--ua-spacing-lg);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @include tablet-up {
+    padding: var(--ua-spacing-2xl) 0;
+  }
 }
 
 .ua-auth-description {
@@ -592,6 +708,11 @@ body {
   text-align: center;
   line-height: var(--ua-line-height-base);
   margin-bottom: var(--ua-spacing-xl);
+
+  @include tablet-up {
+    font-size: var(--ua-font-size-md);
+    margin-bottom: var(--ua-spacing-2xl);
+  }
 }
 
 .ua-auth-footer {
@@ -599,6 +720,12 @@ body {
   padding-top: var(--ua-spacing-lg);
   border-top: 1px solid var(--ua-color-border);
   margin-top: var(--ua-spacing-lg);
+
+  @include tablet-up {
+    padding-top: var(--ua-spacing-xl);
+    margin-top: var(--ua-spacing-xl);
+    border-top: none;
+  }
 }
 
 // =============================================================================
@@ -634,10 +761,16 @@ body {
 }
 
 .ua-mypage-content {
+  flex: 1;
   padding: var(--ua-spacing-lg);
-  max-width: var(--ua-container-lg);
-  margin: 0 auto;
   width: 100%;
+  box-sizing: border-box;
+
+  @include tablet-up {
+    padding: var(--ua-spacing-xl) 40px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
 }
 
 .ua-mypage-section {

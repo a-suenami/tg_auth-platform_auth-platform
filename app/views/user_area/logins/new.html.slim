@@ -1,40 +1,70 @@
 .ua-auth-container
   .ua-auth-content
-    .ua-auth-card
-      / ヘッダー
-      .ua-auth-header
-        h1.ua-auth-title ログイン
+    / 左サイドパネル（PC版のみ表示）
+    .ua-auth-side
+      .ua-auth-side__icon
+        / 矢印アイコン（テナントでカスタマイズ可能）
+        svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          line x1="5" y1="12" x2="19" y2="12"
+          polyline points="12 5 19 12 12 19"
+      h2.ua-auth-side__title ログイン
+      p.ua-auth-side__subtitle または新規会員登録
 
-      / ボディ
-      .ua-auth-body
-        / フラッシュメッセージ
-        - if flash[:error].present?
-          .ua-alert.ua-alert--error.uk-margin-bottom
-            = flash[:error]
+    / 右メインエリア
+    .ua-auth-main
+      .ua-auth-card
+        / ヘッダー（SP版のみ表示）
+        .ua-auth-header
+          h1.ua-auth-title ログイン
 
-        / ログインフォーム
-        = form_with url: login_path, method: :post, local: true, class: 'ua-form' do |f|
-          .ua-form__group
-            label.ua-form__label メールアドレス
-            = f.email_field :email, value: @email, class: 'ua-form__input', placeholder: 'example@example.com', required: true, autofocus: true
+        / ボディ
+        .ua-auth-body
+          / フラッシュメッセージ
+          - if flash[:error].present?
+            .ua-alert.ua-alert--error.uk-margin-bottom
+              = flash[:error]
 
-          .ua-form__group
-            label.ua-form__label パスワード
-            = f.password_field :password, class: 'ua-form__input', placeholder: 'パスワード', required: true
+          / 説明文
+          .ua-auth-description
+            | OOIDとは、
+            br
+            | OOが提供する各種サービスを
+            br
+            | 一つのアカウントでご利用いただくためのIDです
 
-          .uk-margin-medium-top
-            = f.submit 'ログイン', class: 'ua-btn ua-btn--lg ua-btn--primary'
+          / ログインフォーム
+          = form_with url: login_path, method: :post, local: true, class: 'ua-form' do |f|
+            .ua-form__group
+              label.ua-form__label メールアドレス
+              = f.email_field :email, value: @email, class: 'ua-form__input', placeholder: 'email@example.com', required: true, autofocus: true
 
-        / パスワードリセットリンク
-        .uk-text-center.uk-margin-top
-          = link_to 'パスワードを忘れた方はこちら', '#', class: 'ua-link'
+            .ua-form__group
+              label.ua-form__label パスワード
+              = f.password_field :password, class: 'ua-form__input', placeholder: 'password', required: true
 
-        / 新規登録リンク
-        .ua-auth-footer
-          p.uk-margin-small-bottom アカウントをお持ちでない方
-          = link_to '新規登録はこちら', sign_up_path, class: 'ua-btn ua-btn--md ua-btn--secondary ua-btn--full-width'
+            / パスワードリセットリンク
+            .uk-text-center.uk-margin-top
+              = link_to 'パスワードを忘れた方はこちら', '#', class: 'ua-link'
+
+            .uk-margin-large-top
+              = f.submit 'ログイン', class: 'ua-btn ua-btn--lg ua-btn--primary'
+
+            / 新規登録ボタン
+            .uk-margin-top
+              = link_to '新規会員登録', sign_up_path, class: 'ua-btn ua-btn--lg ua-btn--secondary'
 
   / フッター
   footer.ua-footer
-    .ua-footer__copyright
+    .ua-footer__links
+      = link_to 'TOP', '#', class: 'ua-footer__link'
+      = link_to 'NEWS', '#', class: 'ua-footer__link'
+      = link_to 'MY PAGE', '#', class: 'ua-footer__link'
+
+    .uk-margin-top
+      = link_to '利用規約・チケット規約', '#', class: 'ua-link uk-margin-small-right'
+      = link_to '個人情報の取り扱いについて', '#', class: 'ua-link uk-margin-small-right'
+      = link_to 'サイトポリシー', '#', class: 'ua-link uk-margin-small-right'
+      = link_to 'FAQ / お問い合わせ', '#', class: 'ua-link'
+
+    .ua-footer__copyright.uk-margin-top
       | &copy; #{Time.current.year} All Rights Reserved.
