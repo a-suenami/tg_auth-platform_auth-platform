@@ -1,0 +1,28 @@
+.uk-margin-top.uk-container
+  h2 外部IdP設定 一覧
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    .uk-flex.uk-flex-right
+      = link_to "新規登録", new_ruler_area_tenant_oauth_provider_path(@tenant_id), class: "uk-button uk-button-primary"
+    - if @oauth_providers.empty?
+      p.uk-text-lead
+        | No OAuth Providers found
+    - else
+      table.uk-table.uk-table-divider
+        tr
+          th = OauthProvider.human_attribute_name(:provider)
+          th = OauthProvider.human_attribute_name(:client_id)
+          th = OauthProvider.human_attribute_name(:auth_url)
+          th
+        - @oauth_providers.each do |oauth_provider|
+          tr
+            td
+              = oauth_provider.provider
+            td
+              = oauth_provider.client_id
+            td
+              = truncate(oauth_provider.auth_url, length: 40)
+            td
+              = link_to "詳細", ruler_area_tenant_oauth_provider_path(@tenant_id, oauth_provider), class: "uk-button uk-button-secondary"
+
+    == pagy_nav(@pagy)

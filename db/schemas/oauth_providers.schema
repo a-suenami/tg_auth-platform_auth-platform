@@ -7,4 +7,5 @@ create_table 'oauth_providers', force: :cascade, id: :uuid, default: -> { 'gen_r
   t.string :token_url, null: false
   t.string :user_info_url
   t.string :scopes, default: '', null: false
+  t.timestamps null: false
 end

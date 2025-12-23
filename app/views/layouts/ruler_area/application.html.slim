@@ -39,6 +39,8 @@ html lang='ja'
                       li
                         = link_to 'OAuth設定', ruler_area_tenant_oauth_applications_path(@tenant_id)
                       li
+                        = link_to '外部IdP設定', ruler_area_tenant_oauth_providers_path(@tenant_id)
+                      li
                         = link_to 'Admin一覧', ruler_area_tenant_admins_path(@tenant_id)
                       li
                         = link_to 'Shopify Multipass設定', ruler_area_tenant_shopify_multipass_stores_path(@tenant_id)

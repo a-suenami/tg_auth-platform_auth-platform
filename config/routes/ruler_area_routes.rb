@@ -61,6 +61,7 @@ Rails.application.routes.draw do
         resources :shopify_multipass_stores, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :email_templates, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :oauth_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        resources :oauth_providers, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resource :tenant_stripe_account, only: [:show, :new, :create, :edit, :update, :destroy]
         resource :tenant_komoju_account, only: [:show, :new, :create, :edit, :update, :destroy]
         namespace :stripe_records do
