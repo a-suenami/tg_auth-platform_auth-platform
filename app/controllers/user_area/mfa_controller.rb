@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 module UserArea
-  class MfaController < ApplicationController
+  class MFAController < ApplicationController
     before_action :require_login
     before_action :require_sms_mfa_enabled
 
@@ -95,7 +95,7 @@ module UserArea
       if cookie_session[:auth_url].present?
         redirect_to cookie_session[:auth_url]
       else
-        redirect_to root_path
+        redirect_to mypage_path
       end
     end
   end

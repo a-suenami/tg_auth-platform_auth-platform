@@ -40,6 +40,22 @@
       td
         = @login_spa_application.confidential
     tr
+      th = LoginSpaApplication.human_attribute_name(:enable_web_login)
+      td
+        = @login_spa_application.enable_web_login ? '有効' : '無効'
+    tr
+      th = LoginSpaApplication.human_attribute_name(:enable_api_login)
+      td
+        = @login_spa_application.enable_api_login ? '有効' : '無効'
+    tr
+      th = LoginSpaApplication.human_attribute_name(:enable_web_sign_up)
+      td
+        = @login_spa_application.enable_web_sign_up ? '有効' : '無効'
+    tr
+      th = LoginSpaApplication.human_attribute_name(:enable_api_sign_up)
+      td
+        = @login_spa_application.enable_api_sign_up ? '有効' : '無効'
+    tr
       th = LoginSpaApplication.human_attribute_name(:created_at)
       td
         = @login_spa_application.created_at

@@ -6,6 +6,7 @@ module UserArea
     extend T::Sig
     include Pagy::Backend
     include ExpirableCookieUseable
+    helper UserAreaHelper
     rescue_from Exception, with: :handle_500 if Rails.env.production?
 
     before_action :set_tenant

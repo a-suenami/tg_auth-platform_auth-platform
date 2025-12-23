@@ -62,7 +62,7 @@ module UserArea
       if cookie_session[:auth_url].present?
         redirect_to cookie_session[:auth_url]
       else
-        redirect_to root_path
+        redirect_to mypage_path
       end
     end
   end
