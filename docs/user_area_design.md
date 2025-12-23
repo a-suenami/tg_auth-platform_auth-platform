@@ -135,10 +135,24 @@ scope module: :user_area do
   post 'mfa/sms', to: 'mfa#create'
   post 'mfa/sms/resend', to: 'mfa#resend'
 
+  # ログアウト
+  get 'logout', to: 'sessions#logout'
+
+  # マイページ
+  get 'my', to: 'mypage#show'
+  get 'my/profile', to: 'profiles#edit'
+  patch 'my/profile', to: 'profiles#update'
+  get 'my/memberships', to: 'memberships#my_memberships'
+
+  # メンバーシッププラン
+  get 'memberships', to: 'memberships#index'
+  get 'memberships/:id', to: 'memberships#show'
+  post 'memberships/:id/purchase', to: 'memberships#purchase'
+
   # 既存（oauth_area から移行）
-  resources :sessions, only: [] do
+  resources :authorizations, only: [] do
     collection do
-      get :logout
+      get :relaunch
     end
   end
   # ...
@@ -155,14 +169,18 @@ end
 - [x] `SignUpsController` 作成（複数ステップのサインアップフロー）
 - [x] `MfaController` 作成（SMS二要素認証）
 - [x] `ProfilesController` 作成（プロフィール登録・編集、`profile_field_rules` による項目出し分け対応）
-- [x] ビューファイル作成（logins, sign_ups, mfa, profiles）
+- [x] `MypageController` 作成（マイページ）
+- [x] `MembershipsController` 作成（プラン一覧・詳細・購入・契約一覧）
+- [x] ビューファイル作成（logins, sign_ups, mfa, profiles, mypage, memberships）
 - [x] ルーティング追加（`config/routes/user_area_routes.rb`）
 - [x] `login_spa_applications` テーブルに `enable_web_login`, `enable_web_sign_up` カラム追加
+- [x] ルーティング変更（`/logout`, `/my`, `/my/profile`, `/my/memberships`）
 
 ### 未完了
 
 - [ ] テストの作成
 - [ ] フロントエンドの詳細なスタイリング
+- [ ] クレジットカード登録画面（決済連携）
 
 ## 参考
 
