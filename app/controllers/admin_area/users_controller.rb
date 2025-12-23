@@ -34,8 +34,13 @@ module AdminArea
       @user = User.new(create_user_params)
       @user.tenant_id = T.must(Tenant.current_id)
 
+      # Combine country code and local phone number
+      if params[:country_code].present? && params[:user][:phone_number_local].present?
+        @user.phone_number = "#{params[:country_code]}#{params[:user][:phone_number_local]}"
+      end
+
       if @user.save
-        redirect_to admin_area_users_path, notice: '会員を登録しました'
+        redirect_to admin_area_users_path, notice: 'ユーザーを登録しました'
       else
         render_with_ui_toggle('new', status: :unprocessable_entity)
       end

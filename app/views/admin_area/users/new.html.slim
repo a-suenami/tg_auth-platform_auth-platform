@@ -1,5 +1,5 @@
 .uk-margin-top.uk-container
-  h2 会員新規登録
+  h2 新規登録
 
   .uk-margin-top.uk-card.uk-card-default.uk-card-body
     = form_with model: @user, url: admin_area_users_path, method: :post, class: 'uk-form-horizontal' do |f|
@@ -16,8 +16,11 @@
       .uk-margin
         = f.label :phone_number, class: 'uk-form-label'
         .uk-form-controls
-          em 注意: 国際電話番号のフォーマットにする必要あり(例: +818012345678)
-          = f.text_field :phone_number, class: "uk-input", placeholder: "+818012345678"
+          .uk-grid.uk-grid-small
+            .uk-width-1-4
+              = select_tag :country_code, options_for_select(['+81 (日本)', '+1 (US)', '+44 (UK)', '+86 (中国)', '+82 (韓国)'].map { |c| [c, c.split(' ').first] }, '+81'), class: "uk-select"
+            .uk-width-3-4
+              = f.text_field :phone_number_local, class: "uk-input", placeholder: "8012345678", value: nil
 
       = f.submit "登録", class: "uk-button uk-button-primary"
       = link_to "キャンセル", admin_area_users_path, class: "uk-button uk-button-default uk-margin-left"
