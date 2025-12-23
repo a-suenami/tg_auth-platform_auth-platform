@@ -39,11 +39,22 @@ module Deliveries
 
       { success: true, synced: total_synced }
     rescue StandardError => e
-      Rails.logger.error("[#{self.class.name}] Failed: #{e.message}")
-      { success: false, error: e.message }
+      error_detail = build_error_detail(e)
+      Rails.logger.error("[#{self.class.name}] Failed: #{error_detail}")
+      { success: false, error: error_detail }
     end
 
     private
+
+    sig { params(error: StandardError).returns(String) }
+    def build_error_detail(error)
+      return error.message unless error.respond_to?(:body)
+
+      body = T.unsafe(error).body
+      return error.message if body.blank?
+
+      "#{error.message} | API: #{body}"
+    end
 
     # --- Abstract methods (must be implemented by subclasses) ---
 
