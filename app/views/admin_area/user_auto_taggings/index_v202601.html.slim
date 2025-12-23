@@ -31,9 +31,6 @@
                     .c-tag-card__footer__author__avatar
                       = render 'shared/icons/icon-user'
                     .c-tag-card__footer__author__name 作成者 #{auto_tagging.created_by_name || '-'}
-                  .c-tag-card__footer__tag
-                    - status_label = auto_tagging.shareable ? '連携タグ設定中' : 'ローカル'
-                    .c-tag-card__footer__tag__item = status_label
               .c-tag-card__action-wrapper
                 .c-tag-card__action data-dropdown-toggle="dropdown-#{auto_tagging.id}"
                   = render 'shared/icons/icon-more-vertical'
