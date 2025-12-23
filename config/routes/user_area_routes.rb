@@ -23,12 +23,13 @@ Rails.application.routes.draw do
     post 'mfa/sms', to: 'mfa#create'
     post 'mfa/sms/resend', to: 'mfa#resend', as: :mfa_sms_resend
 
-    # マイページ
-    get 'mypage', to: 'mypage#show', as: :mypage
+    # ログアウト
+    get 'logout', to: 'sessions#logout', as: :logout
 
-    # プロフィール登録・編集
-    get 'profile', to: 'profiles#edit', as: :edit_profile
-    patch 'profile', to: 'profiles#update', as: :profile
+    # マイページ
+    get 'my', to: 'mypage#show', as: :mypage
+    get 'my/profile', to: 'profiles#edit', as: :edit_profile
+    patch 'my/profile', to: 'profiles#update', as: :profile
 
     resources :authorizations, only: [] do
       collection do
@@ -42,7 +43,7 @@ Rails.application.routes.draw do
     end
     resources :sessions, only: [] do
       collection do
-        get :logout
+        get :logout  # 後方互換性のため残す
       end
     end
 
