@@ -3,27 +3,42 @@
   .ua-mypage-header
     h1.ua-mypage-title マイページ
 
-  / メンバーシップカードセクション（テナントで設定されている場合）
-  - if @membership_card_image.present?
-    .ua-mypage-card-section
-      .ua-membership-card style="background-image: url('#{@membership_card_image}')"
-        .ua-membership-card__content
-          .ua-membership-card__info
-            | MEMBER ID: #{@user.id}
-            br
-            | MEMBER NAME: #{@user.user_profile&.full_name || @user.email}
-
-      - if @membership_card_downloadable
-        .uk-margin-top
-          = link_to 'カードをダウンロード', '#', class: 'ua-btn ua-btn--sm ua-btn--secondary'
-
   / フラッシュメッセージ
   - if flash[:notice].present?
     .ua-mypage-content
       .ua-alert.ua-alert--success
         = flash[:notice]
 
-  / メインコンテンツ
+  / ヒーローセクション（ピンク背景エリア）
+  .ua-mypage-hero
+    / メンバーシップカード
+    .ua-mypage-card-section
+      .ua-membership-card
+        .ua-membership-card__content
+          .ua-membership-card__info
+            | MEMBER ID: #{@user.id}
+            br
+            | MEMBER NAME: #{@user.user_profile&.full_name || @user.email}
+
+    / ユーザー情報サマリー
+    .ua-user-summary
+      .ua-user-summary__item
+        .ua-user-summary__icon
+          svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+            circle cx="12" cy="7" r="4"
+        span.ua-user-summary__text = @user.user_profile&.full_name || @user.email.split('@').first
+      .ua-user-summary__item
+        .ua-user-summary__icon
+          svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            rect x="2" y="4" width="20" height="16" rx="2"
+            path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"
+        span.ua-user-summary__text = @user.email
+
+      .ua-user-summary__action
+        = link_to 'プロフィールの設定', edit_profile_path, class: 'ua-btn ua-btn--md ua-btn--outline'
+
+  / メインコンテンツ（白背景エリア）
   .ua-mypage-content
     / アカウント情報セクション
     .ua-mypage-section

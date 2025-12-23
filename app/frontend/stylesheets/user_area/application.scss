@@ -166,11 +166,11 @@ body {
   max-width: 354px;
   aspect-ratio: 354 / 200;
   border-radius: var(--ua-radius-md);
-  border: 1px solid var(--ua-color-white);
-  box-shadow: var(--ua-shadow-md);
   overflow: hidden;
+  background-color: var(--ua-color-accent-light);
   background-size: cover;
   background-position: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
   &__content {
     position: absolute;
@@ -178,7 +178,7 @@ body {
     left: 0;
     right: 0;
     padding: var(--ua-spacing-md);
-    color: var(--ua-color-white);
+    color: var(--ua-color-primary);
   }
 
   &__info {
@@ -401,7 +401,9 @@ body {
 // =============================================================================
 .ua-table {
   width: 100%;
+  max-width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 
   th, td {
     padding: var(--ua-spacing-sm) var(--ua-spacing-md);
@@ -431,6 +433,7 @@ body {
       display: block;
       width: 100%;
       padding-top: var(--ua-spacing-xs);
+      border-bottom: none;
     }
   }
 
@@ -752,12 +755,25 @@ body {
   margin: 0;
 }
 
-.ua-mypage-card-section {
+// マイページヒーローセクション（ピンク背景エリア）
+.ua-mypage-hero {
   background-color: var(--ua-color-primary-light);
-  padding: 0 var(--ua-spacing-lg) var(--ua-spacing-xl);
+  padding: var(--ua-spacing-lg);
+  padding-top: 0;
+  padding-bottom: var(--ua-spacing-md);
+
+  @include tablet-up {
+    padding: var(--ua-spacing-xl) 40px;
+    padding-top: 0;
+    padding-bottom: var(--ua-spacing-lg);
+  }
+}
+
+.ua-mypage-card-section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: var(--ua-spacing-lg);
 }
 
 .ua-mypage-content {
@@ -775,4 +791,39 @@ body {
 
 .ua-mypage-section {
   margin-bottom: var(--ua-spacing-2xl);
+  overflow: hidden;
+}
+
+// User Summary (マイページのユーザー情報サマリー)
+.ua-user-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--ua-spacing-lg) 0;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--ua-spacing-sm);
+    margin-bottom: var(--ua-spacing-sm);
+  }
+
+  &__icon {
+    color: var(--ua-color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__text {
+    color: var(--ua-color-primary);
+    font-size: var(--ua-font-size-md);
+    font-weight: 500;
+  }
+
+  &__action {
+    margin-top: var(--ua-spacing-lg);
+  }
 }
