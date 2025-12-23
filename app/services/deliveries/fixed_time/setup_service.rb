@@ -27,12 +27,23 @@ module Deliveries
 
         { success: true, blastengine_delivery_id: @schedule.blastengine_delivery_id }
       rescue StandardError => e
-        Rails.logger.error("[FixedTime::SetupService] Failed: #{e.message}")
+        error_detail = build_error_detail(e)
+        Rails.logger.error("[FixedTime::SetupService] Failed: #{error_detail}")
         Rails.logger.error(e.backtrace&.first(10)&.join("\n"))
-        { success: false, error: e.message }
+        { success: false, error: error_detail }
       end
 
       private
+
+      sig { params(error: StandardError).returns(String) }
+      def build_error_detail(error)
+        return error.message unless error.respond_to?(:body)
+
+        body = T.unsafe(error).body
+        return error.message if body.blank?
+
+        "#{error.message} | API: #{body}"
+      end
 
       sig { void }
       def create_blastengine_delivery

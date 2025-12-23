@@ -29,12 +29,22 @@ module Deliveries
         process_birthday(birthday) if birthday
       end
     rescue StandardError => e
-      Rails.logger.error("[ConfirmImportWorker] #{type} #{record_id} failed: #{e.message}")
+      error_detail = build_error_detail(e)
+      Rails.logger.error("[ConfirmImportWorker] #{type} #{record_id} failed: #{error_detail}")
       Rails.logger.error(e.backtrace.first(5).join("\n"))
       raise # Re-raise for Sidekiq retry
     end
 
     private
+
+    def build_error_detail(error)
+      return error.message unless error.respond_to?(:body)
+
+      body = error.body
+      return error.message if body.blank?
+
+      "#{error.message} | API: #{body}"
+    end
 
     def process_schedule(schedule)
       return unless schedule.preparing? # Status guard
