@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 # for Doorkeeper::TokenController
-module OauthArea
+module UserArea
   class ApplicationMetalController < ActionController::API
     before_action :set_tenant
 

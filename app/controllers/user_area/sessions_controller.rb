@@ -1,6 +1,6 @@
 # typed: true
 
-module OauthArea
+module UserArea
   class SessionsController < ApplicationController
     def logout
       cookie_session.session_clear

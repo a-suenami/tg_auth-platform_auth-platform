@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  scope module: :oauth_area do
+  scope module: :user_area do
     # ログイン
     get 'login', to: 'logins#new', as: :login
     post 'login', to: 'logins#create'

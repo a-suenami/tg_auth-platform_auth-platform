@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-module OauthArea
+module UserArea
   class ApplicationController < ActionController::Base
     extend T::Sig
     include Pagy::Backend
@@ -25,7 +25,7 @@ module OauthArea
       logger.error(exception.backtrace&.join("\n")) if exception
 
       # TODO: fix error page
-      render 'oauth_area/sessions/error'
+      render 'user_area/sessions/error'
     end
   end
 end
