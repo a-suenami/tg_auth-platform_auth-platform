@@ -22,7 +22,7 @@ module UserArea
         if current_user.enabled?
           redirect_after_profile_complete
         else
-          flash.now[:error] = '必須項目を入力してください'
+          flash.now[:error] = I18n.t('user_area.profiles.required_fields')
           @user = current_user
           render :edit, status: :unprocessable_entity
         end
@@ -54,7 +54,7 @@ module UserArea
       if cookie_session[:auth_url].present?
         redirect_to cookie_session[:auth_url]
       else
-        flash[:notice] = 'プロフィールを保存しました'
+        flash[:notice] = I18n.t('user_area.profiles.saved')
         redirect_to edit_profile_path
       end
     end

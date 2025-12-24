@@ -11,7 +11,7 @@ module UserArea
       # SMS送信を自動的に行う
       unless flash[:sms_sent]
         send_mfa_sms
-        flash.now[:notice] = '認証コードを送信しました'
+        flash.now[:notice] = I18n.t('user_area.mfa.code_sent')
       end
       @phone_number = current_user.phone_number
     end
@@ -28,24 +28,24 @@ module UserArea
       Authentication::VerifySmsService.new.execute!(
         verification_code: params[:code],
         user_id: current_user.id,
-        verifier_type: :mfa
+        verifier_type: :mfa,
       )
       cookie_session[:sms_mfa_verified] = Time.zone.now
       redirect_after_mfa
     rescue Exceptions::Authentication::InvalidCode
-      flash.now[:error] = '認証コードが正しくありません'
+      flash.now[:error] = I18n.t('user_area.mfa.invalid_code')
       @phone_number = current_user.phone_number
       render :new, status: :unprocessable_entity
     rescue Exceptions::Authentication::ExpiredSmsVerificationCode
-      flash.now[:error] = '認証コードの有効期限が切れています'
+      flash.now[:error] = I18n.t('user_area.mfa.code_expired')
       @phone_number = current_user.phone_number
       render :new, status: :unprocessable_entity
     rescue Exceptions::Authentication::SmsVerificationCodeAttemptsIsOver
-      flash.now[:error] = '認証コードの入力回数が上限に達しました'
+      flash.now[:error] = I18n.t('user_area.mfa.max_attempts_reached')
       @phone_number = current_user.phone_number
       render :new, status: :unprocessable_entity
     rescue Exceptions::Authentication::SmsVerificationCodeUsed
-      flash.now[:error] = '認証コードは既に使用されています'
+      flash.now[:error] = I18n.t('user_area.mfa.code_already_used')
       @phone_number = current_user.phone_number
       render :new, status: :unprocessable_entity
     end
@@ -53,11 +53,11 @@ module UserArea
     # SMS 再送信
     def resend
       send_mfa_sms
-      flash[:notice] = '認証コードを再送信しました'
+      flash[:notice] = I18n.t('user_area.mfa.code_resent')
       flash[:sms_sent] = true
       redirect_to mfa_sms_path
     rescue Exceptions::Authentication::SmsSendLimit
-      flash[:error] = 'SMS送信の上限に達しました。しばらく経ってからお試しください'
+      flash[:error] = I18n.t('user_area.mfa.sms_limit_reached')
       redirect_to mfa_sms_path
     end
 
@@ -87,7 +87,7 @@ module UserArea
         user_id: current_user.id,
         ip_address: request.remote_ip,
         delivery_type: params[:delivery_type],
-        verifier_type: :mfa
+        verifier_type: :mfa,
       )
     end
 

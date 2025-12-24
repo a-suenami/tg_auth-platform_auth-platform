@@ -13,7 +13,7 @@ module UserArea
     def create
       user = Authentication::SessionCreateService.new.execute!(
         email: params[:email],
-        password: params[:password]
+        password: params[:password],
       )
 
       cookie_session[:current_user_id] = user.id
@@ -25,11 +25,11 @@ module UserArea
         redirect_after_login
       end
     rescue Exceptions::Auth::AuthError
-      flash.now[:error] = 'メールアドレスまたはパスワードが正しくありません'
+      flash.now[:error] = I18n.t('user_area.logins.invalid_credentials')
       @email = params[:email]
       render :new, status: :unprocessable_entity
     rescue Exceptions::Auth::AccountLocked
-      flash.now[:error] = 'アカウントがロックされています。メールをご確認ください'
+      flash.now[:error] = I18n.t('user_area.logins.account_locked')
       @email = params[:email]
       render :new, status: :unprocessable_entity
     end
@@ -44,7 +44,7 @@ module UserArea
     end
 
     def redirect_if_logged_in
-      return unless cookie_session[:current_user_id].present?
+      return if cookie_session[:current_user_id].blank?
 
       user = User.active.find_by(id: cookie_session[:current_user_id])
       redirect_after_login if user.present?

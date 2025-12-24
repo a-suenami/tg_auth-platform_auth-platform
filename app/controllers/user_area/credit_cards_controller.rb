@@ -6,6 +6,11 @@ module UserArea
     before_action :require_login
     before_action :ensure_stripe_available
 
+    # 登録済みカード情報表示
+    def show
+      @card = current_user.valid_stripe_card_payment_method
+    end
+
     # カード登録画面
     def new
       @return_to = params[:return_to]
@@ -23,7 +28,7 @@ module UserArea
 
       result = StripeRecord::SetupIntent.api_create_card_setup_intent(
         tenant_stripe_account: tenant_stripe_account,
-        user: current_user
+        user: current_user,
       )
 
       if result.is_a?(Mangrove::Result::Err)
@@ -45,32 +50,28 @@ module UserArea
 
       case result
       when StripeRecord::SetupIntent::CreateCardPaymentMethodResult::Succeeded
-        flash[:notice] = 'クレジットカードを登録しました'
+        flash[:notice] = I18n.t('user_area.credit_cards.registered')
       when StripeRecord::SetupIntent::CreateCardPaymentMethodResult::AlreadyCreated
-        flash[:notice] = 'クレジットカードは既に登録されています'
+        flash[:notice] = I18n.t('user_area.credit_cards.already_registered')
       when StripeRecord::SetupIntent::CreateCardPaymentMethodResult::InvalidStatus
-        flash[:error] = 'カード登録が完了していません。もう一度お試しください。'
+        flash[:error] = I18n.t('user_area.credit_cards.registration_incomplete')
       when StripeRecord::SetupIntent::CreateCardPaymentMethodResult::InvalidPaymentMethodType
-        flash[:error] = 'カード以外の支払い方法は登録できません'
+        flash[:error] = I18n.t('user_area.credit_cards.not_card')
       when StripeRecord::SetupIntent::CreateCardPaymentMethodResult::StripeError
-        flash[:error] = 'カード登録中にエラーが発生しました'
+        flash[:error] = I18n.t('user_area.credit_cards.registration_error')
       end
 
       redirect_to return_path
     end
 
-    # 登録済みカード情報表示
-    def show
-      @card = current_user.valid_stripe_card_payment_method
-    end
 
     # カード削除
     def destroy
       result = current_user.detach_stripe_payment_methods
       if result.is_a?(Mangrove::Result::Err)
-        flash[:error] = 'カード削除中にエラーが発生しました'
+        flash[:error] = I18n.t('user_area.credit_cards.delete_error')
       else
-        flash[:notice] = 'クレジットカードを削除しました'
+        flash[:notice] = I18n.t('user_area.credit_cards.deleted')
       end
       redirect_to mypage_path
     end
@@ -98,7 +99,7 @@ module UserArea
       Rails.logger.info "[CreditCards] tenant_stripe_account: #{tenant_stripe.inspect}"
       return if tenant_stripe.present?
 
-      flash[:error] = 'クレジットカード決済は現在利用できません'
+      flash[:error] = I18n.t('user_area.credit_cards.not_available')
       redirect_to mypage_path
     end
 

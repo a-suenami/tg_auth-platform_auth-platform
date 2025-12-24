@@ -20,12 +20,12 @@ module UserArea
     def create
       @user = Authentication::SendVerificationEmailService.new.execute!(
         email: params[:email],
-        captcha_score: nil
+        captcha_score: nil,
       )
       cookie_session[:registering_user_id] = @user.id
       redirect_to sign_up_verify_email_path
     rescue Exceptions::Authentication::InvalidEmail
-      flash.now[:error] = '正しいメールアドレスを入力してください'
+      flash.now[:error] = I18n.t('user_area.sign_ups.invalid_email')
       @email = params[:email]
       render :new, status: :unprocessable_entity
     end
@@ -39,19 +39,19 @@ module UserArea
     def verify_email_submit
       @user = Authentication::VerifyEmailService.new.execute!(
         email_verification_code: params[:email_verification_code],
-        user_id: cookie_session[:registering_user_id]
+        user_id: cookie_session[:registering_user_id],
       )
       redirect_to sign_up_set_password_path
     rescue Exceptions::Authentication::InvalidCode
-      flash.now[:error] = '認証コードが正しくありません'
+      flash.now[:error] = I18n.t('user_area.sign_ups.invalid_code')
       @user_id = cookie_session[:registering_user_id]
       render :verify_email, status: :unprocessable_entity
     rescue Exceptions::Authentication::ExpiredEmailVerificationCode
-      flash.now[:error] = '認証コードの有効期限が切れています'
+      flash.now[:error] = I18n.t('user_area.sign_ups.code_expired')
       @user_id = cookie_session[:registering_user_id]
       render :verify_email, status: :unprocessable_entity
     rescue Exceptions::Authentication::EmailVerificationCodeAttemptsIsOver
-      flash.now[:error] = '認証コードの入力回数が上限に達しました'
+      flash.now[:error] = I18n.t('user_area.sign_ups.max_attempts_reached')
       @user_id = cookie_session[:registering_user_id]
       render :verify_email, status: :unprocessable_entity
     end
@@ -60,9 +60,9 @@ module UserArea
     def resend_email
       @user = Authentication::SendVerificationEmailService.new.execute!(
         email: registering_user.email,
-        captcha_score: nil
+        captcha_score: nil,
       )
-      flash[:notice] = '認証コードを再送信しました'
+      flash[:notice] = I18n.t('user_area.sign_ups.code_resent')
       redirect_to sign_up_verify_email_path
     end
 
@@ -105,16 +105,16 @@ module UserArea
         user_id: user.id,
         ip_address: request.remote_ip,
         delivery_type: params[:delivery_type],
-        verifier_type: :registration
+        verifier_type: :registration,
       )
       cookie_session[:registering_phone_number] = params[:phone_number]
       redirect_to sign_up_verify_sms_path
     rescue Exceptions::Authentication::NoSmsSupportedCountry
-      flash.now[:error] = 'この電話番号はSMS認証に対応していません'
+      flash.now[:error] = I18n.t('user_area.sign_ups.phone_not_supported')
       @user = registering_user
       render :phone_number, status: :unprocessable_entity
     rescue Exceptions::Authentication::SmsSendLimit
-      flash.now[:error] = 'SMS送信の上限に達しました。しばらく経ってからお試しください'
+      flash.now[:error] = I18n.t('user_area.sign_ups.sms_limit_reached')
       @user = registering_user
       render :phone_number, status: :unprocessable_entity
     end
@@ -128,12 +128,12 @@ module UserArea
         user_id: user.id,
         ip_address: request.remote_ip,
         delivery_type: params[:delivery_type],
-        verifier_type: :registration
+        verifier_type: :registration,
       )
-      flash[:notice] = '認証コードを再送信しました'
+      flash[:notice] = I18n.t('user_area.sign_ups.code_resent')
       redirect_to sign_up_verify_sms_path
     rescue Exceptions::Authentication::SmsSendLimit
-      flash[:error] = 'SMS送信の上限に達しました。しばらく経ってからお試しください'
+      flash[:error] = I18n.t('user_area.sign_ups.sms_limit_reached')
       redirect_to sign_up_verify_sms_path
     end
 
@@ -147,23 +147,23 @@ module UserArea
       user = Authentication::VerifySmsService.new.execute!(
         verification_code: params[:verification_code],
         user_id: registering_user.id,
-        verifier_type: :registration
+        verifier_type: :registration,
       )
       complete_registration(user)
     rescue Exceptions::Authentication::InvalidCode
-      flash.now[:error] = '認証コードが正しくありません'
+      flash.now[:error] = I18n.t('user_area.sign_ups.invalid_code')
       @phone_number = cookie_session[:registering_phone_number]
       render :verify_sms, status: :unprocessable_entity
     rescue Exceptions::Authentication::ExpiredSmsVerificationCode
-      flash.now[:error] = '認証コードの有効期限が切れています'
+      flash.now[:error] = I18n.t('user_area.sign_ups.code_expired')
       @phone_number = cookie_session[:registering_phone_number]
       render :verify_sms, status: :unprocessable_entity
     rescue Exceptions::Authentication::SmsVerificationCodeAttemptsIsOver
-      flash.now[:error] = '認証コードの入力回数が上限に達しました'
+      flash.now[:error] = I18n.t('user_area.sign_ups.max_attempts_reached')
       @phone_number = cookie_session[:registering_phone_number]
       render :verify_sms, status: :unprocessable_entity
     rescue Exceptions::Authentication::SmsVerificationCodeUsed
-      flash.now[:error] = '認証コードは既に使用されています'
+      flash.now[:error] = I18n.t('user_area.sign_ups.code_already_used')
       @phone_number = cookie_session[:registering_phone_number]
       render :verify_sms, status: :unprocessable_entity
     end

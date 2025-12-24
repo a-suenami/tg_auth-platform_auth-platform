@@ -27,27 +27,27 @@ module UserArea
     def purchase
       payment_method = params[:payment_method] || 'credit_card'
 
-      contract = Membership::Contracts::CreateService.new.execute(
+      Membership::Contracts::CreateService.new.execute(
         user: current_user,
         membership_plan: @membership_plan,
         payment_method: payment_method,
-        store: params[:store]
+        store: params[:store],
       )
 
-      flash[:notice] = 'メンバーシップを購入しました'
+      flash[:notice] = I18n.t('user_area.memberships.purchased')
       redirect_to my_memberships_path
     rescue Exceptions::Payment::CardMissing
-      flash[:error] = 'クレジットカードが登録されていません'
+      flash[:error] = I18n.t('user_area.memberships.card_missing')
       redirect_to membership_plan_path(@membership_plan)
     rescue Exceptions::Payment::PaymentMethodNotAvailable
-      flash[:error] = '選択された支払い方法は利用できません'
+      flash[:error] = I18n.t('user_area.memberships.payment_method_not_available')
       redirect_to membership_plan_path(@membership_plan)
     rescue Exceptions::Payment::AlreadyHaveMembership
-      flash[:error] = '既にこのプランに加入しています'
+      flash[:error] = I18n.t('user_area.memberships.already_subscribed')
       redirect_to my_memberships_path
     rescue StandardError => e
       Rails.logger.error("Membership purchase error: #{e.message}")
-      flash[:error] = '購入処理中にエラーが発生しました'
+      flash[:error] = I18n.t('user_area.memberships.purchase_error')
       redirect_to membership_plan_path(@membership_plan)
     end
 
