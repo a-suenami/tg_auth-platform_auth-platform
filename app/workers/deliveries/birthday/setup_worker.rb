@@ -63,7 +63,7 @@ module Deliveries
           Sentry.set_context('api_error', {
             status: e.status,
             body: e.body,
-          })
+          },)
         end
 
         raise # Re-raise for Sidekiq retry
