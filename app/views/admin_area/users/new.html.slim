@@ -45,7 +45,7 @@
             .uk-width-1-4
               = select_tag :country_code, options_for_select(['+81 (日本)', '+1 (US)', '+44 (UK)', '+86 (中国)', '+82 (韓国)'].map { |c| [c, c.split(' ').first] }, '+81'), class: "uk-select"
             .uk-width-3-4
-              = f.text_field :phone_number_local, class: "uk-input", placeholder: "8012345678", value: nil
+              = f.text_field :phone_number_local, class: "uk-input", placeholder: "09012345678", value: nil
 
       = f.submit "登録", class: "uk-button uk-button-primary"
       = link_to "キャンセル", admin_area_users_path, class: "uk-button uk-button-default uk-margin-left"

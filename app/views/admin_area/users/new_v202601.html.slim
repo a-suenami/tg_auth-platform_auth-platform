@@ -40,7 +40,7 @@
               .c-form-field__input-group__input style="flex: 0 0 120px;"
                 = select_tag :country_code, options_for_select(['+81 (日本)', '+1 (US)', '+44 (UK)', '+86 (中国)', '+82 (韓国)'].map { |c| [c, c.split(' ').first] }, '+81'), class: 'c-form-field__input c-form-field__input--select'
               .c-form-field__input-group__input
-                = f.text_field :phone_number_local, placeholder: '8012345678', class: 'c-form-field__input', value: nil
+                = f.text_field :phone_number_local, placeholder: '09012345678', class: 'c-form-field__input', value: nil
     .l-page-content__content__sub.p-user-tag-form__content__sub
       .p-user-tag-form__content__sub__section
         button.p-user-tag-form__content__sub__button.p-user-tag-form__content__sub__button--submit type="submit" form="new_user_form" data-form-validation-target="submit" disabled="disabled" 登録
