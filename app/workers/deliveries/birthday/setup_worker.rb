@@ -59,10 +59,10 @@ module Deliveries
         Rails.logger.error(e.backtrace.first(5).join("\n"))
 
         # Capture API error details in Sentry for debugging
-        if e.respond_to?(:body) && e.respond_to?(:status)
+        if e.is_a?(Exceptions::API::ServerError)
           Sentry.set_context('api_error', {
-            status: e.status,
-            body: e.body,
+            status: e.instance_variable_get(:@status),
+            body: e.instance_variable_get(:@body),
           },)
         end
 
