@@ -47,6 +47,15 @@ module Deliveries
       rescue StandardError => e
         Rails.logger.error("[FixedTime::SetupWorker] Error processing #{schedule_id}: #{e.message}")
         Rails.logger.error(e.backtrace.first(5).join("\n"))
+
+        # Capture API error details in Sentry for debugging
+        if e.respond_to?(:body) && e.respond_to?(:status)
+          Sentry.set_context('api_error', {
+            status: e.status,
+            body: e.body,
+          },)
+        end
+
         raise # Re-raise for Sidekiq retry
       end
     end

@@ -45,7 +45,7 @@ module Deliveries
         @schedule.update!(status: 'delivered')
         DeliveryEvent.record!(
           delivery: @delivery,
-          event: DeliveryEvent::Type::Sent.new(payload: { source: 'bulk_sync' }),
+          event: DeliveryEvent::Type::Completed.new,
           admin: nil,
         )
       end
