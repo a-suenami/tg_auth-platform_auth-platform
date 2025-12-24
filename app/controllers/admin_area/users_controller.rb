@@ -12,6 +12,19 @@ module AdminArea
         @users = @users.where(email_condition)
       end
       @users = @users.where(phone_number: params[:phone_number]) if params[:phone_number].present?
+
+      # Tag filter - supports multiple tags (OR condition)
+      if params[:tag_ids].present?
+        tag_ids = Array(params[:tag_ids]).compact_blank
+        if tag_ids.any?
+          @users = @users.joins(:tag_assignments)
+                         .where(user_tag_assignments: { user_tag_id: tag_ids })
+                         .distinct
+        end
+      end
+
+      @user_tags = UserTag.ordered
+      @users = @users.includes(:user_profile, :contact_address)
       @pagy, @users = pagy @users
 
       render_with_ui_toggle('index')

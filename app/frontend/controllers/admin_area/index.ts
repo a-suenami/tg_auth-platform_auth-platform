@@ -12,6 +12,7 @@ import DeliveryFormController from "./delivery_form_controller";
 import DeliveryTagSelectorController from "./delivery_tag_selector_controller";
 import DatetimeUtcController from "./datetime_utc_controller";
 import UserTagAssignmentFormController from "./user_tag_assignment_form_controller";
+import UserSearchTagSelectorController from "./user_search_tag_selector_controller";
 
 application.register(
   "auto-tagging-tag-selector",
@@ -25,6 +26,10 @@ application.register("user-auto-tagging-form", UserAutoTaggingFormController);
 application.register(
   "user-tag-assignment-form",
   UserTagAssignmentFormController
+);
+application.register(
+  "user-search-tag-selector",
+  UserSearchTagSelectorController
 );
 application.register("form-validation", FormValidationController);
 application.register("period-settings", PeriodSettingsController);
