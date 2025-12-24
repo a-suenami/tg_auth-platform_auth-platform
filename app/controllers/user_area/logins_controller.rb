@@ -28,7 +28,7 @@ module UserArea
       flash.now[:error] = 'メールアドレスまたはパスワードが正しくありません'
       @email = params[:email]
       render :new, status: :unprocessable_entity
-    rescue Exceptions::Auth::AccountLockedError
+    rescue Exceptions::Auth::AccountLocked
       flash.now[:error] = 'アカウントがロックされています。メールをご確認ください'
       @email = params[:email]
       render :new, status: :unprocessable_entity

@@ -24,12 +24,12 @@ module UserArea
 
     sig { void }
     def load_design_settings
-      @design_settings = Tenant.current&.design_setting || Tenant::DesignSetting.new
+      @design_settings = T.let(Tenant.current&.design_setting || Tenant::DesignSetting.new, T.nilable(Tenant::DesignSetting))
     end
 
     sig { returns(Tenant::DesignSetting) }
     def design_settings
-      @design_settings || Tenant::DesignSetting.new
+      T.must(@design_settings)
     end
 
     sig { params(exception: T.nilable(Exception)).void }

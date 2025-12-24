@@ -42,7 +42,7 @@ module UserArea
     rescue Exceptions::Payment::PaymentMethodNotAvailable
       flash[:error] = '選択された支払い方法は利用できません'
       redirect_to membership_plan_path(@membership_plan)
-    rescue Exceptions::Payment::AlreadySubscribed
+    rescue Exceptions::Payment::AlreadyHaveMembership
       flash[:error] = '既にこのプランに加入しています'
       redirect_to my_memberships_path
     rescue StandardError => e
