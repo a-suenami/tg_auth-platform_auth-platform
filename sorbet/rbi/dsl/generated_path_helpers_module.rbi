@@ -172,7 +172,13 @@ module GeneratedPathHelpersModule
   def cancel_api_v1_internal_membership_contract_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def complete_credit_card_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def complete_off_session_card_api_v1_internal_me_card_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def credit_card_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def datepicker_admin_area_user_auto_taggings_path(*args); end
@@ -203,6 +209,12 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def edit_admin_area_user_user_tag_assignment_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_profile_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def edit_ruler_area_tenant_design_settings_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def edit_ruler_area_tenant_email_template_path(*args); end
@@ -259,7 +271,34 @@ module GeneratedPathHelpersModule
   def history_admin_area_user_user_tag_assignments_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def login_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def logout_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def logout_sessions_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def membership_plan_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def membership_plans_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def mfa_sms_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def mfa_sms_resend_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def my_credit_card_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def my_memberships_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def mypage_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def native_oauth_authorization_path(*args); end
@@ -284,6 +323,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_user_profile_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def new_credit_card_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_ruler_path(*args); end
@@ -397,10 +439,16 @@ module GeneratedPathHelpersModule
   def preview_ruler_area_tenant_stripe_records_products_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def profile_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def publish_admin_area_delivery_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def publish_admin_area_template_mail_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def purchase_membership_plan_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def rails_info_path(*args); end
@@ -425,6 +473,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def resume_admin_area_delivery_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def root_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_auth_auth0_callback_path(*args); end
@@ -464,6 +515,9 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_admins_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def ruler_area_tenant_design_settings_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_email_template_path(*args); end
@@ -584,6 +638,27 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def shopify_area_webhooks_eventbridge_shopify_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def sign_up_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def sign_up_phone_number_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def sign_up_resend_email_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def sign_up_resend_sms_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def sign_up_set_password_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def sign_up_verify_email_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
+  def sign_up_verify_sms_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def sync_ruler_area_tenant_stripe_records_products_path(*args); end

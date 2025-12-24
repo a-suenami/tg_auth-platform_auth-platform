@@ -48,6 +48,7 @@ Rails.application.routes.draw do
         resources :admins, only: [:index, :new, :create, :destroy]
         resources :login_spa_applications, only: [:index, :show, :new, :create, :edit, :update, :destroy]
         resources :tenant_settings, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+        resource :design_settings, only: [:edit, :update]
         resources :memberships, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
           get :top, on: :collection
         end

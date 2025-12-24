@@ -1,0 +1,19 @@
+.ua-auth-container
+  .ua-auth-content
+    .ua-auth-card
+      / ヘッダー
+      .ua-auth-header
+        h1.ua-auth-title アカウントロック解除
+
+      / ボディ
+      .ua-auth-body
+        .ua-alert.ua-alert--success
+          p アカウントロックを解除しました。
+          p 再度ログインをお試しください。
+
+        - if @login_url.present?
+          .uk-margin-medium-top.uk-text-center
+            = link_to 'ログイン画面へ', @login_url, class: 'ua-btn ua-btn--lg ua-btn--primary'
+
+  / フッター
+  = render 'user_area/shared/footer'

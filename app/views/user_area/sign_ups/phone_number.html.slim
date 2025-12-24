@@ -1,0 +1,30 @@
+.ua-auth-container
+  .ua-auth-content
+    .ua-auth-card
+      / ヘッダー
+      .ua-auth-header
+        h1.ua-auth-title 電話番号認証
+
+      / ボディ
+      .ua-auth-body
+        / フラッシュメッセージ
+        - if flash[:error].present?
+          .ua-alert.ua-alert--error.uk-margin-bottom
+            = flash[:error]
+
+        / 説明文
+        .ua-auth-description
+          | SMS認証のため、電話番号を入力してください。
+
+        / 電話番号フォーム
+        = form_with url: sign_up_phone_number_path, method: :post, local: true, class: 'ua-form' do |f|
+          .ua-form__group
+            label.ua-form__label 電話番号
+            = f.telephone_field :phone_number, class: 'ua-form__input', placeholder: '09012345678', required: true, autofocus: true
+            p.ua-form__hint ハイフンなしで入力してください
+
+          .uk-margin-medium-top
+            = f.submit '認証コードを送信', class: 'ua-btn ua-btn--lg ua-btn--primary'
+
+  / フッター
+  = render 'user_area/shared/footer'

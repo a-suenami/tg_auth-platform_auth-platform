@@ -1,0 +1,40 @@
+ja:
+  user_area:
+    credit_cards:
+      registered: クレジットカードを登録しました
+      already_registered: クレジットカードは既に登録されています
+      registration_incomplete: カード登録が完了していません。もう一度お試しください。
+      not_card: カード以外の支払い方法は登録できません
+      registration_error: カード登録中にエラーが発生しました
+      deleted: クレジットカードを削除しました
+      delete_error: カード削除中にエラーが発生しました
+      not_available: クレジットカード決済は現在利用できません
+    logins:
+      invalid_credentials: メールアドレスまたはパスワードが正しくありません
+      account_locked: アカウントがロックされています。メールをご確認ください
+    memberships:
+      purchased: メンバーシップを購入しました
+      card_missing: クレジットカードが登録されていません
+      payment_method_not_available: 選択された支払い方法は利用できません
+      already_subscribed: 既にこのプランに加入しています
+      purchase_error: 購入処理中にエラーが発生しました
+    mfa:
+      code_sent: 認証コードを送信しました
+      invalid_code: 認証コードが正しくありません
+      code_expired: 認証コードの有効期限が切れています
+      max_attempts_reached: 認証コードの入力回数が上限に達しました
+      code_already_used: 認証コードは既に使用されています
+      code_resent: 認証コードを再送信しました
+      sms_limit_reached: SMS送信の上限に達しました。しばらく経ってからお試しください
+    profiles:
+      required_fields: 必須項目を入力してください
+      saved: プロフィールを保存しました
+    sign_ups:
+      invalid_email: 正しいメールアドレスを入力してください
+      invalid_code: 認証コードが正しくありません
+      code_expired: 認証コードの有効期限が切れています
+      max_attempts_reached: 認証コードの入力回数が上限に達しました
+      code_resent: 認証コードを再送信しました
+      phone_not_supported: この電話番号はSMS認証に対応していません
+      sms_limit_reached: SMS送信の上限に達しました。しばらく経ってからお試しください
+      code_already_used: 認証コードは既に使用されています

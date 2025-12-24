@@ -1,0 +1,143 @@
+.ua-mypage-container
+  / ヘッダー
+  .ua-mypage-header
+    h1.ua-mypage-title マイページ
+
+  / フラッシュメッセージ
+  - if flash[:notice].present?
+    .ua-mypage-content
+      .ua-alert.ua-alert--success
+        = flash[:notice]
+  - if flash[:error].present?
+    .ua-mypage-content
+      .ua-alert.ua-alert--error
+        = flash[:error]
+
+  / ヒーローセクション（ピンク背景エリア）
+  .ua-mypage-hero
+    / メンバーシップカード
+    .ua-mypage-card-section
+      - card_style = @design_settings&.membership_card_image_url.present? ? "background-image: url(#{@design_settings.membership_card_image_url});" : nil
+      .ua-membership-card style=card_style
+        .ua-membership-card__content
+          .ua-membership-card__info
+            | MEMBER ID: #{@user.id}
+            br
+            | MEMBER NAME: #{@user.user_profile&.full_name || @user.email}
+
+    / ユーザー情報サマリー
+    .ua-user-summary
+      .ua-user-summary__item
+        .ua-user-summary__icon
+          svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+            circle cx="12" cy="7" r="4"
+        span.ua-user-summary__text = @user.user_profile&.full_name || @user.email.split('@').first
+      .ua-user-summary__item
+        .ua-user-summary__icon
+          svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            rect x="2" y="4" width="20" height="16" rx="2"
+            path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"
+        span.ua-user-summary__text = @user.email
+
+      .ua-user-summary__action
+        = link_to 'プロフィールの設定', edit_profile_path, class: 'ua-btn ua-btn--md ua-btn--outline'
+
+  / メインコンテンツ（白背景エリア）
+  .ua-mypage-content
+    / アカウント情報セクション
+    .ua-mypage-section
+      h2.ua-section-heading アカウント情報
+
+      table.ua-table
+        tbody
+          tr
+            th メールアドレス
+            td = @user.email
+          tr
+            th 電話番号
+            td = @user.phone_number.presence || '未登録'
+          tr
+            th ステータス
+            td
+              - if @user.enabled?
+                span.ua-badge.ua-badge--success 有効
+              - else
+                span.ua-badge.ua-badge--warning 未完了
+
+    / プロフィール情報セクション
+    - if @user.user_profile.present?
+      .ua-mypage-section
+        h2.ua-section-heading プロフィール
+
+        table.ua-table
+          tbody
+            - if @user.user_profile.last_name.present? || @user.user_profile.first_name.present?
+              tr
+                th 氏名
+                td = "#{@user.user_profile.last_name} #{@user.user_profile.first_name}"
+            - if @user.user_profile.last_name_kana.present? || @user.user_profile.first_name_kana.present?
+              tr
+                th 氏名（カナ）
+                td = "#{@user.user_profile.last_name_kana} #{@user.user_profile.first_name_kana}"
+            - if @user.user_profile.birth_date.present?
+              tr
+                th 生年月日
+                td = @user.user_profile.birth_date.strftime('%Y年%m月%d日')
+            - if @user.user_profile.gender.present?
+              tr
+                th 性別
+                td
+                  - case @user.user_profile.gender
+                  - when 'male'
+                    | 男性
+                  - when 'female'
+                    | 女性
+                  - when 'other'
+                    | その他
+
+    / 住所情報セクション
+    - if @user.contact_address.present?
+      .ua-mypage-section
+        h2.ua-section-heading 住所
+
+        table.ua-table
+          tbody
+            - if @user.contact_address.zip_code.present?
+              tr
+                th 郵便番号
+                td = @user.contact_address.zip_code
+            - if @user.contact_address.prefecture.present?
+              tr
+                th 都道府県
+                td = @user.contact_address.prefecture.name
+            - if @user.contact_address.city.present? || @user.contact_address.street.present?
+              tr
+                th 住所
+                td = "#{@user.contact_address.city}#{@user.contact_address.street}"
+            - if @user.contact_address.building.present?
+              tr
+                th 建物名
+                td = @user.contact_address.building
+
+    / メニューセクション
+    .ua-mypage-section
+      h2.ua-section-heading 設定・その他
+
+      ul.ua-menu
+        li.ua-menu__item
+          = link_to edit_profile_path, class: 'ua-menu__link' do
+            span プロフィールを編集
+        li.ua-menu__item
+          = link_to my_memberships_path, class: 'ua-menu__link' do
+            span メンバーシップ
+        li.ua-menu__item
+          = link_to membership_plans_path, class: 'ua-menu__link' do
+            span プラン一覧
+
+    / ログアウトボタン
+    .uk-text-center.uk-margin-large-top
+      = link_to 'ログアウト', logout_path, class: 'ua-btn ua-btn--lg ua-btn--outline'
+
+  / フッター
+  = render 'user_area/shared/footer'

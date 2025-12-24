@@ -1,0 +1,57 @@
+.ua-mypage-container
+  / ヘッダー
+  .ua-mypage-header
+    h1.ua-mypage-title 契約中のメンバーシップ
+
+  / メインコンテンツ
+  .ua-mypage-content
+    / フラッシュメッセージ
+    - if flash[:notice].present?
+      .ua-alert.ua-alert--success.uk-margin-bottom
+        = flash[:notice]
+
+    - if flash[:error].present?
+      .ua-alert.ua-alert--error.uk-margin-bottom
+        = flash[:error]
+
+    - if @contracts.empty?
+      .ua-alert.ua-alert--info
+        p 契約中のメンバーシップはありません
+        .uk-margin-top.uk-text-center
+          = link_to 'プランを見る', membership_plans_path, class: 'ua-btn ua-btn--md ua-btn--primary'
+
+    - else
+      - @contracts.each do |contract|
+        .ua-card.uk-margin-bottom
+          .ua-card__body
+            .uk-flex.uk-flex-between.uk-flex-middle.uk-flex-wrap
+              div
+                h3 style="margin: 0 0 8px 0; font-size: var(--ua-font-size-lg); font-weight: 700;"
+                  = contract.current_contract_term&.membership_plan&.name || 'プラン'
+                p.uk-margin-remove style="color: var(--ua-color-text-muted); font-size: var(--ua-font-size-sm);"
+                  | 契約日: #{contract.created_at.strftime('%Y年%m月%d日')}
+                - if contract.expired_at.present?
+                  p.uk-margin-remove style="color: var(--ua-color-text-muted); font-size: var(--ua-font-size-sm);"
+                    | 有効期限: #{contract.expired_at.strftime('%Y年%m月%d日')}
+
+              div.uk-margin-small-top
+                - case contract.status
+                - when 'active'
+                  span.ua-badge.ua-badge--success 有効
+                - when 'pending'
+                  span.ua-badge.ua-badge--warning 処理中
+                - when 'cancelled'
+                  span.ua-badge.ua-badge--error 解約済み
+                - when 'expired'
+                  span.ua-badge 期限切れ
+                - else
+                  span.ua-badge = contract.status
+
+    / アクションボタン
+    .uk-margin-large-top
+      .action-buttons-grid
+        = link_to 'プラン一覧', membership_plans_path, class: 'ua-btn ua-btn--md ua-btn--primary'
+        = link_to 'マイページに戻る', mypage_path, class: 'ua-btn ua-btn--md ua-btn--outline'
+
+  / フッター
+  = render 'user_area/shared/footer'

@@ -1,0 +1,37 @@
+.ua-auth-container
+  .ua-auth-content
+    .ua-auth-card
+      / ヘッダー
+      .ua-auth-header
+        h1.ua-auth-title メールアドレス認証
+
+      / ボディ
+      .ua-auth-body
+        / フラッシュメッセージ
+        - if flash[:error].present?
+          .ua-alert.ua-alert--error.uk-margin-bottom
+            = flash[:error]
+
+        - if flash[:notice].present?
+          .ua-alert.ua-alert--success.uk-margin-bottom
+            = flash[:notice]
+
+        / 説明文
+        .ua-auth-description
+          | メールに送信された6桁の認証コードを入力してください。
+
+        / 認証コードフォーム
+        = form_with url: sign_up_verify_email_path, method: :post, local: true, class: 'ua-form' do |f|
+          .ua-form__group
+            label.ua-form__label 認証コード
+            = f.text_field :email_verification_code, class: 'ua-form__input', placeholder: '000000', required: true, autofocus: true, maxlength: 6, pattern: '[0-9]{6}', inputmode: 'numeric', style: 'text-align: center; letter-spacing: 0.5em; font-size: 24px;'
+
+          .uk-margin-medium-top
+            = f.submit '認証', class: 'ua-btn ua-btn--lg ua-btn--primary'
+
+        / 再送信リンク
+        .uk-text-center.uk-margin-top
+          = button_to '認証コードを再送信', sign_up_resend_email_path, method: :post, class: 'ua-link'
+
+  / フッター
+  = render 'user_area/shared/footer'

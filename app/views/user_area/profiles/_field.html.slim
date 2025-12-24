@@ -1,0 +1,11 @@
+.uk-margin
+  label.uk-form-label
+    = label
+    - if required
+      span.uk-text-danger *
+  .uk-form-controls
+    - if editable
+      = text_field_tag field_name, value, class: 'uk-input', placeholder: local_assigns[:placeholder]
+    - else
+      = text_field_tag field_name, value, class: 'uk-input', disabled: true
+      = hidden_field_tag field_name, value

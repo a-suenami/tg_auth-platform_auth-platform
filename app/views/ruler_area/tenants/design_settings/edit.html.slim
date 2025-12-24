@@ -1,0 +1,117 @@
+.uk-margin-top.uk-container
+  h2 デザイン設定
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with model: @design_setting, url: ruler_area_tenant_design_settings_path(@tenant_id), method: :put, local: true, multipart: true do |f|
+      = render 'ruler_area/shared/form_error', target: f.object
+
+      h3 カラーパレット
+      .uk-grid.uk-child-width-1-4
+        .uk-margin
+          = f.label :color_primary, 'メインカラー'
+          = f.color_field :color_primary, class: "uk-input"
+        .uk-margin
+          = f.label :color_primary_light, '背景色'
+          = f.color_field :color_primary_light, class: "uk-input"
+        .uk-margin
+          = f.label :color_accent, 'アクセントカラー'
+          = f.color_field :color_accent, class: "uk-input"
+        .uk-margin
+          = f.label :color_accent_light, 'カード背景'
+          = f.color_field :color_accent_light, class: "uk-input"
+
+      h3.uk-margin-top フォント
+      .uk-grid.uk-child-width-1-2
+        .uk-margin
+          = f.label :font_family_heading, '見出し用フォント'
+          = f.text_field :font_family_heading, class: "uk-input", placeholder: "'Zen Maru Gothic', sans-serif"
+        .uk-margin
+          = f.label :font_family_base, '本文用フォント'
+          = f.text_field :font_family_base, class: "uk-input", placeholder: "'Hiragino Sans', sans-serif"
+
+      h3.uk-margin-top 画像
+      .uk-grid.uk-child-width-1-3
+        .uk-margin
+          = f.label :logo_image, 'ロゴ画像'
+          - if @design_setting.logo_image_url.present?
+            .uk-margin-small-bottom
+              = image_tag @design_setting.logo_image_url, style: "max-width: 200px; max-height: 100px;"
+          = f.file_field :logo_image, class: "uk-input", accept: "image/*"
+
+        .uk-margin
+          = f.label :login_side_image, 'ログイン画面サイド画像'
+          - if @design_setting.login_side_image_url.present?
+            .uk-margin-small-bottom
+              = image_tag @design_setting.login_side_image_url, style: "max-width: 200px; max-height: 150px;"
+          = f.file_field :login_side_image, class: "uk-input", accept: "image/*"
+
+        .uk-margin
+          = f.label :membership_card_image, 'メンバーシップカード画像'
+          - if @design_setting.membership_card_image_url.present?
+            .uk-margin-small-bottom
+              = image_tag @design_setting.membership_card_image_url, style: "max-width: 200px; max-height: 150px;"
+          = f.file_field :membership_card_image, class: "uk-input", accept: "image/*"
+
+      h3.uk-margin-top テキスト
+      .uk-margin
+        = f.label :service_name, 'サービス名'
+        = f.text_field :service_name, class: "uk-input"
+      .uk-margin
+        = f.label :description_text, '説明文（ログイン・新規登録画面に表示）'
+        = f.text_area :description_text, class: "uk-textarea", rows: 5
+
+      h3.uk-margin-top フッターリンク（メイン）
+      #footer-links-container data-controller="nested-fields"
+        - (@design_setting.footer_links.presence || [{}]).each_with_index do |link, index|
+          .uk-grid.uk-child-width-1-2.uk-margin-small.footer-link-row
+            .uk-margin-small
+              = f.label "footer_links_#{index}_text", 'テキスト'
+              = f.text_field "footer_links[#{index}][text]", value: link['text'], class: "uk-input", name: "tenant_design_setting[footer_links][][text]"
+            .uk-margin-small
+              = f.label "footer_links_#{index}_url", 'URL'
+              .uk-flex
+                = f.text_field "footer_links[#{index}][url]", value: link['url'], class: "uk-input uk-flex-1", name: "tenant_design_setting[footer_links][][url]"
+                button.uk-button.uk-button-danger.uk-margin-small-left type="button" onclick="this.closest('.footer-link-row').remove()"
+                  | 削除
+      button.uk-button.uk-button-secondary.uk-margin-small-top type="button" onclick="addFooterLink('footer-links-container', 'footer_links')"
+        | + リンク追加
+
+      h3.uk-margin-top フッターサブリンク
+      #footer-sub-links-container
+        - (@design_setting.footer_sub_links.presence || [{}]).each_with_index do |link, index|
+          .uk-grid.uk-child-width-1-2.uk-margin-small.footer-link-row
+            .uk-margin-small
+              = f.label "footer_sub_links_#{index}_text", 'テキスト'
+              = f.text_field "footer_sub_links[#{index}][text]", value: link['text'], class: "uk-input", name: "tenant_design_setting[footer_sub_links][][text]"
+            .uk-margin-small
+              = f.label "footer_sub_links_#{index}_url", 'URL'
+              .uk-flex
+                = f.text_field "footer_sub_links[#{index}][url]", value: link['url'], class: "uk-input uk-flex-1", name: "tenant_design_setting[footer_sub_links][][url]"
+                button.uk-button.uk-button-danger.uk-margin-small-left type="button" onclick="this.closest('.footer-link-row').remove()"
+                  | 削除
+      button.uk-button.uk-button-secondary.uk-margin-small-top type="button" onclick="addFooterLink('footer-sub-links-container', 'footer_sub_links')"
+        | + リンク追加
+
+      .uk-margin-large-top
+        = f.submit '保存', class: "uk-button uk-button-primary"
+
+javascript:
+  function addFooterLink(containerId, fieldName) {
+    const container = document.getElementById(containerId);
+    const row = document.createElement('div');
+    row.className = 'uk-grid uk-child-width-1-2 uk-margin-small footer-link-row';
+    row.innerHTML = `
+      <div class="uk-margin-small">
+        <label class="uk-form-label">テキスト</label>
+        <input type="text" class="uk-input" name="tenant_design_setting[${fieldName}][][text]">
+      </div>
+      <div class="uk-margin-small">
+        <label class="uk-form-label">URL</label>
+        <div class="uk-flex">
+          <input type="text" class="uk-input uk-flex-1" name="tenant_design_setting[${fieldName}][][url]">
+          <button type="button" class="uk-button uk-button-danger uk-margin-small-left" onclick="this.closest('.footer-link-row').remove()">削除</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(row);
+  }

@@ -1,0 +1,39 @@
+.ua-auth-container
+  .ua-auth-content
+    .ua-auth-card
+      / ヘッダー
+      .ua-auth-header
+        h1.ua-auth-title 二要素認証
+
+      / ボディ
+      .ua-auth-body
+        / フラッシュメッセージ
+        - if flash[:error].present?
+          .ua-alert.ua-alert--error.uk-margin-bottom
+            = flash[:error]
+
+        - if flash[:notice].present?
+          .ua-alert.ua-alert--success.uk-margin-bottom
+            = flash[:notice]
+
+        / 説明文
+        .ua-auth-description
+          | SMSに送信された認証コードを入力してください。
+          br
+          span.uk-text-bold 送信先: #{@phone_number}
+
+        / 認証コードフォーム
+        = form_with url: mfa_sms_path, method: :post, local: true, class: 'ua-form' do |f|
+          .ua-form__group
+            label.ua-form__label 認証コード
+            = f.text_field :code, class: 'ua-form__input', placeholder: '000000', required: true, autofocus: true, maxlength: 6, pattern: '[0-9]{6}', inputmode: 'numeric', style: 'text-align: center; letter-spacing: 0.5em; font-size: 24px;'
+
+          .uk-margin-medium-top
+            = f.submit '認証', class: 'ua-btn ua-btn--lg ua-btn--primary'
+
+        / 再送信リンク
+        .uk-text-center.uk-margin-top
+          = button_to '認証コードを再送信', mfa_sms_resend_path, method: :post, class: 'ua-link'
+
+  / フッター
+  = render 'user_area/shared/footer'

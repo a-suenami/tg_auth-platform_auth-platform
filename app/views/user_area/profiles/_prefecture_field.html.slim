@@ -1,0 +1,13 @@
+.uk-margin
+  label.uk-form-label
+    = label
+    - if required
+      span.uk-text-danger *
+  .uk-form-controls
+    - prefectures = JpPrefecture::Prefecture.all.map { |p| [p.name, p.code] }
+    - if editable
+      = select_tag field_name, options_for_select([['選択してください', '']] + prefectures, value&.to_i), class: 'uk-select'
+    - else
+      - prefecture_name = JpPrefecture::Prefecture.find(value)&.name rescue ''
+      = text_field_tag nil, prefecture_name, class: 'uk-input', disabled: true
+      = hidden_field_tag field_name, value
