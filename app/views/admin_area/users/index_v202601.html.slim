@@ -109,7 +109,7 @@
                 td
                   - if user.tag_assignments.any?
                     .c-tag-list
-                      - user.tag_assignments.includes(:user_tag).first(5).each do |assignment|
+                      - user.tag_assignments.take(5).each do |assignment|
                         - next unless assignment.user_tag
                         .c-tag.c-tag--primary
                           = assignment.user_tag.name
