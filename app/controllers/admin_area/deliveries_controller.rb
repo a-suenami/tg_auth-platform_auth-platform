@@ -79,7 +79,8 @@ module AdminArea
       if service.execute
         redirect_to admin_area_delivery_path(@delivery), notice: t('admin_area.deliveries.published')
       else
-        redirect_to admin_area_delivery_path(@delivery), alert: t('admin_area.deliveries.errors.publish_failed')
+        error_msg = @delivery.errors[:base].first || t('admin_area.deliveries.errors.publish_failed')
+        redirect_to admin_area_delivery_path(@delivery), alert: error_msg
       end
     end
 

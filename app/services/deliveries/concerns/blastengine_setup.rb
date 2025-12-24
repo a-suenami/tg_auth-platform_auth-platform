@@ -23,9 +23,6 @@ module Deliveries
           .gsub('{{full_name}}', '__fullname__')
       end
 
-      DEFAULT_SENDER_EMAIL = 'idp@id-platform.net'
-      DEFAULT_SENDER_NAME = 'ID Platform'
-
       # Create Blastengine bulk delivery and return delivery_id
       sig { params(delivery: Delivery, api: Blastengine::API).returns(Integer) }
       def create_blastengine_bulk_delivery(delivery:, api:)
@@ -34,7 +31,7 @@ module Deliveries
         raise 'No published mail version' unless mail_version
 
         from_email = resolve_sender_email
-        from_name = Tenant.current&.name.presence || DEFAULT_SENDER_NAME
+        from_name = T.must(Tenant.current).name
 
         subject = render_with_insert_codes(mail_version.title)
         body = render_with_insert_codes(mail_version.body)
@@ -52,21 +49,10 @@ module Deliveries
 
       sig { returns(String) }
       def resolve_sender_email
-        configured_email = Tenant.current&.tenant_setting&.sender_email.presence
-        return configured_email if configured_email
+        email = Tenant.current&.tenant_setting&.sender_email.presence
+        raise 'Tenant sender_email not configured' unless email
 
-        # Warn ruler to configure sender_email for this tenant
-        Sentry.capture_message(
-          '[BlastengineSetup] Tenant missing sender_email, using default',
-          level: :warning,
-          extra: {
-            tenant_id: Tenant.current_id,
-            tenant_name: Tenant.current&.name,
-            default_email: DEFAULT_SENDER_EMAIL,
-          },
-        )
-
-        DEFAULT_SENDER_EMAIL
+        email
       end
 
       # Upload CSV to Blastengine and return job_id
