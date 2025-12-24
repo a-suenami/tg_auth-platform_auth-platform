@@ -23,18 +23,12 @@
         thead
           tr
             th 名前
-            th 連携設定
             th 説明
         tbody
           - @user_auto_taggings.each do |rule|
             tr
               td
                 = link_to rule.name, edit_admin_area_user_auto_tagging_path(rule.id)
-              td
-                - if rule.shareable
-                  span.uk-label 連携タグとして設定中
-                - else
-                  | -
               td
                 = rule.description.present? ? truncate(rule.description, length: 100) : '-'
 
