@@ -289,6 +289,10 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "login_url", null: false
     t.string "sign_up_url"
     t.string "redirect_url_on_password_reset", null: false
+    t.boolean "enable_web_login", default: false, null: false
+    t.boolean "enable_api_login", default: true, null: false
+    t.boolean "enable_web_sign_up", default: false, null: false
+    t.boolean "enable_api_sign_up", default: true, null: false
     t.index ["tenant_id"], name: "index_login_spa_applications_on_tenant_id"
     t.index ["uid"], name: "index_login_spa_applications_on_uid", unique: true
   end
@@ -972,6 +976,27 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.datetime "updated_at", null: false
     t.index ["tenant_id", "name"], name: "idx_templates_tenant_name"
     t.index ["tenant_id"], name: "index_templates_on_tenant_id"
+  end
+
+  create_table "tenant_design_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "tenant_id", null: false
+    t.string "color_primary", null: false
+    t.string "color_primary_light", null: false
+    t.string "color_accent", null: false
+    t.string "color_accent_light", null: false
+    t.string "font_family_heading", default: "'Zen Maru Gothic', sans-serif"
+    t.string "font_family_base", default: "'Hiragino Sans', sans-serif"
+    t.string "service_name"
+    t.text "description_text"
+    t.string "logo_image_url"
+    t.string "login_side_image_url"
+    t.string "membership_card_image_url"
+    t.jsonb "footer_links", default: []
+    t.jsonb "footer_sub_links", default: []
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tenant_id"], name: "idx_tenant_design_settings_tenant_id_uniq", unique: true
+    t.index ["tenant_id"], name: "index_tenant_design_settings_on_tenant_id"
   end
 
   create_table "tenant_komoju_accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

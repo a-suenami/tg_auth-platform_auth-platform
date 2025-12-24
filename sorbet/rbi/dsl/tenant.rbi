@@ -349,6 +349,9 @@ class Tenant
   end
 
   module GeneratedAssociationMethods
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::DesignSetting) }
+    def build_design_setting(*args, &blk); end
+
     sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
     def build_login_spa_application(*args, &blk); end
 
@@ -360,6 +363,12 @@ class Tenant
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::StripeAccount) }
     def build_tenant_stripe_account(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::DesignSetting) }
+    def create_design_setting(*args, &blk); end
+
+    sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::DesignSetting) }
+    def create_design_setting!(*args, &blk); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::LoginSpaApplication) }
     def create_login_spa_application(*args, &blk); end
@@ -384,6 +393,12 @@ class Tenant
 
     sig { params(args: T.untyped, blk: T.untyped).returns(::Tenant::StripeAccount) }
     def create_tenant_stripe_account!(*args, &blk); end
+
+    sig { returns(T.nilable(::Tenant::DesignSetting)) }
+    def design_setting; end
+
+    sig { params(value: T.nilable(::Tenant::DesignSetting)).void }
+    def design_setting=(value); end
 
     sig { returns(T.nilable(::LoginSpaApplication)) }
     def login_spa_application; end
@@ -489,6 +504,9 @@ class Tenant
     sig { params(value: T::Enumerable[::Payment::Transaction]).void }
     def payment_transactions=(value); end
 
+    sig { returns(T.nilable(::Tenant::DesignSetting)) }
+    def reload_design_setting; end
+
     sig { returns(T.nilable(::LoginSpaApplication)) }
     def reload_login_spa_application; end
 
@@ -500,6 +518,9 @@ class Tenant
 
     sig { returns(T.nilable(::Tenant::StripeAccount)) }
     def reload_tenant_stripe_account; end
+
+    sig { void }
+    def reset_design_setting; end
 
     sig { void }
     def reset_login_spa_application; end
