@@ -280,6 +280,9 @@ module GeneratedUrlHelpersModule
   def new_admin_area_user_tag_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_user_url(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_user_profile_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
