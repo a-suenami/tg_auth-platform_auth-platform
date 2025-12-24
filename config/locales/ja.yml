@@ -37,7 +37,7 @@ ja:
         draft_only_delete: 下書き状態の配信イベントのみ削除できます
         draft_only_publish: 下書き状態の配信イベントのみ公開できます
         publish_failed: 配信イベントの公開に失敗しました
-        sender_email_required: 送信元メールアドレスを設定ください
+        sender_email_required: 送信元メールアドレスを設定してください
         cannot_cancel: この配信イベントはキャンセルできません
         cannot_pause: この配信イベントは停止できません
         cannot_resume: この配信イベントは再開できません
