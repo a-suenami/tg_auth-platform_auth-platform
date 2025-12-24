@@ -1,7 +1,7 @@
 # typed: true
 # frozen_string_literal: true
 
-class RootRedirectController < ActionController::Base
+class RootRedirectController < ApplicationController
   include ExpirableCookieUseable
 
   def index

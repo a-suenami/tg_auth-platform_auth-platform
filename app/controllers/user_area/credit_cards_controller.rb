@@ -50,15 +50,15 @@ module UserArea
 
       case result
       when StripeRecord::SetupIntent::CreateCardPaymentMethodResult::Succeeded
-        flash[:notice] = I18n.t('user_area.credit_cards.registered')
+        flash.now[:notice] = I18n.t('user_area.credit_cards.registered')
       when StripeRecord::SetupIntent::CreateCardPaymentMethodResult::AlreadyCreated
-        flash[:notice] = I18n.t('user_area.credit_cards.already_registered')
+        flash.now[:notice] = I18n.t('user_area.credit_cards.already_registered')
       when StripeRecord::SetupIntent::CreateCardPaymentMethodResult::InvalidStatus
-        flash[:error] = I18n.t('user_area.credit_cards.registration_incomplete')
+        flash.now[:error] = I18n.t('user_area.credit_cards.registration_incomplete')
       when StripeRecord::SetupIntent::CreateCardPaymentMethodResult::InvalidPaymentMethodType
-        flash[:error] = I18n.t('user_area.credit_cards.not_card')
+        flash.now[:error] = I18n.t('user_area.credit_cards.not_card')
       when StripeRecord::SetupIntent::CreateCardPaymentMethodResult::StripeError
-        flash[:error] = I18n.t('user_area.credit_cards.registration_error')
+        flash.now[:error] = I18n.t('user_area.credit_cards.registration_error')
       end
 
       redirect_to return_path

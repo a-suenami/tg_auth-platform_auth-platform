@@ -4,7 +4,7 @@ module UserArea
   class SessionsController < ApplicationController
     def logout
       # 既にログアウト済みの場合はログイン画面へリダイレクト
-      unless cookie_session[:current_user_id].present?
+      if cookie_session[:current_user_id].blank?
         return redirect_to login_path
       end
 

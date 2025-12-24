@@ -11,19 +11,19 @@ module S3
     sig { void }
     def initialize
       # ローカル開発環境（minio）の場合はENV変数を直接使用
-      if ENV['AWS_S3_ENDPOINT'].present?
-        client_options = {
+      client_options = if ENV['AWS_S3_ENDPOINT'].present?
+        {
           access_key_id: ENV.fetch('AWS_ACCESS_KEY_ID'),
           secret_access_key: ENV.fetch('AWS_SECRET_ACCESS_KEY'),
           region: ENV.fetch('AWS_REGION', 'ap-northeast-1'),
           endpoint: ENV['AWS_S3_ENDPOINT'],
-          force_path_style: true
+          force_path_style: true,
         }
       else
-        client_options = {
+        {
           access_key_id: Settings.aws.access_key_id,
           secret_access_key: Settings.aws.secret_access_key,
-          region: Settings.aws.region
+          region: Settings.aws.region,
         }
       end
 
@@ -40,7 +40,7 @@ module S3
         key: path,
         body: file.read,
         content_type: content_type,
-        acl: 'public-read'
+        acl: 'public-read',
       )
 
       public_url(path)
@@ -51,7 +51,7 @@ module S3
     def delete(path:)
       @client.delete_object(
         bucket: bucket,
-        key: path
+        key: path,
       )
     rescue Aws::S3::Errors::NoSuchKey
       # ファイルが存在しない場合は無視

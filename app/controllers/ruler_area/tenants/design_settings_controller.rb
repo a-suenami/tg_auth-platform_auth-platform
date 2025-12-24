@@ -31,7 +31,7 @@ module RulerArea::Tenants
         :service_name,
         :description_text,
         footer_links: [:text, :url],
-        footer_sub_links: [:text, :url]
+        footer_sub_links: [:text, :url],
       )
     end
 
