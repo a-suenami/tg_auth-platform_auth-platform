@@ -28,6 +28,7 @@ en:
         draft_only_delete: Only draft delivery events can be deleted
         draft_only_publish: Only draft delivery events can be published
         publish_failed: Failed to publish delivery event
+        sender_email_required: Please configure sender email address
         cannot_cancel: This delivery event cannot be cancelled
         cannot_pause: This delivery event cannot be paused
         cannot_resume: This delivery event cannot be resumed
