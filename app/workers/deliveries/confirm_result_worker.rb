@@ -32,6 +32,15 @@ module Deliveries
     rescue StandardError => e
       Rails.logger.error("[ConfirmResultWorker] #{type} #{record_id} failed: #{e.message}")
       Rails.logger.error(e.backtrace.first(5).join("\n"))
+
+      # Capture API error details in Sentry for debugging
+      if e.respond_to?(:body) && e.respond_to?(:status)
+        Sentry.set_context('api_error', {
+          status: e.status,
+          body: e.body,
+        })
+      end
+
       raise # Re-raise for Sidekiq retry
     end
 
