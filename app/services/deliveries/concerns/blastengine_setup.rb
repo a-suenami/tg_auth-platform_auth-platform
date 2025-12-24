@@ -41,7 +41,7 @@ module Deliveries
           text_part: ActionView::Base.full_sanitizer.sanitize(body, tags: []),
           html_part: body,
           from_email: from_email,
-          from_name: from_name,
+          from_name: T.must(from_name),
         )
 
         result['delivery_id'].to_i
