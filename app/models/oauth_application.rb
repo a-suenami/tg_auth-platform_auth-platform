@@ -41,7 +41,7 @@ class OauthApplication < ApplicationRecord
   # 内部ログイン画面を使用するタイプかどうか
   sig { returns(T::Boolean) }
   def uses_internal_login?
-    application_type == 'traditional_web'
+    application_type == ApplicationTypeEnum::TraditionalWeb
   end
 
   # OAuth フローで使用するログイン URL を取得
@@ -51,7 +51,7 @@ class OauthApplication < ApplicationRecord
     return nil unless requires_external_login?
     return nil if login_url.blank?
 
-    attach_oauth_flow_flag(login_url, require_sms_mfa:)
+    attach_oauth_flow_flag(T.must(login_url), require_sms_mfa:)
   end
 
   # OAuth フローで使用するサインアップ URL を取得
@@ -60,7 +60,7 @@ class OauthApplication < ApplicationRecord
     return nil unless requires_external_login?
     return nil if sign_up_url.blank?
 
-    attach_oauth_flow_flag(sign_up_url, require_sms_mfa:)
+    attach_oauth_flow_flag(T.must(sign_up_url), require_sms_mfa:)
   end
 
   private
