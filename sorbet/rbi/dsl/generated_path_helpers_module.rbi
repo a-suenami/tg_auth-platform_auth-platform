@@ -319,6 +319,9 @@ module GeneratedPathHelpersModule
   def new_admin_area_user_contact_address_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
+  def new_admin_area_user_path(*args); end
+
+  sig { params(args: T.untyped).returns(String) }
   def new_admin_area_user_tag_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }

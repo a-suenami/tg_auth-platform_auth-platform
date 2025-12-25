@@ -1,0 +1,51 @@
+.uk-margin-top.uk-container
+  h2 新規登録
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with model: @user, url: admin_area_users_path, method: :post, class: 'uk-form-horizontal' do |f|
+      = render 'admin_area/shared/form_error', target: f.object
+      .uk-margin
+        = f.label :email, class: 'uk-form-label'
+        .uk-form-controls
+          = f.email_field :email, class: "uk-input", required: true, placeholder: "mail@example.com"
+      = f.fields_for :user_profile do |pf|
+        .uk-margin
+          label.uk-form-label 氏名
+          .uk-form-controls
+            .uk-grid.uk-grid-small
+              .uk-width-1-2
+                = pf.text_field :last_name, class: "uk-input", placeholder: "姓"
+              .uk-width-1-2
+                = pf.text_field :first_name, class: "uk-input", placeholder: "名"
+        .uk-margin
+          label.uk-form-label 氏名（カナ）
+          .uk-form-controls
+            .uk-grid.uk-grid-small
+              .uk-width-1-2
+                = pf.text_field :last_name_kana, class: "uk-input", placeholder: "セイ"
+              .uk-width-1-2
+                = pf.text_field :first_name_kana, class: "uk-input", placeholder: "メイ"
+        .uk-margin
+          label.uk-form-label 生年月日
+          .uk-form-controls
+            = pf.date_field :birth_date, class: "uk-input", max: Date.current.to_s
+        .uk-margin
+          label.uk-form-label 性別
+          .uk-form-controls
+            = pf.select :gender, [['男性', 'male'], ['女性', 'female'], ['その他', 'other']], { include_blank: '選択してください' }, class: "uk-select"
+      .uk-margin
+        = f.label :password, class: 'uk-form-label'
+        .uk-form-controls
+          em 注意: 8文字以上、大文字・小文字・数字を各1文字以上含む
+          = f.password_field :password, class: "uk-input", placeholder: "パスワード（任意）"
+      .uk-margin
+        = f.label :phone_number, class: 'uk-form-label'
+        .uk-form-controls
+          .uk-grid.uk-grid-small
+            .uk-width-1-4
+              = select_tag :country_code, options_for_select(['+81 (日本)', '+1 (US)', '+44 (UK)', '+86 (中国)', '+82 (韓国)'].map { |c| [c, c.split(' ').first] }, '+81'), class: "uk-select"
+            .uk-width-3-4
+              = f.text_field :phone_number_local, class: "uk-input", placeholder: "09012345678", value: nil
+
+      = f.submit "登録", class: "uk-button uk-button-primary"
+      = link_to "キャンセル", admin_area_users_path, class: "uk-button uk-button-default uk-margin-left"

@@ -11,10 +11,11 @@
           label.c-form-field__label ID
           .c-form-field__input-wrapper
             input.c-form-field__input type="text" value="#{@user.id}" readonly="readonly"
-        .c-form-field
-          label.c-form-field__label 会員番号
-          .c-form-field__input-wrapper
-            input.c-form-field__input type="text" value="1234-5678-9000" readonly="readonly"
+        /- TODO: 会員番号機能が実装されたら有効化
+        /  .c-form-field
+        /    label.c-form-field__label 会員番号
+        /    .c-form-field__input-wrapper
+        /      input.c-form-field__input type="text" value="#{@user.member_number}" readonly="readonly"
         .c-form-field
           label.c-form-field__label メールアドレス
           .c-form-field__input-group

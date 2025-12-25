@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     get '/auth/failure' => 'auth0#failure'
     get '/auth/logout' => 'auth0#logout'
 
-    resources :users, only: %i[index show edit update destroy] do
+    resources :users, only: %i[index show new create edit update destroy] do
       member do
         put :reset_sms_ratelimit
         get :activities
