@@ -12,10 +12,16 @@ export default class extends Controller {
   ): Promise<S3UploadSignature> {
     let response: AxiosResponse<any>;
 
+    // Security: Validate path is same-origin to prevent SSRF
+    const requestUrl = new URL(path, window.location.origin);
+    if (requestUrl.origin !== window.location.origin) {
+      throw new Error('Cross-origin requests are not allowed');
+    }
+
     // 1. 署名情報の取得
     try {
       response = await axios.post(
-        path,
+        requestUrl.href,
         {
           content: {
             content_type: file.type,
