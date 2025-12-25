@@ -1,6 +1,6 @@
-\restrict dF0SFqOKnz9IBXPBaRSfgakyccmaLc4zwOISotCO5P8QvAQFhdH6Mfnv1YVSCR8
+\restrict lm416Gb3bTr1KO44gYxRjiH6w5GJpZfH820eqkVBkdOgMUiMjaNKrOzT81fzEcE
 
--- Dumped from database version 15.14
+-- Dumped from database version 15.15
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
 
 SET statement_timeout = 0;
@@ -958,7 +958,11 @@ CREATE TABLE public.login_spa_applications (
     updated_at timestamp(6) without time zone NOT NULL,
     login_url character varying NOT NULL,
     sign_up_url character varying,
-    redirect_url_on_password_reset character varying NOT NULL
+    redirect_url_on_password_reset character varying NOT NULL,
+    enable_web_login boolean DEFAULT false NOT NULL,
+    enable_api_login boolean DEFAULT true NOT NULL,
+    enable_web_sign_up boolean DEFAULT false NOT NULL,
+    enable_api_sign_up boolean DEFAULT true NOT NULL
 );
 
 
@@ -1518,6 +1522,25 @@ CREATE TABLE public.oauth_openid_requests (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     access_grant_id uuid NOT NULL,
     nonce character varying NOT NULL
+);
+
+
+--
+-- Name: oauth_providers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.oauth_providers (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    provider character varying NOT NULL,
+    client_id character varying NOT NULL,
+    client_secret character varying NOT NULL,
+    auth_url character varying NOT NULL,
+    token_url character varying NOT NULL,
+    user_info_url character varying,
+    scopes character varying DEFAULT ''::character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -2560,6 +2583,31 @@ COMMENT ON COLUMN public.templates.name IS 'テンプレート名';
 
 
 --
+-- Name: tenant_design_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_design_settings (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    tenant_id public.citext NOT NULL,
+    color_primary character varying NOT NULL,
+    color_primary_light character varying NOT NULL,
+    color_accent character varying NOT NULL,
+    color_accent_light character varying NOT NULL,
+    font_family_heading character varying DEFAULT '''Zen Maru Gothic'', sans-serif'::character varying,
+    font_family_base character varying DEFAULT '''Hiragino Sans'', sans-serif'::character varying,
+    service_name character varying,
+    description_text text,
+    logo_image_url character varying,
+    login_side_image_url character varying,
+    membership_card_image_url character varying,
+    footer_links jsonb DEFAULT '[]'::jsonb,
+    footer_sub_links jsonb DEFAULT '[]'::jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: tenant_komoju_accounts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3471,6 +3519,14 @@ ALTER TABLE ONLY public.oauth_openid_requests
 
 
 --
+-- Name: oauth_providers oauth_providers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.oauth_providers
+    ADD CONSTRAINT oauth_providers_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: payment_subscriptions payment_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3652,6 +3708,14 @@ ALTER TABLE ONLY public.template_mails
 
 ALTER TABLE ONLY public.templates
     ADD CONSTRAINT templates_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tenant_design_settings tenant_design_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_design_settings
+    ADD CONSTRAINT tenant_design_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -4201,6 +4265,13 @@ CREATE UNIQUE INDEX idx_template_mails_template_id ON public.template_mails USIN
 --
 
 CREATE INDEX idx_templates_tenant_name ON public.templates USING btree (tenant_id, name);
+
+
+--
+-- Name: idx_tenant_design_settings_tenant_id_uniq; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_tenant_design_settings_tenant_id_uniq ON public.tenant_design_settings USING btree (tenant_id);
 
 
 --
@@ -4806,6 +4877,13 @@ CREATE INDEX index_oauth_openid_requests_on_access_grant_id ON public.oauth_open
 
 
 --
+-- Name: index_oauth_providers_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_oauth_providers_on_tenant_id ON public.oauth_providers USING btree (tenant_id);
+
+
+--
 -- Name: index_payment_subscriptions_on_membership_contract_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5321,6 +5399,13 @@ CREATE INDEX index_template_mails_on_tenant_id ON public.template_mails USING bt
 --
 
 CREATE INDEX index_templates_on_tenant_id ON public.templates USING btree (tenant_id);
+
+
+--
+-- Name: index_tenant_design_settings_on_tenant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_tenant_design_settings_on_tenant_id ON public.tenant_design_settings USING btree (tenant_id);
 
 
 --
@@ -6896,7 +6981,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict dF0SFqOKnz9IBXPBaRSfgakyccmaLc4zwOISotCO5P8QvAQFhdH6Mfnv1YVSCR8
+\unrestrict lm416Gb3bTr1KO44gYxRjiH6w5GJpZfH820eqkVBkdOgMUiMjaNKrOzT81fzEcE
 
 SET search_path TO "$user", public;
 

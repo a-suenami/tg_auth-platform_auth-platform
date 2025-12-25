@@ -1,0 +1,76 @@
+.ua-mypage-container
+  / ヘッダー
+  .ua-mypage-header
+    h1.ua-mypage-title = @membership_plan.name
+
+  / メインコンテンツ
+  .ua-mypage-content
+    / フラッシュメッセージ
+    - if flash[:error].present?
+      .ua-alert.ua-alert--error.uk-margin-bottom
+        = flash[:error]
+
+    / プラン詳細
+    .ua-mypage-section
+      h2.ua-section-heading プラン内容
+
+      table.ua-table
+        tbody
+          tr
+            th 料金
+            td
+              span style="font-size: var(--ua-font-size-lg); font-weight: 700; color: var(--ua-color-primary);"
+                = number_to_currency(@membership_plan.amount, unit: '¥', precision: 0)
+              span.uk-text-muted style="font-size: var(--ua-font-size-sm);"
+                = " / #{@membership_plan.recurring_interval_count}#{interval_unit_label(@membership_plan.recurring_interval_unit)}"
+          tr
+            th 更新
+            td
+              - if @membership_plan.recurrence
+                | 自動更新あり
+              - else
+                | 一回払い
+          tr
+            th 含まれるメンバーシップ
+            td
+              - @membership_plan.memberships.each do |membership|
+                span.ua-badge.ua-badge--info.uk-margin-small-right
+                  = membership.display_name
+
+    / 支払い方法選択
+    .ua-mypage-section
+      h2.ua-section-heading 支払い方法
+
+      - available_methods = @membership_plan.plan_payment_methods.map(&:payment_type)
+
+      = form_with url: purchase_membership_plan_path(@membership_plan), method: :post, local: true, class: 'ua-form' do |f|
+        .ua-form__group
+          - if available_methods.include?('credit_card')
+            label.uk-flex.uk-flex-middle.uk-margin-small-bottom style="cursor: pointer;"
+              = f.radio_button :payment_method, 'credit_card', checked: true, class: 'uk-radio', style: 'margin-right: 8px;'
+              span クレジットカード
+              - if @has_card
+                span.ua-badge.ua-badge--success.uk-margin-small-left 登録済み
+              - else
+                span.ua-badge.ua-badge--warning.uk-margin-small-left 未登録
+
+          - if available_methods.include?('konbini') || available_methods.include?('convenience')
+            label.uk-flex.uk-flex-middle.uk-margin-small-bottom style="cursor: pointer;"
+              = f.radio_button :payment_method, 'konbini', class: 'uk-radio', style: 'margin-right: 8px;'
+              span コンビニ払い
+
+        - unless @has_card
+          .ua-alert.ua-alert--warning.uk-margin-top
+            p
+              | クレジットカードが登録されていません。
+              = link_to 'カードを登録する', new_credit_card_path(return_to: membership_plan_path(@membership_plan)), class: 'ua-link ua-link--accent'
+              |  か、別の支払い方法を選択してください。
+
+        .uk-margin-large-top
+          = f.submit '購入する', class: 'ua-btn ua-btn--lg ua-btn--primary'
+
+    .uk-margin-medium-top.uk-text-center
+      = link_to 'プラン一覧に戻る', membership_plans_path, class: 'ua-btn ua-btn--md ua-btn--outline'
+
+  / フッター
+  = render 'user_area/shared/footer'

@@ -1,0 +1,38 @@
+= render 'ruler_area/shared/form_error', target: f.object
+.uk-margin
+  = f.label :provider
+  .uk-article
+    p.uk-article-meta プロバイダー識別子（例: google, line, apple）
+  = f.text_field :provider, class: "uk-input", placeholder: "google"
+.uk-margin
+  = f.label :client_id
+  .uk-article
+    p.uk-article-meta OAuthプロバイダーから発行されたClient ID
+  = f.text_field :client_id, class: "uk-input"
+.uk-margin
+  = f.label :client_secret
+  .uk-article
+    p.uk-article-meta OAuthプロバイダーから発行されたClient Secret
+  = f.text_field :client_secret, class: "uk-input"
+.uk-margin
+  = f.label :auth_url
+  .uk-article
+    p.uk-article-meta 認可エンドポイントURL
+  = f.text_field :auth_url, class: "uk-input", placeholder: "https://accounts.google.com/o/oauth2/v2/auth"
+.uk-margin
+  = f.label :token_url
+  .uk-article
+    p.uk-article-meta トークンエンドポイントURL
+  = f.text_field :token_url, class: "uk-input", placeholder: "https://oauth2.googleapis.com/token"
+.uk-margin
+  = f.label :user_info_url
+  .uk-article
+    p.uk-article-meta ユーザー情報エンドポイントURL（id_tokenがある場合は省略可）
+  = f.text_field :user_info_url, class: "uk-input", placeholder: "https://openidconnect.googleapis.com/v1/userinfo"
+.uk-margin
+  = f.label :scopes
+  .uk-article
+    p.uk-article-meta 要求するスコープ（スペース区切り）
+  = f.text_field :scopes, class: "uk-input", placeholder: "openid email profile"
+
+= f.submit class: "uk-button uk-button-default"

@@ -1,0 +1,110 @@
+// =============================================================================
+// CSS Variables (テナントごとにカスタマイズ可能)
+// =============================================================================
+// これらの変数はHTMLのstyleタグやテナント設定から上書き可能です
+// 例: <style>:root { --ua-color-primary: #FF0000; }</style>
+
+:root {
+  // カラーパレット
+  --ua-color-primary: #4E34C0;           // プライマリ（紫）
+  --ua-color-primary-light: #FFF7FF;     // プライマリ背景
+  --ua-color-accent: #F2719D;            // アクセント（ピンク）
+  --ua-color-accent-light: #FF99BC;      // アクセント明るい
+  --ua-color-text: #454C67;              // テキスト
+  --ua-color-text-muted: #6B7280;        // サブテキスト
+  --ua-color-background: #FFFFFF;        // 背景
+  --ua-color-background-alt: #EFE7F2;    // 代替背景（グレー）
+  --ua-color-border: #E5E7EB;            // ボーダー
+  --ua-color-white: #FFFFFF;
+  --ua-color-success: #10B981;
+  --ua-color-error: #EF4444;
+  --ua-color-warning: #F59E0B;
+
+  // タイポグラフィ
+  --ua-font-family-heading: 'Zen Maru Gothic', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  --ua-font-family-body: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  --ua-font-family-display: 'Tsukimi Rounded', var(--ua-font-family-heading);
+
+  // フォントサイズ
+  --ua-font-size-xs: 11px;
+  --ua-font-size-sm: 13px;
+  --ua-font-size-base: 14px;
+  --ua-font-size-md: 16px;
+  --ua-font-size-lg: 18px;
+  --ua-font-size-xl: 21px;
+  --ua-font-size-2xl: 24px;
+
+  // 行間
+  --ua-line-height-tight: 1.4;
+  --ua-line-height-base: 1.6;
+  --ua-line-height-relaxed: 1.8;
+
+  // スペーシング
+  --ua-spacing-xs: 4px;
+  --ua-spacing-sm: 8px;
+  --ua-spacing-md: 16px;
+  --ua-spacing-lg: 24px;
+  --ua-spacing-xl: 32px;
+  --ua-spacing-2xl: 48px;
+
+  // 角丸
+  --ua-radius-sm: 8px;
+  --ua-radius-md: 15px;
+  --ua-radius-lg: 20px;
+  --ua-radius-full: 140px;
+
+  // シャドウ
+  --ua-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --ua-shadow-md: 3px 3px 10px rgba(0, 0, 0, 0.1);
+  --ua-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+
+  // コンテナ幅
+  --ua-container-sm: 390px;
+  --ua-container-md: 768px;
+  --ua-container-lg: 1024px;
+
+  // ブレークポイント
+  --ua-breakpoint-sm: 640px;
+  --ua-breakpoint-md: 768px;
+  --ua-breakpoint-lg: 1024px;
+}
+
+// =============================================================================
+// SCSS Variables & Functions
+// =============================================================================
+
+@function font-color($key) {
+  @return map-get($font-colors, $key);
+}
+
+$font-colors: (
+  black: #333,
+  primary: var(--ua-color-primary),
+  accent: var(--ua-color-accent),
+  text: var(--ua-color-text),
+  muted: var(--ua-color-text-muted),
+);
+
+// ブレークポイント
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+
+// Mixins
+@mixin mobile-only {
+  @media (max-width: #{$breakpoint-md - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet-up {
+  @media (min-width: #{$breakpoint-md}) {
+    @content;
+  }
+}
+
+@mixin desktop-up {
+  @media (min-width: #{$breakpoint-lg}) {
+    @content;
+  }
+}

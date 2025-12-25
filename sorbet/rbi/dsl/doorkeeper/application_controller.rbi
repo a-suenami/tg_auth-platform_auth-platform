@@ -20,6 +20,8 @@ class Doorkeeper::ApplicationController
     include ::Turbo::Streams::ActionHelper
     include ::ViteRails::TagHelpers
     include ::ActionController::Base::HelperMethods
+    include ::UserAreaHelper
+    include ::UserArea::ApplicationController::HelperMethods
     include ::Doorkeeper::DashboardHelper
   end
 

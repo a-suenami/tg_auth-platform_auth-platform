@@ -1,0 +1,56 @@
+.ua-auth-container
+  .ua-auth-content
+    / 左サイドパネル（PC版のみ表示）
+    - side_style = @design_settings&.login_side_image_url.present? ? "background-image: url(#{@design_settings.login_side_image_url}); background-size: cover; background-position: center;" : nil
+    .ua-auth-side style=side_style
+      - unless @design_settings&.login_side_image_url.present?
+        .ua-auth-side__icon
+          / 矢印アイコン（テナントでカスタマイズ可能）
+          svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            line x1="5" y1="12" x2="19" y2="12"
+            polyline points="12 5 19 12 12 19"
+        h2.ua-auth-side__title ログイン
+        p.ua-auth-side__subtitle または新規会員登録
+
+    / 右メインエリア
+    .ua-auth-main
+      .ua-auth-card
+        / ヘッダー（SP版のみ表示）
+        .ua-auth-header
+          h1.ua-auth-title ログイン
+
+        / ボディ
+        .ua-auth-body
+          / フラッシュメッセージ
+          - if flash[:error].present?
+            .ua-alert.ua-alert--error.uk-margin-bottom
+              = flash[:error]
+
+          / 説明文
+          - if @design_settings&.description_text.present?
+            .ua-auth-description
+              = simple_format(@design_settings.description_text)
+
+          / ログインフォーム
+          = form_with url: login_path, method: :post, local: true, class: 'ua-form' do |f|
+            .ua-form__group
+              label.ua-form__label メールアドレス
+              = f.email_field :email, value: @email, class: 'ua-form__input', placeholder: 'email@example.com', required: true, autofocus: true
+
+            .ua-form__group
+              label.ua-form__label パスワード
+              = f.password_field :password, class: 'ua-form__input', placeholder: 'password', required: true
+
+            / パスワードリセットリンク
+            .uk-text-center.uk-margin-top
+              = link_to 'パスワードを忘れた方はこちら', '#', class: 'ua-link'
+
+            .uk-margin-large-top
+              = f.submit 'ログイン', class: 'ua-btn ua-btn--lg ua-btn--primary'
+
+            / 新規登録ボタン
+            .uk-margin-top
+              = link_to '新規会員登録', sign_up_path, class: 'ua-btn ua-btn--lg ua-btn--secondary'
+
+  / フッター
+  = render 'user_area/shared/footer'

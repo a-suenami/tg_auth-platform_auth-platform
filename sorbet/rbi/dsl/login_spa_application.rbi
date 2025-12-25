@@ -588,6 +588,10 @@ class LoginSpaApplication
         string_query: String,
         confidential: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        enable_api_login: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        enable_api_sign_up: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        enable_web_login: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        enable_web_sign_up: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         login_url: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -600,7 +604,7 @@ class LoginSpaApplication
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateAssociationRelation)
     end
-    def where(string_query = nil, confidential: nil, created_at: nil, id: nil, login_url: nil, name: nil, redirect_url_on_password_reset: nil, scopes: nil, sign_up_url: nil, tenant_id: nil, uid: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, confidential: nil, created_at: nil, enable_api_login: nil, enable_api_sign_up: nil, enable_web_login: nil, enable_web_sign_up: nil, id: nil, login_url: nil, name: nil, redirect_url_on_password_reset: nil, scopes: nil, sign_up_url: nil, tenant_id: nil, uid: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -699,6 +703,186 @@ class LoginSpaApplication
 
     sig { void }
     def created_at_will_change!; end
+
+    sig { returns(T::Boolean) }
+    def enable_api_login; end
+
+    sig { params(value: T::Boolean).returns(T::Boolean) }
+    def enable_api_login=(value); end
+
+    sig { returns(T::Boolean) }
+    def enable_api_login?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_api_login_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def enable_api_login_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def enable_api_login_came_from_user?; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def enable_api_login_change; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def enable_api_login_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def enable_api_login_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_api_login_in_database; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def enable_api_login_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def enable_api_login_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_api_login_previously_was; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_api_login_was; end
+
+    sig { void }
+    def enable_api_login_will_change!; end
+
+    sig { returns(T::Boolean) }
+    def enable_api_sign_up; end
+
+    sig { params(value: T::Boolean).returns(T::Boolean) }
+    def enable_api_sign_up=(value); end
+
+    sig { returns(T::Boolean) }
+    def enable_api_sign_up?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_api_sign_up_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def enable_api_sign_up_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def enable_api_sign_up_came_from_user?; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def enable_api_sign_up_change; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def enable_api_sign_up_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def enable_api_sign_up_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_api_sign_up_in_database; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def enable_api_sign_up_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def enable_api_sign_up_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_api_sign_up_previously_was; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_api_sign_up_was; end
+
+    sig { void }
+    def enable_api_sign_up_will_change!; end
+
+    sig { returns(T::Boolean) }
+    def enable_web_login; end
+
+    sig { params(value: T::Boolean).returns(T::Boolean) }
+    def enable_web_login=(value); end
+
+    sig { returns(T::Boolean) }
+    def enable_web_login?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_web_login_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def enable_web_login_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def enable_web_login_came_from_user?; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def enable_web_login_change; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def enable_web_login_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def enable_web_login_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_web_login_in_database; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def enable_web_login_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def enable_web_login_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_web_login_previously_was; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_web_login_was; end
+
+    sig { void }
+    def enable_web_login_will_change!; end
+
+    sig { returns(T::Boolean) }
+    def enable_web_sign_up; end
+
+    sig { params(value: T::Boolean).returns(T::Boolean) }
+    def enable_web_sign_up=(value); end
+
+    sig { returns(T::Boolean) }
+    def enable_web_sign_up?; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_web_sign_up_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def enable_web_sign_up_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def enable_web_sign_up_came_from_user?; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def enable_web_sign_up_change; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def enable_web_sign_up_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def enable_web_sign_up_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_web_sign_up_in_database; end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def enable_web_sign_up_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def enable_web_sign_up_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_web_sign_up_previously_was; end
+
+    sig { returns(T.nilable(T::Boolean)) }
+    def enable_web_sign_up_was; end
+
+    sig { void }
+    def enable_web_sign_up_will_change!; end
 
     sig { returns(::String) }
     def id; end
@@ -932,6 +1116,18 @@ class LoginSpaApplication
     def restore_created_at!; end
 
     sig { void }
+    def restore_enable_api_login!; end
+
+    sig { void }
+    def restore_enable_api_sign_up!; end
+
+    sig { void }
+    def restore_enable_web_login!; end
+
+    sig { void }
+    def restore_enable_web_sign_up!; end
+
+    sig { void }
     def restore_id!; end
 
     sig { void }
@@ -972,6 +1168,30 @@ class LoginSpaApplication
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_created_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def saved_change_to_enable_api_login; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_enable_api_login?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def saved_change_to_enable_api_sign_up; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_enable_api_sign_up?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def saved_change_to_enable_web_login; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_enable_web_login?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([T::Boolean, T::Boolean])) }
+    def saved_change_to_enable_web_sign_up; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_enable_web_sign_up?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_id; end
@@ -1265,6 +1485,18 @@ class LoginSpaApplication
     def will_save_change_to_created_at?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_enable_api_login?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_enable_api_sign_up?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_enable_web_login?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_enable_web_sign_up?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -1433,6 +1665,10 @@ class LoginSpaApplication
         string_query: String,
         confidential: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        enable_api_login: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        enable_api_sign_up: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        enable_web_login: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        enable_web_sign_up: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         login_url: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
@@ -1445,7 +1681,7 @@ class LoginSpaApplication
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateRelation)
     end
-    def where(string_query = nil, confidential: nil, created_at: nil, id: nil, login_url: nil, name: nil, redirect_url_on_password_reset: nil, scopes: nil, sign_up_url: nil, tenant_id: nil, uid: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, confidential: nil, created_at: nil, enable_api_login: nil, enable_api_sign_up: nil, enable_web_login: nil, enable_web_sign_up: nil, id: nil, login_url: nil, name: nil, redirect_url_on_password_reset: nil, scopes: nil, sign_up_url: nil, tenant_id: nil, uid: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

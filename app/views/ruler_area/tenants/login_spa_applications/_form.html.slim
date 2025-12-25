@@ -20,4 +20,27 @@
     p.uk-article-meta
       | 現在未対応
   = f.text_field :scopes, class: "uk-input"
+
+h3.uk-heading-line.uk-margin-top
+  span ログイン設定
+.uk-margin
+  label.uk-form-label
+    = f.check_box :enable_web_login, class: "uk-checkbox"
+    |  Web ログインを有効化
+.uk-margin
+  label.uk-form-label
+    = f.check_box :enable_api_login, class: "uk-checkbox"
+    |  API ログインを有効化
+
+h3.uk-heading-line.uk-margin-top
+  span サインアップ設定
+.uk-margin
+  label.uk-form-label
+    = f.check_box :enable_web_sign_up, class: "uk-checkbox"
+    |  Web サインアップを有効化
+.uk-margin
+  label.uk-form-label
+    = f.check_box :enable_api_sign_up, class: "uk-checkbox"
+    |  API サインアップを有効化
+
 = f.submit class: "uk-button uk-button-default"

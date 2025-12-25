@@ -4,6 +4,7 @@ module AdminArea
   class UserAutoTaggingsController < ApplicationController
     require_feature :user_tag
     before_action :set_user_auto_tagging, only: [:edit, :update, :destroy]
+    before_action :load_condition_options, only: [:new, :edit, :create, :update]
 
     def index
       query = UserAutoTagging.ordered.search_by_name(params[:q])
@@ -89,12 +90,25 @@ module AdminArea
       UserTag.where.not(id: used_tag_ids).ordered
     end
 
+    # Load dynamic options for condition dropdowns
+    def load_condition_options
+      @memberships = Membership.all
+      @membership_plans = Membership::Plan.all
+      @prefectures = load_prefectures
+    end
+
+    # Load prefecture data from config/prefecture.yml
+    def load_prefectures
+      YAML.load_file(Rails.root.join('config/prefecture.yml')).map do |code, data|
+        [data[:name], code.to_s]
+      end
+    end
+
     def user_auto_tagging_params
       params.require(:user_auto_tagging).permit(
         :name,
         :description,
         :enabled,
-        :shareable,
         schedule_attributes: [:id, :start_at, :end_at, :_destroy],
         rule_blocks_attributes: [
           :id,

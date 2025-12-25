@@ -1,0 +1,17 @@
+doctype html
+html lang='ja'
+  head
+    meta charset='utf-8'
+    meta name='viewport' content='width=device-width,initial-scale=1.0,user-scalable=no'
+    meta http-equiv='content-language' content='ja'
+    title = Tenant.current.name
+    / link rel='icon' href=vite_asset_path('images/admin_area/favicon.svg')
+    = vite_client_tag
+    = vite_typescript_tag 'entrypoints/user_area/application'
+    = csrf_meta_tags
+    = yield :head
+    - if @design_settings&.persisted?
+      = content_tag :style, ":root { --ua-color-primary: #{@design_settings.color_primary} !important; --ua-color-primary-light: #{@design_settings.color_primary_light} !important; --ua-color-accent: #{@design_settings.color_accent} !important; --ua-color-accent-light: #{@design_settings.color_accent_light} !important; --ua-font-family-heading: #{@design_settings.font_family_heading} !important; --ua-font-family-body: #{@design_settings.font_family_base} !important; }".html_safe
+  body
+    .uk-container.uk-container-expand.uk-background-muted
+      = yield

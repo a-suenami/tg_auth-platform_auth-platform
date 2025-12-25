@@ -30,8 +30,8 @@ module Deliveries
         mail_version = template.template_mail_versions.published.order(created_at: :desc).first
         raise 'No published mail version' unless mail_version
 
-        from_email = Tenant.current&.tenant_setting&.sender_email || 'idp@id-platform.net'
-        from_name = Tenant.current&.name || 'ID Platform'
+        from_email = resolve_sender_email
+        from_name = T.must(Tenant.current).name
 
         subject = render_with_insert_codes(mail_version.title)
         body = render_with_insert_codes(mail_version.body)
@@ -41,10 +41,18 @@ module Deliveries
           text_part: ActionView::Base.full_sanitizer.sanitize(body, tags: []),
           html_part: body,
           from_email: from_email,
-          from_name: from_name,
+          from_name: T.must(from_name),
         )
 
         result['delivery_id'].to_i
+      end
+
+      sig { returns(String) }
+      def resolve_sender_email
+        email = Tenant.current&.tenant_setting&.sender_email.presence
+        raise 'Tenant sender_email not configured' unless email
+
+        email
       end
 
       # Upload CSV to Blastengine and return job_id

@@ -1,0 +1,6 @@
+.uk-margin-top.uk-container
+  h2 外部IdP設定 編集
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with model: @oauth_provider, url: ruler_area_tenant_oauth_provider_path(@tenant_id, @oauth_provider), method: :put do |f|
+      = render 'form', f: f

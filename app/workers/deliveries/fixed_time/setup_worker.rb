@@ -13,10 +13,15 @@ module Deliveries
       include Sidekiq::Worker
       include Concerns::TenantContext
 
-      sidekiq_options queue: :default, retry: 3
+      sidekiq_options queue: :default, retry: 3, unique_for: 5.minutes
 
       def perform(schedule_id, tenant_id)
         set_tenant_context_by_id(tenant_id)
+
+        Sentry.set_context('worker', {
+          class: self.class.name,
+          schedule_id: schedule_id,
+        },)
 
         schedule = DeliverySchedule.find_by(id: schedule_id)
         return unless schedule
@@ -30,10 +35,27 @@ module Deliveries
           Rails.logger.info("[FixedTime::SetupWorker] #{schedule_id} setup complete")
         else
           Rails.logger.error("[FixedTime::SetupWorker] #{schedule_id} failed: #{result[:error]}")
+          capture_soft_failure(
+            '[FixedTime::SetupWorker] Setup service failed',
+            context: {
+              schedule_id: schedule_id,
+              delivery_id: schedule.delivery_id,
+              error: result[:error],
+            },
+          )
         end
       rescue StandardError => e
         Rails.logger.error("[FixedTime::SetupWorker] Error processing #{schedule_id}: #{e.message}")
         Rails.logger.error(e.backtrace.first(5).join("\n"))
+
+        # Capture API error details in Sentry for debugging
+        if e.is_a?(Exceptions::API::ServerError)
+          Sentry.set_context('api_error', {
+            status: e.instance_variable_get(:@status),
+            body: e.instance_variable_get(:@body),
+          },)
+        end
+
         raise # Re-raise for Sidekiq retry
       end
     end

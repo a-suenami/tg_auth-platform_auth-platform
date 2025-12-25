@@ -31,6 +31,11 @@ class ExpirableCookie
     @session.delete(:"#{key}_expired_at")
   end
 
+  sig { params(key: Symbol).void }
+  def delete(key)
+    delete_session(key)
+  end
+
   private
 
   sig { params(key: Symbol).returns(T::Boolean) }

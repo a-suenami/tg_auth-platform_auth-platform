@@ -15,6 +15,32 @@
       .uk-margin
         = f.label :phone_number, "電話番号"
         = f.text_field :phone_number, placeholder: "+818012345678 (国際電話番号フォーマット)", value: params[:phone_number], class: "uk-input"
+      .uk-margin data-controller="user-search-tag-selector"
+        = f.label :tag_ids, "タグ", class: "uk-form-label"
+        - selected_tag_ids = Array(params[:tag_ids]).compact_blank
+        - selected_tags = @user_tags.select { |t| selected_tag_ids.include?(t.id.to_s) }
+        - available_tags = @user_tags.reject { |t| selected_tag_ids.include?(t.id.to_s) }
+
+        / Selected tags displayed as chips
+        .uk-margin-small-top data-user-search-tag-selector-target="container" data-action="click->user-search-tag-selector#removeTag" style="min-height: 40px; padding: 8px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fafafa;"
+          - if selected_tags.any?
+            - selected_tags.each do |tag|
+              span.uk-label.uk-label-primary.uk-margin-small-right.tag-chip data-tag-id=tag.id data-tag-name=tag.name style="cursor: pointer;"
+                = tag.name
+                |
+                span uk-icon="icon: close; ratio: 0.8"
+                = hidden_field_tag 'tag_ids[]', tag.id, id: "search_tag_#{tag.id}"
+          - else
+            span.uk-text-meta data-user-search-tag-selector-target="placeholder" タグが選択されていません
+
+        / Dropdown to add new tags
+        .uk-margin-small-top
+          label.uk-form-label.uk-text-small タグを追加
+          select.uk-select data-user-search-tag-selector-target="selector" data-action="change->user-search-tag-selector#addTag"
+            option value="" -- タグを選択 --
+            - available_tags.each do |tag|
+              option value=tag.id data-name=tag.name
+                = tag.name
       = submit_tag "Search", class: "uk-button uk-button-secondary"
       = link_to "検索初期化", admin_area_users_path, class: "uk-button uk-button-default uk-margin-left"
     br

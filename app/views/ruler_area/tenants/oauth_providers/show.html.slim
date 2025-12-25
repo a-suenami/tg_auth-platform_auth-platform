@@ -1,0 +1,49 @@
+.uk-margin-top.uk-container
+  h2 外部IdP設定 詳細
+
+  .uk-flex.uk-flex-right
+    = link_to "編集", edit_ruler_area_tenant_oauth_provider_path(@tenant_id, @oauth_provider), class: "uk-button uk-button-primary"
+    .uk-margin-left
+    = link_to "削除", ruler_area_tenant_oauth_provider_path(@tenant_id, @oauth_provider), data: { turbo_method: :delete, turbo_confirm: "一度削除したデータを戻せません。本当に削除しますか？" }, class: 'uk-button uk-button-danger'
+
+  table.uk-table
+    tr
+      th = OauthProvider.human_attribute_name(:id)
+      td
+        = @oauth_provider.id
+    tr
+      th = OauthProvider.human_attribute_name(:provider)
+      td
+        = @oauth_provider.provider
+    tr
+      th = OauthProvider.human_attribute_name(:client_id)
+      td
+        = @oauth_provider.client_id
+    tr
+      th = OauthProvider.human_attribute_name(:client_secret)
+      td
+        = @oauth_provider.client_secret.present? ? '********' : '-'
+    tr
+      th = OauthProvider.human_attribute_name(:auth_url)
+      td
+        = @oauth_provider.auth_url
+    tr
+      th = OauthProvider.human_attribute_name(:token_url)
+      td
+        = @oauth_provider.token_url
+    tr
+      th = OauthProvider.human_attribute_name(:user_info_url)
+      td
+        = @oauth_provider.user_info_url || '-'
+    tr
+      th = OauthProvider.human_attribute_name(:scopes)
+      td
+        = @oauth_provider.scopes.presence || '-'
+    tr
+      th = OauthProvider.human_attribute_name(:created_at)
+      td
+        = @oauth_provider.created_at
+    tr
+      th = OauthProvider.human_attribute_name(:updated_at)
+      td
+        = @oauth_provider.updated_at
