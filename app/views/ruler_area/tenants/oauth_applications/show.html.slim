@@ -16,6 +16,18 @@
       td
         = @oauth_application.name
     tr
+      th = OauthApplication.human_attribute_name(:application_type)
+      td
+        = @oauth_application.application_type
+    tr
+      th = OauthApplication.human_attribute_name(:login_url)
+      td
+        = @oauth_application.login_url
+    tr
+      th = OauthApplication.human_attribute_name(:sign_up_url)
+      td
+        = @oauth_application.sign_up_url
+    tr
       th = OauthApplication.human_attribute_name(:uid)
       td
         = @oauth_application.uid

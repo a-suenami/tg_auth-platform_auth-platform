@@ -290,9 +290,7 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.string "sign_up_url"
     t.string "redirect_url_on_password_reset", null: false
     t.boolean "enable_web_login", default: false, null: false
-    t.boolean "enable_api_login", default: true, null: false
     t.boolean "enable_web_sign_up", default: false, null: false
-    t.boolean "enable_api_sign_up", default: true, null: false
     t.index ["tenant_id"], name: "index_login_spa_applications_on_tenant_id"
     t.index ["uid"], name: "index_login_spa_applications_on_uid", unique: true
   end
@@ -481,6 +479,9 @@ ActiveRecord::Schema[7.1].define(version: 0) do
     t.boolean "enable_push_event", default: false
     t.boolean "require_sms_mfa", default: false
     t.text "allowed_logout_urls"
+    t.string "application_type", default: "spa", null: false
+    t.string "login_url"
+    t.string "sign_up_url"
     t.index ["tenant_id"], name: "index_oauth_applications_on_tenant_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end

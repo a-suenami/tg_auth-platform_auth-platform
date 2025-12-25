@@ -1,4 +1,4 @@
-\restrict lm416Gb3bTr1KO44gYxRjiH6w5GJpZfH820eqkVBkdOgMUiMjaNKrOzT81fzEcE
+\restrict kneMEKWOx0y4Be5VfU0PZJwlLOsEhdQVR8fmrMeYDZDhYnbXUacy1FT0tEswCwH
 
 -- Dumped from database version 15.15
 -- Dumped by pg_dump version 15.14 (Debian 15.14-1.pgdg12+1)
@@ -960,9 +960,7 @@ CREATE TABLE public.login_spa_applications (
     sign_up_url character varying,
     redirect_url_on_password_reset character varying NOT NULL,
     enable_web_login boolean DEFAULT false NOT NULL,
-    enable_api_login boolean DEFAULT true NOT NULL,
-    enable_web_sign_up boolean DEFAULT false NOT NULL,
-    enable_api_sign_up boolean DEFAULT true NOT NULL
+    enable_web_sign_up boolean DEFAULT false NOT NULL
 );
 
 
@@ -1510,7 +1508,10 @@ CREATE TABLE public.oauth_applications (
     enable_client_credential_flow boolean DEFAULT false,
     enable_push_event boolean DEFAULT false,
     require_sms_mfa boolean DEFAULT false,
-    allowed_logout_urls text
+    allowed_logout_urls text,
+    application_type character varying DEFAULT 'spa'::character varying NOT NULL,
+    login_url character varying,
+    sign_up_url character varying
 );
 
 
@@ -6981,7 +6982,7 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict lm416Gb3bTr1KO44gYxRjiH6w5GJpZfH820eqkVBkdOgMUiMjaNKrOzT81fzEcE
+\unrestrict kneMEKWOx0y4Be5VfU0PZJwlLOsEhdQVR8fmrMeYDZDhYnbXUacy1FT0tEswCwH
 
 SET search_path TO "$user", public;
 

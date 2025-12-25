@@ -15,8 +15,16 @@ ja:
         enable_client_credential_flow: Admin APIの利用
         enable_push_event: 変更通知Event発行
         require_sms_mfa: SMS 2fa有効化
+        application_type: アプリケーションタイプ
+        login_url: ログインURL
+        sign_up_url: サインアップURL
   enumerize:
     oauth_application:
+      application_type:
+        spa: シングルページアプリケーション
+        traditional_web: 一般的なWebアプリケーション
+        native: ネイティブ
+        m2m: マシンツーマシン
       template_type:
         registered: 登録完了メール
         email_address_verification: メールアドレス確認メール
