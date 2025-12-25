@@ -3,6 +3,26 @@
   = f.label :name
   = f.text_field :name, class: "uk-input"
 .uk-margin
+  = f.label :application_type
+  .uk-article
+    p.uk-article-meta
+      | アプリケーションの種類を選択してください。
+      br
+      | SPA: 外部ログインURLを使用（React, Vue等）
+      br
+      | Traditional Web: 内部ログイン画面を使用（Rails, Express等）
+  = f.select :application_type, OauthApplication::ApplicationTypeEnum.values.select { |v| v.serialize.in?(%w[spa traditional_web]) }.map { |v| [v.serialize, v.serialize] }, {}, class: "uk-select"
+.uk-margin
+  = f.label :login_url
+  .uk-article
+    p.uk-article-meta SPAの場合のみ使用。ログイン画面のURLを入力してください。
+  = f.text_field :login_url, class: "uk-input"
+.uk-margin
+  = f.label :sign_up_url
+  .uk-article
+    p.uk-article-meta SPAの場合のみ使用。サインアップ画面のURLを入力してください（任意）。
+  = f.text_field :sign_up_url, class: "uk-input"
+.uk-margin
   = f.label :redirect_uri
   .uk-article
     p.uk-article-meta 複数のURIを設定する場合は、URLごと改行で区切って入力してください

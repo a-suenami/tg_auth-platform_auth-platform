@@ -19,27 +19,63 @@ Doorkeeper.configure do
     raise ActiveRecord::RecordNotFound if oauth_application.blank?
 
     require_sms_mfa = oauth_application.require_sms_mfa
-    client = Tenant.current.login_spa_application
-    raise ActiveRecord::RecordNotFound if client.blank?
 
-    # CASE1: 未ログイン時
-    if resource_owner.nil?
-      # sign_upが指定されている場合は新規登録URLへ遷移
-      if params[:on_no_session].present? && params[:on_no_session] == 'sign_up' && client.sign_up_url.present?
-        next redirect_to client.sign_up_url_with_flag(require_sms_mfa:), allow_other_host: true
-      else
-        next redirect_to client.login_url_with_flag(require_sms_mfa:), allow_other_host: true
+    # application_type による分岐
+    # - spa: 外部ログイン URL を使用（フォールバック: LoginSpaApplication）
+    # - traditional_web: 内部ログイン画面（/user_area/logins）を使用
+    if oauth_application.uses_internal_login?
+      # Traditional Web: 内部ログイン画面を使用
+      internal_login_path = '/user_area/logins/new'
+      internal_mfa_path = '/user_area/mfa/sms'
+
+      # CASE1: 未ログイン時
+      if resource_owner.nil?
+        next redirect_to internal_login_path
       end
-    end
 
-    # CASE2: プロフィール未登録時
-    if resource_owner&.enabled == false
-      next redirect_to client.login_url_with_flag(require_sms_mfa:), allow_other_host: true
-    end
+      # CASE2: プロフィール未登録時
+      if resource_owner&.enabled == false
+        next redirect_to internal_login_path
+      end
 
-    # CASE3: SMS二要素認証が必須で未認証時
-    if require_sms_mfa && cookie_session[:sms_mfa_verified].blank? && !resource_owner.suppress_sms_verification
-      next redirect_to client.login_url_with_flag(require_sms_mfa:), allow_other_host: true
+      # CASE3: SMS二要素認証が必須で未認証時
+      if require_sms_mfa && cookie_session[:sms_mfa_verified].blank? && !resource_owner.suppress_sms_verification
+        next redirect_to internal_mfa_path
+      end
+    else
+      # SPA/Native: 外部ログイン URL を使用
+      # OauthApplication の login_url が未設定の場合は LoginSpaApplication をフォールバック
+      login_url = oauth_application.effective_login_url(require_sms_mfa:)
+      sign_up_url = oauth_application.effective_sign_up_url(require_sms_mfa:)
+
+      # フォールバック: LoginSpaApplication
+      if login_url.blank?
+        client = Tenant.current.login_spa_application
+        raise ActiveRecord::RecordNotFound if client.blank?
+
+        login_url = client.login_url_with_flag(require_sms_mfa:)
+        sign_up_url = client.sign_up_url_with_flag(require_sms_mfa:) if sign_up_url.blank?
+      end
+
+      # CASE1: 未ログイン時
+      if resource_owner.nil?
+        # sign_upが指定されている場合は新規登録URLへ遷移
+        if params[:on_no_session].present? && params[:on_no_session] == 'sign_up' && sign_up_url.present?
+          next redirect_to sign_up_url, allow_other_host: true
+        else
+          next redirect_to login_url, allow_other_host: true
+        end
+      end
+
+      # CASE2: プロフィール未登録時
+      if resource_owner&.enabled == false
+        next redirect_to login_url, allow_other_host: true
+      end
+
+      # CASE3: SMS二要素認証が必須で未認証時
+      if require_sms_mfa && cookie_session[:sms_mfa_verified].blank? && !resource_owner.suppress_sms_verification
+        next redirect_to login_url, allow_other_host: true
+      end
     end
 
     # ログイン済み

@@ -12,6 +12,9 @@ create_table 'oauth_applications', force: :cascade, id: :uuid, default: -> { 'ge
   t.boolean :enable_push_event, default: false
   t.boolean :require_sms_mfa, default: false
   t.text :allowed_logout_urls
+  t.string :application_type, null: false, default: 'spa'
+  t.string :login_url
+  t.string :sign_up_url
   t.index ['uid'], name: 'index_oauth_applications_on_uid', unique: true
 end
 

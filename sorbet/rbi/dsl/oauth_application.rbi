@@ -11,6 +11,9 @@ class OauthApplication
   extend CommonRelationMethods
   extend GeneratedRelationMethods
 
+  sig { returns(T.nilable(::Enumerize::Value::OauthApplication::ApplicationType)) }
+  def application_type; end
+
   private
 
   sig { returns(NilClass) }
@@ -24,6 +27,32 @@ class OauthApplication
       ).returns(::OauthApplication)
     end
     def new(attributes = nil, &block); end
+  end
+
+  class ::Enumerize::Value::OauthApplication::ApplicationType < ::Enumerize::Value
+    sig { params(other: OauthApplication::ApplicationTypeEnum).returns(T::Boolean) }
+    def !=(other); end
+
+    sig { params(other: OauthApplication::ApplicationTypeEnum).returns(T::Boolean) }
+    def ==(other); end
+
+    sig { params(other: OauthApplication::ApplicationTypeEnum).returns(T::Boolean) }
+    def ===(other); end
+
+    sig { returns(OauthApplication::ApplicationTypeEnum) }
+    def enum; end
+
+    sig { returns(T::Boolean) }
+    def m2m?; end
+
+    sig { returns(T::Boolean) }
+    def native?; end
+
+    sig { returns(T::Boolean) }
+    def spa?; end
+
+    sig { returns(T::Boolean) }
+    def traditional_web?; end
   end
 
   module CommonRelationMethods
@@ -658,23 +687,26 @@ class OauthApplication
       params(
         string_query: String,
         allowed_logout_urls: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        application_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         confidential: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         enable_client_credential_flow: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         enable_push_event: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        login_url: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         redirect_uri: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         require_sms_mfa: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         scopes: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         secret: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        sign_up_url: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         uid: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateAssociationRelation)
     end
-    def where(string_query = nil, allowed_logout_urls: nil, confidential: nil, created_at: nil, enable_client_credential_flow: nil, enable_push_event: nil, id: nil, name: nil, redirect_uri: nil, require_sms_mfa: nil, scopes: nil, secret: nil, tenant_id: nil, uid: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, allowed_logout_urls: nil, application_type: nil, confidential: nil, created_at: nil, enable_client_credential_flow: nil, enable_push_event: nil, id: nil, login_url: nil, name: nil, redirect_uri: nil, require_sms_mfa: nil, scopes: nil, secret: nil, sign_up_url: nil, tenant_id: nil, uid: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
     def with(*args, &blk); end
@@ -728,6 +760,51 @@ class OauthApplication
 
     sig { void }
     def allowed_logout_urls_will_change!; end
+
+    sig { returns(T.untyped) }
+    def application_type; end
+
+    sig { params(value: T.untyped).returns(T.untyped) }
+    def application_type=(value); end
+
+    sig { returns(T::Boolean) }
+    def application_type?; end
+
+    sig { returns(T.untyped) }
+    def application_type_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def application_type_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def application_type_came_from_user?; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def application_type_change; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def application_type_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def application_type_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def application_type_in_database; end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def application_type_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def application_type_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.untyped) }
+    def application_type_previously_was; end
+
+    sig { returns(T.untyped) }
+    def application_type_was; end
+
+    sig { void }
+    def application_type_will_change!; end
 
     sig { returns(T::Boolean) }
     def confidential; end
@@ -999,6 +1076,51 @@ class OauthApplication
     sig { void }
     def id_will_change!; end
 
+    sig { returns(T.nilable(::String)) }
+    def login_url; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def login_url=(value); end
+
+    sig { returns(T::Boolean) }
+    def login_url?; end
+
+    sig { returns(T.nilable(::String)) }
+    def login_url_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def login_url_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def login_url_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def login_url_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def login_url_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def login_url_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def login_url_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def login_url_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def login_url_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def login_url_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def login_url_was; end
+
+    sig { void }
+    def login_url_will_change!; end
+
     sig { returns(::String) }
     def name; end
 
@@ -1138,6 +1260,9 @@ class OauthApplication
     def restore_allowed_logout_urls!; end
 
     sig { void }
+    def restore_application_type!; end
+
+    sig { void }
     def restore_confidential!; end
 
     sig { void }
@@ -1156,6 +1281,9 @@ class OauthApplication
     def restore_id_value!; end
 
     sig { void }
+    def restore_login_url!; end
+
+    sig { void }
     def restore_name!; end
 
     sig { void }
@@ -1171,6 +1299,9 @@ class OauthApplication
     def restore_secret!; end
 
     sig { void }
+    def restore_sign_up_url!; end
+
+    sig { void }
     def restore_tenant_id!; end
 
     sig { void }
@@ -1184,6 +1315,12 @@ class OauthApplication
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_allowed_logout_urls?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([T.untyped, T.untyped])) }
+    def saved_change_to_application_type; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_application_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([T::Boolean, T::Boolean])) }
     def saved_change_to_confidential; end
@@ -1221,6 +1358,12 @@ class OauthApplication
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_login_url; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_login_url?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_name; end
 
@@ -1250,6 +1393,12 @@ class OauthApplication
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def saved_change_to_secret?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def saved_change_to_sign_up_url; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def saved_change_to_sign_up_url?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { returns(T.nilable([::String, ::String])) }
     def saved_change_to_tenant_id; end
@@ -1358,6 +1507,51 @@ class OauthApplication
 
     sig { void }
     def secret_will_change!; end
+
+    sig { returns(T.nilable(::String)) }
+    def sign_up_url; end
+
+    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+    def sign_up_url=(value); end
+
+    sig { returns(T::Boolean) }
+    def sign_up_url?; end
+
+    sig { returns(T.nilable(::String)) }
+    def sign_up_url_before_last_save; end
+
+    sig { returns(T.untyped) }
+    def sign_up_url_before_type_cast; end
+
+    sig { returns(T::Boolean) }
+    def sign_up_url_came_from_user?; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def sign_up_url_change; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def sign_up_url_change_to_be_saved; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def sign_up_url_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def sign_up_url_in_database; end
+
+    sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
+    def sign_up_url_previous_change; end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def sign_up_url_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { returns(T.nilable(::String)) }
+    def sign_up_url_previously_was; end
+
+    sig { returns(T.nilable(::String)) }
+    def sign_up_url_was; end
+
+    sig { void }
+    def sign_up_url_will_change!; end
 
     sig { returns(::String) }
     def tenant_id; end
@@ -1498,6 +1692,9 @@ class OauthApplication
     def will_save_change_to_allowed_logout_urls?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_application_type?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_confidential?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -1516,6 +1713,9 @@ class OauthApplication
     def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_login_url?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_name?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
@@ -1529,6 +1729,9 @@ class OauthApplication
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_secret?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+    sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+    def will_save_change_to_sign_up_url?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
     sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
     def will_save_change_to_tenant_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
@@ -1677,23 +1880,26 @@ class OauthApplication
       params(
         string_query: String,
         allowed_logout_urls: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        application_type: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         confidential: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         created_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         enable_client_credential_flow: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         enable_push_event: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        login_url: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         name: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         redirect_uri: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         require_sms_mfa: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         scopes: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         secret: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
+        sign_up_url: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         tenant_id: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         uid: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         updated_at: T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation),
         nested: T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)], T::Hash[T.untyped, T.untyped]))
       ).returns(PrivateRelation)
     end
-    def where(string_query = nil, allowed_logout_urls: nil, confidential: nil, created_at: nil, enable_client_credential_flow: nil, enable_push_event: nil, id: nil, name: nil, redirect_uri: nil, require_sms_mfa: nil, scopes: nil, secret: nil, tenant_id: nil, uid: nil, updated_at: nil, **nested); end
+    def where(string_query = nil, allowed_logout_urls: nil, application_type: nil, confidential: nil, created_at: nil, enable_client_credential_flow: nil, enable_push_event: nil, id: nil, login_url: nil, name: nil, redirect_uri: nil, require_sms_mfa: nil, scopes: nil, secret: nil, sign_up_url: nil, tenant_id: nil, uid: nil, updated_at: nil, **nested); end
 
     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
     def with(*args, &blk); end

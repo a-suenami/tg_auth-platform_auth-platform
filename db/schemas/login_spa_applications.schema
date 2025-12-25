@@ -10,9 +10,7 @@ create_table 'login_spa_applications', force: :cascade, id: :uuid, default: -> {
   t.string :sign_up_url
   t.string :redirect_url_on_password_reset, null: false
   t.boolean :enable_web_login, null: false, default: false
-  t.boolean :enable_api_login, null: false, default: true
   t.boolean :enable_web_sign_up, null: false, default: false
-  t.boolean :enable_api_sign_up, null: false, default: true
   t.index ['uid'], name: 'index_login_spa_applications_on_uid', unique: true
 end
 
