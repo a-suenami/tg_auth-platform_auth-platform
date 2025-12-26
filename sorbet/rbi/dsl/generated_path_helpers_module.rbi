@@ -346,9 +346,6 @@ module GeneratedPathHelpersModule
   def new_ruler_area_tenant_komoju_records_account_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def new_ruler_area_tenant_login_spa_application_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_membership_group_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -539,9 +536,6 @@ module GeneratedPathHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_login_spa_application_path(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_login_spa_applications_path(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_membership_group_path(*args); end

@@ -346,9 +346,6 @@ module GeneratedUrlHelpersModule
   def new_ruler_area_tenant_komoju_records_account_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
-  def new_ruler_area_tenant_login_spa_application_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
   def new_ruler_area_tenant_membership_group_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
@@ -539,9 +536,6 @@ module GeneratedUrlHelpersModule
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_login_spa_application_url(*args); end
-
-  sig { params(args: T.untyped).returns(String) }
-  def ruler_area_tenant_login_spa_applications_url(*args); end
 
   sig { params(args: T.untyped).returns(String) }
   def ruler_area_tenant_membership_group_url(*args); end
