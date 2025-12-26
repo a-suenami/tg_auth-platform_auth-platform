@@ -1,6 +1,8 @@
 .uk-margin-top.uk-container
-  h2 Login Spa Application 編集
+  .uk-flex.uk-flex-between.uk-flex-middle
+    h2 SPA 設定 編集
+    = link_to "戻る", ruler_area_tenant_login_spa_application_path(@tenant_id), class: "uk-button uk-button-default"
 
   .uk-margin-top.uk-card.uk-card-default.uk-card-body
-    = form_with model: @login_spa_application, url: ruler_area_tenant_login_spa_application_path(@tenant_id), method: :put do |f|
+    = form_with model: @login_spa_application, url: ruler_area_tenant_login_spa_application_path(@tenant_id), method: :patch do |f|
       = render 'form', f: f

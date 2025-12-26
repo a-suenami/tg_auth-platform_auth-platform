@@ -1,66 +1,42 @@
 .uk-margin-top.uk-container
-  h2 Login Spa Application 詳細
+  .uk-flex.uk-flex-between.uk-flex-middle
+    h2 SPA 設定
+    = link_to "編集", edit_ruler_area_tenant_login_spa_application_path(@tenant_id), class: "uk-button uk-button-primary"
 
-  .uk-flex.uk-flex-right
-    = link_to "編集", edit_ruler_area_tenant_login_spa_application_path(@tenant_id, @login_spa_application), class: "uk-button uk-button-primary"
-    .uk-margin-left
-    = link_to "削除", ruler_area_tenant_login_spa_application_path(@tenant_id, @login_spa_application), data: { turbo_method: :delete, turbo_confirm: "一度削除したデータを戻せません。本当に削除しますか？" }, class: 'uk-button uk-button-danger'
-
-  table.uk-table
-    tr
-      th = LoginSpaApplication.human_attribute_name(:id)
-      td
-        = @login_spa_application.id
-    tr
-      th = LoginSpaApplication.human_attribute_name(:name)
-      td
-        = @login_spa_application.name
-    tr
-      th = LoginSpaApplication.human_attribute_name(:uid)
-      td
-        = @login_spa_application.uid
-    tr
-      th = LoginSpaApplication.human_attribute_name(:redirect_url_on_password_reset)
-      td
-        = @login_spa_application.redirect_url_on_password_reset
-    tr
-      th = LoginSpaApplication.human_attribute_name(:login_url)
-      td
-        = @login_spa_application.login_url
-    tr
-      th = LoginSpaApplication.human_attribute_name(:sign_up_url)
-      td
-        = @login_spa_application.sign_up_url
-    tr
-      th = LoginSpaApplication.human_attribute_name(:scopes)
-      td
-        = @login_spa_application.scopes
-    tr
-      th = LoginSpaApplication.human_attribute_name(:confidential)
-      td
-        = @login_spa_application.confidential
-    tr
-      th = LoginSpaApplication.human_attribute_name(:enable_web_login)
-      td
-        = @login_spa_application.enable_web_login ? '有効' : '無効'
-    tr
-      th = LoginSpaApplication.human_attribute_name(:enable_api_login)
-      td
-        = @login_spa_application.enable_api_login ? '有効' : '無効'
-    tr
-      th = LoginSpaApplication.human_attribute_name(:enable_web_sign_up)
-      td
-        = @login_spa_application.enable_web_sign_up ? '有効' : '無効'
-    tr
-      th = LoginSpaApplication.human_attribute_name(:enable_api_sign_up)
-      td
-        = @login_spa_application.enable_api_sign_up ? '有効' : '無効'
-    tr
-      th = LoginSpaApplication.human_attribute_name(:created_at)
-      td
-        = @login_spa_application.created_at
-    tr
-      th = LoginSpaApplication.human_attribute_name(:updated_at)
-      td
-        = @login_spa_application.updated_at
-
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    - if @login_spa_application.new_record?
+      p.uk-text-muted 設定がありません。「編集」ボタンから設定を作成してください。
+    - else
+      table.uk-table
+        tr
+          th = LoginSpaApplication.human_attribute_name(:name)
+          td = @login_spa_application.name
+        tr
+          th = LoginSpaApplication.human_attribute_name(:login_url)
+          td = @login_spa_application.login_url
+        tr
+          th = LoginSpaApplication.human_attribute_name(:sign_up_url)
+          td = @login_spa_application.sign_up_url
+        tr
+          th = LoginSpaApplication.human_attribute_name(:redirect_url_on_password_reset)
+          td = @login_spa_application.redirect_url_on_password_reset
+        tr
+          th = LoginSpaApplication.human_attribute_name(:enable_web_login)
+          td
+            - if @login_spa_application.enable_web_login
+              span.uk-label.uk-label-success 有効
+            - else
+              span.uk-label.uk-label-danger 無効
+        tr
+          th = LoginSpaApplication.human_attribute_name(:enable_web_sign_up)
+          td
+            - if @login_spa_application.enable_web_sign_up
+              span.uk-label.uk-label-success 有効
+            - else
+              span.uk-label.uk-label-danger 無効
+        tr
+          th = LoginSpaApplication.human_attribute_name(:uid)
+          td.uk-text-muted = @login_spa_application.uid
+        tr
+          th = LoginSpaApplication.human_attribute_name(:updated_at)
+          td = @login_spa_application.updated_at
