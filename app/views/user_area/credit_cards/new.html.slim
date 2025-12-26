@@ -1,5 +1,5 @@
 - content_for :head do
-  script src='https://js.stripe.com/v3/'
+  script src='https://js.stripe.com/v3/' data-turbo-track='reload'
 
 .l-page
   .uk-section
@@ -31,7 +31,7 @@
             = link_to 'マイページに戻る', mypage_path, class: 'uk-button uk-button-default'
 
 javascript:
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('turbo:load', function() {
     const stripeOptions = {};
     const stripeAccountId = '#{@stripe_account_id}';
     if (stripeAccountId) {
