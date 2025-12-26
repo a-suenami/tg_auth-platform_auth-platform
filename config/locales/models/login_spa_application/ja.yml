@@ -14,8 +14,6 @@ ja:
         sign_up_url: サインアップURL
         redirect_url_on_password_reset: パスワードリセット後リダイレクトURL
         enable_web_login: Web ログイン
-        enable_api_login: API ログイン
         enable_web_sign_up: Web サインアップ
-        enable_api_sign_up: API サインアップ
         created_at: 作成日時
         updated_at: 更新日時
