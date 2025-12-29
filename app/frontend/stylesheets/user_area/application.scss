@@ -311,6 +311,7 @@ body {
   &__textarea {
     width: 100%;
     padding: 12px 16px;
+    box-sizing: border-box;
     font-family: var(--ua-font-family-body);
     font-size: var(--ua-font-size-base);
     color: var(--ua-color-text);
