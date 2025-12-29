@@ -109,6 +109,38 @@ def field_editable?(table_name, field)
 end
 ```
 
+## Attribute Combinations
+
+The three attributes (`required`, `hidden`, `editable`) are implemented as independent flags, but some combinations are logically invalid.
+
+### Valid Combinations
+
+| required | hidden | editable | Description |
+|----------|--------|----------|-------------|
+| `true` | `false` | `true` | Displayed, required, always editable |
+| `true` | `false` | `false` | Displayed, required, locked after first input |
+| `false` | `false` | `true` | Displayed, optional, always editable |
+| `false` | `false` | `false` | Displayed, optional, locked after first input |
+| `false` | `true` | `*` | Hidden (not collected from user) |
+
+### Invalid Combinations
+
+| required | hidden | editable | Problem |
+|----------|--------|----------|---------|
+| `true` | `true` | `*` | Field is hidden from form but validation requires it - user cannot input but gets validation error |
+
+## Known Issues
+
+### No Validation for Invalid Attribute Combinations
+
+The current implementation does not validate the logical consistency of attribute combinations. If an administrator configures `required: true` with `hidden: true`, the system will:
+
+1. Hide the field from the profile edit form (due to `hidden: true`)
+2. Fail validation when the user submits (due to `required: true`)
+3. Result in an uncompletable profile, blocking the user from enabling their account
+
+**Workaround**: Administrators must manually ensure they do not set `required: true` and `hidden: true` together.
+
 ## Related Files
 
 - `app/forms/user_form.rb` - Main form handling profile field rules
