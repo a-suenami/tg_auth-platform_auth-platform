@@ -241,22 +241,25 @@ end
 
 ## Database
 
-See: `.claude/todos/oauth-application-field-rules/TASK.md` (別途作成予定)
+Schema file: `db/schemas/oauth_application_field_rules.schema`
 
 ```ruby
-create_table :oauth_application_field_rules do |t|
-  t.citext :tenant_id, null: false
-  t.uuid   :oauth_application_id, null: false
+create_table :oauth_application_field_rules, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :oauth_application, type: :uuid, null: false
   t.string :table_name, null: false   # 'user_profiles', 'user_contact_addresses'
   t.string :field_name, null: false   # 'first_name', 'phone_number', etc.
-  t.boolean :required, default: false
-  t.timestamps
+  t.boolean :required, default: true, null: false
+
+  t.timestamps null: false
+
+  t.index [:tenant_id, :oauth_application_id, :table_name, :field_name],
+          name: :idx_oauth_app_field_rules_unique,
+          unique: true
 end
 
-add_index :oauth_application_field_rules,
-          [:tenant_id, :oauth_application_id, :table_name, :field_name],
-          unique: true,
-          name: 'idx_oauth_app_field_rules_unique'
+add_foreign_key :oauth_application_field_rules, :tenants, name: :fk_oauth_application_field_rules_tenants
+add_foreign_key :oauth_application_field_rules, :oauth_applications, name: :fk_oauth_application_field_rules_oauth_applications
 ```
 
 ## Edit Flow
