@@ -277,6 +277,271 @@ add_index :oauth_application_field_rules,
 
 現時点（grant_types テーブル未実装）では、`user_facing?` は常に `true` を返す。
 
+---
+
+# User-Side: Authorization Flow with Field Collection
+
+## Overview
+
+OAuth 認可フロー中に、アプリケーションが要求するフィールドが未入力の場合、入力フォームを表示してユーザーに入力を求める。
+
+## Authorization Flow
+
+```
+[SP] → [認可リクエスト] → [ログイン/会員登録]
+                              ↓
+                    [必須フィールドチェック]
+                              ↓
+              ┌───────────────┴───────────────┐
+              ↓                               ↓
+        [未入力あり]                    [すべて入力済み]
+              ↓                               ↓
+        [入力フォーム表示]                    │
+              ↓                               │
+        [フォーム送信]                        │
+              ↓                               ↓
+              └───────────────┬───────────────┘
+                              ↓
+                    [認可完了・コールバック]
+```
+
+## Implementation Options
+
+### Option A: Show form only when fields are missing (Recommended)
+
+```ruby
+# app/controllers/oauth/authorizations_controller.rb
+class Oauth::AuthorizationsController < Doorkeeper::AuthorizationsController
+  before_action :ensure_required_fields_filled, only: [:create]
+
+  private
+
+  def ensure_required_fields_filled
+    return unless user_signed_in?
+
+    missing_fields = calculate_missing_fields(current_user, oauth_application)
+
+    if missing_fields.any?
+      # Store authorization params in session
+      session[:pending_authorization] = authorization_params
+
+      redirect_to oauth_profile_completion_path(
+        oauth_application_id: oauth_application.id,
+        missing_fields: missing_fields.map(&:field_name)
+      )
+    end
+  end
+
+  def calculate_missing_fields(user, application)
+    application.required_field_rules.select do |rule|
+      value = get_field_value(user, rule.table_name, rule.field_name)
+      value.blank?
+    end
+  end
+end
+```
+
+**Pros:**
+- Better UX for returning users (no extra step if already filled)
+- Faster flow for users with complete profiles
+
+**Cons:**
+- Need conditional logic to check field completion
+
+### Option B: Always show form (pre-filled)
+
+```ruby
+# Always redirect to profile completion, pre-fill with existing values
+def ensure_required_fields_filled
+  return unless user_signed_in?
+
+  session[:pending_authorization] = authorization_params
+
+  redirect_to oauth_profile_completion_path(
+    oauth_application_id: oauth_application.id
+  )
+end
+```
+
+**Pros:**
+- Simpler implementation (no conditional branching)
+- User always confirms their information
+
+**Cons:**
+- Extra step for every authorization (annoying UX)
+- Users may wonder why they need to confirm every time
+
+### Recommendation: Option A with shared controller
+
+Option A を採用しつつ、フォーム表示/スキップの判定ロジックをコントローラで共通化する。
+
+## Profile Completion Screen
+
+`app/views/oauth/profile_completions/show.html.slim`
+
+```slim
+.uk-margin-top.uk-container
+  h2 追加情報の入力
+
+  .uk-alert.uk-alert-primary
+    | 「#{@oauth_application.name}」をご利用いただくには、以下の情報が必要です。
+
+  .uk-margin-top.uk-card.uk-card-default.uk-card-body
+    = form_with model: @profile_form,
+                url: oauth_profile_completion_path,
+                method: :patch do |f|
+
+      - @required_fields.each do |field|
+        .uk-margin
+          = f.label field.field_name
+          - if field.already_filled?
+            = f.text_field field.field_name, class: "uk-input",
+                           value: field.current_value, readonly: true
+            .uk-text-meta.uk-text-success ✓ 入力済み
+          - else
+            = f.text_field field.field_name, class: "uk-input"
+            - if field.required?
+              span.uk-text-danger *
+
+      .uk-margin-top
+        = f.submit "確認して続行", class: "uk-button uk-button-primary"
+```
+
+## Controller: ProfileCompletionsController
+
+```ruby
+# app/controllers/oauth/profile_completions_controller.rb
+module Oauth
+  class ProfileCompletionsController < ApplicationController
+    before_action :authenticate_user!
+    before_action :load_oauth_application
+    before_action :ensure_pending_authorization
+
+    def show
+      @required_fields = build_required_fields
+      @profile_form = ProfileCompletionForm.new(current_user, @required_fields)
+    end
+
+    def update
+      @profile_form = ProfileCompletionForm.new(current_user, @required_fields)
+
+      if @profile_form.update(profile_params)
+        # Resume authorization flow
+        redirect_to oauth_authorization_path(session[:pending_authorization])
+      else
+        @required_fields = build_required_fields
+        render :show, status: :unprocessable_entity
+      end
+    end
+
+    private
+
+    def load_oauth_application
+      @oauth_application = OauthApplication.find(params[:oauth_application_id])
+    end
+
+    def ensure_pending_authorization
+      unless session[:pending_authorization]
+        redirect_to root_path, alert: "認可リクエストが見つかりません"
+      end
+    end
+
+    def build_required_fields
+      @oauth_application.required_field_rules.map do |rule|
+        FieldPresenter.new(
+          rule: rule,
+          current_value: get_current_value(current_user, rule)
+        )
+      end
+    end
+  end
+end
+```
+
+## Routes
+
+```ruby
+namespace :oauth do
+  resource :profile_completion, only: [:show, :update]
+end
+```
+
+## Doorkeeper Integration
+
+Doorkeeper の認可フローにフックするには、`Doorkeeper::AuthorizationsController` を継承してカスタマイズする。
+
+```ruby
+# config/initializers/doorkeeper.rb
+Doorkeeper.configure do
+  # ...
+
+  # Use custom authorization controller
+  controllers authorizations: 'oauth/authorizations'
+end
+```
+
+## Session Management
+
+認可パラメータをセッションに保存し、プロフィール入力完了後に復元する。
+
+```ruby
+# Store
+session[:pending_authorization] = {
+  client_id: params[:client_id],
+  redirect_uri: params[:redirect_uri],
+  response_type: params[:response_type],
+  scope: params[:scope],
+  state: params[:state],
+  code_challenge: params[:code_challenge],
+  code_challenge_method: params[:code_challenge_method]
+}
+
+# Resume
+redirect_to oauth_authorization_path(session.delete(:pending_authorization))
+```
+
+## Validation
+
+フィールドルールに基づいてバリデーションを動的に適用する。
+
+```ruby
+class ProfileCompletionForm
+  include ActiveModel::Model
+
+  def initialize(user, required_fields)
+    @user = user
+    @required_fields = required_fields
+
+    # Dynamically add validations
+    required_fields.each do |field|
+      if field.required? && !field.already_filled?
+        validates field.field_name, presence: true
+      end
+    end
+  end
+end
+```
+
+## Edge Cases
+
+### 1. User cancels profile completion
+
+「戻る」ボタンで SP に戻れるようにする（認可拒否として処理）。
+
+```slim
+= link_to "キャンセル",
+          oauth_authorization_path(session[:pending_authorization].merge(error: 'access_denied')),
+          class: "uk-button uk-button-default"
+```
+
+### 2. Field becomes hidden after user filled it
+
+テナント設定で後から hidden にされたフィールドは、既存の値を保持しつつ、新規入力は求めない。
+
+### 3. Multiple applications with different requirements
+
+各アプリケーションの field_rules が異なる場合、認可時にそのアプリケーションのルールのみをチェックする。
+
 ## Related Documents
 
 - `docs/spec/profile_field_rules.md` - テナントレベルのフィールドルール仕様
