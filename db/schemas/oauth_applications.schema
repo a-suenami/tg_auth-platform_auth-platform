@@ -13,6 +13,7 @@ create_table 'oauth_applications', force: :cascade, id: :uuid, default: -> { 'ge
   t.boolean :require_sms_mfa, default: false
   t.text :allowed_logout_urls
   t.index ['uid'], name: 'index_oauth_applications_on_uid', unique: true
+  t.index [:tenant_id, :id], name: 'index_oauth_applications_on_tenant_id_and_id', unique: true
 end
 
 add_foreign_key :oauth_applications, :tenants, name: :fk_oauth_applications_tenants

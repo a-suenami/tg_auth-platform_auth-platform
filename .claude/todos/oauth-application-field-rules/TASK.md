@@ -254,8 +254,10 @@ create_table :oauth_application_field_rules, force: :cascade, id: :uuid, default
           unique: true
 end
 
-add_foreign_key :oauth_application_field_rules, :tenants, name: :fk_oauth_application_field_rules_tenants
-add_foreign_key :oauth_application_field_rules, :oauth_applications, name: :fk_oauth_application_field_rules_oauth_applications
+add_foreign_key :oauth_application_field_rules, :oauth_applications,
+                column: [:tenant_id, :oauth_application_id],
+                primary_key: [:tenant_id, :id],
+                name: :fk_oauth_application_field_rules_oauth_applications
 ```
 
 ### Rule Values
