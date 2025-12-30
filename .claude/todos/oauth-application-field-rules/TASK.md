@@ -2,36 +2,36 @@
 
 ## Overview
 
-OAuth Application 登録時に、アプリケーションごとのフィールドルールを設定する UI 設計。
+UI design for configuring per-application field rules during OAuth Application registration.
 
 ## Design Principles
 
-1. **既存 UI からの差分を最小化** - 既存のフォームは変更しない
-2. **2段階フロー** - 基本情報登録後、field rule 設定画面に遷移
-3. **デフォルト required** - 離脱時も安全な状態を保証
+1. **Minimize diff from existing UI** - Don't change existing forms
+2. **Two-step flow** - Navigate to field rules screen after basic info registration
+3. **Default to required** - Ensure safe state even if user abandons mid-flow
 
 ## Current Flow
 
 ```
-[新規作成] → [フォーム入力] → [保存] → [詳細画面]
+[New] → [Form Input] → [Save] → [Detail Screen]
 ```
 
 ## Proposed Flow
 
 ```
-[新規作成] → [フォーム入力] → [保存] → [Field Rules 設定] → [詳細画面]
-                                              ↓
-                                        (離脱しても OK:
-                                         デフォルト全て required)
+[New] → [Form Input] → [Save] → [Field Rules Config] → [Detail Screen]
+                                        ↓
+                                  (OK to abandon:
+                                   defaults all to required)
 ```
 
 ## Screen Specifications
 
-### 1. OAuth Application 新規作成画面（既存：変更なし）
+### 1. OAuth Application Create Screen (Existing: No Changes)
 
 `app/views/ruler_area/tenants/oauth_applications/new.html.slim`
 
-現在のフォームをそのまま維持：
+Keep current form as-is:
 - name
 - redirect_uri
 - scopes
@@ -41,18 +41,18 @@ OAuth Application 登録時に、アプリケーションごとのフィール�
 - require_sms_mfa
 - confidential
 
-### 2. Field Rules 設定画面（新規）
+### 2. Field Rules Configuration Screen (New)
 
 `app/views/ruler_area/tenants/oauth_applications/field_rules.html.slim`
 
-#### 画面構成
+#### Screen Layout
 
 ```slim
 .uk-margin-top.uk-container
-  h2 フィールドルール設定
+  h2 Field Rules Configuration
 
   .uk-alert.uk-alert-primary
-    | このアプリケーションを利用するユーザーに必須入力を求めるフィールドを設定します。
+    | Configure which fields are required for users of this application.
 
   .uk-margin-top.uk-card.uk-card-default.uk-card-body
     h3 #{@oauth_application.name}
@@ -64,9 +64,9 @@ OAuth Application 登録時に、アプリケーションごとのフィール�
       table.uk-table.uk-table-divider
         thead
           tr
-            th フィールド
-            th テナント設定
-            th 必須にする
+            th Field
+            th Tenant Setting
+            th Required
         tbody
           - @field_rules.each do |field|
             tr
@@ -76,16 +76,16 @@ OAuth Application 登録時に、アプリケーションごとのフィール�
               td
                 - case field[:tenant_status]
                 - when :required
-                  span.uk-label.uk-label-warning 必須
+                  span.uk-label.uk-label-warning Required
                 - when :hidden
-                  span.uk-label.uk-label-danger 非表示
+                  span.uk-label.uk-label-danger Hidden
                 - when :editable
-                  span.uk-label 編集可
+                  span.uk-label Editable
               td
                 - if field[:tenant_status] == :required
                   = check_box_tag "field_rules[#{field[:key]}]", true, true,
                                   disabled: true, class: "uk-checkbox"
-                  .uk-text-meta テナント設定で必須
+                  .uk-text-meta Required by tenant
                 - elsif field[:tenant_status] == :hidden
                   | −
                 - else
@@ -93,49 +93,49 @@ OAuth Application 登録時に、アプリケーションごとのフィール�
                                   field[:required], class: "uk-checkbox"
 
       .uk-alert.uk-alert-warning
-        | ⚠️ デフォルトですべての編集可能なフィールドが「必須」に設定されています。
-        | 不要なものはオフにしてください。
+        | ⚠️ All editable fields default to "required".
+        | Uncheck fields that are not needed.
 
       .uk-margin-top
-        = f.submit "設定を保存", class: "uk-button uk-button-primary"
-        = link_to "スキップ（全て必須のまま）",
+        = f.submit "Save Settings", class: "uk-button uk-button-primary"
+        = link_to "Skip (keep all required)",
                   ruler_area_tenant_oauth_application_path(@oauth_application.tenant_id, @oauth_application),
                   class: "uk-button uk-button-default uk-margin-left"
 ```
 
-#### 表示フィールド一覧
+#### Available Fields
 
 | Key | Label |
 |-----|-------|
-| `first_name` | 名 |
-| `last_name` | 姓 |
-| `first_name_kana` | 名（カナ） |
-| `last_name_kana` | 姓（カナ） |
-| `birth_date` | 生年月日 |
-| `gender` | 性別 |
-| `phone_number` | 電話番号 |
-| `postal_code` | 郵便番号 |
-| `prefecture` | 都道府県 |
-| `city` | 市区町村 |
-| `address1` | 住所1 |
-| `address2` | 住所2 |
+| `first_name` | First Name |
+| `last_name` | Last Name |
+| `first_name_kana` | First Name (Kana) |
+| `last_name_kana` | Last Name (Kana) |
+| `birth_date` | Birth Date |
+| `gender` | Gender |
+| `phone_number` | Phone Number |
+| `postal_code` | Postal Code |
+| `prefecture` | Prefecture |
+| `city` | City |
+| `address1` | Address 1 |
+| `address2` | Address 2 |
 
-### 3. 詳細画面の拡張
+### 3. Detail Screen Extension
 
 `app/views/ruler_area/tenants/oauth_applications/show.html.slim`
 
-Field Rules セクションを追加：
+Add Field Rules section:
 
 ```slim
-/ 既存のテーブルの後に追加
-h3.uk-margin-top フィールドルール
+/ Add after existing table
+h3.uk-margin-top Field Rules
 
 - if @oauth_application.user_facing?
   table.uk-table.uk-table-divider
     thead
       tr
-        th フィールド
-        th 必須
+        th Field
+        th Required
     tbody
       - @oauth_application.field_rules_summary.each do |field|
         tr
@@ -146,11 +146,11 @@ h3.uk-margin-top フィールドルール
             - else
               | −
 
-  = link_to "フィールドルールを編集",
+  = link_to "Edit Field Rules",
             field_rules_ruler_area_tenant_oauth_application_path(@oauth_application.tenant_id, @oauth_application),
             class: "uk-button uk-button-default uk-button-small"
 - else
-  p.uk-text-muted M2M専用アプリケーションのため、フィールドルールは設定できません。
+  p.uk-text-muted Field rules cannot be configured for M2M-only applications.
 ```
 
 ## Controller Changes
@@ -161,17 +161,17 @@ h3.uk-margin-top フィールドルール
 def create
   @oauth_application = OauthApplication.create(oauth_application_params)
   if @oauth_application.persisted?
-    # Field rules をデフォルト (全て required) で作成
+    # Create field rules with defaults (all required)
     create_default_field_rules(@oauth_application)
 
     if @oauth_application.user_facing?
-      # User-facing app の場合は field rules 設定画面へ
+      # User-facing app: redirect to field rules config
       redirect_to field_rules_ruler_area_tenant_oauth_application_path(
         @oauth_application.tenant_id,
         @oauth_application
       ), notice: t('helpers.messages.created_configure_field_rules')
     else
-      # M2M app の場合は詳細画面へ
+      # M2M app: redirect to detail screen
       redirect_to ruler_area_tenant_oauth_application_path(
         @oauth_application.tenant_id,
         @oauth_application
@@ -204,15 +204,15 @@ end
 private
 
 def create_default_field_rules(oauth_application)
-  # テナント設定を取得
+  # Get tenant settings
   tenant_setting = TenantSetting.find_by(tenant_id: oauth_application.tenant_id)
   tenant_rules = JSON.parse(tenant_setting&.profile_field_rules || '{}')
 
-  # 全フィールドについてルールを作成
+  # Create rules for all fields
   CONFIGURABLE_FIELDS.each do |field|
     tenant_rule = tenant_rules.dig(field.to_s) || {}
 
-    # テナントで hidden のフィールドは hidden、それ以外は required
+    # Hidden if tenant marks it hidden, otherwise required
     rule = tenant_rule['hidden'] ? 'hidden' : 'required'
 
     OauthApplicationFieldRule.create!(
@@ -270,21 +270,21 @@ add_foreign_key :oauth_application_field_rules, :oauth_applications,
 
 ## Edit Flow
 
-既存アプリケーションの編集時：
+When editing existing applications:
 
-1. 詳細画面から「フィールドルールを編集」をクリック
-2. field_rules 画面で編集
-3. 保存 → 詳細画面に戻る
+1. Click "Edit Field Rules" from detail screen
+2. Edit on field_rules screen
+3. Save → return to detail screen
 
 ## M2M App Handling
 
-`user_facing?` が `false` の場合（将来 grant_types テーブル実装後）：
+When `user_facing?` is `false` (after grant_types table implementation):
 
-- 新規作成時: field rules 設定画面をスキップ
-- 詳細画面: "M2M専用アプリケーションのため設定できません" と表示
-- field_rules は作成しない
+- On create: skip field rules config screen
+- On detail screen: show "Cannot configure for M2M-only applications"
+- Don't create field_rules records
 
-現時点（grant_types テーブル未実装）では、`user_facing?` は常に `true` を返す。
+Currently (before grant_types table implementation), `user_facing?` always returns `true`.
 
 ---
 
@@ -292,26 +292,26 @@ add_foreign_key :oauth_application_field_rules, :oauth_applications,
 
 ## Overview
 
-OAuth 認可フロー中に、アプリケーションが要求するフィールドが未入力の場合、入力フォームを表示してユーザーに入力を求める。
+During OAuth authorization flow, if required fields are not filled, display an input form to collect them from the user.
 
 ## Authorization Flow
 
 ```
-[SP] → [認可リクエスト] → [ログイン/会員登録]
+[SP] → [Auth Request] → [Login/Sign Up]
                               ↓
-                    [必須フィールドチェック]
+                    [Check Required Fields]
                               ↓
               ┌───────────────┴───────────────┐
               ↓                               ↓
-        [未入力あり]                    [すべて入力済み]
+        [Missing Fields]              [All Fields Filled]
               ↓                               ↓
-        [入力フォーム表示]                    │
+        [Show Input Form]                     │
               ↓                               │
-        [フォーム送信]                        │
+        [Submit Form]                         │
               ↓                               ↓
               └───────────────┬───────────────┘
                               ↓
-                    [認可完了・コールバック]
+                    [Authorization Complete → Callback]
 ```
 
 ## Implementation Options
@@ -382,7 +382,7 @@ end
 
 ### Recommendation: Option A with shared controller
 
-Option A を採用しつつ、フォーム表示/スキップの判定ロジックをコントローラで共通化する。
+Adopt Option A while consolidating form display/skip logic in a shared controller.
 
 ## Profile Completion Screen
 
@@ -390,10 +390,10 @@ Option A を採用しつつ、フォーム表示/スキップの判定ロジッ�
 
 ```slim
 .uk-margin-top.uk-container
-  h2 追加情報の入力
+  h2 Additional Information Required
 
   .uk-alert.uk-alert-primary
-    | 「#{@oauth_application.name}」をご利用いただくには、以下の情報が必要です。
+    | To use "#{@oauth_application.name}", the following information is required.
 
   .uk-margin-top.uk-card.uk-card-default.uk-card-body
     = form_with model: @profile_form,
@@ -406,14 +406,14 @@ Option A を採用しつつ、フォーム表示/スキップの判定ロジッ�
           - if field.already_filled?
             = f.text_field field.field_name, class: "uk-input",
                            value: field.current_value, readonly: true
-            .uk-text-meta.uk-text-success ✓ 入力済み
+            .uk-text-meta.uk-text-success ✓ Already filled
           - else
             = f.text_field field.field_name, class: "uk-input"
             - if field.required?
               span.uk-text-danger *
 
       .uk-margin-top
-        = f.submit "確認して続行", class: "uk-button uk-button-primary"
+        = f.submit "Confirm and Continue", class: "uk-button uk-button-primary"
 ```
 
 ## Controller: ProfileCompletionsController
@@ -451,7 +451,7 @@ module Oauth
 
     def ensure_pending_authorization
       unless session[:pending_authorization]
-        redirect_to root_path, alert: "認可リクエストが見つかりません"
+        redirect_to root_path, alert: "Authorization request not found"
       end
     end
 
@@ -477,7 +477,7 @@ end
 
 ## Doorkeeper Integration
 
-Doorkeeper の認可フローにフックするには、`Doorkeeper::AuthorizationsController` を継承してカスタマイズする。
+Customize by inheriting from `Doorkeeper::AuthorizationsController` to hook into the authorization flow.
 
 ```ruby
 # config/initializers/doorkeeper.rb
@@ -491,7 +491,7 @@ end
 
 ## Session Management
 
-認可パラメータをセッションに保存し、プロフィール入力完了後に復元する。
+Store authorization params in session and restore after profile completion.
 
 ```ruby
 # Store
@@ -511,7 +511,7 @@ redirect_to oauth_authorization_path(session.delete(:pending_authorization))
 
 ## Validation
 
-フィールドルールに基づいてバリデーションを動的に適用する。
+Dynamically apply validations based on field rules.
 
 ```ruby
 class ProfileCompletionForm
@@ -535,23 +535,23 @@ end
 
 ### 1. User cancels profile completion
 
-「戻る」ボタンで SP に戻れるようにする（認可拒否として処理）。
+Allow returning to SP via "Cancel" button (treated as authorization denial).
 
 ```slim
-= link_to "キャンセル",
+= link_to "Cancel",
           oauth_authorization_path(session[:pending_authorization].merge(error: 'access_denied')),
           class: "uk-button uk-button-default"
 ```
 
 ### 2. Field becomes hidden after user filled it
 
-テナント設定で後から hidden にされたフィールドは、既存の値を保持しつつ、新規入力は求めない。
+Fields marked hidden later by tenant settings retain existing values but don't require new input.
 
 ### 3. Multiple applications with different requirements
 
-各アプリケーションの field_rules が異なる場合、認可時にそのアプリケーションのルールのみをチェックする。
+When field_rules differ between applications, only check the rules for the current application during authorization.
 
 ## Related Documents
 
-- `docs/spec/profile_field_rules.md` - テナントレベルのフィールドルール仕様
-- `.claude/todos/grant-types-per-application/TASK.md` - Grant Types 実装タスク
+- `docs/spec/profile_field_rules.md` - Tenant-level field rules specification
+- `.claude/todos/grant-types-per-application/TASK.md` - Grant Types implementation task
