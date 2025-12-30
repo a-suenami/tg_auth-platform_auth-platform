@@ -105,20 +105,20 @@ OAuth Application 登録時に、アプリケーションごとのフィール�
 
 #### 表示フィールド一覧
 
-| Key | Label | Table |
-|-----|-------|-------|
-| `first_name` | 名 | user_profiles |
-| `last_name` | 姓 | user_profiles |
-| `first_name_kana` | 名（カナ） | user_profiles |
-| `last_name_kana` | 姓（カナ） | user_profiles |
-| `birth_date` | 生年月日 | user_profiles |
-| `gender` | 性別 | user_profiles |
-| `phone_number` | 電話番号 | user_contact_addresses |
-| `postal_code` | 郵便番号 | user_contact_addresses |
-| `prefecture` | 都道府県 | user_contact_addresses |
-| `city` | 市区町村 | user_contact_addresses |
-| `address1` | 住所1 | user_contact_addresses |
-| `address2` | 住所2 | user_contact_addresses |
+| Key | Label |
+|-----|-------|
+| `first_name` | 名 |
+| `last_name` | 姓 |
+| `first_name_kana` | 名（カナ） |
+| `last_name_kana` | 姓（カナ） |
+| `birth_date` | 生年月日 |
+| `gender` | 性別 |
+| `phone_number` | 電話番号 |
+| `postal_code` | 郵便番号 |
+| `prefecture` | 都道府県 |
+| `city` | 市区町村 |
+| `address1` | 住所1 |
+| `address2` | 住所2 |
 
 ### 3. 詳細画面の拡張
 
@@ -208,22 +208,19 @@ def create_default_field_rules(oauth_application)
   tenant_setting = TenantSetting.find_by(tenant_id: oauth_application.tenant_id)
   tenant_rules = JSON.parse(tenant_setting&.profile_field_rules || '{}')
 
-  # 編集可能なフィールドをすべて required で作成
-  CONFIGURABLE_FIELDS.each do |table, fields|
-    fields.each do |field|
-      tenant_rule = tenant_rules.dig(table.to_s, field.to_s) || {}
+  # 全フィールドについてルールを作成
+  CONFIGURABLE_FIELDS.each do |field|
+    tenant_rule = tenant_rules.dig(field.to_s) || {}
 
-      # テナントで hidden でなければ required で作成
-      unless tenant_rule['hidden']
-        OauthApplicationFieldRule.create!(
-          tenant_id: oauth_application.tenant_id,
-          oauth_application_id: oauth_application.id,
-          table_name: table.to_s,
-          field_name: field.to_s,
-          required: true
-        )
-      end
-    end
+    # テナントで hidden のフィールドは hidden、それ以外は required
+    rule = tenant_rule['hidden'] ? 'hidden' : 'required'
+
+    OauthApplicationFieldRule.create!(
+      tenant_id: oauth_application.tenant_id,
+      oauth_application_id: oauth_application.id,
+      field_name: field.to_s,
+      rule: rule
+    )
   end
 end
 ```
@@ -247,13 +244,12 @@ end
 create_table :oauth_application_field_rules, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant, type: :citext, null: false
   t.references :oauth_application, type: :uuid, null: false
-  t.string :table_name, null: false   # 'user_profiles', 'user_contact_addresses'
   t.string :field_name, null: false   # 'first_name', 'phone_number', etc.
-  t.boolean :required, default: true, null: false
+  t.string :rule, null: false         # 'required', 'editable', 'hidden'
 
   t.timestamps null: false
 
-  t.index [:tenant_id, :oauth_application_id, :table_name, :field_name],
+  t.index [:oauth_application_id, :field_name],
           name: :idx_oauth_app_field_rules_unique,
           unique: true
 end
@@ -261,6 +257,14 @@ end
 add_foreign_key :oauth_application_field_rules, :tenants, name: :fk_oauth_application_field_rules_tenants
 add_foreign_key :oauth_application_field_rules, :oauth_applications, name: :fk_oauth_application_field_rules_oauth_applications
 ```
+
+### Rule の値
+
+| 値 | 説明 |
+|-------|-------------|
+| `required` | ユーザーは認可完了のためにこのフィールドを入力する必要がある |
+| `editable` | ユーザーは任意でこのフィールドを入力できる |
+| `hidden` | このアプリケーションではフィールドをユーザーに表示しない |
 
 ## 編集フロー
 
@@ -336,8 +340,8 @@ class Oauth::AuthorizationsController < Doorkeeper::AuthorizationsController
   end
 
   def calculate_missing_fields(user, application)
-    application.required_field_rules.select do |rule|
-      value = get_field_value(user, rule.table_name, rule.field_name)
+    application.field_rules.where(rule: 'required').select do |field_rule|
+      value = get_field_value(user, field_rule.field_name)
       value.blank?
     end
   end
@@ -450,10 +454,10 @@ module Oauth
     end
 
     def build_required_fields
-      @oauth_application.required_field_rules.map do |rule|
+      @oauth_application.field_rules.where(rule: 'required').map do |field_rule|
         FieldPresenter.new(
-          rule: rule,
-          current_value: get_current_value(current_user, rule)
+          field_rule: field_rule,
+          current_value: get_current_value(current_user, field_rule)
         )
       end
     end

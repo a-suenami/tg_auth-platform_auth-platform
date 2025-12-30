@@ -1,13 +1,12 @@
 create_table :oauth_application_field_rules, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
   t.references :tenant, type: :citext, null: false
   t.references :oauth_application, type: :uuid, null: false
-  t.string :table_name, null: false   # 'user_profiles', 'user_contact_addresses'
   t.string :field_name, null: false   # 'first_name', 'phone_number', etc.
-  t.boolean :required, default: true, null: false
+  t.string :rule, null: false         # 'required', 'editable', 'hidden'
 
   t.timestamps null: false
 
-  t.index [:tenant_id, :oauth_application_id, :table_name, :field_name],
+  t.index [:oauth_application_id, :field_name],
           name: :idx_oauth_app_field_rules_unique,
           unique: true
 end
