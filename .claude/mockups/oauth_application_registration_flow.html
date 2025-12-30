@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OAuth Application 登録フロー - UI モック</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .step-indicator {
+      display: flex;
+      margin-bottom: 30px;
+      gap: 10px;
+    }
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #e0e0e0;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+    .step.active {
+      background: #1976d2;
+      color: white;
+    }
+    .step.completed {
+      background: #4caf50;
+      color: white;
+    }
+    .step-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card h2 {
+      font-size: 18px;
+      margin: 0 0 20px 0;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+    .form-group input[type="text"],
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #1976d2;
+      box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+    }
+    .form-group .hint {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .checkbox-item input[type="checkbox"] {
+      margin-top: 2px;
+      width: 18px;
+      height: 18px;
+    }
+    .checkbox-item .label-text {
+      font-weight: 500;
+    }
+    .checkbox-item .description {
+      font-size: 12px;
+      color: #666;
+    }
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-primary {
+      background: #1976d2;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #1565c0;
+    }
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+    .btn-secondary:hover {
+      background: #d0d0d0;
+    }
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    /* Step 2 specific styles */
+    .field-rules-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .field-rules-table th,
+    .field-rules-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    .field-rules-table th {
+      background: #fafafa;
+      font-weight: 500;
+      font-size: 13px;
+      color: #666;
+    }
+    .field-rules-table td {
+      font-size: 14px;
+    }
+    .field-name {
+      font-weight: 500;
+    }
+    .field-key {
+      font-size: 12px;
+      color: #888;
+      font-family: monospace;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .badge-required {
+      background: #fff3e0;
+      color: #e65100;
+    }
+    .badge-locked {
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+    .badge-hidden {
+      background: #fce4ec;
+      color: #c62828;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.3s;
+      border-radius: 26px;
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: #1976d2;
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+    }
+    .toggle-switch input:disabled + .toggle-slider {
+      background-color: #1976d2;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .info-box {
+      background: #e3f2fd;
+      border-left: 4px solid #1976d2;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #1565c0;
+    }
+    .warning-box {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #e65100;
+    }
+
+    /* Tab navigation for demo */
+    .demo-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      padding: 10px;
+      background: #333;
+      border-radius: 8px;
+    }
+    .demo-tab {
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      color: #aaa;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .demo-tab.active {
+      background: #555;
+      color: white;
+    }
+    .demo-tab:hover {
+      color: white;
+    }
+    .step-content {
+      display: none;
+    }
+    .step-content.active {
+      display: block;
+    }
+    .demo-label {
+      font-size: 11px;
+      background: #333;
+      color: #aaa;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="demo-tabs">
+      <button class="demo-tab active" onclick="showStep(1)">Step 1: 基本情報</button>
+      <button class="demo-tab" onclick="showStep(2)">Step 2: フィールドルール</button>
+      <button class="demo-tab" onclick="showStep(3)">完了画面</button>
+    </div>
+
+    <!-- Step 1: Basic Info -->
+    <div id="step1" class="step-content active">
+      <h1>アプリケーションの登録</h1>
+
+      <div class="step-indicator">
+        <div class="step active">
+          <span class="step-number">1</span>
+          <span>基本情報</span>
+        </div>
+        <div class="step">
+          <span class="step-number">2</span>
+          <span>フィールドルール</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>基本情報</h2>
+
+        <div class="form-group">
+          <label>アプリケーション名 *</label>
+          <input type="text" value="ECサイト本店" placeholder="アプリケーション名を入力">
+        </div>
+
+        <div class="form-group">
+          <label>リダイレクト URI *</label>
+          <textarea rows="3" placeholder="https://example.com/callback">https://shop.example.com/auth/callback</textarea>
+          <div class="hint">1行に1つのURIを入力してください</div>
+        </div>
+
+        <div class="form-group">
+          <label>クライアントタイプ</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="radio" name="client_type" checked>
+              <div>
+                <div class="label-text">Confidential（機密）</div>
+                <div class="description">サーバーサイドアプリケーション。client_secret を安全に保管できる環境向け</div>
+              </div>
+            </label>
+            <label class="checkbox-item">
+              <input type="radio" name="client_type">
+              <div>
+                <div class="label-text">Public（公開）</div>
+                <div class="description">SPA、モバイルアプリなど。client_secret を保管できない環境向け</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>許可する認証フロー</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item">
+              <input type="checkbox" checked>
+              <div>
+                <div class="label-text">Authorization Code</div>
+                <div class="description">ユーザーがログインして認可するフロー（推奨）</div>
+              </div>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              <div>
+                <div class="label-text">Client Credentials</div>
+                <div class="description">M2M通信用。ユーザー認証なしでAPIアクセス（Admin API 利用時に必要）</div>
+              </div>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox">
+              <div>
+                <div class="label-text">Refresh Token</div>
+                <div class="description">アクセストークンの更新を許可</div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-secondary">キャンセル</button>
+        <button class="btn btn-primary" onclick="showStep(2)">次へ：フィールドルールの設定</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Field Rules -->
+    <div id="step2" class="step-content">
+      <h1>アプリケーションの登録</h1>
+
+      <div class="step-indicator">
+        <div class="step completed">
+          <span class="step-number">✓</span>
+          <span>基本情報</span>
+        </div>
+        <div class="step active">
+          <span class="step-number">2</span>
+          <span>フィールドルール</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>
+          フィールドルール設定
+          <span class="demo-label">ECサイト本店</span>
+        </h2>
+
+        <div class="info-box">
+          このアプリケーションを利用するユーザーに必須入力を求めるフィールドを設定します。<br>
+          テナント設定で「必須」または「非表示」に設定されているフィールドは変更できません。
+        </div>
+
+        <table class="field-rules-table">
+          <thead>
+            <tr>
+              <th>フィールド</th>
+              <th>テナント設定</th>
+              <th style="width: 120px; text-align: center;">必須にする</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="field-name">メールアドレス</div>
+                <div class="field-key">email</div>
+              </td>
+              <td><span class="badge badge-required">必須</span></td>
+              <td style="text-align: center;">
+                <label class="toggle-switch">
+                  <input type="checkbox" checked disabled>
+                  <span class="toggle-slider"></span>
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="field-name">氏名</div>
+                <div class="field-key">name</div>
+              </td>
+              <td><span class="badge badge-locked">編集可</span></td>
+              <td style="text-align: center;">
+                <label class="toggle-switch">
+                  <input type="checkbox" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="field-name">電話番号</div>
+                <div class="field-key">phone_number</div>
+              </td>
+              <td><span class="badge badge-locked">編集可</span></td>
+              <td style="text-align: center;">
+                <label class="toggle-switch">
+                  <input type="checkbox" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="field-name">住所</div>
+                <div class="field-key">address</div>
+              </td>
+              <td><span class="badge badge-locked">編集可</span></td>
+              <td style="text-align: center;">
+                <label class="toggle-switch">
+                  <input type="checkbox" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="field-name">生年月日</div>
+                <div class="field-key">birthdate</div>
+              </td>
+              <td><span class="badge badge-locked">編集可</span></td>
+              <td style="text-align: center;">
+                <label class="toggle-switch">
+                  <input type="checkbox">
+                  <span class="toggle-slider"></span>
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="field-name">性別</div>
+                <div class="field-key">gender</div>
+              </td>
+              <td><span class="badge badge-hidden">非表示</span></td>
+              <td style="text-align: center; color: #999;">
+                −
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="warning-box" style="margin-top: 20px;">
+          ⚠️ デフォルトですべての編集可能なフィールドが「必須」に設定されています。不要なものはオフにしてください。
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="showStep(1)">戻る</button>
+        <button class="btn btn-primary" onclick="showStep(3)">登録を完了</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Complete -->
+    <div id="step3" class="step-content">
+      <h1>アプリケーションの登録</h1>
+
+      <div class="step-indicator">
+        <div class="step completed">
+          <span class="step-number">✓</span>
+          <span>基本情報</span>
+        </div>
+        <div class="step completed">
+          <span class="step-number">✓</span>
+          <span>フィールドルール</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🎉 登録が完了しました</h2>
+
+        <p>アプリケーション「ECサイト本店」が正常に登録されました。</p>
+
+        <div style="background: #f5f5f5; padding: 16px; border-radius: 4px; margin: 20px 0;">
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Client ID</div>
+            <code style="font-size: 14px;">a1b2c3d4-e5f6-7890-abcd-ef1234567890</code>
+          </div>
+          <div>
+            <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Client Secret</div>
+            <code style="font-size: 14px;">********************************</code>
+          </div>
+        </div>
+
+        <div class="warning-box">
+          ⚠️ Client Secret は一度しか表示されません。安全な場所に保管してください。
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-secondary">アプリケーション一覧へ</button>
+        <button class="btn btn-primary">アプリケーション詳細を見る</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showStep(step) {
+      // Hide all steps
+      document.querySelectorAll('.step-content').forEach(el => {
+        el.classList.remove('active');
+      });
+      // Show selected step
+      document.getElementById('step' + step).classList.add('active');
+      // Update tabs
+      document.querySelectorAll('.demo-tab').forEach((el, index) => {
+        el.classList.toggle('active', index === step - 1);
+      });
+    }
+  </script>
+</body>
+</html>
