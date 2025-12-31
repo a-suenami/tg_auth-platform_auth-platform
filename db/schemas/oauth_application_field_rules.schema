@@ -1,0 +1,17 @@
+create_table :oauth_application_field_rules, force: :cascade, id: :uuid, default: -> { 'gen_random_uuid()' } do |t|
+  t.references :tenant, type: :citext, null: false
+  t.references :oauth_application, type: :uuid, null: false
+  t.string :field_name, null: false   # 'first_name', 'phone_number', etc.
+  t.string :rule, null: false         # 'required', 'editable', 'hidden'
+
+  t.timestamps null: false
+
+  t.index [:oauth_application_id, :field_name],
+          name: :idx_oauth_app_field_rules_unique,
+          unique: true
+end
+
+add_foreign_key :oauth_application_field_rules, :oauth_applications,
+                column: [:tenant_id, :oauth_application_id],
+                primary_key: [:tenant_id, :id],
+                name: :fk_oauth_application_field_rules_oauth_applications
