@@ -129,7 +129,7 @@ gem 'yaml_vault', '~> 1.3.2'
 # # FCM push notification utility
 # gem 'fcmpush', '~> 1.4.0'
 # # HTTP client
-gem 'faraday', '~> 2.9'
+gem 'faraday', '~> 2.14'
 gem 'faraday-retry', '~> 2.2.0'
 gem 'faraday-multipart', '~> 1.0'
 # gem 'faraday-http-cache', '~> 2.4.0'
